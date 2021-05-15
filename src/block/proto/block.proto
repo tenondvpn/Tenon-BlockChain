@@ -1,0 +1,106 @@
+syntax = "proto2";
+
+package lego.block.protobuf;
+
+message GetTxBlockRequest {
+    optional bytes tx_gid = 1;
+    optional bytes block_hash = 2;
+    optional bool from = 3;
+    optional uint64 height = 4;
+    optional bytes account_address = 5;
+}
+
+message GetTxBlockResponse {
+    optional bytes block = 1;
+}
+
+message AccountHeightRequest {
+    optional bytes account_addr = 1;
+}
+
+message AccountHeightResponse {
+    repeated uint64 heights = 1;
+    optional bytes account_addr = 2;
+    optional bytes type = 3;
+}
+
+message AccountAttrRequest {
+    optional bytes account = 1;
+    optional bytes attr_key = 2;
+    optional uint64 height = 3;
+}
+
+message AccountAttrResponse {
+    optional bytes account = 1;
+    optional bytes attr_key = 2;
+    optional uint64 height = 3;
+    optional bytes block = 4;
+}
+
+message UpdateVpnCountRequest {
+    optional uint64 account_hash = 1;
+    optional bytes ip = 2;
+    optional bytes old_ip = 3;
+    optional bytes uid = 4;
+    optional bool just_set = 5;
+}
+
+message VpnCountItem {
+    optional bytes ip = 1;
+    optional uint32 count = 2;
+}
+
+message UpdateVpnCountResponse {
+    repeated VpnCountItem vpn_nodes = 1;
+}
+
+message GetAccountInitInfoRequest {
+    optional bytes id = 1;
+    optional uint32 count = 2;
+    optional uint64 height = 3;
+}
+
+message TxItem {
+    optional bytes from = 1;
+    optional bytes to = 2;
+    optional uint64 amount = 3;
+    optional uint64 timestamp = 4;
+    optional uint64 height = 5;
+    optional uint64 balance = 6;
+    optional bytes gid = 7;
+    optional uint32 type = 8;
+    optional uint32 status = 9;
+    optional uint32 version = 10;
+}
+
+message GetAccountInitInfoResponse {
+    optional uint64 balance = 1;
+    repeated TxItem tx_list = 2;
+    optional bytes id = 3;
+}
+
+message UpdateVpnActiveRequest {
+    optional bytes id = 1;
+    optional bytes ip = 2;
+}
+
+message AdRewardRequest {
+    optional bytes id = 1;
+    optional bytes reward_key = 2;
+    optional bytes gid = 3;
+}
+
+message BlockMessage {
+    optional GetTxBlockRequest block_req = 1;
+    optional GetTxBlockResponse block_res = 2;
+    optional AccountHeightRequest height_req = 3;
+    optional AccountHeightResponse height_res = 4;
+    optional AccountAttrRequest acc_attr_req = 5;
+    optional AccountAttrResponse acc_attr_res = 6;
+    optional UpdateVpnCountRequest up_vpn_req = 7;
+    optional UpdateVpnCountResponse up_vpn_res = 8;
+    optional GetAccountInitInfoRequest account_init_req = 9;
+    optional GetAccountInitInfoResponse account_init_res = 10;
+    optional UpdateVpnActiveRequest vpn_active_req = 11;
+    optional AdRewardRequest ad_reward_req = 12;
+}

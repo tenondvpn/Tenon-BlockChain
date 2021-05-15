@@ -1,0 +1,252 @@
+#include "stdafx.h"
+// #include "transport/tcp/client_transport.h"
+// #ifdef _WIN32
+// #include "uv/uv.h"
+// #endif // _WIN32
+// 
+// #include "common/hash.h"
+// #include "transport/transport_utils.h"
+// #include "common/global_info.h"
+// #include "transport/multi_thread.h"
+// #include "transport/proto/transport.pb.h"
+// 
+// namespace lego {
+// 
+// namespace transport {
+// 
+// #ifdef _WIN32
+// const char *inet_ntop(int af, const void *src, char *dst, socklen_t size) {
+//     struct sockaddr_storage ss;
+//     unsigned long s = size;
+// 
+//     memset(&ss, sizeof(ss), 0);
+//     ss.ss_family = af;
+// 
+//     switch (af) {
+//     case AF_INET:
+//         ((struct sockaddr_in *)&ss)->sin_addr = *(struct in_addr *)src;
+//         break;
+//     case AF_INET6:
+//         ((struct sockaddr_in6 *)&ss)->sin6_addr = *(struct in6_addr *)src;
+//         break;
+//     default:
+//         return NULL;
+//     }
+// 
+//     const size_t cSize = strlen(dst) + 1;
+//     wchar_t* wc = new wchar_t[cSize];
+//     mbstowcs(wc, dst, cSize);
+//     char* res = (WSAAddressToStringW((struct sockaddr *)&ss, sizeof(ss), NULL, wc, &s) == 0) ?
+//         dst : NULL;
+//     delete[]wc;
+//     return res;
+// }
+// 
+// #endif // _WIN32
+// 
+// static void get_peer_ip_port(int fd, std::string* ip, uint16_t *port) {
+//     int peer_fd = fd;
+//     struct sockaddr_in addr;
+//     socklen_t addrlen = sizeof(addr);
+//     if (getpeername(peer_fd, (struct sockaddr*)&addr, &addrlen) == -1) {
+//         fprintf(stderr, "discovery client information failed, fd=%d, errno=%d(%#x).\n", peer_fd, errno, errno);
+//         return;
+//     }
+// 
+//     char buf[INET6_ADDRSTRLEN];
+//     memset(buf, 0, INET6_ADDRSTRLEN);
+//     if ((inet_ntop(addr.sin_family, &addr.sin_addr, buf, INET6_ADDRSTRLEN)) == NULL) {
+//         fprintf(stderr, "convert client information failed, fd=%d, errno=%d(%#x).\n", peer_fd, errno, errno);
+//         return;
+//     }
+// 
+//     *port = ntohs(addr.sin_port);
+//     *ip = buf;
+//     return;
+// }// 
+// 
+// struct User* create_user() {
+//     struct User* user = (struct User*)malloc(sizeof(struct User));
+//     return user;
+// }
+// 
+// void destroy_user(struct User* user) {
+//     mr_buffer_free(user->buffer);
+//     free(user);
+// }
+// 
+// static void client_handle_data(uintptr_t uid, int fd, char* data, int size) {
+//     struct User* user = (struct User*)uid;
+//     struct mr_buffer* buffer = user->buffer;
+//     mr_buffer_read_push(buffer, data, size);
+//     int ret = mr_buffer_read_pack(buffer);
+//     if (ret > 0) {
+//         const char* ptr = buffer->read_data;
+//         std::string msg(ptr, buffer->read_len);
+//         std::string from_ip;
+//         uint16_t from_port;
+//         get_peer_ip_port(fd, &from_ip, &from_port);
+//         printf("client_handle_data ip: %s, port: %d, uid = %d, fd = %d, size = %d \n", from_ip.c_str(), from_port, (int)uid, fd, size);
+//         MultiThreadHandler::Instance()->HandleMessage(
+//                 from_ip,
+//                 from_port,
+//                 msg.c_str(),
+//                 msg.size(),
+//                 1);
+//     }
+// }
+// 
+// static void client_handle_connect(uintptr_t uid, int fd, char* data, int size) {
+//     printf("client_handle_connect uid = %d, fd = %d, data =%s, size = %d \n", (int)uid, fd, data, size);
+//     struct User* user = (struct User*)uid;
+//     user->snd_id = 0;
+//     user->rcv_id = 0;
+//     user->snd_id++;
+//     struct mr_buffer* buffer = user->buffer;
+//     int ret = mr_socket_send(fd, buffer->write_data, buffer->write_len);
+//     if (ret < 0) {
+//         printf("mr_socket_send faild ret = %d\n", ret);
+//     }
+// }
+// 
+// static void client_handle_close(uintptr_t uid, int fd, char* data, int size)
+// {
+//     printf("client_handle_close uid = %d, fd = %d, data=%s, size = %d \n", (int)uid, fd, data, size);
+// }
+// 
+// static void client_handle_error(uintptr_t uid, int fd, char* data, int size)
+// {
+//     printf("client_handle_error uid = %d, fd = %d, data=%s, size = %d \n", (int)uid, fd, data, size);
+// }
+// 
+// static void client_handle_warning(uintptr_t uid, int fd, char* data, int size)
+// {
+//     printf("client_handle_warning uid = %d, fd = %d, data=%s, size = %d \n", (int)uid, fd, data, size);
+// }
+// 
+// ClientTransport::ClientTransport(const std::string& ip_port, int backlog, bool create_server) {
+// 
+// }
+// 
+// ClientTransport::~ClientTransport() {
+// 
+// }
+// 
+// int ClientTransport::Init() {
+//     mr_socket_init();
+//     mr_socket_run();
+//     mr_set_handle_data(client_handle_data);
+//     mr_set_handle_connect(client_handle_connect);
+//     mr_set_handle_close(client_handle_close);
+//     mr_set_handle_error(client_handle_error);
+//     mr_set_handle_warning(client_handle_warning);
+//     return kTransportSuccess;
+// }
+// 
+// int ClientTransport::Start(bool hold) {
+//     if (hold) {
+//         Run();
+//     } else {
+//         run_thread_ = std::make_shared<std::thread>(std::bind(&ClientTransport::Run, this));
+//         run_thread_->detach();
+//     }
+// 
+//     return kTransportSuccess;
+// }
+// 
+// void ClientTransport::Stop() {
+//     mr_socket_free();
+// }
+// 
+// int ClientTransport::Send(
+//         const std::string& ip,
+//         uint16_t port,
+//         uint32_t ttl,
+//         transport::protobuf::Header& message) {
+//     std::string msg;
+//     message.set_hash(GetMessageHash(message));
+//     message.SerializeToString(&msg);
+//     std::string tmp_msg;
+//     PacketHeader header(msg.size());
+//     tmp_msg.append((char*)&header, sizeof(header));
+//     tmp_msg.append(msg);
+//     struct User* user = GetConnection(ip, port);
+//     if (user == nullptr) {
+//         user = create_user();
+//         uintptr_t uid = (uintptr_t)user;
+//         int fd = mr_socket_connect(uid, ip.c_str(), port);
+//         if (fd < 0) {
+//             printf("mr_socket_connect faild fd = %d\n", fd);
+//             return kTransportError;
+//         }
+// 
+//         user->buffer = mr_buffer_create(10 *1024 * 1024);
+//         struct mr_buffer* buffer = user->buffer;
+//         mr_buffer_write_push(buffer, (char*)tmp_msg.c_str(), tmp_msg.size());
+//         mr_buffer_write_pack(buffer);
+//         user->fd = fd;
+//         AddConnection(ip, port, user);
+//     } else {
+//         struct mr_buffer* buffer = user->buffer;
+//         mr_buffer_write_push(buffer, (char*)tmp_msg.c_str(), tmp_msg.size());
+//         mr_buffer_write_pack(buffer);
+//         int ret = mr_socket_send(user->fd, buffer->write_data, buffer->write_len);
+//         if (ret < 0) {
+//             printf("mr_socket_send faild ret = %d\n", ret);
+//             return kTransportError;
+//         }
+//     }
+// 
+//     return kTransportSuccess;
+// }
+// 
+// int ClientTransport::SendToLocal(transport::protobuf::Header& message) {
+//     return kTransportSuccess;
+// }
+// 
+// int ClientTransport::GetSocket() {
+//     return kTransportSuccess;
+// }
+// 
+// void ClientTransport::FreeConnection(const std::string& ip, uint16_t port) {
+//     std::string peer_spec = ip + ":" + std::to_string(port);
+//     std::lock_guard<std::mutex> guard(conn_map_mutex_);
+//     auto iter = client_connections_.find(peer_spec);
+//     if (iter != client_connections_.end()) {
+//         client_connections_.erase(iter);
+//     }
+// }
+// 
+// void ClientTransport::Run() {
+//     while (true) {
+//         mr_socket_update();
+//         std::this_thread::sleep_for(std::chrono::microseconds(10000ull));
+//     }
+// }
+// 
+// struct User* ClientTransport::GetConnection(const std::string& ip, uint16_t port) {
+//     std::string peer_spec = ip + ":" + std::to_string(port);
+//     std::lock_guard<std::mutex> guard(conn_map_mutex_);
+//     auto iter = client_connections_.find(peer_spec);
+//     if (iter != client_connections_.end()) {
+//         return iter->second;
+//     }
+// 
+//     return nullptr;
+// }
+// 
+// void ClientTransport::AddConnection(const std::string& ip, uint16_t port, struct User* stream) {
+//     std::string peer_spec = ip + ":" + std::to_string(port);
+//     std::lock_guard<std::mutex> guard(conn_map_mutex_);
+//     client_connections_[peer_spec] = stream;
+// }
+// 
+// uint64_t ClientTransport::GetMessageHash(transport::protobuf::Header& message) {
+//     auto hash = common::Hash::Hash64(
+//         "tcp" + message.src_node_id() + std::to_string(message.id()) + message.data());
+//     return hash;
+// }
+// 
+// }  // namespace transport
+// 
+// }  // namespace lego

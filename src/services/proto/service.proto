@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package lego.service.protobuf;
+
+message GetVpnInfoRequest {
+    optional bytes pubkey = 1;
+    optional bytes sign_challenge = 2;
+    optional bytes sign_response = 3;
+    optional bool heartbeat = 4;
+    optional bytes method = 5;
+}
+
+message GetVpnInfoResponse {
+	optional bytes ip = 1;
+	optional uint32 svr_port = 2;
+	optional uint32 route_port = 3;
+    optional bytes country = 4;
+    optional int32 secnum = 5;
+    optional bytes pubkey = 6;
+}
+
+message VlanNodeHeartbeat {
+	optional int32 nat_type = 1;
+	optional bytes node_id = 2;
+	optional bytes dht_key = 3;
+	optional bytes public_key = 4;
+    optional string public_ip = 5;
+    optional int32 udp_port = 6;
+    optional int32 tcp_port = 7;
+}
+
+message ServiceMessage {
+	optional GetVpnInfoRequest vpn_req = 1;
+	optional GetVpnInfoResponse vpn_res = 2;
+	optional VlanNodeHeartbeat vlan_heartbeat = 3;
+}

@@ -1,0 +1,29 @@
+syntax = "proto2";
+
+package lego.elect.protobuf;
+
+message member {
+	optional bytes id = 1;
+	optional bytes pubkey = 2;
+	optional bytes sign = 3;
+	optional uint32 net_id = 4;
+	optional uint32 country = 5;
+	optional bytes dht_key = 6;
+	optional int32 nat_type = 7;
+	optional bytes public_ip = 8;
+	optional uint32 public_port = 9;
+    optional bytes local_ip = 10;
+	optional uint32 local_port = 11;
+
+}
+
+message ElectBlock {
+	repeated member in = 1;
+	repeated member out = 2;
+	optional bytes acc_pubkey = 3;
+	optional bytes acc_sign = 4;
+}
+
+message ElectMessage {
+	optional ElectBlock elect_block = 1;
+}

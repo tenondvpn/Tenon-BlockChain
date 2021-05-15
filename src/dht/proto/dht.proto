@@ -1,0 +1,153 @@
+syntax = "proto2";
+
+package lego.dht.protobuf;
+
+message BootstrapRequest {
+    optional string local_ip = 1;
+    optional int32 local_port = 2;
+    optional int32 nat_type = 3;
+    optional bytes node_id = 4;
+    optional int32 get_init_msg = 5;
+    optional uint32 min_svr_port = 6;
+    optional uint32 max_svr_port = 7;
+    optional uint32 min_route_port = 8;
+    optional uint32 max_route_port = 9;
+    optional int32 public_port = 10;
+    optional uint32 node_weight = 11;
+    optional uint32 min_udp_port = 12;
+    optional uint32 max_udp_port = 13;
+    optional uint32 version = 14;
+    optional bytes uid = 15;
+    optional bytes node_tag = 16;
+}
+
+message RelayVpnNodeInfo {
+    optional bytes ip = 1;
+    optional bytes dhkey = 2;
+    optional bytes pubkey = 3;
+    optional bytes country = 4;
+    optional uint32 min_svr_port = 5;
+    optional uint32 max_svr_port = 6;
+    optional uint32 min_route_port = 7;
+    optional uint32 max_route_port = 8;
+    optional uint32 node_weight = 9;
+    optional uint32 min_udp_port = 10;
+    optional uint32 max_udp_port = 11;
+    optional bytes node_tag = 12;
+}
+
+message VpnNodeInfo {
+    optional bytes ip = 1;
+    optional bytes dhkey = 2;
+    optional bytes pubkey = 3;
+    optional bytes country = 4;
+    optional uint32 min_svr_port = 5;
+    optional uint32 max_svr_port = 6;
+    optional uint32 min_route_port = 7;
+    optional uint32 max_route_port = 8;
+    optional uint32 node_weight = 9;
+    optional uint32 min_udp_port = 10;
+    optional uint32 max_udp_port = 11;
+    repeated RelayVpnNodeInfo relay_vpn_nodes = 12;
+    optional bytes node_tag = 13;
+}
+
+message InitMessage {
+    optional bytes version_info = 1;
+    repeated VpnNodeInfo route_nodes = 2;
+    repeated VpnNodeInfo vpn_nodes = 3;
+    optional bool use_conf_nodes = 4;
+    optional bytes vpn_node_count = 5;
+    optional bytes vpn_count_svr = 6;
+    optional bytes init_blocks = 7;
+    optional bytes bft_nodes = 8;
+    repeated VpnNodeInfo vip_route_nodes = 9;
+    repeated VpnNodeInfo vip_vpn_nodes = 10;
+}
+
+message BootstrapResponse {
+    optional bytes node_id = 1;
+    optional int32 nat_type = 2;
+    optional string local_ip = 3;
+    optional int32 local_port = 4;
+    optional string public_ip = 5;
+    optional int32 public_port = 6;
+    optional int32 country_code = 7;
+    optional InitMessage init_message = 8;
+    optional uint32 min_svr_port = 9;
+    optional uint32 max_svr_port = 10;
+    optional uint32 min_route_port = 11;
+    optional uint32 max_route_port = 12;
+    optional int32 peer_public_port = 13;
+    optional uint32 node_weight = 14;
+    optional uint32 min_udp_port = 15;
+    optional uint32 max_udp_port = 16;
+    optional bytes node_tag = 17;
+}
+
+message RefreshNeighborsRequest {
+    optional uint32 count = 1;
+    optional bytes des_dht_key = 2;
+    repeated uint64 bloomfilter1 = 3;
+    repeated uint64 bloomfilter = 4;
+}
+
+message NodeInfo {
+    optional bytes public_ip = 1;
+    optional int32 public_port = 2;
+    optional bytes local_ip = 3;
+    optional int32 local_port = 4;
+    optional bytes public_key = 5;
+    optional int32 nat_type = 6;
+    optional bytes dht_key = 7;
+    optional uint32 min_svr_port = 8;
+    optional uint32 max_svr_port = 9;
+    optional uint32 min_route_port = 10;
+    optional uint32 max_route_port = 11;
+    optional uint32 node_weight = 12;
+    optional uint32 min_udp_port = 13;
+    optional uint32 max_udp_port = 14;
+    optional bytes node_tag = 15;
+}
+
+message RefreshNeighborsResponse {
+    repeated NodeInfo nodes = 1;
+}
+
+message HeartbeatRequest {
+    optional uint64 dht_key_hash = 1;
+}
+
+message HeartbeatResponse {
+    optional uint64 dht_key_hash = 1;
+}
+
+message ConnectReqeust {
+    optional bytes local_ip = 1;
+    optional int32 local_port = 2;
+    optional bytes public_ip = 3;
+    optional int32 public_port = 4;
+    optional int32 nat_type = 5;
+    optional bytes id = 6;
+    optional bytes dht_key = 7;
+    optional bool direct = 8;
+    optional uint32 min_svr_port = 9;
+    optional uint32 max_svr_port = 10;
+    optional uint32 min_route_port = 11;
+    optional uint32 max_route_port = 12;
+    optional uint32 node_weight = 13;
+    optional uint32 min_udp_port = 14;
+    optional uint32 max_udp_port = 15;
+    optional bytes node_tag = 16;
+}
+
+message DhtMessage {
+    optional BootstrapRequest bootstrap_req = 1;
+    optional BootstrapResponse bootstrap_res = 2;
+    optional RefreshNeighborsRequest refresh_neighbors_req = 3;
+    optional RefreshNeighborsResponse refresh_neighbors_res = 4;
+    optional ConnectReqeust connect_req = 5;
+    optional HeartbeatRequest heartbeat_req = 6;
+    optional HeartbeatResponse heartbeat_res = 7;
+    repeated uint32 networks = 8;
+}
