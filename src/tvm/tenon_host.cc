@@ -18,6 +18,8 @@ evmc::bytes32 TenonHost::get_storage(
         const evmc::address& addr,
         const evmc::bytes32& key) const noexcept {
     // first find from temporary map storage
+    std::string id((char*)addr.bytes, sizeof(addr.bytes));
+    std::string key_str((char*)key.bytes, sizeof(key.bytes));
     const auto account_iter = accounts.find(addr);
     if (account_iter != accounts.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
@@ -37,7 +39,18 @@ evmc::bytes32 TenonHost::get_storage(
     std::string tmp_key((char*)key.bytes, sizeof(key.bytes));
     if (account_info->GetAttrValue(tmp_key, &val) == block::kBlockSuccess) {
         evmc::bytes32 tmp_val{};
-        memcpy(tmp_val.bytes, val.c_str(), sizeof(tmp_val.bytes));
+        uint32_t offset = 0;
+        uint32_t length = sizeof(tmp_val.bytes);
+        if (val.size() < sizeof(tmp_val.bytes)) {
+            offset = sizeof(tmp_val.bytes) - val.size();
+            length = val.size();
+        }
+
+        memcpy(tmp_val.bytes + offset, val.c_str(), length);
+        std::cout << "get_storage addr: " << common::Encode::HexEncode(id)
+            << ", key: " << common::Encode::HexEncode(key_str)
+            << ", value: " << common::Encode::HexEncode(val)
+            << std::endl;
         return tmp_val;
     }
 
@@ -85,6 +98,7 @@ evmc::uint256be TenonHost::get_balance(const evmc::address& addr) const noexcept
     uint64_t balance = 0;
     if (account_info->GetBalance(&balance) == block::kBlockSuccess) {
         evmc::bytes32 tmp_val{};
+        std::cout << "addr: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes))) << ", balance: " << balance << std::endl;
         Uint64ToEvmcBytes32(tmp_val, balance);
         return tmp_val;
     }
@@ -253,7 +267,8 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     }
 
     if (params.value > 0) {
-        uint64_t from_balance = EvmcBytes32ToUint64(accounts[msg.sender].balance);
+        
+        uint64_t from_balance = EvmcBytes32ToUint64(get_balance(msg.sender));
         std::cout << "check can transfer now balance: " << from_balance
             << ", to : " << params.value
             << ", valid: " << (from_balance >= params.value)

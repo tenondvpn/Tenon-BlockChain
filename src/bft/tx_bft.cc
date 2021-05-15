@@ -771,7 +771,7 @@ void TxBft::LeaderCreateTxBlock(
                         break;
                     }
 
-                    if (contract::GetContractAddress(
+                    if (security::Secp256k1::Instance()->GetContractAddress(
                             tx_vec[i]->from_acc_addr,
                             tx_vec[i]->gid,
                             tx_vec[i]->attr_map[kContractBytesCode]) != tx_vec[i]->to_acc_addr) {

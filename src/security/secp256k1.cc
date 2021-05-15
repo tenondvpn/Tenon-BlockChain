@@ -132,7 +132,6 @@ std::string Secp256k1::GetContractAddress(
     return block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code));
 }
 
-
 }  // namespace security
 
 }  // namespace lego

@@ -75,14 +75,14 @@ int Execution::execute(
     }
 
     uint32_t address_type = block::kNormalAddress;
-    if (contract_info->GetAddressType(&address_type) != block::kContractAddress) {
+    if (contract_info->GetAddressType(&address_type) != block::kBlockSuccess) {
         TVM_ERROR("contract address not exists[%s]",
             common::Encode::HexEncode(contract_address).c_str());
         return kTvmContractNotExists;
     }
 
     std::string bytes_code;
-    if (contract_info->GetBytesCode(&bytes_code) != block::kContractAddress) {
+    if (contract_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
         TVM_ERROR("contract address not exists[%s]",
             common::Encode::HexEncode(contract_address).c_str());
         return kTvmContractNotExists;
@@ -119,6 +119,16 @@ int Execution::execute(
     msg.gas = gas;
     msg.input_data = (uint8_t*)str_input.c_str();
     msg.input_size = str_input.size();
+
+    memcpy(
+        msg.sender.bytes,
+        from_address.c_str(),
+        sizeof(msg.sender.bytes));
+    memcpy(
+        msg.destination.bytes,
+        to_address.c_str(),
+        sizeof(msg.destination.bytes));
+    set_value(&msg, 0);
 
     std::cout << "msg.input_size: " << msg.input_size << std::endl;
     const uint8_t* exec_code_data = nullptr;
