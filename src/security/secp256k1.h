@@ -29,6 +29,10 @@ public:
     std::string ToPublicFromCompressed(const std::string& in_pubkey);
     std::string ToAddressWithPublicKey(const std::string& pub_key);
     std::string ToAddressWithPrivateKey(const std::string& pri_key);
+    std::string GetContractAddress(
+        const std::string& from,
+        const std::string& gid,
+        const std::string& bytes_code);
 
 private:
     Secp256k1();

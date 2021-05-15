@@ -125,6 +125,14 @@ std::string Secp256k1::ToAddressWithPrivateKey(const std::string& pri_key) {
     return block::UnicastAddress(common::Hash::keccak256(pub_key));
 }
 
+std::string Secp256k1::GetContractAddress(
+        const std::string& from,
+        const std::string& gid,
+        const std::string& bytes_code) {
+    return block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code));
+}
+
+
 }  // namespace security
 
 }  // namespace lego

@@ -26,11 +26,6 @@ static const std::string kVpnClientLoginManager = "kVpnClientLoginManager";
 static const std::string kVpnMining = "kVpnMining";
 static const std::string kContractEcrecover = common::Encode::HexDecode("0000000000000000000000000000000000000001");
 
-std::string GetContractAddress(
-    const std::string& from,
-    const std::string& gid,
-    const std::string& bytes_code);
-
 }  // namespace contact
 
 }  // namespace lego

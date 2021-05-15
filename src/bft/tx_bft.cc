@@ -505,7 +505,7 @@ int TxBft::CheckTxInfo(
                 }
             }
 
-            if (contract::GetContractAddress(
+            if (security::Secp256k1::Instance()->GetContractAddress(
                     local_tx_info->from_acc_addr,
                     local_tx_info->gid,
                     local_tx_info->attr_map[kContractBytesCode]) != local_tx_info->to_acc_addr) {
