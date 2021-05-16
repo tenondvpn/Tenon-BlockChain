@@ -713,6 +713,50 @@ int TxBft::GetTempAccountBalance(
     return kBftSuccess;
 }
 
+int TxBft::CheckAndCallContract(
+        TxItemPtr& tx_info,
+        uint64_t from_balance,
+        uint32_t* call_step,
+        protobuf::TxInfo* tx) {
+    auto acount_info = block::AccountManager::Instance()->GetContractInfoByAddress(
+        tx_info->to_acc_addr);
+    if (acount_info == nullptr) {
+        *call_step = contract::kCallStepDefault;
+        return kBftSuccess;
+    }
+
+    if (tx_info->call_contract_step == contract::kCallStepDefault) {
+        *call_step = contract::kCallStepCallerInited;
+        tx_info->attr_map[kContractCallerBalance] = std::to_string(from_balance);
+        return kBftSuccess;
+    }
+
+    if (tx_info->call_contract_step == contract::kCallStepCallerInited) {
+        // will return from address's remove tenon and gas used
+        evmc_result evmc_res = {};
+        evmc::result res{ evmc_res };
+        tvm::TenonHost tenon_host;
+        if (CallContract(tx_info, &tenon_host, &res) != kBftSuccess) {
+            return kBftExecuteContractFailed;
+        }
+
+        if (res.status_code != EVMC_SUCCESS) {
+            return kBftExecuteContractFailed;
+        }
+
+        // add gas_used
+        *call_step = contract::kCallStepContractCalled;
+        return kBftSuccess;
+    }
+
+    if (tx_info->call_contract_step == contract::kCallStepContractCalled) {
+        *call_step = contract::kCallStepContractFinal;
+        return kBftSuccess;
+    }
+
+    return kBftError;
+}
+
 void TxBft::LeaderCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
@@ -749,6 +793,11 @@ void TxBft::LeaderCreateTxBlock(
             do 
             {
                 gas_used = kTransferGas;
+                if (from_balance <= tx_vec[i]->gas) {
+                    tx.set_status(kBftUserSetGasLimitError);
+                    break;
+                }
+
                 if (!tx_vec[i]->attr_map.empty()) {
                     for (auto iter = tx_vec[i]->attr_map.begin();
                         iter != tx_vec[i]->attr_map.end(); ++iter) {
@@ -779,22 +828,17 @@ void TxBft::LeaderCreateTxBlock(
                     }
                 }
 
-                if (from_balance > gas_used && tx.gas_limit() >= gas_used) {
+                if (tx.gas_limit() >= gas_used) {
                     // execute contract
+                    uint32_t call_contract_step;
+                    if (CheckAndCallContract(tx_vec[i], &call_contract_step) != kBftSuccess) {
+
+                    }
                     assert(false);
                     {
-                        // will return from address's remove tenon and gas used
-                        evmc_result evmc_res = {};
-                        evmc::result res{ evmc_res };
-                        tvm::TenonHost tenon_host;
-                        if (CallContract(tx_vec[i], &tenon_host, &res) != kBftSuccess) {
-                            tx.set_status(kBftExecuteContractFailed);
-                            break;
-                        }
-
-                        // add gas_used
+                        
                     }
-                } else if (tx.gas_limit() < gas_used) {
+                } else {
                     tx.set_status(kBftUserSetGasLimitError);
                     break;
                 }

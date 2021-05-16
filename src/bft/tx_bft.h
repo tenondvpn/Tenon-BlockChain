@@ -48,6 +48,11 @@ private:
         const TxItemPtr& tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res);
+    int CheckAndCallContract(
+        TxItemPtr& tx_info,
+        uint64_t from_balance,
+        uint32_t* call_step,
+        protobuf::TxInfo* tx);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

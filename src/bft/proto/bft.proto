@@ -7,6 +7,18 @@ message AccountAttributes {
 	optional bytes value = 2;
 }
 
+message StorageItem {
+    optional bytes id = 1;
+	optional bytes key = 2;
+	optional bytes value = 3;
+}
+
+message TransferItem {
+    optional bytes from = 1;
+	optional bytes to = 2;
+	optional uint64 amount = 3;
+}
+
 message TxInfo {
 	optional uint32 version = 1;
 	optional bytes gid = 2;
@@ -26,6 +38,8 @@ message TxInfo {
     optional bytes tx_hash = 16;
     optional uint32 network_id = 17;
     optional uint32 call_contract_step = 18;
+    repeated StorageItem storages = 19;
+    repeated TransferItem transfers = 20;
 }
 
 message Block {

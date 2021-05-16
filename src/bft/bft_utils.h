@@ -143,9 +143,10 @@ static const std::string kVpnSubscriptionDeduction("vpn_subscription_deduction")
 static const std::string kRootCreateNewAccountAttrKey("kRootNewAddr_netid");
 
 // transaction contract attr keys
-static const std::string kContractAddress = "caddress";
-static const std::string kContractBytesCode = "cbytescode";
-static const std::string kContractInputCode = "cinput";
+static const std::string kContractAddress = "__caddress";
+static const std::string kContractBytesCode = "__cbytescode";
+static const std::string kContractInputCode = "__cinput";
+static const std::string kContractCallerBalance = "__ccallerbalance";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;
