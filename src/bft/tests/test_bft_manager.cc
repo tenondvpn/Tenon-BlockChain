@@ -570,7 +570,6 @@ public:
             tx_info.to(),
             tx_info.amount(),
             tx_info.type(),
-            tx_info.call_addr(),
             tx_info.gas_limit(),
             tx_info.tx_hash());
         tx_ptr->add_to_acc_addr = tx_info.to_add();
