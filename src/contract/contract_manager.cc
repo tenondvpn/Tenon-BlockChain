@@ -56,7 +56,6 @@ void ContractManager::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (contract_msg.has_get_attr_req()) {
-        HandleGetContractAttrRequest(header, contract_msg);
         return;
     }
 
