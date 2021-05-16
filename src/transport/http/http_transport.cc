@@ -734,10 +734,11 @@ std::string HttpTransport::GetCountryLoad(int32_t pre_days) try {
         }
         std::string attr_key = common::kVpnClientLoginAttr + now_day_timestamp;
         std::string attr_val;
-        contract::ContractManager::Instance()->GetAttrWithKey(
-                contract::kVpnClientLoginManager,
-                attr_key,
-                attr_val);
+        assert(false);
+//         contract::ContractManager::Instance()->GetAttrWithKey(
+//                 contract::kVpnClientLoginManager,
+//                 attr_key,
+//                 attr_val);
         common::Split<> splits(attr_val.c_str(), ',', attr_val.size());
         for (uint32_t i = 0; i < splits.Count(); ++i) {
             common::Split<> tmp_split(splits[i], ':', splits.SubLen(i));
