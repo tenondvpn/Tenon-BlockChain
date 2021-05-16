@@ -25,6 +25,7 @@ message TxInfo {
     optional uint32 status = 15;
     optional bytes tx_hash = 16;
     optional uint32 network_id = 17;
+    optional uint32 call_contract_step = 18;
 }
 
 message Block {

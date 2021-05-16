@@ -65,6 +65,24 @@ DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
     return nullptr;
 }
 
+DbAccountInfo* AccountManager::GetContractInfoByAddress(const std::string& address) {
+    auto account_info = GetAcountInfo(address);
+    if (account_info == nullptr) {
+        return nullptr;
+    }
+
+    uint32_t address_type = kNormalAddress;
+    if (account_info->GetAddressType(&address_type) != kBlockSuccess) {
+        return nullptr;
+    }
+
+    if (address_type != kContractAddress) {
+        return nullptr;
+    }
+
+    return account_info;
+}
+
 int AccountManager::GetAddressConsensusNetworkId(
         const std::string& address,
         uint32_t* network_id) {

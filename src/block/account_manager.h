@@ -29,6 +29,7 @@ public:
         const std::string& create_hash,
         db::DbWriteBach& db_batch);
     int GetAddressConsensusNetworkId(const std::string& address, uint32_t* network_id);
+    DbAccountInfo* GetContractInfoByAddress(const std::string& address);
 
 private:
     AccountManager();
