@@ -17,6 +17,7 @@
 #include "bft/bft_utils.h"
 #include "bft/bft_interface.h"
 #include "network/network_utils.h"
+#include "contract/contract_utils.h"
 
 namespace lego {
 
