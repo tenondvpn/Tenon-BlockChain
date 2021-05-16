@@ -303,7 +303,7 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
                     evmc_result evmc_res = {};
                     evmc::result res{ evmc_res };
                     tvm::TenonHost tenon_host;
-                    if (CallContract(tx_info, &tenon_host, &res) != kBftSuccess) {
+                    if (CallContract(local_tx_info, &tenon_host, &res) != kBftSuccess) {
                         if (tx_info.status() != kBftExecuteContractFailed) {
                             BFT_ERROR("local tx status not equal to leader status[%d][%d]!",
                                 tx_info.status(), kBftExecuteContractFailed);
