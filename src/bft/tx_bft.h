@@ -5,9 +5,13 @@
 #include "bft/bft_interface.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft_proto.h"
-#include "tvm/tenon_host.h"
+#include "evmc/evmc.hpp"
 
 namespace lego {
+
+namespace tvm {
+    class TenonHost;
+}
 
 namespace bft {
 

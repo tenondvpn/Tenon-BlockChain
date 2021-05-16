@@ -11,6 +11,7 @@
 #include "security/secp256k1.h"
 #include "tvm/execution.h"
 #include "tvm/tvm_utils.h"
+#include "tvm/tenon_host.h"
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/dispatch_pool.h"
