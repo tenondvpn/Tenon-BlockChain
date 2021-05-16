@@ -94,7 +94,6 @@ static void CreateTransaction(
     new_tx->set_type(common::kConsensusVpnMiningPayToNode);
     new_tx->set_to_acc_addr(to);
     new_tx->set_lego_count(amount);
-    new_tx->set_call_addr(contract::kVpnMining);
     auto server_attr = new_tx->add_attr();
     server_attr->set_key(common::kVpnMiningBandwidth);
     server_attr->set_value(attr_key);

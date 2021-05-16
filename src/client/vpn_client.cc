@@ -424,7 +424,6 @@ void VpnClient::SendGetAccountAttrUsedBandwidth() {
     contract::ContractProto::CreateGetAttrRequest(
             uni_dht->local_node(),
             common::GlobalInfo::Instance()->id(),
-            contract::kContractVpnBandwidthProveAddr,
             key,
             msg);
     uni_dht->SendToClosestNode(msg);

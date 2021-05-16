@@ -207,10 +207,6 @@ public:
         new_tx->set_type(type);
         new_tx->set_to_acc_addr(to);
         new_tx->set_lego_count(amount);
-        if (!contract_addr.empty()) {
-            new_tx->set_call_addr(contract_addr);
-        }
-
         for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
             auto server_attr = new_tx->add_attr();
             server_attr->set_key(iter->first);
