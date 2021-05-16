@@ -5,6 +5,7 @@
 #include "bft/bft_interface.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft_proto.h"
+#include "tvm/tenon_host.h"
 
 namespace lego {
 
@@ -39,6 +40,10 @@ private:
         const std::string& id,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         uint64_t* balance);
+    int CallContract(
+        const protobuf::TxInfo& tx_info,
+        tvm::TenonHost* tenon_host,
+        evmc::result* out_res);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

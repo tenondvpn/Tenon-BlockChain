@@ -17,7 +17,6 @@ public:
     static void CreateGetAttrRequest(
             const dht::NodePtr& local_node,
             const std::string& des_account,
-            const std::string& call_addr,
             const std::string& key,
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
@@ -32,7 +31,6 @@ public:
         msg.set_client(local_node->client_mode);
         protobuf::ContractMessage contract_msg;
         auto attr_req = contract_msg.mutable_get_attr_req();
-        attr_req->set_call_addr(call_addr);
         attr_req->set_attr_key(key);
         msg.set_data(contract_msg.SerializeAsString());
     }

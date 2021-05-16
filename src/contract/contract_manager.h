@@ -15,15 +15,15 @@ class ContractManager {
 public:
     static ContractManager* Instance();
     int Init();
-    int InitWithAttr(
-            const bft::protobuf::Block& block_item,
-            const bft::protobuf::TxInfo& tx_info,
-            db::DbWriteBach& db_batch);
-    int GetAttrWithKey(
-            const std::string& call_addr,
-            const std::string& key,
-            std::string& value);
-    virtual int Execute(bft::TxItemPtr& tx_item);
+//     int InitWithAttr(
+//             const bft::protobuf::Block& block_item,
+//             const bft::protobuf::TxInfo& tx_info,
+//             db::DbWriteBach& db_batch);
+//     int GetAttrWithKey(
+//             const std::string& call_addr,
+//             const std::string& key,
+//             std::string& value);
+//     virtual int Execute(bft::TxItemPtr& tx_item);
     virtual int call(
         const CallParameters& param,
         uint64_t gas,
@@ -34,9 +34,9 @@ private:
     ContractManager();
     ~ContractManager();
     void HandleMessage(transport::protobuf::Header& header);
-    void HandleGetContractAttrRequest(
-            transport::protobuf::Header& header,
-            protobuf::ContractMessage& block_msg);
+//     void HandleGetContractAttrRequest(
+//             transport::protobuf::Header& header,
+//             protobuf::ContractMessage& block_msg);
 
     std::unordered_map<std::string, ContractInterfacePtr> contract_map_;
     std::mutex contract_map_mutex_;

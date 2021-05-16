@@ -118,13 +118,6 @@ int AccountManager::AddBlockItem(
             std::string tx_gid = common::GetTxDbKey(false, tx_list[i].gid());
             db_batch.Put(tx_gid, block_item.hash());
         } else {
-            if (!tx_list[i].call_addr().empty()) {
-                contract::ContractManager::Instance()->InitWithAttr(
-                        block_item,
-                        tx_list[i],
-                        db_batch);
-            }
-
             if (UpdateAccountInfo(
                     tx_list[i],
                     block_item.height(),

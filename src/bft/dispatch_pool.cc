@@ -38,7 +38,6 @@ int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
         tx_info.to(),
         tx_info.amount(),
         tx_info.type(),
-        tx_info.call_addr(),
         tx_info.gas_limit(),
         tx_info.tx_hash());
     tx_ptr->add_to_acc_addr = tx_info.to_add();
@@ -98,7 +97,6 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
         tx_bft.new_tx().to_acc_addr(),
         tx_bft.new_tx().lego_count(),
         tx_bft.new_tx().type(),
-        tx_bft.new_tx().call_addr(),
         tx_bft.new_tx().gas(),
         tx_hash);
     for (int32_t attr_idx = 0; attr_idx < tx_bft.new_tx().attr_size(); ++attr_idx) {

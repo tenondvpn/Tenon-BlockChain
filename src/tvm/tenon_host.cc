@@ -20,8 +20,8 @@ evmc::bytes32 TenonHost::get_storage(
     // first find from temporary map storage
     std::string id((char*)addr.bytes, sizeof(addr.bytes));
     std::string key_str((char*)key.bytes, sizeof(key.bytes));
-    const auto account_iter = accounts.find(addr);
-    if (account_iter != accounts.end()) {
+    const auto account_iter = accounts_.find(addr);
+    if (account_iter != accounts_.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
         if (storage_iter != account_iter->second.storage.end()) {
             return storage_iter->second.value;
@@ -62,8 +62,8 @@ evmc_storage_status TenonHost::set_storage(
         const evmc::bytes32& key,
         const evmc::bytes32& value) noexcept {
     // just set temporary map storage, when commit set to db and block
-    const auto it = accounts.find(addr);
-    if (it == accounts.end())
+    const auto it = accounts_.find(addr);
+    if (it == accounts_.end())
         return EVMC_STORAGE_UNCHANGED;
 
     auto& old = it->second.storage[key];
@@ -105,8 +105,8 @@ evmc::uint256be TenonHost::get_balance(const evmc::address& addr) const noexcept
 
     return {};
 // 
-//     const auto it = accounts.find(addr);
-//     if (it == accounts.end()) {
+//     const auto it = accounts_.find(addr);
+//     if (it == accounts_.end()) {
 //         return {};
 //     }
 // 
@@ -131,8 +131,8 @@ size_t TenonHost::get_code_size(const evmc::address& addr) const noexcept {
 
     return account_info->VmCodeSize();
 
-//     const auto it = accounts.find(addr);
-//     if (it == accounts.end())
+//     const auto it = accounts_.find(addr);
+//     if (it == accounts_.end())
 //         return 0;
 //     return it->second.code.size();
 }
@@ -158,8 +158,8 @@ evmc::bytes32 TenonHost::get_code_hash(const evmc::address& addr) const noexcept
     memcpy(tmp_val.bytes, code_hash.c_str(), sizeof(tmp_val.bytes));
     return tmp_val;
 // 
-//     const auto it = accounts.find(addr);
-//     if (it == accounts.end())
+//     const auto it = accounts_.find(addr);
+//     if (it == accounts_.end())
 //         return {};
 //     return it->second.codehash;
 }
@@ -196,8 +196,8 @@ size_t TenonHost::copy_code(
 
     return n;
 // 
-//     const auto it = accounts.find(addr);
-//     if (it == accounts.end())
+//     const auto it = accounts_.find(addr);
+//     if (it == accounts_.end())
 //         return 0;
 // 
 //     const auto& code = it->second.code;
@@ -215,7 +215,7 @@ size_t TenonHost::copy_code(
 void TenonHost::selfdestruct(
         const evmc::address& addr,
         const evmc::address& beneficiary) noexcept {
-    recorded_selfdestructs.push_back({addr, beneficiary});
+    recorded_selfdestructs_.push_back({addr, beneficiary});
 }
 
 evmc::result TenonHost::call(const evmc_message& msg) noexcept {
@@ -267,14 +267,24 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     }
 
     if (params.value > 0) {
-        
         uint64_t from_balance = EvmcBytes32ToUint64(get_balance(msg.sender));
-        std::cout << "check can transfer now balance: " << from_balance
-            << ", to : " << params.value
-            << ", valid: " << (from_balance >= params.value)
-            << std::endl;
         if (from_balance < params.value) {
             evmc_res.status_code = EVMC_INSUFFICIENT_BALANCE;
+        } else {
+            std::string from_str = std::string((char*)msg.sender.bytes, sizeof(msg.sender.bytes));
+            std::string dest_str = std::string((char*)msg.destination.bytes, sizeof(msg.destination.bytes));
+            auto sender_iter = to_account_value_.find(from_str);
+            if (sender_iter == to_account_value_.end()) {
+                to_account_value_[from_str] = std::unordered_map<std::string, uint64_t>();
+                to_account_value_[from_str][dest_str] = params.value;
+            } else {
+                auto iter = sender_iter->second.find(dest_str);
+                if (iter != sender_iter->second.end()) {
+                    sender_iter->second[dest_str] += params.value;
+                } else {
+                    sender_iter->second[dest_str] = params.value;
+                }
+            }
         }
     }
     
@@ -282,11 +292,11 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
 }
 
 evmc_tx_context TenonHost::get_tx_context() const noexcept {
-    return tx_context;
+    return tx_context_;
 }
 
 evmc::bytes32 TenonHost::get_block_hash(int64_t block_number) const noexcept {
-    return block_hash;
+    return block_hash_;
 }
 
 void TenonHost::emit_log(const evmc::address& addr,
@@ -294,7 +304,7 @@ void TenonHost::emit_log(const evmc::address& addr,
                 size_t data_size,
                 const evmc::bytes32 topics[],
                 size_t topics_count) noexcept {
-    recorded_logs.push_back({addr, {data, data_size}, {topics, topics + topics_count}});
+    recorded_logs_.push_back({addr, {data, data_size}, {topics, topics + topics_count}});
 }
 
 }  // namespace tvm

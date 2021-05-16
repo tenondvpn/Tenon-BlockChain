@@ -9,6 +9,8 @@
 #include "network/network_utils.h"
 #include "sync/key_value_sync.h"
 #include "security/secp256k1.h"
+#include "tvm/execution.h"
+#include "tvm/tvm_utils.h"
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/dispatch_pool.h"
@@ -466,13 +468,6 @@ int TxBft::CheckTxInfo(
         return kBftLeaderInfoInvalid;
     }
 
-    if (local_tx_info->call_addr != tx_info.call_addr()) {
-        BFT_ERROR("local tx call_addr[%s] not equal to leader to account [%s]!",
-            local_tx_info->call_addr.c_str(),
-            tx_info.call_addr().c_str());
-        return kBftLeaderInfoInvalid;
-    }
-
     // just from account can set attrs
     if (!tx_info.to_add()) {
         if (local_tx_info->attr_map.size() != static_cast<uint32_t>(tx_info.attr_size())) {
@@ -619,7 +614,6 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         tx.set_gas_used(0);
         tx.set_status(kBftSuccess);
         tx.set_to_add(tx_vec[i]->add_to_acc_addr);
-        tx.set_call_addr(tx_vec[i]->call_addr);
         for (auto iter = tx_vec[i]->attr_map.begin(); iter != tx_vec[i]->attr_map.end(); ++iter) {
             auto attr = tx.add_attr();
             attr->set_key(iter->first);
@@ -733,7 +727,6 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_gas_price(0);
         tx.set_status(kBftSuccess);
         tx.set_to_add(tx_vec[i]->add_to_acc_addr);
-        tx.set_call_addr(tx_vec[i]->call_addr);
         tx.set_type(tx_vec[i]->bft_type);
         uint64_t gas_used = 0;
         // gas just consume by from
@@ -784,8 +777,10 @@ void TxBft::LeaderCreateTxBlock(
                     // execute contract
                     if (!tx_vec[i]->call_addr.empty()) {
                         // will return from address's remove tenon and gas used
-                        if (contract::ContractManager::Instance()->Execute(
-                                tx_vec[i]) != contract::kContractSuccess) {
+                        evmc_result evmc_res = {};
+                        evmc::result res{ evmc_res };
+                        tvm::TenonHost tenon_host;
+                        if (CallContract(tx_vec[i], &tenon_host, &res) != kBftSuccess) {
                             tx.set_status(kBftExecuteContractFailed);
                             break;
                         }
@@ -871,6 +866,45 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_hash(GetBlockHash(tenon_block));
+}
+
+int TxBft::CallContract(
+        const protobuf::TxInfo& tx_info,
+        tvm::TenonHost* tenon_host,
+        evmc::result* out_res) {
+    std::string input;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == kContractInputCode) {
+            input = tx_info.attr(i).value();
+            break;
+        }
+    }
+
+    std::string from = tx_info.from();
+    std::string to = tx_info.to();
+    std::string origin_address = from;
+    uint64_t value = tx_info.amount();
+    uint64_t gas_limit = tx_info.gas_limit();
+    uint32_t depth = 0;
+    bool is_create = false;
+    tvm::Execution exec;
+    int exec_res = exec.execute(
+        tx_info.to(),
+        input,
+        from,
+        to,
+        origin_address,
+        value,
+        gas_limit,
+        depth,
+        is_create,
+        *tenon_host,
+        out_res);
+    if (exec_res != tvm::kTvmSuccess) {
+        return kBftError;
+    }
+
+    return kBftSuccess;
 }
 
 }  // namespace bft

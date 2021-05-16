@@ -24,8 +24,7 @@ message TxInfo {
     repeated AccountAttributes attr = 14; 
     optional uint32 status = 15;
     optional bytes tx_hash = 16;
-    optional bytes call_addr = 17;
-    optional uint32 network_id = 18;
+    optional uint32 network_id = 17;
 }
 
 message Block {
@@ -79,9 +78,8 @@ message NewTx {
 	optional uint64 lego_count = 6;
 	optional uint32 type = 7;
     repeated AccountAttributes attr = 8;
-    optional bytes call_addr = 9;
-    optional bytes contract_bytes = 10;
-    optional uint64 gas = 11;
+    optional bytes contract_bytes = 9;
+    optional uint64 gas = 10;
 }
 
 message ToAccountTx {

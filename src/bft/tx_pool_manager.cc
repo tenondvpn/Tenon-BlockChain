@@ -85,12 +85,11 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 
     // overload new addr request
     if (!tx_pool_[pool_index].NewAddrValid(tx_bft.new_tx().from_acc_addr())) {
-        BFT_ERROR("new from acc addr exists[%s][to: %s][lego: %llu][type: %u][smart: %s] failed!",
+        BFT_ERROR("new from acc addr exists[%s][to: %s][lego: %llu][type: %u] failed!",
                 common::Encode::HexEncode(tx_bft.new_tx().from_acc_addr()).c_str(),
                 common::Encode::HexEncode(tx_bft.new_tx().to_acc_addr()).c_str(),
                 tx_bft.new_tx().lego_count(),
-                tx_bft.new_tx().type(),
-                tx_bft.new_tx().call_addr().c_str());
+                tx_bft.new_tx().type());
         return false;
     }
 

@@ -58,12 +58,6 @@ public:
         }
     };
 
-    std::unordered_map<evmc::address, MockedAccount> accounts;
-    evmc_tx_context tx_context = {};
-    evmc::bytes32 block_hash = {};
-    std::vector<log_record> recorded_logs;
-    std::vector<selfdestuct_record> recorded_selfdestructs;
-
     bool account_exists(const evmc::address& addr) const noexcept override;
     evmc::bytes32 get_storage(
         const evmc::address& addr,
@@ -93,12 +87,17 @@ public:
         const evmc::bytes32 topics[],
         size_t topics_count) noexcept override;
 
-private:
-    std::vector<bytes> m_recorded_calls_inputs;
+    std::unordered_map<evmc::address, MockedAccount> accounts_;
+    evmc_tx_context tx_context_ = {};
+    evmc::bytes32 block_hash_ = {};
+    std::vector<log_record> recorded_logs_;
+    std::vector<selfdestuct_record> recorded_selfdestructs_;
+
     std::string my_address_;
     uint64_t gas_price_{ 0 };
     std::string origin_address_;
     uint32_t depth_{ 0 };
+    std::unordered_map<std::string, std::unordered_map<std::string, uint64_t>> to_account_value_;
 };
 
 }  // namespace tvm

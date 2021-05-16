@@ -1549,8 +1549,19 @@ TEST_F(TestBftManager, TestExecution) {
             is_create,
             tenon_host,
             &res);
+        ASSERT_EQ(res.status_code, EVMC_SUCCESS);
+        ASSERT_EQ(tenon_host.accounts_.size(), 0);
+        ASSERT_EQ(tenon_host.to_account_value_.size(), 1);
+
+        std::cout << "from: " << common::Encode::HexEncode(from)
+            << ", to(contract address): " << common::Encode::HexEncode(to)
+            << ", owner: " << common::Encode::HexEncode(GetIdByPrikey(common::Encode::HexDecode("348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709")))
+            << std::endl;
+        auto iter = tenon_host.to_account_value_.begin();
+        std::cout << "from: " << common::Encode::HexEncode(iter->first) << std::endl;
+        auto sec_iter = iter->second.begin();
+        std::cout << "to: " << common::Encode::HexEncode(sec_iter->first) << " : " << sec_iter->second << std::endl;
     }
-    
 }
 
 }  // namespace test

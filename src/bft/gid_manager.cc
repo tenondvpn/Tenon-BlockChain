@@ -69,7 +69,6 @@ TxItemPtr GidManager::GetTx(bool add_to, const std::string& gid) {
         tx_bft.to(),
         tx_bft.amount(),
         tx_bft.type(),
-        tx_bft.call_addr(),
         tx_bft.gas_limit(),
         tx_bft.tx_hash());
     tx_ptr->add_to_acc_addr = tx_bft.to_add();
@@ -98,7 +97,6 @@ std::string GidManager::CreateTxInfo(TxItemPtr& tx_ptr) {
     tx.set_amount(tx_ptr->lego_count);
     tx.set_to_add(tx_ptr->add_to_acc_addr);
     tx.set_type(tx_ptr->bft_type);
-    tx.set_call_addr(tx_ptr->call_addr);
     tx.set_gas_limit(0);
     tx.set_gas_price(0);
     tx.set_gas_used(0);

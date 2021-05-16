@@ -39,7 +39,6 @@ int Ecrecover::call(
     std::string sign(param.data.c_str() + 32, param.data.size() - 32);
     std::string pubkey = security::Secp256k1::Instance()->recover(sign, hash);
     std::string addr_sha3 = security::Secp256k1::Instance()->sha3(pubkey);
-    std::cout << "call recover addr: " << common::Encode::HexEncode(addr_sha3) << std::endl;
     res->output_data = new uint8_t[addr_sha3.size()];
     memcpy((void*)res->output_data, addr_sha3.c_str(), addr_sha3.size());
     res->output_size = addr_sha3.size();
