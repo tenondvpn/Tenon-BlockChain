@@ -171,7 +171,6 @@ static void CreateMiningContract(
     new_tx->set_from_acc_addr(account_address);
     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
     new_tx->set_type(common::kConsensusVpnMining);
-    new_tx->set_call_addr(contract::kVpnMining);
     auto server_attr = new_tx->add_attr();
     server_attr->set_key(common::kVpnMiningBandwidth);
     server_attr->set_value(std::to_string(bandwidth));

@@ -2529,7 +2529,6 @@ void VpnServer::SendGetAccountAttrUsedBandwidth(const std::string& account) {
     contract::ContractProto::CreateGetAttrRequest(
             uni_dht->local_node(),
             account,
-            contract::kContractVpnBandwidthProveAddr,
             key,
             msg);
     network::Route::Instance()->Send(msg);

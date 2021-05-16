@@ -278,7 +278,9 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
 
             if (from_balance > gas_used && tx_info.gas_limit() >= gas_used) {
                 // execute contract
-                if (!tx_info.call_addr().empty()) {
+                // check to is contract address
+                assert(false);
+                {
                     auto local_tx_info = DispatchPool::Instance()->GetTx(
                         pool_index(),
                         tx_info.to_add(),
@@ -298,13 +300,16 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
                         }
                     }
 
-                    if (contract::ContractManager::Instance()->Execute(
-                            local_tx_info) != contract::kContractSuccess) {
+                    evmc_result evmc_res = {};
+                    evmc::result res{ evmc_res };
+                    tvm::TenonHost tenon_host;
+                    if (CallContract(tx_info, &tenon_host, &res) != kBftSuccess) {
                         if (tx_info.status() != kBftExecuteContractFailed) {
                             BFT_ERROR("local tx status not equal to leader status[%d][%d]!",
                                 tx_info.status(), kBftExecuteContractFailed);
                             return kBftLeaderInfoInvalid;
                         }
+                        break;
                     }
                 }
             }
@@ -776,7 +781,8 @@ void TxBft::LeaderCreateTxBlock(
 
                 if (from_balance > gas_used && tx.gas_limit() >= gas_used) {
                     // execute contract
-                    if (!tx_vec[i]->call_addr.empty()) {
+                    assert(false);
+                    {
                         // will return from address's remove tenon and gas used
                         evmc_result evmc_res = {};
                         evmc::result res{ evmc_res };
