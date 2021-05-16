@@ -349,6 +349,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxInfo, status_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxInfo, tx_hash_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxInfo, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxInfo, call_contract_step_),
   6,
   0,
   1,
@@ -366,6 +367,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   14,
   5,
   15,
+  16,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -538,18 +540,18 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::lego::bft::protobuf::AccountAttributes)},
-  { 9, 31, sizeof(::lego::bft::protobuf::TxInfo)},
-  { 48, 66, sizeof(::lego::bft::protobuf::Block)},
-  { 79, 86, sizeof(::lego::bft::protobuf::TxPrepareItem)},
-  { 88, 95, sizeof(::lego::bft::protobuf::LeaderTxPrepare)},
-  { 97, 103, sizeof(::lego::bft::protobuf::BackupTxPrepare)},
-  { 104, 110, sizeof(::lego::bft::protobuf::LeaderTxPreCommit)},
-  { 111, 117, sizeof(::lego::bft::protobuf::BackupTxPreCommit)},
-  { 118, 124, sizeof(::lego::bft::protobuf::LeaderTxCommit)},
-  { 125, 140, sizeof(::lego::bft::protobuf::NewTx)},
-  { 150, 156, sizeof(::lego::bft::protobuf::ToAccountTx)},
-  { 157, 169, sizeof(::lego::bft::protobuf::TxBft)},
-  { 176, 199, sizeof(::lego::bft::protobuf::BftMessage)},
+  { 9, 32, sizeof(::lego::bft::protobuf::TxInfo)},
+  { 50, 68, sizeof(::lego::bft::protobuf::Block)},
+  { 81, 88, sizeof(::lego::bft::protobuf::TxPrepareItem)},
+  { 90, 97, sizeof(::lego::bft::protobuf::LeaderTxPrepare)},
+  { 99, 105, sizeof(::lego::bft::protobuf::BackupTxPrepare)},
+  { 106, 112, sizeof(::lego::bft::protobuf::LeaderTxPreCommit)},
+  { 113, 119, sizeof(::lego::bft::protobuf::BackupTxPreCommit)},
+  { 120, 126, sizeof(::lego::bft::protobuf::LeaderTxCommit)},
+  { 127, 142, sizeof(::lego::bft::protobuf::NewTx)},
+  { 152, 158, sizeof(::lego::bft::protobuf::ToAccountTx)},
+  { 159, 171, sizeof(::lego::bft::protobuf::TxBft)},
+  { 178, 201, sizeof(::lego::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -591,7 +593,7 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\tbft.proto\022\021lego.bft.protobuf\"/\n\021Accoun"
       "tAttributes\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\""
-      "\310\002\n\006TxInfo\022\017\n\007version\030\001 \001(\r\022\013\n\003gid\030\002 \001(\014"
+      "\344\002\n\006TxInfo\022\017\n\007version\030\001 \001(\r\022\013\n\003gid\030\002 \001(\014"
       "\022\014\n\004from\030\003 \001(\014\022\023\n\013from_pubkey\030\004 \001(\014\022\021\n\tf"
       "rom_sign\030\005 \001(\014\022\n\n\002to\030\006 \001(\014\022\016\n\006amount\030\007 \001"
       "(\004\022\021\n\tgas_limit\030\010 \001(\004\022\020\n\010gas_used\030\t \001(\004\022"
@@ -599,50 +601,50 @@ void AddDescriptorsImpl() {
       "o_add\030\014 \001(\010\022\014\n\004type\030\r \001(\r\0222\n\004attr\030\016 \003(\0132"
       "$.lego.bft.protobuf.AccountAttributes\022\016\n"
       "\006status\030\017 \001(\r\022\017\n\007tx_hash\030\020 \001(\014\022\022\n\nnetwor"
-      "k_id\030\021 \001(\r\"\223\002\n\005Block\022\022\n\nnetwork_id\030\001 \001(\r"
-      "\022\022\n\npool_index\030\002 \001(\r\022\017\n\007prehash\030\003 \001(\014\022\014\n"
-      "\004hash\030\004 \001(\014\022\017\n\007version\030\005 \001(\r\022\016\n\006height\030\006"
-      " \001(\004\022\032\n\022consistency_random\030\007 \001(\004\022\021\n\telec"
-      "t_ver\030\010 \001(\r\022\016\n\006bitmap\030\t \003(\004\022\022\n\nagg_pubke"
-      "y\030\n \001(\014\022\020\n\010agg_sign\030\013 \001(\014\022*\n\007tx_list\030\014 \003"
-      "(\0132\031.lego.bft.protobuf.TxInfo\022\021\n\ttimesta"
-      "mp\030\r \001(\004\".\n\rTxPrepareItem\022\020\n\010acc_addr\030\001 "
-      "\001(\014\022\013\n\003gid\030\002 \001(\014\"i\n\017LeaderTxPrepare\022-\n\003t"
-      "xs\030\001 \003(\0132 .lego.bft.protobuf.TxPrepareIt"
-      "em\022\'\n\005block\030\002 \001(\0132\030.lego.bft.protobuf.Bl"
-      "ock\"!\n\017BackupTxPrepare\022\016\n\006status\030\001 \001(\005\"#"
-      "\n\021LeaderTxPreCommit\022\016\n\006status\030\001 \001(\005\"#\n\021B"
-      "ackupTxPreCommit\022\016\n\006status\030\001 \001(\005\" \n\016Lead"
-      "erTxCommit\022\016\n\006status\030\001 \001(\005\"\343\001\n\005NewTx\022\013\n\003"
-      "gid\030\001 \001(\014\022\025\n\rfrom_acc_addr\030\002 \001(\014\022\023\n\013from"
-      "_pubkey\030\003 \001(\014\022\021\n\tfrom_sign\030\004 \001(\014\022\023\n\013to_a"
-      "cc_addr\030\005 \001(\014\022\022\n\nlego_count\030\006 \001(\004\022\014\n\004typ"
-      "e\030\007 \001(\r\0222\n\004attr\030\010 \003(\0132$.lego.bft.protobu"
-      "f.AccountAttributes\022\026\n\016contract_bytes\030\t "
-      "\001(\014\022\013\n\003gas\030\n \001(\004\"6\n\013ToAccountTx\022\'\n\005block"
-      "\030\001 \001(\0132\030.lego.bft.protobuf.Block\"\203\003\n\005TxB"
-      "ft\022(\n\006new_tx\030\001 \001(\0132\030.lego.bft.protobuf.N"
-      "ewTx\022-\n\005to_tx\030\002 \001(\0132\036.lego.bft.protobuf."
-      "ToAccountTx\0227\n\013ltx_prepare\030\003 \001(\0132\".lego."
-      "bft.protobuf.LeaderTxPrepare\0227\n\013btx_prep"
-      "are\030\004 \001(\0132\".lego.bft.protobuf.BackupTxPr"
-      "epare\022;\n\rltx_precommit\030\005 \001(\0132$.lego.bft."
-      "protobuf.LeaderTxPreCommit\022;\n\rbtx_precom"
-      "mit\030\006 \001(\0132$.lego.bft.protobuf.BackupTxPr"
-      "eCommit\0225\n\nltx_commit\030\007 \001(\0132!.lego.bft.p"
-      "rotobuf.LeaderTxCommit\"\326\002\n\nBftMessage\022\013\n"
-      "\003gid\030\001 \001(\014\022\014\n\004rand\030\002 \001(\004\022\020\n\010bft_step\030\003 \001"
-      "(\005\022\016\n\006leader\030\004 \001(\010\022\016\n\006net_id\030\005 \001(\r\022\017\n\007no"
-      "de_id\030\006 \001(\014\022\016\n\006pubkey\030\007 \001(\014\022\026\n\016sign_chal"
-      "lenge\030\010 \001(\014\022\025\n\rsign_response\030\t \001(\014\022\016\n\006se"
-      "cret\030\n \001(\014\022\021\n\tchallenge\030\013 \001(\014\022\020\n\010respons"
-      "e\030\014 \001(\014\022\032\n\022agg_sign_challenge\030\r \001(\014\022\031\n\021a"
-      "gg_sign_response\030\016 \001(\014\022\016\n\006bitmap\030\017 \003(\004\022\r"
-      "\n\005agree\030\020 \001(\010\022\022\n\npool_index\030\021 \001(\r\022\014\n\004dat"
-      "a\030\022 \001(\014"
+      "k_id\030\021 \001(\r\022\032\n\022call_contract_step\030\022 \001(\r\"\223"
+      "\002\n\005Block\022\022\n\nnetwork_id\030\001 \001(\r\022\022\n\npool_ind"
+      "ex\030\002 \001(\r\022\017\n\007prehash\030\003 \001(\014\022\014\n\004hash\030\004 \001(\014\022"
+      "\017\n\007version\030\005 \001(\r\022\016\n\006height\030\006 \001(\004\022\032\n\022cons"
+      "istency_random\030\007 \001(\004\022\021\n\telect_ver\030\010 \001(\r\022"
+      "\016\n\006bitmap\030\t \003(\004\022\022\n\nagg_pubkey\030\n \001(\014\022\020\n\010a"
+      "gg_sign\030\013 \001(\014\022*\n\007tx_list\030\014 \003(\0132\031.lego.bf"
+      "t.protobuf.TxInfo\022\021\n\ttimestamp\030\r \001(\004\".\n\r"
+      "TxPrepareItem\022\020\n\010acc_addr\030\001 \001(\014\022\013\n\003gid\030\002"
+      " \001(\014\"i\n\017LeaderTxPrepare\022-\n\003txs\030\001 \003(\0132 .l"
+      "ego.bft.protobuf.TxPrepareItem\022\'\n\005block\030"
+      "\002 \001(\0132\030.lego.bft.protobuf.Block\"!\n\017Backu"
+      "pTxPrepare\022\016\n\006status\030\001 \001(\005\"#\n\021LeaderTxPr"
+      "eCommit\022\016\n\006status\030\001 \001(\005\"#\n\021BackupTxPreCo"
+      "mmit\022\016\n\006status\030\001 \001(\005\" \n\016LeaderTxCommit\022\016"
+      "\n\006status\030\001 \001(\005\"\343\001\n\005NewTx\022\013\n\003gid\030\001 \001(\014\022\025\n"
+      "\rfrom_acc_addr\030\002 \001(\014\022\023\n\013from_pubkey\030\003 \001("
+      "\014\022\021\n\tfrom_sign\030\004 \001(\014\022\023\n\013to_acc_addr\030\005 \001("
+      "\014\022\022\n\nlego_count\030\006 \001(\004\022\014\n\004type\030\007 \001(\r\0222\n\004a"
+      "ttr\030\010 \003(\0132$.lego.bft.protobuf.AccountAtt"
+      "ributes\022\026\n\016contract_bytes\030\t \001(\014\022\013\n\003gas\030\n"
+      " \001(\004\"6\n\013ToAccountTx\022\'\n\005block\030\001 \001(\0132\030.leg"
+      "o.bft.protobuf.Block\"\203\003\n\005TxBft\022(\n\006new_tx"
+      "\030\001 \001(\0132\030.lego.bft.protobuf.NewTx\022-\n\005to_t"
+      "x\030\002 \001(\0132\036.lego.bft.protobuf.ToAccountTx\022"
+      "7\n\013ltx_prepare\030\003 \001(\0132\".lego.bft.protobuf"
+      ".LeaderTxPrepare\0227\n\013btx_prepare\030\004 \001(\0132\"."
+      "lego.bft.protobuf.BackupTxPrepare\022;\n\rltx"
+      "_precommit\030\005 \001(\0132$.lego.bft.protobuf.Lea"
+      "derTxPreCommit\022;\n\rbtx_precommit\030\006 \001(\0132$."
+      "lego.bft.protobuf.BackupTxPreCommit\0225\n\nl"
+      "tx_commit\030\007 \001(\0132!.lego.bft.protobuf.Lead"
+      "erTxCommit\"\326\002\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014"
+      "\n\004rand\030\002 \001(\004\022\020\n\010bft_step\030\003 \001(\005\022\016\n\006leader"
+      "\030\004 \001(\010\022\016\n\006net_id\030\005 \001(\r\022\017\n\007node_id\030\006 \001(\014\022"
+      "\016\n\006pubkey\030\007 \001(\014\022\026\n\016sign_challenge\030\010 \001(\014\022"
+      "\025\n\rsign_response\030\t \001(\014\022\016\n\006secret\030\n \001(\014\022\021"
+      "\n\tchallenge\030\013 \001(\014\022\020\n\010response\030\014 \001(\014\022\032\n\022a"
+      "gg_sign_challenge\030\r \001(\014\022\031\n\021agg_sign_resp"
+      "onse\030\016 \001(\014\022\016\n\006bitmap\030\017 \003(\004\022\r\n\005agree\030\020 \001("
+      "\010\022\022\n\npool_index\030\021 \001(\r\022\014\n\004data\030\022 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2007);
+      descriptor, 2035);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft.proto", &protobuf_RegisterTypes);
 }
@@ -977,6 +979,7 @@ const int TxInfo::kAttrFieldNumber;
 const int TxInfo::kStatusFieldNumber;
 const int TxInfo::kTxHashFieldNumber;
 const int TxInfo::kNetworkIdFieldNumber;
+const int TxInfo::kCallContractStepFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TxInfo::TxInfo()
@@ -1017,8 +1020,8 @@ TxInfo::TxInfo(const TxInfo& from)
     tx_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tx_hash_);
   }
   ::memcpy(&version_, &from.version_,
-    static_cast<size_t>(reinterpret_cast<char*>(&network_id_) -
-    reinterpret_cast<char*>(&version_)) + sizeof(network_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&call_contract_step_) -
+    reinterpret_cast<char*>(&version_)) + sizeof(call_contract_step_));
   // @@protoc_insertion_point(copy_constructor:lego.bft.protobuf.TxInfo)
 }
 
@@ -1030,8 +1033,8 @@ void TxInfo::SharedCtor() {
   to_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   tx_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&version_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&network_id_) -
-      reinterpret_cast<char*>(&version_)) + sizeof(network_id_));
+      reinterpret_cast<char*>(&call_contract_step_) -
+      reinterpret_cast<char*>(&version_)) + sizeof(call_contract_step_));
 }
 
 TxInfo::~TxInfo() {
@@ -1100,6 +1103,7 @@ void TxInfo::Clear() {
         reinterpret_cast<char*>(&network_id_) -
         reinterpret_cast<char*>(&amount_)) + sizeof(network_id_));
   }
+  call_contract_step_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1338,6 +1342,20 @@ bool TxInfo::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 call_contract_step = 18;
+      case 18: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(144u /* 144 & 0xFF */)) {
+          set_has_call_contract_step();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &call_contract_step_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1460,6 +1478,11 @@ void TxInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(17, this->network_id(), output);
   }
 
+  // optional uint32 call_contract_step = 18;
+  if (cached_has_bits & 0x00010000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(18, this->call_contract_step(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -1573,6 +1596,11 @@ void TxInfo::SerializeWithCachedSizes(
   // optional uint32 network_id = 17;
   if (cached_has_bits & 0x00008000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(17, this->network_id(), target);
+  }
+
+  // optional uint32 call_contract_step = 18;
+  if (cached_has_bits & 0x00010000u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(18, this->call_contract_step(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1717,6 +1745,13 @@ size_t TxInfo::ByteSizeLong() const {
     }
 
   }
+  // optional uint32 call_contract_step = 18;
+  if (has_call_contract_step()) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->call_contract_step());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -1806,6 +1841,9 @@ void TxInfo::MergeFrom(const TxInfo& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
+  if (cached_has_bits & 0x00010000u) {
+    set_call_contract_step(from.call_contract_step());
+  }
 }
 
 void TxInfo::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1855,6 +1893,7 @@ void TxInfo::InternalSwap(TxInfo* other) {
   swap(type_, other->type_);
   swap(status_, other->status_);
   swap(network_id_, other->network_id_);
+  swap(call_contract_step_, other->call_contract_step_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }

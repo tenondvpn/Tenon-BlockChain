@@ -519,6 +519,13 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 network_id() const;
   void set_network_id(::google::protobuf::uint32 value);
 
+  // optional uint32 call_contract_step = 18;
+  bool has_call_contract_step() const;
+  void clear_call_contract_step();
+  static const int kCallContractStepFieldNumber = 18;
+  ::google::protobuf::uint32 call_contract_step() const;
+  void set_call_contract_step(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:lego.bft.protobuf.TxInfo)
  private:
   void set_has_version();
@@ -553,6 +560,8 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_tx_hash();
   void set_has_network_id();
   void clear_has_network_id();
+  void set_has_call_contract_step();
+  void clear_has_call_contract_step();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -574,6 +583,7 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 type_;
   ::google::protobuf::uint32 status_;
   ::google::protobuf::uint32 network_id_;
+  ::google::protobuf::uint32 call_contract_step_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -3345,6 +3355,30 @@ inline void TxInfo::set_network_id(::google::protobuf::uint32 value) {
   set_has_network_id();
   network_id_ = value;
   // @@protoc_insertion_point(field_set:lego.bft.protobuf.TxInfo.network_id)
+}
+
+// optional uint32 call_contract_step = 18;
+inline bool TxInfo::has_call_contract_step() const {
+  return (_has_bits_[0] & 0x00010000u) != 0;
+}
+inline void TxInfo::set_has_call_contract_step() {
+  _has_bits_[0] |= 0x00010000u;
+}
+inline void TxInfo::clear_has_call_contract_step() {
+  _has_bits_[0] &= ~0x00010000u;
+}
+inline void TxInfo::clear_call_contract_step() {
+  call_contract_step_ = 0u;
+  clear_has_call_contract_step();
+}
+inline ::google::protobuf::uint32 TxInfo::call_contract_step() const {
+  // @@protoc_insertion_point(field_get:lego.bft.protobuf.TxInfo.call_contract_step)
+  return call_contract_step_;
+}
+inline void TxInfo::set_call_contract_step(::google::protobuf::uint32 value) {
+  set_has_call_contract_step();
+  call_contract_step_ = value;
+  // @@protoc_insertion_point(field_set:lego.bft.protobuf.TxInfo.call_contract_step)
 }
 
 // -------------------------------------------------------------------
