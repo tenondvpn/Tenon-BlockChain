@@ -33,6 +33,7 @@ struct TxItem {
             uint64_t in_lego_count,
             uint32_t type,
             uint64_t in_gas,
+            uint32_t in_call_contract_step,
             const std::string& in_tx_hash)
             : tx_version(in_tx_version),
               gid(in_gid),
@@ -43,6 +44,7 @@ struct TxItem {
               lego_count(in_lego_count),
               bft_type(type),
               gas(in_gas),
+            call_contract_step(in_call_contract_step),
               tx_hash(in_tx_hash) {
         delta_time = (std::chrono::steady_clock::now() +
                 std::chrono::microseconds(kBftStartDeltaTime));
@@ -67,6 +69,7 @@ struct TxItem {
     std::chrono::steady_clock::time_point delta_time;
     uint64_t time_valid{ 0 };
     uint64_t index{ 0 };
+    uint32_t call_contract_step{ contract::kCallStepDefault };
     std::map<std::string, std::string> attr_map;
     uint32_t bft_type{ common::kConsensusTransaction };
     std::string tx_hash;

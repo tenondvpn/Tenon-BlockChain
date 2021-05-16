@@ -571,6 +571,7 @@ public:
             tx_info.amount(),
             tx_info.type(),
             tx_info.gas_limit(),
+            tx_info.call_contract_step(),
             tx_info.tx_hash());
         tx_ptr->add_to_acc_addr = tx_info.to_add();
         GidManager::Instance()->NewGidTxValid(tx_ptr->gid, tx_ptr);

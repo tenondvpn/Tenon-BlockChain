@@ -70,6 +70,7 @@ TxItemPtr GidManager::GetTx(bool add_to, const std::string& gid) {
         tx_bft.amount(),
         tx_bft.type(),
         tx_bft.gas_limit(),
+        tx_bft.call_contract_step(),
         tx_bft.tx_hash());
     tx_ptr->add_to_acc_addr = tx_bft.to_add();
     for (int32_t attr_idx = 0; attr_idx < tx_bft.attr_size(); ++attr_idx) {

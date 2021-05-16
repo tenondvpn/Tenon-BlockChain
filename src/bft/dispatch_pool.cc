@@ -6,6 +6,7 @@
 #include "bft/proto/bft.pb.h"
 #include "bft/gid_manager.h"
 #include "block/account_manager.h"
+#include "contract/contract_utils.h"
 
 namespace lego {
 
@@ -39,6 +40,7 @@ int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
         tx_info.amount(),
         tx_info.type(),
         tx_info.gas_limit(),
+        tx_info.call_contract_step(),
         tx_info.tx_hash());
     tx_ptr->add_to_acc_addr = tx_info.to_add();
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->gid, tx_ptr)) {
@@ -98,6 +100,7 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
         tx_bft.new_tx().lego_count(),
         tx_bft.new_tx().type(),
         tx_bft.new_tx().gas(),
+        contract::kCallStepDefault,
         tx_hash);
     for (int32_t attr_idx = 0; attr_idx < tx_bft.new_tx().attr_size(); ++attr_idx) {
         tx_ptr->add_attr(
