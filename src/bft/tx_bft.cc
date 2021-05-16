@@ -876,35 +876,26 @@ void TxBft::LeaderCreateTxBlock(
 }
 
 int TxBft::CallContract(
-        const protobuf::TxInfo& tx_info,
+        const TxItemPtr& tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res) {
     std::string input;
-    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-        if (tx_info.attr(i).key() == kContractInputCode) {
-            input = tx_info.attr(i).value();
-            break;
-        }
+    auto iter = tx_info->attr_map.find(kContractInputCode);
+    if (iter != tx_info->attr_map.end()) {
+        input = iter->second;
     }
 
-    std::string from = tx_info.from();
-    std::string to = tx_info.to();
-    std::string origin_address = from;
-    uint64_t value = tx_info.amount();
-    uint64_t gas_limit = tx_info.gas_limit();
-    uint32_t depth = 0;
-    bool is_create = false;
     tvm::Execution exec;
     int exec_res = exec.execute(
-        tx_info.to(),
+        tx_info->to_acc_addr,
         input,
-        from,
-        to,
-        origin_address,
-        value,
-        gas_limit,
-        depth,
-        is_create,
+        tx_info->from_acc_addr,
+        tx_info->to_acc_addr,
+        tx_info->from_acc_addr,
+        tx_info->lego_count,
+        tx_info->gas,
+        0,
+        false,
         *tenon_host,
         out_res);
     if (exec_res != tvm::kTvmSuccess) {

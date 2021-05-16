@@ -45,7 +45,7 @@ private:
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         uint64_t* balance);
     int CallContract(
-        const protobuf::TxInfo& tx_info,
+        const TxItemPtr& tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res);
 
