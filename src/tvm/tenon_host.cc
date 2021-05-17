@@ -313,6 +313,17 @@ void TenonHost::emit_log(const evmc::address& addr,
     recorded_logs_.push_back({addr, {data, data_size}, {topics, topics + topics_count}});
 }
 
+void TenonHost::AddTmpAccountBalance(const std::string& address, uint64_t balance) {
+    evmc::address addr;
+    memcpy(
+        addr.bytes,
+        address.c_str(),
+        sizeof(addr.bytes));
+    evmc::bytes32 tmp_val{};
+    Uint64ToEvmcBytes32(tmp_val, balance);
+    account_balance_[addr] = tmp_val;
+}
+
 }  // namespace tvm
 
 }  // namespace lego
