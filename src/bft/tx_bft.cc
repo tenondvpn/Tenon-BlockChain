@@ -83,7 +83,7 @@ int TxBft::LeaderCreatePrepare(std::string& bft_str) {
 
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
         add_item_index_vec(tx_vec[i]->index);
-        push_bft_item_vec(tx_vec[i]->gid);
+        push_bft_item_vec(tx_vec[i]->tx.gid());
     }
 
     set_pool_index(pool_index);
@@ -157,7 +157,7 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
             }
         }
 
-        if (local_tx_info->to_acc_addr != tx_info.to()) {
+        if (local_tx_info->tx.to() != tx_info.to()) {
             BFT_ERROR("local to is not equal leader to.");
             return kBftError;
         }
@@ -168,16 +168,16 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
             return kBftError;
         }
 
-        if (local_tx_info->bft_type != tx_info.type()) {
+        if (local_tx_info->tx.type() != tx_info.type()) {
             BFT_ERROR("local tx type[%d] not eq to leader[%d].",
-                local_tx_info->bft_type, tx_info.type());
+                local_tx_info->tx.type(), tx_info.type());
             return kBftError;
         }
 
-        if (local_tx_info->bft_type == common::kConsensusCreateContract) {
+        if (local_tx_info->tx.type() == common::kConsensusCreateContract) {
                 uint32_t network_id = 0;
                 if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                        local_tx_info->from_acc_addr,
+                        local_tx_info->tx.from(),
                         &network_id) != block::kBlockSuccess) {
                     BFT_ERROR("get network_id error!");
                     continue;
@@ -454,22 +454,22 @@ int TxBft::CheckTxInfo(
         }
     }
 
-    if (local_tx_info->lego_count != tx_info.amount()) {
+    if (local_tx_info->tx.amount() != tx_info.amount()) {
         BFT_ERROR("local tx balance[%llu] not equal to leader[%llu]!",
-                local_tx_info->lego_count, tx_info.amount());
+                local_tx_info->tx.amount(), tx_info.amount());
         return kBftLeaderInfoInvalid;
     }
 
-    if (local_tx_info->from_acc_addr != tx_info.from()) {
+    if (local_tx_info->tx.from() != tx_info.from()) {
         BFT_ERROR("local tx  from not equal to leader from account![%s][%s]",
-            common::Encode::HexEncode(local_tx_info->from_acc_addr).c_str(),
+            common::Encode::HexEncode(local_tx_info->tx.from()).c_str(),
             common::Encode::HexEncode(tx_info.from()).c_str());
         return kBftLeaderInfoInvalid;
     }
 
-    if (local_tx_info->to_acc_addr != tx_info.to()) {
+    if (local_tx_info->tx.to() != tx_info.to()) {
         BFT_ERROR("local tx  to not equal to leader to account![%s][%s]",
-            common::Encode::HexEncode(local_tx_info->to_acc_addr).c_str(),
+            common::Encode::HexEncode(local_tx_info->tx.to()).c_str(),
             common::Encode::HexEncode(tx_info.to()).c_str());
         return kBftLeaderInfoInvalid;
     }
@@ -507,9 +507,9 @@ int TxBft::CheckTxInfo(
             }
 
             if (security::Secp256k1::Instance()->GetContractAddress(
-                    local_tx_info->from_acc_addr,
-                    local_tx_info->gid,
-                    local_tx_info->attr_map[kContractBytesCode]) != local_tx_info->to_acc_addr) {
+                    local_tx_info->tx.from(),
+                    local_tx_info->tx.gid(),
+                    local_tx_info->attr_map[kContractBytesCode]) != local_tx_info->tx.to()) {
                 if (tx_info.status() != kBftCreateContractKeyError) {
                     BFT_ERROR("local tx bft status[%d] not equal to leader status[%d]!",
                         kBftCreateContractKeyError, tx_info.status());
@@ -525,7 +525,7 @@ int TxBft::CheckTxInfo(
             return kBftLeaderInfoInvalid;
         }
     } else {
-        if (local_tx_info->bft_type != tx_info.type()) {
+        if (local_tx_info->tx.type() != tx_info.type()) {
             BFT_ERROR("local tx bft type not equal to leader tx bft type!");
             return kBftLeaderInfoInvalid;
         }
@@ -623,7 +623,7 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
             continue;
         }
 
-        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx.to_add());
+        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx.to());
         if (acc_info != nullptr) {
             continue;
         }
@@ -708,19 +708,19 @@ int TxBft::CheckAndCallContract(
         uint32_t* call_step,
         protobuf::TxInfo* tx) {
     auto acount_info = block::AccountManager::Instance()->GetContractInfoByAddress(
-        tx_info->to_acc_addr);
+        tx_info->tx.to());
     if (acount_info == nullptr) {
         *call_step = contract::kCallStepDefault;
         return kBftSuccess;
     }
 
-    if (tx_info->call_contract_step == contract::kCallStepDefault) {
+    if (tx_info->tx.call_contract_step() == contract::kCallStepDefault) {
         *call_step = contract::kCallStepCallerInited;
         tx_info->attr_map[kContractCallerBalance] = std::to_string(from_balance);
         return kBftSuccess;
     }
 
-    if (tx_info->call_contract_step == contract::kCallStepCallerInited) {
+    if (tx_info->tx.call_contract_step() == contract::kCallStepCallerInited) {
         auto iter = tx_info->attr_map.find(kContractCallerBalance);
         if (iter == tx_info->attr_map.end()) {
             return kBftError;
@@ -731,7 +731,7 @@ int TxBft::CheckAndCallContract(
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
         tenon_host.AddTmpAccountBalance(
-            tx_info->from_acc_addr,
+            tx_info->tx.from(),
             common::StringUtil::ToUint64(tx_info->attr_map[kContractCallerBalance]));
         if (CallContract(tx_info, &tenon_host, &res) != kBftSuccess) {
             return kBftExecuteContractFailed;
@@ -746,7 +746,7 @@ int TxBft::CheckAndCallContract(
         return kBftSuccess;
     }
 
-    if (tx_info->call_contract_step == contract::kCallStepContractCalled) {
+    if (tx_info->tx.call_contract_step() == contract::kCallStepContractCalled) {
         *call_step = contract::kCallStepContractFinal;
         return kBftSuccess;
     }
@@ -762,19 +762,10 @@ void TxBft::LeaderCreateTxBlock(
     auto tx_list = tenon_block.mutable_tx_list();
     std::unordered_map<std::string, int64_t> acc_balance_map;
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
-        protobuf::TxInfo tx;
+        protobuf::TxInfo tx = tx_vec[i]->tx;
         tx.set_version(common::kTransactionVersion);
-        tx.set_gid(tx_vec[i]->gid);
-        tx.set_from(tx_vec[i]->from_acc_addr);
-        tx.set_from_pubkey(tx_vec[i]->from_pubkey);
-        tx.set_from_sign(tx_vec[i]->from_sign);
-        tx.set_to(tx_vec[i]->to_acc_addr);
-        tx.set_amount(tx_vec[i]->lego_count);
-        tx.set_gas_limit(tx_vec[i]->gas);
         tx.set_gas_price(0);
         tx.set_status(kBftSuccess);
-        tx.set_to_add(tx_vec[i]->add_to_acc_addr);
-        tx.set_type(tx_vec[i]->bft_type);
         uint64_t gas_used = 0;
         // gas just consume by from
         uint64_t from_balance = 0;
@@ -790,7 +781,7 @@ void TxBft::LeaderCreateTxBlock(
             do 
             {
                 gas_used = kTransferGas;
-                if (from_balance <= tx_vec[i]->gas) {
+                if (from_balance <= tx_vec[i]->tx.gas_limit()) {
                     tx.set_status(kBftUserSetGasLimitError);
                     break;
                 }
@@ -817,9 +808,9 @@ void TxBft::LeaderCreateTxBlock(
                     }
 
                     if (security::Secp256k1::Instance()->GetContractAddress(
-                            tx_vec[i]->from_acc_addr,
-                            tx_vec[i]->gid,
-                            tx_vec[i]->attr_map[kContractBytesCode]) != tx_vec[i]->to_acc_addr) {
+                            tx_vec[i]->tx.from(),
+                            tx_vec[i]->tx.gid(),
+                            tx_vec[i]->attr_map[kContractBytesCode]) != tx_vec[i]->tx.to()) {
                         tx.set_status(kBftCreateContractKeyError);
                         break;
                     }
@@ -828,9 +819,9 @@ void TxBft::LeaderCreateTxBlock(
                 if (tx.gas_limit() >= gas_used) {
                     // execute contract
                     uint32_t call_contract_step;
-                    if (CheckAndCallContract(tx_vec[i], &call_contract_step) != kBftSuccess) {
-
-                    }
+//                     if (CheckAndCallContract(tx_vec[i], &call_contract_step) != kBftSuccess) {
+// 
+//                     }
                     assert(false);
                     {
                         
@@ -850,10 +841,10 @@ void TxBft::LeaderCreateTxBlock(
         }
 
         if (tx.status() == kBftSuccess) {
-            if (tx_vec[i]->add_to_acc_addr) {
-                to_balance = to_balance + tx_vec[i]->lego_count;
+            if (tx_vec[i]->tx.to_add()) {
+                to_balance = to_balance + tx_vec[i]->tx.amount();
             } else {
-                uint64_t dec_amount = tx_vec[i]->lego_count + gas_used;
+                uint64_t dec_amount = tx_vec[i]->tx.amount() + gas_used;
                 if (from_balance >= gas_used) {
                     if (from_balance >= dec_amount) {
                         from_balance -= dec_amount;
@@ -877,16 +868,16 @@ void TxBft::LeaderCreateTxBlock(
             }
         }
 
-        if (tx_vec[i]->add_to_acc_addr && tx.status() == kBftAccountNotExists) {
+        if (tx_vec[i]->tx.to_add() && tx.status() == kBftAccountNotExists) {
             // waiting root network create account address and assignment network id
             continue;
         }
 
-        if (tx_vec[i]->add_to_acc_addr) {
-            acc_balance_map[tx_vec[i]->to_acc_addr] = to_balance;
+        if (tx_vec[i]->tx.to_add()) {
+            acc_balance_map[tx_vec[i]->tx.to()] = to_balance;
             tx.set_balance(to_balance);
         } else {
-            acc_balance_map[tx_vec[i]->from_acc_addr] = from_balance;
+            acc_balance_map[tx_vec[i]->tx.from()] = from_balance;
             tx.set_balance(from_balance);
         }
 
@@ -928,13 +919,13 @@ int TxBft::CallContract(
 
     tvm::Execution exec;
     int exec_res = exec.execute(
-        tx_info->to_acc_addr,
+        tx_info->tx.to(),
         input,
-        tx_info->from_acc_addr,
-        tx_info->to_acc_addr,
-        tx_info->from_acc_addr,
-        tx_info->lego_count,
-        tx_info->gas,
+        tx_info->tx.from(),
+        tx_info->tx.to(),
+        tx_info->tx.from(),
+        tx_info->tx.amount(),
+        tx_info->tx.gas_limit(),
         0,
         false,
         *tenon_host,
