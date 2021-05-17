@@ -105,10 +105,10 @@ static std::string CreateWxAliPayRequest(
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
-    new_tx->set_from_acc_addr(common::GlobalInfo::Instance()->id());
+    new_tx->set_from(common::GlobalInfo::Instance()->id());
     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
-    new_tx->set_to_acc_addr(to);
-    new_tx->set_lego_count(amount);
+    new_tx->set_to(to);
+    new_tx->set_amount(amount);
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);
 
@@ -169,11 +169,11 @@ static void UseLocalCreateTxRequest(
     bft_msg.set_pubkey(str_pubkey);
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
-    new_tx->set_lego_count(data["amount"].get<uint64_t>());
+    new_tx->set_amount(data["amount"].get<uint64_t>());
     new_tx->set_gid(gid);
-    new_tx->set_from_acc_addr(account_address);
+    new_tx->set_from(account_address);
     new_tx->set_from_pubkey(str_pubkey);
-    new_tx->set_to_acc_addr(to);
+    new_tx->set_to(to);
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);
 
@@ -264,11 +264,11 @@ static void CreateTxRequest(
     bft_msg.set_pubkey(str_pubkey);
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
-    new_tx->set_lego_count(data["amount"].get<uint64_t>());
+    new_tx->set_amount(data["amount"].get<uint64_t>());
     new_tx->set_gid(gid);
-    new_tx->set_from_acc_addr(account_address);
+    new_tx->set_from(account_address);
     new_tx->set_from_pubkey(str_pubkey);
-    new_tx->set_to_acc_addr(to);
+    new_tx->set_to(to);
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);
     auto hash128 = common::Hash::Hash128(tx_data);

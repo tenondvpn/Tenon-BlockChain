@@ -96,10 +96,10 @@ static std::string CreateAdRewardRequest(
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
-    new_tx->set_from_acc_addr(common::GlobalInfo::Instance()->id());
+    new_tx->set_from(common::GlobalInfo::Instance()->id());
     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
-    new_tx->set_to_acc_addr(to);
-    new_tx->set_lego_count(amount);
+    new_tx->set_to(to);
+    new_tx->set_amount(amount);
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);
 

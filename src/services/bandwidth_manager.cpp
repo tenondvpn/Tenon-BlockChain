@@ -168,7 +168,7 @@ static void CreateMiningContract(
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
-    new_tx->set_from_acc_addr(account_address);
+    new_tx->set_from(account_address);
     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
     new_tx->set_type(common::kConsensusVpnMining);
     auto server_attr = new_tx->add_attr();

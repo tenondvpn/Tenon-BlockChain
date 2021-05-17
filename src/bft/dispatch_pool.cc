@@ -39,13 +39,13 @@ int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
     return tx_pool_.AddTx(tx_ptr);
 }
 
-bool DispatchPool::TxTypeValid(const bft::protobuf::NewTx& new_tx) {
+bool DispatchPool::TxTypeValid(const bft::protobuf::TxInfo& new_tx) {
     switch (new_tx.type())
     {
     case common::kConsensusInvalidType:
         return false;
     case common::kConsensusCreateAcount:{
-        auto account_info = block::AccountManager::Instance()->GetAcountInfo(new_tx.to_acc_addr());
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(new_tx.to());
         if (account_info != nullptr) {
             BFT_ERROR("kConsensusCreateAcount account exists.");
             return false;
@@ -74,34 +74,13 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
 
     // (TODO): check sign for gid
     assert(tx_bft.has_new_tx());
-    auto tx_ptr = std::make_shared<TxItem>(
-        common::kTransactionNoVersion,
-        tx_bft.new_tx().gid(),
-        tx_bft.new_tx().from_acc_addr(),
-        tx_bft.new_tx().from_pubkey(),
-        bft_msg.sign_challenge() + bft_msg.sign_response(),
-        tx_bft.new_tx().to_acc_addr(),
-        tx_bft.new_tx().lego_count(),
-        tx_bft.new_tx().type(),
-        tx_bft.new_tx().gas(),
-        contract::kCallStepDefault,
-        tx_hash);
-    for (int32_t attr_idx = 0; attr_idx < tx_bft.new_tx().attr_size(); ++attr_idx) {
-        tx_ptr->add_attr(
-            tx_bft.new_tx().attr(attr_idx).key(),
-            tx_bft.new_tx().attr(attr_idx).value());
-    }
-
-    if (!GidManager::Instance()->NewGidTxValid(tx_ptr->gid, tx_ptr)) {
-        BFT_ERROR("gid invalid.[%s]", common::Encode::HexEncode(tx_ptr->gid));
+    auto tx_ptr = std::make_shared<TxItem>(tx_bft.new_tx());
+    if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
+        BFT_ERROR("gid invalid.[%s]", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return kBftError;
     }
 
     return tx_pool_.AddTx(tx_ptr);
-}
-
-void DispatchPool::ProtoNewTxToTxInfo(const protobuf::NewTx& new_tx, protobuf::TxInfo* tx_info) {
-
 }
 
  void DispatchPool::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec) {

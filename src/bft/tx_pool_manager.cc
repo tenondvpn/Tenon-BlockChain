@@ -35,10 +35,10 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t network_id = 0;
         if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                tx_bft.new_tx().from_acc_addr(),
+                tx_bft.new_tx().from(),
                 &network_id) != block::kBlockSuccess) {
             BFT_ERROR("get from addr network id failed! account address not exists[%s]",
-                common::Encode::HexEncode(tx_bft.new_tx().from_acc_addr()).c_str());
+                common::Encode::HexEncode(tx_bft.new_tx().from()).c_str());
             return false;
         }
 
@@ -50,21 +50,21 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
     } else {
         // just check create new account
         auto account_info = block::AccountManager::Instance()->GetAcountInfo(
-            tx_bft.new_tx().to_acc_addr());
+            tx_bft.new_tx().to());
         if (account_info != nullptr) {
             BFT_ERROR("root network create to addr failed, exists[%s]",
-                common::Encode::HexEncode(tx_bft.new_tx().to_acc_addr()).c_str());
+                common::Encode::HexEncode(tx_bft.new_tx().to()).c_str());
             return false;
         }
     }
 
-    uint32_t pool_index = common::GetPoolIndex(tx_bft.new_tx().from_acc_addr());
+    uint32_t pool_index = common::GetPoolIndex(tx_bft.new_tx().from());
     if (!tx_pool_[pool_index].GidValid(tx_bft.new_tx().gid())) {
         BFT_ERROR("GID exists[%s] type[%d] from[%s] to[%s] failed!",
             common::Encode::HexEncode(tx_bft.new_tx().gid()).c_str(),
             tx_bft.new_tx().type(),
-            common::Encode::HexEncode(tx_bft.new_tx().from_acc_addr()).c_str(),
-            common::Encode::HexEncode(tx_bft.new_tx().to_acc_addr()).c_str());
+            common::Encode::HexEncode(tx_bft.new_tx().from()).c_str(),
+            common::Encode::HexEncode(tx_bft.new_tx().to()).c_str());
         return false;
     }
 
@@ -75,7 +75,7 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 //         return false;
 //     }
 
-    if (!tx_bft.new_tx().to_acc_addr().empty()) {
+    if (!tx_bft.new_tx().to().empty()) {
         return true;
     }
 
@@ -84,11 +84,11 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
     }
 
     // overload new addr request
-    if (!tx_pool_[pool_index].NewAddrValid(tx_bft.new_tx().from_acc_addr())) {
+    if (!tx_pool_[pool_index].NewAddrValid(tx_bft.new_tx().from())) {
         BFT_ERROR("new from acc addr exists[%s][to: %s][lego: %llu][type: %u] failed!",
-                common::Encode::HexEncode(tx_bft.new_tx().from_acc_addr()).c_str(),
-                common::Encode::HexEncode(tx_bft.new_tx().to_acc_addr()).c_str(),
-                tx_bft.new_tx().lego_count(),
+                common::Encode::HexEncode(tx_bft.new_tx().from()).c_str(),
+                common::Encode::HexEncode(tx_bft.new_tx().to()).c_str(),
+                tx_bft.new_tx().amount(),
                 tx_bft.new_tx().type());
         return false;
     }
@@ -97,28 +97,28 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
-    if (tx_ptr->from_acc_addr == tx_ptr->to_acc_addr) {
+    if (tx_ptr->tx.from() == tx_ptr->tx.to()) {
         return kBftError;
     }
 
     // call contract and init
     uint32_t pool_index = common::kInvalidPoolIndex;
-    if (tx_ptr->bft_type == common::kConsensusCallContract) {
-        if (tx_ptr->call_contract_step == contract::kCallStepDefault) {
-            if (!CheckCallContractAddressValid(tx_ptr->to_acc_addr)) {
+    if (tx_ptr->tx.type() == common::kConsensusCallContract) {
+        if (tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
+            if (!CheckCallContractAddressValid(tx_ptr->tx.to())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->to_acc_addr);
-        } else if (tx_ptr->call_contract_step == contract::kCallStepCallerInited) {
-            if (!CheckCallerAccountInfoValid(tx_ptr->from_acc_addr)) {
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+        } else if (tx_ptr->tx.call_contract_step == contract::kCallStepCallerInited) {
+            if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->from_acc_addr);
-        } else if (tx_ptr->call_contract_step == contract::kCallStepContractCalled) {
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+        } else if (tx_ptr->tx.call_contract_step == contract::kCallStepContractCalled) {
             // just contract's network handle this message
-            if (!CheckCallContractAddressValid(tx_ptr->to_acc_addr)) {
+            if (!CheckCallContractAddressValid(tx_ptr->tx.to())) {
                 return kBftError;
             }
         }
@@ -127,10 +127,10 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
             return kBftError;
         }
 
-        if (!tx_ptr->add_to_acc_addr) {
-            pool_index = common::GetPoolIndex(tx_ptr->from_acc_addr);
+        if (!tx_ptr->tx.to_add()) {
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else {
-            pool_index = common::GetPoolIndex(tx_ptr->to_acc_addr);
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
         }
     }
 

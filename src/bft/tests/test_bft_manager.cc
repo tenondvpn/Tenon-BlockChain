@@ -251,7 +251,7 @@ public:
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(common::CreateGID(from_pubkey_str));
-        new_tx->set_from_acc_addr(id);
+        new_tx->set_from(id);
         new_tx->set_from_pubkey(from_pubkey_str);
         if (!to_prikey.empty() && tx_type != 99) {
             security::PrivateKey to_private_key(to_prikey);
@@ -259,11 +259,11 @@ public:
             std::string to_pubkey_str;
             ASSERT_EQ(to_pubkey.Serialize(to_pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string to_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_str);
-            new_tx->set_to_acc_addr(to_id);
+            new_tx->set_to(to_id);
         }
 
         if (tx_type == 99) {
-            new_tx->set_to_acc_addr(to_prikey);
+            new_tx->set_to(to_prikey);
             tx_type = common::kConsensusTransaction;
         }
 
@@ -274,7 +274,7 @@ public:
                 id,
                 new_tx->gid(),
                 attrs[bft::kContractBytesCode]);
-            new_tx->set_to_acc_addr(contract_addres);
+            new_tx->set_to(contract_addres);
         }
 
         new_tx->set_lego_count(amount);
@@ -1312,9 +1312,9 @@ TEST_F(TestBftManager, InitBft) {
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(common::CreateGID(pubkey_str));
-    new_tx->set_from_acc_addr(id);
+    new_tx->set_from(id);
     new_tx->set_from_pubkey(pubkey_str);
-    new_tx->set_to_acc_addr("to");
+    new_tx->set_to("to");
     new_tx->set_lego_count(1000000);
     new_tx->set_type(common::kConsensusTransaction);
     auto hash128 = GetTxMessageHash(*new_tx);

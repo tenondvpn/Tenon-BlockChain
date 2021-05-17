@@ -155,8 +155,6 @@ static const uint64_t kKeyValueStorageEachBytes = 100llu;
 
 std::string StatusToString(uint32_t status);
 // hash128(gid + from + to + amount + type + attrs(k:v))
-std::string GetTxMessageHash(const protobuf::NewTx& new_tx);
-// hash128(gid + from + to + amount + type + attrs(k:v))
 std::string GetTxMessageHash(const protobuf::TxInfo& tx_info);
 // prehash + network_id + height + random + elect version + txes's hash
 std::string GetBlockHash(const protobuf::Block& block);

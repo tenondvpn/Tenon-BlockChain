@@ -25,20 +25,6 @@ std::string StatusToString(uint32_t status) {
 }
 
 // hash128(gid + from + to + amount + type + attrs(k:v))
-std::string GetTxMessageHash(const protobuf::NewTx& new_tx) {
-    std::string message = new_tx.gid() + "-" +
-        new_tx.from_acc_addr() + "-" +
-        new_tx.to_acc_addr() + "-" +
-        std::to_string(new_tx.lego_count()) + "-" +
-        std::to_string(new_tx.type()) + "-";
-    for (int32_t i = 0; i < new_tx.attr_size(); ++i) {
-        message += new_tx.attr(i).key() + new_tx.attr(i).value();
-    }
-
-    return common::Hash::Hash128(message);
-}
-
-// hash128(gid + from + to + amount + type + attrs(k:v))
 std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
     std::string message = tx_info.gid() + "-" +
         tx_info.from() + "-" +
