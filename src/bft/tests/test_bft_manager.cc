@@ -455,10 +455,6 @@ public:
             common::GlobalInfo::Instance()->config_local_port(),
             security::Schnorr::Instance()->str_pubkey(),
             common::GlobalInfo::Instance()->node_tag());
-        NETWORK_ERROR("create universal network[%s][%d][%s]",
-            common::GlobalInfo::Instance()->id().c_str(),
-            common::GlobalInfo::Instance()->id().size(),
-            common::Encode::HexEncode(dht_key.StrKey()).c_str());
         local_node->first_node = true;
         transport::TransportPtr transport;
         auto dht = std::make_shared<elect::ElectDht>(transport, local_node);

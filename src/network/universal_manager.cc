@@ -85,10 +85,6 @@ int UniversalManager::CreateNetwork(
         common::GlobalInfo::Instance()->config_local_port(),
         security::Schnorr::Instance()->str_pubkey(),
         common::GlobalInfo::Instance()->node_tag());
-    NETWORK_INFO("create universal network[%s][%d][%s]",
-        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
-        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).size(),
-        common::Encode::HexEncode(dht_key.StrKey()).c_str());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);
     dht_ptr->Init();
