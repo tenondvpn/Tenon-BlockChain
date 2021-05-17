@@ -239,6 +239,7 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
     }
 
     std::unordered_map<std::string, int64_t> acc_balance_map;
+    std::unordered_map<std::string, bool> locked_account_map
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         const auto& tx_info = block.tx_list(i);
         int tmp_res = CheckTxInfo(block, tx_info);
@@ -262,7 +263,10 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
                 break;
             }
             case contract::kCallStepCallerInited: {
-                int check_res = BackupCheckContractInited(tx_info, acc_balance_map);
+                int check_res = BackupCheckContractInited(
+                    tx_info,
+                    acc_balance_map,
+                    locked_account_map);
                 if (check_res != kBftSuccess) {
                     return check_res;
                 }
@@ -1326,12 +1330,12 @@ int TxBft::LeaderAddCallContract(
             return kBftAccountBalanceError;
         }
 
-        auto attr = out_tx.add_attr();
-        attr->set_key(kContractBytesCode);
-        attr->set_value(bytes_code);
-        auto attr = out_tx.add_attr();
-        attr->set_key(kContractBalance);
-        attr->set_value(std::to_string(balance));
+        auto bytes_code_attr = out_tx.add_attr();
+        bytes_code_attr->set_key(kContractBytesCode);
+        bytes_code_attr->set_value(bytes_code);
+        auto balace_attr = out_tx.add_attr();
+        balace_attr->set_key(kContractBalance);
+        balace_attr->set_value(std::to_string(balance));
         locked_account_map[tx_info->tx.to()] = true;
         // account lock must new block coming
         return kBftSuccess;

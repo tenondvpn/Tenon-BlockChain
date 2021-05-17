@@ -355,10 +355,6 @@ void BftManager::HandleToAccountTxBlock(
         }
 
         tx_list[i].set_to_add(true);
-        if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
-            // 
-        }
-
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(tx_list[i].to());
             if (account_ptr != nullptr) {
@@ -370,21 +366,6 @@ void BftManager::HandleToAccountTxBlock(
 
             if (tx_list[i].amount() <= 0 && tx_list[i].type() != common::kConsensusCreateContract) {
                 BFT_ERROR("transfer amount error!");
-                continue;
-            }
-        } else {
-            uint32_t network_id = 0;
-            if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                    tx_list[i].to(),
-                    &network_id) != block::kBlockSuccess) {
-                BFT_ERROR("get network_id error!");
-                continue;
-            }
-
-            if (network_id != common::GlobalInfo::Instance()->network_id()) {
-                BFT_ERROR("network_id error![id: %s][%d: %d]",
-                    common::Encode::HexEncode(tx_list[i].to()).c_str(),
-                    network_id, common::GlobalInfo::Instance()->network_id());
                 continue;
             }
         }
