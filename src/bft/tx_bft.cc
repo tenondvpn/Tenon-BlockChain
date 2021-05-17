@@ -1423,7 +1423,6 @@ int TxBft::LeaderAddContractCalled(
     return kBftSuccess;
 }
 
-
 }  // namespace bft
 
 }  //namespace lego

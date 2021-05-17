@@ -69,26 +69,26 @@ int UniversalManager::CreateNetwork(
         const common::Config& config,
         transport::TransportPtr& transport) {
     dht::DhtKeyManager dht_key(
-            network_id,
-            common::GlobalInfo::Instance()->country(),
-            common::GlobalInfo::Instance()->id());
+        network_id,
+        common::GlobalInfo::Instance()->country(),
+        common::GlobalInfo::Instance()->id());
     bool client = false;
     config.Get("lego", "client", client);
     dht::NodePtr local_node = std::make_shared<dht::Node>(
-            common::GlobalInfo::Instance()->id(),
-            dht_key.StrKey(),
-            dht::kNatTypeFullcone,
-            client,
-            common::GlobalInfo::Instance()->config_local_ip(),
-            common::GlobalInfo::Instance()->config_local_port(),
-            common::GlobalInfo::Instance()->config_local_ip(),
-            common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
-            common::GlobalInfo::Instance()->node_tag());
+        common::GlobalInfo::Instance()->id(),
+        dht_key.StrKey(),
+        dht::kNatTypeFullcone,
+        client,
+        common::GlobalInfo::Instance()->config_local_ip(),
+        common::GlobalInfo::Instance()->config_local_port(),
+        common::GlobalInfo::Instance()->config_local_ip(),
+        common::GlobalInfo::Instance()->config_local_port(),
+        security::Schnorr::Instance()->str_pubkey(),
+        common::GlobalInfo::Instance()->node_tag());
     NETWORK_INFO("create universal network[%s][%d][%s]",
-            common::GlobalInfo::Instance()->id().c_str(),
-            common::GlobalInfo::Instance()->id().size(),
-            common::Encode::HexEncode(dht_key.StrKey()).c_str());
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).size(),
+        common::Encode::HexEncode(dht_key.StrKey()).c_str());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);
     dht_ptr->Init();

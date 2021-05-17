@@ -3,25 +3,25 @@
 
 #include <cassert>
 
-#include "common/hash.h"
-#include "common/global_info.h"
-#include "db/db.h"
-#include "statistics/statistics.h"
-#include "block/block_manager.h"
-#include "block/account_manager.h"
-#include "security/schnorr.h"
-#include "security/secp256k1.h"
-#include "dht/base_dht.h"
-#include "election/elect_dht.h"
-#include "network/dht_manager.h"
-#include "network/route.h"
-#include "network/universal_manager.h"
 #include "bft/bft_utils.h"
 #include "bft/tx_pool_manager.h"
 #include "bft/tx_bft.h"
 #include "bft/member_manager.h"
 #include "bft/proto/bft_proto.h"
 #include "bft/dispatch_pool.h"
+#include "block/block_manager.h"
+#include "block/account_manager.h"
+#include "common/hash.h"
+#include "common/global_info.h"
+#include "db/db.h"
+#include "dht/base_dht.h"
+#include "election/elect_dht.h"
+#include "network/dht_manager.h"
+#include "network/route.h"
+#include "network/universal_manager.h"
+#include "security/schnorr.h"
+#include "security/secp256k1.h"
+#include "statistics/statistics.h"
 
 namespace lego {
 
