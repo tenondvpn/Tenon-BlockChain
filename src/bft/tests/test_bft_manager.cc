@@ -214,6 +214,7 @@ public:
             uint64_t amount,
             uint64_t gas_limit,
             uint32_t tx_type,
+            bool just_to_id,
             std::map<std::string, std::string>& attrs,
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key("");
@@ -253,7 +254,7 @@ public:
         new_tx->set_gid(common::CreateGID(from_pubkey_str));
         new_tx->set_from(id);
         new_tx->set_from_pubkey(from_pubkey_str);
-        if (!to_prikey.empty() && tx_type != 99) {
+        if (!to_prikey.empty() && !just_to_id) {
             security::PrivateKey to_private_key(to_prikey);
             security::PublicKey to_pubkey(to_private_key);
             std::string to_pubkey_str;
@@ -262,9 +263,8 @@ public:
             new_tx->set_to(to_id);
         }
 
-        if (tx_type == 99) {
+        if (just_to_id) {
             new_tx->set_to(to_prikey);
-            tx_type = common::kConsensusTransaction;
         }
 
         std::cout << "DDDDDDDDDDDDDDDDDDDDD tx_type: " << tx_type << ", " << common::kConsensusCreateContract << std::endl;
@@ -573,10 +573,11 @@ public:
             uint64_t amount,
             uint64_t gas_limit,
             uint32_t tx_type,
+            bool just_to_id,
             std::map<std::string, std::string>& attrs,
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
-        CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, attrs, msg);
+        CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
@@ -990,10 +991,11 @@ public:
             uint64_t amount,
             uint64_t gas_limit,
             uint32_t tx_type,
+            bool just_to_id,
             bool call_to,
             std::map<std::string, std::string>& attrs) {
         transport::protobuf::Header broadcast_msg;
-        Transfer(from_prikey, to_prikey, amount, gas_limit, tx_type, attrs, &broadcast_msg);
+        Transfer(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, &broadcast_msg);
         if (call_to) {
             bft::protobuf::BftMessage bft_msg;
             ASSERT_TRUE(bft_msg.ParseFromString(broadcast_msg.data()));
@@ -1044,13 +1046,13 @@ TEST_F(TestBftManager, RootCreateNewAccount) {
     std::map<std::string, std::string> attrs;
     Transaction(
         from_prikey, to_prikey, amount, 1000000,
-        common::kConsensusTransaction, true, attrs);
+        common::kConsensusTransaction, true, false, attrs);
     for (uint32_t i = 0; i < 10; ++i) {
         all_amount += amount;
         all_gas += bft::kTransferGas;
         Transaction(
             from_prikey, to_prikey, amount, 1000000,
-            common::kConsensusTransaction, true, attrs);
+            common::kConsensusTransaction, true, false, attrs);
     }
 
     from_balance = GetBalanceByPrikey(from_prikey);
@@ -1077,7 +1079,7 @@ TEST_F(TestBftManager, TransferGasLimitError) {
     std::map<std::string, std::string> attrs;
     Transaction(
         from_prikey, to_prikey, amount, 100,
-        common::kConsensusTransaction, false, attrs);
+        common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas);
@@ -1102,7 +1104,7 @@ TEST_F(TestBftManager, TransferGasLimitJustOk) {
     std::map<std::string, std::string> attrs;
     Transaction(
         from_prikey, to_prikey, amount, all_gas,
-        common::kConsensusTransaction, true, attrs);
+        common::kConsensusTransaction, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
@@ -1133,7 +1135,7 @@ TEST_F(TestBftManager, TransferGasLimitCover) {
     }
 
     Transaction(from_prikey, to_prikey, amount, all_gas + 1,
-        common::kConsensusTransaction, true, attrs);
+        common::kConsensusTransaction, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
@@ -1157,7 +1159,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsOk) {
         all_gas += (i + 1 + i + 2) * bft::kKeyValueStorageEachBytes;
     }
 
-    Transaction(from_prikey, "", 0, all_gas, common::kConsensusTransaction, false, attrs);
+    Transaction(from_prikey, "", 0, all_gas, common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
@@ -1186,7 +1188,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasError) {
         all_gas += (i + 1 + i + 2) * bft::kKeyValueStorageEachBytes;
     }
 
-    Transaction(from_prikey, "", 0, all_gas - 1, common::kConsensusTransaction, false, attrs);
+    Transaction(from_prikey, "", 0, all_gas - 1, common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
@@ -1216,7 +1218,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasCover) {
     }
 
     Transaction(from_prikey, "", 0, all_gas + 1,
-        common::kConsensusTransaction, false, attrs);
+        common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
@@ -1252,7 +1254,7 @@ TEST_F(TestBftManager, CreateContractOk) {
 
     Transaction(
         from_prikey, "", amount, all_gas + 1,
-        common::kConsensusCreateContract, true, attrs);
+        common::kConsensusCreateContract, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
 }
@@ -1366,6 +1368,7 @@ TEST_F(TestBftManager, TestExecution) {
             all_gas + 1,
             common::kConsensusTransaction,
             true,
+            false,
             attrs);
         from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
@@ -1444,6 +1447,7 @@ TEST_F(TestBftManager, TestExecution) {
             all_gas + 1,
             common::kConsensusCreateContract,
             true,
+            false,
             attrs);
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
@@ -1463,7 +1467,7 @@ TEST_F(TestBftManager, TestExecution) {
         all_amount += amount;
         all_gas += bft::kTransferGas;
         std::map<std::string, std::string> attrs;
-        Transaction(from_prikey, to_prikey, amount, all_gas + 1, 99, true, attrs);
+        Transaction(from_prikey, to_prikey, amount, all_gas + 1, common::kConsensusTransaction, true, true, attrs);
         auto from_balance = GetBalanceByPrikey(from_prikey);
         auto contract_info = block::AccountManager::Instance()->GetAcountInfo(contract_addr);
         ASSERT_TRUE(contract_info != nullptr);
@@ -1496,6 +1500,7 @@ TEST_F(TestBftManager, TestExecution) {
             all_gas + 1,
             common::kConsensusTransaction,
             true,
+            false,
             attrs);
         auto from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
@@ -1504,7 +1509,7 @@ TEST_F(TestBftManager, TestExecution) {
         std::cout << "MMMMMMMMMMMMMMMMM 4 " << std::endl;
     }
 
-    // call contract
+    // direct call contract
     {
         std::string from_prikey = common::Encode::HexDecode(
             "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
@@ -1561,6 +1566,192 @@ TEST_F(TestBftManager, TestExecution) {
         std::cout << "from: " << common::Encode::HexEncode(iter->first) << std::endl;
         auto sec_iter = iter->second.begin();
         std::cout << "to: " << common::Encode::HexEncode(sec_iter->first) << " : " << sec_iter->second << std::endl;
+    }
+}
+
+TEST_F(TestBftManager, TestCallContract) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    // maybe not ok, contract addr prikey: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8704
+
+    // create owner and transfer tenon to it
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+        std::string to_prikey = common::Encode::HexDecode(
+            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
+        uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        ASSERT_EQ(from_balance, init_balance);
+        ASSERT_EQ(to_balance, common::kInvalidUint64);
+        uint64_t all_amount = 0;
+        uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey,
+            to_prikey,
+            amount,
+            all_gas + 1,
+            common::kConsensusTransaction,
+            true,
+            false,
+            attrs);
+        from_balance = GetBalanceByPrikey(from_prikey);
+        to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(to_balance, all_amount);
+        std::cout << "MMMMMMMMMMMMMMMMM 1 " << std::endl;
+    }
+
+
+    // create contract
+    std::string contract_addr;
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t all_amount = 0;
+        uint64_t amount = 0;
+        uint64_t all_gas = 0;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        attrs.insert(std::make_pair(kContractBytesCode, common::Encode::HexDecode(
+            "60806040523480156100115760006000fd5b50600436106100465760003560e01c806"
+            "341c0e1b51461004c578063a90ae88714610056578063cfb5192814610072576100465"
+            "65b60006000fd5b6100546100a2565b005b610070600480360381019061006b9190610"
+            "402565b61011a565b005b61008c600480360381019061008791906103be565b61029c5"
+            "65b604051610099919061048d565b60405180910390f35b600060009054906101000a9"
+            "00473ffffffffffffffffffffffffffffffffffffffff1673fffffffffffffffffffff"
+            "fffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141"
+            "5156100ff5760006000fd5b3373ffffffffffffffffffffffffffffffffffffffff16f"
+            "f5b565b6000601b905060007f3d584400dc77e383a2a2860d15fd181b1c36117d7b6c1"
+            "e5d54e2f21d9491b66e60001b905060007f043a539fab3f2e42ba806da59b30e100077"
+            "a7dba7439de3fce427eaa75dce5c460001b905060007ff559642966b18c5e58a82106d"
+            "7cbb6dfaa449e1820dda477580b08bab68b93d560001b9050600060018286868660405"
+            "1600081526020016040526040516101bd94939291906104a9565b60206040516020810"
+            "39080840390855afa1580156101e0573d600060003e3d6000fd5b50505060206040510"
+            "3519050600060009054906101000a900473fffffffffffffffffffffffffffffffffff"
+            "fffff1673ffffffffffffffffffffffffffffffffffffffff168173fffffffffffffff"
+            "fffffffffffffffffffffffff161415156102495760006000fd5b3373fffffffffffff"
+            "fffffffffffffffffffffffffff166108fc89908115029060405160006040518083038"
+            "1858888f19350505050158015610290573d600060003e3d6000fd5b5050505050505b5"
+            "05050565b600060008290506000815114156102ba57600060001b9150506102c3565b6"
+            "0208301519150505b9190505661063e565b60006102df6102da84610516565b6104ef5"
+            "65b9050828152602081018484840111156102f85760006000fd5b61030384828561059"
+            "e565b505b9392505050565b600061031f61031a84610548565b6104ef565b905082815"
+            "2602081018484840111156103385760006000fd5b61034384828561059e565b505b939"
+            "2505050565b600082601f83011215156103605760006000fd5b8135610370848260208"
+            "6016102cc565b9150505b92915050565b600082601f830112151561038e5760006000f"
+            "d5b813561039e84826020860161030c565b9150505b92915050565b600081359050610"
+            "3b781610623565b5b92915050565b6000602082840312156103d15760006000fd5b600"
+            "082013567ffffffffffffffff8111156103ec5760006000fd5b6103f88482850161037"
+            "a565b9150505b92915050565b600060006000606084860312156104195760006000fd5"
+            "b6000610427868287016103a8565b9350506020610438868287016103a8565b9250506"
+            "04084013567ffffffffffffffff8111156104565760006000fd5b61046286828701610"
+            "34c565b9150505b9250925092565b6104768161057a565b82525b5050565b610486816"
+            "10590565b82525b5050565b60006020820190506104a2600083018461046d565b5b929"
+            "15050565b60006080820190506104be600083018761046d565b6104cb6020830186610"
+            "47d565b6104d8604083018561046d565b6104e5606083018461046d565b5b959450505"
+            "05050565b60006104f961050b565b905061050582826105ae565b5b919050565b60006"
+            "0405190505b90565b600067ffffffffffffffff821115610531576105306105e0565b5"
+            "b61053a82610611565b90506020810190505b919050565b600067ffffffffffffffff8"
+            "21115610563576105626105e0565b5b61056c82610611565b90506020810190505b919"
+            "050565b60008190505b919050565b60008190505b919050565b600060ff821690505b9"
+            "19050565b828183376000838301525b505050565b6105b782610611565b81018181106"
+            "7ffffffffffffffff821117156105d6576105d56105e0565b5b80604052505b5050565"
+            "b7f4e487b7100000000000000000000000000000000000000000000000000000000600"
+            "052604160045260246000fd5b565b6000601f19601f83011690505b919050565b61062"
+            "c81610585565b8114151561063a5760006000fd5b5b50565bfea264697066735822122"
+            "05df1f066520c41781aa6e597f682192d353de3fdfe0f68038958a4170a2bf34264736"
+            "f6c63430008030033")));
+        all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size()) *
+            bft::kKeyValueStorageEachBytes;
+        Transaction(
+            from_prikey,
+            "",
+            amount,
+            all_gas + 1,
+            common::kConsensusCreateContract,
+            true,
+            false,
+            attrs);
+        uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        contract_addr = attrs["res_contract_addr"];
+        std::cout << "MMMMMMMMMMMMMMMMM 2 " << std::endl;
+    }
+
+    // transfer to contract address
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+        std::string to_prikey = contract_addr;
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t all_amount = 0;
+        uint64_t amount = 100llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(from_prikey, to_prikey, amount, all_gas + 1, common::kConsensusTransaction, true, true, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        auto contract_info = block::AccountManager::Instance()->GetAcountInfo(contract_addr);
+        ASSERT_TRUE(contract_info != nullptr);
+        uint64_t to_balance;
+        ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
+        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(to_balance, all_amount);
+        std::cout << "MMMMMMMMMMMMMMMMM 3 " << std::endl;
+    }
+
+    // create contract caller
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+        std::string to_prikey = common::Encode::HexDecode(
+            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(to_balance, common::kInvalidUint64);
+        uint64_t all_amount = 0;
+        uint64_t amount = 10000llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey,
+            to_prikey,
+            amount,
+            all_gas + 1,
+            common::kConsensusTransaction,
+            true,
+            false,
+            attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(to_balance, all_amount);
+        std::cout << "MMMMMMMMMMMMMMMMM 4 " << std::endl;
+    }
+
+    // call contract
+    {
+        transport::protobuf::Header broadcast_msg;
+        std::string from_prikey = common::Encode::HexDecode(
+            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+        std::string to_prikey = common::Encode::HexDecode(
+            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+        std::map<std::string, std::string> attrs;
+        // Default caller init
+        Transfer(from_prikey, to_prikey, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        // LockContract
+        // CallContract
+        // UnlockContract
     }
 }
 
