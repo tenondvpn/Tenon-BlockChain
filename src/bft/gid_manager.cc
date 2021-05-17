@@ -14,7 +14,7 @@ GidManager* GidManager::Instance() {
 }
 
 bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
-    std::string tx_gid = GetUniversalGid(tx_ptr->add_to_acc_addr, gid);
+    std::string tx_gid = GetUniversalGid(tx_ptr->tx.to_add(), gid);
     {
         std::lock_guard<std::mutex> guard(tx_map_mutex_);
         auto iter = tx_map_.find(tx_gid);
@@ -60,25 +60,7 @@ TxItemPtr GidManager::GetTx(bool add_to, const std::string& gid) {
         return nullptr;
     }
 
-    auto tx_ptr = std::make_shared<TxItem>(
-        tx_bft.version(),
-        tx_bft.gid(),
-        tx_bft.from(),
-        tx_bft.from_pubkey(),
-        tx_bft.from_sign(),
-        tx_bft.to(),
-        tx_bft.amount(),
-        tx_bft.type(),
-        tx_bft.gas_limit(),
-        tx_bft.call_contract_step(),
-        tx_bft.tx_hash());
-    tx_ptr->add_to_acc_addr = tx_bft.to_add();
-    for (int32_t attr_idx = 0; attr_idx < tx_bft.attr_size(); ++attr_idx) {
-        tx_ptr->add_attr(
-            tx_bft.attr(attr_idx).key(),
-            tx_bft.attr(attr_idx).value());
-    }
-
+    auto tx_ptr = std::make_shared<TxItem>(tx_bft);
     {
         std::lock_guard<std::mutex> guard(tx_map_mutex_);
         tx_map_[tx_gid] = tx_ptr;
