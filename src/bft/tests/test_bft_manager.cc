@@ -277,8 +277,8 @@ public:
             new_tx->set_to(contract_addres);
         }
 
-        new_tx->set_lego_count(amount);
-        new_tx->set_gas(gas_limit);
+        new_tx->set_amount(amount);
+        new_tx->set_gas_limit(gas_limit);
         new_tx->set_type(tx_type);
         for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
             auto attr = new_tx->add_attr();
@@ -1315,7 +1315,7 @@ TEST_F(TestBftManager, InitBft) {
     new_tx->set_from(id);
     new_tx->set_from_pubkey(pubkey_str);
     new_tx->set_to("to");
-    new_tx->set_lego_count(1000000);
+    new_tx->set_amount(1000000);
     new_tx->set_type(common::kConsensusTransaction);
     auto hash128 = GetTxMessageHash(*new_tx);
     auto tx_data = tx_bft.SerializeAsString();
