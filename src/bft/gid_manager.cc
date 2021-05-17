@@ -75,14 +75,6 @@ std::string GidManager::CreateTxInfo(TxItemPtr& tx_ptr) {
     tx.set_gas_price(0);
     tx.set_gas_used(0);
     tx.set_status(kBftSuccess);
-    if (!tx_ptr->attr_map.empty()) {
-        for (auto iter = tx_ptr->attr_map.begin(); iter != tx_ptr->attr_map.end(); ++iter) {
-            auto tx_attr = tx.add_attr();
-            tx_attr->set_key(iter->first);
-            tx_attr->set_value(iter->second);
-        }
-    }
-
     return tx.SerializeAsString();
 }
 

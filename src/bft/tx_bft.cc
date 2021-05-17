@@ -918,12 +918,6 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         tx.set_gas_price(0);
         tx.set_gas_used(0);
         tx.set_status(kBftSuccess);
-        for (auto iter = tx_vec[i]->attr_map.begin(); iter != tx_vec[i]->attr_map.end(); ++iter) {
-            auto attr = tx.add_attr();
-            attr->set_key(iter->first);
-            attr->set_value(iter->second);
-        }
-
         // create address must to and have transfer amount
         if (!tx.to_add() || (tx.amount() <= 0 && tx.type() != common::kConsensusCreateContract)) {
             continue;
@@ -1085,11 +1079,9 @@ int TxBft::LeaderAddNormalTransaction(
 
             if (!tx_info->attr_map.empty()) {
                 for (auto iter = tx_info->attr_map.begin();
-                    iter != tx_info->attr_map.end(); ++iter) {
-                    auto tx_attr = tx.add_attr();
-                    tx_attr->set_key(iter->first);
-                    tx_attr->set_value(iter->second);
-                    gas_used += (iter->first.size() + iter->second.size()) * kKeyValueStorageEachBytes;
+                        iter != tx_info->attr_map.end(); ++iter) {
+                    gas_used += (iter->first.size() + iter->second.size()) *
+                        kKeyValueStorageEachBytes;
                 }
             }
 
