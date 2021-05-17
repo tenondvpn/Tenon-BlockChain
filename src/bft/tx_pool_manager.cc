@@ -105,22 +105,34 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
     uint32_t pool_index = common::kInvalidPoolIndex;
     if (tx_ptr->tx.type() == common::kConsensusCallContract) {
         if (tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
+            // caller network to consensus and consume gas, no balance will fail
+            if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
+                return kBftError;
+            }
+
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+        } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
+            // caller called and now contract network lock it
             if (!CheckCallContractAddressValid(tx_ptr->tx.to())) {
                 return kBftError;
             }
 
             pool_index = common::GetPoolIndex(tx_ptr->tx.to());
-        } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
+        } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractLocked) {
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
             pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
-            // just contract's network handle this message
+            // just contract's network handle this message and unlock it
             if (!CheckCallContractAddressValid(tx_ptr->tx.to())) {
                 return kBftError;
             }
+
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+        } else {
+            return kBftError;
         }
     } else {
         if (!CheckDispatchNormalTransaction(tx_ptr)) {

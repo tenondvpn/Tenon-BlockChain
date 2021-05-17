@@ -35,6 +35,17 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
         message += tx_info.attr(i).key() + tx_info.attr(i).value();
     }
 
+    for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
+        message += tx_info.transfers(i).from() +
+            tx_info.transfers(i).to() +
+            std::to_string(tx_info.transfers(i).amount());
+    }
+
+    for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+        message += tx_info.storages(i).key() +
+            tx_info.storages(i).value();
+    }
+
     return common::Hash::Hash128(message);
 }
 

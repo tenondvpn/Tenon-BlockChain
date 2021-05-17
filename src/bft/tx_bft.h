@@ -48,11 +48,40 @@ private:
         const TxItemPtr& tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res);
-    int CheckAndCallContract(
+    int LeaderAddNormalTransaction(
         TxItemPtr& tx_info,
-        uint64_t from_balance,
-        uint32_t* call_step,
-        protobuf::TxInfo* tx);
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        protobuf::TxInfo& tx);
+    int LeaderAddCallContract(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
+        protobuf::TxInfo& tx);
+    int LeaderCheckCallContract(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        protobuf::TxInfo& tx);
+    int LeaderAddContractCalled(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        protobuf::TxInfo& tx);
+    int BackupNormalCheck(
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map);
+    int BackupCheckContractDefault(
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map);
+    int BackupCheckContractInited(
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map);
+    int BackupCheckContractLocked(
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map);
+    int BackupCheckContractCalled(
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map);
+
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

@@ -5,6 +5,7 @@
 
 #include "bft/bft_utils.h"
 #include "common/encode.h"
+#include "block/account_manager.h"
 
 namespace lego {
 
@@ -92,6 +93,10 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 
 
             if (iter->second->time_valid <= timestamp_now) {
+                if (IsTxContractLocked(iter->second)) {
+                    continue;
+                }
+
                 res_vec.push_back(iter->second);
                 if (res_vec.size() >= kBftOneConsensusMaxCount) {
                     break;
@@ -105,6 +110,23 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }
+}
+
+bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
+    if (tx_ptr->tx.type() == common::kConsensusCallContract &&
+            tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
+            tx_ptr->tx.to());
+        assert(contract_info != nullptr);
+        if (contract_info->locked()) {
+            return true;
+        }
+
+        // lock contract until kCallStepContractCalled coming and unlock it
+        contract_info->LockAccount();
+    }
+
+    return false;
 }
 
 bool TxPool::HasTx(bool to, const std::string& tx_gid) {

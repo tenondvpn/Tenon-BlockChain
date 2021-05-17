@@ -69,6 +69,18 @@ public:
         return account_id_;
     }
 
+    bool locked() {
+        return locked_;
+    }
+
+    void LockAccount() {
+        locked_ = true;
+    }
+
+    void UnLockAccount() {
+        locked_ = false;
+    }
+
 private:
     static const uint32_t kTopTxHeightBlocksCount = 128;
 
@@ -100,6 +112,7 @@ private:
     std::string owner_;
     std::string full_account_id_;
     std::mutex full_account_id_mutex_;
+    std::atomic<bool> locked_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

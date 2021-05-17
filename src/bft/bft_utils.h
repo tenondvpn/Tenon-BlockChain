@@ -94,6 +94,8 @@ enum BftErrorCode {
     kBftGasUsedNotEqualToLeaderError = 20,
     kBftUserSetGasLimitError = 21,
     kBftCreateContractKeyError = 22,
+    kBftContractAddressLocked = 23,
+    kBftContractBytesCodeError = 24,
 };
 
 enum BftStatus {
@@ -147,7 +149,7 @@ static const std::string kRootCreateNewAccountAttrKey("kRootNewAddr_netid");
 static const std::string kContractAddress = "__caddress";
 static const std::string kContractBytesCode = "__cbytescode";
 static const std::string kContractInputCode = "__cinput";
-static const std::string kContractCallerBalance = "__ccallerbalance";
+static const std::string kContractBalance = "__ccontractbalance";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;
