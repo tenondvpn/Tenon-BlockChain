@@ -16,6 +16,7 @@ enum ConsensusType {
     kConsensusCreateAcount,
     kConsensusCreateContract,
     kConsensusTransaction,
+    kConsensusCallContract,
     kConsensusMining,
     kConsensusLogin,
     kConsensusKeyValue,

@@ -87,6 +87,18 @@ public:
         const evmc::bytes32 topics[],
         size_t topics_count) noexcept override;
 
+    // tmp item
+    void AddTmpAccountBalance(const std::string& address, uint64_t balance) {
+        evmc::address addr;
+        memcpy(
+            addr.bytes,
+            address.c_str(),
+            sizeof(addr.bytes));
+        evmc::bytes32 tmp_val{};
+        Uint64ToEvmcBytes32(tmp_val, balance);
+        account_balance_[addr] = tmp_val;
+    }
+
     std::unordered_map<evmc::address, MockedAccount> accounts_;
     evmc_tx_context tx_context_ = {};
     evmc::bytes32 block_hash_ = {};
@@ -98,6 +110,7 @@ public:
     std::string origin_address_;
     uint32_t depth_{ 0 };
     std::unordered_map<std::string, std::unordered_map<std::string, uint64_t>> to_account_value_;
+    std::unordered_map<evmc::address, evmc::uint256be> account_balance_;
 };
 
 }  // namespace tvm

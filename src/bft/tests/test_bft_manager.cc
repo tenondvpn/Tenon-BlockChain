@@ -561,20 +561,8 @@ public:
     }
 
     void AddNewTxToTxPool(const bft::protobuf::TxInfo& tx_info) {
-        auto tx_ptr = std::make_shared<TxItem>(
-            tx_info.version(),
-            tx_info.gid(),
-            tx_info.from(),
-            tx_info.from_pubkey(),
-            tx_info.from_sign(),
-            tx_info.to(),
-            tx_info.amount(),
-            tx_info.type(),
-            tx_info.gas_limit(),
-            tx_info.call_contract_step(),
-            tx_info.tx_hash());
-        tx_ptr->add_to_acc_addr = tx_info.to_add();
-        GidManager::Instance()->NewGidTxValid(tx_ptr->gid, tx_ptr);
+        auto tx_ptr = std::make_shared<TxItem>(tx_info);
+        GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr);
     }
 
     void ResetBftSecret(const std::string& bft_gid, uint32_t net_id, const std::string& id) {

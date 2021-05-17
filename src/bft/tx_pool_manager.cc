@@ -97,61 +97,106 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
-    if (!TxValid(tx_ptr)) {
-        BFT_ERROR("tx invalid.");
+    if (tx_ptr->from_acc_addr == tx_ptr->to_acc_addr) {
         return kBftError;
     }
 
+    // call contract and init
     uint32_t pool_index = common::kInvalidPoolIndex;
-    if (!tx_ptr->add_to_acc_addr) {
-        pool_index = common::GetPoolIndex(tx_ptr->from_acc_addr);
+    if (tx_ptr->bft_type == common::kConsensusCallContract) {
+        if (tx_ptr->call_contract_step == contract::kCallStepDefault) {
+            if (!CheckCallContractAddressValid(tx_ptr->to_acc_addr)) {
+                return kBftError;
+            }
+
+            pool_index = common::GetPoolIndex(tx_ptr->to_acc_addr);
+        } else if (tx_ptr->call_contract_step == contract::kCallStepCallerInited) {
+            if (!CheckCallerAccountInfoValid(tx_ptr->from_acc_addr)) {
+                return kBftError;
+            }
+
+            pool_index = common::GetPoolIndex(tx_ptr->from_acc_addr);
+        } else if (tx_ptr->call_contract_step == contract::kCallStepContractCalled) {
+            // just contract's network handle this message
+            if (!CheckCallContractAddressValid(tx_ptr->to_acc_addr)) {
+                return kBftError;
+            }
+        }
     } else {
-        pool_index = common::GetPoolIndex(tx_ptr->to_acc_addr);
+        if (!CheckDispatchNormalTransaction(tx_ptr)) {
+            return kBftError;
+        }
+
+        if (!tx_ptr->add_to_acc_addr) {
+            pool_index = common::GetPoolIndex(tx_ptr->from_acc_addr);
+        } else {
+            pool_index = common::GetPoolIndex(tx_ptr->to_acc_addr);
+        }
     }
-    
+
     return tx_pool_[pool_index].AddTx(tx_ptr);
 }
 
-bool TxPoolManager::TxValid(TxItemPtr& tx_ptr) {
-    if (tx_ptr->from_acc_addr == tx_ptr->to_acc_addr) {
+bool TxPoolManager::CheckCallContractAddressValid(const std::string& contract_addr) {
+    auto acc_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+    if (acc_info == nullptr) {
+        BFT_ERROR("tx invalid. account address not exists[%s]",
+            common::Encode::HexEncode(contract_addr).c_str());
         return false;
     }
 
+    uint32_t network_id = 0;
+    if (acc_info->GetConsensuseNetId(&network_id) != block::kBlockSuccess) {
+        return false;
+    }
+
+    if (network_id != common::GlobalInfo::Instance()->network_id()) {
+        return false;
+    }
+
+    return true;
+}
+
+bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_address) {
+    auto acc_info = block::AccountManager::Instance()->GetAcountInfo(caller_address);
+    if (acc_info == nullptr) {
+        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            return true;
+        }
+
+        BFT_ERROR("tx invalid. account address not exists[%s]",
+            common::Encode::HexEncode(caller_address).c_str());
+        return false;
+    }
+
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+        uint32_t network_id = 0;
+        if (acc_info->GetConsensuseNetId(&network_id) != block::kBlockSuccess) {
+            return false;
+        }
+
+        if (network_id != common::GlobalInfo::Instance()->network_id()) {
+            return false;
+        }
+    }
+
+    uint64_t db_balance = 0;
+    if (acc_info->GetBalance(&db_balance) != block::kBlockSuccess) {
+        BFT_ERROR("tx invalid. account address not exists");
+        return false;
+    }
+
+    if (db_balance <= 0) {
+        BFT_ERROR("tx invalid. balance error[%lld]", db_balance);
+        return false;
+    }
+
+    return true;
+}
+
+bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr& tx_ptr) {
     if (!tx_ptr->add_to_acc_addr) {
-        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->from_acc_addr);
-        if (acc_info == nullptr) {
-            if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-                return true;
-            }
-
-            BFT_ERROR("tx invalid. account address not exists[%s]",
-                common::Encode::HexEncode(tx_ptr->from_acc_addr).c_str());
-            return false;
-        }
-
-        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            uint32_t network_id = 0;
-            if (acc_info->GetConsensuseNetId(&network_id) != block::kBlockSuccess) {
-                return false;
-            }
-
-            if (network_id != common::GlobalInfo::Instance()->network_id()) {
-                return false;
-            }
-        }
-
-        uint64_t db_balance = 0;
-        if (acc_info->GetBalance(&db_balance) != block::kBlockSuccess) {
-            BFT_ERROR("tx invalid. account address not exists");
-            return false;
-        }
-
-        if (db_balance <= 0) {
-            BFT_ERROR("tx invalid. balance error[%lld][%llu]",
-                    db_balance,
-			        tx_ptr->lego_count);
-            return false;
-        }
+        return CheckCallerAccountInfoValid(tx_ptr->from_acc_addr);
     } else {
         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
             auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->to_acc_addr);

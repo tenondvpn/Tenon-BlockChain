@@ -298,7 +298,6 @@ void BftManager::RootCommitAddNewAccount(const bft::protobuf::Block& block, db::
     }
 }
 
-
 void BftManager::HandleToAccountTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
@@ -356,6 +355,10 @@ void BftManager::HandleToAccountTxBlock(
         }
 
         tx_list[i].set_to_add(true);
+        if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
+            // 
+        }
+
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(tx_list[i].to());
             if (account_ptr != nullptr) {
@@ -389,15 +392,16 @@ void BftManager::HandleToAccountTxBlock(
         if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
             BFT_ERROR("dispatch pool failed!");
         }
-
-        if (ThisNodeIsLeader()) {
-            StartBft("");
-        }
     }
 
     if (just_broadcast) {
         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
     }
+
+    if (ThisNodeIsLeader()) {
+        StartBft("");
+    }
+
     BFT_ERROR("dispatch pool ok!");
 }
 

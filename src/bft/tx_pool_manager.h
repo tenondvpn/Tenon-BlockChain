@@ -23,10 +23,13 @@ public:
     bool HasTx(uint32_t pool_index, bool to, const std::string& tx_gid);
     void BftOver(BftInterfacePtr& bft_ptr);
     bool LockPool(uint32_t pool_index);
-    bool TxValid(TxItemPtr& tx_ptr);
     TxItemPtr GetTx(uint32_t pool_index, bool to, const std::string& gid);
 
 private:
+    bool CheckCallContractAddressValid(const std::string& contract_address);
+    bool CheckDispatchNormalTransaction(TxItemPtr& tx_ptr);
+    bool CheckCallerAccountInfoValid(const std::string& caller_address);
+
     TxPool* tx_pool_{ nullptr };
     common::Bitmap waiting_pools_{ common::kImmutablePoolSize };
     uint64_t waiting_pools_height_[common::kImmutablePoolSize];

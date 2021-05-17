@@ -104,6 +104,7 @@ enum BftStatus {
     kBftCommited = 4,
     kBftToTxInit = 5,
     kBftRootBlock = 6,
+    kBftCallContract = 7,
 };
 
 enum BftRole {

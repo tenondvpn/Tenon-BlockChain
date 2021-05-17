@@ -732,10 +732,18 @@ int TxBft::CheckAndCallContract(
     }
 
     if (tx_info->call_contract_step == contract::kCallStepCallerInited) {
+        auto iter = tx_info->attr_map.find(kContractCallerBalance);
+        if (iter == tx_info->attr_map.end()) {
+            return kBftError;
+        }
+
         // will return from address's remove tenon and gas used
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
+        tenon_host.AddTmpAccountBalance(
+            tx_info->from_acc_addr,
+            common::StringUtil::ToUint64(tx_info->attr_map[kContractCallerBalance]));
         if (CallContract(tx_info, &tenon_host, &res) != kBftSuccess) {
             return kBftExecuteContractFailed;
         }

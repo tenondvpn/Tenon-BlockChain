@@ -25,6 +25,7 @@ public:
 private:
     DispatchPool();
     ~DispatchPool();
+    void ProtoNewTxToTxInfo(const protobuf::NewTx& new_tx, protobuf::TxInfo* tx_info);
 
     int AddTx(const bft::protobuf::BftMessage& bft_msg, const std::string& tx_hash);
     int CheckNetworkValid(const TxItemPtr& tx_ptr);

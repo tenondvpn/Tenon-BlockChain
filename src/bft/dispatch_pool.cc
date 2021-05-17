@@ -30,26 +30,10 @@ int DispatchPool::Dispatch(const bft::protobuf::BftMessage& bft_msg, const std::
 }
 
 int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
-    auto tx_ptr = std::make_shared<TxItem>(
-        tx_info.version(),
-        tx_info.gid(),
-        tx_info.from(),
-        tx_info.from_pubkey(),
-        tx_info.from_sign(),
-        tx_info.to(),
-        tx_info.amount(),
-        tx_info.type(),
-        tx_info.gas_limit(),
-        tx_info.call_contract_step(),
-        tx_info.tx_hash());
-    tx_ptr->add_to_acc_addr = tx_info.to_add();
-    if (!GidManager::Instance()->NewGidTxValid(tx_ptr->gid, tx_ptr)) {
-        BFT_ERROR("global check gid exists: %s", common::Encode::HexEncode(tx_ptr->gid).c_str());
+    auto tx_ptr = std::make_shared<TxItem>(tx_info);
+    if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
+        BFT_ERROR("global check gid exists: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return kBftError;
-    }
-
-    for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
-        tx_ptr->add_attr(tx_info.attr(attr_idx).key(), tx_info.attr(attr_idx).value());
     }
 
     return tx_pool_.AddTx(tx_ptr);
@@ -114,6 +98,10 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     }
 
     return tx_pool_.AddTx(tx_ptr);
+}
+
+void DispatchPool::ProtoNewTxToTxInfo(const protobuf::NewTx& new_tx, protobuf::TxInfo* tx_info) {
+
 }
 
  void DispatchPool::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec) {

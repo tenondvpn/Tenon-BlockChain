@@ -89,21 +89,27 @@ evmc_storage_status TenonHost::set_storage(
 }
 
 evmc::uint256be TenonHost::get_balance(const evmc::address& addr) const noexcept {
-    auto account_info = block::AccountManager::Instance()->GetAcountInfo(
-        std::string((char*)addr.bytes, sizeof(addr.bytes)));
-    if (account_info == nullptr) {
+    // don't use real balance
+    auto iter = account_balance_.find(addr);
+    if (iter == account_balance_.end()) {
         return {};
     }
 
-    uint64_t balance = 0;
-    if (account_info->GetBalance(&balance) == block::kBlockSuccess) {
-        evmc::bytes32 tmp_val{};
-        std::cout << "addr: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes))) << ", balance: " << balance << std::endl;
-        Uint64ToEvmcBytes32(tmp_val, balance);
-        return tmp_val;
-    }
-
-    return {};
+    return iter->second;
+//     auto account_info = block::AccountManager::Instance()->GetAcountInfo(
+//         std::string((char*)addr.bytes, sizeof(addr.bytes)));
+//     if (account_info == nullptr) {
+//         return {};
+//     }
+// 
+//     uint64_t balance = 0;
+//     if (account_info->GetBalance(&balance) == block::kBlockSuccess) {
+//         evmc::bytes32 tmp_val{};
+//         Uint64ToEvmcBytes32(tmp_val, balance);
+//         return tmp_val;
+//     }
+// 
+//     return {};
 // 
 //     const auto it = accounts_.find(addr);
 //     if (it == accounts_.end()) {
