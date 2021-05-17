@@ -1501,6 +1501,7 @@ TEST_F(TestBftManager, TestExecution) {
         to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
+        std::cout << "MMMMMMMMMMMMMMMMM 4 " << std::endl;
     }
 
     // call contract
@@ -1521,6 +1522,21 @@ TEST_F(TestBftManager, TestExecution) {
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
+        auto caller_info = block::AccountManager::Instance()->GetAcountInfo(from);
+        ASSERT_TRUE(caller_info != nullptr);
+        uint64_t caller_balance = 0;
+        ASSERT_EQ(caller_info->GetBalance(&caller_balance), block::kBlockSuccess);
+        tenon_host.AddTmpAccountBalance(
+            from,
+            caller_balance);
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
+            contract_address);
+        ASSERT_TRUE(contract_info != nullptr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        tenon_host.AddTmpAccountBalance(
+            contract_address,
+            contract_balance);
         exec.execute(
             contract_address,
             input,

@@ -68,15 +68,20 @@ DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
 DbAccountInfo* AccountManager::GetContractInfoByAddress(const std::string& address) {
     auto account_info = GetAcountInfo(address);
     if (account_info == nullptr) {
+        BLOCK_ERROR("get account failed[%s]", common::Encode::HexEncode(address).c_str());
         return nullptr;
     }
 
     uint32_t address_type = kNormalAddress;
     if (account_info->GetAddressType(&address_type) != kBlockSuccess) {
+        BLOCK_ERROR("get account address_type failed[%s]",
+            common::Encode::HexEncode(address).c_str());
         return nullptr;
     }
 
     if (address_type != kContractAddress) {
+        BLOCK_ERROR("get account address_type[%d] invalid failed[%s]",
+            address_type, common::Encode::HexEncode(address).c_str());
         return nullptr;
     }
 
