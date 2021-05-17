@@ -59,11 +59,11 @@ std::string TxPool::GetUniqueId(const std::string& gid, bool to_add) {
 int TxPool::AddTx(TxItemPtr& tx_ptr) {
     assert(tx_ptr != nullptr);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-    std::string uni_gid = GetUniqueId(tx_ptr->gid, tx_ptr->add_to_acc_addr);
+    std::string uni_gid = GetUniqueId(tx_ptr->tx.gid(), tx_ptr->tx.to_add());
     auto iter = added_tx_map_.find(uni_gid);
     if (iter != added_tx_map_.end()) {
         BFT_ERROR("gid exists: %s, tx_ptr->add_to_acc_addr: %d.",
-            common::Encode::HexEncode(uni_gid).c_str(), tx_ptr->add_to_acc_addr);
+            common::Encode::HexEncode(uni_gid).c_str(), tx_ptr->tx.to_add());
         return kBftTxAdded;
     }
 

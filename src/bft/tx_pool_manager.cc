@@ -195,14 +195,14 @@ bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_addres
 }
 
 bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr& tx_ptr) {
-    if (!tx_ptr->add_to_acc_addr) {
-        return CheckCallerAccountInfoValid(tx_ptr->from_acc_addr);
+    if (!tx_ptr->tx.to_add()) {
+        return CheckCallerAccountInfoValid(tx_ptr->tx.from());
     } else {
         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->to_acc_addr);
+            auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.to());
             if (acc_info == nullptr) {
                 BFT_ERROR("tx invalid. account address not exists[%s]",
-                    common::Encode::HexEncode(tx_ptr->to_acc_addr).c_str());
+                    common::Encode::HexEncode(tx_ptr->tx.to()).c_str());
                 return false;
             }
 
@@ -237,7 +237,8 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
                 &pool_height,
                 &pool_hash);
             if (res != block::kBlockSuccess) {
-                BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u, tx_pool_.empty(): %u, res: %d",
+                BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
+                    "tx_pool_.empty(): %u, res: %d",
                     i, waiting_pools_.Valid(i), tx_pool_[i].TxPoolEmpty(), res);
                 continue;
             }
@@ -259,7 +260,8 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
                         &pool_height,
                         &pool_hash);
                 if (res != block::kBlockSuccess) {
-                    BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u, tx_pool_.empty(): %u, res: %d",
+                    BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
+                        "tx_pool_.empty(): %u, res: %d",
                         i, waiting_pools_.Valid(i), tx_pool_[i].TxPoolEmpty(), res);
                     continue;
                 }

@@ -88,16 +88,7 @@ TxItemPtr GidManager::GetTx(bool add_to, const std::string& gid) {
 }
 
 std::string GidManager::CreateTxInfo(TxItemPtr& tx_ptr) {
-    protobuf::TxInfo tx;
-    tx.set_version(tx_ptr->tx_version);
-    tx.set_gid(tx_ptr->gid);
-    tx.set_from(tx_ptr->from_acc_addr);
-    tx.set_from_pubkey(tx_ptr->from_pubkey);
-    tx.set_from_sign(tx_ptr->from_sign);
-    tx.set_to(tx_ptr->to_acc_addr);
-    tx.set_amount(tx_ptr->lego_count);
-    tx.set_to_add(tx_ptr->add_to_acc_addr);
-    tx.set_type(tx_ptr->bft_type);
+    protobuf::TxInfo tx = tx_ptr->tx;
     tx.set_gas_limit(0);
     tx.set_gas_price(0);
     tx.set_gas_used(0);

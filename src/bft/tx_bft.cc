@@ -607,19 +607,11 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     auto tx_list = tenon_block.mutable_tx_list();
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
-        protobuf::TxInfo tx;
+        protobuf::TxInfo tx = tx_vec[i]->tx;
         tx.set_version(common::kTransactionVersion);
-        tx.set_gid(tx_vec[i]->gid);
-        tx.set_from(tx_vec[i]->from_acc_addr);
-        tx.set_from_pubkey(tx_vec[i]->from_pubkey);
-        tx.set_from_sign(tx_vec[i]->from_sign);
-        tx.set_to(tx_vec[i]->to_acc_addr);
-        tx.set_amount(tx_vec[i]->lego_count);
-        tx.set_gas_limit(tx_vec[i]->gas);
         tx.set_gas_price(0);
         tx.set_gas_used(0);
         tx.set_status(kBftSuccess);
-        tx.set_to_add(tx_vec[i]->add_to_acc_addr);
         for (auto iter = tx_vec[i]->attr_map.begin(); iter != tx_vec[i]->attr_map.end(); ++iter) {
             auto attr = tx.add_attr();
             attr->set_key(iter->first);
@@ -627,23 +619,20 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         }
 
         // create address must to and have transfer amount
-        if (!tx_vec[i]->add_to_acc_addr || (tx_vec[i]->lego_count <= 0 &&
-                tx_vec[i]->bft_type != common::kConsensusCreateContract)) {
+        if (!tx.to_add() || (tx.amount() <= 0 && tx.type() != common::kConsensusCreateContract)) {
             continue;
         }
 
-        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(
-            tx_vec[i]->to_acc_addr);
+        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(tx.to_add());
         if (acc_info != nullptr) {
             continue;
         }
 
-        tx.set_type(tx_vec[i]->bft_type);
         tx.set_balance(0);  // just to network add balance by transfer tenon
-        if (tx_vec[i]->bft_type == common::kConsensusCreateContract) {
+        if (tx.type() == common::kConsensusCreateContract) {
             uint32_t network_id = 0;
             if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                    tx_vec[i]->from_acc_addr,
+                    tx.from(),
                     &network_id) != block::kBlockSuccess) {
                 BFT_ERROR("get network_id error!");
                 continue;
@@ -652,7 +641,7 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
             // same to from address's network id
             tx.set_network_id(network_id);
         } else {
-            tx.set_network_id(NewAccountGetNetworkId(tx_vec[i]->to_acc_addr));
+            tx.set_network_id(NewAccountGetNetworkId(tx.to()));
         }
 
         auto add_tx = tx_list->Add();
