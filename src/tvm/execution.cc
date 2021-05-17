@@ -78,7 +78,6 @@ int Execution::execute(
     int64_t gas = gas_limit;
     auto rev = EVMC_ISTANBUL;
     auto create = false;
-    constexpr auto create_address = evmc_address();// "c9ea7ed000000000000000000000000000000001_address";
     auto create_gas = gas_limit;
 
     evmc_message msg{};

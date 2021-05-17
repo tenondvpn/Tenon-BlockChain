@@ -42,15 +42,15 @@ int PayforVpn::GetAttrWithKey(const std::string& key, std::string& value) {
 }
 
 int PayforVpn::Execute(bft::TxItemPtr& tx_item) {
-    if (tx_item->bft_type != common::kConsensusPayForCommonVpn) {
+    if (tx_item->tx.type() != common::kConsensusPayForCommonVpn) {
         return kContractError;
     }
 
-    if (tx_item->add_to_acc_addr) {
+    if (tx_item->tx.to_add()) {
         return kContractSuccess;
     }
 
-    std::string key = db::kGlobalContractForPayforVpn + "_" + tx_item->from_acc_addr;
+    std::string key = db::kGlobalContractForPayforVpn + "_" + tx_item->tx.from();
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok() || val.size() != sizeof(PayInfo)) {
@@ -61,8 +61,8 @@ int PayforVpn::Execute(bft::TxItemPtr& tx_item) {
     auto now_day_timestamp = common::TimeUtils::TimestampDays() + 1;
     if (pay_info->end_day_timestamp > now_day_timestamp) {
         CONTRACT_ERROR("user[%s] vpn pay for[%s] prev paied not end.[%u] now[%u]",
-                common::Encode::HexEncode(tx_item->from_acc_addr).c_str(),
-                common::Encode::HexEncode(tx_item->to_acc_addr).c_str(),
+                common::Encode::HexEncode(tx_item->tx.from()).c_str(),
+                common::Encode::HexEncode(tx_item->tx.to()).c_str(),
                 pay_info->end_day_timestamp,
                 now_day_timestamp);
         return kContractError;
