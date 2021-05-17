@@ -807,6 +807,7 @@ public:
     void NewAccountDestNetworkTransfer(
             bool is_from_root,
             uint32_t tx_type,
+            bool just_to_id,
             transport::protobuf::Header& root_leader_msg,
             const std::string& from_prikey,
             const std::string& to_prikey,
@@ -925,7 +926,7 @@ public:
 
         // commit
         std::string to_id = GetIdByPrikey(to_prikey);
-        if (tx_type == 99) {
+        if (just_to_id) {
             to_id = to_prikey;
         }
 
@@ -991,8 +992,8 @@ public:
             uint64_t amount,
             uint64_t gas_limit,
             uint32_t tx_type,
-            bool just_to_id,
             bool call_to,
+            bool just_to_id,
             std::map<std::string, std::string>& attrs) {
         transport::protobuf::Header broadcast_msg;
         Transfer(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, &broadcast_msg);
@@ -1006,9 +1007,9 @@ public:
                 std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD called CreateNewAccount now." << std::endl;
                 CreateNewAccount(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
-                NewAccountDestNetworkTransfer(true, tx_type, to_root_broadcast_msg, from_prikey, to_prikey, attrs);
+                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs);
             } else {
-                NewAccountDestNetworkTransfer(false, tx_type, broadcast_msg, from_prikey, to_prikey, attrs);
+                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs);
             }
         }
     }
@@ -1607,7 +1608,6 @@ TEST_F(TestBftManager, TestCallContract) {
         std::cout << "MMMMMMMMMMMMMMMMM 1 " << std::endl;
     }
 
-
     // create contract
     std::string contract_addr;
     {
@@ -1744,12 +1744,12 @@ TEST_F(TestBftManager, TestCallContract) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode(
             "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
-        std::string to_prikey = common::Encode::HexDecode(
-            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
         std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
         // Default caller init
-        Transfer(from_prikey, to_prikey, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        Transfer(from_prikey, contract_addr, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
         // LockContract
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, broadcast_msg, from_prikey, contract_addr, attrs);
         // CallContract
         // UnlockContract
     }
