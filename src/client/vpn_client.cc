@@ -962,24 +962,20 @@ int VpnClient::InitNetworkSingleton(uint32_t init_type) {
 
 int VpnClient::CreateClientUniversalNetwork() {
     dht::DhtKeyManager dht_key(
-            network::kVpnNetworkId,
-            common::GlobalInfo::Instance()->country(),
-            common::GlobalInfo::Instance()->id());
+        network::kVpnNetworkId,
+        common::GlobalInfo::Instance()->country(),
+        common::GlobalInfo::Instance()->id());
     dht::NodePtr local_node = std::make_shared<dht::Node>(
-            common::GlobalInfo::Instance()->id(),
-            dht_key.StrKey(),
-            dht::kNatTypeFullcone,
-            client_mode_,
-            common::GlobalInfo::Instance()->config_local_ip(),
-            common::GlobalInfo::Instance()->config_local_port(),
-            common::GlobalInfo::Instance()->config_local_ip(),
-            common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
-            common::GlobalInfo::Instance()->node_tag());
-    NETWORK_ERROR("create universal network[%s][%d][%s]",
-        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
-        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).size(),
-        common::Encode::HexEncode(dht_key.StrKey()).c_str());
+        common::GlobalInfo::Instance()->id(),
+        dht_key.StrKey(),
+        dht::kNatTypeFullcone,
+        client_mode_,
+        common::GlobalInfo::Instance()->config_local_ip(),
+        common::GlobalInfo::Instance()->config_local_port(),
+        common::GlobalInfo::Instance()->config_local_ip(),
+        common::GlobalInfo::Instance()->config_local_port(),
+        security::Schnorr::Instance()->str_pubkey(),
+        common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     root_dht_ = std::make_shared<ClientUniversalDht>(udp_transport_, local_node);
     root_dht_->Init();
