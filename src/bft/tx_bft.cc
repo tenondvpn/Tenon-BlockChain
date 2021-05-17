@@ -239,7 +239,7 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
     }
 
     std::unordered_map<std::string, int64_t> acc_balance_map;
-    std::unordered_map<std::string, bool> locked_account_map
+    std::unordered_map<std::string, bool> locked_account_map;
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         const auto& tx_info = block.tx_list(i);
         int tmp_res = CheckTxInfo(block, tx_info);
@@ -458,7 +458,7 @@ int TxBft::BackupCheckContractLocked(
             }
         }
 
-        if (account_iter->second.storage.size() != tx_info.storages_size()) {
+        if (account_iter->second.storage.size() != (uint32_t)tx_info.storages_size()) {
             return kBftLeaderInfoInvalid;
         }
 
@@ -479,7 +479,7 @@ int TxBft::BackupCheckContractLocked(
 
         int64_t caller_balance_add = 0;
         auto& transfers = tenon_host.to_account_value_;
-        if (tx_info.transfers_size() != transfers.size()) {
+        if ((uint32_t)tx_info.transfers_size() != transfers.size()) {
             return kBftLeaderInfoInvalid;
         }
 
@@ -561,7 +561,7 @@ int TxBft::BackupCheckContractCalled(
     uint64_t to_balance = 0;
     int balance_status = GetTempAccountBalance(tx_info.to(), acc_balance_map, &to_balance);
     if (balance_status != kBftSuccess) {
-        if (tx_info.status() != balance_status) {
+        if (tx_info.status() != (uint32_t)balance_status) {
             return kBftLeaderInfoInvalid;
         }
     }
@@ -582,7 +582,7 @@ int TxBft::BackupCheckContractCalled(
     }
 
     if (contract_balance_add < 0) {
-        assert(to_balance > abs(contract_balance_add));
+        assert(to_balance > (uint64_t)abs(contract_balance_add));
     }
 
     to_balance += contract_balance_add;
@@ -1413,7 +1413,7 @@ int TxBft::LeaderAddContractCalled(
     }
 
     if (contract_balance_add < 0) {
-        assert(to_balance > abs(contract_balance_add));
+        assert(to_balance > (uint64_t)abs(contract_balance_add));
     }
 
     to_balance += contract_balance_add;
