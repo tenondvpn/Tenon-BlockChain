@@ -1009,9 +1009,11 @@ public:
                 std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD called CreateNewAccount now." << std::endl;
                 CreateNewAccount(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
-                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &broadcast_msg);
+                transport::protobuf::Header tmp_broadcast_msg;
+                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
             } else {
-                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, &broadcast_msg);
+                transport::protobuf::Header tmp_broadcast_msg;
+                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
             }
         }
     }

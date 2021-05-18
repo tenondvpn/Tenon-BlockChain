@@ -14,14 +14,23 @@ class GidManager {
 public:
     static GidManager* Instance();
     bool NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr);
-    TxItemPtr GetTx(bool add_to, const std::string& gid);
+    TxItemPtr GetTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
 
 private:
     GidManager() {}
     ~GidManager() {}
 
     std::string CreateTxInfo(TxItemPtr& tx_ptr);
-        
+    std::string GetUniversalGid(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
+
     std::unordered_map<std::string, TxItemPtr> tx_map_;
     std::mutex tx_map_mutex_;
 };
