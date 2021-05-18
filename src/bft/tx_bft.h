@@ -30,7 +30,10 @@ private:
     int LeaderCreatePreCommit(std::string& bft_str);
     int LeaderCreateCommit(std::string& bft_str);
     int CheckBlockInfo(const protobuf::Block& block_info);
-    int CheckTxInfo(const protobuf::Block& block_info, const protobuf::TxInfo& tx_info);
+    int CheckTxInfo(
+        const protobuf::Block& block_info,
+        const protobuf::TxInfo& tx_info,
+        TxItemPtr* local_tx);
     void LeaderCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,

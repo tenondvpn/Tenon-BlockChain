@@ -241,18 +241,13 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
     std::unordered_map<std::string, bool> locked_account_map;
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         const auto& tx_info = block.tx_list(i);
-        int tmp_res = CheckTxInfo(block, tx_info);
-        if (tmp_res != kBftSuccess) {
+        TxItemPtr local_tx_info = nullptr;
+        int tmp_res = CheckTxInfo(block, tx_info, &local_tx_info);
+        if (tmp_res != kBftSuccess || local_tx_info == nullptr) {
             BFT_ERROR("check transaction failed![%d]", tmp_res);
             return tmp_res;
         }
 
-        auto local_tx_info = DispatchPool::Instance()->GetTx(
-            pool_index(),
-            tx_info.to_add(),
-            tx_info.type(),
-            tx_info.call_contract_step(),
-            tx_info.gid());
         if (local_tx_info->tx.type() != common::kConsensusCallContract) {
             int check_res = BackupNormalCheck(local_tx_info, tx_info, acc_balance_map);
             if (check_res != kBftSuccess) {
@@ -776,17 +771,30 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
 
 int TxBft::CheckTxInfo(
         const protobuf::Block& block_info,
-        const protobuf::TxInfo& tx_info) {
+        const protobuf::TxInfo& tx_info,
+        TxItemPtr* local_tx) {
+    uint32_t call_contract_step = 0;
+    if (tx_info.type() == common::kConsensusCallContract) {
+        if (tx_info.call_contract_step() <= contract::kCallStepDefault) {
+            return kBftLeaderInfoInvalid;
+        }
+
+        call_contract_step = tx_info.call_contract_step() - 1;
+    }
     auto local_tx_info = DispatchPool::Instance()->GetTx(
         pool_index(),
         tx_info.to_add(),
         tx_info.type(),
-        tx_info.call_contract_step(),
+        call_contract_step,
         tx_info.gid());
+    *local_tx = local_tx_info;
     if (local_tx_info == nullptr) {
-        BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
+        BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
+            "call_contract_step: %d not has tx[%s]to[%s][%s]!",
             tx_info.to_add(),
             pool_index(),
+            tx_info.type(),
+            tx_info.call_contract_step(),
             common::Encode::HexEncode(tx_info.from()).c_str(),
             common::Encode::HexEncode(tx_info.to()).c_str(),
             common::Encode::HexEncode(tx_info.gid()).c_str());

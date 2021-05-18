@@ -69,7 +69,15 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
-    std::cout << "Add new tx: " << tx_index << ", tx_ptr->index: " << tx_ptr->index << std::endl;
+    BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
+        "call_contract_step: %d not has tx[%s]to[%s][%s]!",
+        tx_ptr->tx.to_add(),
+        pool_index_,
+        tx_ptr->tx.type(),
+        tx_ptr->tx.call_contract_step(),
+        common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
+        common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
+        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
     return kBftSuccess;
 }
 
