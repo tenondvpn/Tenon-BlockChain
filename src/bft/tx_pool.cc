@@ -6,6 +6,7 @@
 #include "bft/bft_utils.h"
 #include "common/encode.h"
 #include "block/account_manager.h"
+#include "bft/gid_manager.h"
 
 namespace lego {
 
@@ -49,18 +50,14 @@ bool TxPool::NewAddrValid(const std::string& new_addr) {
     return true;
 }
 
-std::string TxPool::GetUniqueId(const std::string& gid, bool to_add) {
-    if (to_add) {
-        return std::to_string(common::GlobalInfo::Instance()->network_id()) + "_t_" + gid;
-    } else {
-        return std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" + gid;
-    }
-}
-
 int TxPool::AddTx(TxItemPtr& tx_ptr) {
     assert(tx_ptr != nullptr);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-    std::string uni_gid = GetUniqueId(tx_ptr->tx.gid(), tx_ptr->tx.to_add());
+    std::string uni_gid = GidManager::Instance()->GetUniversalGid(
+        tx_ptr->tx.to_add(),
+        tx_ptr->tx.type(),
+        tx_ptr->tx.call_contract_step(),
+        tx_ptr->tx.gid());
     auto iter = added_tx_map_.find(uni_gid);
     if (iter != added_tx_map_.end()) {
         BFT_ERROR("gid exists: %s, tx_ptr->add_to_acc_addr: %d.",
@@ -132,15 +129,16 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
     return false;
 }
 
-bool TxPool::HasTx(bool to, const std::string& tx_gid) {
-    std::string uni_gid = GetUniqueId(tx_gid, to);
-    std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-    auto iter = added_tx_map_.find(uni_gid);
-    return iter != added_tx_map_.end();
-}
-
-TxItemPtr TxPool::GetTx(bool to, const std::string& tx_gid) {
-    std::string uni_gid = GetUniqueId(tx_gid, to);
+TxItemPtr TxPool::GetTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid) {
+    std::string uni_gid = GidManager::Instance()->GetUniversalGid(
+        add_to,
+        tx_type,
+        call_contract_step,
+        gid);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {

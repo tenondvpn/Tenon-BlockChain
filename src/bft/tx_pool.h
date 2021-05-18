@@ -57,8 +57,11 @@ public:
     int AddTx(TxItemPtr& account_ptr);
     void GetTx(std::vector<TxItemPtr>& res_vec);
     bool TxPoolEmpty();
-    bool HasTx(bool to, const std::string& tx_gid);
-    TxItemPtr GetTx(bool to, const std::string& tx_gid);
+    TxItemPtr GetTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;

@@ -15,9 +15,12 @@ public:
     int Dispatch(const protobuf::TxInfo& tx_info);
 
     void GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec);
-    bool HasTx(const std::string& acc_addr, bool to, const std::string& gid);
-    bool HasTx(uint32_t pool_index, bool to, const std::string& gid);
-    TxItemPtr GetTx(uint32_t pool_index, bool to, const std::string& gid);
+    TxItemPtr GetTx(
+        uint32_t pool_index,
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
     bool TxLockPool(uint32_t pool_index);
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);

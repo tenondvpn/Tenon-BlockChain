@@ -19,17 +19,16 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
-
-private:
-    GidManager() {}
-    ~GidManager() {}
-
-    std::string CreateTxInfo(TxItemPtr& tx_ptr);
     std::string GetUniversalGid(
         bool add_to,
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+
+private:
+    GidManager() {}
+    ~GidManager() {}
+    std::string CreateTxInfo(TxItemPtr& tx_ptr);
 
     std::unordered_map<std::string, TxItemPtr> tx_map_;
     std::mutex tx_map_mutex_;

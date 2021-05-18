@@ -87,16 +87,13 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     return tx_pool_.GetTx(pool_index, res_vec);
 }
 
-bool DispatchPool::HasTx(const std::string& acc_addr, bool to, const std::string& gid) {
-    return tx_pool_.HasTx(acc_addr, to, gid);
-}
-
-bool DispatchPool::HasTx(uint32_t pool_index, bool to, const std::string& gid) {
-    return tx_pool_.HasTx(pool_index, to, gid);
-}
-
-TxItemPtr DispatchPool::GetTx(uint32_t pool_index, bool to, const std::string& gid) {
-    return tx_pool_.GetTx(pool_index, to, gid);
+ TxItemPtr DispatchPool::GetTx(
+         uint32_t pool_index,
+         bool add_to,
+         uint32_t tx_type,
+         uint32_t call_contract_step,
+         const std::string& gid) {
+     return tx_pool_.GetTx(pool_index, add_to, tx_type, call_contract_step, gid);
 }
 
 void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {

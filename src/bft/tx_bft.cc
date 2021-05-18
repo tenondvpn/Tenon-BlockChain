@@ -143,18 +143,17 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
         auto local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
             tx_info.to_add(),
+            tx_info.type(),
+            tx_info.call_contract_step(),
             tx_info.gid());
         if (local_tx_info == nullptr) {
-            local_tx_info = GidManager::Instance()->GetTx(tx_info.to_add(), tx_info.gid());
-            if (local_tx_info == nullptr) {
-                BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
-                    tx_info.to_add(),
-                    pool_index(),
-                    common::Encode::HexEncode(tx_info.from()).c_str(),
-                    common::Encode::HexEncode(tx_info.to()).c_str(),
-                    common::Encode::HexEncode(tx_info.gid()).c_str());
-                return kBftTxNotExists;
-            }
+            BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
+                tx_info.to_add(),
+                pool_index(),
+                common::Encode::HexEncode(tx_info.from()).c_str(),
+                common::Encode::HexEncode(tx_info.to()).c_str(),
+                common::Encode::HexEncode(tx_info.gid()).c_str());
+            return kBftTxNotExists;
         }
 
         if (local_tx_info->tx.to() != tx_info.to()) {
@@ -251,6 +250,8 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
         auto local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
             tx_info.to_add(),
+            tx_info.type(),
+            tx_info.call_contract_step(),
             tx_info.gid());
         if (local_tx_info->tx.type() != common::kConsensusCallContract) {
             int check_res = BackupNormalCheck(local_tx_info, tx_info, acc_balance_map);
@@ -422,6 +423,8 @@ int TxBft::BackupCheckContractLocked(
     auto local_tx_info = DispatchPool::Instance()->GetTx(
         pool_index(),
         local_tx_ptr->tx.to_add(),
+        local_tx_ptr->tx.type(),
+        local_tx_ptr->tx.call_contract_step(),
         local_tx_ptr->tx.gid());
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
@@ -775,20 +778,19 @@ int TxBft::CheckTxInfo(
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info) {
     auto local_tx_info = DispatchPool::Instance()->GetTx(
-            pool_index(),
-            tx_info.to_add(),
-            tx_info.gid());
+        pool_index(),
+        tx_info.to_add(),
+        tx_info.type(),
+        tx_info.call_contract_step(),
+        tx_info.gid());
     if (local_tx_info == nullptr) {
-        local_tx_info = GidManager::Instance()->GetTx(tx_info.to_add(), tx_info.gid());
-        if (local_tx_info == nullptr) {
-            BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
-                tx_info.to_add(),
-                pool_index(),
-                common::Encode::HexEncode(tx_info.from()).c_str(),
-                common::Encode::HexEncode(tx_info.to()).c_str(),
-                common::Encode::HexEncode(tx_info.gid()).c_str());
-            return kBftTxNotExists;
-        }
+        BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
+            tx_info.to_add(),
+            pool_index(),
+            common::Encode::HexEncode(tx_info.from()).c_str(),
+            common::Encode::HexEncode(tx_info.to()).c_str(),
+            common::Encode::HexEncode(tx_info.gid()).c_str());
+        return kBftTxNotExists;
     }
 
     if (local_tx_info->tx.amount() != tx_info.amount()) {
