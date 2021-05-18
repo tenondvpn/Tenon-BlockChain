@@ -392,6 +392,10 @@ int TxBft::BackupCheckContractInited(
         return kBftLeaderInfoInvalid;
     }
 
+    if (tx_info.call_contract_step() != contract::kCallStepContractLocked) {
+        return kBftLeaderInfoInvalid;
+    }
+
     locked_account_map[local_tx_ptr->tx.to()] = true;
     // account lock must new block coming
     return kBftSuccess;
@@ -571,6 +575,10 @@ int TxBft::BackupCheckContractLocked(
         return kBftLeaderInfoInvalid;
     }
 
+    if (tx_info.call_contract_step() != contract::kCallStepContractCalled) {
+        return kBftLeaderInfoInvalid;
+    }
+
     acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     return kBftSuccess;
 }
@@ -617,6 +625,10 @@ int TxBft::BackupCheckContractCalled(
 
     acc_balance_map[tx_info.to()] = to_balance;
     if (tx_info.gas_used() != 0) {
+        return kBftLeaderInfoInvalid;
+    }
+
+    if (tx_info.call_contract_step() != contract::kCallStepContractFinal) {
         return kBftLeaderInfoInvalid;
     }
 
@@ -794,7 +806,7 @@ int TxBft::CheckTxInfo(
             tx_info.to_add(),
             pool_index(),
             tx_info.type(),
-            tx_info.call_contract_step(),
+            call_contract_step,
             common::Encode::HexEncode(tx_info.from()).c_str(),
             common::Encode::HexEncode(tx_info.to()).c_str(),
             common::Encode::HexEncode(tx_info.gid()).c_str());
@@ -1199,7 +1211,6 @@ int TxBft::LeaderAddNormalTransaction(
         tx.set_balance(from_balance);
     }
 
-    tx.set_call_contract_step(contract::kCallStepCallerInited);
     tx.set_gas_used(gas_used);
     return kBftSuccess;
 }
@@ -1340,7 +1351,13 @@ int TxBft::LeaderAddCallContract(
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& out_tx) {
     if (tx_info->tx.call_contract_step() == contract::kCallStepDefault) {
-        return LeaderAddNormalTransaction(tx_info, acc_balance_map, out_tx);
+        int res = LeaderAddNormalTransaction(tx_info, acc_balance_map, out_tx);
+        if (res != kBftSuccess) {
+            return res;
+        }
+
+        out_tx.set_call_contract_step(contract::kCallStepCallerInited);
+        return kBftSuccess;
     }
 
     if (tx_info->tx.call_contract_step() == contract::kCallStepCallerInited) {
@@ -1374,18 +1391,31 @@ int TxBft::LeaderAddCallContract(
         balace_attr->set_key(kContractBalance);
         balace_attr->set_value(std::to_string(balance));
         locked_account_map[tx_info->tx.to()] = true;
+        out_tx.set_call_contract_step(contract::kCallStepContractLocked);
         // account lock must new block coming
         return kBftSuccess;
     }
 
     if (tx_info->tx.call_contract_step() == contract::kCallStepContractLocked) {
         // now caller call contract
-        return LeaderCheckCallContract(tx_info, acc_balance_map, out_tx);
+        int res = LeaderCheckCallContract(tx_info, acc_balance_map, out_tx);
+        if (res != kBftSuccess) {
+            return res;
+        }
+
+        out_tx.set_call_contract_step(contract::kCallStepContractCalled);
+        return kBftSuccess;
     }
 
     if (tx_info->tx.call_contract_step() == contract::kCallStepContractCalled) {
         // contract unlock it
-        return LeaderAddContractCalled(tx_info, acc_balance_map, out_tx);
+        int res = LeaderAddContractCalled(tx_info, acc_balance_map, out_tx);
+        if (res != kBftSuccess) {
+            return res;
+        }
+
+        out_tx.set_call_contract_step(contract::kCallStepContractFinal);
+        return kBftSuccess;
     }
 
     return kBftError;

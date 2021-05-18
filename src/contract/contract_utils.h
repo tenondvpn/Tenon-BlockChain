@@ -24,6 +24,7 @@ enum CallContractStep {
     kCallStepCallerInited = 1,
     kCallStepContractLocked = 2,
     kCallStepContractCalled = 3,
+    kCallStepContractFinal = 4,
 };
 
 static const std::string kContractVpnBandwidthProveAddr = "contract_vpn_bandwith_prove";
