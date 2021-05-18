@@ -336,6 +336,7 @@ int TxBft::BackupCheckContractInited(
     // lock contract and 
     if (locked_account_map.find(local_tx_ptr->tx.to()) != locked_account_map.end()) {
         if (tx_info.status() != kBftContractAddressLocked) {
+            BFT_ERROR("backup account locked error.");
             return kBftLeaderInfoInvalid;
         }
     }
@@ -343,11 +344,13 @@ int TxBft::BackupCheckContractInited(
     auto contract_acc = block::AccountManager::Instance()->GetContractInfoByAddress(
         local_tx_ptr->tx.to());
     if (contract_acc == nullptr) {
+        BFT_ERROR("backup get contract address error.");
         return kBftLeaderInfoInvalid;
     }
 
     if (contract_acc->locked()) {
         if (tx_info.status() != kBftContractAddressLocked) {
+            BFT_ERROR("backup account locked by block commit error.");
             return kBftLeaderInfoInvalid;
         }
     }
@@ -355,6 +358,7 @@ int TxBft::BackupCheckContractInited(
     std::string bytes_code;
     if (contract_acc->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
         if (tx_info.status() != kBftContractBytesCodeError) {
+            BFT_ERROR("backup get bytescode error.");
             return kBftLeaderInfoInvalid;
         }
     }
@@ -372,7 +376,7 @@ int TxBft::BackupCheckContractInited(
 
     bool bytes_code_ok = false;
     bool balance_ok = false;
-    for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         if (tx_info.attr(i).key() == kContractBytesCode) {
             if (tx_info.attr(i).value() == bytes_code) {
                 bytes_code_ok = true;
@@ -387,6 +391,8 @@ int TxBft::BackupCheckContractInited(
     }
 
     if (!bytes_code_ok || !balance_ok) {
+        BFT_ERROR("backup get bytes_code_ok error or balance_ok error[%d][%d].",
+            bytes_code_ok, balance_ok);
         return kBftLeaderInfoInvalid;
     }
 
@@ -577,7 +583,10 @@ int TxBft::BackupCheckContractCalled(
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     // gas just consume by from
     uint64_t to_balance = 0;
-    int balance_status = GetTempAccountBalance(local_tx_ptr.tx.to(), acc_balance_map, &to_balance);
+    int balance_status = GetTempAccountBalance(
+        local_tx_ptr->tx.to(),
+        acc_balance_map,
+        &to_balance);
     if (balance_status != kBftSuccess) {
         if (tx_info.status() != (uint32_t)balance_status) {
             return kBftLeaderInfoInvalid;
@@ -1047,7 +1056,8 @@ void TxBft::LeaderCreateTxBlock(
             if (LeaderAddCallContract(
                     tx_vec[i],
                     acc_balance_map,
-                    locked_account_map, tx) != kBftSuccess) {
+                    locked_account_map,
+                    tx) != kBftSuccess) {
                 continue;
             }
         }
@@ -1354,6 +1364,7 @@ int TxBft::LeaderAddCallContract(
         balace_attr->set_key(kContractBalance);
         balace_attr->set_value(std::to_string(balance));
         locked_account_map[tx_info->tx.to()] = true;
+        std::cout << "leader add bytes code: " << common::Encode::HexEncode(bytes_code) << ", balance: " << balance << std::endl;
         // account lock must new block coming
         return kBftSuccess;
     }

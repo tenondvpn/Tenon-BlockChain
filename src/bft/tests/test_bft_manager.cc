@@ -811,7 +811,8 @@ public:
             transport::protobuf::Header& root_leader_msg,
             const std::string& from_prikey,
             const std::string& to_prikey,
-            std::map<std::string, std::string>& attrs) {
+            std::map<std::string, std::string>& attrs,
+            transport::protobuf::Header* leader_broadcast_msg) {
         // root create new account and add to consensus network
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(root_leader_msg);
@@ -902,6 +903,7 @@ public:
             ASSERT_EQ(bft_msg.gid(), bft_gid);
         }
 
+        *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
         bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
@@ -1007,9 +1009,9 @@ public:
                 std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD called CreateNewAccount now." << std::endl;
                 CreateNewAccount(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
-                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs);
+                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &broadcast_msg);
             } else {
-                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs);
+                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, &broadcast_msg);
             }
         }
     }
@@ -1750,9 +1752,13 @@ TEST_F(TestBftManager, TestCallContract) {
         std::cout << "CCCCCCCCCC caller init." << std::endl;
         Transfer(from_prikey, contract_addr, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
         // LockContract
-        std::cout << "CCCCCCCCCC caller lock contract." << std::endl;
-        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, broadcast_msg, from_prikey, contract_addr, attrs);
+        std::cout << "CCCCCCCCCC contact lock contract." << std::endl;
+        transport::protobuf::Header leader_init_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
         // CallContract
+        transport::protobuf::Header leader_lock_msg;
+        std::cout << "CCCCCCCCCC caller call contract." << std::endl;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         // UnlockContract
     }
 }
