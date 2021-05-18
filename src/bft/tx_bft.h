@@ -66,19 +66,24 @@ private:
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
     int BackupNormalCheck(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractDefault(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractInited(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map);
     int BackupCheckContractLocked(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractCalled(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
 

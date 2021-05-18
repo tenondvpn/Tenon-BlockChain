@@ -248,40 +248,49 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
             return tmp_res;
         }
 
-        if (tx_info.type() != common::kConsensusCallContract) {
-            int check_res = BackupNormalCheck(tx_info, acc_balance_map);
+        auto local_tx_info = DispatchPool::Instance()->GetTx(
+            pool_index(),
+            tx_info.to_add(),
+            tx_info.gid());
+        if (local_tx_info->tx.type() != common::kConsensusCallContract) {
+            int check_res = BackupNormalCheck(local_tx_info, tx_info, acc_balance_map);
             if (check_res != kBftSuccess) {
                 return check_res;
             }
         } else {
-            switch (tx_info.call_contract_step()) {
+            switch (local_tx_info->tx.call_contract_step()) {
             case contract::kCallStepDefault: {
-                int check_res = BackupCheckContractDefault(tx_info, acc_balance_map);
+                int check_res = BackupCheckContractDefault(local_tx_info, tx_info, acc_balance_map);
                 if (check_res != kBftSuccess) {
+                    BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
                     return check_res;
                 }
                 break;
             }
             case contract::kCallStepCallerInited: {
                 int check_res = BackupCheckContractInited(
+                    local_tx_info,
                     tx_info,
                     acc_balance_map,
                     locked_account_map);
                 if (check_res != kBftSuccess) {
+                    BFT_ERROR("BackupCheckContractInited transaction failed![%d]", tmp_res);
                     return check_res;
                 }
                 break;
             }
             case contract::kCallStepContractLocked: {
-                int check_res = BackupCheckContractLocked(tx_info, acc_balance_map);
+                int check_res = BackupCheckContractLocked(local_tx_info, tx_info, acc_balance_map);
                 if (check_res != kBftSuccess) {
+                    BFT_ERROR("BackupCheckContractLocked transaction failed![%d]", tmp_res);
                     return check_res;
                 }
                 break;
             }
             case contract::kCallStepContractCalled: {
-                int check_res = BackupCheckContractCalled(tx_info, acc_balance_map);
+                int check_res = BackupCheckContractCalled(local_tx_info, tx_info, acc_balance_map);
                 if (check_res != kBftSuccess) {
+                    BFT_ERROR("BackupCheckContractCalled transaction failed![%d]", tmp_res);
                     return check_res;
                 }
                 break;
@@ -304,28 +313,35 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
 }
 
 int TxBft::BackupCheckContractDefault(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
-    int check_res = BackupNormalCheck(tx_info, acc_balance_map);
+    int check_res = BackupNormalCheck(local_tx_ptr, tx_info, acc_balance_map);
     if (check_res != kBftSuccess) {
         return check_res;
+    }
+    
+    if (tx_info.call_contract_step() != contract::kCallStepCallerInited) {
+        return kBftLeaderInfoInvalid;
     }
 
     return kBftSuccess;
 }
 
 int TxBft::BackupCheckContractInited(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map) {
     // lock contract and 
-    if (locked_account_map.find(tx_info.to()) != locked_account_map.end()) {
+    if (locked_account_map.find(local_tx_ptr->tx.to()) != locked_account_map.end()) {
         if (tx_info.status() != kBftContractAddressLocked) {
             return kBftLeaderInfoInvalid;
         }
     }
 
-    auto contract_acc = block::AccountManager::Instance()->GetContractInfoByAddress(tx_info.to());
+    auto contract_acc = block::AccountManager::Instance()->GetContractInfoByAddress(
+        local_tx_ptr->tx.to());
     if (contract_acc == nullptr) {
         return kBftLeaderInfoInvalid;
     }
@@ -345,7 +361,7 @@ int TxBft::BackupCheckContractInited(
 
     uint64_t to_balance = 0;
     int balance_status = GetTempAccountBalance(
-        tx_info.to(),
+        local_tx_ptr->tx.to(),
         acc_balance_map,
         &to_balance);
     if (balance_status != kBftSuccess && tx_info.status() != (uint32_t)balance_status) {
@@ -356,7 +372,7 @@ int TxBft::BackupCheckContractInited(
 
     bool bytes_code_ok = false;
     bool balance_ok = false;
-    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+    for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
         if (tx_info.attr(i).key() == kContractBytesCode) {
             if (tx_info.attr(i).value() == bytes_code) {
                 bytes_code_ok = true;
@@ -374,12 +390,13 @@ int TxBft::BackupCheckContractInited(
         return kBftLeaderInfoInvalid;
     }
 
-    locked_account_map[tx_info.to()] = true;
+    locked_account_map[local_tx_ptr->tx.to()] = true;
     // account lock must new block coming
     return kBftSuccess;
 }
 
 int TxBft::BackupCheckContractLocked(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     uint64_t gas_used = 0;
@@ -387,7 +404,7 @@ int TxBft::BackupCheckContractLocked(
     uint64_t from_balance = 0;
     uint64_t to_balance = 0;
     int balance_status = GetTempAccountBalance(
-        tx_info.from(),
+        local_tx_ptr->tx.from(),
         acc_balance_map,
         &from_balance);
     if (balance_status != kBftSuccess && tx_info.status() != (uint32_t)balance_status) {
@@ -398,14 +415,14 @@ int TxBft::BackupCheckContractLocked(
 
     auto local_tx_info = DispatchPool::Instance()->GetTx(
         pool_index(),
-        tx_info.to_add(),
-        tx_info.gid());
+        local_tx_ptr->tx.to_add(),
+        local_tx_ptr->tx.gid());
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
     do
     {
-        if (from_balance <= tx_info.gas_limit()) {
+        if (from_balance <= local_tx_ptr->tx.gas_limit()) {
             if (tx_info.status() != kBftUserSetGasLimitError) {
                 return kBftLeaderInfoInvalid;
             }
@@ -450,7 +467,7 @@ int TxBft::BackupCheckContractLocked(
     // use execute contract transfer amount to change from balance
     if (tx_info.status() == kBftSuccess) {
         evmc_address sender;
-        memcpy(sender.bytes, tx_info.from().c_str(), sizeof(sender.bytes));
+        memcpy(sender.bytes, local_tx_ptr->tx.from().c_str(), sizeof(sender.bytes));
         auto account_iter = tenon_host.accounts_.find(sender);
         if (account_iter == tenon_host.accounts_.end()) {
             if (tx_info.storages_size() != 0) {
@@ -542,7 +559,6 @@ int TxBft::BackupCheckContractLocked(
         }
     }
 
-    acc_balance_map[tx_info.from()] = from_balance;
     if (from_balance != tx_info.balance()) {
         return kBftLeaderInfoInvalid;
     }
@@ -551,15 +567,17 @@ int TxBft::BackupCheckContractLocked(
         return kBftLeaderInfoInvalid;
     }
 
+    acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     return kBftSuccess;
 }
 
 int TxBft::BackupCheckContractCalled(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     // gas just consume by from
     uint64_t to_balance = 0;
-    int balance_status = GetTempAccountBalance(tx_info.to(), acc_balance_map, &to_balance);
+    int balance_status = GetTempAccountBalance(local_tx_ptr.tx.to(), acc_balance_map, &to_balance);
     if (balance_status != kBftSuccess) {
         if (tx_info.status() != (uint32_t)balance_status) {
             return kBftLeaderInfoInvalid;
@@ -572,11 +590,11 @@ int TxBft::BackupCheckContractCalled(
 
     int64_t contract_balance_add = 0;
     for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
-        if (tx_info.to() == tx_info.transfers(i).from()) {
+        if (local_tx_ptr->tx.to() == tx_info.transfers(i).from()) {
             contract_balance_add -= tx_info.transfers(i).amount();
         }
 
-        if (tx_info.to() == tx_info.transfers(i).to()) {
+        if (local_tx_ptr->tx.to() == tx_info.transfers(i).to()) {
             contract_balance_add += tx_info.transfers(i).amount();
         }
     }
@@ -599,15 +617,16 @@ int TxBft::BackupCheckContractCalled(
 }
 
 int TxBft::BackupNormalCheck(
+        const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     uint64_t gas_used = 0;
     // gas just consume by from
     uint64_t from_balance = 0;
     uint64_t to_balance = 0;
-    if (!tx_info.to_add()) {
+    if (!local_tx_ptr->tx.to_add()) {
         int balance_status = GetTempAccountBalance(
-            tx_info.from(),
+            local_tx_ptr->tx.from(),
             acc_balance_map,
             &from_balance);
         if (balance_status != kBftSuccess && tx_info.status() != (uint32_t)balance_status) {
@@ -617,12 +636,12 @@ int TxBft::BackupNormalCheck(
         }
 
         gas_used = kTransferGas;
-        for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-            gas_used += (tx_info.attr(i).key().size() +
-                tx_info.attr(i).value().size()) * kKeyValueStorageEachBytes;
+        for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
+            gas_used += (local_tx_ptr->tx.attr(i).key().size() +
+                local_tx_ptr->tx.attr(i).value().size()) * kKeyValueStorageEachBytes;
         }
 
-        if (tx_info.gas_limit() < gas_used) {
+        if (local_tx_ptr->tx.gas_limit() < gas_used) {
             if (tx_info.status() != kBftUserSetGasLimitError) {
                 BFT_ERROR("gas_limit error and status ne[%d][%d]!",
                     tx_info.status(), kBftUserSetGasLimitError);
@@ -630,7 +649,10 @@ int TxBft::BackupNormalCheck(
             }
         }
     } else {
-        int balance_status = GetTempAccountBalance(tx_info.to(), acc_balance_map, &to_balance);
+        int balance_status = GetTempAccountBalance(
+            local_tx_ptr->tx.to(),
+            acc_balance_map,
+            &to_balance);
         if (balance_status != kBftSuccess && tx_info.status() != (uint32_t)balance_status) {
             BFT_ERROR("GetTempAccountBalance error and status ne[%d][%d]!",
                 tx_info.status(), balance_status);
@@ -638,17 +660,17 @@ int TxBft::BackupNormalCheck(
         }
     }
 
-    if (tx_info.to_add()) {
-        if (tx_info.balance() != to_balance + tx_info.amount()) {
+    if (local_tx_ptr->tx.to_add()) {
+        if (tx_info.balance() != to_balance + local_tx_ptr->tx.amount()) {
             BFT_ERROR("balance error and status ne[%llu][%llu]!",
-                tx_info.balance(), to_balance + tx_info.amount());
+                tx_info.balance(), to_balance + local_tx_ptr->tx.amount());
             return kBftAccountBalanceError;
         }
 
-        to_balance = to_balance + tx_info.amount();
+        to_balance = to_balance + local_tx_ptr->tx.amount();
     } else {
-        uint64_t real_transfer_amount = tx_info.amount();
-        if (tx_info.gas_limit() < gas_used) {
+        uint64_t real_transfer_amount = local_tx_ptr->tx.amount();
+        if (local_tx_ptr->tx.gas_limit() < gas_used) {
             real_transfer_amount = 0;
         }
 
@@ -681,10 +703,10 @@ int TxBft::BackupNormalCheck(
             return kBftLeaderInfoInvalid;
         }
                 
-        acc_balance_map[tx_info.from()] = from_balance;
+        acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     }
 
-    push_bft_item_vec(tx_info.gid());
+    push_bft_item_vec(local_tx_ptr->tx.gid());
     return kBftSuccess;
 }
 
@@ -1015,6 +1037,8 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_version(common::kTransactionVersion);
         tx.set_gas_price(0);
         tx.set_status(kBftSuccess);
+        std::cout << "LeaderCreateTxBlock called, type: " << tx.type()
+            << ", call contract step: " << tx.call_contract_step() << std::endl;
         if (tx.type() != common::kConsensusCallContract) {
             if (LeaderAddNormalTransaction(tx_vec[i], acc_balance_map, tx) != kBftSuccess) {
                 continue;
@@ -1155,6 +1179,7 @@ int TxBft::LeaderAddNormalTransaction(
         tx.set_balance(from_balance);
     }
 
+    tx.set_call_contract_step(contract::kCallStepCallerInited);
     tx.set_gas_used(gas_used);
     return kBftSuccess;
 }
