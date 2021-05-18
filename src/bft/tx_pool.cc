@@ -70,14 +70,15 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
     BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d not has tx[%s]to[%s][%s]!",
+        "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
         tx_ptr->tx.to_add(),
         pool_index_,
         tx_ptr->tx.type(),
         tx_ptr->tx.call_contract_step(),
         common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
         common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
-        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
+        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(),
+        common::Encode::HexEncode(uni_gid).c_str());
     return kBftSuccess;
 }
 
@@ -147,6 +148,16 @@ TxItemPtr TxPool::GetTx(
         tx_type,
         call_contract_step,
         gid);
+    BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
+        "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
+        add_to,
+        pool_index_,
+        tx_type,
+        call_contract_step,
+        "",
+        "",
+        common::Encode::HexEncode(gid).c_str(),
+        common::Encode::HexEncode(uni_gid).c_str());
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {

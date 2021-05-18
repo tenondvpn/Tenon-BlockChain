@@ -1374,7 +1374,6 @@ int TxBft::LeaderAddCallContract(
         balace_attr->set_key(kContractBalance);
         balace_attr->set_value(std::to_string(balance));
         locked_account_map[tx_info->tx.to()] = true;
-        std::cout << "leader add bytes code: " << common::Encode::HexEncode(bytes_code) << ", balance: " << balance << std::endl;
         // account lock must new block coming
         return kBftSuccess;
     }
