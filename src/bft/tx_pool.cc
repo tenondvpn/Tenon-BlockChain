@@ -72,6 +72,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
+    std::cout << "Add new tx: " << tx_index << ", tx_ptr->index: " << tx_ptr->index << std::endl;
     return kBftSuccess;
 }
 

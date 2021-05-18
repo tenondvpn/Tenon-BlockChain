@@ -1747,8 +1747,10 @@ TEST_F(TestBftManager, TestCallContract) {
         std::map<std::string, std::string> attrs;
         attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
         // Default caller init
+        std::cout << "CCCCCCCCCC caller init." << std::endl;
         Transfer(from_prikey, contract_addr, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
         // LockContract
+        std::cout << "CCCCCCCCCC caller lock contract." << std::endl;
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, broadcast_msg, from_prikey, contract_addr, attrs);
         // CallContract
         // UnlockContract

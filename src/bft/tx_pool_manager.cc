@@ -98,6 +98,9 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 
 int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
     if (tx_ptr->tx.from() == tx_ptr->tx.to()) {
+        BFT_ERROR("add tx from is eq to to[%s][%s]",
+            common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
+            common::Encode::HexEncode(tx_ptr->tx.to()).c_str());
         return kBftError;
     }
 
