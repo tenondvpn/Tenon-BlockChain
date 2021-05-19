@@ -50,6 +50,7 @@ private:
         db::DbWriteBach& db_batch,
         block::DbAccountInfo* account_info);
     int SetAccountAttrs(
+        const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         uint64_t exist_height,
         uint64_t tmp_now_height,

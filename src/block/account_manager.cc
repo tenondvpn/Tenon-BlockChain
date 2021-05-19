@@ -262,6 +262,7 @@ int AccountManager::AddNewAccount(
 
     account_info->NewHeight(tmp_now_height, db_batch);
     if (SetAccountAttrs(
+            account_id,
             tx_info,
             exist_height,
             tmp_now_height,
@@ -404,6 +405,7 @@ int AccountManager::UpdateAccountInfo(
     }
 
     if (SetAccountAttrs(
+            account_id,
             tx_info,
             exist_height,
             tmp_now_height,
@@ -426,6 +428,7 @@ int AccountManager::UpdateAccountInfo(
 }
 
 int AccountManager::SetAccountAttrs(
+        const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         uint64_t exist_height,
         uint64_t tmp_now_height,
@@ -461,6 +464,10 @@ int AccountManager::SetAccountAttrs(
 
                 for (int32_t storage_idx = 0;
                         storage_idx < tx_info.storages_size(); ++storage_idx) {
+                    if (tx_info.storages(storage_idx).id() != account_id) {
+                        continue;
+                    }
+
                     res += account_info->SetAttrWithHeight(
                         tx_info.storages(storage_idx).key(),
                         tmp_now_height,
