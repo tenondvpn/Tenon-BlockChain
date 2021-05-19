@@ -159,8 +159,8 @@ int BftManager::CreateGenisisBlock(
 bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
     if (!block.has_agg_sign_challenge() || !block.has_agg_sign_response() || block.bitmap_size() <= 0) {
         BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
-            "block.bitmap_size(): %u",
-            block.has_agg_sign(), block.bitmap_size());
+            "block.has_agg_sign_response(): %d, block.bitmap_size(): %u",
+            block.has_agg_sign_challenge(), block.has_agg_sign_response(), block.bitmap_size());
         return false;
     }
 
@@ -892,7 +892,8 @@ int BftManager::BackupCommit(
     }
 
     auto tenon_block = bft_ptr->prpare_block();
-    tenon_block->set_agg_sign(bft_msg.sign_challenge() + bft_msg.sign_response());
+    tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
+    tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {

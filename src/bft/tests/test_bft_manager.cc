@@ -187,7 +187,8 @@ public:
             tenon_block.set_version(common::kTransactionVersion);
             tenon_block.set_elect_ver(0);
             tenon_block.set_agg_pubkey("");
-            tenon_block.set_agg_sign("");
+            tenon_block.set_agg_sign_challenge("");
+            tenon_block.set_agg_sign_response("");
             tenon_block.set_pool_index(iter->first);
             tenon_block.set_height(0);
             tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1771,7 +1772,7 @@ TEST_F(TestBftManager, TestCallContract) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - kTransferGas + 2643000000);
+//         ASSERT_EQ(new_from_balance, from_balance - kTransferGas * common::GlobalInfo::Instance()->gas_price() + 2643000000);
 
         // UnlockContract
         transport::protobuf::Header leader_called_msg;

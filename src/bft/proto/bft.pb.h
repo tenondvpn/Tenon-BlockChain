@@ -351,25 +351,10 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // optional bytes id = 1;
-  bool has_id() const;
-  void clear_id();
-  static const int kIdFieldNumber = 1;
-  const ::std::string& id() const;
-  void set_id(const ::std::string& value);
-  #if LANG_CXX11
-  void set_id(::std::string&& value);
-  #endif
-  void set_id(const char* value);
-  void set_id(const void* value, size_t size);
-  ::std::string* mutable_id();
-  ::std::string* release_id();
-  void set_allocated_id(::std::string* id);
-
-  // optional bytes key = 2;
+  // optional bytes key = 1;
   bool has_key() const;
   void clear_key();
-  static const int kKeyFieldNumber = 2;
+  static const int kKeyFieldNumber = 1;
   const ::std::string& key() const;
   void set_key(const ::std::string& value);
   #if LANG_CXX11
@@ -381,10 +366,10 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_key();
   void set_allocated_key(::std::string* key);
 
-  // optional bytes value = 3;
+  // optional bytes value = 2;
   bool has_value() const;
   void clear_value();
-  static const int kValueFieldNumber = 3;
+  static const int kValueFieldNumber = 2;
   const ::std::string& value() const;
   void set_value(const ::std::string& value);
   #if LANG_CXX11
@@ -398,8 +383,6 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // @@protoc_insertion_point(class_scope:lego.bft.protobuf.StorageItem)
  private:
-  void set_has_id();
-  void clear_has_id();
   void set_has_key();
   void clear_has_key();
   void set_has_value();
@@ -408,7 +391,6 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::internal::ArenaStringPtr key_;
   ::google::protobuf::internal::ArenaStringPtr value_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
@@ -1032,10 +1014,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_bitmap();
 
-  // repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+  // repeated .lego.bft.protobuf.TxInfo tx_list = 13;
   int tx_list_size() const;
   void clear_tx_list();
-  static const int kTxListFieldNumber = 12;
+  static const int kTxListFieldNumber = 13;
   ::lego::bft::protobuf::TxInfo* mutable_tx_list(int index);
   ::google::protobuf::RepeatedPtrField< ::lego::bft::protobuf::TxInfo >*
       mutable_tx_list();
@@ -1089,20 +1071,35 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_agg_pubkey();
   void set_allocated_agg_pubkey(::std::string* agg_pubkey);
 
-  // optional bytes agg_sign = 11;
-  bool has_agg_sign() const;
-  void clear_agg_sign();
-  static const int kAggSignFieldNumber = 11;
-  const ::std::string& agg_sign() const;
-  void set_agg_sign(const ::std::string& value);
+  // optional bytes agg_sign_challenge = 11;
+  bool has_agg_sign_challenge() const;
+  void clear_agg_sign_challenge();
+  static const int kAggSignChallengeFieldNumber = 11;
+  const ::std::string& agg_sign_challenge() const;
+  void set_agg_sign_challenge(const ::std::string& value);
   #if LANG_CXX11
-  void set_agg_sign(::std::string&& value);
+  void set_agg_sign_challenge(::std::string&& value);
   #endif
-  void set_agg_sign(const char* value);
-  void set_agg_sign(const void* value, size_t size);
-  ::std::string* mutable_agg_sign();
-  ::std::string* release_agg_sign();
-  void set_allocated_agg_sign(::std::string* agg_sign);
+  void set_agg_sign_challenge(const char* value);
+  void set_agg_sign_challenge(const void* value, size_t size);
+  ::std::string* mutable_agg_sign_challenge();
+  ::std::string* release_agg_sign_challenge();
+  void set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge);
+
+  // optional bytes agg_sign_response = 12;
+  bool has_agg_sign_response() const;
+  void clear_agg_sign_response();
+  static const int kAggSignResponseFieldNumber = 12;
+  const ::std::string& agg_sign_response() const;
+  void set_agg_sign_response(const ::std::string& value);
+  #if LANG_CXX11
+  void set_agg_sign_response(::std::string&& value);
+  #endif
+  void set_agg_sign_response(const char* value);
+  void set_agg_sign_response(const void* value, size_t size);
+  ::std::string* mutable_agg_sign_response();
+  ::std::string* release_agg_sign_response();
+  void set_allocated_agg_sign_response(::std::string* agg_sign_response);
 
   // optional uint32 network_id = 1;
   bool has_network_id() const;
@@ -1146,10 +1143,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint64 consistency_random() const;
   void set_consistency_random(::google::protobuf::uint64 value);
 
-  // optional uint64 timestamp = 13;
+  // optional uint64 timestamp = 14;
   bool has_timestamp() const;
   void clear_timestamp();
-  static const int kTimestampFieldNumber = 13;
+  static const int kTimestampFieldNumber = 14;
   ::google::protobuf::uint64 timestamp() const;
   void set_timestamp(::google::protobuf::uint64 value);
 
@@ -1173,8 +1170,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_elect_ver();
   void set_has_agg_pubkey();
   void clear_has_agg_pubkey();
-  void set_has_agg_sign();
-  void clear_has_agg_sign();
+  void set_has_agg_sign_challenge();
+  void clear_has_agg_sign_challenge();
+  void set_has_agg_sign_response();
+  void clear_has_agg_sign_response();
   void set_has_timestamp();
   void clear_has_timestamp();
 
@@ -1186,7 +1185,8 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr prehash_;
   ::google::protobuf::internal::ArenaStringPtr hash_;
   ::google::protobuf::internal::ArenaStringPtr agg_pubkey_;
-  ::google::protobuf::internal::ArenaStringPtr agg_sign_;
+  ::google::protobuf::internal::ArenaStringPtr agg_sign_challenge_;
+  ::google::protobuf::internal::ArenaStringPtr agg_sign_response_;
   ::google::protobuf::uint32 network_id_;
   ::google::protobuf::uint32 pool_index_;
   ::google::protobuf::uint64 height_;
@@ -2774,81 +2774,15 @@ inline void AccountAttributes::set_allocated_value(::std::string* value) {
 
 // StorageItem
 
-// optional bytes id = 1;
-inline bool StorageItem::has_id() const {
+// optional bytes key = 1;
+inline bool StorageItem::has_key() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void StorageItem::set_has_id() {
+inline void StorageItem::set_has_key() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void StorageItem::clear_has_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void StorageItem::clear_id() {
-  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_id();
-}
-inline const ::std::string& StorageItem::id() const {
-  // @@protoc_insertion_point(field_get:lego.bft.protobuf.StorageItem.id)
-  return id_.GetNoArena();
-}
-inline void StorageItem::set_id(const ::std::string& value) {
-  set_has_id();
-  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.bft.protobuf.StorageItem.id)
-}
-#if LANG_CXX11
-inline void StorageItem::set_id(::std::string&& value) {
-  set_has_id();
-  id_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.bft.protobuf.StorageItem.id)
-}
-#endif
-inline void StorageItem::set_id(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_id();
-  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.bft.protobuf.StorageItem.id)
-}
-inline void StorageItem::set_id(const void* value, size_t size) {
-  set_has_id();
-  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.bft.protobuf.StorageItem.id)
-}
-inline ::std::string* StorageItem::mutable_id() {
-  set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.bft.protobuf.StorageItem.id)
-  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* StorageItem::release_id() {
-  // @@protoc_insertion_point(field_release:lego.bft.protobuf.StorageItem.id)
-  if (!has_id()) {
-    return NULL;
-  }
-  clear_has_id();
-  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void StorageItem::set_allocated_id(::std::string* id) {
-  if (id != NULL) {
-    set_has_id();
-  } else {
-    clear_has_id();
-  }
-  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.StorageItem.id)
-}
-
-// optional bytes key = 2;
-inline bool StorageItem::has_key() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void StorageItem::set_has_key() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void StorageItem::clear_has_key() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void StorageItem::clear_key() {
   key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -2906,15 +2840,15 @@ inline void StorageItem::set_allocated_key(::std::string* key) {
   // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.StorageItem.key)
 }
 
-// optional bytes value = 3;
+// optional bytes value = 2;
 inline bool StorageItem::has_value() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void StorageItem::set_has_value() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void StorageItem::clear_has_value() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void StorageItem::clear_value() {
   value_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -3892,13 +3826,13 @@ TxInfo::transfers() const {
 
 // optional uint32 network_id = 1;
 inline bool Block::has_network_id() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void Block::set_has_network_id() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void Block::clear_has_network_id() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Block::clear_network_id() {
   network_id_ = 0u;
@@ -3916,13 +3850,13 @@ inline void Block::set_network_id(::google::protobuf::uint32 value) {
 
 // optional uint32 pool_index = 2;
 inline bool Block::has_pool_index() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void Block::set_has_pool_index() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void Block::clear_has_pool_index() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Block::clear_pool_index() {
   pool_index_ = 0u;
@@ -4072,13 +4006,13 @@ inline void Block::set_allocated_hash(::std::string* hash) {
 
 // optional uint32 version = 5;
 inline bool Block::has_version() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Block::set_has_version() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Block::clear_has_version() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Block::clear_version() {
   version_ = 0u;
@@ -4096,13 +4030,13 @@ inline void Block::set_version(::google::protobuf::uint32 value) {
 
 // optional uint64 height = 6;
 inline bool Block::has_height() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Block::set_has_height() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Block::clear_has_height() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Block::clear_height() {
   height_ = GOOGLE_ULONGLONG(0);
@@ -4120,13 +4054,13 @@ inline void Block::set_height(::google::protobuf::uint64 value) {
 
 // optional uint64 consistency_random = 7;
 inline bool Block::has_consistency_random() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void Block::set_has_consistency_random() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void Block::clear_has_consistency_random() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void Block::clear_consistency_random() {
   consistency_random_ = GOOGLE_ULONGLONG(0);
@@ -4144,13 +4078,13 @@ inline void Block::set_consistency_random(::google::protobuf::uint64 value) {
 
 // optional uint32 elect_ver = 8;
 inline bool Block::has_elect_ver() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void Block::set_has_elect_ver() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void Block::clear_has_elect_ver() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void Block::clear_elect_ver() {
   elect_ver_ = 0u;
@@ -4262,73 +4196,139 @@ inline void Block::set_allocated_agg_pubkey(::std::string* agg_pubkey) {
   // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.Block.agg_pubkey)
 }
 
-// optional bytes agg_sign = 11;
-inline bool Block::has_agg_sign() const {
+// optional bytes agg_sign_challenge = 11;
+inline bool Block::has_agg_sign_challenge() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Block::set_has_agg_sign() {
+inline void Block::set_has_agg_sign_challenge() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Block::clear_has_agg_sign() {
+inline void Block::clear_has_agg_sign_challenge() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Block::clear_agg_sign() {
-  agg_sign_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_sign();
+inline void Block::clear_agg_sign_challenge() {
+  agg_sign_challenge_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_agg_sign_challenge();
 }
-inline const ::std::string& Block::agg_sign() const {
-  // @@protoc_insertion_point(field_get:lego.bft.protobuf.Block.agg_sign)
-  return agg_sign_.GetNoArena();
+inline const ::std::string& Block::agg_sign_challenge() const {
+  // @@protoc_insertion_point(field_get:lego.bft.protobuf.Block.agg_sign_challenge)
+  return agg_sign_challenge_.GetNoArena();
 }
-inline void Block::set_agg_sign(const ::std::string& value) {
-  set_has_agg_sign();
-  agg_sign_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.bft.protobuf.Block.agg_sign)
+inline void Block::set_agg_sign_challenge(const ::std::string& value) {
+  set_has_agg_sign_challenge();
+  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:lego.bft.protobuf.Block.agg_sign_challenge)
 }
 #if LANG_CXX11
-inline void Block::set_agg_sign(::std::string&& value) {
-  set_has_agg_sign();
-  agg_sign_.SetNoArena(
+inline void Block::set_agg_sign_challenge(::std::string&& value) {
+  set_has_agg_sign_challenge();
+  agg_sign_challenge_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.bft.protobuf.Block.agg_sign)
+  // @@protoc_insertion_point(field_set_rvalue:lego.bft.protobuf.Block.agg_sign_challenge)
 }
 #endif
-inline void Block::set_agg_sign(const char* value) {
+inline void Block::set_agg_sign_challenge(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  set_has_agg_sign();
-  agg_sign_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.bft.protobuf.Block.agg_sign)
+  set_has_agg_sign_challenge();
+  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:lego.bft.protobuf.Block.agg_sign_challenge)
 }
-inline void Block::set_agg_sign(const void* value, size_t size) {
-  set_has_agg_sign();
-  agg_sign_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+inline void Block::set_agg_sign_challenge(const void* value, size_t size) {
+  set_has_agg_sign_challenge();
+  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.bft.protobuf.Block.agg_sign)
+  // @@protoc_insertion_point(field_set_pointer:lego.bft.protobuf.Block.agg_sign_challenge)
 }
-inline ::std::string* Block::mutable_agg_sign() {
-  set_has_agg_sign();
-  // @@protoc_insertion_point(field_mutable:lego.bft.protobuf.Block.agg_sign)
-  return agg_sign_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline ::std::string* Block::mutable_agg_sign_challenge() {
+  set_has_agg_sign_challenge();
+  // @@protoc_insertion_point(field_mutable:lego.bft.protobuf.Block.agg_sign_challenge)
+  return agg_sign_challenge_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Block::release_agg_sign() {
-  // @@protoc_insertion_point(field_release:lego.bft.protobuf.Block.agg_sign)
-  if (!has_agg_sign()) {
+inline ::std::string* Block::release_agg_sign_challenge() {
+  // @@protoc_insertion_point(field_release:lego.bft.protobuf.Block.agg_sign_challenge)
+  if (!has_agg_sign_challenge()) {
     return NULL;
   }
-  clear_has_agg_sign();
-  return agg_sign_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_agg_sign_challenge();
+  return agg_sign_challenge_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Block::set_allocated_agg_sign(::std::string* agg_sign) {
-  if (agg_sign != NULL) {
-    set_has_agg_sign();
+inline void Block::set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge) {
+  if (agg_sign_challenge != NULL) {
+    set_has_agg_sign_challenge();
   } else {
-    clear_has_agg_sign();
+    clear_has_agg_sign_challenge();
   }
-  agg_sign_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign);
-  // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.Block.agg_sign)
+  agg_sign_challenge_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_challenge);
+  // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.Block.agg_sign_challenge)
 }
 
-// repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+// optional bytes agg_sign_response = 12;
+inline bool Block::has_agg_sign_response() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Block::set_has_agg_sign_response() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Block::clear_has_agg_sign_response() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Block::clear_agg_sign_response() {
+  agg_sign_response_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_agg_sign_response();
+}
+inline const ::std::string& Block::agg_sign_response() const {
+  // @@protoc_insertion_point(field_get:lego.bft.protobuf.Block.agg_sign_response)
+  return agg_sign_response_.GetNoArena();
+}
+inline void Block::set_agg_sign_response(const ::std::string& value) {
+  set_has_agg_sign_response();
+  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:lego.bft.protobuf.Block.agg_sign_response)
+}
+#if LANG_CXX11
+inline void Block::set_agg_sign_response(::std::string&& value) {
+  set_has_agg_sign_response();
+  agg_sign_response_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:lego.bft.protobuf.Block.agg_sign_response)
+}
+#endif
+inline void Block::set_agg_sign_response(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_agg_sign_response();
+  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:lego.bft.protobuf.Block.agg_sign_response)
+}
+inline void Block::set_agg_sign_response(const void* value, size_t size) {
+  set_has_agg_sign_response();
+  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:lego.bft.protobuf.Block.agg_sign_response)
+}
+inline ::std::string* Block::mutable_agg_sign_response() {
+  set_has_agg_sign_response();
+  // @@protoc_insertion_point(field_mutable:lego.bft.protobuf.Block.agg_sign_response)
+  return agg_sign_response_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Block::release_agg_sign_response() {
+  // @@protoc_insertion_point(field_release:lego.bft.protobuf.Block.agg_sign_response)
+  if (!has_agg_sign_response()) {
+    return NULL;
+  }
+  clear_has_agg_sign_response();
+  return agg_sign_response_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Block::set_allocated_agg_sign_response(::std::string* agg_sign_response) {
+  if (agg_sign_response != NULL) {
+    set_has_agg_sign_response();
+  } else {
+    clear_has_agg_sign_response();
+  }
+  agg_sign_response_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_response);
+  // @@protoc_insertion_point(field_set_allocated:lego.bft.protobuf.Block.agg_sign_response)
+}
+
+// repeated .lego.bft.protobuf.TxInfo tx_list = 13;
 inline int Block::tx_list_size() const {
   return tx_list_.size();
 }
@@ -4358,15 +4358,15 @@ Block::tx_list() const {
   return tx_list_;
 }
 
-// optional uint64 timestamp = 13;
+// optional uint64 timestamp = 14;
 inline bool Block::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void Block::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void Block::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void Block::clear_timestamp() {
   timestamp_ = GOOGLE_ULONGLONG(0);

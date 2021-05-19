@@ -444,7 +444,7 @@ int AccountManager::SetAccountAttrs(
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
         }
 
-        if ((tx_info.type() != common::kConsensusCallContract && tx_info.to_add()) ||
+        if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
                 (tx_info.type() == common::kConsensusCallContract &&
                 tx_info.call_contract_step() == contract::kCallStepContractCalled)) {
             if (exist_height <= tmp_now_height) {

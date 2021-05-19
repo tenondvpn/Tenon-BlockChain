@@ -354,12 +354,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::StorageItem, id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::StorageItem, key_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::StorageItem, value_),
   0,
   1,
-  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TransferItem, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TransferItem, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -431,22 +429,24 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, elect_ver_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, bitmap_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, agg_pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, agg_sign_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, agg_sign_challenge_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, agg_sign_response_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, tx_list_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::Block, timestamp_),
-  4,
   5,
+  6,
   0,
   1,
-  7,
-  6,
-  9,
   8,
+  7,
+  10,
+  9,
   ~0u,
   2,
   3,
+  4,
   ~0u,
-  10,
+  11,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxPrepareItem, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::bft::protobuf::TxPrepareItem, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -563,10 +563,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::lego::bft::protobuf::AccountAttributes)},
-  { 9, 17, sizeof(::lego::bft::protobuf::StorageItem)},
-  { 20, 28, sizeof(::lego::bft::protobuf::TransferItem)},
-  { 31, 56, sizeof(::lego::bft::protobuf::TxInfo)},
-  { 76, 94, sizeof(::lego::bft::protobuf::Block)},
+  { 9, 16, sizeof(::lego::bft::protobuf::StorageItem)},
+  { 18, 26, sizeof(::lego::bft::protobuf::TransferItem)},
+  { 29, 54, sizeof(::lego::bft::protobuf::TxInfo)},
+  { 74, 93, sizeof(::lego::bft::protobuf::Block)},
   { 107, 114, sizeof(::lego::bft::protobuf::TxPrepareItem)},
   { 116, 123, sizeof(::lego::bft::protobuf::LeaderTxPrepare)},
   { 125, 131, sizeof(::lego::bft::protobuf::BackupTxPrepare)},
@@ -618,58 +618,59 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\tbft.proto\022\021lego.bft.protobuf\"/\n\021Accoun"
       "tAttributes\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\""
-      "5\n\013StorageItem\022\n\n\002id\030\001 \001(\014\022\013\n\003key\030\002 \001(\014\022"
-      "\r\n\005value\030\003 \001(\014\"8\n\014TransferItem\022\014\n\004from\030\001"
-      " \001(\014\022\n\n\002to\030\002 \001(\014\022\016\n\006amount\030\003 \001(\004\"\312\003\n\006TxI"
-      "nfo\022\017\n\007version\030\001 \001(\r\022\013\n\003gid\030\002 \001(\014\022\014\n\004fro"
-      "m\030\003 \001(\014\022\023\n\013from_pubkey\030\004 \001(\014\022\021\n\tfrom_sig"
-      "n\030\005 \001(\014\022\n\n\002to\030\006 \001(\014\022\016\n\006amount\030\007 \001(\004\022\021\n\tg"
-      "as_limit\030\010 \001(\004\022\020\n\010gas_used\030\t \001(\004\022\021\n\tgas_"
-      "price\030\n \001(\004\022\017\n\007balance\030\013 \001(\004\022\016\n\006to_add\030\014"
-      " \001(\010\022\014\n\004type\030\r \001(\r\0222\n\004attr\030\016 \003(\0132$.lego."
-      "bft.protobuf.AccountAttributes\022\016\n\006status"
-      "\030\017 \001(\r\022\017\n\007tx_hash\030\020 \001(\014\022\022\n\nnetwork_id\030\021 "
-      "\001(\r\022\032\n\022call_contract_step\030\022 \001(\r\0220\n\010stora"
-      "ges\030\023 \003(\0132\036.lego.bft.protobuf.StorageIte"
-      "m\0222\n\ttransfers\030\024 \003(\0132\037.lego.bft.protobuf"
-      ".TransferItem\"\223\002\n\005Block\022\022\n\nnetwork_id\030\001 "
-      "\001(\r\022\022\n\npool_index\030\002 \001(\r\022\017\n\007prehash\030\003 \001(\014"
-      "\022\014\n\004hash\030\004 \001(\014\022\017\n\007version\030\005 \001(\r\022\016\n\006heigh"
-      "t\030\006 \001(\004\022\032\n\022consistency_random\030\007 \001(\004\022\021\n\te"
-      "lect_ver\030\010 \001(\r\022\016\n\006bitmap\030\t \003(\004\022\022\n\nagg_pu"
-      "bkey\030\n \001(\014\022\020\n\010agg_sign\030\013 \001(\014\022*\n\007tx_list\030"
-      "\014 \003(\0132\031.lego.bft.protobuf.TxInfo\022\021\n\ttime"
-      "stamp\030\r \001(\004\".\n\rTxPrepareItem\022\020\n\010acc_addr"
-      "\030\001 \001(\014\022\013\n\003gid\030\002 \001(\014\"i\n\017LeaderTxPrepare\022-"
-      "\n\003txs\030\001 \003(\0132 .lego.bft.protobuf.TxPrepar"
-      "eItem\022\'\n\005block\030\002 \001(\0132\030.lego.bft.protobuf"
-      ".Block\"!\n\017BackupTxPrepare\022\016\n\006status\030\001 \001("
-      "\005\"#\n\021LeaderTxPreCommit\022\016\n\006status\030\001 \001(\005\"#"
-      "\n\021BackupTxPreCommit\022\016\n\006status\030\001 \001(\005\" \n\016L"
-      "eaderTxCommit\022\016\n\006status\030\001 \001(\005\"6\n\013ToAccou"
-      "ntTx\022\'\n\005block\030\001 \001(\0132\030.lego.bft.protobuf."
-      "Block\"\204\003\n\005TxBft\022)\n\006new_tx\030\001 \001(\0132\031.lego.b"
-      "ft.protobuf.TxInfo\022-\n\005to_tx\030\002 \001(\0132\036.lego"
-      ".bft.protobuf.ToAccountTx\0227\n\013ltx_prepare"
-      "\030\003 \001(\0132\".lego.bft.protobuf.LeaderTxPrepa"
-      "re\0227\n\013btx_prepare\030\004 \001(\0132\".lego.bft.proto"
-      "buf.BackupTxPrepare\022;\n\rltx_precommit\030\005 \001"
-      "(\0132$.lego.bft.protobuf.LeaderTxPreCommit"
-      "\022;\n\rbtx_precommit\030\006 \001(\0132$.lego.bft.proto"
-      "buf.BackupTxPreCommit\0225\n\nltx_commit\030\007 \001("
-      "\0132!.lego.bft.protobuf.LeaderTxCommit\"\326\002\n"
-      "\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014\n\004rand\030\002 \001(\004\022\020"
-      "\n\010bft_step\030\003 \001(\005\022\016\n\006leader\030\004 \001(\010\022\016\n\006net_"
-      "id\030\005 \001(\r\022\017\n\007node_id\030\006 \001(\014\022\016\n\006pubkey\030\007 \001("
-      "\014\022\026\n\016sign_challenge\030\010 \001(\014\022\025\n\rsign_respon"
-      "se\030\t \001(\014\022\016\n\006secret\030\n \001(\014\022\021\n\tchallenge\030\013 "
-      "\001(\014\022\020\n\010response\030\014 \001(\014\022\032\n\022agg_sign_challe"
-      "nge\030\r \001(\014\022\031\n\021agg_sign_response\030\016 \001(\014\022\016\n\006"
-      "bitmap\030\017 \003(\004\022\r\n\005agree\030\020 \001(\010\022\022\n\npool_inde"
-      "x\030\021 \001(\r\022\014\n\004data\030\022 \001(\014"
+      ")\n\013StorageItem\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001"
+      "(\014\"8\n\014TransferItem\022\014\n\004from\030\001 \001(\014\022\n\n\002to\030\002"
+      " \001(\014\022\016\n\006amount\030\003 \001(\004\"\312\003\n\006TxInfo\022\017\n\007versi"
+      "on\030\001 \001(\r\022\013\n\003gid\030\002 \001(\014\022\014\n\004from\030\003 \001(\014\022\023\n\013f"
+      "rom_pubkey\030\004 \001(\014\022\021\n\tfrom_sign\030\005 \001(\014\022\n\n\002t"
+      "o\030\006 \001(\014\022\016\n\006amount\030\007 \001(\004\022\021\n\tgas_limit\030\010 \001"
+      "(\004\022\020\n\010gas_used\030\t \001(\004\022\021\n\tgas_price\030\n \001(\004\022"
+      "\017\n\007balance\030\013 \001(\004\022\016\n\006to_add\030\014 \001(\010\022\014\n\004type"
+      "\030\r \001(\r\0222\n\004attr\030\016 \003(\0132$.lego.bft.protobuf"
+      ".AccountAttributes\022\016\n\006status\030\017 \001(\r\022\017\n\007tx"
+      "_hash\030\020 \001(\014\022\022\n\nnetwork_id\030\021 \001(\r\022\032\n\022call_"
+      "contract_step\030\022 \001(\r\0220\n\010storages\030\023 \003(\0132\036."
+      "lego.bft.protobuf.StorageItem\0222\n\ttransfe"
+      "rs\030\024 \003(\0132\037.lego.bft.protobuf.TransferIte"
+      "m\"\270\002\n\005Block\022\022\n\nnetwork_id\030\001 \001(\r\022\022\n\npool_"
+      "index\030\002 \001(\r\022\017\n\007prehash\030\003 \001(\014\022\014\n\004hash\030\004 \001"
+      "(\014\022\017\n\007version\030\005 \001(\r\022\016\n\006height\030\006 \001(\004\022\032\n\022c"
+      "onsistency_random\030\007 \001(\004\022\021\n\telect_ver\030\010 \001"
+      "(\r\022\016\n\006bitmap\030\t \003(\004\022\022\n\nagg_pubkey\030\n \001(\014\022\032"
+      "\n\022agg_sign_challenge\030\013 \001(\014\022\031\n\021agg_sign_r"
+      "esponse\030\014 \001(\014\022*\n\007tx_list\030\r \003(\0132\031.lego.bf"
+      "t.protobuf.TxInfo\022\021\n\ttimestamp\030\016 \001(\004\".\n\r"
+      "TxPrepareItem\022\020\n\010acc_addr\030\001 \001(\014\022\013\n\003gid\030\002"
+      " \001(\014\"i\n\017LeaderTxPrepare\022-\n\003txs\030\001 \003(\0132 .l"
+      "ego.bft.protobuf.TxPrepareItem\022\'\n\005block\030"
+      "\002 \001(\0132\030.lego.bft.protobuf.Block\"!\n\017Backu"
+      "pTxPrepare\022\016\n\006status\030\001 \001(\005\"#\n\021LeaderTxPr"
+      "eCommit\022\016\n\006status\030\001 \001(\005\"#\n\021BackupTxPreCo"
+      "mmit\022\016\n\006status\030\001 \001(\005\" \n\016LeaderTxCommit\022\016"
+      "\n\006status\030\001 \001(\005\"6\n\013ToAccountTx\022\'\n\005block\030\001"
+      " \001(\0132\030.lego.bft.protobuf.Block\"\204\003\n\005TxBft"
+      "\022)\n\006new_tx\030\001 \001(\0132\031.lego.bft.protobuf.TxI"
+      "nfo\022-\n\005to_tx\030\002 \001(\0132\036.lego.bft.protobuf.T"
+      "oAccountTx\0227\n\013ltx_prepare\030\003 \001(\0132\".lego.b"
+      "ft.protobuf.LeaderTxPrepare\0227\n\013btx_prepa"
+      "re\030\004 \001(\0132\".lego.bft.protobuf.BackupTxPre"
+      "pare\022;\n\rltx_precommit\030\005 \001(\0132$.lego.bft.p"
+      "rotobuf.LeaderTxPreCommit\022;\n\rbtx_precomm"
+      "it\030\006 \001(\0132$.lego.bft.protobuf.BackupTxPre"
+      "Commit\0225\n\nltx_commit\030\007 \001(\0132!.lego.bft.pr"
+      "otobuf.LeaderTxCommit\"\326\002\n\nBftMessage\022\013\n\003"
+      "gid\030\001 \001(\014\022\014\n\004rand\030\002 \001(\004\022\020\n\010bft_step\030\003 \001("
+      "\005\022\016\n\006leader\030\004 \001(\010\022\016\n\006net_id\030\005 \001(\r\022\017\n\007nod"
+      "e_id\030\006 \001(\014\022\016\n\006pubkey\030\007 \001(\014\022\026\n\016sign_chall"
+      "enge\030\010 \001(\014\022\025\n\rsign_response\030\t \001(\014\022\016\n\006sec"
+      "ret\030\n \001(\014\022\021\n\tchallenge\030\013 \001(\014\022\020\n\010response"
+      "\030\014 \001(\014\022\032\n\022agg_sign_challenge\030\r \001(\014\022\031\n\021ag"
+      "g_sign_response\030\016 \001(\014\022\016\n\006bitmap\030\017 \003(\004\022\r\n"
+      "\005agree\030\020 \001(\010\022\022\n\npool_index\030\021 \001(\r\022\014\n\004data"
+      "\030\022 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2021);
+      descriptor, 2046);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft.proto", &protobuf_RegisterTypes);
 }
@@ -987,7 +988,6 @@ void AccountAttributes::InternalSwap(AccountAttributes* other) {
 void StorageItem::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int StorageItem::kIdFieldNumber;
 const int StorageItem::kKeyFieldNumber;
 const int StorageItem::kValueFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -1004,10 +1004,6 @@ StorageItem::StorageItem(const StorageItem& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_id()) {
-    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
-  }
   key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_key()) {
     key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.key_);
@@ -1020,7 +1016,6 @@ StorageItem::StorageItem(const StorageItem& from)
 }
 
 void StorageItem::SharedCtor() {
-  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   value_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1031,7 +1026,6 @@ StorageItem::~StorageItem() {
 }
 
 void StorageItem::SharedDtor() {
-  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   value_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1057,14 +1051,11 @@ void StorageItem::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      id_.ClearNonDefaultToEmptyNoArena();
-    }
-    if (cached_has_bits & 0x00000002u) {
       key_.ClearNonDefaultToEmptyNoArena();
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000002u) {
       value_.ClearNonDefaultToEmptyNoArena();
     }
   }
@@ -1082,22 +1073,10 @@ bool StorageItem::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bytes id = 1;
+      // optional bytes key = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_id()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional bytes key = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_key()));
         } else {
@@ -1106,10 +1085,10 @@ bool StorageItem::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes value = 3;
-      case 3: {
+      // optional bytes value = 2;
+      case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_value()));
         } else {
@@ -1145,22 +1124,16 @@ void StorageItem::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional bytes id = 1;
+  // optional bytes key = 1;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      1, this->id(), output);
+      1, this->key(), output);
   }
 
-  // optional bytes key = 2;
+  // optional bytes value = 2;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->key(), output);
-  }
-
-  // optional bytes value = 3;
-  if (cached_has_bits & 0x00000004u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->value(), output);
+      2, this->value(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1178,25 +1151,18 @@ void StorageItem::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional bytes id = 1;
+  // optional bytes key = 1;
   if (cached_has_bits & 0x00000001u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->id(), target);
+        1, this->key(), target);
   }
 
-  // optional bytes key = 2;
+  // optional bytes value = 2;
   if (cached_has_bits & 0x00000002u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->key(), target);
-  }
-
-  // optional bytes value = 3;
-  if (cached_has_bits & 0x00000004u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->value(), target);
+        2, this->value(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1216,22 +1182,15 @@ size_t StorageItem::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 7u) {
-    // optional bytes id = 1;
-    if (has_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->id());
-    }
-
-    // optional bytes key = 2;
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional bytes key = 1;
     if (has_key()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->key());
     }
 
-    // optional bytes value = 3;
+    // optional bytes value = 2;
     if (has_value()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -1267,16 +1226,12 @@ void StorageItem::MergeFrom(const StorageItem& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      set_has_id();
-      id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
-    }
-    if (cached_has_bits & 0x00000002u) {
       set_has_key();
       key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.key_);
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000002u) {
       set_has_value();
       value_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.value_);
     }
@@ -1307,8 +1262,6 @@ void StorageItem::Swap(StorageItem* other) {
 }
 void StorageItem::InternalSwap(StorageItem* other) {
   using std::swap;
-  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
   key_.Swap(&other->key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   value_.Swap(&other->value_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
@@ -2708,7 +2661,8 @@ const int Block::kConsistencyRandomFieldNumber;
 const int Block::kElectVerFieldNumber;
 const int Block::kBitmapFieldNumber;
 const int Block::kAggPubkeyFieldNumber;
-const int Block::kAggSignFieldNumber;
+const int Block::kAggSignChallengeFieldNumber;
+const int Block::kAggSignResponseFieldNumber;
 const int Block::kTxListFieldNumber;
 const int Block::kTimestampFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -2739,9 +2693,13 @@ Block::Block(const Block& from)
   if (from.has_agg_pubkey()) {
     agg_pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_pubkey_);
   }
-  agg_sign_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_agg_sign()) {
-    agg_sign_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_);
+  agg_sign_challenge_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_agg_sign_challenge()) {
+    agg_sign_challenge_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_challenge_);
+  }
+  agg_sign_response_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_agg_sign_response()) {
+    agg_sign_response_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_response_);
   }
   ::memcpy(&network_id_, &from.network_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&timestamp_) -
@@ -2753,7 +2711,8 @@ void Block::SharedCtor() {
   prehash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   agg_pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  agg_sign_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  agg_sign_challenge_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  agg_sign_response_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&network_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&timestamp_) -
       reinterpret_cast<char*>(&network_id_)) + sizeof(timestamp_));
@@ -2768,7 +2727,8 @@ void Block::SharedDtor() {
   prehash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   agg_pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  agg_sign_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  agg_sign_challenge_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  agg_sign_response_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void Block::SetCachedSize(int size) const {
@@ -2794,7 +2754,7 @@ void Block::Clear() {
   bitmap_.Clear();
   tx_list_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 15u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
       prehash_.ClearNonDefaultToEmptyNoArena();
     }
@@ -2805,18 +2765,21 @@ void Block::Clear() {
       agg_pubkey_.ClearNonDefaultToEmptyNoArena();
     }
     if (cached_has_bits & 0x00000008u) {
-      agg_sign_.ClearNonDefaultToEmptyNoArena();
+      agg_sign_challenge_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000010u) {
+      agg_sign_response_.ClearNonDefaultToEmptyNoArena();
     }
   }
-  if (cached_has_bits & 240u) {
+  if (cached_has_bits & 224u) {
     ::memset(&network_id_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&version_) -
-        reinterpret_cast<char*>(&network_id_)) + sizeof(version_));
+        reinterpret_cast<char*>(&height_) -
+        reinterpret_cast<char*>(&network_id_)) + sizeof(height_));
   }
-  if (cached_has_bits & 1792u) {
-    ::memset(&elect_ver_, 0, static_cast<size_t>(
+  if (cached_has_bits & 3840u) {
+    ::memset(&version_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&timestamp_) -
-        reinterpret_cast<char*>(&elect_ver_)) + sizeof(timestamp_));
+        reinterpret_cast<char*>(&version_)) + sizeof(timestamp_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -2971,22 +2934,34 @@ bool Block::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes agg_sign = 11;
+      // optional bytes agg_sign_challenge = 11;
       case 11: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(90u /* 90 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_agg_sign()));
+                input, this->mutable_agg_sign_challenge()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+      // optional bytes agg_sign_response = 12;
       case 12: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(98u /* 98 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_agg_sign_response()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .lego.bft.protobuf.TxInfo tx_list = 13;
+      case 13: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(106u /* 106 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                 input, add_tx_list()));
         } else {
@@ -2995,10 +2970,10 @@ bool Block::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 timestamp = 13;
-      case 13: {
+      // optional uint64 timestamp = 14;
+      case 14: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(104u /* 104 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(112u /* 112 & 0xFF */)) {
           set_has_timestamp();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
@@ -3037,12 +3012,12 @@ void Block::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint32 network_id = 1;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->network_id(), output);
   }
 
   // optional uint32 pool_index = 2;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->pool_index(), output);
   }
 
@@ -3059,22 +3034,22 @@ void Block::SerializeWithCachedSizes(
   }
 
   // optional uint32 version = 5;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->version(), output);
   }
 
   // optional uint64 height = 6;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(6, this->height(), output);
   }
 
   // optional uint64 consistency_random = 7;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(7, this->consistency_random(), output);
   }
 
   // optional uint32 elect_ver = 8;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(8, this->elect_ver(), output);
   }
 
@@ -3090,24 +3065,30 @@ void Block::SerializeWithCachedSizes(
       10, this->agg_pubkey(), output);
   }
 
-  // optional bytes agg_sign = 11;
+  // optional bytes agg_sign_challenge = 11;
   if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      11, this->agg_sign(), output);
+      11, this->agg_sign_challenge(), output);
   }
 
-  // repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+  // optional bytes agg_sign_response = 12;
+  if (cached_has_bits & 0x00000010u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      12, this->agg_sign_response(), output);
+  }
+
+  // repeated .lego.bft.protobuf.TxInfo tx_list = 13;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->tx_list_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      12,
+      13,
       this->tx_list(static_cast<int>(i)),
       output);
   }
 
-  // optional uint64 timestamp = 13;
-  if (cached_has_bits & 0x00000400u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(13, this->timestamp(), output);
+  // optional uint64 timestamp = 14;
+  if (cached_has_bits & 0x00000800u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(14, this->timestamp(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3126,12 +3107,12 @@ void Block::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint32 network_id = 1;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->network_id(), target);
   }
 
   // optional uint32 pool_index = 2;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->pool_index(), target);
   }
 
@@ -3150,22 +3131,22 @@ void Block::SerializeWithCachedSizes(
   }
 
   // optional uint32 version = 5;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->version(), target);
   }
 
   // optional uint64 height = 6;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(6, this->height(), target);
   }
 
   // optional uint64 consistency_random = 7;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(7, this->consistency_random(), target);
   }
 
   // optional uint32 elect_ver = 8;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(8, this->elect_ver(), target);
   }
 
@@ -3180,24 +3161,31 @@ void Block::SerializeWithCachedSizes(
         10, this->agg_pubkey(), target);
   }
 
-  // optional bytes agg_sign = 11;
+  // optional bytes agg_sign_challenge = 11;
   if (cached_has_bits & 0x00000008u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        11, this->agg_sign(), target);
+        11, this->agg_sign_challenge(), target);
   }
 
-  // repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+  // optional bytes agg_sign_response = 12;
+  if (cached_has_bits & 0x00000010u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        12, this->agg_sign_response(), target);
+  }
+
+  // repeated .lego.bft.protobuf.TxInfo tx_list = 13;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->tx_list_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        12, this->tx_list(static_cast<int>(i)), deterministic, target);
+        13, this->tx_list(static_cast<int>(i)), deterministic, target);
   }
 
-  // optional uint64 timestamp = 13;
-  if (cached_has_bits & 0x00000400u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(13, this->timestamp(), target);
+  // optional uint64 timestamp = 14;
+  if (cached_has_bits & 0x00000800u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(14, this->timestamp(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3226,7 +3214,7 @@ size_t Block::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // repeated .lego.bft.protobuf.TxInfo tx_list = 12;
+  // repeated .lego.bft.protobuf.TxInfo tx_list = 13;
   {
     unsigned int count = static_cast<unsigned int>(this->tx_list_size());
     total_size += 1UL * count;
@@ -3259,11 +3247,18 @@ size_t Block::ByteSizeLong() const {
           this->agg_pubkey());
     }
 
-    // optional bytes agg_sign = 11;
-    if (has_agg_sign()) {
+    // optional bytes agg_sign_challenge = 11;
+    if (has_agg_sign_challenge()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->agg_sign());
+          this->agg_sign_challenge());
+    }
+
+    // optional bytes agg_sign_response = 12;
+    if (has_agg_sign_response()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->agg_sign_response());
     }
 
     // optional uint32 network_id = 1;
@@ -3287,6 +3282,8 @@ size_t Block::ByteSizeLong() const {
           this->height());
     }
 
+  }
+  if (_has_bits_[8 / 32] & 3840u) {
     // optional uint32 version = 5;
     if (has_version()) {
       total_size += 1 +
@@ -3294,8 +3291,6 @@ size_t Block::ByteSizeLong() const {
           this->version());
     }
 
-  }
-  if (_has_bits_[8 / 32] & 1792u) {
     // optional uint32 elect_ver = 8;
     if (has_elect_ver()) {
       total_size += 1 +
@@ -3310,7 +3305,7 @@ size_t Block::ByteSizeLong() const {
           this->consistency_random());
     }
 
-    // optional uint64 timestamp = 13;
+    // optional uint64 timestamp = 14;
     if (has_timestamp()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
@@ -3362,31 +3357,35 @@ void Block::MergeFrom(const Block& from) {
       agg_pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_pubkey_);
     }
     if (cached_has_bits & 0x00000008u) {
-      set_has_agg_sign();
-      agg_sign_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_);
+      set_has_agg_sign_challenge();
+      agg_sign_challenge_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_challenge_);
     }
     if (cached_has_bits & 0x00000010u) {
-      network_id_ = from.network_id_;
+      set_has_agg_sign_response();
+      agg_sign_response_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.agg_sign_response_);
     }
     if (cached_has_bits & 0x00000020u) {
-      pool_index_ = from.pool_index_;
+      network_id_ = from.network_id_;
     }
     if (cached_has_bits & 0x00000040u) {
-      height_ = from.height_;
+      pool_index_ = from.pool_index_;
     }
     if (cached_has_bits & 0x00000080u) {
-      version_ = from.version_;
+      height_ = from.height_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 1792u) {
+  if (cached_has_bits & 3840u) {
     if (cached_has_bits & 0x00000100u) {
-      elect_ver_ = from.elect_ver_;
+      version_ = from.version_;
     }
     if (cached_has_bits & 0x00000200u) {
-      consistency_random_ = from.consistency_random_;
+      elect_ver_ = from.elect_ver_;
     }
     if (cached_has_bits & 0x00000400u) {
+      consistency_random_ = from.consistency_random_;
+    }
+    if (cached_has_bits & 0x00000800u) {
       timestamp_ = from.timestamp_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -3425,7 +3424,9 @@ void Block::InternalSwap(Block* other) {
     GetArenaNoVirtual());
   agg_pubkey_.Swap(&other->agg_pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  agg_sign_.Swap(&other->agg_sign_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  agg_sign_challenge_.Swap(&other->agg_sign_challenge_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  agg_sign_response_.Swap(&other->agg_sign_response_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(network_id_, other->network_id_);
   swap(pool_index_, other->pool_index_);
