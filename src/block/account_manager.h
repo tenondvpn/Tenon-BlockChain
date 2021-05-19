@@ -49,6 +49,12 @@ private:
         const std::string& account_id,
         db::DbWriteBach& db_batch,
         block::DbAccountInfo* account_info);
+    int SetAccountAttrs(
+        const bft::protobuf::TxInfo& tx_info,
+        uint64_t exist_height,
+        uint64_t tmp_now_height,
+        block::DbAccountInfo* account_info,
+        db::DbWriteBach& db_batch);
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
     std::mutex acc_map_mutex_;

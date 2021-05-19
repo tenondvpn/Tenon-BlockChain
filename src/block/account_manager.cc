@@ -262,35 +262,13 @@ int AccountManager::AddNewAccount(
 
     account_info->NewHeight(tmp_now_height, db_batch);
 
-    assert(false);
-    // just sender can modify self attrs
-    if ((tx_info.type() != common::kConsensusCallContract && tx_info.to_add()) ||
-            (tx_info.type() == common::kConsensusCallContract &&
-            tx_info.call_contract_step() == contract::kCallStepContractCalled)) {
-        if (exist_height <= tmp_now_height) {
-            for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
-                res += account_info->SetAttrWithHeight(
-                    tx_info.attr(attr_idx).key(),
-                    tmp_now_height,
-                    db_batch);
-                res += account_info->SetAttrValue(
-                    tx_info.attr(attr_idx).key(),
-                    tx_info.attr(attr_idx).value(),
-                    db_batch);
-            }
-
-            for (int32_t storage_idx = 0;
-                    storage_idx < tx_info.storages_size(); ++storage_idx) {
-                res += account_info->SetAttrWithHeight(
-                    tx_info.storages(storage_idx).key(),
-                    tmp_now_height,
-                    db_batch);
-                res += account_info->SetAttrValue(
-                    tx_info.storages(storage_idx).key(),
-                    tx_info.storages(storage_idx).value(),
-                    db_batch);
-            }
-        }
+    if (SetAccountAttrs(
+            tx_info,
+            exist_height,
+            tmp_now_height,
+            account_info,
+            db_batch) != kBlockSuccess) {
+        return kBlockError;
     }
 
     if (exist_height <= tmp_now_height) {
@@ -426,6 +404,34 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
+    if (SetAccountAttrs(
+            tx_info,
+            exist_height,
+            tmp_now_height,
+            account_info,
+            db_batch) != kBlockSuccess) {
+        return kBlockError;
+    }
+    
+    if (tx_info.type() == common::kConsensusCallContract) {
+        if (tx_info.call_contract_step() == contract::kCallStepContractLocked) {
+            account_info->LockAccount();
+        }
+
+        if (tx_info.call_contract_step() == contract::kCallStepContractCalled) {
+            account_info->UnLockAccount();
+        }
+    }
+
+    return kBlockSuccess;
+}
+
+int AccountManager::SetAccountAttrs(
+        const bft::protobuf::TxInfo& tx_info,
+        uint64_t exist_height,
+        uint64_t tmp_now_height,
+        block::DbAccountInfo* account_info,
+        db::DbWriteBach& db_batch) {
     if (tx_info.status() == bft::kBftSuccess) {
         int res = 0;
         if (tx_info.type() == common::kConsensusCreateContract) {
@@ -471,16 +477,6 @@ int AccountManager::UpdateAccountInfo(
         if (res != 0) {
             BLOCK_ERROR("SetCreateAccountHeight failed!");
             return kBlockError;
-        }
-    }
-    
-    if (tx_info.type() == common::kConsensusCallContract) {
-        if (tx_info.call_contract_step() == contract::kCallStepContractLocked) {
-            account_info->LockAccount();
-        }
-
-        if (tx_info.call_contract_step() == contract::kCallStepContractCalled) {
-            account_info->UnLockAccount();
         }
     }
 
