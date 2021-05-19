@@ -7,7 +7,7 @@
 #include "db/db_utils.h"
 #include "contract/contract_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -73,4 +73,4 @@ int PayforVpn::Execute(bft::TxItemPtr& tx_item) {
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

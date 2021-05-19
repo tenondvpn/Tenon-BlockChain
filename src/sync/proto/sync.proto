@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.sync.protobuf;
+package tenon.sync.protobuf;
 
 message SyncValueRequest {
 	optional uint32 network_id = 1;

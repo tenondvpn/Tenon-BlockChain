@@ -3,7 +3,7 @@
 
 #include <functional>
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 

@@ -8,7 +8,7 @@
 #include "block/account_manager.h"
 #include "contract/contract_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -117,4 +117,4 @@ bool DispatchPool::TxLockPool(uint32_t pool_index) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

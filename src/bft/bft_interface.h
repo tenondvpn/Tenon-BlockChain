@@ -19,7 +19,7 @@
 #include "bft/member_manager.h"
 #include "bft/proto/bft.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -247,4 +247,4 @@ typedef std::shared_ptr<BftInterface> BftInterfacePtr;
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

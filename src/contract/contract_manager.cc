@@ -10,7 +10,7 @@
 #include "contract/contract_vpn_mining.h"
 #include "contract/contract_ecrecover.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -170,4 +170,4 @@ int ContractManager::call(
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

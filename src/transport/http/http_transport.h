@@ -8,7 +8,7 @@
 #include "common/tick.h"
 #include "httplib.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -59,4 +59,4 @@ private:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

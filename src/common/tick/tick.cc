@@ -5,7 +5,7 @@
 
 #include "common/global_info.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -79,4 +79,4 @@ void IndependentTick::TimerFlies() {
 }
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

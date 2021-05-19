@@ -10,7 +10,7 @@
 
 #include "common/random.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -85,4 +85,4 @@ std::string Random::RandomString(uint32_t size) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -39,7 +39,7 @@ extern "C" {
 #define VPNSVR_WARN(fmt, ...) TENON_WARN("[vpn_svr]" fmt, ## __VA_ARGS__)
 #define VPNSVR_ERROR(fmt, ...) TENON_WARN("[vpn_svr]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -129,4 +129,4 @@ static const uint32_t kUdpForHoleMaxCount = 60u;
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

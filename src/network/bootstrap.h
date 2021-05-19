@@ -9,7 +9,7 @@
 #include "network/universal_manager.h"
 #include "network/universal.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class Node;
@@ -43,4 +43,4 @@ private:
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

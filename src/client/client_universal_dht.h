@@ -3,7 +3,7 @@
 #include "dht/base_dht.h"
 #include "transport/transport.h"
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -24,4 +24,4 @@ typedef std::shared_ptr<ClientUniversalDht> ClientUniversalDhtPtr;
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

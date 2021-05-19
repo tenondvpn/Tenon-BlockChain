@@ -8,7 +8,7 @@
 #define DHT_WARN(fmt, ...) TENON_WARN("[dht]" fmt, ## __VA_ARGS__)
 #define DHT_ERROR(fmt, ...) TENON_ERROR("[dht]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -46,4 +46,4 @@ static const uint32_t kHeartbeatDefaultAliveTimes = 3u;
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

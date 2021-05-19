@@ -30,7 +30,7 @@
 #include "security/schnorr.h"
 
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
@@ -47,7 +47,7 @@ void UpdateVpnInit::ServerInit(const common::Config& conf) {
 #ifdef ENABLE_CLIENT_MODE
     {
         std::string cns;
-        if (!conf.Get("lego", "cns", cns) || cns.empty()) {
+        if (!conf.Get("tenon", "cns", cns) || cns.empty()) {
             cns = "AU,CA,CN,DE,FR,GB,HK,IN,JP,NL,SG,US,PH,KR,ID";
         }
 
@@ -61,7 +61,7 @@ void UpdateVpnInit::ServerInit(const common::Config& conf) {
         }
     }
     std::string config_nodes;
-    conf.Get("lego", "config_nodes", config_nodes);
+    conf.Get("tenon", "config_nodes", config_nodes);
     if (!config_nodes.empty()) {
         common::Split<1024> nodes_split(config_nodes.c_str(), ',', config_nodes.size());
         for (uint32_t i = 0; i < nodes_split.Count(); ++i) {
@@ -87,7 +87,7 @@ void UpdateVpnInit::ServerInit(const common::Config& conf) {
         }
     }
 
-    conf.Get("lego", "vpn_count_svr", vpn_count_direct_info_);
+    conf.Get("tenon", "vpn_count_svr", vpn_count_direct_info_);
     update_vpn_nodes_tick_.CutOff(
             kGetVpnNodesPeriod,
             std::bind(&UpdateVpnInit::GetVpnNodes, this));
@@ -222,7 +222,7 @@ void UpdateVpnInit::GetAccountInitBlocks(const std::string& account_id, std::str
     }
 
     LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(message, common::Encode::HexEncode(account_id));
-    auto dht = network::UniversalManager::Instance()->GetUniversal(lego::network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal(tenon::network::kUniversalNetworkId);
     if (dht == nullptr) {
         return;
     }
@@ -1360,4 +1360,4 @@ void UpdateVpnInit::UpdateNodePorts(
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

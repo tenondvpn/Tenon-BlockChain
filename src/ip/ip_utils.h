@@ -8,7 +8,7 @@
 #define IP_WARN(fmt, ...) TENON_WARN("[ip]" fmt, ## __VA_ARGS__)
 #define IP_ERROR(fmt, ...) TENON_ERROR("[ip]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -21,4 +21,4 @@ static const uint8_t kInvalidCountryCode = 255u;
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

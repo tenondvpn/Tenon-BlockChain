@@ -9,7 +9,7 @@
 #include "network/universal_manager.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -224,4 +224,4 @@ void Route::RouteByUniversal(transport::protobuf::Header& header) {
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

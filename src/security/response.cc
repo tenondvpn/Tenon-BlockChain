@@ -7,7 +7,7 @@
 #include "security/schnorr.h"
 #include "security/security_string_trans.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -131,4 +131,4 @@ bool Response::operator==(const Response& r) const {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

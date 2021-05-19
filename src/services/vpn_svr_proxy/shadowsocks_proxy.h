@@ -5,7 +5,7 @@
 #include "network/shard_network.h"
 #include "services/vpn_svr_proxy/proxy_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -52,4 +52,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

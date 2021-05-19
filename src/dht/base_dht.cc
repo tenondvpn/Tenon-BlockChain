@@ -28,7 +28,7 @@
 #include "network/universal_manager.h"
 #include "security/secp256k1.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -1054,4 +1054,4 @@ void BaseDht::GetNetIdAndCountry(uint32_t& net_id, uint8_t& country) {
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

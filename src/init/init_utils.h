@@ -8,7 +8,7 @@
 #define INIT_WARN(fmt, ...) TENON_WARN("[init]" fmt, ## __VA_ARGS__)
 #define INIT_ERROR(fmt, ...) TENON_ERROR("[init]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
@@ -19,4 +19,4 @@ enum InitErrorCode {
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

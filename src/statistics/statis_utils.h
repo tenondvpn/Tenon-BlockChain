@@ -12,7 +12,7 @@
 #define STATIS_WARN(fmt, ...) TENON_WARN("[statis]" fmt, ## __VA_ARGS__)
 #define STATIS_ERROR(fmt, ...) TENON_ERROR("[statis]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace statis {
 
@@ -31,25 +31,25 @@ bool operator==(const AccountBalance& lhs, const AccountBalance& rhs);
 
 }  // namespace statis
 
-}  // namespace lego
+}  // namespace tenon
 
 namespace std {
     template<>
-    struct hash<lego::statis::AccountBalance> {
-        size_t operator()(const lego::statis::AccountBalance& _Keyval) const noexcept {
+    struct hash<tenon::statis::AccountBalance> {
+        size_t operator()(const tenon::statis::AccountBalance& _Keyval) const noexcept {
             std::string key(_Keyval.account_id, sizeof(_Keyval.account_id));
-            return lego::common::Hash::Hash32(key);
+            return tenon::common::Hash::Hash32(key);
         }
     };
 }
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::statis::AccountBalance& val);
+uint64_t MinHeapUniqueVal(const tenon::statis::AccountBalance& val);
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

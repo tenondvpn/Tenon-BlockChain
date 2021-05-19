@@ -8,7 +8,7 @@
 #define ELECT_WARN(fmt, ...) TENON_WARN("[elect]" fmt, ## __VA_ARGS__)
 #define ELECT_ERROR(fmt, ...) TENON_ERROR("[elect]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -30,4 +30,4 @@ static const uint32_t kElectNeighborCount = 7u;
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

@@ -3,7 +3,7 @@
 
 #include "common/global_info.h"
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 
@@ -25,4 +25,4 @@ int CongressInit::Init() {
 
 }  // namespace congress
 
-}  // namespace lego
+}  // namespace tenon

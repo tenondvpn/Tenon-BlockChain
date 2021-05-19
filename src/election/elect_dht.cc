@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "election/elect_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -12,4 +12,4 @@ ElectDht::~ElectDht() {}
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

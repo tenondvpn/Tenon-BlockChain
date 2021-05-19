@@ -8,7 +8,7 @@
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -57,4 +57,4 @@ private:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

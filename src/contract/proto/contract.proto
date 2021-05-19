@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.contract.protobuf;
+package tenon.contract.protobuf;
 
 message GetAttrByKeyReq {
 	optional bytes call_addr = 1;

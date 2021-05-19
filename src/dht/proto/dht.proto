@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.dht.protobuf;
+package tenon.dht.protobuf;
 
 message BootstrapRequest {
     optional string local_ip = 1;

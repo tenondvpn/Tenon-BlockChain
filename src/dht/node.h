@@ -11,7 +11,7 @@
 #include "security/signature.h"
 #include "dht/dht_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -168,4 +168,4 @@ typedef std::shared_ptr<Node> NodePtr;
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

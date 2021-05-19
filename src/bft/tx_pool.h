@@ -20,7 +20,7 @@
 #include "network/network_utils.h"
 #include "contract/contract_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -88,4 +88,4 @@ private:
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

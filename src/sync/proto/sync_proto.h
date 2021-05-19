@@ -6,7 +6,7 @@
 #include "dht/node.h"
 #include "sync/proto/sync.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace sync {
 
@@ -32,5 +32,5 @@ private:
 
 }  // namespace sync
 
-}  //namespace lego
+}  //namespace tenon
 

@@ -10,7 +10,7 @@
 #define CLIENT_WARN(fmt, ...) TENON_WARN("[client]" fmt, ## __VA_ARGS__)
 #define CLIENT_ERROR(fmt, ...) TENON_ERROR("[client]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -32,4 +32,4 @@ static const int64_t kInvalidTimestamp = (std::numeric_limits<int64_t>::max)();
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

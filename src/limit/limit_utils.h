@@ -8,7 +8,7 @@
 #define LIMIT_WARN(fmt, ...) TENON_WARN("[limit]" fmt, ## __VA_ARGS__)
 #define LIMIT_ERROR(fmt, ...) TENON_ERROR("[limit]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace limit {
 
@@ -19,4 +19,4 @@ enum LimitErrorCode {
 
 }  // namespace limit
 
-}  // namespace lego
+}  // namespace tenon

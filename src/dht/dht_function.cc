@@ -4,7 +4,7 @@
 #include "common/encode.h"
 #include "common/global_info.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -190,4 +190,4 @@ std::vector<NodePtr> DhtFunction::GetClosestNodes(
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

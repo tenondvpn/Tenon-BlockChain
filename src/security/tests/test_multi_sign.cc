@@ -13,7 +13,7 @@
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -469,4 +469,4 @@ TEST_F(TestMultiSign, TestSerialization) {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

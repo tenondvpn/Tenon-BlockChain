@@ -21,7 +21,7 @@
 #include "rocksdb/db.h"
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -104,4 +104,4 @@ private:
 
 }  // db
 
-}  // lego
+}  // tenon

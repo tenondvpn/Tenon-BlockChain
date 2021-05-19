@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.service.protobuf;
+package tenon.service.protobuf;
 
 message GetVpnInfoRequest {
     optional bytes pubkey = 1;

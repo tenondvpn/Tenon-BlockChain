@@ -9,7 +9,7 @@
 #include "common/encode.h"
 #include "dht/dht_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -78,4 +78,4 @@ uint8_t DhtKeyManager::DhtKeyGetCountry(const std::string& dht_key) {
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

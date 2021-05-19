@@ -5,7 +5,7 @@
 #include "common/min_heap.h"
 #include "common/encode.h"
 
-namespace lego {
+namespace tenon {
 
 namespace  common {
 
@@ -76,10 +76,10 @@ bool operator==(const BlockItemPtr& lhs, const BlockItemPtr& rhs);
 
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::common::BlockItemPtr& val);
+uint64_t MinHeapUniqueVal(const tenon::common::BlockItemPtr& val);
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::common::BlockItem& val);
+uint64_t MinHeapUniqueVal(const tenon::common::BlockItem& val);
 
 
 static const std::string kClientFreeBandwidthOver = "bwo";
@@ -116,12 +116,12 @@ static const uint64_t kVpnVipMaxPayfor = 2000u * kTenonMiniTransportUnit;
 
 }  // namespace  common
 
-}  // namespace lego 
+}  // namespace tenon 
 
 namespace std {
     template<>
-    struct hash<lego::common::BlockItemPtr> {
-        size_t operator()(const lego::common::BlockItemPtr& _Keyval) const noexcept {
+    struct hash<tenon::common::BlockItemPtr> {
+        size_t operator()(const tenon::common::BlockItemPtr& _Keyval) const noexcept {
             return _Keyval.item->height;
         }
     };

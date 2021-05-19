@@ -6,7 +6,7 @@
 #include "contract/contract_manager.h"
 #include "db/db.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -546,4 +546,4 @@ void AccountManager::SetPool(
 
 }  // namespace block
 
-}  //namespace lego
+}  //namespace tenon

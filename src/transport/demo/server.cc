@@ -6,24 +6,24 @@
 #include "transport/multi_thread.h"
 #include "transport/processor.h"
 
-static void HandleMessage(lego::transport::protobuf::Header& message) {
+static void HandleMessage(tenon::transport::protobuf::Header& message) {
     static std::atomic<uint32_t> rcv_cnt(0);
-    static auto b_time = lego::common::TimeStampMsec();
+    static auto b_time = tenon::common::TimeStampMsec();
     if (message.id() == 0) {
         rcv_cnt = 0;
-        b_time = lego::common::TimeStampMsec();
+        b_time = tenon::common::TimeStampMsec();
     }
     ++rcv_cnt;
     if (rcv_cnt % 10000 == 0) {
-        auto use_time_ms = double(lego::common::TimeStampMsec() - b_time) / 1000.0;
+        auto use_time_ms = double(tenon::common::TimeStampMsec() - b_time) / 1000.0;
         std::cout << "receive rcv_cnt: " << rcv_cnt << " use time: " << use_time_ms << " ms" << std::endl;
     }
 }
 
 int main(int argc, char* argv[]) {
     log4cpp::PropertyConfigurator::configure("./conf/log4cpp.properties");
-    using namespace lego::transport;
-    using namespace lego::common;
+    using namespace tenon::transport;
+    using namespace tenon::common;
 
     ParserArgs args_parser;
     args_parser.AddArgType('r', "role", kMaybeValue);

@@ -8,7 +8,7 @@
 #include "bft/proto/bft_proto.h"
 #include "bft/bft_interface.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 

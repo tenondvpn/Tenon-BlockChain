@@ -4,7 +4,7 @@
 
 #include "common/bloom_filter.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -67,4 +67,4 @@ bool BloomFilter::operator==(const BloomFilter& r) const {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -273,4 +273,4 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

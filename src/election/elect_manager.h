@@ -10,7 +10,7 @@
 #include "election/elect_utils.h"
 #include "election/proto/elect.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -43,4 +43,4 @@ private:
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "transport/processor.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -21,7 +21,7 @@ void Processor::UnRegisterProcessor(uint32_t type) {
     message_processor_[type] = nullptr;
 }
 
-void Processor::HandleMessage(lego::transport::protobuf::Header& message) {
+void Processor::HandleMessage(tenon::transport::protobuf::Header& message) {
     assert(message.type() < common::kLegoMaxMessageTypeCount);
     if (message_processor_[message.type()] == nullptr) {
         message_processor_[common::kRelayMessage](message);
@@ -42,4 +42,4 @@ Processor::~Processor() {}
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

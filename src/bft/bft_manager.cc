@@ -23,7 +23,7 @@
 #include "security/secp256k1.h"
 #include "statistics/statistics.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -1171,4 +1171,4 @@ int BftManager::VerifyAggSignature(
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

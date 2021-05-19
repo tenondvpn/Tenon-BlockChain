@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "vss/vss_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vss {
 
@@ -12,4 +12,4 @@ VssManager* VssManager::Instance() {
 
 }  // namespace vss
 
-}  // namespace lego
+}  // namespace tenon

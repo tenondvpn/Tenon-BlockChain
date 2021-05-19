@@ -10,7 +10,7 @@
 #include "contract/contract_utils.h"
 #include "contract/call_parameters.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -42,4 +42,4 @@ typedef std::shared_ptr<ContractInterface> ContractInterfacePtr;
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

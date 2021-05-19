@@ -22,7 +22,7 @@
 #include "services/vpn_route/route_tcp.h"
 #include "services/vpn_server/vpn_route.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -132,9 +132,9 @@ int ShadowsocksProxy::Init(int argc, char** argv) {
         common::GlobalInfo::Instance()->min_svr_port(),
         common::GlobalInfo::Instance()->max_svr_port());
 
-    conf_.Get("lego", "vpn_route_port", vpn_route_port_);
+    conf_.Get("tenon", "vpn_route_port", vpn_route_port_);
     uint32_t vpn_vip_level = 0;
-    conf_.Get("lego", "vpn_vip_level", vpn_vip_level);
+    conf_.Get("tenon", "vpn_vip_level", vpn_vip_level);
     PROXY_ERROR("begin init InitTcpRelay.");
     if (InitTcpRelay(vpn_vip_level) != kProxySuccess) {
         PROXY_ERROR("init tcp relay failed!");
@@ -142,7 +142,7 @@ int ShadowsocksProxy::Init(int argc, char** argv) {
     }
 
     PROXY_ERROR("success init InitTcpRelay.");
-    conf_.Get("lego", "vpn_server_port", vpn_server_port_);
+    conf_.Get("tenon", "vpn_server_port", vpn_server_port_);
     if (StartShadowsocks() != kProxySuccess) {
         PROXY_ERROR("start shadowsocks failed!");
         return kProxyError;
@@ -166,7 +166,7 @@ int ShadowsocksProxy::Init(int argc, char** argv) {
 
     std::string gid;
     std::map<std::string, std::string> attrs;
-    lego::client::TransactionClient::Instance()->Transaction(
+    tenon::client::TransactionClient::Instance()->Transaction(
             "",
             0,
             "",
@@ -264,4 +264,4 @@ int ShadowsocksProxy::StartShadowsocks() {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

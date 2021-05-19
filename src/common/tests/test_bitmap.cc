@@ -7,7 +7,7 @@
 #include "common/bitmap.h"
 #include "common/random.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -61,4 +61,4 @@ TEST_F(TestBitmap, AddAndContainClear) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

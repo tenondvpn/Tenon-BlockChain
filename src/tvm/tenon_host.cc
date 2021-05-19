@@ -5,7 +5,7 @@
 #include "tvm/execution.h"
 #include "block/account_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -326,4 +326,4 @@ void TenonHost::AddTmpAccountBalance(const std::string& address, uint64_t balanc
 
 }  // namespace tvm
 
-}  // namespace lego
+}  // namespace tenon

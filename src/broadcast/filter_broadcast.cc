@@ -9,7 +9,7 @@
 #include "dht/base_dht.h"
 #include "broadcast/broadcast_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace broadcast {
 
@@ -267,4 +267,4 @@ uint64_t FilterBroadcast::GetLayerRight(
 
 }  // namespace broadcast
 
-}  // namespace lego
+}  // namespace tenon

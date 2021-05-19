@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.transport.protobuf;
+package tenon.transport.protobuf;
 
 message BroadcastParam {
 	optional uint32 type = 1;

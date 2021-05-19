@@ -9,7 +9,7 @@
 #include "tvm/tvm_utils.h"
 #include "tvm/tenon_host.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -65,4 +65,4 @@ TEST_F(TestExecution, All) {
 
 }  // namespace tvm
 
-}  // namespace lego
+}  // namespace tenon

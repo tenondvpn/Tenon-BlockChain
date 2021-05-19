@@ -12,7 +12,7 @@
 #include <deque>
 #include <condition_variable>
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
     class Transport;
@@ -297,4 +297,4 @@ private:
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

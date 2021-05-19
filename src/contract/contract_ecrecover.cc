@@ -2,7 +2,7 @@
 
 #include "security/secp256k1.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -50,4 +50,4 @@ int Ecrecover::call(
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

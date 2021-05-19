@@ -32,17 +32,17 @@
 #include "common/string_utils.h"
 #include "common/user_property_key_define.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::common::BlockItemPtr& val) {
+uint64_t MinHeapUniqueVal(const tenon::common::BlockItemPtr& val) {
     return common::Hash::Hash64(val.item->gid + std::to_string(val.item->timestamp));
 }
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::common::BlockItem& val) {
+uint64_t MinHeapUniqueVal(const tenon::common::BlockItem& val) {
     return common::Hash::Hash64(val.gid + std::to_string(val.timestamp));
 }
 
@@ -60,9 +60,9 @@ bool operator==(const BlockItemPtr& lhs, const BlockItemPtr& rhs) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
 
-namespace lego {
+namespace tenon {
 
 namespace common {
     
@@ -304,4 +304,4 @@ bool IsVlanIp(const std::string& ip_str)
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

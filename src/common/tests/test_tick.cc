@@ -6,7 +6,7 @@
 #define private public
 #include "common/tick.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -116,4 +116,4 @@ TEST_F(TestTick, All) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

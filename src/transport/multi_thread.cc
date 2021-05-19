@@ -18,7 +18,7 @@
 #include "block/proto/block.pb.h"
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -359,4 +359,4 @@ void MultiThreadHandler::Join() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

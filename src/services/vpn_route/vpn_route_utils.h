@@ -8,7 +8,7 @@
 #define VPNROUTE_WARN(fmt, ...) TENON_WARN("[vpnrouteroute]" fmt, ## __VA_ARGS__)
 #define VPNROUTE_ERROR(fmt, ...) TENON_ERROR("[vpnrouteroute]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace vpnroute {
 
@@ -19,4 +19,4 @@ enum VpnRouteErrorCode {
 
 }  // namespace vpnroute
 
-}  // namespace lego
+}  // namespace tenon

@@ -3,7 +3,7 @@
 #include "transport/udp/udp_transport.h"
 #include "transport/endpoint.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -42,4 +42,4 @@ int Rudp::GetSocket() {
 
 }  // namespace transport
 
-}  //namespace lego
+}  //namespace tenon

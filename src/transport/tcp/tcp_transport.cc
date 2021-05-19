@@ -7,7 +7,7 @@
 #include "transport/proto/transport.pb.h"
 #include "init/update_vpn_init.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -731,4 +731,4 @@ void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

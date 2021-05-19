@@ -32,7 +32,7 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::interna
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_RefreshNeighborsResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_VpnNodeInfo;
 }  // namespace protobuf_dht_2eproto
-namespace lego {
+namespace tenon {
 namespace dht {
 namespace protobuf {
 class BootstrapRequestDefaultTypeInternal {
@@ -97,17 +97,17 @@ class DhtMessageDefaultTypeInternal {
 } _DhtMessage_default_instance_;
 }  // namespace protobuf
 }  // namespace dht
-}  // namespace lego
+}  // namespace tenon
 namespace protobuf_dht_2eproto {
 static void InitDefaultsBootstrapRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_BootstrapRequest_default_instance_;
-    new (ptr) ::lego::dht::protobuf::BootstrapRequest();
+    void* ptr = &::tenon::dht::protobuf::_BootstrapRequest_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::BootstrapRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::BootstrapRequest::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::BootstrapRequest::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_BootstrapRequest =
@@ -117,11 +117,11 @@ static void InitDefaultsRelayVpnNodeInfo() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_RelayVpnNodeInfo_default_instance_;
-    new (ptr) ::lego::dht::protobuf::RelayVpnNodeInfo();
+    void* ptr = &::tenon::dht::protobuf::_RelayVpnNodeInfo_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::RelayVpnNodeInfo();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::RelayVpnNodeInfo::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::RelayVpnNodeInfo::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_RelayVpnNodeInfo =
@@ -131,11 +131,11 @@ static void InitDefaultsVpnNodeInfo() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_VpnNodeInfo_default_instance_;
-    new (ptr) ::lego::dht::protobuf::VpnNodeInfo();
+    void* ptr = &::tenon::dht::protobuf::_VpnNodeInfo_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::VpnNodeInfo();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::VpnNodeInfo::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::VpnNodeInfo::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_VpnNodeInfo =
@@ -146,11 +146,11 @@ static void InitDefaultsInitMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_InitMessage_default_instance_;
-    new (ptr) ::lego::dht::protobuf::InitMessage();
+    void* ptr = &::tenon::dht::protobuf::_InitMessage_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::InitMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::InitMessage::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::InitMessage::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_InitMessage =
@@ -161,11 +161,11 @@ static void InitDefaultsBootstrapResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_BootstrapResponse_default_instance_;
-    new (ptr) ::lego::dht::protobuf::BootstrapResponse();
+    void* ptr = &::tenon::dht::protobuf::_BootstrapResponse_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::BootstrapResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::BootstrapResponse::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::BootstrapResponse::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_BootstrapResponse =
@@ -176,11 +176,11 @@ static void InitDefaultsRefreshNeighborsRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_RefreshNeighborsRequest_default_instance_;
-    new (ptr) ::lego::dht::protobuf::RefreshNeighborsRequest();
+    void* ptr = &::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::RefreshNeighborsRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::RefreshNeighborsRequest::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::RefreshNeighborsRequest::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshNeighborsRequest =
@@ -190,11 +190,11 @@ static void InitDefaultsNodeInfo() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_NodeInfo_default_instance_;
-    new (ptr) ::lego::dht::protobuf::NodeInfo();
+    void* ptr = &::tenon::dht::protobuf::_NodeInfo_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::NodeInfo();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::NodeInfo::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::NodeInfo::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_NodeInfo =
@@ -204,11 +204,11 @@ static void InitDefaultsRefreshNeighborsResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_RefreshNeighborsResponse_default_instance_;
-    new (ptr) ::lego::dht::protobuf::RefreshNeighborsResponse();
+    void* ptr = &::tenon::dht::protobuf::_RefreshNeighborsResponse_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::RefreshNeighborsResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::RefreshNeighborsResponse::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::RefreshNeighborsResponse::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_RefreshNeighborsResponse =
@@ -219,11 +219,11 @@ static void InitDefaultsHeartbeatRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_HeartbeatRequest_default_instance_;
-    new (ptr) ::lego::dht::protobuf::HeartbeatRequest();
+    void* ptr = &::tenon::dht::protobuf::_HeartbeatRequest_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::HeartbeatRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::HeartbeatRequest::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::HeartbeatRequest::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_HeartbeatRequest =
@@ -233,11 +233,11 @@ static void InitDefaultsHeartbeatResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_HeartbeatResponse_default_instance_;
-    new (ptr) ::lego::dht::protobuf::HeartbeatResponse();
+    void* ptr = &::tenon::dht::protobuf::_HeartbeatResponse_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::HeartbeatResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::HeartbeatResponse::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::HeartbeatResponse::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_HeartbeatResponse =
@@ -247,11 +247,11 @@ static void InitDefaultsConnectReqeust() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_ConnectReqeust_default_instance_;
-    new (ptr) ::lego::dht::protobuf::ConnectReqeust();
+    void* ptr = &::tenon::dht::protobuf::_ConnectReqeust_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::ConnectReqeust();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::ConnectReqeust::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::ConnectReqeust::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_ConnectReqeust =
@@ -261,11 +261,11 @@ static void InitDefaultsDhtMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::dht::protobuf::_DhtMessage_default_instance_;
-    new (ptr) ::lego::dht::protobuf::DhtMessage();
+    void* ptr = &::tenon::dht::protobuf::_DhtMessage_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::DhtMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::dht::protobuf::DhtMessage::InitAsDefaultInstance();
+  ::tenon::dht::protobuf::DhtMessage::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<7> scc_info_DhtMessage =
@@ -296,27 +296,27 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[12];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, local_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, local_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, node_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, get_init_msg_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, version_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, uid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapRequest, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, local_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, local_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, node_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, get_init_msg_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, version_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, uid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapRequest, node_tag_),
   0,
   4,
   5,
@@ -333,23 +333,23 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   15,
   2,
   3,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, dhkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, country_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RelayVpnNodeInfo, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, dhkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, country_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RelayVpnNodeInfo, node_tag_),
   0,
   1,
   2,
@@ -362,24 +362,24 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   10,
   11,
   4,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, dhkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, country_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, relay_vpn_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::VpnNodeInfo, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, dhkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, country_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, relay_vpn_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::VpnNodeInfo, node_tag_),
   0,
   1,
   2,
@@ -393,21 +393,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   11,
   ~0u,
   4,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, version_info_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, route_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, vpn_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, use_conf_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, vpn_node_count_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, vpn_count_svr_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, init_blocks_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, bft_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, vip_route_nodes_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::InitMessage, vip_vpn_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, version_info_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, route_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, vpn_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, use_conf_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, vpn_node_count_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, vpn_count_svr_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, init_blocks_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, bft_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, vip_route_nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::InitMessage, vip_vpn_nodes_),
   0,
   ~0u,
   ~0u,
@@ -418,28 +418,28 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   4,
   ~0u,
   ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, node_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, local_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, local_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, public_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, country_code_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, init_message_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, peer_public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::BootstrapResponse, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, node_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, local_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, local_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, country_code_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, init_message_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, peer_public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::BootstrapResponse, node_tag_),
   0,
   5,
   1,
@@ -457,39 +457,39 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   15,
   16,
   3,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, count_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, des_dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, bloomfilter1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsRequest, bloomfilter_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, count_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, des_dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter_),
   1,
   0,
   ~0u,
   ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, public_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, local_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, local_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, public_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::NodeInfo, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, local_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, local_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, public_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, node_tag_),
   0,
   5,
   1,
@@ -505,48 +505,48 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   13,
   14,
   4,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsResponse, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::RefreshNeighborsResponse, nodes_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsResponse, nodes_),
   ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatRequest, dht_key_hash_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatRequest, dht_key_hash_),
   0,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatResponse, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::HeartbeatResponse, dht_key_hash_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::HeartbeatResponse, dht_key_hash_),
   0,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, local_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, local_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, public_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, direct_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, min_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, max_svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, min_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, max_route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, node_weight_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, min_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, max_udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::ConnectReqeust, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, local_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, local_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, direct_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, min_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, max_svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, min_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, max_route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, node_weight_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, min_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, max_udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::ConnectReqeust, node_tag_),
   0,
   5,
   1,
@@ -563,19 +563,19 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   14,
   15,
   4,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, bootstrap_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, bootstrap_res_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, refresh_neighbors_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, refresh_neighbors_res_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, connect_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, heartbeat_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, heartbeat_res_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::dht::protobuf::DhtMessage, networks_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, bootstrap_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, bootstrap_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, refresh_neighbors_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, refresh_neighbors_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, connect_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, heartbeat_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, heartbeat_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, networks_),
   0,
   1,
   2,
@@ -586,33 +586,33 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 21, sizeof(::lego::dht::protobuf::BootstrapRequest)},
-  { 37, 54, sizeof(::lego::dht::protobuf::RelayVpnNodeInfo)},
-  { 66, 84, sizeof(::lego::dht::protobuf::VpnNodeInfo)},
-  { 97, 112, sizeof(::lego::dht::protobuf::InitMessage)},
-  { 122, 144, sizeof(::lego::dht::protobuf::BootstrapResponse)},
-  { 161, 170, sizeof(::lego::dht::protobuf::RefreshNeighborsRequest)},
-  { 174, 194, sizeof(::lego::dht::protobuf::NodeInfo)},
-  { 209, 215, sizeof(::lego::dht::protobuf::RefreshNeighborsResponse)},
-  { 216, 222, sizeof(::lego::dht::protobuf::HeartbeatRequest)},
-  { 223, 229, sizeof(::lego::dht::protobuf::HeartbeatResponse)},
-  { 230, 251, sizeof(::lego::dht::protobuf::ConnectReqeust)},
-  { 267, 280, sizeof(::lego::dht::protobuf::DhtMessage)},
+  { 0, 21, sizeof(::tenon::dht::protobuf::BootstrapRequest)},
+  { 37, 54, sizeof(::tenon::dht::protobuf::RelayVpnNodeInfo)},
+  { 66, 84, sizeof(::tenon::dht::protobuf::VpnNodeInfo)},
+  { 97, 112, sizeof(::tenon::dht::protobuf::InitMessage)},
+  { 122, 144, sizeof(::tenon::dht::protobuf::BootstrapResponse)},
+  { 161, 170, sizeof(::tenon::dht::protobuf::RefreshNeighborsRequest)},
+  { 174, 194, sizeof(::tenon::dht::protobuf::NodeInfo)},
+  { 209, 215, sizeof(::tenon::dht::protobuf::RefreshNeighborsResponse)},
+  { 216, 222, sizeof(::tenon::dht::protobuf::HeartbeatRequest)},
+  { 223, 229, sizeof(::tenon::dht::protobuf::HeartbeatResponse)},
+  { 230, 251, sizeof(::tenon::dht::protobuf::ConnectReqeust)},
+  { 267, 280, sizeof(::tenon::dht::protobuf::DhtMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_BootstrapRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_RelayVpnNodeInfo_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_VpnNodeInfo_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_InitMessage_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_BootstrapResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_RefreshNeighborsRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_NodeInfo_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_RefreshNeighborsResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_HeartbeatRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_HeartbeatResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_ConnectReqeust_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::dht::protobuf::_DhtMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_BootstrapRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RelayVpnNodeInfo_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_VpnNodeInfo_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_InitMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_BootstrapResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_NodeInfo_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RefreshNeighborsResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_HeartbeatRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_HeartbeatResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_ConnectReqeust_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_DhtMessage_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -658,22 +658,22 @@ void AddDescriptorsImpl() {
       "e_port\030\007 \001(\r\022\026\n\016max_route_port\030\010 \001(\r\022\023\n\013"
       "node_weight\030\t \001(\r\022\024\n\014min_udp_port\030\n \001(\r\022"
       "\024\n\014max_udp_port\030\013 \001(\r\022<\n\017relay_vpn_nodes"
-      "\030\014 \003(\0132#.lego.dht.protobuf.RelayVpnNodeI"
+      "\030\014 \003(\0132#.tenon.dht.protobuf.RelayVpnNodeI"
       "nfo\022\020\n\010node_tag\030\r \001(\014\"\352\002\n\013InitMessage\022\024\n"
       "\014version_info\030\001 \001(\014\0223\n\013route_nodes\030\002 \003(\013"
-      "2\036.lego.dht.protobuf.VpnNodeInfo\0221\n\tvpn_"
-      "nodes\030\003 \003(\0132\036.lego.dht.protobuf.VpnNodeI"
+      "2\036.tenon.dht.protobuf.VpnNodeInfo\0221\n\tvpn_"
+      "nodes\030\003 \003(\0132\036.tenon.dht.protobuf.VpnNodeI"
       "nfo\022\026\n\016use_conf_nodes\030\004 \001(\010\022\026\n\016vpn_node_"
       "count\030\005 \001(\014\022\025\n\rvpn_count_svr\030\006 \001(\014\022\023\n\013in"
       "it_blocks\030\007 \001(\014\022\021\n\tbft_nodes\030\010 \001(\014\0227\n\017vi"
-      "p_route_nodes\030\t \003(\0132\036.lego.dht.protobuf."
+      "p_route_nodes\030\t \003(\0132\036.tenon.dht.protobuf."
       "VpnNodeInfo\0225\n\rvip_vpn_nodes\030\n \003(\0132\036.leg"
       "o.dht.protobuf.VpnNodeInfo\"\231\003\n\021Bootstrap"
       "Response\022\017\n\007node_id\030\001 \001(\014\022\020\n\010nat_type\030\002 "
       "\001(\005\022\020\n\010local_ip\030\003 \001(\t\022\022\n\nlocal_port\030\004 \001("
       "\005\022\021\n\tpublic_ip\030\005 \001(\t\022\023\n\013public_port\030\006 \001("
       "\005\022\024\n\014country_code\030\007 \001(\005\0224\n\014init_message\030"
-      "\010 \001(\0132\036.lego.dht.protobuf.InitMessage\022\024\n"
+      "\010 \001(\0132\036.tenon.dht.protobuf.InitMessage\022\024\n"
       "\014min_svr_port\030\t \001(\r\022\024\n\014max_svr_port\030\n \001("
       "\r\022\026\n\016min_route_port\030\013 \001(\r\022\026\n\016max_route_p"
       "ort\030\014 \001(\r\022\030\n\020peer_public_port\030\r \001(\005\022\023\n\013n"
@@ -690,7 +690,7 @@ void AddDescriptorsImpl() {
       "\n\016max_route_port\030\013 \001(\r\022\023\n\013node_weight\030\014 "
       "\001(\r\022\024\n\014min_udp_port\030\r \001(\r\022\024\n\014max_udp_por"
       "t\030\016 \001(\r\022\020\n\010node_tag\030\017 \001(\014\"F\n\030RefreshNeig"
-      "hborsResponse\022*\n\005nodes\030\001 \003(\0132\033.lego.dht."
+      "hborsResponse\022*\n\005nodes\030\001 \003(\0132\033.tenon.dht."
       "protobuf.NodeInfo\"(\n\020HeartbeatRequest\022\024\n"
       "\014dht_key_hash\030\001 \001(\004\")\n\021HeartbeatResponse"
       "\022\024\n\014dht_key_hash\030\001 \001(\004\"\314\002\n\016ConnectReqeus"
@@ -704,15 +704,15 @@ void AddDescriptorsImpl() {
       "\014max_udp_port\030\017 \001(\r\022\020\n\010node_tag\030\020 \001(\014\"\337\003"
       "\n\nDhtMessage\022:\n\rbootstrap_req\030\001 \001(\0132#.le"
       "go.dht.protobuf.BootstrapRequest\022;\n\rboot"
-      "strap_res\030\002 \001(\0132$.lego.dht.protobuf.Boot"
+      "strap_res\030\002 \001(\0132$.tenon.dht.protobuf.Boot"
       "strapResponse\022I\n\025refresh_neighbors_req\030\003"
-      " \001(\0132*.lego.dht.protobuf.RefreshNeighbor"
+      " \001(\0132*.tenon.dht.protobuf.RefreshNeighbor"
       "sRequest\022J\n\025refresh_neighbors_res\030\004 \001(\0132"
-      "+.lego.dht.protobuf.RefreshNeighborsResp"
-      "onse\0226\n\013connect_req\030\005 \001(\0132!.lego.dht.pro"
+      "+.tenon.dht.protobuf.RefreshNeighborsResp"
+      "onse\0226\n\013connect_req\030\005 \001(\0132!.tenon.dht.pro"
       "tobuf.ConnectReqeust\022:\n\rheartbeat_req\030\006 "
-      "\001(\0132#.lego.dht.protobuf.HeartbeatRequest"
-      "\022;\n\rheartbeat_res\030\007 \001(\0132$.lego.dht.proto"
+      "\001(\0132#.tenon.dht.protobuf.HeartbeatRequest"
+      "\022;\n\rheartbeat_res\030\007 \001(\0132$.tenon.dht.proto"
       "buf.HeartbeatResponse\022\020\n\010networks\030\010 \003(\r"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
@@ -732,7 +732,7 @@ struct StaticDescriptorInitializer {
   }
 } static_descriptor_initializer;
 }  // namespace protobuf_dht_2eproto
-namespace lego {
+namespace tenon {
 namespace dht {
 namespace protobuf {
 
@@ -764,7 +764,7 @@ BootstrapRequest::BootstrapRequest()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_BootstrapRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.BootstrapRequest)
 }
 BootstrapRequest::BootstrapRequest(const BootstrapRequest& from)
   : ::google::protobuf::Message(),
@@ -790,7 +790,7 @@ BootstrapRequest::BootstrapRequest(const BootstrapRequest& from)
   ::memcpy(&local_port_, &from.local_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&version_) -
     reinterpret_cast<char*>(&local_port_)) + sizeof(version_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.BootstrapRequest)
 }
 
 void BootstrapRequest::SharedCtor() {
@@ -804,7 +804,7 @@ void BootstrapRequest::SharedCtor() {
 }
 
 BootstrapRequest::~BootstrapRequest() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.BootstrapRequest)
   SharedDtor();
 }
 
@@ -830,7 +830,7 @@ const BootstrapRequest& BootstrapRequest::default_instance() {
 
 
 void BootstrapRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.BootstrapRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -868,7 +868,7 @@ bool BootstrapRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.BootstrapRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
@@ -883,7 +883,7 @@ bool BootstrapRequest::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->local_ip().data(), static_cast<int>(this->local_ip().length()),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "lego.dht.protobuf.BootstrapRequest.local_ip");
+            "tenon.dht.protobuf.BootstrapRequest.local_ip");
         } else {
           goto handle_unusual;
         }
@@ -1106,17 +1106,17 @@ bool BootstrapRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.BootstrapRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.BootstrapRequest)
   return false;
 #undef DO_
 }
 
 void BootstrapRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.BootstrapRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1126,7 +1126,7 @@ void BootstrapRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->local_ip().data(), static_cast<int>(this->local_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapRequest.local_ip");
+      "tenon.dht.protobuf.BootstrapRequest.local_ip");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->local_ip(), output);
   }
@@ -1213,13 +1213,13 @@ void BootstrapRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.BootstrapRequest)
 }
 
 ::google::protobuf::uint8* BootstrapRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.BootstrapRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1229,7 +1229,7 @@ void BootstrapRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->local_ip().data(), static_cast<int>(this->local_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapRequest.local_ip");
+      "tenon.dht.protobuf.BootstrapRequest.local_ip");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->local_ip(), target);
@@ -1320,12 +1320,12 @@ void BootstrapRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.BootstrapRequest)
   return target;
 }
 
 size_t BootstrapRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.BootstrapRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1455,22 +1455,22 @@ size_t BootstrapRequest::ByteSizeLong() const {
 }
 
 void BootstrapRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.BootstrapRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const BootstrapRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const BootstrapRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.BootstrapRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.BootstrapRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.BootstrapRequest)
     MergeFrom(*source);
   }
 }
 
 void BootstrapRequest::MergeFrom(const BootstrapRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.BootstrapRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1538,14 +1538,14 @@ void BootstrapRequest::MergeFrom(const BootstrapRequest& from) {
 }
 
 void BootstrapRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.BootstrapRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void BootstrapRequest::CopyFrom(const BootstrapRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.BootstrapRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.BootstrapRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1615,7 +1615,7 @@ RelayVpnNodeInfo::RelayVpnNodeInfo()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_RelayVpnNodeInfo.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.RelayVpnNodeInfo)
 }
 RelayVpnNodeInfo::RelayVpnNodeInfo(const RelayVpnNodeInfo& from)
   : ::google::protobuf::Message(),
@@ -1645,7 +1645,7 @@ RelayVpnNodeInfo::RelayVpnNodeInfo(const RelayVpnNodeInfo& from)
   ::memcpy(&min_svr_port_, &from.min_svr_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&min_svr_port_)) + sizeof(max_udp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.RelayVpnNodeInfo)
 }
 
 void RelayVpnNodeInfo::SharedCtor() {
@@ -1660,7 +1660,7 @@ void RelayVpnNodeInfo::SharedCtor() {
 }
 
 RelayVpnNodeInfo::~RelayVpnNodeInfo() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.RelayVpnNodeInfo)
   SharedDtor();
 }
 
@@ -1687,7 +1687,7 @@ const RelayVpnNodeInfo& RelayVpnNodeInfo::default_instance() {
 
 
 void RelayVpnNodeInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1728,7 +1728,7 @@ bool RelayVpnNodeInfo::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1904,17 +1904,17 @@ bool RelayVpnNodeInfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.RelayVpnNodeInfo)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.RelayVpnNodeInfo)
   return false;
 #undef DO_
 }
 
 void RelayVpnNodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1988,13 +1988,13 @@ void RelayVpnNodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.RelayVpnNodeInfo)
 }
 
 ::google::protobuf::uint8* RelayVpnNodeInfo::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2073,12 +2073,12 @@ void RelayVpnNodeInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.RelayVpnNodeInfo)
   return target;
 }
 
 size_t RelayVpnNodeInfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2180,22 +2180,22 @@ size_t RelayVpnNodeInfo::ByteSizeLong() const {
 }
 
 void RelayVpnNodeInfo::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   const RelayVpnNodeInfo* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const RelayVpnNodeInfo>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.RelayVpnNodeInfo)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.RelayVpnNodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.RelayVpnNodeInfo)
     MergeFrom(*source);
   }
 }
 
 void RelayVpnNodeInfo::MergeFrom(const RelayVpnNodeInfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -2252,14 +2252,14 @@ void RelayVpnNodeInfo::MergeFrom(const RelayVpnNodeInfo& from) {
 }
 
 void RelayVpnNodeInfo::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void RelayVpnNodeInfo::CopyFrom(const RelayVpnNodeInfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.RelayVpnNodeInfo)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.RelayVpnNodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2327,7 +2327,7 @@ VpnNodeInfo::VpnNodeInfo()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_VpnNodeInfo.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.VpnNodeInfo)
 }
 VpnNodeInfo::VpnNodeInfo(const VpnNodeInfo& from)
   : ::google::protobuf::Message(),
@@ -2358,7 +2358,7 @@ VpnNodeInfo::VpnNodeInfo(const VpnNodeInfo& from)
   ::memcpy(&min_svr_port_, &from.min_svr_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&min_svr_port_)) + sizeof(max_udp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.VpnNodeInfo)
 }
 
 void VpnNodeInfo::SharedCtor() {
@@ -2373,7 +2373,7 @@ void VpnNodeInfo::SharedCtor() {
 }
 
 VpnNodeInfo::~VpnNodeInfo() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.VpnNodeInfo)
   SharedDtor();
 }
 
@@ -2400,7 +2400,7 @@ const VpnNodeInfo& VpnNodeInfo::default_instance() {
 
 
 void VpnNodeInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.VpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -2442,7 +2442,7 @@ bool VpnNodeInfo::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.VpnNodeInfo)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -2594,7 +2594,7 @@ bool VpnNodeInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
+      // repeated .tenon.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
       case 12: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(98u /* 98 & 0xFF */)) {
@@ -2630,17 +2630,17 @@ bool VpnNodeInfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.VpnNodeInfo)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.VpnNodeInfo)
   return false;
 #undef DO_
 }
 
 void VpnNodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.VpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2704,7 +2704,7 @@ void VpnNodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(11, this->max_udp_port(), output);
   }
 
-  // repeated .lego.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
+  // repeated .tenon.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->relay_vpn_nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -2723,13 +2723,13 @@ void VpnNodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.VpnNodeInfo)
 }
 
 ::google::protobuf::uint8* VpnNodeInfo::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.VpnNodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2797,7 +2797,7 @@ void VpnNodeInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(11, this->max_udp_port(), target);
   }
 
-  // repeated .lego.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
+  // repeated .tenon.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->relay_vpn_nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -2816,12 +2816,12 @@ void VpnNodeInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.VpnNodeInfo)
   return target;
 }
 
 size_t VpnNodeInfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.VpnNodeInfo)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2829,7 +2829,7 @@ size_t VpnNodeInfo::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated .lego.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
+  // repeated .tenon.dht.protobuf.RelayVpnNodeInfo relay_vpn_nodes = 12;
   {
     unsigned int count = static_cast<unsigned int>(this->relay_vpn_nodes_size());
     total_size += 1UL * count;
@@ -2934,22 +2934,22 @@ size_t VpnNodeInfo::ByteSizeLong() const {
 }
 
 void VpnNodeInfo::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.VpnNodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   const VpnNodeInfo* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const VpnNodeInfo>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.VpnNodeInfo)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.VpnNodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.VpnNodeInfo)
     MergeFrom(*source);
   }
 }
 
 void VpnNodeInfo::MergeFrom(const VpnNodeInfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.VpnNodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -3007,14 +3007,14 @@ void VpnNodeInfo::MergeFrom(const VpnNodeInfo& from) {
 }
 
 void VpnNodeInfo::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.VpnNodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void VpnNodeInfo::CopyFrom(const VpnNodeInfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.VpnNodeInfo)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.VpnNodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3080,7 +3080,7 @@ InitMessage::InitMessage()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_InitMessage.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.InitMessage)
 }
 InitMessage::InitMessage(const InitMessage& from)
   : ::google::protobuf::Message(),
@@ -3112,7 +3112,7 @@ InitMessage::InitMessage(const InitMessage& from)
     bft_nodes_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.bft_nodes_);
   }
   use_conf_nodes_ = from.use_conf_nodes_;
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.InitMessage)
 }
 
 void InitMessage::SharedCtor() {
@@ -3125,7 +3125,7 @@ void InitMessage::SharedCtor() {
 }
 
 InitMessage::~InitMessage() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.InitMessage)
   SharedDtor();
 }
 
@@ -3152,7 +3152,7 @@ const InitMessage& InitMessage::default_instance() {
 
 
 void InitMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.InitMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -3188,7 +3188,7 @@ bool InitMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.InitMessage)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -3206,7 +3206,7 @@ bool InitMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.dht.protobuf.VpnNodeInfo route_nodes = 2;
+      // repeated .tenon.dht.protobuf.VpnNodeInfo route_nodes = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -3218,7 +3218,7 @@ bool InitMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
+      // repeated .tenon.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
@@ -3292,7 +3292,7 @@ bool InitMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
+      // repeated .tenon.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
       case 9: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(74u /* 74 & 0xFF */)) {
@@ -3304,7 +3304,7 @@ bool InitMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
+      // repeated .tenon.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
       case 10: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(82u /* 82 & 0xFF */)) {
@@ -3328,17 +3328,17 @@ bool InitMessage::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.InitMessage)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.InitMessage)
   return false;
 #undef DO_
 }
 
 void InitMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.InitMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -3349,7 +3349,7 @@ void InitMessage::SerializeWithCachedSizes(
       1, this->version_info(), output);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo route_nodes = 2;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo route_nodes = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->route_nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -3358,7 +3358,7 @@ void InitMessage::SerializeWithCachedSizes(
       output);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vpn_nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -3396,7 +3396,7 @@ void InitMessage::SerializeWithCachedSizes(
       8, this->bft_nodes(), output);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vip_route_nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -3405,7 +3405,7 @@ void InitMessage::SerializeWithCachedSizes(
       output);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vip_vpn_nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -3418,13 +3418,13 @@ void InitMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.InitMessage)
 }
 
 ::google::protobuf::uint8* InitMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.InitMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -3436,7 +3436,7 @@ void InitMessage::SerializeWithCachedSizes(
         1, this->version_info(), target);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo route_nodes = 2;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo route_nodes = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->route_nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -3444,7 +3444,7 @@ void InitMessage::SerializeWithCachedSizes(
         2, this->route_nodes(static_cast<int>(i)), deterministic, target);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vpn_nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -3485,7 +3485,7 @@ void InitMessage::SerializeWithCachedSizes(
         8, this->bft_nodes(), target);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vip_route_nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -3493,7 +3493,7 @@ void InitMessage::SerializeWithCachedSizes(
         9, this->vip_route_nodes(static_cast<int>(i)), deterministic, target);
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->vip_vpn_nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -3505,12 +3505,12 @@ void InitMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.InitMessage)
   return target;
 }
 
 size_t InitMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.InitMessage)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3518,7 +3518,7 @@ size_t InitMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated .lego.dht.protobuf.VpnNodeInfo route_nodes = 2;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo route_nodes = 2;
   {
     unsigned int count = static_cast<unsigned int>(this->route_nodes_size());
     total_size += 1UL * count;
@@ -3529,7 +3529,7 @@ size_t InitMessage::ByteSizeLong() const {
     }
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vpn_nodes = 3;
   {
     unsigned int count = static_cast<unsigned int>(this->vpn_nodes_size());
     total_size += 1UL * count;
@@ -3540,7 +3540,7 @@ size_t InitMessage::ByteSizeLong() const {
     }
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_route_nodes = 9;
   {
     unsigned int count = static_cast<unsigned int>(this->vip_route_nodes_size());
     total_size += 1UL * count;
@@ -3551,7 +3551,7 @@ size_t InitMessage::ByteSizeLong() const {
     }
   }
 
-  // repeated .lego.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
+  // repeated .tenon.dht.protobuf.VpnNodeInfo vip_vpn_nodes = 10;
   {
     unsigned int count = static_cast<unsigned int>(this->vip_vpn_nodes_size());
     total_size += 1UL * count;
@@ -3610,22 +3610,22 @@ size_t InitMessage::ByteSizeLong() const {
 }
 
 void InitMessage::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.InitMessage)
   GOOGLE_DCHECK_NE(&from, this);
   const InitMessage* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const InitMessage>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.InitMessage)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.InitMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.InitMessage)
     MergeFrom(*source);
   }
 }
 
 void InitMessage::MergeFrom(const InitMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.InitMessage)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -3665,14 +3665,14 @@ void InitMessage::MergeFrom(const InitMessage& from) {
 }
 
 void InitMessage::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.InitMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void InitMessage::CopyFrom(const InitMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.InitMessage)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.InitMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3716,8 +3716,8 @@ void InitMessage::InternalSwap(InitMessage* other) {
 // ===================================================================
 
 void BootstrapResponse::InitAsDefaultInstance() {
-  ::lego::dht::protobuf::_BootstrapResponse_default_instance_._instance.get_mutable()->init_message_ = const_cast< ::lego::dht::protobuf::InitMessage*>(
-      ::lego::dht::protobuf::InitMessage::internal_default_instance());
+  ::tenon::dht::protobuf::_BootstrapResponse_default_instance_._instance.get_mutable()->init_message_ = const_cast< ::tenon::dht::protobuf::InitMessage*>(
+      ::tenon::dht::protobuf::InitMessage::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int BootstrapResponse::kNodeIdFieldNumber;
@@ -3744,7 +3744,7 @@ BootstrapResponse::BootstrapResponse()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_BootstrapResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.BootstrapResponse)
 }
 BootstrapResponse::BootstrapResponse(const BootstrapResponse& from)
   : ::google::protobuf::Message(),
@@ -3768,14 +3768,14 @@ BootstrapResponse::BootstrapResponse(const BootstrapResponse& from)
     node_tag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.node_tag_);
   }
   if (from.has_init_message()) {
-    init_message_ = new ::lego::dht::protobuf::InitMessage(*from.init_message_);
+    init_message_ = new ::tenon::dht::protobuf::InitMessage(*from.init_message_);
   } else {
     init_message_ = NULL;
   }
   ::memcpy(&nat_type_, &from.nat_type_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&nat_type_)) + sizeof(max_udp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.BootstrapResponse)
 }
 
 void BootstrapResponse::SharedCtor() {
@@ -3789,7 +3789,7 @@ void BootstrapResponse::SharedCtor() {
 }
 
 BootstrapResponse::~BootstrapResponse() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.BootstrapResponse)
   SharedDtor();
 }
 
@@ -3816,7 +3816,7 @@ const BootstrapResponse& BootstrapResponse::default_instance() {
 
 
 void BootstrapResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.BootstrapResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -3859,7 +3859,7 @@ bool BootstrapResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.BootstrapResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
@@ -3900,7 +3900,7 @@ bool BootstrapResponse::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->local_ip().data(), static_cast<int>(this->local_ip().length()),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "lego.dht.protobuf.BootstrapResponse.local_ip");
+            "tenon.dht.protobuf.BootstrapResponse.local_ip");
         } else {
           goto handle_unusual;
         }
@@ -3930,7 +3930,7 @@ bool BootstrapResponse::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->public_ip().data(), static_cast<int>(this->public_ip().length()),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "lego.dht.protobuf.BootstrapResponse.public_ip");
+            "tenon.dht.protobuf.BootstrapResponse.public_ip");
         } else {
           goto handle_unusual;
         }
@@ -3965,7 +3965,7 @@ bool BootstrapResponse::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.InitMessage init_message = 8;
+      // optional .tenon.dht.protobuf.InitMessage init_message = 8;
       case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
@@ -4113,17 +4113,17 @@ bool BootstrapResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.BootstrapResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.BootstrapResponse)
   return false;
 #undef DO_
 }
 
 void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.BootstrapResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -4144,7 +4144,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->local_ip().data(), static_cast<int>(this->local_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapResponse.local_ip");
+      "tenon.dht.protobuf.BootstrapResponse.local_ip");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->local_ip(), output);
   }
@@ -4159,7 +4159,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->public_ip().data(), static_cast<int>(this->public_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapResponse.public_ip");
+      "tenon.dht.protobuf.BootstrapResponse.public_ip");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       5, this->public_ip(), output);
   }
@@ -4174,7 +4174,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->country_code(), output);
   }
 
-  // optional .lego.dht.protobuf.InitMessage init_message = 8;
+  // optional .tenon.dht.protobuf.InitMessage init_message = 8;
   if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       8, this->_internal_init_message(), output);
@@ -4230,13 +4230,13 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.BootstrapResponse)
 }
 
 ::google::protobuf::uint8* BootstrapResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.BootstrapResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -4258,7 +4258,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->local_ip().data(), static_cast<int>(this->local_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapResponse.local_ip");
+      "tenon.dht.protobuf.BootstrapResponse.local_ip");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->local_ip(), target);
@@ -4274,7 +4274,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->public_ip().data(), static_cast<int>(this->public_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.dht.protobuf.BootstrapResponse.public_ip");
+      "tenon.dht.protobuf.BootstrapResponse.public_ip");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         5, this->public_ip(), target);
@@ -4290,7 +4290,7 @@ void BootstrapResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->country_code(), target);
   }
 
-  // optional .lego.dht.protobuf.InitMessage init_message = 8;
+  // optional .tenon.dht.protobuf.InitMessage init_message = 8;
   if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
@@ -4348,12 +4348,12 @@ void BootstrapResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.BootstrapResponse)
   return target;
 }
 
 size_t BootstrapResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.BootstrapResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -4390,7 +4390,7 @@ size_t BootstrapResponse::ByteSizeLong() const {
           this->node_tag());
     }
 
-    // optional .lego.dht.protobuf.InitMessage init_message = 8;
+    // optional .tenon.dht.protobuf.InitMessage init_message = 8;
     if (has_init_message()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -4490,22 +4490,22 @@ size_t BootstrapResponse::ByteSizeLong() const {
 }
 
 void BootstrapResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.BootstrapResponse)
   GOOGLE_DCHECK_NE(&from, this);
   const BootstrapResponse* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const BootstrapResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.BootstrapResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.BootstrapResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.BootstrapResponse)
     MergeFrom(*source);
   }
 }
 
 void BootstrapResponse::MergeFrom(const BootstrapResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.BootstrapResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -4530,7 +4530,7 @@ void BootstrapResponse::MergeFrom(const BootstrapResponse& from) {
       node_tag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.node_tag_);
     }
     if (cached_has_bits & 0x00000010u) {
-      mutable_init_message()->::lego::dht::protobuf::InitMessage::MergeFrom(from.init_message());
+      mutable_init_message()->::tenon::dht::protobuf::InitMessage::MergeFrom(from.init_message());
     }
     if (cached_has_bits & 0x00000020u) {
       nat_type_ = from.nat_type_;
@@ -4576,14 +4576,14 @@ void BootstrapResponse::MergeFrom(const BootstrapResponse& from) {
 }
 
 void BootstrapResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.BootstrapResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void BootstrapResponse::CopyFrom(const BootstrapResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.BootstrapResponse)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.BootstrapResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -4646,7 +4646,7 @@ RefreshNeighborsRequest::RefreshNeighborsRequest()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_RefreshNeighborsRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
 }
 RefreshNeighborsRequest::RefreshNeighborsRequest(const RefreshNeighborsRequest& from)
   : ::google::protobuf::Message(),
@@ -4660,7 +4660,7 @@ RefreshNeighborsRequest::RefreshNeighborsRequest(const RefreshNeighborsRequest& 
     des_dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.des_dht_key_);
   }
   count_ = from.count_;
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
 }
 
 void RefreshNeighborsRequest::SharedCtor() {
@@ -4669,7 +4669,7 @@ void RefreshNeighborsRequest::SharedCtor() {
 }
 
 RefreshNeighborsRequest::~RefreshNeighborsRequest() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.RefreshNeighborsRequest)
   SharedDtor();
 }
 
@@ -4692,7 +4692,7 @@ const RefreshNeighborsRequest& RefreshNeighborsRequest::default_instance() {
 
 
 void RefreshNeighborsRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -4712,7 +4712,7 @@ bool RefreshNeighborsRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -4794,17 +4794,17 @@ bool RefreshNeighborsRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.RefreshNeighborsRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.RefreshNeighborsRequest)
   return false;
 #undef DO_
 }
 
 void RefreshNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -4836,13 +4836,13 @@ void RefreshNeighborsRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.RefreshNeighborsRequest)
 }
 
 ::google::protobuf::uint8* RefreshNeighborsRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -4871,12 +4871,12 @@ void RefreshNeighborsRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.RefreshNeighborsRequest)
   return target;
 }
 
 size_t RefreshNeighborsRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -4924,22 +4924,22 @@ size_t RefreshNeighborsRequest::ByteSizeLong() const {
 }
 
 void RefreshNeighborsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const RefreshNeighborsRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const RefreshNeighborsRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.RefreshNeighborsRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.RefreshNeighborsRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.RefreshNeighborsRequest)
     MergeFrom(*source);
   }
 }
 
 void RefreshNeighborsRequest::MergeFrom(const RefreshNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -4961,14 +4961,14 @@ void RefreshNeighborsRequest::MergeFrom(const RefreshNeighborsRequest& from) {
 }
 
 void RefreshNeighborsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void RefreshNeighborsRequest::CopyFrom(const RefreshNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.RefreshNeighborsRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -5026,7 +5026,7 @@ NodeInfo::NodeInfo()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_NodeInfo.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.NodeInfo)
 }
 NodeInfo::NodeInfo(const NodeInfo& from)
   : ::google::protobuf::Message(),
@@ -5056,7 +5056,7 @@ NodeInfo::NodeInfo(const NodeInfo& from)
   ::memcpy(&public_port_, &from.public_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&public_port_)) + sizeof(max_udp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.NodeInfo)
 }
 
 void NodeInfo::SharedCtor() {
@@ -5071,7 +5071,7 @@ void NodeInfo::SharedCtor() {
 }
 
 NodeInfo::~NodeInfo() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.NodeInfo)
   SharedDtor();
 }
 
@@ -5098,7 +5098,7 @@ const NodeInfo& NodeInfo::default_instance() {
 
 
 void NodeInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.NodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -5139,7 +5139,7 @@ bool NodeInfo::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.NodeInfo)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -5357,17 +5357,17 @@ bool NodeInfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.NodeInfo)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.NodeInfo)
   return false;
 #undef DO_
 }
 
 void NodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.NodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -5456,13 +5456,13 @@ void NodeInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.NodeInfo)
 }
 
 ::google::protobuf::uint8* NodeInfo::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.NodeInfo)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -5556,12 +5556,12 @@ void NodeInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.NodeInfo)
   return target;
 }
 
 size_t NodeInfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.NodeInfo)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5684,22 +5684,22 @@ size_t NodeInfo::ByteSizeLong() const {
 }
 
 void NodeInfo::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.NodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   const NodeInfo* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const NodeInfo>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.NodeInfo)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.NodeInfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.NodeInfo)
     MergeFrom(*source);
   }
 }
 
 void NodeInfo::MergeFrom(const NodeInfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.NodeInfo)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -5765,14 +5765,14 @@ void NodeInfo::MergeFrom(const NodeInfo& from) {
 }
 
 void NodeInfo::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.NodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void NodeInfo::CopyFrom(const NodeInfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.NodeInfo)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.NodeInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -5831,7 +5831,7 @@ RefreshNeighborsResponse::RefreshNeighborsResponse()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_RefreshNeighborsResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.RefreshNeighborsResponse)
 }
 RefreshNeighborsResponse::RefreshNeighborsResponse(const RefreshNeighborsResponse& from)
   : ::google::protobuf::Message(),
@@ -5839,14 +5839,14 @@ RefreshNeighborsResponse::RefreshNeighborsResponse(const RefreshNeighborsRespons
       _has_bits_(from._has_bits_),
       nodes_(from.nodes_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.RefreshNeighborsResponse)
 }
 
 void RefreshNeighborsResponse::SharedCtor() {
 }
 
 RefreshNeighborsResponse::~RefreshNeighborsResponse() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.RefreshNeighborsResponse)
   SharedDtor();
 }
 
@@ -5868,7 +5868,7 @@ const RefreshNeighborsResponse& RefreshNeighborsResponse::default_instance() {
 
 
 void RefreshNeighborsResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -5882,13 +5882,13 @@ bool RefreshNeighborsResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .lego.dht.protobuf.NodeInfo nodes = 1;
+      // repeated .tenon.dht.protobuf.NodeInfo nodes = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -5912,21 +5912,21 @@ bool RefreshNeighborsResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.RefreshNeighborsResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.RefreshNeighborsResponse)
   return false;
 #undef DO_
 }
 
 void RefreshNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .lego.dht.protobuf.NodeInfo nodes = 1;
+  // repeated .tenon.dht.protobuf.NodeInfo nodes = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->nodes_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -5939,17 +5939,17 @@ void RefreshNeighborsResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.RefreshNeighborsResponse)
 }
 
 ::google::protobuf::uint8* RefreshNeighborsResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .lego.dht.protobuf.NodeInfo nodes = 1;
+  // repeated .tenon.dht.protobuf.NodeInfo nodes = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->nodes_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -5961,12 +5961,12 @@ void RefreshNeighborsResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.RefreshNeighborsResponse)
   return target;
 }
 
 size_t RefreshNeighborsResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5974,7 +5974,7 @@ size_t RefreshNeighborsResponse::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated .lego.dht.protobuf.NodeInfo nodes = 1;
+  // repeated .tenon.dht.protobuf.NodeInfo nodes = 1;
   {
     unsigned int count = static_cast<unsigned int>(this->nodes_size());
     total_size += 1UL * count;
@@ -5991,22 +5991,22 @@ size_t RefreshNeighborsResponse::ByteSizeLong() const {
 }
 
 void RefreshNeighborsResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   GOOGLE_DCHECK_NE(&from, this);
   const RefreshNeighborsResponse* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const RefreshNeighborsResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.RefreshNeighborsResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.RefreshNeighborsResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.RefreshNeighborsResponse)
     MergeFrom(*source);
   }
 }
 
 void RefreshNeighborsResponse::MergeFrom(const RefreshNeighborsResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -6016,14 +6016,14 @@ void RefreshNeighborsResponse::MergeFrom(const RefreshNeighborsResponse& from) {
 }
 
 void RefreshNeighborsResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void RefreshNeighborsResponse::CopyFrom(const RefreshNeighborsResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.RefreshNeighborsResponse)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.RefreshNeighborsResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6063,7 +6063,7 @@ HeartbeatRequest::HeartbeatRequest()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_HeartbeatRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.HeartbeatRequest)
 }
 HeartbeatRequest::HeartbeatRequest(const HeartbeatRequest& from)
   : ::google::protobuf::Message(),
@@ -6071,7 +6071,7 @@ HeartbeatRequest::HeartbeatRequest(const HeartbeatRequest& from)
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   dht_key_hash_ = from.dht_key_hash_;
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.HeartbeatRequest)
 }
 
 void HeartbeatRequest::SharedCtor() {
@@ -6079,7 +6079,7 @@ void HeartbeatRequest::SharedCtor() {
 }
 
 HeartbeatRequest::~HeartbeatRequest() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.HeartbeatRequest)
   SharedDtor();
 }
 
@@ -6101,7 +6101,7 @@ const HeartbeatRequest& HeartbeatRequest::default_instance() {
 
 
 void HeartbeatRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.HeartbeatRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -6115,7 +6115,7 @@ bool HeartbeatRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.HeartbeatRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -6147,17 +6147,17 @@ bool HeartbeatRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.HeartbeatRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.HeartbeatRequest)
   return false;
 #undef DO_
 }
 
 void HeartbeatRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.HeartbeatRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -6171,13 +6171,13 @@ void HeartbeatRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.HeartbeatRequest)
 }
 
 ::google::protobuf::uint8* HeartbeatRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.HeartbeatRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -6191,12 +6191,12 @@ void HeartbeatRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.HeartbeatRequest)
   return target;
 }
 
 size_t HeartbeatRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.HeartbeatRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6217,22 +6217,22 @@ size_t HeartbeatRequest::ByteSizeLong() const {
 }
 
 void HeartbeatRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.HeartbeatRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const HeartbeatRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const HeartbeatRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.HeartbeatRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.HeartbeatRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.HeartbeatRequest)
     MergeFrom(*source);
   }
 }
 
 void HeartbeatRequest::MergeFrom(const HeartbeatRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.HeartbeatRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -6244,14 +6244,14 @@ void HeartbeatRequest::MergeFrom(const HeartbeatRequest& from) {
 }
 
 void HeartbeatRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.HeartbeatRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void HeartbeatRequest::CopyFrom(const HeartbeatRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.HeartbeatRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.HeartbeatRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6291,7 +6291,7 @@ HeartbeatResponse::HeartbeatResponse()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_HeartbeatResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.HeartbeatResponse)
 }
 HeartbeatResponse::HeartbeatResponse(const HeartbeatResponse& from)
   : ::google::protobuf::Message(),
@@ -6299,7 +6299,7 @@ HeartbeatResponse::HeartbeatResponse(const HeartbeatResponse& from)
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   dht_key_hash_ = from.dht_key_hash_;
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.HeartbeatResponse)
 }
 
 void HeartbeatResponse::SharedCtor() {
@@ -6307,7 +6307,7 @@ void HeartbeatResponse::SharedCtor() {
 }
 
 HeartbeatResponse::~HeartbeatResponse() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.HeartbeatResponse)
   SharedDtor();
 }
 
@@ -6329,7 +6329,7 @@ const HeartbeatResponse& HeartbeatResponse::default_instance() {
 
 
 void HeartbeatResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.HeartbeatResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -6343,7 +6343,7 @@ bool HeartbeatResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.HeartbeatResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -6375,17 +6375,17 @@ bool HeartbeatResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.HeartbeatResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.HeartbeatResponse)
   return false;
 #undef DO_
 }
 
 void HeartbeatResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.HeartbeatResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -6399,13 +6399,13 @@ void HeartbeatResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.HeartbeatResponse)
 }
 
 ::google::protobuf::uint8* HeartbeatResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.HeartbeatResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -6419,12 +6419,12 @@ void HeartbeatResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.HeartbeatResponse)
   return target;
 }
 
 size_t HeartbeatResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.HeartbeatResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6445,22 +6445,22 @@ size_t HeartbeatResponse::ByteSizeLong() const {
 }
 
 void HeartbeatResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.HeartbeatResponse)
   GOOGLE_DCHECK_NE(&from, this);
   const HeartbeatResponse* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const HeartbeatResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.HeartbeatResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.HeartbeatResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.HeartbeatResponse)
     MergeFrom(*source);
   }
 }
 
 void HeartbeatResponse::MergeFrom(const HeartbeatResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.HeartbeatResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -6472,14 +6472,14 @@ void HeartbeatResponse::MergeFrom(const HeartbeatResponse& from) {
 }
 
 void HeartbeatResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.HeartbeatResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void HeartbeatResponse::CopyFrom(const HeartbeatResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.HeartbeatResponse)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.HeartbeatResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6534,7 +6534,7 @@ ConnectReqeust::ConnectReqeust()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_ConnectReqeust.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.ConnectReqeust)
 }
 ConnectReqeust::ConnectReqeust(const ConnectReqeust& from)
   : ::google::protobuf::Message(),
@@ -6564,7 +6564,7 @@ ConnectReqeust::ConnectReqeust(const ConnectReqeust& from)
   ::memcpy(&local_port_, &from.local_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&local_port_)) + sizeof(max_udp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.ConnectReqeust)
 }
 
 void ConnectReqeust::SharedCtor() {
@@ -6579,7 +6579,7 @@ void ConnectReqeust::SharedCtor() {
 }
 
 ConnectReqeust::~ConnectReqeust() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.ConnectReqeust)
   SharedDtor();
 }
 
@@ -6606,7 +6606,7 @@ const ConnectReqeust& ConnectReqeust::default_instance() {
 
 
 void ConnectReqeust::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.ConnectReqeust)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -6647,7 +6647,7 @@ bool ConnectReqeust::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.ConnectReqeust)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
@@ -6879,17 +6879,17 @@ bool ConnectReqeust::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.ConnectReqeust)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.ConnectReqeust)
   return false;
 #undef DO_
 }
 
 void ConnectReqeust::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.ConnectReqeust)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -6983,13 +6983,13 @@ void ConnectReqeust::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.ConnectReqeust)
 }
 
 ::google::protobuf::uint8* ConnectReqeust::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.ConnectReqeust)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -7088,12 +7088,12 @@ void ConnectReqeust::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.ConnectReqeust)
   return target;
 }
 
 size_t ConnectReqeust::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.ConnectReqeust)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -7221,22 +7221,22 @@ size_t ConnectReqeust::ByteSizeLong() const {
 }
 
 void ConnectReqeust::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.ConnectReqeust)
   GOOGLE_DCHECK_NE(&from, this);
   const ConnectReqeust* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const ConnectReqeust>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.ConnectReqeust)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.ConnectReqeust)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.ConnectReqeust)
     MergeFrom(*source);
   }
 }
 
 void ConnectReqeust::MergeFrom(const ConnectReqeust& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.ConnectReqeust)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -7305,14 +7305,14 @@ void ConnectReqeust::MergeFrom(const ConnectReqeust& from) {
 }
 
 void ConnectReqeust::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.ConnectReqeust)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void ConnectReqeust::CopyFrom(const ConnectReqeust& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.ConnectReqeust)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.ConnectReqeust)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -7362,20 +7362,20 @@ void ConnectReqeust::InternalSwap(ConnectReqeust* other) {
 // ===================================================================
 
 void DhtMessage::InitAsDefaultInstance() {
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->bootstrap_req_ = const_cast< ::lego::dht::protobuf::BootstrapRequest*>(
-      ::lego::dht::protobuf::BootstrapRequest::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->bootstrap_res_ = const_cast< ::lego::dht::protobuf::BootstrapResponse*>(
-      ::lego::dht::protobuf::BootstrapResponse::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->refresh_neighbors_req_ = const_cast< ::lego::dht::protobuf::RefreshNeighborsRequest*>(
-      ::lego::dht::protobuf::RefreshNeighborsRequest::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->refresh_neighbors_res_ = const_cast< ::lego::dht::protobuf::RefreshNeighborsResponse*>(
-      ::lego::dht::protobuf::RefreshNeighborsResponse::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->connect_req_ = const_cast< ::lego::dht::protobuf::ConnectReqeust*>(
-      ::lego::dht::protobuf::ConnectReqeust::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->heartbeat_req_ = const_cast< ::lego::dht::protobuf::HeartbeatRequest*>(
-      ::lego::dht::protobuf::HeartbeatRequest::internal_default_instance());
-  ::lego::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->heartbeat_res_ = const_cast< ::lego::dht::protobuf::HeartbeatResponse*>(
-      ::lego::dht::protobuf::HeartbeatResponse::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->bootstrap_req_ = const_cast< ::tenon::dht::protobuf::BootstrapRequest*>(
+      ::tenon::dht::protobuf::BootstrapRequest::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->bootstrap_res_ = const_cast< ::tenon::dht::protobuf::BootstrapResponse*>(
+      ::tenon::dht::protobuf::BootstrapResponse::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->refresh_neighbors_req_ = const_cast< ::tenon::dht::protobuf::RefreshNeighborsRequest*>(
+      ::tenon::dht::protobuf::RefreshNeighborsRequest::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->refresh_neighbors_res_ = const_cast< ::tenon::dht::protobuf::RefreshNeighborsResponse*>(
+      ::tenon::dht::protobuf::RefreshNeighborsResponse::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->connect_req_ = const_cast< ::tenon::dht::protobuf::ConnectReqeust*>(
+      ::tenon::dht::protobuf::ConnectReqeust::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->heartbeat_req_ = const_cast< ::tenon::dht::protobuf::HeartbeatRequest*>(
+      ::tenon::dht::protobuf::HeartbeatRequest::internal_default_instance());
+  ::tenon::dht::protobuf::_DhtMessage_default_instance_._instance.get_mutable()->heartbeat_res_ = const_cast< ::tenon::dht::protobuf::HeartbeatResponse*>(
+      ::tenon::dht::protobuf::HeartbeatResponse::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int DhtMessage::kBootstrapReqFieldNumber;
@@ -7393,7 +7393,7 @@ DhtMessage::DhtMessage()
   ::google::protobuf::internal::InitSCC(
       &protobuf_dht_2eproto::scc_info_DhtMessage.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.DhtMessage)
 }
 DhtMessage::DhtMessage(const DhtMessage& from)
   : ::google::protobuf::Message(),
@@ -7402,41 +7402,41 @@ DhtMessage::DhtMessage(const DhtMessage& from)
       networks_(from.networks_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_bootstrap_req()) {
-    bootstrap_req_ = new ::lego::dht::protobuf::BootstrapRequest(*from.bootstrap_req_);
+    bootstrap_req_ = new ::tenon::dht::protobuf::BootstrapRequest(*from.bootstrap_req_);
   } else {
     bootstrap_req_ = NULL;
   }
   if (from.has_bootstrap_res()) {
-    bootstrap_res_ = new ::lego::dht::protobuf::BootstrapResponse(*from.bootstrap_res_);
+    bootstrap_res_ = new ::tenon::dht::protobuf::BootstrapResponse(*from.bootstrap_res_);
   } else {
     bootstrap_res_ = NULL;
   }
   if (from.has_refresh_neighbors_req()) {
-    refresh_neighbors_req_ = new ::lego::dht::protobuf::RefreshNeighborsRequest(*from.refresh_neighbors_req_);
+    refresh_neighbors_req_ = new ::tenon::dht::protobuf::RefreshNeighborsRequest(*from.refresh_neighbors_req_);
   } else {
     refresh_neighbors_req_ = NULL;
   }
   if (from.has_refresh_neighbors_res()) {
-    refresh_neighbors_res_ = new ::lego::dht::protobuf::RefreshNeighborsResponse(*from.refresh_neighbors_res_);
+    refresh_neighbors_res_ = new ::tenon::dht::protobuf::RefreshNeighborsResponse(*from.refresh_neighbors_res_);
   } else {
     refresh_neighbors_res_ = NULL;
   }
   if (from.has_connect_req()) {
-    connect_req_ = new ::lego::dht::protobuf::ConnectReqeust(*from.connect_req_);
+    connect_req_ = new ::tenon::dht::protobuf::ConnectReqeust(*from.connect_req_);
   } else {
     connect_req_ = NULL;
   }
   if (from.has_heartbeat_req()) {
-    heartbeat_req_ = new ::lego::dht::protobuf::HeartbeatRequest(*from.heartbeat_req_);
+    heartbeat_req_ = new ::tenon::dht::protobuf::HeartbeatRequest(*from.heartbeat_req_);
   } else {
     heartbeat_req_ = NULL;
   }
   if (from.has_heartbeat_res()) {
-    heartbeat_res_ = new ::lego::dht::protobuf::HeartbeatResponse(*from.heartbeat_res_);
+    heartbeat_res_ = new ::tenon::dht::protobuf::HeartbeatResponse(*from.heartbeat_res_);
   } else {
     heartbeat_res_ = NULL;
   }
-  // @@protoc_insertion_point(copy_constructor:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.DhtMessage)
 }
 
 void DhtMessage::SharedCtor() {
@@ -7446,7 +7446,7 @@ void DhtMessage::SharedCtor() {
 }
 
 DhtMessage::~DhtMessage() {
-  // @@protoc_insertion_point(destructor:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.DhtMessage)
   SharedDtor();
 }
 
@@ -7475,7 +7475,7 @@ const DhtMessage& DhtMessage::default_instance() {
 
 
 void DhtMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.DhtMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -7520,13 +7520,13 @@ bool DhtMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.DhtMessage)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .lego.dht.protobuf.BootstrapRequest bootstrap_req = 1;
+      // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -7538,7 +7538,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.BootstrapResponse bootstrap_res = 2;
+      // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -7550,7 +7550,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
+      // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
@@ -7562,7 +7562,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
+      // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
@@ -7574,7 +7574,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.ConnectReqeust connect_req = 5;
+      // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
@@ -7586,7 +7586,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
+      // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
@@ -7598,7 +7598,7 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
+      // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
@@ -7641,58 +7641,58 @@ bool DhtMessage::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.DhtMessage)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.DhtMessage)
   return false;
 #undef DO_
 }
 
 void DhtMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.DhtMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.dht.protobuf.BootstrapRequest bootstrap_req = 1;
+  // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_bootstrap_req(), output);
   }
 
-  // optional .lego.dht.protobuf.BootstrapResponse bootstrap_res = 2;
+  // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_bootstrap_res(), output);
   }
 
-  // optional .lego.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
+  // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->_internal_refresh_neighbors_req(), output);
   }
 
-  // optional .lego.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
+  // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
   if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->_internal_refresh_neighbors_res(), output);
   }
 
-  // optional .lego.dht.protobuf.ConnectReqeust connect_req = 5;
+  // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
   if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->_internal_connect_req(), output);
   }
 
-  // optional .lego.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
+  // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
   if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->_internal_heartbeat_req(), output);
   }
 
-  // optional .lego.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
+  // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
   if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->_internal_heartbeat_res(), output);
@@ -7708,60 +7708,60 @@ void DhtMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.DhtMessage)
 }
 
 ::google::protobuf::uint8* DhtMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.DhtMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.dht.protobuf.BootstrapRequest bootstrap_req = 1;
+  // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
   if (cached_has_bits & 0x00000001u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_bootstrap_req(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.BootstrapResponse bootstrap_res = 2;
+  // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
   if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, this->_internal_bootstrap_res(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
+  // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
   if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, this->_internal_refresh_neighbors_req(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
+  // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
   if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, this->_internal_refresh_neighbors_res(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.ConnectReqeust connect_req = 5;
+  // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
   if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         5, this->_internal_connect_req(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
+  // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
   if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         6, this->_internal_heartbeat_req(), deterministic, target);
   }
 
-  // optional .lego.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
+  // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
   if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
@@ -7776,12 +7776,12 @@ void DhtMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.DhtMessage)
   return target;
 }
 
 size_t DhtMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.DhtMessage)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -7799,49 +7799,49 @@ size_t DhtMessage::ByteSizeLong() const {
   }
 
   if (_has_bits_[0 / 32] & 127u) {
-    // optional .lego.dht.protobuf.BootstrapRequest bootstrap_req = 1;
+    // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
     if (has_bootstrap_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *bootstrap_req_);
     }
 
-    // optional .lego.dht.protobuf.BootstrapResponse bootstrap_res = 2;
+    // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
     if (has_bootstrap_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *bootstrap_res_);
     }
 
-    // optional .lego.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
+    // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
     if (has_refresh_neighbors_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *refresh_neighbors_req_);
     }
 
-    // optional .lego.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
+    // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
     if (has_refresh_neighbors_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *refresh_neighbors_res_);
     }
 
-    // optional .lego.dht.protobuf.ConnectReqeust connect_req = 5;
+    // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
     if (has_connect_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *connect_req_);
     }
 
-    // optional .lego.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
+    // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
     if (has_heartbeat_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *heartbeat_req_);
     }
 
-    // optional .lego.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
+    // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
     if (has_heartbeat_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -7855,22 +7855,22 @@ size_t DhtMessage::ByteSizeLong() const {
 }
 
 void DhtMessage::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.DhtMessage)
   GOOGLE_DCHECK_NE(&from, this);
   const DhtMessage* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const DhtMessage>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.DhtMessage)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.dht.protobuf.DhtMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.DhtMessage)
     MergeFrom(*source);
   }
 }
 
 void DhtMessage::MergeFrom(const DhtMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.DhtMessage)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -7880,38 +7880,38 @@ void DhtMessage::MergeFrom(const DhtMessage& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 127u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_bootstrap_req()->::lego::dht::protobuf::BootstrapRequest::MergeFrom(from.bootstrap_req());
+      mutable_bootstrap_req()->::tenon::dht::protobuf::BootstrapRequest::MergeFrom(from.bootstrap_req());
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_bootstrap_res()->::lego::dht::protobuf::BootstrapResponse::MergeFrom(from.bootstrap_res());
+      mutable_bootstrap_res()->::tenon::dht::protobuf::BootstrapResponse::MergeFrom(from.bootstrap_res());
     }
     if (cached_has_bits & 0x00000004u) {
-      mutable_refresh_neighbors_req()->::lego::dht::protobuf::RefreshNeighborsRequest::MergeFrom(from.refresh_neighbors_req());
+      mutable_refresh_neighbors_req()->::tenon::dht::protobuf::RefreshNeighborsRequest::MergeFrom(from.refresh_neighbors_req());
     }
     if (cached_has_bits & 0x00000008u) {
-      mutable_refresh_neighbors_res()->::lego::dht::protobuf::RefreshNeighborsResponse::MergeFrom(from.refresh_neighbors_res());
+      mutable_refresh_neighbors_res()->::tenon::dht::protobuf::RefreshNeighborsResponse::MergeFrom(from.refresh_neighbors_res());
     }
     if (cached_has_bits & 0x00000010u) {
-      mutable_connect_req()->::lego::dht::protobuf::ConnectReqeust::MergeFrom(from.connect_req());
+      mutable_connect_req()->::tenon::dht::protobuf::ConnectReqeust::MergeFrom(from.connect_req());
     }
     if (cached_has_bits & 0x00000020u) {
-      mutable_heartbeat_req()->::lego::dht::protobuf::HeartbeatRequest::MergeFrom(from.heartbeat_req());
+      mutable_heartbeat_req()->::tenon::dht::protobuf::HeartbeatRequest::MergeFrom(from.heartbeat_req());
     }
     if (cached_has_bits & 0x00000040u) {
-      mutable_heartbeat_res()->::lego::dht::protobuf::HeartbeatResponse::MergeFrom(from.heartbeat_res());
+      mutable_heartbeat_res()->::tenon::dht::protobuf::HeartbeatResponse::MergeFrom(from.heartbeat_res());
     }
   }
 }
 
 void DhtMessage::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.DhtMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void DhtMessage::CopyFrom(const DhtMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.dht.protobuf.DhtMessage)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.DhtMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -7948,44 +7948,44 @@ void DhtMessage::InternalSwap(DhtMessage* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace protobuf
 }  // namespace dht
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::BootstrapRequest* Arena::CreateMaybeMessage< ::lego::dht::protobuf::BootstrapRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::BootstrapRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::BootstrapRequest* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::BootstrapRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::BootstrapRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::RelayVpnNodeInfo* Arena::CreateMaybeMessage< ::lego::dht::protobuf::RelayVpnNodeInfo >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::RelayVpnNodeInfo >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RelayVpnNodeInfo* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RelayVpnNodeInfo >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::RelayVpnNodeInfo >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::VpnNodeInfo* Arena::CreateMaybeMessage< ::lego::dht::protobuf::VpnNodeInfo >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::VpnNodeInfo >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::VpnNodeInfo* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::VpnNodeInfo >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::VpnNodeInfo >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::InitMessage* Arena::CreateMaybeMessage< ::lego::dht::protobuf::InitMessage >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::InitMessage >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::InitMessage* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::InitMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::InitMessage >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::BootstrapResponse* Arena::CreateMaybeMessage< ::lego::dht::protobuf::BootstrapResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::BootstrapResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::BootstrapResponse* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::BootstrapResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::BootstrapResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::RefreshNeighborsRequest* Arena::CreateMaybeMessage< ::lego::dht::protobuf::RefreshNeighborsRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::RefreshNeighborsRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RefreshNeighborsRequest* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RefreshNeighborsRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::RefreshNeighborsRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::NodeInfo* Arena::CreateMaybeMessage< ::lego::dht::protobuf::NodeInfo >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::NodeInfo >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::NodeInfo* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::NodeInfo >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::NodeInfo >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::RefreshNeighborsResponse* Arena::CreateMaybeMessage< ::lego::dht::protobuf::RefreshNeighborsResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::RefreshNeighborsResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RefreshNeighborsResponse* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RefreshNeighborsResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::RefreshNeighborsResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::HeartbeatRequest* Arena::CreateMaybeMessage< ::lego::dht::protobuf::HeartbeatRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::HeartbeatRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::HeartbeatRequest* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::HeartbeatRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::HeartbeatRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::HeartbeatResponse* Arena::CreateMaybeMessage< ::lego::dht::protobuf::HeartbeatResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::HeartbeatResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::HeartbeatResponse* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::HeartbeatResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::HeartbeatResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::ConnectReqeust* Arena::CreateMaybeMessage< ::lego::dht::protobuf::ConnectReqeust >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::ConnectReqeust >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::ConnectReqeust* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::ConnectReqeust >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::ConnectReqeust >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::dht::protobuf::DhtMessage* Arena::CreateMaybeMessage< ::lego::dht::protobuf::DhtMessage >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::dht::protobuf::DhtMessage >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::DhtMessage* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::DhtMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::DhtMessage >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

@@ -4,7 +4,7 @@
 #include "bft/bft_interface.h"
 #include "bft/proto/bft.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -39,4 +39,4 @@ private:
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 
 #include "contract/contract_interface.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -38,4 +38,4 @@ private:
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

@@ -3,7 +3,7 @@
 
 #include "common/global_info.h"
 
-namespace lego {
+namespace tenon {
 
 namespace sync {
 
@@ -53,5 +53,5 @@ void SyncProto::CreateSyncValueResponse(
 
 }  // namespace sync
 
-}  //namespace lego
+}  //namespace tenon
 

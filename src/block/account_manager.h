@@ -10,7 +10,7 @@
 #include "bft/proto/bft.pb.h"
 #include "block/db_pool_info.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -66,4 +66,4 @@ private:
 
 }  // namespace block
 
-}  //namespace lego
+}  //namespace tenon

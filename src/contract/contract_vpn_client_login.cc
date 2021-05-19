@@ -7,7 +7,7 @@
 #include "common/split.h"
 #include "contract/contract_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -95,4 +95,4 @@ int VpnClientLogin::Execute(bft::TxItemPtr& tx_item) {
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

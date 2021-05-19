@@ -5,7 +5,7 @@
 #include <openssl/ec.h>
 #include "security/commit_secret.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -37,4 +37,4 @@ private:
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

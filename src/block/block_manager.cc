@@ -21,20 +21,20 @@
 #include "bft/proto/bft_proto.h"
 #include "init/update_vpn_init.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::block::HeightCacheHeapItem& val) {
+uint64_t MinHeapUniqueVal(const tenon::block::HeightCacheHeapItem& val) {
     return val.height;
 }
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -683,4 +683,4 @@ int BlockManager::AddNewBlock(
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

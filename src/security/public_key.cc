@@ -6,7 +6,7 @@
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -178,4 +178,4 @@ int PublicKey::Deserialize(const std::string& src) {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

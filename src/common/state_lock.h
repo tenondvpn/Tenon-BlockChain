@@ -5,7 +5,7 @@
 
 #include "common/utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -26,4 +26,4 @@ private:
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

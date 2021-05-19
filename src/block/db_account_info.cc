@@ -5,7 +5,7 @@
 #include "db/db.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -729,4 +729,4 @@ std::string DbAccountInfo::GetCode() {
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

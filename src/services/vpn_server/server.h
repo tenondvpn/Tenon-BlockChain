@@ -77,7 +77,7 @@ static const uint32_t kPeerTimeout = 30 * 1000 * 1000;  // 30s
 static const int64_t kTransactionTimeout = 1ll * 1000ll * 1000ll;  // 1 s
 static const uint32_t kMaxBandwidthFreeUse = 2048u * 1024u * 1024u;
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -92,19 +92,19 @@ struct PeerInfo {
             : pubkey(pub), method(mtd) {}
 
     bool init() {
-        sec_num = lego::common::Random::RandomInt32();
-        account = lego::security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey);
-        lego::security::PublicKey pub_key;
+        sec_num = tenon::common::Random::RandomInt32();
+        account = tenon::security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey);
+        tenon::security::PublicKey pub_key;
         if (pub_key.Deserialize(pubkey) != 0) {
             return false;
         }
 
-        auto res = lego::security::EcdhCreateKey::Instance()->CreateKey(pub_key, seckey);
-        if (res != lego::security::kSecuritySuccess) {
+        auto res = tenon::security::EcdhCreateKey::Instance()->CreateKey(pub_key, seckey);
+        if (res != tenon::security::kSecuritySuccess) {
             return false;
         }
 
-        seckey = lego::common::Encode::HexEncode(seckey);
+        seckey = tenon::common::Encode::HexEncode(seckey);
         timeout = std::chrono::steady_clock::now() + std::chrono::microseconds(kPeerTimeout);
         crypto = crypto_init(seckey.c_str(), NULL, method.c_str());
         if (crypto == NULL) {

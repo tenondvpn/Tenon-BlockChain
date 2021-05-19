@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "common/encode.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -160,4 +160,4 @@ std::string Encode::Base64Substr(const std::string& str) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

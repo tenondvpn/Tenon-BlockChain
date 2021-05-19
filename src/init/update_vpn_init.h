@@ -11,7 +11,7 @@
 #include "block/db_account_info.h"
 #include "init/init_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
@@ -218,4 +218,4 @@ private:
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

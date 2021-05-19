@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.elect.protobuf;
+package tenon.elect.protobuf;
 
 message member {
 	optional bytes id = 1;

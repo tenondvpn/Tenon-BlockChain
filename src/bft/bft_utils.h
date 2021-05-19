@@ -67,7 +67,7 @@
 #define LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE(pre, bft_ptr, message)
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -166,4 +166,4 @@ bool ThisNodeIsLeader();
 
 }  // namespace bft
 
-}  //namespace lego
+}  //namespace tenon

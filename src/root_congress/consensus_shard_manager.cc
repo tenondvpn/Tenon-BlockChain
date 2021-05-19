@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "root_congress/consensus_shard_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 
@@ -13,4 +13,4 @@ ConsensusShardManager::~ConsensusShardManager() {}
 
 }  // namespace congress
 
-}  // namespace lego
+}  // namespace tenon

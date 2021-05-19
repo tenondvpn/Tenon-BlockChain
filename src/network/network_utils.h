@@ -10,7 +10,7 @@
 #define NETWORK_WARN(fmt, ...) TENON_WARN("[network]" fmt, ## __VA_ARGS__)
 #define NETWORK_ERROR(fmt, ...) TENON_ERROR("[network]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -53,4 +53,4 @@ enum ServiceNetworkType {
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

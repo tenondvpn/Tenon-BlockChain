@@ -4,7 +4,7 @@
 #include "transport/tcp/msg_encoder.h"
 #include "transport/tcp/msg_decoder.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -25,4 +25,4 @@ public:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

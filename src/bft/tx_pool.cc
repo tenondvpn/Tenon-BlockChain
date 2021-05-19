@@ -8,7 +8,7 @@
 #include "block/account_manager.h"
 #include "bft/gid_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -192,4 +192,4 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

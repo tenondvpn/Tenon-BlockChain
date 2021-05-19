@@ -7,7 +7,7 @@
 #include "ip/cidr.h"
 #include "ip/ip_with_country.h"
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -60,4 +60,4 @@ TEST_F(TestCidr, All) {
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

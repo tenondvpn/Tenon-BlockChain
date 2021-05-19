@@ -88,7 +88,7 @@ err:
 
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -370,4 +370,4 @@ bool Schnorr::Verify(
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

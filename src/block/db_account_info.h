@@ -12,7 +12,7 @@
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -111,4 +111,4 @@ private:
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

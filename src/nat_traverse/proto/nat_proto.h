@@ -8,7 +8,7 @@
 #include "dht/node.h"
 #include "nat_traverse/proto/nat.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace nat {
 
@@ -57,4 +57,4 @@ private:
 
 }  // namespace nat
 
-}  // namespace lego
+}  // namespace tenon

@@ -10,7 +10,7 @@
 #define private public
 #include "db/db.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -110,4 +110,4 @@ TEST_F(TestDb, All) {
 
 }  // namespace db
 
-}  // namespace lego
+}  // namespace tenon

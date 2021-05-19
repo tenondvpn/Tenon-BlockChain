@@ -10,7 +10,7 @@
 #include "block/block_utils.h"
 #include "security/crypto_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -134,4 +134,4 @@ std::string Secp256k1::GetContractAddress(
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

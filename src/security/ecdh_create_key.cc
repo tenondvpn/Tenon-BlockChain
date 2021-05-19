@@ -7,7 +7,7 @@
 
 #include "security/schnorr.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -71,4 +71,4 @@ EcdhCreateKey::~EcdhCreateKey() {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

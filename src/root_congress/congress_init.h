@@ -4,7 +4,7 @@
 #include "root_congress/congress_utils.h"
 #include "root_congress/congress_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 
@@ -25,4 +25,4 @@ private:
 
 }  // namespace congress
 
-}  // namespace lego
+}  // namespace tenon

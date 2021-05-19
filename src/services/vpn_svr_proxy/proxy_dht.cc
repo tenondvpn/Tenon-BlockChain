@@ -15,7 +15,7 @@
 #include "services/vpn_svr_proxy/shadowsocks_proxy.h"
 #include "services/account_with_secret.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -137,4 +137,4 @@ void ProxyDht::HandleGetSocksRequest(
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

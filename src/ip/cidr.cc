@@ -12,7 +12,7 @@
 #include "common/split.h"
 #include "common/string_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -190,4 +190,4 @@ uint32_t Cidr::GetGeoId(const std::string& ip) {
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

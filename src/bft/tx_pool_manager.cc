@@ -7,7 +7,7 @@
 #include "block/account_manager.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -85,7 +85,7 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
 
     // overload new addr request
     if (!tx_pool_[pool_index].NewAddrValid(tx_bft.new_tx().from())) {
-        BFT_ERROR("new from acc addr exists[%s][to: %s][lego: %llu][type: %u] failed!",
+        BFT_ERROR("new from acc addr exists[%s][to: %s][tenon: %llu][type: %u] failed!",
                 common::Encode::HexEncode(tx_bft.new_tx().from()).c_str(),
                 common::Encode::HexEncode(tx_bft.new_tx().to()).c_str(),
                 tx_bft.new_tx().amount(),

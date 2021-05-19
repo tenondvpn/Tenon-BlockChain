@@ -5,7 +5,7 @@
 #include "network/network_utils.h"
 #include "election/elect_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -30,4 +30,4 @@ private:
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

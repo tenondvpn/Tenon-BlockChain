@@ -5,7 +5,7 @@
 #include "security/crypto_utils.h"
 #include "security/sha256.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -342,4 +342,4 @@ bool MultiSign::VerifyKey(
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 
 #include "services/vpn_server/server.h"
 
-namespace lego {
+namespace tenon {
 
 namespace service {
 
@@ -31,4 +31,4 @@ private:
 
 }  // namespace service
 
-}  // namespace lego
+}  // namespace tenon

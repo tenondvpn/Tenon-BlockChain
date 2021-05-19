@@ -17,7 +17,7 @@
 #include "bft/dispatch_pool.h"
 #include "bft/gid_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -1608,4 +1608,4 @@ int TxBft::LeaderAddContractCalled(
 
 }  // namespace bft
 
-}  //namespace lego
+}  //namespace tenon

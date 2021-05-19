@@ -12,7 +12,7 @@
 #define LONG_MIN (std::numeric_limits<long>::min)()  // NOLINT
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -324,4 +324,4 @@ void StringUtil::Trim(std::string& str) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -47,7 +47,7 @@ struct TableStruct {
 };
 void AddDescriptors();
 }  // namespace protobuf_block_2eproto
-namespace lego {
+namespace tenon {
 namespace block {
 namespace protobuf {
 class AccountAttrRequest;
@@ -97,33 +97,33 @@ class VpnCountItemDefaultTypeInternal;
 extern VpnCountItemDefaultTypeInternal _VpnCountItem_default_instance_;
 }  // namespace protobuf
 }  // namespace block
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> ::lego::block::protobuf::AccountAttrRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::AccountAttrRequest>(Arena*);
-template<> ::lego::block::protobuf::AccountAttrResponse* Arena::CreateMaybeMessage<::lego::block::protobuf::AccountAttrResponse>(Arena*);
-template<> ::lego::block::protobuf::AccountHeightRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::AccountHeightRequest>(Arena*);
-template<> ::lego::block::protobuf::AccountHeightResponse* Arena::CreateMaybeMessage<::lego::block::protobuf::AccountHeightResponse>(Arena*);
-template<> ::lego::block::protobuf::AdRewardRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::AdRewardRequest>(Arena*);
-template<> ::lego::block::protobuf::BlockMessage* Arena::CreateMaybeMessage<::lego::block::protobuf::BlockMessage>(Arena*);
-template<> ::lego::block::protobuf::GetAccountInitInfoRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::GetAccountInitInfoRequest>(Arena*);
-template<> ::lego::block::protobuf::GetAccountInitInfoResponse* Arena::CreateMaybeMessage<::lego::block::protobuf::GetAccountInitInfoResponse>(Arena*);
-template<> ::lego::block::protobuf::GetTxBlockRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::GetTxBlockRequest>(Arena*);
-template<> ::lego::block::protobuf::GetTxBlockResponse* Arena::CreateMaybeMessage<::lego::block::protobuf::GetTxBlockResponse>(Arena*);
-template<> ::lego::block::protobuf::TxItem* Arena::CreateMaybeMessage<::lego::block::protobuf::TxItem>(Arena*);
-template<> ::lego::block::protobuf::UpdateVpnActiveRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::UpdateVpnActiveRequest>(Arena*);
-template<> ::lego::block::protobuf::UpdateVpnCountRequest* Arena::CreateMaybeMessage<::lego::block::protobuf::UpdateVpnCountRequest>(Arena*);
-template<> ::lego::block::protobuf::UpdateVpnCountResponse* Arena::CreateMaybeMessage<::lego::block::protobuf::UpdateVpnCountResponse>(Arena*);
-template<> ::lego::block::protobuf::VpnCountItem* Arena::CreateMaybeMessage<::lego::block::protobuf::VpnCountItem>(Arena*);
+template<> ::tenon::block::protobuf::AccountAttrRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::AccountAttrRequest>(Arena*);
+template<> ::tenon::block::protobuf::AccountAttrResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::AccountAttrResponse>(Arena*);
+template<> ::tenon::block::protobuf::AccountHeightRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::AccountHeightRequest>(Arena*);
+template<> ::tenon::block::protobuf::AccountHeightResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::AccountHeightResponse>(Arena*);
+template<> ::tenon::block::protobuf::AdRewardRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::AdRewardRequest>(Arena*);
+template<> ::tenon::block::protobuf::BlockMessage* Arena::CreateMaybeMessage<::tenon::block::protobuf::BlockMessage>(Arena*);
+template<> ::tenon::block::protobuf::GetAccountInitInfoRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoRequest>(Arena*);
+template<> ::tenon::block::protobuf::GetAccountInitInfoResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoResponse>(Arena*);
+template<> ::tenon::block::protobuf::GetTxBlockRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockRequest>(Arena*);
+template<> ::tenon::block::protobuf::GetTxBlockResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockResponse>(Arena*);
+template<> ::tenon::block::protobuf::TxItem* Arena::CreateMaybeMessage<::tenon::block::protobuf::TxItem>(Arena*);
+template<> ::tenon::block::protobuf::UpdateVpnActiveRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnActiveRequest>(Arena*);
+template<> ::tenon::block::protobuf::UpdateVpnCountRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnCountRequest>(Arena*);
+template<> ::tenon::block::protobuf::UpdateVpnCountResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnCountResponse>(Arena*);
+template<> ::tenon::block::protobuf::VpnCountItem* Arena::CreateMaybeMessage<::tenon::block::protobuf::VpnCountItem>(Arena*);
 }  // namespace protobuf
 }  // namespace google
-namespace lego {
+namespace tenon {
 namespace block {
 namespace protobuf {
 
 // ===================================================================
 
-class GetTxBlockRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.GetTxBlockRequest) */ {
+class GetTxBlockRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetTxBlockRequest) */ {
  public:
   GetTxBlockRequest();
   virtual ~GetTxBlockRequest();
@@ -276,7 +276,7 @@ class GetTxBlockRequest : public ::google::protobuf::Message /* @@protoc_inserti
   bool from() const;
   void set_from(bool value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.GetTxBlockRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetTxBlockRequest)
  private:
   void set_has_tx_gid();
   void clear_has_tx_gid();
@@ -301,7 +301,7 @@ class GetTxBlockRequest : public ::google::protobuf::Message /* @@protoc_inserti
 };
 // -------------------------------------------------------------------
 
-class GetTxBlockResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.GetTxBlockResponse) */ {
+class GetTxBlockResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetTxBlockResponse) */ {
  public:
   GetTxBlockResponse();
   virtual ~GetTxBlockResponse();
@@ -410,7 +410,7 @@ class GetTxBlockResponse : public ::google::protobuf::Message /* @@protoc_insert
   ::std::string* release_block();
   void set_allocated_block(::std::string* block);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.GetTxBlockResponse)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetTxBlockResponse)
  private:
   void set_has_block();
   void clear_has_block();
@@ -423,7 +423,7 @@ class GetTxBlockResponse : public ::google::protobuf::Message /* @@protoc_insert
 };
 // -------------------------------------------------------------------
 
-class AccountHeightRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.AccountHeightRequest) */ {
+class AccountHeightRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.AccountHeightRequest) */ {
  public:
   AccountHeightRequest();
   virtual ~AccountHeightRequest();
@@ -532,7 +532,7 @@ class AccountHeightRequest : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_account_addr();
   void set_allocated_account_addr(::std::string* account_addr);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.AccountHeightRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AccountHeightRequest)
  private:
   void set_has_account_addr();
   void clear_has_account_addr();
@@ -545,7 +545,7 @@ class AccountHeightRequest : public ::google::protobuf::Message /* @@protoc_inse
 };
 // -------------------------------------------------------------------
 
-class AccountHeightResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.AccountHeightResponse) */ {
+class AccountHeightResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.AccountHeightResponse) */ {
  public:
   AccountHeightResponse();
   virtual ~AccountHeightResponse();
@@ -681,7 +681,7 @@ class AccountHeightResponse : public ::google::protobuf::Message /* @@protoc_ins
   ::std::string* release_type();
   void set_allocated_type(::std::string* type);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.AccountHeightResponse)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AccountHeightResponse)
  private:
   void set_has_account_addr();
   void clear_has_account_addr();
@@ -698,7 +698,7 @@ class AccountHeightResponse : public ::google::protobuf::Message /* @@protoc_ins
 };
 // -------------------------------------------------------------------
 
-class AccountAttrRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.AccountAttrRequest) */ {
+class AccountAttrRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.AccountAttrRequest) */ {
  public:
   AccountAttrRequest();
   virtual ~AccountAttrRequest();
@@ -829,7 +829,7 @@ class AccountAttrRequest : public ::google::protobuf::Message /* @@protoc_insert
   ::google::protobuf::uint64 height() const;
   void set_height(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.AccountAttrRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AccountAttrRequest)
  private:
   void set_has_account();
   void clear_has_account();
@@ -848,7 +848,7 @@ class AccountAttrRequest : public ::google::protobuf::Message /* @@protoc_insert
 };
 // -------------------------------------------------------------------
 
-class AccountAttrResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.AccountAttrResponse) */ {
+class AccountAttrResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.AccountAttrResponse) */ {
  public:
   AccountAttrResponse();
   virtual ~AccountAttrResponse();
@@ -994,7 +994,7 @@ class AccountAttrResponse : public ::google::protobuf::Message /* @@protoc_inser
   ::google::protobuf::uint64 height() const;
   void set_height(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.AccountAttrResponse)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AccountAttrResponse)
  private:
   void set_has_account();
   void clear_has_account();
@@ -1016,7 +1016,7 @@ class AccountAttrResponse : public ::google::protobuf::Message /* @@protoc_inser
 };
 // -------------------------------------------------------------------
 
-class UpdateVpnCountRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.UpdateVpnCountRequest) */ {
+class UpdateVpnCountRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.UpdateVpnCountRequest) */ {
  public:
   UpdateVpnCountRequest();
   virtual ~UpdateVpnCountRequest();
@@ -1169,7 +1169,7 @@ class UpdateVpnCountRequest : public ::google::protobuf::Message /* @@protoc_ins
   bool just_set() const;
   void set_just_set(bool value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.UpdateVpnCountRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.UpdateVpnCountRequest)
  private:
   void set_has_account_hash();
   void clear_has_account_hash();
@@ -1194,7 +1194,7 @@ class UpdateVpnCountRequest : public ::google::protobuf::Message /* @@protoc_ins
 };
 // -------------------------------------------------------------------
 
-class VpnCountItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.VpnCountItem) */ {
+class VpnCountItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.VpnCountItem) */ {
  public:
   VpnCountItem();
   virtual ~VpnCountItem();
@@ -1310,7 +1310,7 @@ class VpnCountItem : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::google::protobuf::uint32 count() const;
   void set_count(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.VpnCountItem)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.VpnCountItem)
  private:
   void set_has_ip();
   void clear_has_ip();
@@ -1326,7 +1326,7 @@ class VpnCountItem : public ::google::protobuf::Message /* @@protoc_insertion_po
 };
 // -------------------------------------------------------------------
 
-class UpdateVpnCountResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.UpdateVpnCountResponse) */ {
+class UpdateVpnCountResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.UpdateVpnCountResponse) */ {
  public:
   UpdateVpnCountResponse();
   virtual ~UpdateVpnCountResponse();
@@ -1420,30 +1420,30 @@ class UpdateVpnCountResponse : public ::google::protobuf::Message /* @@protoc_in
 
   // accessors -------------------------------------------------------
 
-  // repeated .lego.block.protobuf.VpnCountItem vpn_nodes = 1;
+  // repeated .tenon.block.protobuf.VpnCountItem vpn_nodes = 1;
   int vpn_nodes_size() const;
   void clear_vpn_nodes();
   static const int kVpnNodesFieldNumber = 1;
-  ::lego::block::protobuf::VpnCountItem* mutable_vpn_nodes(int index);
-  ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::VpnCountItem >*
+  ::tenon::block::protobuf::VpnCountItem* mutable_vpn_nodes(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::VpnCountItem >*
       mutable_vpn_nodes();
-  const ::lego::block::protobuf::VpnCountItem& vpn_nodes(int index) const;
-  ::lego::block::protobuf::VpnCountItem* add_vpn_nodes();
-  const ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::VpnCountItem >&
+  const ::tenon::block::protobuf::VpnCountItem& vpn_nodes(int index) const;
+  ::tenon::block::protobuf::VpnCountItem* add_vpn_nodes();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::VpnCountItem >&
       vpn_nodes() const;
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.UpdateVpnCountResponse)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.UpdateVpnCountResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::VpnCountItem > vpn_nodes_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::VpnCountItem > vpn_nodes_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class GetAccountInitInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.GetAccountInitInfoRequest) */ {
+class GetAccountInitInfoRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetAccountInitInfoRequest) */ {
  public:
   GetAccountInitInfoRequest();
   virtual ~GetAccountInitInfoRequest();
@@ -1566,7 +1566,7 @@ class GetAccountInitInfoRequest : public ::google::protobuf::Message /* @@protoc
   ::google::protobuf::uint32 count() const;
   void set_count(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.GetAccountInitInfoRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetAccountInitInfoRequest)
  private:
   void set_has_id();
   void clear_has_id();
@@ -1585,7 +1585,7 @@ class GetAccountInitInfoRequest : public ::google::protobuf::Message /* @@protoc
 };
 // -------------------------------------------------------------------
 
-class TxItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.TxItem) */ {
+class TxItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.TxItem) */ {
  public:
   TxItem();
   virtual ~TxItem();
@@ -1773,7 +1773,7 @@ class TxItem : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 version() const;
   void set_version(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.TxItem)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.TxItem)
  private:
   void set_has_from();
   void clear_has_from();
@@ -1813,7 +1813,7 @@ class TxItem : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 };
 // -------------------------------------------------------------------
 
-class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.GetAccountInitInfoResponse) */ {
+class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetAccountInitInfoResponse) */ {
  public:
   GetAccountInitInfoResponse();
   virtual ~GetAccountInitInfoResponse();
@@ -1907,16 +1907,16 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
 
   // accessors -------------------------------------------------------
 
-  // repeated .lego.block.protobuf.TxItem tx_list = 2;
+  // repeated .tenon.block.protobuf.TxItem tx_list = 2;
   int tx_list_size() const;
   void clear_tx_list();
   static const int kTxListFieldNumber = 2;
-  ::lego::block::protobuf::TxItem* mutable_tx_list(int index);
-  ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::TxItem >*
+  ::tenon::block::protobuf::TxItem* mutable_tx_list(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::TxItem >*
       mutable_tx_list();
-  const ::lego::block::protobuf::TxItem& tx_list(int index) const;
-  ::lego::block::protobuf::TxItem* add_tx_list();
-  const ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::TxItem >&
+  const ::tenon::block::protobuf::TxItem& tx_list(int index) const;
+  ::tenon::block::protobuf::TxItem* add_tx_list();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::TxItem >&
       tx_list() const;
 
   // optional bytes id = 3;
@@ -1941,7 +1941,7 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::uint64 balance() const;
   void set_balance(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.GetAccountInitInfoResponse)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetAccountInitInfoResponse)
  private:
   void set_has_balance();
   void clear_has_balance();
@@ -1951,14 +1951,14 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::TxItem > tx_list_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::TxItem > tx_list_;
   ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::uint64 balance_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class UpdateVpnActiveRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.UpdateVpnActiveRequest) */ {
+class UpdateVpnActiveRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.UpdateVpnActiveRequest) */ {
  public:
   UpdateVpnActiveRequest();
   virtual ~UpdateVpnActiveRequest();
@@ -2082,7 +2082,7 @@ class UpdateVpnActiveRequest : public ::google::protobuf::Message /* @@protoc_in
   ::std::string* release_ip();
   void set_allocated_ip(::std::string* ip);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.UpdateVpnActiveRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.UpdateVpnActiveRequest)
  private:
   void set_has_id();
   void clear_has_id();
@@ -2098,7 +2098,7 @@ class UpdateVpnActiveRequest : public ::google::protobuf::Message /* @@protoc_in
 };
 // -------------------------------------------------------------------
 
-class AdRewardRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.AdRewardRequest) */ {
+class AdRewardRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.AdRewardRequest) */ {
  public:
   AdRewardRequest();
   virtual ~AdRewardRequest();
@@ -2237,7 +2237,7 @@ class AdRewardRequest : public ::google::protobuf::Message /* @@protoc_insertion
   ::std::string* release_gid();
   void set_allocated_gid(::std::string* gid);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.AdRewardRequest)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AdRewardRequest)
  private:
   void set_has_id();
   void clear_has_id();
@@ -2256,7 +2256,7 @@ class AdRewardRequest : public ::google::protobuf::Message /* @@protoc_insertion
 };
 // -------------------------------------------------------------------
 
-class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.block.protobuf.BlockMessage) */ {
+class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.BlockMessage) */ {
  public:
   BlockMessage();
   virtual ~BlockMessage();
@@ -2350,151 +2350,151 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
 
   // accessors -------------------------------------------------------
 
-  // optional .lego.block.protobuf.GetTxBlockRequest block_req = 1;
+  // optional .tenon.block.protobuf.GetTxBlockRequest block_req = 1;
   bool has_block_req() const;
   void clear_block_req();
   static const int kBlockReqFieldNumber = 1;
   private:
-  const ::lego::block::protobuf::GetTxBlockRequest& _internal_block_req() const;
+  const ::tenon::block::protobuf::GetTxBlockRequest& _internal_block_req() const;
   public:
-  const ::lego::block::protobuf::GetTxBlockRequest& block_req() const;
-  ::lego::block::protobuf::GetTxBlockRequest* release_block_req();
-  ::lego::block::protobuf::GetTxBlockRequest* mutable_block_req();
-  void set_allocated_block_req(::lego::block::protobuf::GetTxBlockRequest* block_req);
+  const ::tenon::block::protobuf::GetTxBlockRequest& block_req() const;
+  ::tenon::block::protobuf::GetTxBlockRequest* release_block_req();
+  ::tenon::block::protobuf::GetTxBlockRequest* mutable_block_req();
+  void set_allocated_block_req(::tenon::block::protobuf::GetTxBlockRequest* block_req);
 
-  // optional .lego.block.protobuf.GetTxBlockResponse block_res = 2;
+  // optional .tenon.block.protobuf.GetTxBlockResponse block_res = 2;
   bool has_block_res() const;
   void clear_block_res();
   static const int kBlockResFieldNumber = 2;
   private:
-  const ::lego::block::protobuf::GetTxBlockResponse& _internal_block_res() const;
+  const ::tenon::block::protobuf::GetTxBlockResponse& _internal_block_res() const;
   public:
-  const ::lego::block::protobuf::GetTxBlockResponse& block_res() const;
-  ::lego::block::protobuf::GetTxBlockResponse* release_block_res();
-  ::lego::block::protobuf::GetTxBlockResponse* mutable_block_res();
-  void set_allocated_block_res(::lego::block::protobuf::GetTxBlockResponse* block_res);
+  const ::tenon::block::protobuf::GetTxBlockResponse& block_res() const;
+  ::tenon::block::protobuf::GetTxBlockResponse* release_block_res();
+  ::tenon::block::protobuf::GetTxBlockResponse* mutable_block_res();
+  void set_allocated_block_res(::tenon::block::protobuf::GetTxBlockResponse* block_res);
 
-  // optional .lego.block.protobuf.AccountHeightRequest height_req = 3;
+  // optional .tenon.block.protobuf.AccountHeightRequest height_req = 3;
   bool has_height_req() const;
   void clear_height_req();
   static const int kHeightReqFieldNumber = 3;
   private:
-  const ::lego::block::protobuf::AccountHeightRequest& _internal_height_req() const;
+  const ::tenon::block::protobuf::AccountHeightRequest& _internal_height_req() const;
   public:
-  const ::lego::block::protobuf::AccountHeightRequest& height_req() const;
-  ::lego::block::protobuf::AccountHeightRequest* release_height_req();
-  ::lego::block::protobuf::AccountHeightRequest* mutable_height_req();
-  void set_allocated_height_req(::lego::block::protobuf::AccountHeightRequest* height_req);
+  const ::tenon::block::protobuf::AccountHeightRequest& height_req() const;
+  ::tenon::block::protobuf::AccountHeightRequest* release_height_req();
+  ::tenon::block::protobuf::AccountHeightRequest* mutable_height_req();
+  void set_allocated_height_req(::tenon::block::protobuf::AccountHeightRequest* height_req);
 
-  // optional .lego.block.protobuf.AccountHeightResponse height_res = 4;
+  // optional .tenon.block.protobuf.AccountHeightResponse height_res = 4;
   bool has_height_res() const;
   void clear_height_res();
   static const int kHeightResFieldNumber = 4;
   private:
-  const ::lego::block::protobuf::AccountHeightResponse& _internal_height_res() const;
+  const ::tenon::block::protobuf::AccountHeightResponse& _internal_height_res() const;
   public:
-  const ::lego::block::protobuf::AccountHeightResponse& height_res() const;
-  ::lego::block::protobuf::AccountHeightResponse* release_height_res();
-  ::lego::block::protobuf::AccountHeightResponse* mutable_height_res();
-  void set_allocated_height_res(::lego::block::protobuf::AccountHeightResponse* height_res);
+  const ::tenon::block::protobuf::AccountHeightResponse& height_res() const;
+  ::tenon::block::protobuf::AccountHeightResponse* release_height_res();
+  ::tenon::block::protobuf::AccountHeightResponse* mutable_height_res();
+  void set_allocated_height_res(::tenon::block::protobuf::AccountHeightResponse* height_res);
 
-  // optional .lego.block.protobuf.AccountAttrRequest acc_attr_req = 5;
+  // optional .tenon.block.protobuf.AccountAttrRequest acc_attr_req = 5;
   bool has_acc_attr_req() const;
   void clear_acc_attr_req();
   static const int kAccAttrReqFieldNumber = 5;
   private:
-  const ::lego::block::protobuf::AccountAttrRequest& _internal_acc_attr_req() const;
+  const ::tenon::block::protobuf::AccountAttrRequest& _internal_acc_attr_req() const;
   public:
-  const ::lego::block::protobuf::AccountAttrRequest& acc_attr_req() const;
-  ::lego::block::protobuf::AccountAttrRequest* release_acc_attr_req();
-  ::lego::block::protobuf::AccountAttrRequest* mutable_acc_attr_req();
-  void set_allocated_acc_attr_req(::lego::block::protobuf::AccountAttrRequest* acc_attr_req);
+  const ::tenon::block::protobuf::AccountAttrRequest& acc_attr_req() const;
+  ::tenon::block::protobuf::AccountAttrRequest* release_acc_attr_req();
+  ::tenon::block::protobuf::AccountAttrRequest* mutable_acc_attr_req();
+  void set_allocated_acc_attr_req(::tenon::block::protobuf::AccountAttrRequest* acc_attr_req);
 
-  // optional .lego.block.protobuf.AccountAttrResponse acc_attr_res = 6;
+  // optional .tenon.block.protobuf.AccountAttrResponse acc_attr_res = 6;
   bool has_acc_attr_res() const;
   void clear_acc_attr_res();
   static const int kAccAttrResFieldNumber = 6;
   private:
-  const ::lego::block::protobuf::AccountAttrResponse& _internal_acc_attr_res() const;
+  const ::tenon::block::protobuf::AccountAttrResponse& _internal_acc_attr_res() const;
   public:
-  const ::lego::block::protobuf::AccountAttrResponse& acc_attr_res() const;
-  ::lego::block::protobuf::AccountAttrResponse* release_acc_attr_res();
-  ::lego::block::protobuf::AccountAttrResponse* mutable_acc_attr_res();
-  void set_allocated_acc_attr_res(::lego::block::protobuf::AccountAttrResponse* acc_attr_res);
+  const ::tenon::block::protobuf::AccountAttrResponse& acc_attr_res() const;
+  ::tenon::block::protobuf::AccountAttrResponse* release_acc_attr_res();
+  ::tenon::block::protobuf::AccountAttrResponse* mutable_acc_attr_res();
+  void set_allocated_acc_attr_res(::tenon::block::protobuf::AccountAttrResponse* acc_attr_res);
 
-  // optional .lego.block.protobuf.UpdateVpnCountRequest up_vpn_req = 7;
+  // optional .tenon.block.protobuf.UpdateVpnCountRequest up_vpn_req = 7;
   bool has_up_vpn_req() const;
   void clear_up_vpn_req();
   static const int kUpVpnReqFieldNumber = 7;
   private:
-  const ::lego::block::protobuf::UpdateVpnCountRequest& _internal_up_vpn_req() const;
+  const ::tenon::block::protobuf::UpdateVpnCountRequest& _internal_up_vpn_req() const;
   public:
-  const ::lego::block::protobuf::UpdateVpnCountRequest& up_vpn_req() const;
-  ::lego::block::protobuf::UpdateVpnCountRequest* release_up_vpn_req();
-  ::lego::block::protobuf::UpdateVpnCountRequest* mutable_up_vpn_req();
-  void set_allocated_up_vpn_req(::lego::block::protobuf::UpdateVpnCountRequest* up_vpn_req);
+  const ::tenon::block::protobuf::UpdateVpnCountRequest& up_vpn_req() const;
+  ::tenon::block::protobuf::UpdateVpnCountRequest* release_up_vpn_req();
+  ::tenon::block::protobuf::UpdateVpnCountRequest* mutable_up_vpn_req();
+  void set_allocated_up_vpn_req(::tenon::block::protobuf::UpdateVpnCountRequest* up_vpn_req);
 
-  // optional .lego.block.protobuf.UpdateVpnCountResponse up_vpn_res = 8;
+  // optional .tenon.block.protobuf.UpdateVpnCountResponse up_vpn_res = 8;
   bool has_up_vpn_res() const;
   void clear_up_vpn_res();
   static const int kUpVpnResFieldNumber = 8;
   private:
-  const ::lego::block::protobuf::UpdateVpnCountResponse& _internal_up_vpn_res() const;
+  const ::tenon::block::protobuf::UpdateVpnCountResponse& _internal_up_vpn_res() const;
   public:
-  const ::lego::block::protobuf::UpdateVpnCountResponse& up_vpn_res() const;
-  ::lego::block::protobuf::UpdateVpnCountResponse* release_up_vpn_res();
-  ::lego::block::protobuf::UpdateVpnCountResponse* mutable_up_vpn_res();
-  void set_allocated_up_vpn_res(::lego::block::protobuf::UpdateVpnCountResponse* up_vpn_res);
+  const ::tenon::block::protobuf::UpdateVpnCountResponse& up_vpn_res() const;
+  ::tenon::block::protobuf::UpdateVpnCountResponse* release_up_vpn_res();
+  ::tenon::block::protobuf::UpdateVpnCountResponse* mutable_up_vpn_res();
+  void set_allocated_up_vpn_res(::tenon::block::protobuf::UpdateVpnCountResponse* up_vpn_res);
 
-  // optional .lego.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
+  // optional .tenon.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
   bool has_account_init_req() const;
   void clear_account_init_req();
   static const int kAccountInitReqFieldNumber = 9;
   private:
-  const ::lego::block::protobuf::GetAccountInitInfoRequest& _internal_account_init_req() const;
+  const ::tenon::block::protobuf::GetAccountInitInfoRequest& _internal_account_init_req() const;
   public:
-  const ::lego::block::protobuf::GetAccountInitInfoRequest& account_init_req() const;
-  ::lego::block::protobuf::GetAccountInitInfoRequest* release_account_init_req();
-  ::lego::block::protobuf::GetAccountInitInfoRequest* mutable_account_init_req();
-  void set_allocated_account_init_req(::lego::block::protobuf::GetAccountInitInfoRequest* account_init_req);
+  const ::tenon::block::protobuf::GetAccountInitInfoRequest& account_init_req() const;
+  ::tenon::block::protobuf::GetAccountInitInfoRequest* release_account_init_req();
+  ::tenon::block::protobuf::GetAccountInitInfoRequest* mutable_account_init_req();
+  void set_allocated_account_init_req(::tenon::block::protobuf::GetAccountInitInfoRequest* account_init_req);
 
-  // optional .lego.block.protobuf.GetAccountInitInfoResponse account_init_res = 10;
+  // optional .tenon.block.protobuf.GetAccountInitInfoResponse account_init_res = 10;
   bool has_account_init_res() const;
   void clear_account_init_res();
   static const int kAccountInitResFieldNumber = 10;
   private:
-  const ::lego::block::protobuf::GetAccountInitInfoResponse& _internal_account_init_res() const;
+  const ::tenon::block::protobuf::GetAccountInitInfoResponse& _internal_account_init_res() const;
   public:
-  const ::lego::block::protobuf::GetAccountInitInfoResponse& account_init_res() const;
-  ::lego::block::protobuf::GetAccountInitInfoResponse* release_account_init_res();
-  ::lego::block::protobuf::GetAccountInitInfoResponse* mutable_account_init_res();
-  void set_allocated_account_init_res(::lego::block::protobuf::GetAccountInitInfoResponse* account_init_res);
+  const ::tenon::block::protobuf::GetAccountInitInfoResponse& account_init_res() const;
+  ::tenon::block::protobuf::GetAccountInitInfoResponse* release_account_init_res();
+  ::tenon::block::protobuf::GetAccountInitInfoResponse* mutable_account_init_res();
+  void set_allocated_account_init_res(::tenon::block::protobuf::GetAccountInitInfoResponse* account_init_res);
 
-  // optional .lego.block.protobuf.UpdateVpnActiveRequest vpn_active_req = 11;
+  // optional .tenon.block.protobuf.UpdateVpnActiveRequest vpn_active_req = 11;
   bool has_vpn_active_req() const;
   void clear_vpn_active_req();
   static const int kVpnActiveReqFieldNumber = 11;
   private:
-  const ::lego::block::protobuf::UpdateVpnActiveRequest& _internal_vpn_active_req() const;
+  const ::tenon::block::protobuf::UpdateVpnActiveRequest& _internal_vpn_active_req() const;
   public:
-  const ::lego::block::protobuf::UpdateVpnActiveRequest& vpn_active_req() const;
-  ::lego::block::protobuf::UpdateVpnActiveRequest* release_vpn_active_req();
-  ::lego::block::protobuf::UpdateVpnActiveRequest* mutable_vpn_active_req();
-  void set_allocated_vpn_active_req(::lego::block::protobuf::UpdateVpnActiveRequest* vpn_active_req);
+  const ::tenon::block::protobuf::UpdateVpnActiveRequest& vpn_active_req() const;
+  ::tenon::block::protobuf::UpdateVpnActiveRequest* release_vpn_active_req();
+  ::tenon::block::protobuf::UpdateVpnActiveRequest* mutable_vpn_active_req();
+  void set_allocated_vpn_active_req(::tenon::block::protobuf::UpdateVpnActiveRequest* vpn_active_req);
 
-  // optional .lego.block.protobuf.AdRewardRequest ad_reward_req = 12;
+  // optional .tenon.block.protobuf.AdRewardRequest ad_reward_req = 12;
   bool has_ad_reward_req() const;
   void clear_ad_reward_req();
   static const int kAdRewardReqFieldNumber = 12;
   private:
-  const ::lego::block::protobuf::AdRewardRequest& _internal_ad_reward_req() const;
+  const ::tenon::block::protobuf::AdRewardRequest& _internal_ad_reward_req() const;
   public:
-  const ::lego::block::protobuf::AdRewardRequest& ad_reward_req() const;
-  ::lego::block::protobuf::AdRewardRequest* release_ad_reward_req();
-  ::lego::block::protobuf::AdRewardRequest* mutable_ad_reward_req();
-  void set_allocated_ad_reward_req(::lego::block::protobuf::AdRewardRequest* ad_reward_req);
+  const ::tenon::block::protobuf::AdRewardRequest& ad_reward_req() const;
+  ::tenon::block::protobuf::AdRewardRequest* release_ad_reward_req();
+  ::tenon::block::protobuf::AdRewardRequest* mutable_ad_reward_req();
+  void set_allocated_ad_reward_req(::tenon::block::protobuf::AdRewardRequest* ad_reward_req);
 
-  // @@protoc_insertion_point(class_scope:lego.block.protobuf.BlockMessage)
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.BlockMessage)
  private:
   void set_has_block_req();
   void clear_has_block_req();
@@ -2524,18 +2524,18 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::lego::block::protobuf::GetTxBlockRequest* block_req_;
-  ::lego::block::protobuf::GetTxBlockResponse* block_res_;
-  ::lego::block::protobuf::AccountHeightRequest* height_req_;
-  ::lego::block::protobuf::AccountHeightResponse* height_res_;
-  ::lego::block::protobuf::AccountAttrRequest* acc_attr_req_;
-  ::lego::block::protobuf::AccountAttrResponse* acc_attr_res_;
-  ::lego::block::protobuf::UpdateVpnCountRequest* up_vpn_req_;
-  ::lego::block::protobuf::UpdateVpnCountResponse* up_vpn_res_;
-  ::lego::block::protobuf::GetAccountInitInfoRequest* account_init_req_;
-  ::lego::block::protobuf::GetAccountInitInfoResponse* account_init_res_;
-  ::lego::block::protobuf::UpdateVpnActiveRequest* vpn_active_req_;
-  ::lego::block::protobuf::AdRewardRequest* ad_reward_req_;
+  ::tenon::block::protobuf::GetTxBlockRequest* block_req_;
+  ::tenon::block::protobuf::GetTxBlockResponse* block_res_;
+  ::tenon::block::protobuf::AccountHeightRequest* height_req_;
+  ::tenon::block::protobuf::AccountHeightResponse* height_res_;
+  ::tenon::block::protobuf::AccountAttrRequest* acc_attr_req_;
+  ::tenon::block::protobuf::AccountAttrResponse* acc_attr_res_;
+  ::tenon::block::protobuf::UpdateVpnCountRequest* up_vpn_req_;
+  ::tenon::block::protobuf::UpdateVpnCountResponse* up_vpn_res_;
+  ::tenon::block::protobuf::GetAccountInitInfoRequest* account_init_req_;
+  ::tenon::block::protobuf::GetAccountInitInfoResponse* account_init_res_;
+  ::tenon::block::protobuf::UpdateVpnActiveRequest* vpn_active_req_;
+  ::tenon::block::protobuf::AdRewardRequest* ad_reward_req_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // ===================================================================
@@ -2564,41 +2564,41 @@ inline void GetTxBlockRequest::clear_tx_gid() {
   clear_has_tx_gid();
 }
 inline const ::std::string& GetTxBlockRequest::tx_gid() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
   return tx_gid_.GetNoArena();
 }
 inline void GetTxBlockRequest::set_tx_gid(const ::std::string& value) {
   set_has_tx_gid();
   tx_gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
 }
 #if LANG_CXX11
 inline void GetTxBlockRequest::set_tx_gid(::std::string&& value) {
   set_has_tx_gid();
   tx_gid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
 }
 #endif
 inline void GetTxBlockRequest::set_tx_gid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_tx_gid();
   tx_gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
 }
 inline void GetTxBlockRequest::set_tx_gid(const void* value, size_t size) {
   set_has_tx_gid();
   tx_gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
 }
 inline ::std::string* GetTxBlockRequest::mutable_tx_gid() {
   set_has_tx_gid();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
   return tx_gid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetTxBlockRequest::release_tx_gid() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
   if (!has_tx_gid()) {
     return NULL;
   }
@@ -2612,7 +2612,7 @@ inline void GetTxBlockRequest::set_allocated_tx_gid(::std::string* tx_gid) {
     clear_has_tx_gid();
   }
   tx_gid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tx_gid);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetTxBlockRequest.tx_gid)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetTxBlockRequest.tx_gid)
 }
 
 // optional bytes block_hash = 2;
@@ -2630,41 +2630,41 @@ inline void GetTxBlockRequest::clear_block_hash() {
   clear_has_block_hash();
 }
 inline const ::std::string& GetTxBlockRequest::block_hash() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockRequest.block_hash)
   return block_hash_.GetNoArena();
 }
 inline void GetTxBlockRequest::set_block_hash(const ::std::string& value) {
   set_has_block_hash();
   block_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockRequest.block_hash)
 }
 #if LANG_CXX11
 inline void GetTxBlockRequest::set_block_hash(::std::string&& value) {
   set_has_block_hash();
   block_hash_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetTxBlockRequest.block_hash)
 }
 #endif
 inline void GetTxBlockRequest::set_block_hash(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_block_hash();
   block_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetTxBlockRequest.block_hash)
 }
 inline void GetTxBlockRequest::set_block_hash(const void* value, size_t size) {
   set_has_block_hash();
   block_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetTxBlockRequest.block_hash)
 }
 inline ::std::string* GetTxBlockRequest::mutable_block_hash() {
   set_has_block_hash();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetTxBlockRequest.block_hash)
   return block_hash_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetTxBlockRequest::release_block_hash() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetTxBlockRequest.block_hash)
   if (!has_block_hash()) {
     return NULL;
   }
@@ -2678,7 +2678,7 @@ inline void GetTxBlockRequest::set_allocated_block_hash(::std::string* block_has
     clear_has_block_hash();
   }
   block_hash_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), block_hash);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetTxBlockRequest.block_hash)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetTxBlockRequest.block_hash)
 }
 
 // optional bool from = 3;
@@ -2696,13 +2696,13 @@ inline void GetTxBlockRequest::clear_from() {
   clear_has_from();
 }
 inline bool GetTxBlockRequest::from() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockRequest.from)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockRequest.from)
   return from_;
 }
 inline void GetTxBlockRequest::set_from(bool value) {
   set_has_from();
   from_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockRequest.from)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockRequest.from)
 }
 
 // optional uint64 height = 4;
@@ -2720,13 +2720,13 @@ inline void GetTxBlockRequest::clear_height() {
   clear_has_height();
 }
 inline ::google::protobuf::uint64 GetTxBlockRequest::height() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockRequest.height)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockRequest.height)
   return height_;
 }
 inline void GetTxBlockRequest::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockRequest.height)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockRequest.height)
 }
 
 // optional bytes account_address = 5;
@@ -2744,41 +2744,41 @@ inline void GetTxBlockRequest::clear_account_address() {
   clear_has_account_address();
 }
 inline const ::std::string& GetTxBlockRequest::account_address() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockRequest.account_address)
   return account_address_.GetNoArena();
 }
 inline void GetTxBlockRequest::set_account_address(const ::std::string& value) {
   set_has_account_address();
   account_address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockRequest.account_address)
 }
 #if LANG_CXX11
 inline void GetTxBlockRequest::set_account_address(::std::string&& value) {
   set_has_account_address();
   account_address_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetTxBlockRequest.account_address)
 }
 #endif
 inline void GetTxBlockRequest::set_account_address(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_account_address();
   account_address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetTxBlockRequest.account_address)
 }
 inline void GetTxBlockRequest::set_account_address(const void* value, size_t size) {
   set_has_account_address();
   account_address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetTxBlockRequest.account_address)
 }
 inline ::std::string* GetTxBlockRequest::mutable_account_address() {
   set_has_account_address();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetTxBlockRequest.account_address)
   return account_address_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetTxBlockRequest::release_account_address() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetTxBlockRequest.account_address)
   if (!has_account_address()) {
     return NULL;
   }
@@ -2792,7 +2792,7 @@ inline void GetTxBlockRequest::set_allocated_account_address(::std::string* acco
     clear_has_account_address();
   }
   account_address_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account_address);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetTxBlockRequest.account_address)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetTxBlockRequest.account_address)
 }
 
 // -------------------------------------------------------------------
@@ -2814,41 +2814,41 @@ inline void GetTxBlockResponse::clear_block() {
   clear_has_block();
 }
 inline const ::std::string& GetTxBlockResponse::block() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetTxBlockResponse.block)
   return block_.GetNoArena();
 }
 inline void GetTxBlockResponse::set_block(const ::std::string& value) {
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetTxBlockResponse.block)
 }
 #if LANG_CXX11
 inline void GetTxBlockResponse::set_block(::std::string&& value) {
   set_has_block();
   block_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetTxBlockResponse.block)
 }
 #endif
 inline void GetTxBlockResponse::set_block(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetTxBlockResponse.block)
 }
 inline void GetTxBlockResponse::set_block(const void* value, size_t size) {
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetTxBlockResponse.block)
 }
 inline ::std::string* GetTxBlockResponse::mutable_block() {
   set_has_block();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetTxBlockResponse.block)
   return block_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetTxBlockResponse::release_block() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetTxBlockResponse.block)
   if (!has_block()) {
     return NULL;
   }
@@ -2862,7 +2862,7 @@ inline void GetTxBlockResponse::set_allocated_block(::std::string* block) {
     clear_has_block();
   }
   block_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), block);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetTxBlockResponse.block)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetTxBlockResponse.block)
 }
 
 // -------------------------------------------------------------------
@@ -2884,41 +2884,41 @@ inline void AccountHeightRequest::clear_account_addr() {
   clear_has_account_addr();
 }
 inline const ::std::string& AccountHeightRequest::account_addr() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightRequest.account_addr)
   return account_addr_.GetNoArena();
 }
 inline void AccountHeightRequest::set_account_addr(const ::std::string& value) {
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightRequest.account_addr)
 }
 #if LANG_CXX11
 inline void AccountHeightRequest::set_account_addr(::std::string&& value) {
   set_has_account_addr();
   account_addr_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountHeightRequest.account_addr)
 }
 #endif
 inline void AccountHeightRequest::set_account_addr(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountHeightRequest.account_addr)
 }
 inline void AccountHeightRequest::set_account_addr(const void* value, size_t size) {
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountHeightRequest.account_addr)
 }
 inline ::std::string* AccountHeightRequest::mutable_account_addr() {
   set_has_account_addr();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountHeightRequest.account_addr)
   return account_addr_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountHeightRequest::release_account_addr() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountHeightRequest.account_addr)
   if (!has_account_addr()) {
     return NULL;
   }
@@ -2932,7 +2932,7 @@ inline void AccountHeightRequest::set_allocated_account_addr(::std::string* acco
     clear_has_account_addr();
   }
   account_addr_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account_addr);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountHeightRequest.account_addr)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountHeightRequest.account_addr)
 }
 
 // -------------------------------------------------------------------
@@ -2947,25 +2947,25 @@ inline void AccountHeightResponse::clear_heights() {
   heights_.Clear();
 }
 inline ::google::protobuf::uint64 AccountHeightResponse::heights(int index) const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountHeightResponse.heights)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightResponse.heights)
   return heights_.Get(index);
 }
 inline void AccountHeightResponse::set_heights(int index, ::google::protobuf::uint64 value) {
   heights_.Set(index, value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountHeightResponse.heights)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightResponse.heights)
 }
 inline void AccountHeightResponse::add_heights(::google::protobuf::uint64 value) {
   heights_.Add(value);
-  // @@protoc_insertion_point(field_add:lego.block.protobuf.AccountHeightResponse.heights)
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.AccountHeightResponse.heights)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
 AccountHeightResponse::heights() const {
-  // @@protoc_insertion_point(field_list:lego.block.protobuf.AccountHeightResponse.heights)
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.AccountHeightResponse.heights)
   return heights_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 AccountHeightResponse::mutable_heights() {
-  // @@protoc_insertion_point(field_mutable_list:lego.block.protobuf.AccountHeightResponse.heights)
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.AccountHeightResponse.heights)
   return &heights_;
 }
 
@@ -2984,41 +2984,41 @@ inline void AccountHeightResponse::clear_account_addr() {
   clear_has_account_addr();
 }
 inline const ::std::string& AccountHeightResponse::account_addr() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightResponse.account_addr)
   return account_addr_.GetNoArena();
 }
 inline void AccountHeightResponse::set_account_addr(const ::std::string& value) {
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightResponse.account_addr)
 }
 #if LANG_CXX11
 inline void AccountHeightResponse::set_account_addr(::std::string&& value) {
   set_has_account_addr();
   account_addr_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountHeightResponse.account_addr)
 }
 #endif
 inline void AccountHeightResponse::set_account_addr(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountHeightResponse.account_addr)
 }
 inline void AccountHeightResponse::set_account_addr(const void* value, size_t size) {
   set_has_account_addr();
   account_addr_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountHeightResponse.account_addr)
 }
 inline ::std::string* AccountHeightResponse::mutable_account_addr() {
   set_has_account_addr();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountHeightResponse.account_addr)
   return account_addr_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountHeightResponse::release_account_addr() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountHeightResponse.account_addr)
   if (!has_account_addr()) {
     return NULL;
   }
@@ -3032,7 +3032,7 @@ inline void AccountHeightResponse::set_allocated_account_addr(::std::string* acc
     clear_has_account_addr();
   }
   account_addr_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account_addr);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountHeightResponse.account_addr)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountHeightResponse.account_addr)
 }
 
 // optional bytes type = 3;
@@ -3050,41 +3050,41 @@ inline void AccountHeightResponse::clear_type() {
   clear_has_type();
 }
 inline const ::std::string& AccountHeightResponse::type() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightResponse.type)
   return type_.GetNoArena();
 }
 inline void AccountHeightResponse::set_type(const ::std::string& value) {
   set_has_type();
   type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightResponse.type)
 }
 #if LANG_CXX11
 inline void AccountHeightResponse::set_type(::std::string&& value) {
   set_has_type();
   type_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountHeightResponse.type)
 }
 #endif
 inline void AccountHeightResponse::set_type(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_type();
   type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountHeightResponse.type)
 }
 inline void AccountHeightResponse::set_type(const void* value, size_t size) {
   set_has_type();
   type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountHeightResponse.type)
 }
 inline ::std::string* AccountHeightResponse::mutable_type() {
   set_has_type();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountHeightResponse.type)
   return type_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountHeightResponse::release_type() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountHeightResponse.type)
   if (!has_type()) {
     return NULL;
   }
@@ -3098,7 +3098,7 @@ inline void AccountHeightResponse::set_allocated_type(::std::string* type) {
     clear_has_type();
   }
   type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), type);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountHeightResponse.type)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountHeightResponse.type)
 }
 
 // -------------------------------------------------------------------
@@ -3120,41 +3120,41 @@ inline void AccountAttrRequest::clear_account() {
   clear_has_account();
 }
 inline const ::std::string& AccountAttrRequest::account() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrRequest.account)
   return account_.GetNoArena();
 }
 inline void AccountAttrRequest::set_account(const ::std::string& value) {
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrRequest.account)
 }
 #if LANG_CXX11
 inline void AccountAttrRequest::set_account(::std::string&& value) {
   set_has_account();
   account_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountAttrRequest.account)
 }
 #endif
 inline void AccountAttrRequest::set_account(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountAttrRequest.account)
 }
 inline void AccountAttrRequest::set_account(const void* value, size_t size) {
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountAttrRequest.account)
 }
 inline ::std::string* AccountAttrRequest::mutable_account() {
   set_has_account();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountAttrRequest.account)
   return account_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountAttrRequest::release_account() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountAttrRequest.account)
   if (!has_account()) {
     return NULL;
   }
@@ -3168,7 +3168,7 @@ inline void AccountAttrRequest::set_allocated_account(::std::string* account) {
     clear_has_account();
   }
   account_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountAttrRequest.account)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountAttrRequest.account)
 }
 
 // optional bytes attr_key = 2;
@@ -3186,41 +3186,41 @@ inline void AccountAttrRequest::clear_attr_key() {
   clear_has_attr_key();
 }
 inline const ::std::string& AccountAttrRequest::attr_key() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrRequest.attr_key)
   return attr_key_.GetNoArena();
 }
 inline void AccountAttrRequest::set_attr_key(const ::std::string& value) {
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrRequest.attr_key)
 }
 #if LANG_CXX11
 inline void AccountAttrRequest::set_attr_key(::std::string&& value) {
   set_has_attr_key();
   attr_key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountAttrRequest.attr_key)
 }
 #endif
 inline void AccountAttrRequest::set_attr_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountAttrRequest.attr_key)
 }
 inline void AccountAttrRequest::set_attr_key(const void* value, size_t size) {
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountAttrRequest.attr_key)
 }
 inline ::std::string* AccountAttrRequest::mutable_attr_key() {
   set_has_attr_key();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountAttrRequest.attr_key)
   return attr_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountAttrRequest::release_attr_key() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountAttrRequest.attr_key)
   if (!has_attr_key()) {
     return NULL;
   }
@@ -3234,7 +3234,7 @@ inline void AccountAttrRequest::set_allocated_attr_key(::std::string* attr_key) 
     clear_has_attr_key();
   }
   attr_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), attr_key);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountAttrRequest.attr_key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountAttrRequest.attr_key)
 }
 
 // optional uint64 height = 3;
@@ -3252,13 +3252,13 @@ inline void AccountAttrRequest::clear_height() {
   clear_has_height();
 }
 inline ::google::protobuf::uint64 AccountAttrRequest::height() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrRequest.height)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrRequest.height)
   return height_;
 }
 inline void AccountAttrRequest::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrRequest.height)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrRequest.height)
 }
 
 // -------------------------------------------------------------------
@@ -3280,41 +3280,41 @@ inline void AccountAttrResponse::clear_account() {
   clear_has_account();
 }
 inline const ::std::string& AccountAttrResponse::account() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrResponse.account)
   return account_.GetNoArena();
 }
 inline void AccountAttrResponse::set_account(const ::std::string& value) {
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrResponse.account)
 }
 #if LANG_CXX11
 inline void AccountAttrResponse::set_account(::std::string&& value) {
   set_has_account();
   account_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountAttrResponse.account)
 }
 #endif
 inline void AccountAttrResponse::set_account(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountAttrResponse.account)
 }
 inline void AccountAttrResponse::set_account(const void* value, size_t size) {
   set_has_account();
   account_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountAttrResponse.account)
 }
 inline ::std::string* AccountAttrResponse::mutable_account() {
   set_has_account();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountAttrResponse.account)
   return account_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountAttrResponse::release_account() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountAttrResponse.account)
   if (!has_account()) {
     return NULL;
   }
@@ -3328,7 +3328,7 @@ inline void AccountAttrResponse::set_allocated_account(::std::string* account) {
     clear_has_account();
   }
   account_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountAttrResponse.account)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountAttrResponse.account)
 }
 
 // optional bytes attr_key = 2;
@@ -3346,41 +3346,41 @@ inline void AccountAttrResponse::clear_attr_key() {
   clear_has_attr_key();
 }
 inline const ::std::string& AccountAttrResponse::attr_key() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrResponse.attr_key)
   return attr_key_.GetNoArena();
 }
 inline void AccountAttrResponse::set_attr_key(const ::std::string& value) {
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrResponse.attr_key)
 }
 #if LANG_CXX11
 inline void AccountAttrResponse::set_attr_key(::std::string&& value) {
   set_has_attr_key();
   attr_key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountAttrResponse.attr_key)
 }
 #endif
 inline void AccountAttrResponse::set_attr_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountAttrResponse.attr_key)
 }
 inline void AccountAttrResponse::set_attr_key(const void* value, size_t size) {
   set_has_attr_key();
   attr_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountAttrResponse.attr_key)
 }
 inline ::std::string* AccountAttrResponse::mutable_attr_key() {
   set_has_attr_key();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountAttrResponse.attr_key)
   return attr_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountAttrResponse::release_attr_key() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountAttrResponse.attr_key)
   if (!has_attr_key()) {
     return NULL;
   }
@@ -3394,7 +3394,7 @@ inline void AccountAttrResponse::set_allocated_attr_key(::std::string* attr_key)
     clear_has_attr_key();
   }
   attr_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), attr_key);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountAttrResponse.attr_key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountAttrResponse.attr_key)
 }
 
 // optional uint64 height = 3;
@@ -3412,13 +3412,13 @@ inline void AccountAttrResponse::clear_height() {
   clear_has_height();
 }
 inline ::google::protobuf::uint64 AccountAttrResponse::height() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrResponse.height)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrResponse.height)
   return height_;
 }
 inline void AccountAttrResponse::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrResponse.height)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrResponse.height)
 }
 
 // optional bytes block = 4;
@@ -3436,41 +3436,41 @@ inline void AccountAttrResponse::clear_block() {
   clear_has_block();
 }
 inline const ::std::string& AccountAttrResponse::block() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountAttrResponse.block)
   return block_.GetNoArena();
 }
 inline void AccountAttrResponse::set_block(const ::std::string& value) {
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountAttrResponse.block)
 }
 #if LANG_CXX11
 inline void AccountAttrResponse::set_block(::std::string&& value) {
   set_has_block();
   block_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AccountAttrResponse.block)
 }
 #endif
 inline void AccountAttrResponse::set_block(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AccountAttrResponse.block)
 }
 inline void AccountAttrResponse::set_block(const void* value, size_t size) {
   set_has_block();
   block_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AccountAttrResponse.block)
 }
 inline ::std::string* AccountAttrResponse::mutable_block() {
   set_has_block();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AccountAttrResponse.block)
   return block_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AccountAttrResponse::release_block() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AccountAttrResponse.block)
   if (!has_block()) {
     return NULL;
   }
@@ -3484,7 +3484,7 @@ inline void AccountAttrResponse::set_allocated_block(::std::string* block) {
     clear_has_block();
   }
   block_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), block);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AccountAttrResponse.block)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountAttrResponse.block)
 }
 
 // -------------------------------------------------------------------
@@ -3506,13 +3506,13 @@ inline void UpdateVpnCountRequest::clear_account_hash() {
   clear_has_account_hash();
 }
 inline ::google::protobuf::uint64 UpdateVpnCountRequest::account_hash() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountRequest.account_hash)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountRequest.account_hash)
   return account_hash_;
 }
 inline void UpdateVpnCountRequest::set_account_hash(::google::protobuf::uint64 value) {
   set_has_account_hash();
   account_hash_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnCountRequest.account_hash)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnCountRequest.account_hash)
 }
 
 // optional bytes ip = 2;
@@ -3530,41 +3530,41 @@ inline void UpdateVpnCountRequest::clear_ip() {
   clear_has_ip();
 }
 inline const ::std::string& UpdateVpnCountRequest::ip() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountRequest.ip)
   return ip_.GetNoArena();
 }
 inline void UpdateVpnCountRequest::set_ip(const ::std::string& value) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnCountRequest.ip)
 }
 #if LANG_CXX11
 inline void UpdateVpnCountRequest::set_ip(::std::string&& value) {
   set_has_ip();
   ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.UpdateVpnCountRequest.ip)
 }
 #endif
 inline void UpdateVpnCountRequest::set_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.UpdateVpnCountRequest.ip)
 }
 inline void UpdateVpnCountRequest::set_ip(const void* value, size_t size) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.UpdateVpnCountRequest.ip)
 }
 inline ::std::string* UpdateVpnCountRequest::mutable_ip() {
   set_has_ip();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnCountRequest.ip)
   return ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* UpdateVpnCountRequest::release_ip() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.UpdateVpnCountRequest.ip)
   if (!has_ip()) {
     return NULL;
   }
@@ -3578,7 +3578,7 @@ inline void UpdateVpnCountRequest::set_allocated_ip(::std::string* ip) {
     clear_has_ip();
   }
   ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.UpdateVpnCountRequest.ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.UpdateVpnCountRequest.ip)
 }
 
 // optional bytes old_ip = 3;
@@ -3596,41 +3596,41 @@ inline void UpdateVpnCountRequest::clear_old_ip() {
   clear_has_old_ip();
 }
 inline const ::std::string& UpdateVpnCountRequest::old_ip() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
   return old_ip_.GetNoArena();
 }
 inline void UpdateVpnCountRequest::set_old_ip(const ::std::string& value) {
   set_has_old_ip();
   old_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
 }
 #if LANG_CXX11
 inline void UpdateVpnCountRequest::set_old_ip(::std::string&& value) {
   set_has_old_ip();
   old_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
 }
 #endif
 inline void UpdateVpnCountRequest::set_old_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_old_ip();
   old_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
 }
 inline void UpdateVpnCountRequest::set_old_ip(const void* value, size_t size) {
   set_has_old_ip();
   old_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
 }
 inline ::std::string* UpdateVpnCountRequest::mutable_old_ip() {
   set_has_old_ip();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
   return old_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* UpdateVpnCountRequest::release_old_ip() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
   if (!has_old_ip()) {
     return NULL;
   }
@@ -3644,7 +3644,7 @@ inline void UpdateVpnCountRequest::set_allocated_old_ip(::std::string* old_ip) {
     clear_has_old_ip();
   }
   old_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), old_ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.UpdateVpnCountRequest.old_ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.UpdateVpnCountRequest.old_ip)
 }
 
 // optional bytes uid = 4;
@@ -3662,41 +3662,41 @@ inline void UpdateVpnCountRequest::clear_uid() {
   clear_has_uid();
 }
 inline const ::std::string& UpdateVpnCountRequest::uid() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountRequest.uid)
   return uid_.GetNoArena();
 }
 inline void UpdateVpnCountRequest::set_uid(const ::std::string& value) {
   set_has_uid();
   uid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnCountRequest.uid)
 }
 #if LANG_CXX11
 inline void UpdateVpnCountRequest::set_uid(::std::string&& value) {
   set_has_uid();
   uid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.UpdateVpnCountRequest.uid)
 }
 #endif
 inline void UpdateVpnCountRequest::set_uid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_uid();
   uid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.UpdateVpnCountRequest.uid)
 }
 inline void UpdateVpnCountRequest::set_uid(const void* value, size_t size) {
   set_has_uid();
   uid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.UpdateVpnCountRequest.uid)
 }
 inline ::std::string* UpdateVpnCountRequest::mutable_uid() {
   set_has_uid();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnCountRequest.uid)
   return uid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* UpdateVpnCountRequest::release_uid() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.UpdateVpnCountRequest.uid)
   if (!has_uid()) {
     return NULL;
   }
@@ -3710,7 +3710,7 @@ inline void UpdateVpnCountRequest::set_allocated_uid(::std::string* uid) {
     clear_has_uid();
   }
   uid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), uid);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.UpdateVpnCountRequest.uid)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.UpdateVpnCountRequest.uid)
 }
 
 // optional bool just_set = 5;
@@ -3728,13 +3728,13 @@ inline void UpdateVpnCountRequest::clear_just_set() {
   clear_has_just_set();
 }
 inline bool UpdateVpnCountRequest::just_set() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountRequest.just_set)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountRequest.just_set)
   return just_set_;
 }
 inline void UpdateVpnCountRequest::set_just_set(bool value) {
   set_has_just_set();
   just_set_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnCountRequest.just_set)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnCountRequest.just_set)
 }
 
 // -------------------------------------------------------------------
@@ -3756,41 +3756,41 @@ inline void VpnCountItem::clear_ip() {
   clear_has_ip();
 }
 inline const ::std::string& VpnCountItem::ip() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.VpnCountItem.ip)
   return ip_.GetNoArena();
 }
 inline void VpnCountItem::set_ip(const ::std::string& value) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.VpnCountItem.ip)
 }
 #if LANG_CXX11
 inline void VpnCountItem::set_ip(::std::string&& value) {
   set_has_ip();
   ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.VpnCountItem.ip)
 }
 #endif
 inline void VpnCountItem::set_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.VpnCountItem.ip)
 }
 inline void VpnCountItem::set_ip(const void* value, size_t size) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.VpnCountItem.ip)
 }
 inline ::std::string* VpnCountItem::mutable_ip() {
   set_has_ip();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.VpnCountItem.ip)
   return ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* VpnCountItem::release_ip() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.VpnCountItem.ip)
   if (!has_ip()) {
     return NULL;
   }
@@ -3804,7 +3804,7 @@ inline void VpnCountItem::set_allocated_ip(::std::string* ip) {
     clear_has_ip();
   }
   ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.VpnCountItem.ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.VpnCountItem.ip)
 }
 
 // optional uint32 count = 2;
@@ -3822,46 +3822,46 @@ inline void VpnCountItem::clear_count() {
   clear_has_count();
 }
 inline ::google::protobuf::uint32 VpnCountItem::count() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.VpnCountItem.count)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.VpnCountItem.count)
   return count_;
 }
 inline void VpnCountItem::set_count(::google::protobuf::uint32 value) {
   set_has_count();
   count_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.VpnCountItem.count)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.VpnCountItem.count)
 }
 
 // -------------------------------------------------------------------
 
 // UpdateVpnCountResponse
 
-// repeated .lego.block.protobuf.VpnCountItem vpn_nodes = 1;
+// repeated .tenon.block.protobuf.VpnCountItem vpn_nodes = 1;
 inline int UpdateVpnCountResponse::vpn_nodes_size() const {
   return vpn_nodes_.size();
 }
 inline void UpdateVpnCountResponse::clear_vpn_nodes() {
   vpn_nodes_.Clear();
 }
-inline ::lego::block::protobuf::VpnCountItem* UpdateVpnCountResponse::mutable_vpn_nodes(int index) {
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
+inline ::tenon::block::protobuf::VpnCountItem* UpdateVpnCountResponse::mutable_vpn_nodes(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
   return vpn_nodes_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::VpnCountItem >*
+inline ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::VpnCountItem >*
 UpdateVpnCountResponse::mutable_vpn_nodes() {
-  // @@protoc_insertion_point(field_mutable_list:lego.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
   return &vpn_nodes_;
 }
-inline const ::lego::block::protobuf::VpnCountItem& UpdateVpnCountResponse::vpn_nodes(int index) const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
+inline const ::tenon::block::protobuf::VpnCountItem& UpdateVpnCountResponse::vpn_nodes(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
   return vpn_nodes_.Get(index);
 }
-inline ::lego::block::protobuf::VpnCountItem* UpdateVpnCountResponse::add_vpn_nodes() {
-  // @@protoc_insertion_point(field_add:lego.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
+inline ::tenon::block::protobuf::VpnCountItem* UpdateVpnCountResponse::add_vpn_nodes() {
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
   return vpn_nodes_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::VpnCountItem >&
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::VpnCountItem >&
 UpdateVpnCountResponse::vpn_nodes() const {
-  // @@protoc_insertion_point(field_list:lego.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.UpdateVpnCountResponse.vpn_nodes)
   return vpn_nodes_;
 }
 
@@ -3884,41 +3884,41 @@ inline void GetAccountInitInfoRequest::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& GetAccountInitInfoRequest::id() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoRequest.id)
   return id_.GetNoArena();
 }
 inline void GetAccountInitInfoRequest::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoRequest.id)
 }
 #if LANG_CXX11
 inline void GetAccountInitInfoRequest::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetAccountInitInfoRequest.id)
 }
 #endif
 inline void GetAccountInitInfoRequest::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetAccountInitInfoRequest.id)
 }
 inline void GetAccountInitInfoRequest::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetAccountInitInfoRequest.id)
 }
 inline ::std::string* GetAccountInitInfoRequest::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountInitInfoRequest.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetAccountInitInfoRequest::release_id() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetAccountInitInfoRequest.id)
   if (!has_id()) {
     return NULL;
   }
@@ -3932,7 +3932,7 @@ inline void GetAccountInitInfoRequest::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetAccountInitInfoRequest.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetAccountInitInfoRequest.id)
 }
 
 // optional uint32 count = 2;
@@ -3950,13 +3950,13 @@ inline void GetAccountInitInfoRequest::clear_count() {
   clear_has_count();
 }
 inline ::google::protobuf::uint32 GetAccountInitInfoRequest::count() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoRequest.count)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoRequest.count)
   return count_;
 }
 inline void GetAccountInitInfoRequest::set_count(::google::protobuf::uint32 value) {
   set_has_count();
   count_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetAccountInitInfoRequest.count)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoRequest.count)
 }
 
 // optional uint64 height = 3;
@@ -3974,13 +3974,13 @@ inline void GetAccountInitInfoRequest::clear_height() {
   clear_has_height();
 }
 inline ::google::protobuf::uint64 GetAccountInitInfoRequest::height() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoRequest.height)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoRequest.height)
   return height_;
 }
 inline void GetAccountInitInfoRequest::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetAccountInitInfoRequest.height)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoRequest.height)
 }
 
 // -------------------------------------------------------------------
@@ -4002,41 +4002,41 @@ inline void TxItem::clear_from() {
   clear_has_from();
 }
 inline const ::std::string& TxItem::from() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.from)
   return from_.GetNoArena();
 }
 inline void TxItem::set_from(const ::std::string& value) {
   set_has_from();
   from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.from)
 }
 #if LANG_CXX11
 inline void TxItem::set_from(::std::string&& value) {
   set_has_from();
   from_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.TxItem.from)
 }
 #endif
 inline void TxItem::set_from(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_from();
   from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.TxItem.from)
 }
 inline void TxItem::set_from(const void* value, size_t size) {
   set_has_from();
   from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.TxItem.from)
 }
 inline ::std::string* TxItem::mutable_from() {
   set_has_from();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.TxItem.from)
   return from_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* TxItem::release_from() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.TxItem.from)
   if (!has_from()) {
     return NULL;
   }
@@ -4050,7 +4050,7 @@ inline void TxItem::set_allocated_from(::std::string* from) {
     clear_has_from();
   }
   from_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.TxItem.from)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.TxItem.from)
 }
 
 // optional bytes to = 2;
@@ -4068,41 +4068,41 @@ inline void TxItem::clear_to() {
   clear_has_to();
 }
 inline const ::std::string& TxItem::to() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.to)
   return to_.GetNoArena();
 }
 inline void TxItem::set_to(const ::std::string& value) {
   set_has_to();
   to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.to)
 }
 #if LANG_CXX11
 inline void TxItem::set_to(::std::string&& value) {
   set_has_to();
   to_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.TxItem.to)
 }
 #endif
 inline void TxItem::set_to(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_to();
   to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.TxItem.to)
 }
 inline void TxItem::set_to(const void* value, size_t size) {
   set_has_to();
   to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.TxItem.to)
 }
 inline ::std::string* TxItem::mutable_to() {
   set_has_to();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.TxItem.to)
   return to_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* TxItem::release_to() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.TxItem.to)
   if (!has_to()) {
     return NULL;
   }
@@ -4116,7 +4116,7 @@ inline void TxItem::set_allocated_to(::std::string* to) {
     clear_has_to();
   }
   to_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), to);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.TxItem.to)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.TxItem.to)
 }
 
 // optional uint64 amount = 3;
@@ -4134,13 +4134,13 @@ inline void TxItem::clear_amount() {
   clear_has_amount();
 }
 inline ::google::protobuf::uint64 TxItem::amount() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.amount)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.amount)
   return amount_;
 }
 inline void TxItem::set_amount(::google::protobuf::uint64 value) {
   set_has_amount();
   amount_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.amount)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.amount)
 }
 
 // optional uint64 timestamp = 4;
@@ -4158,13 +4158,13 @@ inline void TxItem::clear_timestamp() {
   clear_has_timestamp();
 }
 inline ::google::protobuf::uint64 TxItem::timestamp() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.timestamp)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.timestamp)
   return timestamp_;
 }
 inline void TxItem::set_timestamp(::google::protobuf::uint64 value) {
   set_has_timestamp();
   timestamp_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.timestamp)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.timestamp)
 }
 
 // optional uint64 height = 5;
@@ -4182,13 +4182,13 @@ inline void TxItem::clear_height() {
   clear_has_height();
 }
 inline ::google::protobuf::uint64 TxItem::height() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.height)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.height)
   return height_;
 }
 inline void TxItem::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.height)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.height)
 }
 
 // optional uint64 balance = 6;
@@ -4206,13 +4206,13 @@ inline void TxItem::clear_balance() {
   clear_has_balance();
 }
 inline ::google::protobuf::uint64 TxItem::balance() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.balance)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.balance)
   return balance_;
 }
 inline void TxItem::set_balance(::google::protobuf::uint64 value) {
   set_has_balance();
   balance_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.balance)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.balance)
 }
 
 // optional bytes gid = 7;
@@ -4230,41 +4230,41 @@ inline void TxItem::clear_gid() {
   clear_has_gid();
 }
 inline const ::std::string& TxItem::gid() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.gid)
   return gid_.GetNoArena();
 }
 inline void TxItem::set_gid(const ::std::string& value) {
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.gid)
 }
 #if LANG_CXX11
 inline void TxItem::set_gid(::std::string&& value) {
   set_has_gid();
   gid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.TxItem.gid)
 }
 #endif
 inline void TxItem::set_gid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.TxItem.gid)
 }
 inline void TxItem::set_gid(const void* value, size_t size) {
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.TxItem.gid)
 }
 inline ::std::string* TxItem::mutable_gid() {
   set_has_gid();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.TxItem.gid)
   return gid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* TxItem::release_gid() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.TxItem.gid)
   if (!has_gid()) {
     return NULL;
   }
@@ -4278,7 +4278,7 @@ inline void TxItem::set_allocated_gid(::std::string* gid) {
     clear_has_gid();
   }
   gid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gid);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.TxItem.gid)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.TxItem.gid)
 }
 
 // optional uint32 type = 8;
@@ -4296,13 +4296,13 @@ inline void TxItem::clear_type() {
   clear_has_type();
 }
 inline ::google::protobuf::uint32 TxItem::type() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.type)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.type)
   return type_;
 }
 inline void TxItem::set_type(::google::protobuf::uint32 value) {
   set_has_type();
   type_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.type)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.type)
 }
 
 // optional uint32 status = 9;
@@ -4320,13 +4320,13 @@ inline void TxItem::clear_status() {
   clear_has_status();
 }
 inline ::google::protobuf::uint32 TxItem::status() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.status)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.status)
   return status_;
 }
 inline void TxItem::set_status(::google::protobuf::uint32 value) {
   set_has_status();
   status_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.status)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.status)
 }
 
 // optional uint32 version = 10;
@@ -4344,13 +4344,13 @@ inline void TxItem::clear_version() {
   clear_has_version();
 }
 inline ::google::protobuf::uint32 TxItem::version() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.TxItem.version)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.TxItem.version)
   return version_;
 }
 inline void TxItem::set_version(::google::protobuf::uint32 value) {
   set_has_version();
   version_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.TxItem.version)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.TxItem.version)
 }
 
 // -------------------------------------------------------------------
@@ -4372,42 +4372,42 @@ inline void GetAccountInitInfoResponse::clear_balance() {
   clear_has_balance();
 }
 inline ::google::protobuf::uint64 GetAccountInitInfoResponse::balance() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoResponse.balance)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.balance)
   return balance_;
 }
 inline void GetAccountInitInfoResponse::set_balance(::google::protobuf::uint64 value) {
   set_has_balance();
   balance_ = value;
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetAccountInitInfoResponse.balance)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoResponse.balance)
 }
 
-// repeated .lego.block.protobuf.TxItem tx_list = 2;
+// repeated .tenon.block.protobuf.TxItem tx_list = 2;
 inline int GetAccountInitInfoResponse::tx_list_size() const {
   return tx_list_.size();
 }
 inline void GetAccountInitInfoResponse::clear_tx_list() {
   tx_list_.Clear();
 }
-inline ::lego::block::protobuf::TxItem* GetAccountInitInfoResponse::mutable_tx_list(int index) {
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetAccountInitInfoResponse.tx_list)
+inline ::tenon::block::protobuf::TxItem* GetAccountInitInfoResponse::mutable_tx_list(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
   return tx_list_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::TxItem >*
+inline ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::TxItem >*
 GetAccountInitInfoResponse::mutable_tx_list() {
-  // @@protoc_insertion_point(field_mutable_list:lego.block.protobuf.GetAccountInitInfoResponse.tx_list)
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
   return &tx_list_;
 }
-inline const ::lego::block::protobuf::TxItem& GetAccountInitInfoResponse::tx_list(int index) const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoResponse.tx_list)
+inline const ::tenon::block::protobuf::TxItem& GetAccountInitInfoResponse::tx_list(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
   return tx_list_.Get(index);
 }
-inline ::lego::block::protobuf::TxItem* GetAccountInitInfoResponse::add_tx_list() {
-  // @@protoc_insertion_point(field_add:lego.block.protobuf.GetAccountInitInfoResponse.tx_list)
+inline ::tenon::block::protobuf::TxItem* GetAccountInitInfoResponse::add_tx_list() {
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
   return tx_list_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lego::block::protobuf::TxItem >&
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::block::protobuf::TxItem >&
 GetAccountInitInfoResponse::tx_list() const {
-  // @@protoc_insertion_point(field_list:lego.block.protobuf.GetAccountInitInfoResponse.tx_list)
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
   return tx_list_;
 }
 
@@ -4426,41 +4426,41 @@ inline void GetAccountInitInfoResponse::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& GetAccountInitInfoResponse::id() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.id)
   return id_.GetNoArena();
 }
 inline void GetAccountInitInfoResponse::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoResponse.id)
 }
 #if LANG_CXX11
 inline void GetAccountInitInfoResponse::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetAccountInitInfoResponse.id)
 }
 #endif
 inline void GetAccountInitInfoResponse::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetAccountInitInfoResponse.id)
 }
 inline void GetAccountInitInfoResponse::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetAccountInitInfoResponse.id)
 }
 inline ::std::string* GetAccountInitInfoResponse::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountInitInfoResponse.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* GetAccountInitInfoResponse::release_id() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetAccountInitInfoResponse.id)
   if (!has_id()) {
     return NULL;
   }
@@ -4474,7 +4474,7 @@ inline void GetAccountInitInfoResponse::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.GetAccountInitInfoResponse.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetAccountInitInfoResponse.id)
 }
 
 // -------------------------------------------------------------------
@@ -4496,41 +4496,41 @@ inline void UpdateVpnActiveRequest::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& UpdateVpnActiveRequest::id() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnActiveRequest.id)
   return id_.GetNoArena();
 }
 inline void UpdateVpnActiveRequest::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnActiveRequest.id)
 }
 #if LANG_CXX11
 inline void UpdateVpnActiveRequest::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.UpdateVpnActiveRequest.id)
 }
 #endif
 inline void UpdateVpnActiveRequest::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.UpdateVpnActiveRequest.id)
 }
 inline void UpdateVpnActiveRequest::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.UpdateVpnActiveRequest.id)
 }
 inline ::std::string* UpdateVpnActiveRequest::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnActiveRequest.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* UpdateVpnActiveRequest::release_id() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.UpdateVpnActiveRequest.id)
   if (!has_id()) {
     return NULL;
   }
@@ -4544,7 +4544,7 @@ inline void UpdateVpnActiveRequest::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.UpdateVpnActiveRequest.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.UpdateVpnActiveRequest.id)
 }
 
 // optional bytes ip = 2;
@@ -4562,41 +4562,41 @@ inline void UpdateVpnActiveRequest::clear_ip() {
   clear_has_ip();
 }
 inline const ::std::string& UpdateVpnActiveRequest::ip() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
   return ip_.GetNoArena();
 }
 inline void UpdateVpnActiveRequest::set_ip(const ::std::string& value) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
 }
 #if LANG_CXX11
 inline void UpdateVpnActiveRequest::set_ip(::std::string&& value) {
   set_has_ip();
   ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
 }
 #endif
 inline void UpdateVpnActiveRequest::set_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
 }
 inline void UpdateVpnActiveRequest::set_ip(const void* value, size_t size) {
   set_has_ip();
   ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
 }
 inline ::std::string* UpdateVpnActiveRequest::mutable_ip() {
   set_has_ip();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
   return ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* UpdateVpnActiveRequest::release_ip() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
   if (!has_ip()) {
     return NULL;
   }
@@ -4610,7 +4610,7 @@ inline void UpdateVpnActiveRequest::set_allocated_ip(::std::string* ip) {
     clear_has_ip();
   }
   ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.UpdateVpnActiveRequest.ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.UpdateVpnActiveRequest.ip)
 }
 
 // -------------------------------------------------------------------
@@ -4632,41 +4632,41 @@ inline void AdRewardRequest::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& AdRewardRequest::id() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AdRewardRequest.id)
   return id_.GetNoArena();
 }
 inline void AdRewardRequest::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AdRewardRequest.id)
 }
 #if LANG_CXX11
 inline void AdRewardRequest::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AdRewardRequest.id)
 }
 #endif
 inline void AdRewardRequest::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AdRewardRequest.id)
 }
 inline void AdRewardRequest::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AdRewardRequest.id)
 }
 inline ::std::string* AdRewardRequest::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AdRewardRequest.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AdRewardRequest::release_id() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AdRewardRequest.id)
   if (!has_id()) {
     return NULL;
   }
@@ -4680,7 +4680,7 @@ inline void AdRewardRequest::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AdRewardRequest.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AdRewardRequest.id)
 }
 
 // optional bytes reward_key = 2;
@@ -4698,41 +4698,41 @@ inline void AdRewardRequest::clear_reward_key() {
   clear_has_reward_key();
 }
 inline const ::std::string& AdRewardRequest::reward_key() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AdRewardRequest.reward_key)
   return reward_key_.GetNoArena();
 }
 inline void AdRewardRequest::set_reward_key(const ::std::string& value) {
   set_has_reward_key();
   reward_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AdRewardRequest.reward_key)
 }
 #if LANG_CXX11
 inline void AdRewardRequest::set_reward_key(::std::string&& value) {
   set_has_reward_key();
   reward_key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AdRewardRequest.reward_key)
 }
 #endif
 inline void AdRewardRequest::set_reward_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_reward_key();
   reward_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AdRewardRequest.reward_key)
 }
 inline void AdRewardRequest::set_reward_key(const void* value, size_t size) {
   set_has_reward_key();
   reward_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AdRewardRequest.reward_key)
 }
 inline ::std::string* AdRewardRequest::mutable_reward_key() {
   set_has_reward_key();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AdRewardRequest.reward_key)
   return reward_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AdRewardRequest::release_reward_key() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AdRewardRequest.reward_key)
   if (!has_reward_key()) {
     return NULL;
   }
@@ -4746,7 +4746,7 @@ inline void AdRewardRequest::set_allocated_reward_key(::std::string* reward_key)
     clear_has_reward_key();
   }
   reward_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), reward_key);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AdRewardRequest.reward_key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AdRewardRequest.reward_key)
 }
 
 // optional bytes gid = 3;
@@ -4764,41 +4764,41 @@ inline void AdRewardRequest::clear_gid() {
   clear_has_gid();
 }
 inline const ::std::string& AdRewardRequest::gid() const {
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AdRewardRequest.gid)
   return gid_.GetNoArena();
 }
 inline void AdRewardRequest::set_gid(const ::std::string& value) {
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AdRewardRequest.gid)
 }
 #if LANG_CXX11
 inline void AdRewardRequest::set_gid(::std::string&& value) {
   set_has_gid();
   gid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.AdRewardRequest.gid)
 }
 #endif
 inline void AdRewardRequest::set_gid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.AdRewardRequest.gid)
 }
 inline void AdRewardRequest::set_gid(const void* value, size_t size) {
   set_has_gid();
   gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.AdRewardRequest.gid)
 }
 inline ::std::string* AdRewardRequest::mutable_gid() {
   set_has_gid();
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.AdRewardRequest.gid)
   return gid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* AdRewardRequest::release_gid() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.AdRewardRequest.gid)
   if (!has_gid()) {
     return NULL;
   }
@@ -4812,14 +4812,14 @@ inline void AdRewardRequest::set_allocated_gid(::std::string* gid) {
     clear_has_gid();
   }
   gid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gid);
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.AdRewardRequest.gid)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AdRewardRequest.gid)
 }
 
 // -------------------------------------------------------------------
 
 // BlockMessage
 
-// optional .lego.block.protobuf.GetTxBlockRequest block_req = 1;
+// optional .tenon.block.protobuf.GetTxBlockRequest block_req = 1;
 inline bool BlockMessage::has_block_req() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -4833,32 +4833,32 @@ inline void BlockMessage::clear_block_req() {
   if (block_req_ != NULL) block_req_->Clear();
   clear_has_block_req();
 }
-inline const ::lego::block::protobuf::GetTxBlockRequest& BlockMessage::_internal_block_req() const {
+inline const ::tenon::block::protobuf::GetTxBlockRequest& BlockMessage::_internal_block_req() const {
   return *block_req_;
 }
-inline const ::lego::block::protobuf::GetTxBlockRequest& BlockMessage::block_req() const {
-  const ::lego::block::protobuf::GetTxBlockRequest* p = block_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.block_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::GetTxBlockRequest*>(
-      &::lego::block::protobuf::_GetTxBlockRequest_default_instance_);
+inline const ::tenon::block::protobuf::GetTxBlockRequest& BlockMessage::block_req() const {
+  const ::tenon::block::protobuf::GetTxBlockRequest* p = block_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.block_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetTxBlockRequest*>(
+      &::tenon::block::protobuf::_GetTxBlockRequest_default_instance_);
 }
-inline ::lego::block::protobuf::GetTxBlockRequest* BlockMessage::release_block_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.block_req)
+inline ::tenon::block::protobuf::GetTxBlockRequest* BlockMessage::release_block_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.block_req)
   clear_has_block_req();
-  ::lego::block::protobuf::GetTxBlockRequest* temp = block_req_;
+  ::tenon::block::protobuf::GetTxBlockRequest* temp = block_req_;
   block_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::GetTxBlockRequest* BlockMessage::mutable_block_req() {
+inline ::tenon::block::protobuf::GetTxBlockRequest* BlockMessage::mutable_block_req() {
   set_has_block_req();
   if (block_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::GetTxBlockRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockRequest>(GetArenaNoVirtual());
     block_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.block_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.block_req)
   return block_req_;
 }
-inline void BlockMessage::set_allocated_block_req(::lego::block::protobuf::GetTxBlockRequest* block_req) {
+inline void BlockMessage::set_allocated_block_req(::tenon::block::protobuf::GetTxBlockRequest* block_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete block_req_;
@@ -4874,10 +4874,10 @@ inline void BlockMessage::set_allocated_block_req(::lego::block::protobuf::GetTx
     clear_has_block_req();
   }
   block_req_ = block_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.block_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.block_req)
 }
 
-// optional .lego.block.protobuf.GetTxBlockResponse block_res = 2;
+// optional .tenon.block.protobuf.GetTxBlockResponse block_res = 2;
 inline bool BlockMessage::has_block_res() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -4891,32 +4891,32 @@ inline void BlockMessage::clear_block_res() {
   if (block_res_ != NULL) block_res_->Clear();
   clear_has_block_res();
 }
-inline const ::lego::block::protobuf::GetTxBlockResponse& BlockMessage::_internal_block_res() const {
+inline const ::tenon::block::protobuf::GetTxBlockResponse& BlockMessage::_internal_block_res() const {
   return *block_res_;
 }
-inline const ::lego::block::protobuf::GetTxBlockResponse& BlockMessage::block_res() const {
-  const ::lego::block::protobuf::GetTxBlockResponse* p = block_res_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.block_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::GetTxBlockResponse*>(
-      &::lego::block::protobuf::_GetTxBlockResponse_default_instance_);
+inline const ::tenon::block::protobuf::GetTxBlockResponse& BlockMessage::block_res() const {
+  const ::tenon::block::protobuf::GetTxBlockResponse* p = block_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.block_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetTxBlockResponse*>(
+      &::tenon::block::protobuf::_GetTxBlockResponse_default_instance_);
 }
-inline ::lego::block::protobuf::GetTxBlockResponse* BlockMessage::release_block_res() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.block_res)
+inline ::tenon::block::protobuf::GetTxBlockResponse* BlockMessage::release_block_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.block_res)
   clear_has_block_res();
-  ::lego::block::protobuf::GetTxBlockResponse* temp = block_res_;
+  ::tenon::block::protobuf::GetTxBlockResponse* temp = block_res_;
   block_res_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::GetTxBlockResponse* BlockMessage::mutable_block_res() {
+inline ::tenon::block::protobuf::GetTxBlockResponse* BlockMessage::mutable_block_res() {
   set_has_block_res();
   if (block_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::GetTxBlockResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockResponse>(GetArenaNoVirtual());
     block_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.block_res)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.block_res)
   return block_res_;
 }
-inline void BlockMessage::set_allocated_block_res(::lego::block::protobuf::GetTxBlockResponse* block_res) {
+inline void BlockMessage::set_allocated_block_res(::tenon::block::protobuf::GetTxBlockResponse* block_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete block_res_;
@@ -4932,10 +4932,10 @@ inline void BlockMessage::set_allocated_block_res(::lego::block::protobuf::GetTx
     clear_has_block_res();
   }
   block_res_ = block_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.block_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.block_res)
 }
 
-// optional .lego.block.protobuf.AccountHeightRequest height_req = 3;
+// optional .tenon.block.protobuf.AccountHeightRequest height_req = 3;
 inline bool BlockMessage::has_height_req() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -4949,32 +4949,32 @@ inline void BlockMessage::clear_height_req() {
   if (height_req_ != NULL) height_req_->Clear();
   clear_has_height_req();
 }
-inline const ::lego::block::protobuf::AccountHeightRequest& BlockMessage::_internal_height_req() const {
+inline const ::tenon::block::protobuf::AccountHeightRequest& BlockMessage::_internal_height_req() const {
   return *height_req_;
 }
-inline const ::lego::block::protobuf::AccountHeightRequest& BlockMessage::height_req() const {
-  const ::lego::block::protobuf::AccountHeightRequest* p = height_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.height_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::AccountHeightRequest*>(
-      &::lego::block::protobuf::_AccountHeightRequest_default_instance_);
+inline const ::tenon::block::protobuf::AccountHeightRequest& BlockMessage::height_req() const {
+  const ::tenon::block::protobuf::AccountHeightRequest* p = height_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.height_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::AccountHeightRequest*>(
+      &::tenon::block::protobuf::_AccountHeightRequest_default_instance_);
 }
-inline ::lego::block::protobuf::AccountHeightRequest* BlockMessage::release_height_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.height_req)
+inline ::tenon::block::protobuf::AccountHeightRequest* BlockMessage::release_height_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.height_req)
   clear_has_height_req();
-  ::lego::block::protobuf::AccountHeightRequest* temp = height_req_;
+  ::tenon::block::protobuf::AccountHeightRequest* temp = height_req_;
   height_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::AccountHeightRequest* BlockMessage::mutable_height_req() {
+inline ::tenon::block::protobuf::AccountHeightRequest* BlockMessage::mutable_height_req() {
   set_has_height_req();
   if (height_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::AccountHeightRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::AccountHeightRequest>(GetArenaNoVirtual());
     height_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.height_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.height_req)
   return height_req_;
 }
-inline void BlockMessage::set_allocated_height_req(::lego::block::protobuf::AccountHeightRequest* height_req) {
+inline void BlockMessage::set_allocated_height_req(::tenon::block::protobuf::AccountHeightRequest* height_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete height_req_;
@@ -4990,10 +4990,10 @@ inline void BlockMessage::set_allocated_height_req(::lego::block::protobuf::Acco
     clear_has_height_req();
   }
   height_req_ = height_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.height_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.height_req)
 }
 
-// optional .lego.block.protobuf.AccountHeightResponse height_res = 4;
+// optional .tenon.block.protobuf.AccountHeightResponse height_res = 4;
 inline bool BlockMessage::has_height_res() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -5007,32 +5007,32 @@ inline void BlockMessage::clear_height_res() {
   if (height_res_ != NULL) height_res_->Clear();
   clear_has_height_res();
 }
-inline const ::lego::block::protobuf::AccountHeightResponse& BlockMessage::_internal_height_res() const {
+inline const ::tenon::block::protobuf::AccountHeightResponse& BlockMessage::_internal_height_res() const {
   return *height_res_;
 }
-inline const ::lego::block::protobuf::AccountHeightResponse& BlockMessage::height_res() const {
-  const ::lego::block::protobuf::AccountHeightResponse* p = height_res_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.height_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::AccountHeightResponse*>(
-      &::lego::block::protobuf::_AccountHeightResponse_default_instance_);
+inline const ::tenon::block::protobuf::AccountHeightResponse& BlockMessage::height_res() const {
+  const ::tenon::block::protobuf::AccountHeightResponse* p = height_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.height_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::AccountHeightResponse*>(
+      &::tenon::block::protobuf::_AccountHeightResponse_default_instance_);
 }
-inline ::lego::block::protobuf::AccountHeightResponse* BlockMessage::release_height_res() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.height_res)
+inline ::tenon::block::protobuf::AccountHeightResponse* BlockMessage::release_height_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.height_res)
   clear_has_height_res();
-  ::lego::block::protobuf::AccountHeightResponse* temp = height_res_;
+  ::tenon::block::protobuf::AccountHeightResponse* temp = height_res_;
   height_res_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::AccountHeightResponse* BlockMessage::mutable_height_res() {
+inline ::tenon::block::protobuf::AccountHeightResponse* BlockMessage::mutable_height_res() {
   set_has_height_res();
   if (height_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::AccountHeightResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::AccountHeightResponse>(GetArenaNoVirtual());
     height_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.height_res)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.height_res)
   return height_res_;
 }
-inline void BlockMessage::set_allocated_height_res(::lego::block::protobuf::AccountHeightResponse* height_res) {
+inline void BlockMessage::set_allocated_height_res(::tenon::block::protobuf::AccountHeightResponse* height_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete height_res_;
@@ -5048,10 +5048,10 @@ inline void BlockMessage::set_allocated_height_res(::lego::block::protobuf::Acco
     clear_has_height_res();
   }
   height_res_ = height_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.height_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.height_res)
 }
 
-// optional .lego.block.protobuf.AccountAttrRequest acc_attr_req = 5;
+// optional .tenon.block.protobuf.AccountAttrRequest acc_attr_req = 5;
 inline bool BlockMessage::has_acc_attr_req() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -5065,32 +5065,32 @@ inline void BlockMessage::clear_acc_attr_req() {
   if (acc_attr_req_ != NULL) acc_attr_req_->Clear();
   clear_has_acc_attr_req();
 }
-inline const ::lego::block::protobuf::AccountAttrRequest& BlockMessage::_internal_acc_attr_req() const {
+inline const ::tenon::block::protobuf::AccountAttrRequest& BlockMessage::_internal_acc_attr_req() const {
   return *acc_attr_req_;
 }
-inline const ::lego::block::protobuf::AccountAttrRequest& BlockMessage::acc_attr_req() const {
-  const ::lego::block::protobuf::AccountAttrRequest* p = acc_attr_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.acc_attr_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::AccountAttrRequest*>(
-      &::lego::block::protobuf::_AccountAttrRequest_default_instance_);
+inline const ::tenon::block::protobuf::AccountAttrRequest& BlockMessage::acc_attr_req() const {
+  const ::tenon::block::protobuf::AccountAttrRequest* p = acc_attr_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.acc_attr_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::AccountAttrRequest*>(
+      &::tenon::block::protobuf::_AccountAttrRequest_default_instance_);
 }
-inline ::lego::block::protobuf::AccountAttrRequest* BlockMessage::release_acc_attr_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.acc_attr_req)
+inline ::tenon::block::protobuf::AccountAttrRequest* BlockMessage::release_acc_attr_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.acc_attr_req)
   clear_has_acc_attr_req();
-  ::lego::block::protobuf::AccountAttrRequest* temp = acc_attr_req_;
+  ::tenon::block::protobuf::AccountAttrRequest* temp = acc_attr_req_;
   acc_attr_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::AccountAttrRequest* BlockMessage::mutable_acc_attr_req() {
+inline ::tenon::block::protobuf::AccountAttrRequest* BlockMessage::mutable_acc_attr_req() {
   set_has_acc_attr_req();
   if (acc_attr_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::AccountAttrRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::AccountAttrRequest>(GetArenaNoVirtual());
     acc_attr_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.acc_attr_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.acc_attr_req)
   return acc_attr_req_;
 }
-inline void BlockMessage::set_allocated_acc_attr_req(::lego::block::protobuf::AccountAttrRequest* acc_attr_req) {
+inline void BlockMessage::set_allocated_acc_attr_req(::tenon::block::protobuf::AccountAttrRequest* acc_attr_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete acc_attr_req_;
@@ -5106,10 +5106,10 @@ inline void BlockMessage::set_allocated_acc_attr_req(::lego::block::protobuf::Ac
     clear_has_acc_attr_req();
   }
   acc_attr_req_ = acc_attr_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.acc_attr_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.acc_attr_req)
 }
 
-// optional .lego.block.protobuf.AccountAttrResponse acc_attr_res = 6;
+// optional .tenon.block.protobuf.AccountAttrResponse acc_attr_res = 6;
 inline bool BlockMessage::has_acc_attr_res() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
@@ -5123,32 +5123,32 @@ inline void BlockMessage::clear_acc_attr_res() {
   if (acc_attr_res_ != NULL) acc_attr_res_->Clear();
   clear_has_acc_attr_res();
 }
-inline const ::lego::block::protobuf::AccountAttrResponse& BlockMessage::_internal_acc_attr_res() const {
+inline const ::tenon::block::protobuf::AccountAttrResponse& BlockMessage::_internal_acc_attr_res() const {
   return *acc_attr_res_;
 }
-inline const ::lego::block::protobuf::AccountAttrResponse& BlockMessage::acc_attr_res() const {
-  const ::lego::block::protobuf::AccountAttrResponse* p = acc_attr_res_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.acc_attr_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::AccountAttrResponse*>(
-      &::lego::block::protobuf::_AccountAttrResponse_default_instance_);
+inline const ::tenon::block::protobuf::AccountAttrResponse& BlockMessage::acc_attr_res() const {
+  const ::tenon::block::protobuf::AccountAttrResponse* p = acc_attr_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.acc_attr_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::AccountAttrResponse*>(
+      &::tenon::block::protobuf::_AccountAttrResponse_default_instance_);
 }
-inline ::lego::block::protobuf::AccountAttrResponse* BlockMessage::release_acc_attr_res() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.acc_attr_res)
+inline ::tenon::block::protobuf::AccountAttrResponse* BlockMessage::release_acc_attr_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.acc_attr_res)
   clear_has_acc_attr_res();
-  ::lego::block::protobuf::AccountAttrResponse* temp = acc_attr_res_;
+  ::tenon::block::protobuf::AccountAttrResponse* temp = acc_attr_res_;
   acc_attr_res_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::AccountAttrResponse* BlockMessage::mutable_acc_attr_res() {
+inline ::tenon::block::protobuf::AccountAttrResponse* BlockMessage::mutable_acc_attr_res() {
   set_has_acc_attr_res();
   if (acc_attr_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::AccountAttrResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::AccountAttrResponse>(GetArenaNoVirtual());
     acc_attr_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.acc_attr_res)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.acc_attr_res)
   return acc_attr_res_;
 }
-inline void BlockMessage::set_allocated_acc_attr_res(::lego::block::protobuf::AccountAttrResponse* acc_attr_res) {
+inline void BlockMessage::set_allocated_acc_attr_res(::tenon::block::protobuf::AccountAttrResponse* acc_attr_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete acc_attr_res_;
@@ -5164,10 +5164,10 @@ inline void BlockMessage::set_allocated_acc_attr_res(::lego::block::protobuf::Ac
     clear_has_acc_attr_res();
   }
   acc_attr_res_ = acc_attr_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.acc_attr_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.acc_attr_res)
 }
 
-// optional .lego.block.protobuf.UpdateVpnCountRequest up_vpn_req = 7;
+// optional .tenon.block.protobuf.UpdateVpnCountRequest up_vpn_req = 7;
 inline bool BlockMessage::has_up_vpn_req() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
@@ -5181,32 +5181,32 @@ inline void BlockMessage::clear_up_vpn_req() {
   if (up_vpn_req_ != NULL) up_vpn_req_->Clear();
   clear_has_up_vpn_req();
 }
-inline const ::lego::block::protobuf::UpdateVpnCountRequest& BlockMessage::_internal_up_vpn_req() const {
+inline const ::tenon::block::protobuf::UpdateVpnCountRequest& BlockMessage::_internal_up_vpn_req() const {
   return *up_vpn_req_;
 }
-inline const ::lego::block::protobuf::UpdateVpnCountRequest& BlockMessage::up_vpn_req() const {
-  const ::lego::block::protobuf::UpdateVpnCountRequest* p = up_vpn_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.up_vpn_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::UpdateVpnCountRequest*>(
-      &::lego::block::protobuf::_UpdateVpnCountRequest_default_instance_);
+inline const ::tenon::block::protobuf::UpdateVpnCountRequest& BlockMessage::up_vpn_req() const {
+  const ::tenon::block::protobuf::UpdateVpnCountRequest* p = up_vpn_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.up_vpn_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::UpdateVpnCountRequest*>(
+      &::tenon::block::protobuf::_UpdateVpnCountRequest_default_instance_);
 }
-inline ::lego::block::protobuf::UpdateVpnCountRequest* BlockMessage::release_up_vpn_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.up_vpn_req)
+inline ::tenon::block::protobuf::UpdateVpnCountRequest* BlockMessage::release_up_vpn_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.up_vpn_req)
   clear_has_up_vpn_req();
-  ::lego::block::protobuf::UpdateVpnCountRequest* temp = up_vpn_req_;
+  ::tenon::block::protobuf::UpdateVpnCountRequest* temp = up_vpn_req_;
   up_vpn_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::UpdateVpnCountRequest* BlockMessage::mutable_up_vpn_req() {
+inline ::tenon::block::protobuf::UpdateVpnCountRequest* BlockMessage::mutable_up_vpn_req() {
   set_has_up_vpn_req();
   if (up_vpn_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::UpdateVpnCountRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnCountRequest>(GetArenaNoVirtual());
     up_vpn_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.up_vpn_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.up_vpn_req)
   return up_vpn_req_;
 }
-inline void BlockMessage::set_allocated_up_vpn_req(::lego::block::protobuf::UpdateVpnCountRequest* up_vpn_req) {
+inline void BlockMessage::set_allocated_up_vpn_req(::tenon::block::protobuf::UpdateVpnCountRequest* up_vpn_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete up_vpn_req_;
@@ -5222,10 +5222,10 @@ inline void BlockMessage::set_allocated_up_vpn_req(::lego::block::protobuf::Upda
     clear_has_up_vpn_req();
   }
   up_vpn_req_ = up_vpn_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.up_vpn_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.up_vpn_req)
 }
 
-// optional .lego.block.protobuf.UpdateVpnCountResponse up_vpn_res = 8;
+// optional .tenon.block.protobuf.UpdateVpnCountResponse up_vpn_res = 8;
 inline bool BlockMessage::has_up_vpn_res() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -5239,32 +5239,32 @@ inline void BlockMessage::clear_up_vpn_res() {
   if (up_vpn_res_ != NULL) up_vpn_res_->Clear();
   clear_has_up_vpn_res();
 }
-inline const ::lego::block::protobuf::UpdateVpnCountResponse& BlockMessage::_internal_up_vpn_res() const {
+inline const ::tenon::block::protobuf::UpdateVpnCountResponse& BlockMessage::_internal_up_vpn_res() const {
   return *up_vpn_res_;
 }
-inline const ::lego::block::protobuf::UpdateVpnCountResponse& BlockMessage::up_vpn_res() const {
-  const ::lego::block::protobuf::UpdateVpnCountResponse* p = up_vpn_res_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.up_vpn_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::UpdateVpnCountResponse*>(
-      &::lego::block::protobuf::_UpdateVpnCountResponse_default_instance_);
+inline const ::tenon::block::protobuf::UpdateVpnCountResponse& BlockMessage::up_vpn_res() const {
+  const ::tenon::block::protobuf::UpdateVpnCountResponse* p = up_vpn_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.up_vpn_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::UpdateVpnCountResponse*>(
+      &::tenon::block::protobuf::_UpdateVpnCountResponse_default_instance_);
 }
-inline ::lego::block::protobuf::UpdateVpnCountResponse* BlockMessage::release_up_vpn_res() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.up_vpn_res)
+inline ::tenon::block::protobuf::UpdateVpnCountResponse* BlockMessage::release_up_vpn_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.up_vpn_res)
   clear_has_up_vpn_res();
-  ::lego::block::protobuf::UpdateVpnCountResponse* temp = up_vpn_res_;
+  ::tenon::block::protobuf::UpdateVpnCountResponse* temp = up_vpn_res_;
   up_vpn_res_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::UpdateVpnCountResponse* BlockMessage::mutable_up_vpn_res() {
+inline ::tenon::block::protobuf::UpdateVpnCountResponse* BlockMessage::mutable_up_vpn_res() {
   set_has_up_vpn_res();
   if (up_vpn_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::UpdateVpnCountResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnCountResponse>(GetArenaNoVirtual());
     up_vpn_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.up_vpn_res)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.up_vpn_res)
   return up_vpn_res_;
 }
-inline void BlockMessage::set_allocated_up_vpn_res(::lego::block::protobuf::UpdateVpnCountResponse* up_vpn_res) {
+inline void BlockMessage::set_allocated_up_vpn_res(::tenon::block::protobuf::UpdateVpnCountResponse* up_vpn_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete up_vpn_res_;
@@ -5280,10 +5280,10 @@ inline void BlockMessage::set_allocated_up_vpn_res(::lego::block::protobuf::Upda
     clear_has_up_vpn_res();
   }
   up_vpn_res_ = up_vpn_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.up_vpn_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.up_vpn_res)
 }
 
-// optional .lego.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
+// optional .tenon.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
 inline bool BlockMessage::has_account_init_req() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
@@ -5297,32 +5297,32 @@ inline void BlockMessage::clear_account_init_req() {
   if (account_init_req_ != NULL) account_init_req_->Clear();
   clear_has_account_init_req();
 }
-inline const ::lego::block::protobuf::GetAccountInitInfoRequest& BlockMessage::_internal_account_init_req() const {
+inline const ::tenon::block::protobuf::GetAccountInitInfoRequest& BlockMessage::_internal_account_init_req() const {
   return *account_init_req_;
 }
-inline const ::lego::block::protobuf::GetAccountInitInfoRequest& BlockMessage::account_init_req() const {
-  const ::lego::block::protobuf::GetAccountInitInfoRequest* p = account_init_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.account_init_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::GetAccountInitInfoRequest*>(
-      &::lego::block::protobuf::_GetAccountInitInfoRequest_default_instance_);
+inline const ::tenon::block::protobuf::GetAccountInitInfoRequest& BlockMessage::account_init_req() const {
+  const ::tenon::block::protobuf::GetAccountInitInfoRequest* p = account_init_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.account_init_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetAccountInitInfoRequest*>(
+      &::tenon::block::protobuf::_GetAccountInitInfoRequest_default_instance_);
 }
-inline ::lego::block::protobuf::GetAccountInitInfoRequest* BlockMessage::release_account_init_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.account_init_req)
+inline ::tenon::block::protobuf::GetAccountInitInfoRequest* BlockMessage::release_account_init_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.account_init_req)
   clear_has_account_init_req();
-  ::lego::block::protobuf::GetAccountInitInfoRequest* temp = account_init_req_;
+  ::tenon::block::protobuf::GetAccountInitInfoRequest* temp = account_init_req_;
   account_init_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::GetAccountInitInfoRequest* BlockMessage::mutable_account_init_req() {
+inline ::tenon::block::protobuf::GetAccountInitInfoRequest* BlockMessage::mutable_account_init_req() {
   set_has_account_init_req();
   if (account_init_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::GetAccountInitInfoRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoRequest>(GetArenaNoVirtual());
     account_init_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.account_init_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.account_init_req)
   return account_init_req_;
 }
-inline void BlockMessage::set_allocated_account_init_req(::lego::block::protobuf::GetAccountInitInfoRequest* account_init_req) {
+inline void BlockMessage::set_allocated_account_init_req(::tenon::block::protobuf::GetAccountInitInfoRequest* account_init_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete account_init_req_;
@@ -5338,10 +5338,10 @@ inline void BlockMessage::set_allocated_account_init_req(::lego::block::protobuf
     clear_has_account_init_req();
   }
   account_init_req_ = account_init_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.account_init_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.account_init_req)
 }
 
-// optional .lego.block.protobuf.GetAccountInitInfoResponse account_init_res = 10;
+// optional .tenon.block.protobuf.GetAccountInitInfoResponse account_init_res = 10;
 inline bool BlockMessage::has_account_init_res() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
@@ -5355,32 +5355,32 @@ inline void BlockMessage::clear_account_init_res() {
   if (account_init_res_ != NULL) account_init_res_->Clear();
   clear_has_account_init_res();
 }
-inline const ::lego::block::protobuf::GetAccountInitInfoResponse& BlockMessage::_internal_account_init_res() const {
+inline const ::tenon::block::protobuf::GetAccountInitInfoResponse& BlockMessage::_internal_account_init_res() const {
   return *account_init_res_;
 }
-inline const ::lego::block::protobuf::GetAccountInitInfoResponse& BlockMessage::account_init_res() const {
-  const ::lego::block::protobuf::GetAccountInitInfoResponse* p = account_init_res_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.account_init_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::GetAccountInitInfoResponse*>(
-      &::lego::block::protobuf::_GetAccountInitInfoResponse_default_instance_);
+inline const ::tenon::block::protobuf::GetAccountInitInfoResponse& BlockMessage::account_init_res() const {
+  const ::tenon::block::protobuf::GetAccountInitInfoResponse* p = account_init_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.account_init_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetAccountInitInfoResponse*>(
+      &::tenon::block::protobuf::_GetAccountInitInfoResponse_default_instance_);
 }
-inline ::lego::block::protobuf::GetAccountInitInfoResponse* BlockMessage::release_account_init_res() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.account_init_res)
+inline ::tenon::block::protobuf::GetAccountInitInfoResponse* BlockMessage::release_account_init_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.account_init_res)
   clear_has_account_init_res();
-  ::lego::block::protobuf::GetAccountInitInfoResponse* temp = account_init_res_;
+  ::tenon::block::protobuf::GetAccountInitInfoResponse* temp = account_init_res_;
   account_init_res_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::GetAccountInitInfoResponse* BlockMessage::mutable_account_init_res() {
+inline ::tenon::block::protobuf::GetAccountInitInfoResponse* BlockMessage::mutable_account_init_res() {
   set_has_account_init_res();
   if (account_init_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::GetAccountInitInfoResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoResponse>(GetArenaNoVirtual());
     account_init_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.account_init_res)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.account_init_res)
   return account_init_res_;
 }
-inline void BlockMessage::set_allocated_account_init_res(::lego::block::protobuf::GetAccountInitInfoResponse* account_init_res) {
+inline void BlockMessage::set_allocated_account_init_res(::tenon::block::protobuf::GetAccountInitInfoResponse* account_init_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete account_init_res_;
@@ -5396,10 +5396,10 @@ inline void BlockMessage::set_allocated_account_init_res(::lego::block::protobuf
     clear_has_account_init_res();
   }
   account_init_res_ = account_init_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.account_init_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.account_init_res)
 }
 
-// optional .lego.block.protobuf.UpdateVpnActiveRequest vpn_active_req = 11;
+// optional .tenon.block.protobuf.UpdateVpnActiveRequest vpn_active_req = 11;
 inline bool BlockMessage::has_vpn_active_req() const {
   return (_has_bits_[0] & 0x00000400u) != 0;
 }
@@ -5413,32 +5413,32 @@ inline void BlockMessage::clear_vpn_active_req() {
   if (vpn_active_req_ != NULL) vpn_active_req_->Clear();
   clear_has_vpn_active_req();
 }
-inline const ::lego::block::protobuf::UpdateVpnActiveRequest& BlockMessage::_internal_vpn_active_req() const {
+inline const ::tenon::block::protobuf::UpdateVpnActiveRequest& BlockMessage::_internal_vpn_active_req() const {
   return *vpn_active_req_;
 }
-inline const ::lego::block::protobuf::UpdateVpnActiveRequest& BlockMessage::vpn_active_req() const {
-  const ::lego::block::protobuf::UpdateVpnActiveRequest* p = vpn_active_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.vpn_active_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::UpdateVpnActiveRequest*>(
-      &::lego::block::protobuf::_UpdateVpnActiveRequest_default_instance_);
+inline const ::tenon::block::protobuf::UpdateVpnActiveRequest& BlockMessage::vpn_active_req() const {
+  const ::tenon::block::protobuf::UpdateVpnActiveRequest* p = vpn_active_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.vpn_active_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::UpdateVpnActiveRequest*>(
+      &::tenon::block::protobuf::_UpdateVpnActiveRequest_default_instance_);
 }
-inline ::lego::block::protobuf::UpdateVpnActiveRequest* BlockMessage::release_vpn_active_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.vpn_active_req)
+inline ::tenon::block::protobuf::UpdateVpnActiveRequest* BlockMessage::release_vpn_active_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.vpn_active_req)
   clear_has_vpn_active_req();
-  ::lego::block::protobuf::UpdateVpnActiveRequest* temp = vpn_active_req_;
+  ::tenon::block::protobuf::UpdateVpnActiveRequest* temp = vpn_active_req_;
   vpn_active_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::UpdateVpnActiveRequest* BlockMessage::mutable_vpn_active_req() {
+inline ::tenon::block::protobuf::UpdateVpnActiveRequest* BlockMessage::mutable_vpn_active_req() {
   set_has_vpn_active_req();
   if (vpn_active_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::UpdateVpnActiveRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnActiveRequest>(GetArenaNoVirtual());
     vpn_active_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.vpn_active_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.vpn_active_req)
   return vpn_active_req_;
 }
-inline void BlockMessage::set_allocated_vpn_active_req(::lego::block::protobuf::UpdateVpnActiveRequest* vpn_active_req) {
+inline void BlockMessage::set_allocated_vpn_active_req(::tenon::block::protobuf::UpdateVpnActiveRequest* vpn_active_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete vpn_active_req_;
@@ -5454,10 +5454,10 @@ inline void BlockMessage::set_allocated_vpn_active_req(::lego::block::protobuf::
     clear_has_vpn_active_req();
   }
   vpn_active_req_ = vpn_active_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.vpn_active_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.vpn_active_req)
 }
 
-// optional .lego.block.protobuf.AdRewardRequest ad_reward_req = 12;
+// optional .tenon.block.protobuf.AdRewardRequest ad_reward_req = 12;
 inline bool BlockMessage::has_ad_reward_req() const {
   return (_has_bits_[0] & 0x00000800u) != 0;
 }
@@ -5471,32 +5471,32 @@ inline void BlockMessage::clear_ad_reward_req() {
   if (ad_reward_req_ != NULL) ad_reward_req_->Clear();
   clear_has_ad_reward_req();
 }
-inline const ::lego::block::protobuf::AdRewardRequest& BlockMessage::_internal_ad_reward_req() const {
+inline const ::tenon::block::protobuf::AdRewardRequest& BlockMessage::_internal_ad_reward_req() const {
   return *ad_reward_req_;
 }
-inline const ::lego::block::protobuf::AdRewardRequest& BlockMessage::ad_reward_req() const {
-  const ::lego::block::protobuf::AdRewardRequest* p = ad_reward_req_;
-  // @@protoc_insertion_point(field_get:lego.block.protobuf.BlockMessage.ad_reward_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::block::protobuf::AdRewardRequest*>(
-      &::lego::block::protobuf::_AdRewardRequest_default_instance_);
+inline const ::tenon::block::protobuf::AdRewardRequest& BlockMessage::ad_reward_req() const {
+  const ::tenon::block::protobuf::AdRewardRequest* p = ad_reward_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.ad_reward_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::AdRewardRequest*>(
+      &::tenon::block::protobuf::_AdRewardRequest_default_instance_);
 }
-inline ::lego::block::protobuf::AdRewardRequest* BlockMessage::release_ad_reward_req() {
-  // @@protoc_insertion_point(field_release:lego.block.protobuf.BlockMessage.ad_reward_req)
+inline ::tenon::block::protobuf::AdRewardRequest* BlockMessage::release_ad_reward_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.ad_reward_req)
   clear_has_ad_reward_req();
-  ::lego::block::protobuf::AdRewardRequest* temp = ad_reward_req_;
+  ::tenon::block::protobuf::AdRewardRequest* temp = ad_reward_req_;
   ad_reward_req_ = NULL;
   return temp;
 }
-inline ::lego::block::protobuf::AdRewardRequest* BlockMessage::mutable_ad_reward_req() {
+inline ::tenon::block::protobuf::AdRewardRequest* BlockMessage::mutable_ad_reward_req() {
   set_has_ad_reward_req();
   if (ad_reward_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::block::protobuf::AdRewardRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::AdRewardRequest>(GetArenaNoVirtual());
     ad_reward_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.block.protobuf.BlockMessage.ad_reward_req)
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.ad_reward_req)
   return ad_reward_req_;
 }
-inline void BlockMessage::set_allocated_ad_reward_req(::lego::block::protobuf::AdRewardRequest* ad_reward_req) {
+inline void BlockMessage::set_allocated_ad_reward_req(::tenon::block::protobuf::AdRewardRequest* ad_reward_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete ad_reward_req_;
@@ -5512,7 +5512,7 @@ inline void BlockMessage::set_allocated_ad_reward_req(::lego::block::protobuf::A
     clear_has_ad_reward_req();
   }
   ad_reward_req_ = ad_reward_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.block.protobuf.BlockMessage.ad_reward_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.ad_reward_req)
 }
 
 #ifdef __GNUC__
@@ -5551,7 +5551,7 @@ inline void BlockMessage::set_allocated_ad_reward_req(::lego::block::protobuf::A
 
 }  // namespace protobuf
 }  // namespace block
-}  // namespace lego
+}  // namespace tenon
 
 // @@protoc_insertion_point(global_scope)
 

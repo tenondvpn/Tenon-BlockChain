@@ -18,7 +18,7 @@
 #include "transport/multi_thread.h"
 #include "transport/rudp/rudp.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -341,4 +341,4 @@ uint64_t UdpTransport::GetMessageHash(transport::protobuf::Header& message) {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

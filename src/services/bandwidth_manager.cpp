@@ -13,7 +13,7 @@
 #include "network/route.h"
 #include "services/vpn_server/vpn_svr_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace service {
 
@@ -229,4 +229,4 @@ void BandwidthManager::BftForLocalNodePassedBandwidth() {
 
 }  // namespace service
 
-}  // namespace lego
+}  // namespace tenon

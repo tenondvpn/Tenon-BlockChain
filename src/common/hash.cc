@@ -11,7 +11,7 @@
 #include "security/secp256k1.h"
 #include "ethash/keccak.hpp"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -487,4 +487,4 @@ std::string Hash::keccak256(const std::string& str) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

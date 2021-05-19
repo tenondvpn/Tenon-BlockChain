@@ -4,7 +4,7 @@
 #include "transport/transport_utils.h"
 #include "transport/transport.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -32,4 +32,4 @@ typedef std::shared_ptr<Rudp> RudpPtr;
 
 }  // namespace transport
 
-}  //namespace lego
+}  //namespace tenon

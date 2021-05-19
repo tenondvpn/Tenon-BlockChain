@@ -9,7 +9,7 @@
 #include "common/utils.h"
 #include "common/tick.h"
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
@@ -68,4 +68,4 @@ private:
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

@@ -2,7 +2,7 @@
 
 #include "common/utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vss {
 
@@ -24,4 +24,4 @@ private:
 
 }  // namespace vss
 
-}  // namespace lego
+}  // namespace tenon

@@ -33,7 +33,7 @@ int BN_generate_dsa_nonce(
 
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -94,4 +94,4 @@ private:
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

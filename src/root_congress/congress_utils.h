@@ -8,7 +8,7 @@
 #define CONGRESS_WARN(fmt, ...) TENON_WARN("[congress]" fmt, ## __VA_ARGS__)
 #define CONGRESS_ERROR(fmt, ...) TENON_ERROR("[congress]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 
@@ -21,4 +21,4 @@ static const uint32_t kCongressTestNetworkShardId = 4u;
 
 }  // namespace congress
 
-}  // namespace lego
+}  // namespace tenon

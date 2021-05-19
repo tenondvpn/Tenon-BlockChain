@@ -7,7 +7,7 @@
 #include "network/route.h"
 #include "bft/bft_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -163,4 +163,4 @@ void ElectManager::ProcessNewElectBlock(
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

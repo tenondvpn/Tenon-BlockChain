@@ -3,7 +3,7 @@
 
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -66,4 +66,4 @@ MessageFilter::~MessageFilter() {}
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

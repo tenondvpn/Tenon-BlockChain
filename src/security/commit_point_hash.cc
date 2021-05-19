@@ -9,7 +9,7 @@
 #include "security/schnorr.h"
 #include "security/security_string_trans.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -116,4 +116,4 @@ uint32_t CommitPointHash::Serialize(std::string& dst) const {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

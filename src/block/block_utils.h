@@ -17,7 +17,7 @@
 #define BLOCK_WARN(fmt, ...) TENON_WARN("[block]" fmt, ## __VA_ARGS__)
 #define BLOCK_ERROR(fmt, ...) TENON_ERROR("[block]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -63,4 +63,4 @@ inline static std::string StorageDbKey(const std::string& account_id,  const std
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

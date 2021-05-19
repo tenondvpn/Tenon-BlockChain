@@ -50,7 +50,7 @@ struct Construct {
 #define LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(message, append)
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -234,5 +234,5 @@ bool IsVlanIp(const std::string& ip);
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
 

@@ -6,7 +6,7 @@
 // #include "common/user_property_key_define.h"
 // #include "contract/contract_utils.h"
 // 
-// namespace lego {
+// namespace tenon {
 // 
 // namespace contract {
 // 
@@ -81,4 +81,4 @@
 // 
 // }  // namespace contract
 // 
-// }  // namespace lego
+// }  // namespace tenon

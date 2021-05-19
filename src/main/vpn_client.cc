@@ -16,8 +16,8 @@ int main(int argc, char** argv) {
     log4cpp::PropertyConfigurator::configure("./conf/log4cpp.properties");
 //#define ENCODE_CONFIG_CONTENT
 #ifdef ENCODE_CONFIG_CONTENT
-    lego::common::SignalRegister();
-    auto int_res = lego::client::VpnClient::Instance()->Init(
+    tenon::common::SignalRegister();
+    auto int_res = tenon::client::VpnClient::Instance()->Init(
             "0.0.0.0",
             2,
             "id:134.209.184.49:7896",
@@ -28,37 +28,37 @@ int main(int argc, char** argv) {
         return 1;
     }
 #else
-    lego::common::Config conf;
-    if (!conf.Init("./conf/lego.conf")) {
+    tenon::common::Config conf;
+    if (!conf.Init("./conf/tenon.conf")) {
         return 1;         
     }
 
     std::string db_path;
     conf.Get("db", "path", db_path);
-    auto st = lego::db::Db::Instance()->Init(db_path);
+    auto st = tenon::db::Db::Instance()->Init(db_path);
     if (!st) {
         return 1;
     }
 
     std::string local_ip;
-    conf.Get("lego", "local_ip", local_ip);
+    conf.Get("tenon", "local_ip", local_ip);
     uint16_t local_port;
-    conf.Get("lego", "local_port", local_port);
+    conf.Get("tenon", "local_port", local_port);
     std::string bootstrap;
-    conf.Get("lego", "bootstrap", bootstrap);
+    conf.Get("tenon", "bootstrap", bootstrap);
     bool show_cmd;
-    conf.Get("lego", "show_cmd", show_cmd);
+    conf.Get("tenon", "show_cmd", show_cmd);
     bool run_tx = false;
-    conf.Get("lego", "run_tx", run_tx);
-    lego::common::SignalRegister();
-    if (lego::ip::IpWithCountry::Instance()->Init(
+    conf.Get("tenon", "run_tx", run_tx);
+    tenon::common::SignalRegister();
+    if (tenon::ip::IpWithCountry::Instance()->Init(
             "./conf/geolite.conf",
-            "./conf/geo_country.conf") != lego::ip::kIpSuccess) {
+            "./conf/geo_country.conf") != tenon::ip::kIpSuccess) {
         return 1;
     }
 
 
-    auto int_res = lego::client::VpnClient::Instance()->Init(
+    auto int_res = tenon::client::VpnClient::Instance()->Init(
             local_ip,
             2,
             bootstrap,
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 #endif
-    lego::init::Command cmd;
+    tenon::init::Command cmd;
     if (!cmd.Init(false, true, false)) {
         return 1;
     }

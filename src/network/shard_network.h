@@ -9,7 +9,7 @@
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -138,4 +138,4 @@ int ShardNetwork<DhtType>::JoinShard() {
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

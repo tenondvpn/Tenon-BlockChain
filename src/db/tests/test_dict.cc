@@ -8,7 +8,7 @@
 #define private public
 #include "db/dict.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -50,4 +50,4 @@ TEST_F(TestDict, All) {
 
 }  // namespace db
 
-}  // namespace lego
+}  // namespace tenon

@@ -12,7 +12,7 @@
 #include "services/vpn_svr_proxy/shadowsocks_proxy.h"
 #include "services/vpn_svr_proxy/proxy_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -51,4 +51,4 @@ TEST_F(TestVpnSvrProxy, All) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -11,7 +11,7 @@
 
 #include "security/crypto_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -33,4 +33,4 @@ struct Curve {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

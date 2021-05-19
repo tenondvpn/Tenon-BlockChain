@@ -11,7 +11,7 @@
 #define CRYPTO_WARN(fmt, ...) TENON_WARN("[crypto]" fmt, ## __VA_ARGS__)
 #define CRYPTO_ERROR(fmt, ...) TENON_ERROR("[crypto]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -35,4 +35,4 @@ static const uint32_t kPublicKeyUncompressSize = 65u;
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

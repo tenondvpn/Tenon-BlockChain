@@ -48,7 +48,7 @@ struct TableStruct {
 };
 void AddDescriptors();
 }  // namespace protobuf_sync_2eproto
-namespace lego {
+namespace tenon {
 namespace sync {
 namespace protobuf {
 class SyncMessage;
@@ -65,22 +65,22 @@ class SyncValueResponseDefaultTypeInternal;
 extern SyncValueResponseDefaultTypeInternal _SyncValueResponse_default_instance_;
 }  // namespace protobuf
 }  // namespace sync
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> ::lego::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage<::lego::sync::protobuf::SyncMessage>(Arena*);
-template<> ::lego::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage<::lego::sync::protobuf::SyncResItem>(Arena*);
-template<> ::lego::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage<::lego::sync::protobuf::SyncValueRequest>(Arena*);
-template<> ::lego::sync::protobuf::SyncValueResponse* Arena::CreateMaybeMessage<::lego::sync::protobuf::SyncValueResponse>(Arena*);
+template<> ::tenon::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncMessage>(Arena*);
+template<> ::tenon::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncResItem>(Arena*);
+template<> ::tenon::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncValueRequest>(Arena*);
+template<> ::tenon::sync::protobuf::SyncValueResponse* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncValueResponse>(Arena*);
 }  // namespace protobuf
 }  // namespace google
-namespace lego {
+namespace tenon {
 namespace sync {
 namespace protobuf {
 
 // ===================================================================
 
-class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.sync.protobuf.SyncValueRequest) */ {
+class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncValueRequest) */ {
  public:
   SyncValueRequest();
   virtual ~SyncValueRequest();
@@ -203,7 +203,7 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::uint32 network_id() const;
   void set_network_id(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncValueRequest)
  private:
   void set_has_network_id();
   void clear_has_network_id();
@@ -217,7 +217,7 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
 };
 // -------------------------------------------------------------------
 
-class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.sync.protobuf.SyncResItem) */ {
+class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncResItem) */ {
  public:
   SyncResItem();
   virtual ~SyncResItem();
@@ -341,7 +341,7 @@ class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_value();
   void set_allocated_value(::std::string* value);
 
-  // @@protoc_insertion_point(class_scope:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncResItem)
  private:
   void set_has_key();
   void clear_has_key();
@@ -357,7 +357,7 @@ class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 };
 // -------------------------------------------------------------------
 
-class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.sync.protobuf.SyncValueResponse) */ {
+class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncValueResponse) */ {
  public:
   SyncValueResponse();
   virtual ~SyncValueResponse();
@@ -451,16 +451,16 @@ class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_inserti
 
   // accessors -------------------------------------------------------
 
-  // repeated .lego.sync.protobuf.SyncResItem res = 2;
+  // repeated .tenon.sync.protobuf.SyncResItem res = 2;
   int res_size() const;
   void clear_res();
   static const int kResFieldNumber = 2;
-  ::lego::sync::protobuf::SyncResItem* mutable_res(int index);
-  ::google::protobuf::RepeatedPtrField< ::lego::sync::protobuf::SyncResItem >*
+  ::tenon::sync::protobuf::SyncResItem* mutable_res(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncResItem >*
       mutable_res();
-  const ::lego::sync::protobuf::SyncResItem& res(int index) const;
-  ::lego::sync::protobuf::SyncResItem* add_res();
-  const ::google::protobuf::RepeatedPtrField< ::lego::sync::protobuf::SyncResItem >&
+  const ::tenon::sync::protobuf::SyncResItem& res(int index) const;
+  ::tenon::sync::protobuf::SyncResItem* add_res();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncResItem >&
       res() const;
 
   // optional uint32 network_id = 1;
@@ -470,7 +470,7 @@ class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_inserti
   ::google::protobuf::uint32 network_id() const;
   void set_network_id(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncValueResponse)
  private:
   void set_has_network_id();
   void clear_has_network_id();
@@ -478,13 +478,13 @@ class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_inserti
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lego::sync::protobuf::SyncResItem > res_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncResItem > res_;
   ::google::protobuf::uint32 network_id_;
   friend struct ::protobuf_sync_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.sync.protobuf.SyncMessage) */ {
+class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncMessage) */ {
  public:
   SyncMessage();
   virtual ~SyncMessage();
@@ -578,31 +578,31 @@ class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+  // optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
   bool has_sync_value_req() const;
   void clear_sync_value_req();
   static const int kSyncValueReqFieldNumber = 1;
   private:
-  const ::lego::sync::protobuf::SyncValueRequest& _internal_sync_value_req() const;
+  const ::tenon::sync::protobuf::SyncValueRequest& _internal_sync_value_req() const;
   public:
-  const ::lego::sync::protobuf::SyncValueRequest& sync_value_req() const;
-  ::lego::sync::protobuf::SyncValueRequest* release_sync_value_req();
-  ::lego::sync::protobuf::SyncValueRequest* mutable_sync_value_req();
-  void set_allocated_sync_value_req(::lego::sync::protobuf::SyncValueRequest* sync_value_req);
+  const ::tenon::sync::protobuf::SyncValueRequest& sync_value_req() const;
+  ::tenon::sync::protobuf::SyncValueRequest* release_sync_value_req();
+  ::tenon::sync::protobuf::SyncValueRequest* mutable_sync_value_req();
+  void set_allocated_sync_value_req(::tenon::sync::protobuf::SyncValueRequest* sync_value_req);
 
-  // optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+  // optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
   bool has_sync_value_res() const;
   void clear_sync_value_res();
   static const int kSyncValueResFieldNumber = 2;
   private:
-  const ::lego::sync::protobuf::SyncValueResponse& _internal_sync_value_res() const;
+  const ::tenon::sync::protobuf::SyncValueResponse& _internal_sync_value_res() const;
   public:
-  const ::lego::sync::protobuf::SyncValueResponse& sync_value_res() const;
-  ::lego::sync::protobuf::SyncValueResponse* release_sync_value_res();
-  ::lego::sync::protobuf::SyncValueResponse* mutable_sync_value_res();
-  void set_allocated_sync_value_res(::lego::sync::protobuf::SyncValueResponse* sync_value_res);
+  const ::tenon::sync::protobuf::SyncValueResponse& sync_value_res() const;
+  ::tenon::sync::protobuf::SyncValueResponse* release_sync_value_res();
+  ::tenon::sync::protobuf::SyncValueResponse* mutable_sync_value_res();
+  void set_allocated_sync_value_res(::tenon::sync::protobuf::SyncValueResponse* sync_value_res);
 
-  // @@protoc_insertion_point(class_scope:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncMessage)
  private:
   void set_has_sync_value_req();
   void clear_has_sync_value_req();
@@ -612,8 +612,8 @@ class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::lego::sync::protobuf::SyncValueRequest* sync_value_req_;
-  ::lego::sync::protobuf::SyncValueResponse* sync_value_res_;
+  ::tenon::sync::protobuf::SyncValueRequest* sync_value_req_;
+  ::tenon::sync::protobuf::SyncValueResponse* sync_value_res_;
   friend struct ::protobuf_sync_2eproto::TableStruct;
 };
 // ===================================================================
@@ -642,13 +642,13 @@ inline void SyncValueRequest::clear_network_id() {
   clear_has_network_id();
 }
 inline ::google::protobuf::uint32 SyncValueRequest::network_id() const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncValueRequest.network_id)
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncValueRequest.network_id)
   return network_id_;
 }
 inline void SyncValueRequest::set_network_id(::google::protobuf::uint32 value) {
   set_has_network_id();
   network_id_ = value;
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncValueRequest.network_id)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncValueRequest.network_id)
 }
 
 // repeated bytes keys = 2;
@@ -659,64 +659,64 @@ inline void SyncValueRequest::clear_keys() {
   keys_.Clear();
 }
 inline const ::std::string& SyncValueRequest::keys(int index) const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncValueRequest.keys)
   return keys_.Get(index);
 }
 inline ::std::string* SyncValueRequest::mutable_keys(int index) {
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncValueRequest.keys)
   return keys_.Mutable(index);
 }
 inline void SyncValueRequest::set_keys(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncValueRequest.keys)
   keys_.Mutable(index)->assign(value);
 }
 #if LANG_CXX11
 inline void SyncValueRequest::set_keys(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncValueRequest.keys)
   keys_.Mutable(index)->assign(std::move(value));
 }
 #endif
 inline void SyncValueRequest::set_keys(int index, const char* value) {
   GOOGLE_DCHECK(value != NULL);
   keys_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_set_char:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 inline void SyncValueRequest::set_keys(int index, const void* value, size_t size) {
   keys_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_set_pointer:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 inline ::std::string* SyncValueRequest::add_keys() {
-  // @@protoc_insertion_point(field_add_mutable:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_add_mutable:tenon.sync.protobuf.SyncValueRequest.keys)
   return keys_.Add();
 }
 inline void SyncValueRequest::add_keys(const ::std::string& value) {
   keys_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_add:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 #if LANG_CXX11
 inline void SyncValueRequest::add_keys(::std::string&& value) {
   keys_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_add:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 #endif
 inline void SyncValueRequest::add_keys(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   keys_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_add_char:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 inline void SyncValueRequest::add_keys(const void* value, size_t size) {
   keys_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_add_pointer:tenon.sync.protobuf.SyncValueRequest.keys)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 SyncValueRequest::keys() const {
-  // @@protoc_insertion_point(field_list:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_list:tenon.sync.protobuf.SyncValueRequest.keys)
   return keys_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 SyncValueRequest::mutable_keys() {
-  // @@protoc_insertion_point(field_mutable_list:lego.sync.protobuf.SyncValueRequest.keys)
+  // @@protoc_insertion_point(field_mutable_list:tenon.sync.protobuf.SyncValueRequest.keys)
   return &keys_;
 }
 
@@ -739,41 +739,41 @@ inline void SyncResItem::clear_key() {
   clear_has_key();
 }
 inline const ::std::string& SyncResItem::key() const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncResItem.key)
   return key_.GetNoArena();
 }
 inline void SyncResItem::set_key(const ::std::string& value) {
   set_has_key();
   key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncResItem.key)
 }
 #if LANG_CXX11
 inline void SyncResItem::set_key(::std::string&& value) {
   set_has_key();
   key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.sync.protobuf.SyncResItem.key)
 }
 #endif
 inline void SyncResItem::set_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_key();
   key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_set_char:tenon.sync.protobuf.SyncResItem.key)
 }
 inline void SyncResItem::set_key(const void* value, size_t size) {
   set_has_key();
   key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.sync.protobuf.SyncResItem.key)
 }
 inline ::std::string* SyncResItem::mutable_key() {
   set_has_key();
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncResItem.key)
   return key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* SyncResItem::release_key() {
-  // @@protoc_insertion_point(field_release:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_release:tenon.sync.protobuf.SyncResItem.key)
   if (!has_key()) {
     return NULL;
   }
@@ -787,7 +787,7 @@ inline void SyncResItem::set_allocated_key(::std::string* key) {
     clear_has_key();
   }
   key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), key);
-  // @@protoc_insertion_point(field_set_allocated:lego.sync.protobuf.SyncResItem.key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.sync.protobuf.SyncResItem.key)
 }
 
 // optional bytes value = 2;
@@ -805,41 +805,41 @@ inline void SyncResItem::clear_value() {
   clear_has_value();
 }
 inline const ::std::string& SyncResItem::value() const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncResItem.value)
   return value_.GetNoArena();
 }
 inline void SyncResItem::set_value(const ::std::string& value) {
   set_has_value();
   value_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncResItem.value)
 }
 #if LANG_CXX11
 inline void SyncResItem::set_value(::std::string&& value) {
   set_has_value();
   value_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.sync.protobuf.SyncResItem.value)
 }
 #endif
 inline void SyncResItem::set_value(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_value();
   value_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_set_char:tenon.sync.protobuf.SyncResItem.value)
 }
 inline void SyncResItem::set_value(const void* value, size_t size) {
   set_has_value();
   value_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_set_pointer:tenon.sync.protobuf.SyncResItem.value)
 }
 inline ::std::string* SyncResItem::mutable_value() {
   set_has_value();
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncResItem.value)
   return value_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* SyncResItem::release_value() {
-  // @@protoc_insertion_point(field_release:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_release:tenon.sync.protobuf.SyncResItem.value)
   if (!has_value()) {
     return NULL;
   }
@@ -853,7 +853,7 @@ inline void SyncResItem::set_allocated_value(::std::string* value) {
     clear_has_value();
   }
   value_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set_allocated:lego.sync.protobuf.SyncResItem.value)
+  // @@protoc_insertion_point(field_set_allocated:tenon.sync.protobuf.SyncResItem.value)
 }
 
 // -------------------------------------------------------------------
@@ -875,42 +875,42 @@ inline void SyncValueResponse::clear_network_id() {
   clear_has_network_id();
 }
 inline ::google::protobuf::uint32 SyncValueResponse::network_id() const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncValueResponse.network_id)
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncValueResponse.network_id)
   return network_id_;
 }
 inline void SyncValueResponse::set_network_id(::google::protobuf::uint32 value) {
   set_has_network_id();
   network_id_ = value;
-  // @@protoc_insertion_point(field_set:lego.sync.protobuf.SyncValueResponse.network_id)
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncValueResponse.network_id)
 }
 
-// repeated .lego.sync.protobuf.SyncResItem res = 2;
+// repeated .tenon.sync.protobuf.SyncResItem res = 2;
 inline int SyncValueResponse::res_size() const {
   return res_.size();
 }
 inline void SyncValueResponse::clear_res() {
   res_.Clear();
 }
-inline ::lego::sync::protobuf::SyncResItem* SyncValueResponse::mutable_res(int index) {
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncValueResponse.res)
+inline ::tenon::sync::protobuf::SyncResItem* SyncValueResponse::mutable_res(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncValueResponse.res)
   return res_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::lego::sync::protobuf::SyncResItem >*
+inline ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncResItem >*
 SyncValueResponse::mutable_res() {
-  // @@protoc_insertion_point(field_mutable_list:lego.sync.protobuf.SyncValueResponse.res)
+  // @@protoc_insertion_point(field_mutable_list:tenon.sync.protobuf.SyncValueResponse.res)
   return &res_;
 }
-inline const ::lego::sync::protobuf::SyncResItem& SyncValueResponse::res(int index) const {
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncValueResponse.res)
+inline const ::tenon::sync::protobuf::SyncResItem& SyncValueResponse::res(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncValueResponse.res)
   return res_.Get(index);
 }
-inline ::lego::sync::protobuf::SyncResItem* SyncValueResponse::add_res() {
-  // @@protoc_insertion_point(field_add:lego.sync.protobuf.SyncValueResponse.res)
+inline ::tenon::sync::protobuf::SyncResItem* SyncValueResponse::add_res() {
+  // @@protoc_insertion_point(field_add:tenon.sync.protobuf.SyncValueResponse.res)
   return res_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lego::sync::protobuf::SyncResItem >&
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncResItem >&
 SyncValueResponse::res() const {
-  // @@protoc_insertion_point(field_list:lego.sync.protobuf.SyncValueResponse.res)
+  // @@protoc_insertion_point(field_list:tenon.sync.protobuf.SyncValueResponse.res)
   return res_;
 }
 
@@ -918,7 +918,7 @@ SyncValueResponse::res() const {
 
 // SyncMessage
 
-// optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+// optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
 inline bool SyncMessage::has_sync_value_req() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -932,32 +932,32 @@ inline void SyncMessage::clear_sync_value_req() {
   if (sync_value_req_ != NULL) sync_value_req_->Clear();
   clear_has_sync_value_req();
 }
-inline const ::lego::sync::protobuf::SyncValueRequest& SyncMessage::_internal_sync_value_req() const {
+inline const ::tenon::sync::protobuf::SyncValueRequest& SyncMessage::_internal_sync_value_req() const {
   return *sync_value_req_;
 }
-inline const ::lego::sync::protobuf::SyncValueRequest& SyncMessage::sync_value_req() const {
-  const ::lego::sync::protobuf::SyncValueRequest* p = sync_value_req_;
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncMessage.sync_value_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::sync::protobuf::SyncValueRequest*>(
-      &::lego::sync::protobuf::_SyncValueRequest_default_instance_);
+inline const ::tenon::sync::protobuf::SyncValueRequest& SyncMessage::sync_value_req() const {
+  const ::tenon::sync::protobuf::SyncValueRequest* p = sync_value_req_;
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncMessage.sync_value_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::sync::protobuf::SyncValueRequest*>(
+      &::tenon::sync::protobuf::_SyncValueRequest_default_instance_);
 }
-inline ::lego::sync::protobuf::SyncValueRequest* SyncMessage::release_sync_value_req() {
-  // @@protoc_insertion_point(field_release:lego.sync.protobuf.SyncMessage.sync_value_req)
+inline ::tenon::sync::protobuf::SyncValueRequest* SyncMessage::release_sync_value_req() {
+  // @@protoc_insertion_point(field_release:tenon.sync.protobuf.SyncMessage.sync_value_req)
   clear_has_sync_value_req();
-  ::lego::sync::protobuf::SyncValueRequest* temp = sync_value_req_;
+  ::tenon::sync::protobuf::SyncValueRequest* temp = sync_value_req_;
   sync_value_req_ = NULL;
   return temp;
 }
-inline ::lego::sync::protobuf::SyncValueRequest* SyncMessage::mutable_sync_value_req() {
+inline ::tenon::sync::protobuf::SyncValueRequest* SyncMessage::mutable_sync_value_req() {
   set_has_sync_value_req();
   if (sync_value_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::sync::protobuf::SyncValueRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::sync::protobuf::SyncValueRequest>(GetArenaNoVirtual());
     sync_value_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncMessage.sync_value_req)
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncMessage.sync_value_req)
   return sync_value_req_;
 }
-inline void SyncMessage::set_allocated_sync_value_req(::lego::sync::protobuf::SyncValueRequest* sync_value_req) {
+inline void SyncMessage::set_allocated_sync_value_req(::tenon::sync::protobuf::SyncValueRequest* sync_value_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete sync_value_req_;
@@ -973,10 +973,10 @@ inline void SyncMessage::set_allocated_sync_value_req(::lego::sync::protobuf::Sy
     clear_has_sync_value_req();
   }
   sync_value_req_ = sync_value_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.sync.protobuf.SyncMessage.sync_value_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.sync.protobuf.SyncMessage.sync_value_req)
 }
 
-// optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+// optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
 inline bool SyncMessage::has_sync_value_res() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -990,32 +990,32 @@ inline void SyncMessage::clear_sync_value_res() {
   if (sync_value_res_ != NULL) sync_value_res_->Clear();
   clear_has_sync_value_res();
 }
-inline const ::lego::sync::protobuf::SyncValueResponse& SyncMessage::_internal_sync_value_res() const {
+inline const ::tenon::sync::protobuf::SyncValueResponse& SyncMessage::_internal_sync_value_res() const {
   return *sync_value_res_;
 }
-inline const ::lego::sync::protobuf::SyncValueResponse& SyncMessage::sync_value_res() const {
-  const ::lego::sync::protobuf::SyncValueResponse* p = sync_value_res_;
-  // @@protoc_insertion_point(field_get:lego.sync.protobuf.SyncMessage.sync_value_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::sync::protobuf::SyncValueResponse*>(
-      &::lego::sync::protobuf::_SyncValueResponse_default_instance_);
+inline const ::tenon::sync::protobuf::SyncValueResponse& SyncMessage::sync_value_res() const {
+  const ::tenon::sync::protobuf::SyncValueResponse* p = sync_value_res_;
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncMessage.sync_value_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::sync::protobuf::SyncValueResponse*>(
+      &::tenon::sync::protobuf::_SyncValueResponse_default_instance_);
 }
-inline ::lego::sync::protobuf::SyncValueResponse* SyncMessage::release_sync_value_res() {
-  // @@protoc_insertion_point(field_release:lego.sync.protobuf.SyncMessage.sync_value_res)
+inline ::tenon::sync::protobuf::SyncValueResponse* SyncMessage::release_sync_value_res() {
+  // @@protoc_insertion_point(field_release:tenon.sync.protobuf.SyncMessage.sync_value_res)
   clear_has_sync_value_res();
-  ::lego::sync::protobuf::SyncValueResponse* temp = sync_value_res_;
+  ::tenon::sync::protobuf::SyncValueResponse* temp = sync_value_res_;
   sync_value_res_ = NULL;
   return temp;
 }
-inline ::lego::sync::protobuf::SyncValueResponse* SyncMessage::mutable_sync_value_res() {
+inline ::tenon::sync::protobuf::SyncValueResponse* SyncMessage::mutable_sync_value_res() {
   set_has_sync_value_res();
   if (sync_value_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::sync::protobuf::SyncValueResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::sync::protobuf::SyncValueResponse>(GetArenaNoVirtual());
     sync_value_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.sync.protobuf.SyncMessage.sync_value_res)
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncMessage.sync_value_res)
   return sync_value_res_;
 }
-inline void SyncMessage::set_allocated_sync_value_res(::lego::sync::protobuf::SyncValueResponse* sync_value_res) {
+inline void SyncMessage::set_allocated_sync_value_res(::tenon::sync::protobuf::SyncValueResponse* sync_value_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete sync_value_res_;
@@ -1031,7 +1031,7 @@ inline void SyncMessage::set_allocated_sync_value_res(::lego::sync::protobuf::Sy
     clear_has_sync_value_res();
   }
   sync_value_res_ = sync_value_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.sync.protobuf.SyncMessage.sync_value_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.sync.protobuf.SyncMessage.sync_value_res)
 }
 
 #ifdef __GNUC__
@@ -1048,7 +1048,7 @@ inline void SyncMessage::set_allocated_sync_value_res(::lego::sync::protobuf::Sy
 
 }  // namespace protobuf
 }  // namespace sync
-}  // namespace lego
+}  // namespace tenon
 
 // @@protoc_insertion_point(global_scope)
 

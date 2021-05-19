@@ -24,7 +24,7 @@
 #include "tvm/tvm_utils.h"
 #include "tvm/tenon_host.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -57,7 +57,7 @@ public:
     }
 
     static void SetUpTestCase() {
-        lego::bft::kBftStartDeltaTime = 1000;
+        tenon::bft::kBftStartDeltaTime = 1000;
 
         uint32_t* wait_bft_delay = const_cast<uint32_t*>(&bft::kBftStartDeltaTime);
         *wait_bft_delay = 1000;
@@ -65,9 +65,9 @@ public:
         common::global_stop = true;
         db::Db::Instance()->Init("./test_db");
         std::string config_path_ = "./";
-        std::string conf_path = config_path_ + "/lego.conf";
+        std::string conf_path = config_path_ + "/tenon.conf";
         std::string log_conf_path = config_path_ + "/log4cpp.properties";
-        std::string log_path = config_path_ + "/lego.log";
+        std::string log_path = config_path_ + "/tenon.log";
         WriteDefaultLogConf(log_conf_path, log_path);
         log4cpp::PropertyConfigurator::configure(log_conf_path);
 
@@ -1818,4 +1818,4 @@ TEST_F(TestBftManager, TestCallContractCallerInitBalaceError) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

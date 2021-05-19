@@ -12,7 +12,7 @@
 #include "db/dict.h"
 #include "init/update_vpn_init.h"
 
-namespace lego {
+namespace tenon {
 
 namespace service {
 
@@ -27,19 +27,19 @@ struct BandwidthInfo {
         pre_bandwidth_get_time = std::chrono::steady_clock::now();
         pre_payfor_get_time = std::chrono::steady_clock::now();
         if (plat == "ios") {
-            client_platform = lego::common::kIos;
+            client_platform = tenon::common::kIos;
         }
 
         if (plat == "and") {
-            client_platform = lego::common::kAndroid;
+            client_platform = tenon::common::kAndroid;
         }
 
         if (plat == "win") {
-            client_platform = lego::common::kWindows;
+            client_platform = tenon::common::kWindows;
         }
 
         if (plat == "mac") {
-            client_platform = lego::common::kMac;
+            client_platform = tenon::common::kMac;
         }
         today_used_bandwidth = 0;
     }
@@ -51,13 +51,13 @@ struct BandwidthInfo {
         }
 
         if (IsVip()) {
-            if (today_used_bandwidth <= lego::init::UpdateVpnInit::Instance()->max_vip_bandwidth()) {
+            if (today_used_bandwidth <= tenon::init::UpdateVpnInit::Instance()->max_vip_bandwidth()) {
                 return true;
             }
             return false;
         }
 
-        if (today_used_bandwidth <= lego::init::UpdateVpnInit::Instance()->max_free_bandwidth()) {
+        if (today_used_bandwidth <= tenon::init::UpdateVpnInit::Instance()->max_free_bandwidth()) {
             return true;
         }
         return false;
@@ -77,8 +77,8 @@ struct BandwidthInfo {
 
 
     bool IsVip() {
-        uint32_t now_day_timestamp = lego::common::TimeUtils::TimestampDays();
-        int32_t vip_days = vip_payed_tenon / lego::common::kVpnVipMinPayfor;
+        uint32_t now_day_timestamp = tenon::common::TimeUtils::TimestampDays();
+        int32_t vip_days = vip_payed_tenon / tenon::common::kVpnVipMinPayfor;
         if (vip_days > 0 && ((vip_timestamp + vip_days + 1) >= now_day_timestamp)) {
             return true;
         }
@@ -98,7 +98,7 @@ struct BandwidthInfo {
     std::chrono::steady_clock::time_point pre_payfor_get_time;
     uint64_t vpn_login_height{ 0 };
     uint64_t vpn_pay_for_height{ 0 };
-    uint32_t client_platform{ lego::common::kUnknown };
+    uint32_t client_platform{ tenon::common::kUnknown };
 };
 
 typedef std::shared_ptr<BandwidthInfo> BandwidthInfoPtr;
@@ -137,4 +137,4 @@ private:
 
 }  // namespace service
 
-}  // namespace lego
+}  // namespace tenon

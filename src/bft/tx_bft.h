@@ -7,7 +7,7 @@
 #include "bft/proto/bft_proto.h"
 #include "evmc/evmc.hpp"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
     class TenonHost;
@@ -105,4 +105,4 @@ private:
 
 }  // namespace bft
 
-}  //namespace lego
+}  //namespace tenon

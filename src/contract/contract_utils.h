@@ -9,7 +9,7 @@
 #define CONTRACT_WARN(fmt, ...) TENON_WARN("[CONTRACT]" fmt, ## __VA_ARGS__)
 #define CONTRACT_ERROR(fmt, ...) TENON_ERROR("[CONRTACT]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -36,4 +36,4 @@ static const std::string kContractEcrecover = common::Encode::HexDecode("0000000
 
 }  // namespace contact
 
-}  // namespace lego
+}  // namespace tenon

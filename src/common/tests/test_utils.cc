@@ -7,7 +7,7 @@
 
 #include "common/utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -35,4 +35,4 @@ TEST_F(TestUtils, All) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

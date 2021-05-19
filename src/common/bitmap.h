@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -38,4 +38,4 @@ private:
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

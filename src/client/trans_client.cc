@@ -10,7 +10,7 @@
 #include "network/universal_manager.h"
 #include "client/proto/client_proto.h"
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -50,4 +50,4 @@ int TransactionClient::Transaction(
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

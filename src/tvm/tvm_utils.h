@@ -10,7 +10,7 @@
 #define TVM_WARN(fmt, ...) TENON_WARN("[TVM]" fmt, ## __VA_ARGS__)
 #define TVM_ERROR(fmt, ...) TENON_ERROR("[TVM]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -40,7 +40,7 @@ inline static uint64_t EvmcBytes32ToUint64(const evmc_bytes32& bytes32) {
 
 }  // namespace tvm
 
-}  // namespace lego
+}  // namespace tenon
 
 #if __cplusplus
 extern "C" {

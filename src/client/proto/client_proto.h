@@ -13,7 +13,7 @@
 #include "bft/proto/bft.pb.h"
 #include "client/client_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -466,4 +466,4 @@ private:
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

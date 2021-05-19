@@ -3,7 +3,7 @@
 #include "transport/proto/transport.pb.h"
 #include "dht/node.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -30,4 +30,4 @@ private:
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

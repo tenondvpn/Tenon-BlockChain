@@ -14,7 +14,7 @@
 #include "election/proto/elect.pb.h"
 #include "election/elect_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -88,4 +88,4 @@ void ElectProto::CreateElectBlock(
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

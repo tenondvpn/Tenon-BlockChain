@@ -6,7 +6,7 @@
 #include <set>
 #include <iostream>
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -146,4 +146,4 @@ void TickThreadPool::RemoveTick(uint32_t tick_idx) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

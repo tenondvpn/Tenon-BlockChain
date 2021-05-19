@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "root_congress/congress_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 
@@ -12,4 +12,4 @@ CongressDht::~CongressDht() {}
 
 }  // namespace congress
 
-}  // namespace lego
+}  // namespace tenon

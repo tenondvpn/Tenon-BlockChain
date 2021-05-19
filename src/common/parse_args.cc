@@ -5,7 +5,7 @@
 
 #include "common/string_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -262,4 +262,4 @@ int ParserArgs::Parse(const std::string& params, std::string& err_pos) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

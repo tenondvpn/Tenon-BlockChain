@@ -32,11 +32,11 @@
 #include "client/vpn_client.h"
 #include "security/secp256k1.h"
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
-static const std::string kDefaultConfigPath("./conf/lego.conf");
+static const std::string kDefaultConfigPath("./conf/tenon.conf");
 static const uint32_t kDefaultBufferSize = 1024u * 1024u;
 
 NetworkInit::NetworkInit() {}
@@ -166,7 +166,7 @@ int NetworkInit::InitBft() {
 
 int NetworkInit::CreateConfigNetwork() {
     uint32_t net_id;
-    if (!conf_.Get("lego", "net_id", net_id)) {
+    if (!conf_.Get("tenon", "net_id", net_id)) {
         return kInitSuccess;
     }
 
@@ -193,9 +193,9 @@ int NetworkInit::CreateConfigNetwork() {
 
 int NetworkInit::InitUdpTransport() {
     uint32_t send_buff_size = kDefaultUdpSendBufferSize;
-    conf_.Get("lego", "send_buff_size", send_buff_size);
+    conf_.Get("tenon", "send_buff_size", send_buff_size);
     uint32_t recv_buff_size = kDefaultUdpRecvBufferSize;
-    conf_.Get("lego", "recv_buff_size", recv_buff_size);
+    conf_.Get("tenon", "recv_buff_size", recv_buff_size);
     assert(send_buff_size > kDefaultBufferSize);
     assert(recv_buff_size > kDefaultBufferSize);
     transport_ = std::make_shared<transport::UdpTransport>(
@@ -217,9 +217,9 @@ int NetworkInit::InitUdpTransport() {
 
 int NetworkInit::InitTcpTransport() {
     uint32_t send_buff_size = kDefaultTcpSendBufferSize;
-    conf_.Get("lego", "tcp_send_buff_size", send_buff_size);
+    conf_.Get("tenon", "tcp_send_buff_size", send_buff_size);
     uint32_t recv_buff_size = kDefaultTcpRecvBufferSize;
-    conf_.Get("lego", "tcp_recv_buff_size", recv_buff_size);
+    conf_.Get("tenon", "tcp_recv_buff_size", recv_buff_size);
     assert(send_buff_size > kDefaultBufferSize);
     assert(recv_buff_size > kDefaultBufferSize);
     tcp_transport_ = std::make_shared<transport::TcpTransport>(
@@ -255,14 +255,14 @@ int NetworkInit::InitHttpTransport() {
 
 int NetworkInit::InitCommand() {
     bool first_node = false;
-    if (!conf_.Get("lego", "first_node", first_node)) {
-        INIT_ERROR("get conf lego first_node failed!");
+    if (!conf_.Get("tenon", "first_node", first_node)) {
+        INIT_ERROR("get conf tenon first_node failed!");
         return kInitError;
     }
 
     bool show_cmd = false;
-    if (!conf_.Get("lego", "show_cmd", show_cmd)) {
-        INIT_ERROR("get conf lego show_cmd failed!");
+    if (!conf_.Get("tenon", "show_cmd", show_cmd)) {
+        INIT_ERROR("get conf tenon show_cmd failed!");
         return kInitError;
     }
 
@@ -279,7 +279,7 @@ int NetworkInit::InitNetworkSingleton() {
         return kInitError;
     }
 
-    conf_.Set("lego", "get_init_msg", dht::kBootstrapInit);
+    conf_.Set("tenon", "get_init_msg", dht::kBootstrapInit);
     if (network::UniversalManager::Instance()->CreateUniversalNetwork(
             conf_,
             transport_) != network::kNetworkSuccess) {
@@ -287,7 +287,7 @@ int NetworkInit::InitNetworkSingleton() {
         return kInitError;
     }
 
-    conf_.Set("lego", "get_init_msg", dht::kBootstrapNoInit);
+    conf_.Set("tenon", "get_init_msg", dht::kBootstrapNoInit);
     if (network::UniversalManager::Instance()->CreateNodeNetwork(
             conf_,
             transport_) != network::kNetworkSuccess) {
@@ -335,8 +335,8 @@ int NetworkInit::InitConfigWithArgs(int argc, char** argv) {
 void NetworkInit::StartMoreServer() {
 #ifndef _WIN32
     bool use_rotation_port = false;
-    if (!conf_.Get("lego", "use_rotation_port", use_rotation_port) || !use_rotation_port) {
-        INIT_ERROR("get conf lego show_cmd failed!");
+    if (!conf_.Get("tenon", "use_rotation_port", use_rotation_port) || !use_rotation_port) {
+        INIT_ERROR("get conf tenon show_cmd failed!");
         return;
     }
 
@@ -368,7 +368,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string country;
     parser_arg.Get("o", country);
     if (!country.empty()) {
-        if (!conf_.Set("lego", "country", country)) {
+        if (!conf_.Set("tenon", "country", country)) {
             INIT_ERROR("set config failed [node][country][%s]", country.c_str());
             return kInitError;
         }
@@ -377,14 +377,14 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string local_ip;
     parser_arg.Get("a", local_ip);
     if (!local_ip.empty()) {
-        if (!conf_.Set("lego", "local_ip", local_ip)) {
+        if (!conf_.Set("tenon", "local_ip", local_ip)) {
             INIT_ERROR("set config failed [node][local_ip][%s]", local_ip.c_str());
             return kInitError;
         }
     }
     uint16_t local_port = 0;
     if (parser_arg.Get("l", local_port) == common::kParseSuccess) {
-        if (!conf_.Set("lego", "local_port", local_port)) {
+        if (!conf_.Set("tenon", "local_port", local_port)) {
             INIT_ERROR("set config failed [node][local_port][%d]", local_port);
             return kInitError;
         }
@@ -397,7 +397,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
             first_node = true;
         }
 
-        if (!conf_.Set("lego", "first_node", first_node)) {
+        if (!conf_.Set("tenon", "first_node", first_node)) {
             INIT_ERROR("set config failed [node][first_node][%d]", first_node);
             return kInitError;
         }
@@ -405,7 +405,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
 
     std::string network_ids;
     if (parser_arg.Get("n", network_ids) == common::kParseSuccess) {
-        if (!conf_.Set("lego", "net_ids", network_ids)) {
+        if (!conf_.Set("tenon", "net_ids", network_ids)) {
             INIT_ERROR("set config failed [node][net_id][%s]", network_ids.c_str());
             return kInitError;
         }
@@ -414,7 +414,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string peer;
     parser_arg.Get("p", peer);
     if (!peer.empty()) {
-        if (!conf_.Set("lego", "bootstrap", peer)) {
+        if (!conf_.Set("tenon", "bootstrap", peer)) {
             INIT_ERROR("set config failed [node][bootstrap][%s]", peer.c_str());
             return kInitError;
         }
@@ -423,7 +423,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string id;
     parser_arg.Get("i", id);
     if (!id.empty()) {
-        if (!conf_.Set("lego", "id", id)) {
+        if (!conf_.Set("tenon", "id", id)) {
             INIT_ERROR("set config failed [node][id][%s]", peer.c_str());
             return kInitError;
         }
@@ -431,7 +431,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
 
     int show_cmd = 1;
     if (parser_arg.Get("g", show_cmd) == common::kParseSuccess) {
-        if (!conf_.Set("lego", "show_cmd", show_cmd == 1)) {
+        if (!conf_.Set("tenon", "show_cmd", show_cmd == 1)) {
             INIT_ERROR("set config failed [node][show_cmd][%d]", show_cmd);
             return kInitError;
         }
@@ -439,7 +439,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
 
     int vpn_vip_level = 0;
     if (parser_arg.Get("V", vpn_vip_level) == common::kParseSuccess) {
-        if (!conf_.Set("lego", "vpn_vip_level", vpn_vip_level)) {
+        if (!conf_.Set("tenon", "vpn_vip_level", vpn_vip_level)) {
             INIT_ERROR("set config failed [node][vpn_vip_level][%d]", vpn_vip_level);
             return kInitError;
         }
@@ -447,7 +447,7 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
 
     std::string log_path;
     if (parser_arg.Get("L", log_path) != common::kParseSuccess) {
-        log_path = "log/lego.log";
+        log_path = "log/tenon.log";
     }
 
     if (!conf_.Set("log", "path", log_path)) {
@@ -533,7 +533,7 @@ void NetworkInit::CreateNewElectBlock() {
 
 int NetworkInit::SetPriAndPubKey(const std::string&) {
     std::string prikey("");
-    conf_.Get("lego", "prikey", prikey);
+    conf_.Get("tenon", "prikey", prikey);
     prikey = common::Encode::HexDecode(prikey);
     std::shared_ptr<security::PrivateKey> prikey_ptr{ nullptr };
     if (!prikey.empty()) {
@@ -553,14 +553,14 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     common::GlobalInfo::Instance()->set_id(account_id);
 
     if (prikey.empty()) {
-        conf_.Set("lego", "prikey", common::Encode::HexEncode(
+        conf_.Set("tenon", "prikey", common::Encode::HexEncode(
                 security::Schnorr::Instance()->str_prikey()));
-        conf_.Set("lego", "pubkey", common::Encode::HexEncode(
+        conf_.Set("tenon", "pubkey", common::Encode::HexEncode(
                 security::Schnorr::Instance()->str_pubkey()));
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
                 security::Schnorr::Instance()->str_pubkey_uncompress());
         common::GlobalInfo::Instance()->set_id(account_address);
-        conf_.Set("lego", "id", common::Encode::HexEncode(
+        conf_.Set("tenon", "id", common::Encode::HexEncode(
                 common::GlobalInfo::Instance()->id()));
         conf_.DumpConfig(config_path_);
         std::string gid;
@@ -587,4 +587,4 @@ int NetworkInit::InitBlock(const common::Config& conf) {
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

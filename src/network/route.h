@@ -4,7 +4,7 @@
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class BaseDht;
@@ -45,4 +45,4 @@ private:
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

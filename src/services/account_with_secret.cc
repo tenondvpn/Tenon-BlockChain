@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "services/account_with_secret.h"
 
-namespace lego {
+namespace tenon {
 
 namespace service {
 
@@ -59,4 +59,4 @@ AccountWithSecret::~AccountWithSecret() {}
 
 }  // namespace service
 
-}  // namespace lego
+}  // namespace tenon

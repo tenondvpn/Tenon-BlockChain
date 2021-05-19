@@ -7,7 +7,7 @@
 #include "common/bloom_filter.h"
 #include "common/random.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -95,4 +95,4 @@ TEST_F(TestBloomFilter, AddAndContain) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

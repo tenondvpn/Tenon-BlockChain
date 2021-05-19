@@ -6,7 +6,7 @@
 #include "init/update_vpn_init.h"
 #include "dht/dht_key.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -341,5 +341,5 @@ int32_t DhtProto::CreateConnectRequest(
 
 }  // namespace dht
 
-}  //namespace lego
+}  //namespace tenon
 

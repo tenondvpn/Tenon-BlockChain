@@ -6,7 +6,7 @@
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -90,4 +90,4 @@ int Signature::Deserialize(const std::string& challenge_src, const std::string& 
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

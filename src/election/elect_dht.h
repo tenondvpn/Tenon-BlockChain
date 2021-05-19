@@ -3,7 +3,7 @@
 #include "common/utils.h"
 #include "dht/base_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -19,4 +19,4 @@ private:
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

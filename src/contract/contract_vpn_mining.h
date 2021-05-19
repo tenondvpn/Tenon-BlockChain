@@ -4,7 +4,7 @@
 #include "db/db_unique_queue.h"
 #include "common/tick.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -53,4 +53,4 @@ private:
 
 }  // namespace contract
 
-}  // namespace lego
+}  // namespace tenon

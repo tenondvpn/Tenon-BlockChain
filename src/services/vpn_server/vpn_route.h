@@ -15,7 +15,7 @@
 #include "services/vpn_server/messge_window.h"
 #include "services/bandwidth_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -117,4 +117,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

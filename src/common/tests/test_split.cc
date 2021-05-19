@@ -5,7 +5,7 @@
 #define private public
 #include "common/split.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -99,4 +99,4 @@ TEST_F(TestSplit, SplitWithBadChar) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

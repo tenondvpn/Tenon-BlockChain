@@ -18,7 +18,7 @@
 
 #include "ip/ip_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -41,4 +41,4 @@ private:
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

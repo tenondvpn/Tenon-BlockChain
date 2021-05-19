@@ -14,7 +14,7 @@
 
 #include "common/random.h"
 
-namespace lego {
+namespace tenon {
 
 namespace broadcast {
 
@@ -23,13 +23,13 @@ namespace test {
 class TestFilterBroadcast : public testing::Test {
 public:
     static void SetUpTestCase() {    
-        lego::transport::MultiThreadHandler::Instance()->Init();
-        transport_ = std::make_shared<lego::transport::UdpTransport>(
+        tenon::transport::MultiThreadHandler::Instance()->Init();
+        transport_ = std::make_shared<tenon::transport::UdpTransport>(
                 "127.0.0.1",
                 9701,
                 1024 * 1024,
                 1024 * 1024);
-        if (transport_->Init() != lego::transport::kTransportSuccess) {
+        if (transport_->Init() != tenon::transport::kTransportSuccess) {
             ERROR("init udp transport failed!");
             return;
         }
@@ -46,10 +46,10 @@ public:
     virtual void TearDown() {
     }
 
-    static lego::transport::TransportPtr transport_;
+    static tenon::transport::TransportPtr transport_;
 };
 
-lego::transport::TransportPtr TestFilterBroadcast::transport_ = nullptr;
+tenon::transport::TransportPtr TestFilterBroadcast::transport_ = nullptr;
 
 TEST_F(TestFilterBroadcast, BinarySearch) {
     dht::Dht dht;
@@ -206,4 +206,4 @@ TEST_F(TestFilterBroadcast, BroadcastingOverlap) {
 
 }  // namespace db
 
-}  // namespace lego
+}  // namespace tenon

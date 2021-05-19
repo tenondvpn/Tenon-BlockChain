@@ -7,7 +7,7 @@
 #include "transport//proto/transport.pb.h"
 #include "broadcast/broadcast_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class BaseDht;
@@ -48,4 +48,4 @@ private:
 
 }  // namespace broadcast
 
-}  // namespace lego
+}  // namespace tenon

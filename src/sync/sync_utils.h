@@ -8,7 +8,7 @@
 #define SYNC_WARN(fmt, ...) TENON_WARN("[SYNC]" fmt, ## __VA_ARGS__)
 #define SYNC_ERROR(fmt, ...) TENON_ERROR("[SYNC]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace sync {
 
@@ -40,4 +40,4 @@ static const uint32_t kSyncMaxRetryTimes = 3u;  // fail retry 3 times
 
 }  // namespace sync
 
-}  // namespace lego
+}  // namespace tenon

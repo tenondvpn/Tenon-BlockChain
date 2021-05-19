@@ -9,7 +9,7 @@
 #include "security/crypto_utils.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -20,13 +20,13 @@ Bootstrap* Bootstrap::Instance() {
 
 int Bootstrap::Init(common::Config& config) {
     std::string bootstrap;
-    if (!config.Get("lego", "bootstrap", bootstrap) || bootstrap.empty()) {
-        NETWORK_ERROR("config has no lego bootstrap info.");
+    if (!config.Get("tenon", "bootstrap", bootstrap) || bootstrap.empty()) {
+        NETWORK_ERROR("config has no tenon bootstrap info.");
         return kNetworkError;
     }
 
     std::string bootstrap_net;
-    config.Get("lego", "bootstrap_net", bootstrap_net) ;
+    config.Get("tenon", "bootstrap_net", bootstrap_net) ;
     bootstrap += ',' + bootstrap_net;
 
     common::Split<2048> boot_spliter(bootstrap.c_str(), ',');
@@ -59,26 +59,26 @@ int Bootstrap::Init(common::Config& config) {
         }
 
 //         auto pubkey_ptr = std::make_shared<security::PublicKey>(pubkey);
-        lego::dht::DhtKeyManager root_dht_key(
+        tenon::dht::DhtKeyManager root_dht_key(
                 kUniversalNetworkId,
                 common::GlobalInfo::Instance()->country(),
                 std::string(field_split[0], field_split.SubLen(0)));
-        lego::dht::DhtKeyManager node_dht_key(
+        tenon::dht::DhtKeyManager node_dht_key(
                 kNodeNetworkId,
                 common::GlobalInfo::Instance()->country(),
                 std::string(field_split[0], field_split.SubLen(0)));
-        root_bootstrap_.push_back(std::make_shared<lego::dht::Node>(
+        root_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
                 std::string(field_split[0], field_split.SubLen(0)),
                 root_dht_key.StrKey(),
                 std::string(field_split[1], field_split.SubLen(1)),
-                lego::common::StringUtil::ToUint16(field_split[2]),
+                tenon::common::StringUtil::ToUint16(field_split[2]),
                 str_pubkey,
                 ""));
-        node_bootstrap_.push_back(std::make_shared<lego::dht::Node>(
+        node_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
                 std::string(field_split[0], field_split.SubLen(0)),
                 node_dht_key.StrKey(),
                 std::string(field_split[1], field_split.SubLen(1)),
-                lego::common::StringUtil::ToUint16(field_split[2]),
+                tenon::common::StringUtil::ToUint16(field_split[2]),
                 str_pubkey,
                 ""));
         NETWORK_INFO("bootstrap[%s][%d][%s][%s][%s]",
@@ -115,4 +115,4 @@ std::vector<dht::NodePtr> Bootstrap::GetNetworkBootstrap(
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

@@ -8,7 +8,7 @@
 #include "security/schnorr.h"
 #include "security/security_string_trans.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -88,4 +88,4 @@ bool CommitSecret::operator==(const CommitSecret& r) const {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

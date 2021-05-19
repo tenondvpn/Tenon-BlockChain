@@ -4,7 +4,7 @@
 #include "common/split.h"
 #include "common/string_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -81,4 +81,4 @@ IpWithCountry::~IpWithCountry() {}
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

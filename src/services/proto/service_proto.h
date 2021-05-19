@@ -5,7 +5,7 @@
 #include "dht/node.h"
 #include "services/proto/service.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace service {
 
@@ -50,4 +50,4 @@ private:
 
 }  // namespace service
 
-}  // namespace lego
+}  // namespace tenon

@@ -8,7 +8,7 @@
 #include "common/encode.h"
 #include "security/crypto_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -93,4 +93,4 @@ int Aes::CfbDecrypt(char* str_in, int len, char* key, int key_len, char* out) {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

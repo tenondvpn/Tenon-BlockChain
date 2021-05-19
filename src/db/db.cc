@@ -6,7 +6,7 @@
 #include "common/utils.h"
 #include "common/log.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -93,4 +93,4 @@ bool Db::Init(const std::string& db_path) {
 
 }  // db
 
-}  // lego
+}  // tenon

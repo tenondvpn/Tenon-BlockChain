@@ -3,7 +3,7 @@
 #include "common/utils.h"
 #include "transport/proto/transport.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -34,4 +34,4 @@ typedef std::shared_ptr<Transport> TransportPtr;
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

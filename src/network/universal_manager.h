@@ -8,7 +8,7 @@
 #include "dht/node.h"
 #include "network/universal.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
     class Transport;
@@ -56,4 +56,4 @@ private:
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

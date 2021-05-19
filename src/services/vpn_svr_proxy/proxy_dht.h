@@ -8,7 +8,7 @@
 #include "dht/node.h"
 #include "services/proto/service.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -49,4 +49,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

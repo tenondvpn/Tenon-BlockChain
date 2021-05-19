@@ -7,7 +7,7 @@
 #include "dht/base_dht.h"
 #include "broadcast/broadcast_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace broadcast {
 
@@ -49,4 +49,4 @@ void Broadcast::Send(
 
 }  // namespace broadcast
 
-}  // namespace lego
+}  // namespace tenon

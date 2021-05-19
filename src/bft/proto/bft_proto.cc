@@ -8,7 +8,7 @@
 #include "network/network_utils.h"
 #include "bft/bft_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -274,4 +274,4 @@ void BftProto::CreateLeaderBroadcastToAccount(
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

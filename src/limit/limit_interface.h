@@ -4,7 +4,7 @@
 
 #include "limit/limit_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace limit {
 
@@ -21,4 +21,4 @@ protected:
 
 }  // namespace limit
 
-}  // namespace lego
+}  // namespace tenon

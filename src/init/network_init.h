@@ -8,7 +8,7 @@
 #include "election/elect_manager.h"
 #include "init/command.h"
 
-namespace lego {
+namespace tenon {
 
 namespace congress {
 	class CongressInit;
@@ -70,4 +70,4 @@ protected:
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

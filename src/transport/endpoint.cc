@@ -3,8 +3,8 @@
 
 namespace std {
     bool operator==(
-        const lego::transport::Endpoint& lhs,
-        const lego::transport::Endpoint& rhs) {
+        const tenon::transport::Endpoint& lhs,
+        const tenon::transport::Endpoint& rhs) {
         return lhs.ip == rhs.ip && lhs.port == rhs.port;
     }
 }

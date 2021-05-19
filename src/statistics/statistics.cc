@@ -6,20 +6,20 @@
 #include "common/time_utils.h"
 #include "block/account_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::statis::AccountBalance& val) {
+uint64_t MinHeapUniqueVal(const tenon::statis::AccountBalance& val) {
     return common::Hash::Hash64(val.account_id);
 }
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
 
-namespace lego {
+namespace tenon {
 
 namespace statis {
 
@@ -670,4 +670,4 @@ std::deque<uint32_t> Statistics::NewUserCountForHour(uint32_t count) {
 
 }  // namespace statis
 
-}  // namespace lego
+}  // namespace tenon

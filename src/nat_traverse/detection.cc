@@ -13,7 +13,7 @@
 #include "nat_traverse/proto/nat_proto.h"
 #include "nat_traverse/nat_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace nat {
 
@@ -174,4 +174,4 @@ void Detection::HandleDetectionRequest(
 
 }  // namespace nat
 
-}  // namespace lego
+}  // namespace tenon

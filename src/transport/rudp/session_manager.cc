@@ -3,7 +3,7 @@
 
 #include "transport/multi_thread.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -125,4 +125,4 @@ SessionManager::~SessionManager() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

@@ -118,7 +118,7 @@ extern "C" {
 #include "services/bandwidth_manager.h"
 #include "statistics/statistics.h"
 
-using namespace lego;
+using namespace tenon;
 
 static void AcceptCallback(EV_P_ ev_io *w, int revents);
 static void ServerSendCallback(EV_P_ ev_io *w, int revents);
@@ -701,7 +701,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
     std::string pubkey;
     PeerInfo* client_ptr = nullptr;
     if (server->stage == STAGE_INIT) {
-        int header_offset = lego::security::kPublicKeySize * 2;
+        int header_offset = tenon::security::kPublicKeySize * 2;
         bool valid = false;
         uint8_t method_len = *(uint8_t *)(buf->data + header_offset);
         std::string client_platform;
@@ -724,7 +724,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
 
         pubkey = std::string((char*)buf->data, header_offset);
         VPNSVR_ERROR("client platform and version: %s, pubkey: %s", client_platform.c_str(), pubkey.c_str());
-        client_ptr = lego::service::AccountWithSecret::Instance()->NewPeer(
+        client_ptr = tenon::service::AccountWithSecret::Instance()->NewPeer(
                 common::Encode::HexDecode(pubkey),
                 common::kDefaultEnocdeMethod);
         if (client_ptr == nullptr) {
@@ -735,7 +735,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
 
         auto now_point = std::chrono::steady_clock::now();
         auto& user_account = client_ptr->account;
-        auto& account_map = lego::vpn::VpnServer::Instance()->account_bindwidth_map();
+        auto& account_map = tenon::vpn::VpnServer::Instance()->account_bindwidth_map();
         auto iter = account_map.find(user_account);
         if (iter == account_map.end()) {
             auto acc_item = std::make_shared<service::BandwidthInfo>(r, 0, user_account, client_platform);
@@ -751,7 +751,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
                 CloseAndFreeServer(EV_A_ server);
                 return;
             }
-            lego::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
+            tenon::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
             service::BandwidthManager::Instance()->AddClientBandwidthInfo(acc_item);
         } else {
             if (!iter->second->Valid()) {
@@ -768,7 +768,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
             iter->second->up_bandwidth += r;
             // transaction now with bandwidth
             if (iter->second->timeout + std::chrono::microseconds(kVpnClientTimeout) < now_point) {
-                lego::vpn::VpnServer::Instance()->bandwidth_queue().push(iter->second);
+                tenon::vpn::VpnServer::Instance()->bandwidth_queue().push(iter->second);
                 service::BandwidthManager::Instance()->AddClientBandwidthInfo(iter->second);
             }
             iter->second->timeout = now_point;
@@ -789,7 +789,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
             return;
         }
 
-        auto& account_map = lego::vpn::VpnServer::Instance()->account_bindwidth_map();
+        auto& account_map = tenon::vpn::VpnServer::Instance()->account_bindwidth_map();
         auto iter = account_map.find(client_ptr->account);
         if (iter == account_map.end()) {
             // send back with status
@@ -1226,7 +1226,7 @@ static void RemoteRecvCallback(EV_P_ ev_io *w, int revents) {
 
     auto now_point = std::chrono::steady_clock::now();
     auto& user_account = server->client_ptr->account;
-    auto& account_map = lego::vpn::VpnServer::Instance()->account_bindwidth_map();
+    auto& account_map = tenon::vpn::VpnServer::Instance()->account_bindwidth_map();
     auto iter = account_map.find(user_account);
     if (iter == account_map.end()) {
         return;
@@ -1825,7 +1825,7 @@ static int ClientRecvCallback(
     std::string pubkey;
     PeerInfo* client_ptr = nullptr;
     if (server->stage == STAGE_INIT) {
-        int header_offset = lego::security::kPublicKeySize * 2;
+        int header_offset = tenon::security::kPublicKeySize * 2;
         bool valid = false;
         uint8_t method_len = *(uint8_t *)(buf->data + header_offset);
         std::string client_platform;
@@ -1837,7 +1837,7 @@ static int ClientRecvCallback(
 
         client_platform = std::string((char*)buf->data + header_offset + 1, method_len);
         pubkey = std::string((char*)buf->data, header_offset);
-        client_ptr = lego::service::AccountWithSecret::Instance()->NewPeer(
+        client_ptr = tenon::service::AccountWithSecret::Instance()->NewPeer(
                 common::Encode::HexDecode(pubkey),
                 common::kDefaultEnocdeMethod);
         if (client_ptr == nullptr) {
@@ -1848,7 +1848,7 @@ static int ClientRecvCallback(
 
         auto now_point = std::chrono::steady_clock::now();
         auto& user_account = client_ptr->account;
-        auto& account_map = lego::vpn::VpnServer::Instance()->account_bindwidth_map();
+        auto& account_map = tenon::vpn::VpnServer::Instance()->account_bindwidth_map();
         auto iter = account_map.find(user_account);
         if (iter == account_map.end()) {
             auto acc_item = std::make_shared<service::BandwidthInfo>(r, 0, user_account, client_platform);
@@ -1864,7 +1864,7 @@ static int ClientRecvCallback(
                 CloseAndFreeServer(EV_A_ server);
                 return 1;
             }
-            lego::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
+            tenon::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
         } else {
             if (!iter->second->Valid()) {
 //                 send(
@@ -1880,7 +1880,7 @@ static int ClientRecvCallback(
             iter->second->up_bandwidth += r;
             // transaction now with bandwidth
             if (iter->second->timeout + std::chrono::microseconds(kVpnClientTimeout) < now_point) {
-                lego::vpn::VpnServer::Instance()->bandwidth_queue().push(iter->second);
+                tenon::vpn::VpnServer::Instance()->bandwidth_queue().push(iter->second);
             }
             iter->second->timeout = now_point;
         }
@@ -1900,7 +1900,7 @@ static int ClientRecvCallback(
             return 1;
         }
 
-        auto& account_map = lego::vpn::VpnServer::Instance()->account_bindwidth_map();
+        auto& account_map = tenon::vpn::VpnServer::Instance()->account_bindwidth_map();
         auto iter = account_map.find(client_ptr->account);
         if (iter == account_map.end()) {
             // send back with status
@@ -2131,7 +2131,7 @@ static int ClientRecvCallback(
     return 0;
 }
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -2494,8 +2494,8 @@ void VpnServer::SendGetAccountAttrLastBlock(
         const std::string& attr,
         const std::string& account,
         uint64_t height) {
-    auto uni_dht = lego::network::DhtManager::Instance()->GetDht(
-            lego::network::kVpnNetworkId);
+    auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
+            tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
         VPNSVR_ERROR("not found vpn server dht.");
         return;
@@ -2514,8 +2514,8 @@ void VpnServer::SendGetAccountAttrLastBlock(
 }
 
 void VpnServer::SendGetAccountAttrUsedBandwidth(const std::string& account) {
-    auto uni_dht = lego::network::DhtManager::Instance()->GetDht(
-        lego::network::kVpnNetworkId);
+    auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
+        tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
         VPNSVR_ERROR("not found vpn server dht.");
         return;
@@ -2542,7 +2542,7 @@ void SendClientUseBandwidth(const std::string& id, uint32_t bandwidth) {
         {attr_key, std::to_string(bandwidth)}
     };
     std::string gid;
-    lego::client::TransactionClient::Instance()->Transaction(
+    tenon::client::TransactionClient::Instance()->Transaction(
             id,
             0,
             contract::kContractVpnBandwidthProveAddr,
@@ -2557,7 +2557,7 @@ void VpnServer::CheckTransactions() {
     while (staking_queue_.pop(&staking_item)) {
         if (staking_item != nullptr) {
             std::string gid;
-            lego::client::TransactionClient::Instance()->Transaction(
+            tenon::client::TransactionClient::Instance()->Transaction(
                     staking_item->to,
                     staking_item->amount,
                     "",
@@ -2745,7 +2745,7 @@ void VpnServer::CheckAccountValid() {
 //                 }
 // 
 //                 if (rand_coin > 3) {
-//                     lego::vpn::VpnServer::Instance()->staking_queue().push(
+//                     tenon::vpn::VpnServer::Instance()->staking_queue().push(
 //                         std::make_shared<StakingItem>(iter->second->account_id, rand_coin));
 //                 }
 // 
@@ -3040,4 +3040,4 @@ bool VlanConnection::SendPacket(const char* data, uint32_t len, remote_t* real_r
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

@@ -12,7 +12,7 @@
 
 //#define ENCODE_CONFIG_CONTENT
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -719,4 +719,4 @@ bool Config::AddKey(const std::string& field, const std::string& key, const std:
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -10,7 +10,7 @@
 #include "tvm/tenon_host.h"
 #include "block/account_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -34,7 +34,7 @@ int Execution::execute(
         uint64_t gas_limit,
         uint32_t depth,
         bool is_create,
-        lego::tvm::TenonHost& host,
+        tenon::tvm::TenonHost& host,
         evmc::result* out_res) {
     auto contract_info = block::AccountManager::Instance()->GetAcountInfo(contract_address);
     if (contract_info == nullptr) {
@@ -140,4 +140,4 @@ int Execution::execute(
 
 }  // namespace tvm
 
-}  //namespace lego
+}  //namespace tenon

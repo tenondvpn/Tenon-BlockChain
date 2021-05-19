@@ -4,7 +4,7 @@
 #include "evmc/evmc.hpp"
 #include "evmc/mocked_host.hpp"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -23,9 +23,9 @@ public:
         uint64_t max_gas,
         uint32_t depth,
         bool is_create,
-        lego::tvm::TenonHost& host,
+        tenon::tvm::TenonHost& host,
         evmc::result* res);
-    int InitEnvironment(lego::tvm::TenonHost& tenon_host, evmc_message* msg);
+    int InitEnvironment(tenon::tvm::TenonHost& tenon_host, evmc_message* msg);
 
 private:
     DISALLOW_COPY_AND_ASSIGN(Execution);
@@ -33,5 +33,5 @@ private:
 
 }  // namespace tvm
 
-}  //namespace lego
+}  //namespace tenon
 

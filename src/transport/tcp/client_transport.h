@@ -17,7 +17,7 @@
 // #include "mrsocket/mr_buffer.h"
 // #include "mrsocket/mr_code.h"
 // 
-// namespace lego {
+// namespace tenon {
 // 
 // namespace transport {
 // 
@@ -61,4 +61,4 @@
 // };
 // }  // namespace transport
 // 
-// }  // namespace lego
+// }  // namespace tenon

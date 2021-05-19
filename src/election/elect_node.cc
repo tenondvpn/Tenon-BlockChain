@@ -12,7 +12,7 @@
 #include "election/elect_utils.h"
 #include "election/elect_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace elect {
 
@@ -112,4 +112,4 @@ int ElectNode::JoinShard() {
 
 }  // namespace elect
 
-}  // namespace lego
+}  // namespace tenon

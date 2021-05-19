@@ -3,7 +3,7 @@
 
 #include "common/time_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace limit {
 
@@ -61,4 +61,4 @@ bool TockenBucket::DownCheckLimit(uint32_t stream) {
 
 }  // namespace limit
 
-}  // namespace lego
+}  // namespace tenon

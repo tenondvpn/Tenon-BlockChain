@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "common/state_lock.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -41,4 +41,4 @@ bool StateLock::WaitFor(int64_t wait_us) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

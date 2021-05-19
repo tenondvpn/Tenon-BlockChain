@@ -27,7 +27,7 @@
 #include "bft/proto/bft.pb.h"
 #include "block/account_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -902,4 +902,4 @@ int HttpTransport::GetSocket() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

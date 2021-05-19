@@ -8,7 +8,7 @@
 #include "common/tick.h"
 #include "nat_traverse/proto/nat_proto.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class BaseDht;
@@ -65,4 +65,4 @@ private:
 
 }  // namespace nat
 
-}  // namespace lego
+}  // namespace tenon

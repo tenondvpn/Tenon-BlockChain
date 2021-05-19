@@ -4,7 +4,7 @@
 #include "security/private_key.h"
 #include "security/public_key.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -26,4 +26,4 @@ private:
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

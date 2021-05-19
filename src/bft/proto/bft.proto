@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.bft.protobuf;
+package tenon.bft.protobuf;
 
 message AccountAttributes {
     optional bytes key = 1;

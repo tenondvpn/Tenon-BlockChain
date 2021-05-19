@@ -10,7 +10,7 @@
 #include "block/block_utils.h"
 #include "block/proto/block.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -24,30 +24,30 @@ bool operator==(HeightCacheHeapItem& lhs, HeightCacheHeapItem& rhs);
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon
 
 namespace std {
 template<>
-struct hash<lego::block::HeightCacheHeapItem> {
-    size_t operator()(const lego::block::HeightCacheHeapItem& _Keyval) const noexcept {
+struct hash<tenon::block::HeightCacheHeapItem> {
+    size_t operator()(const tenon::block::HeightCacheHeapItem& _Keyval) const noexcept {
         return _Keyval.height;
     }
 };
 }
 
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const lego::block::HeightCacheHeapItem& val);
+uint64_t MinHeapUniqueVal(const tenon::block::HeightCacheHeapItem& val);
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -97,5 +97,5 @@ private:
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon
 

@@ -8,7 +8,7 @@
 #include "common/log.h"
 #include "common/encode.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -54,71 +54,71 @@ GlobalInfo::GlobalInfo()
 GlobalInfo::~GlobalInfo() {}
 
 int GlobalInfo::Init(const common::Config& config) {
-    if (!config.Get("lego", "local_ip", config_local_ip_)) {
-        TENON_ERROR("get lego local_ip from config failed.");
+    if (!config.Get("tenon", "local_ip", config_local_ip_)) {
+        TENON_ERROR("get tenon local_ip from config failed.");
         return kCommonError;
     }
 
-    if (!config.Get("lego", "local_port", config_local_port_)) {
-        TENON_ERROR("get lego local_port from config failed.");
+    if (!config.Get("tenon", "local_port", config_local_port_)) {
+        TENON_ERROR("get tenon local_port from config failed.");
         return kCommonError;
     }
 
-    if (!config.Get("lego", "http_port", http_port_)) {
+    if (!config.Get("tenon", "http_port", http_port_)) {
         http_port_ = 0;
     }
 
-    config.Get("lego", "tcp_spec", tcp_spec_);
+    config.Get("tenon", "tcp_spec", tcp_spec_);
     std::string str_contry;
-    if (!config.Get("lego", "country", str_contry) || str_contry.empty()) {
-        TENON_ERROR("get lego country from config failed.");
+    if (!config.Get("tenon", "country", str_contry) || str_contry.empty()) {
+        TENON_ERROR("get tenon country from config failed.");
         return kCommonError;
     }
     country_ = global_country_map[str_contry];
 
-    if (!config.Get("lego", "first_node", config_first_node_)) {
-        TENON_ERROR("get lego first_node from config failed.");
+    if (!config.Get("tenon", "first_node", config_first_node_)) {
+        TENON_ERROR("get tenon first_node from config failed.");
         return kCommonError;
     }
 
     std::string account_id;
-    if (!config.Get("lego", "id", account_id) || account_id.empty()) {
-        TENON_ERROR("get lego id from config failed.");
+    if (!config.Get("tenon", "id", account_id) || account_id.empty()) {
+        TENON_ERROR("get tenon id from config failed.");
         return kCommonError;
     }
     set_id(account_id);
 
-    config.Get("lego", "stream_limit", stream_default_limit_);
+    config.Get("tenon", "stream_limit", stream_default_limit_);
 
     min_route_port_ = common::kVpnRoutePortRangeMin;
     max_route_port_ = common::kVpnRoutePortRangeMax;
-    config.Get("lego", "route_min_port", min_route_port_);
-    config.Get("lego", "route_max_port", max_route_port_);
+    config.Get("tenon", "route_min_port", min_route_port_);
+    config.Get("tenon", "route_max_port", max_route_port_);
 
     min_svr_port_ = common::kVpnServerPortRangeMin;
     max_svr_port_ = common::kVpnServerPortRangeMax;
-    config.Get("lego", "vpn_min_port", min_svr_port_);
-    config.Get("lego", "vpn_max_port", max_svr_port_);
+    config.Get("tenon", "vpn_min_port", min_svr_port_);
+    config.Get("tenon", "vpn_max_port", max_svr_port_);
 
     min_udp_port_ = common::kRouteUdpPortRangeMin;
     max_udp_port_ = common::kRouteUdpPortRangeMax;
-    config.Get("lego", "min_udp_port", min_udp_port_);
-    config.Get("lego", "max_udp_port", max_udp_port_);
+    config.Get("tenon", "min_udp_port", min_udp_port_);
+    config.Get("tenon", "max_udp_port", max_udp_port_);
 
-    config.Get("lego", "public_port", config_public_port_);
-    config.Get("lego", "node_weight", node_weight_);
-    config.Get("lego", "is_vlan_node", is_vlan_node_);
-    config.Get("lego", "is_lego_leader", is_lego_leader_);
-    config.Get("lego", "client", is_client_);
-    config.Get("lego", "node_tag", node_tag_);
-    if (config.Get("lego", "udp_mtu", udp_mtu_) && udp_mtu_ > 1400) {
+    config.Get("tenon", "public_port", config_public_port_);
+    config.Get("tenon", "node_weight", node_weight_);
+    config.Get("tenon", "is_vlan_node", is_vlan_node_);
+    config.Get("tenon", "is_lego_leader", is_lego_leader_);
+    config.Get("tenon", "client", is_client_);
+    config.Get("tenon", "node_tag", node_tag_);
+    if (config.Get("tenon", "udp_mtu", udp_mtu_) && udp_mtu_ > 1400) {
         udp_mtu_ -= 100;  // reserve 100 bytes for package header and udp header
     }
-    config.Get("lego", "udp_window_size", udp_window_size_);
+    config.Get("tenon", "udp_window_size", udp_window_size_);
 
     return kCommonSuccess;
 }
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

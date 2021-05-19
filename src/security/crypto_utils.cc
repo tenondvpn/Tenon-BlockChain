@@ -5,10 +5,10 @@
 
 #include "common/encode.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

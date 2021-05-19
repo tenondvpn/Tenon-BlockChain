@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.nat.protobuf;
+package tenon.nat.protobuf;
 
 message DetectionRequest {
 	optional bytes public_ip = 1;

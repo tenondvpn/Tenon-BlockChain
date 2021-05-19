@@ -47,7 +47,7 @@ struct TableStruct {
 };
 void AddDescriptors();
 }  // namespace protobuf_nat_2eproto
-namespace lego {
+namespace tenon {
 namespace nat {
 namespace protobuf {
 class DetectionRequest;
@@ -58,20 +58,20 @@ class NatMessageDefaultTypeInternal;
 extern NatMessageDefaultTypeInternal _NatMessage_default_instance_;
 }  // namespace protobuf
 }  // namespace nat
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> ::lego::nat::protobuf::DetectionRequest* Arena::CreateMaybeMessage<::lego::nat::protobuf::DetectionRequest>(Arena*);
-template<> ::lego::nat::protobuf::NatMessage* Arena::CreateMaybeMessage<::lego::nat::protobuf::NatMessage>(Arena*);
+template<> ::tenon::nat::protobuf::DetectionRequest* Arena::CreateMaybeMessage<::tenon::nat::protobuf::DetectionRequest>(Arena*);
+template<> ::tenon::nat::protobuf::NatMessage* Arena::CreateMaybeMessage<::tenon::nat::protobuf::NatMessage>(Arena*);
 }  // namespace protobuf
 }  // namespace google
-namespace lego {
+namespace tenon {
 namespace nat {
 namespace protobuf {
 
 // ===================================================================
 
-class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.nat.protobuf.DetectionRequest) */ {
+class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.nat.protobuf.DetectionRequest) */ {
  public:
   DetectionRequest();
   virtual ~DetectionRequest();
@@ -317,7 +317,7 @@ class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::uint32 max_udp_port() const;
   void set_max_udp_port(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.nat.protobuf.DetectionRequest)
+  // @@protoc_insertion_point(class_scope:tenon.nat.protobuf.DetectionRequest)
  private:
   void set_has_public_ip();
   void clear_has_public_ip();
@@ -375,7 +375,7 @@ class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertio
 };
 // -------------------------------------------------------------------
 
-class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.nat.protobuf.NatMessage) */ {
+class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.nat.protobuf.NatMessage) */ {
  public:
   NatMessage();
   virtual ~NatMessage();
@@ -469,19 +469,19 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
-  // optional .lego.nat.protobuf.DetectionRequest detection_req = 1;
+  // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
   bool has_detection_req() const;
   void clear_detection_req();
   static const int kDetectionReqFieldNumber = 1;
   private:
-  const ::lego::nat::protobuf::DetectionRequest& _internal_detection_req() const;
+  const ::tenon::nat::protobuf::DetectionRequest& _internal_detection_req() const;
   public:
-  const ::lego::nat::protobuf::DetectionRequest& detection_req() const;
-  ::lego::nat::protobuf::DetectionRequest* release_detection_req();
-  ::lego::nat::protobuf::DetectionRequest* mutable_detection_req();
-  void set_allocated_detection_req(::lego::nat::protobuf::DetectionRequest* detection_req);
+  const ::tenon::nat::protobuf::DetectionRequest& detection_req() const;
+  ::tenon::nat::protobuf::DetectionRequest* release_detection_req();
+  ::tenon::nat::protobuf::DetectionRequest* mutable_detection_req();
+  void set_allocated_detection_req(::tenon::nat::protobuf::DetectionRequest* detection_req);
 
-  // @@protoc_insertion_point(class_scope:lego.nat.protobuf.NatMessage)
+  // @@protoc_insertion_point(class_scope:tenon.nat.protobuf.NatMessage)
  private:
   void set_has_detection_req();
   void clear_has_detection_req();
@@ -489,7 +489,7 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::lego::nat::protobuf::DetectionRequest* detection_req_;
+  ::tenon::nat::protobuf::DetectionRequest* detection_req_;
   friend struct ::protobuf_nat_2eproto::TableStruct;
 };
 // ===================================================================
@@ -518,41 +518,41 @@ inline void DetectionRequest::clear_public_ip() {
   clear_has_public_ip();
 }
 inline const ::std::string& DetectionRequest::public_ip() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.public_ip)
   return public_ip_.GetNoArena();
 }
 inline void DetectionRequest::set_public_ip(const ::std::string& value) {
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.public_ip)
 }
 #if LANG_CXX11
 inline void DetectionRequest::set_public_ip(::std::string&& value) {
   set_has_public_ip();
   public_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.public_ip)
 }
 #endif
 inline void DetectionRequest::set_public_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.public_ip)
 }
 inline void DetectionRequest::set_public_ip(const void* value, size_t size) {
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.public_ip)
 }
 inline ::std::string* DetectionRequest::mutable_public_ip() {
   set_has_public_ip();
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.public_ip)
   return public_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* DetectionRequest::release_public_ip() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.public_ip)
   if (!has_public_ip()) {
     return NULL;
   }
@@ -566,7 +566,7 @@ inline void DetectionRequest::set_allocated_public_ip(::std::string* public_ip) 
     clear_has_public_ip();
   }
   public_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), public_ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.DetectionRequest.public_ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.public_ip)
 }
 
 // optional int32 public_port = 2;
@@ -584,13 +584,13 @@ inline void DetectionRequest::clear_public_port() {
   clear_has_public_port();
 }
 inline ::google::protobuf::int32 DetectionRequest::public_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.public_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.public_port)
   return public_port_;
 }
 inline void DetectionRequest::set_public_port(::google::protobuf::int32 value) {
   set_has_public_port();
   public_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.public_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.public_port)
 }
 
 // optional bytes local_ip = 3;
@@ -608,41 +608,41 @@ inline void DetectionRequest::clear_local_ip() {
   clear_has_local_ip();
 }
 inline const ::std::string& DetectionRequest::local_ip() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.local_ip)
   return local_ip_.GetNoArena();
 }
 inline void DetectionRequest::set_local_ip(const ::std::string& value) {
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.local_ip)
 }
 #if LANG_CXX11
 inline void DetectionRequest::set_local_ip(::std::string&& value) {
   set_has_local_ip();
   local_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.local_ip)
 }
 #endif
 inline void DetectionRequest::set_local_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.local_ip)
 }
 inline void DetectionRequest::set_local_ip(const void* value, size_t size) {
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.local_ip)
 }
 inline ::std::string* DetectionRequest::mutable_local_ip() {
   set_has_local_ip();
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.local_ip)
   return local_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* DetectionRequest::release_local_ip() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.local_ip)
   if (!has_local_ip()) {
     return NULL;
   }
@@ -656,7 +656,7 @@ inline void DetectionRequest::set_allocated_local_ip(::std::string* local_ip) {
     clear_has_local_ip();
   }
   local_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), local_ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.DetectionRequest.local_ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.local_ip)
 }
 
 // optional int32 local_port = 4;
@@ -674,13 +674,13 @@ inline void DetectionRequest::clear_local_port() {
   clear_has_local_port();
 }
 inline ::google::protobuf::int32 DetectionRequest::local_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.local_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.local_port)
   return local_port_;
 }
 inline void DetectionRequest::set_local_port(::google::protobuf::int32 value) {
   set_has_local_port();
   local_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.local_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.local_port)
 }
 
 // optional bytes id = 5;
@@ -698,41 +698,41 @@ inline void DetectionRequest::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& DetectionRequest::id() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.id)
   return id_.GetNoArena();
 }
 inline void DetectionRequest::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.id)
 }
 #if LANG_CXX11
 inline void DetectionRequest::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.id)
 }
 #endif
 inline void DetectionRequest::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.id)
 }
 inline void DetectionRequest::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.id)
 }
 inline ::std::string* DetectionRequest::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* DetectionRequest::release_id() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.id)
   if (!has_id()) {
     return NULL;
   }
@@ -746,7 +746,7 @@ inline void DetectionRequest::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.DetectionRequest.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.id)
 }
 
 // optional int32 nat_type = 6;
@@ -764,13 +764,13 @@ inline void DetectionRequest::clear_nat_type() {
   clear_has_nat_type();
 }
 inline ::google::protobuf::int32 DetectionRequest::nat_type() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.nat_type)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.nat_type)
   return nat_type_;
 }
 inline void DetectionRequest::set_nat_type(::google::protobuf::int32 value) {
   set_has_nat_type();
   nat_type_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.nat_type)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.nat_type)
 }
 
 // optional bytes dht_key = 7;
@@ -788,41 +788,41 @@ inline void DetectionRequest::clear_dht_key() {
   clear_has_dht_key();
 }
 inline const ::std::string& DetectionRequest::dht_key() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.dht_key)
   return dht_key_.GetNoArena();
 }
 inline void DetectionRequest::set_dht_key(const ::std::string& value) {
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.dht_key)
 }
 #if LANG_CXX11
 inline void DetectionRequest::set_dht_key(::std::string&& value) {
   set_has_dht_key();
   dht_key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.dht_key)
 }
 #endif
 inline void DetectionRequest::set_dht_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.dht_key)
 }
 inline void DetectionRequest::set_dht_key(const void* value, size_t size) {
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.dht_key)
 }
 inline ::std::string* DetectionRequest::mutable_dht_key() {
   set_has_dht_key();
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.dht_key)
   return dht_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* DetectionRequest::release_dht_key() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.dht_key)
   if (!has_dht_key()) {
     return NULL;
   }
@@ -836,7 +836,7 @@ inline void DetectionRequest::set_allocated_dht_key(::std::string* dht_key) {
     clear_has_dht_key();
   }
   dht_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), dht_key);
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.DetectionRequest.dht_key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.dht_key)
 }
 
 // optional bool client = 8;
@@ -854,13 +854,13 @@ inline void DetectionRequest::clear_client() {
   clear_has_client();
 }
 inline bool DetectionRequest::client() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.client)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.client)
   return client_;
 }
 inline void DetectionRequest::set_client(bool value) {
   set_has_client();
   client_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.client)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.client)
 }
 
 // optional uint32 min_svr_port = 9;
@@ -878,13 +878,13 @@ inline void DetectionRequest::clear_min_svr_port() {
   clear_has_min_svr_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::min_svr_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.min_svr_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.min_svr_port)
   return min_svr_port_;
 }
 inline void DetectionRequest::set_min_svr_port(::google::protobuf::uint32 value) {
   set_has_min_svr_port();
   min_svr_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.min_svr_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.min_svr_port)
 }
 
 // optional uint32 max_svr_port = 10;
@@ -902,13 +902,13 @@ inline void DetectionRequest::clear_max_svr_port() {
   clear_has_max_svr_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::max_svr_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.max_svr_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.max_svr_port)
   return max_svr_port_;
 }
 inline void DetectionRequest::set_max_svr_port(::google::protobuf::uint32 value) {
   set_has_max_svr_port();
   max_svr_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.max_svr_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.max_svr_port)
 }
 
 // optional uint32 min_route_port = 11;
@@ -926,13 +926,13 @@ inline void DetectionRequest::clear_min_route_port() {
   clear_has_min_route_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::min_route_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.min_route_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.min_route_port)
   return min_route_port_;
 }
 inline void DetectionRequest::set_min_route_port(::google::protobuf::uint32 value) {
   set_has_min_route_port();
   min_route_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.min_route_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.min_route_port)
 }
 
 // optional uint32 max_route_port = 12;
@@ -950,13 +950,13 @@ inline void DetectionRequest::clear_max_route_port() {
   clear_has_max_route_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::max_route_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.max_route_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.max_route_port)
   return max_route_port_;
 }
 inline void DetectionRequest::set_max_route_port(::google::protobuf::uint32 value) {
   set_has_max_route_port();
   max_route_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.max_route_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.max_route_port)
 }
 
 // optional uint32 node_weight = 13;
@@ -974,13 +974,13 @@ inline void DetectionRequest::clear_node_weight() {
   clear_has_node_weight();
 }
 inline ::google::protobuf::uint32 DetectionRequest::node_weight() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.node_weight)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.node_weight)
   return node_weight_;
 }
 inline void DetectionRequest::set_node_weight(::google::protobuf::uint32 value) {
   set_has_node_weight();
   node_weight_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.node_weight)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.node_weight)
 }
 
 // optional uint32 min_udp_port = 14;
@@ -998,13 +998,13 @@ inline void DetectionRequest::clear_min_udp_port() {
   clear_has_min_udp_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::min_udp_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.min_udp_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.min_udp_port)
   return min_udp_port_;
 }
 inline void DetectionRequest::set_min_udp_port(::google::protobuf::uint32 value) {
   set_has_min_udp_port();
   min_udp_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.min_udp_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.min_udp_port)
 }
 
 // optional uint32 max_udp_port = 15;
@@ -1022,13 +1022,13 @@ inline void DetectionRequest::clear_max_udp_port() {
   clear_has_max_udp_port();
 }
 inline ::google::protobuf::uint32 DetectionRequest::max_udp_port() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.max_udp_port)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.max_udp_port)
   return max_udp_port_;
 }
 inline void DetectionRequest::set_max_udp_port(::google::protobuf::uint32 value) {
   set_has_max_udp_port();
   max_udp_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.max_udp_port)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.max_udp_port)
 }
 
 // optional bytes node_tag = 16;
@@ -1046,41 +1046,41 @@ inline void DetectionRequest::clear_node_tag() {
   clear_has_node_tag();
 }
 inline const ::std::string& DetectionRequest::node_tag() const {
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.node_tag)
   return node_tag_.GetNoArena();
 }
 inline void DetectionRequest::set_node_tag(const ::std::string& value) {
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 #if LANG_CXX11
 inline void DetectionRequest::set_node_tag(::std::string&& value) {
   set_has_node_tag();
   node_tag_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 #endif
 inline void DetectionRequest::set_node_tag(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 inline void DetectionRequest::set_node_tag(const void* value, size_t size) {
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 inline ::std::string* DetectionRequest::mutable_node_tag() {
   set_has_node_tag();
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.node_tag)
   return node_tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* DetectionRequest::release_node_tag() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.node_tag)
   if (!has_node_tag()) {
     return NULL;
   }
@@ -1094,14 +1094,14 @@ inline void DetectionRequest::set_allocated_node_tag(::std::string* node_tag) {
     clear_has_node_tag();
   }
   node_tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), node_tag);
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.DetectionRequest.node_tag)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 
 // -------------------------------------------------------------------
 
 // NatMessage
 
-// optional .lego.nat.protobuf.DetectionRequest detection_req = 1;
+// optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
 inline bool NatMessage::has_detection_req() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1115,32 +1115,32 @@ inline void NatMessage::clear_detection_req() {
   if (detection_req_ != NULL) detection_req_->Clear();
   clear_has_detection_req();
 }
-inline const ::lego::nat::protobuf::DetectionRequest& NatMessage::_internal_detection_req() const {
+inline const ::tenon::nat::protobuf::DetectionRequest& NatMessage::_internal_detection_req() const {
   return *detection_req_;
 }
-inline const ::lego::nat::protobuf::DetectionRequest& NatMessage::detection_req() const {
-  const ::lego::nat::protobuf::DetectionRequest* p = detection_req_;
-  // @@protoc_insertion_point(field_get:lego.nat.protobuf.NatMessage.detection_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::nat::protobuf::DetectionRequest*>(
-      &::lego::nat::protobuf::_DetectionRequest_default_instance_);
+inline const ::tenon::nat::protobuf::DetectionRequest& NatMessage::detection_req() const {
+  const ::tenon::nat::protobuf::DetectionRequest* p = detection_req_;
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.NatMessage.detection_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::nat::protobuf::DetectionRequest*>(
+      &::tenon::nat::protobuf::_DetectionRequest_default_instance_);
 }
-inline ::lego::nat::protobuf::DetectionRequest* NatMessage::release_detection_req() {
-  // @@protoc_insertion_point(field_release:lego.nat.protobuf.NatMessage.detection_req)
+inline ::tenon::nat::protobuf::DetectionRequest* NatMessage::release_detection_req() {
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.NatMessage.detection_req)
   clear_has_detection_req();
-  ::lego::nat::protobuf::DetectionRequest* temp = detection_req_;
+  ::tenon::nat::protobuf::DetectionRequest* temp = detection_req_;
   detection_req_ = NULL;
   return temp;
 }
-inline ::lego::nat::protobuf::DetectionRequest* NatMessage::mutable_detection_req() {
+inline ::tenon::nat::protobuf::DetectionRequest* NatMessage::mutable_detection_req() {
   set_has_detection_req();
   if (detection_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::nat::protobuf::DetectionRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::nat::protobuf::DetectionRequest>(GetArenaNoVirtual());
     detection_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.nat.protobuf.NatMessage.detection_req)
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.NatMessage.detection_req)
   return detection_req_;
 }
-inline void NatMessage::set_allocated_detection_req(::lego::nat::protobuf::DetectionRequest* detection_req) {
+inline void NatMessage::set_allocated_detection_req(::tenon::nat::protobuf::DetectionRequest* detection_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete detection_req_;
@@ -1156,7 +1156,7 @@ inline void NatMessage::set_allocated_detection_req(::lego::nat::protobuf::Detec
     clear_has_detection_req();
   }
   detection_req_ = detection_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.nat.protobuf.NatMessage.detection_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.NatMessage.detection_req)
 }
 
 #ifdef __GNUC__
@@ -1169,7 +1169,7 @@ inline void NatMessage::set_allocated_detection_req(::lego::nat::protobuf::Detec
 
 }  // namespace protobuf
 }  // namespace nat
-}  // namespace lego
+}  // namespace tenon
 
 // @@protoc_insertion_point(global_scope)
 

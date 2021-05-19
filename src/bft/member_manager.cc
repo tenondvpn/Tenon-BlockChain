@@ -5,7 +5,7 @@
 
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -116,4 +116,4 @@ BftMemberPtr MemberManager::GetMember(uint32_t network_id, uint32_t index) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

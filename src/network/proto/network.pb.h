@@ -47,7 +47,7 @@ struct TableStruct {
 };
 void AddDescriptors();
 }  // namespace protobuf_network_2eproto
-namespace lego {
+namespace tenon {
 namespace network {
 namespace protobuf {
 class GetNetworkNodesRequest;
@@ -64,22 +64,22 @@ class NodeInfoDefaultTypeInternal;
 extern NodeInfoDefaultTypeInternal _NodeInfo_default_instance_;
 }  // namespace protobuf
 }  // namespace network
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> ::lego::network::protobuf::GetNetworkNodesRequest* Arena::CreateMaybeMessage<::lego::network::protobuf::GetNetworkNodesRequest>(Arena*);
-template<> ::lego::network::protobuf::GetNetworkNodesResponse* Arena::CreateMaybeMessage<::lego::network::protobuf::GetNetworkNodesResponse>(Arena*);
-template<> ::lego::network::protobuf::NetworkMessage* Arena::CreateMaybeMessage<::lego::network::protobuf::NetworkMessage>(Arena*);
-template<> ::lego::network::protobuf::NodeInfo* Arena::CreateMaybeMessage<::lego::network::protobuf::NodeInfo>(Arena*);
+template<> ::tenon::network::protobuf::GetNetworkNodesRequest* Arena::CreateMaybeMessage<::tenon::network::protobuf::GetNetworkNodesRequest>(Arena*);
+template<> ::tenon::network::protobuf::GetNetworkNodesResponse* Arena::CreateMaybeMessage<::tenon::network::protobuf::GetNetworkNodesResponse>(Arena*);
+template<> ::tenon::network::protobuf::NetworkMessage* Arena::CreateMaybeMessage<::tenon::network::protobuf::NetworkMessage>(Arena*);
+template<> ::tenon::network::protobuf::NodeInfo* Arena::CreateMaybeMessage<::tenon::network::protobuf::NodeInfo>(Arena*);
 }  // namespace protobuf
 }  // namespace google
-namespace lego {
+namespace tenon {
 namespace network {
 namespace protobuf {
 
 // ===================================================================
 
-class GetNetworkNodesRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.network.protobuf.GetNetworkNodesRequest) */ {
+class GetNetworkNodesRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.network.protobuf.GetNetworkNodesRequest) */ {
  public:
   GetNetworkNodesRequest();
   virtual ~GetNetworkNodesRequest();
@@ -194,7 +194,7 @@ class GetNetworkNodesRequest : public ::google::protobuf::Message /* @@protoc_in
   ::google::protobuf::uint32 country() const;
   void set_country(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.network.protobuf.GetNetworkNodesRequest)
+  // @@protoc_insertion_point(class_scope:tenon.network.protobuf.GetNetworkNodesRequest)
  private:
   void set_has_net_id();
   void clear_has_net_id();
@@ -213,7 +213,7 @@ class GetNetworkNodesRequest : public ::google::protobuf::Message /* @@protoc_in
 };
 // -------------------------------------------------------------------
 
-class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.network.protobuf.NodeInfo) */ {
+class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.network.protobuf.NodeInfo) */ {
  public:
   NodeInfo();
   virtual ~NodeInfo();
@@ -446,7 +446,7 @@ class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::uint32 max_route_port() const;
   void set_max_route_port(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:lego.network.protobuf.NodeInfo)
+  // @@protoc_insertion_point(class_scope:tenon.network.protobuf.NodeInfo)
  private:
   void set_has_public_ip();
   void clear_has_public_ip();
@@ -495,7 +495,7 @@ class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(
 };
 // -------------------------------------------------------------------
 
-class GetNetworkNodesResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.network.protobuf.GetNetworkNodesResponse) */ {
+class GetNetworkNodesResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.network.protobuf.GetNetworkNodesResponse) */ {
  public:
   GetNetworkNodesResponse();
   virtual ~GetNetworkNodesResponse();
@@ -589,30 +589,30 @@ class GetNetworkNodesResponse : public ::google::protobuf::Message /* @@protoc_i
 
   // accessors -------------------------------------------------------
 
-  // repeated .lego.network.protobuf.NodeInfo nodes = 1;
+  // repeated .tenon.network.protobuf.NodeInfo nodes = 1;
   int nodes_size() const;
   void clear_nodes();
   static const int kNodesFieldNumber = 1;
-  ::lego::network::protobuf::NodeInfo* mutable_nodes(int index);
-  ::google::protobuf::RepeatedPtrField< ::lego::network::protobuf::NodeInfo >*
+  ::tenon::network::protobuf::NodeInfo* mutable_nodes(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::network::protobuf::NodeInfo >*
       mutable_nodes();
-  const ::lego::network::protobuf::NodeInfo& nodes(int index) const;
-  ::lego::network::protobuf::NodeInfo* add_nodes();
-  const ::google::protobuf::RepeatedPtrField< ::lego::network::protobuf::NodeInfo >&
+  const ::tenon::network::protobuf::NodeInfo& nodes(int index) const;
+  ::tenon::network::protobuf::NodeInfo* add_nodes();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::network::protobuf::NodeInfo >&
       nodes() const;
 
-  // @@protoc_insertion_point(class_scope:lego.network.protobuf.GetNetworkNodesResponse)
+  // @@protoc_insertion_point(class_scope:tenon.network.protobuf.GetNetworkNodesResponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::lego::network::protobuf::NodeInfo > nodes_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::network::protobuf::NodeInfo > nodes_;
   friend struct ::protobuf_network_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class NetworkMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:lego.network.protobuf.NetworkMessage) */ {
+class NetworkMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.network.protobuf.NetworkMessage) */ {
  public:
   NetworkMessage();
   virtual ~NetworkMessage();
@@ -706,31 +706,31 @@ class NetworkMessage : public ::google::protobuf::Message /* @@protoc_insertion_
 
   // accessors -------------------------------------------------------
 
-  // optional .lego.network.protobuf.GetNetworkNodesRequest get_net_nodes_req = 1;
+  // optional .tenon.network.protobuf.GetNetworkNodesRequest get_net_nodes_req = 1;
   bool has_get_net_nodes_req() const;
   void clear_get_net_nodes_req();
   static const int kGetNetNodesReqFieldNumber = 1;
   private:
-  const ::lego::network::protobuf::GetNetworkNodesRequest& _internal_get_net_nodes_req() const;
+  const ::tenon::network::protobuf::GetNetworkNodesRequest& _internal_get_net_nodes_req() const;
   public:
-  const ::lego::network::protobuf::GetNetworkNodesRequest& get_net_nodes_req() const;
-  ::lego::network::protobuf::GetNetworkNodesRequest* release_get_net_nodes_req();
-  ::lego::network::protobuf::GetNetworkNodesRequest* mutable_get_net_nodes_req();
-  void set_allocated_get_net_nodes_req(::lego::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req);
+  const ::tenon::network::protobuf::GetNetworkNodesRequest& get_net_nodes_req() const;
+  ::tenon::network::protobuf::GetNetworkNodesRequest* release_get_net_nodes_req();
+  ::tenon::network::protobuf::GetNetworkNodesRequest* mutable_get_net_nodes_req();
+  void set_allocated_get_net_nodes_req(::tenon::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req);
 
-  // optional .lego.network.protobuf.GetNetworkNodesResponse get_net_nodes_res = 2;
+  // optional .tenon.network.protobuf.GetNetworkNodesResponse get_net_nodes_res = 2;
   bool has_get_net_nodes_res() const;
   void clear_get_net_nodes_res();
   static const int kGetNetNodesResFieldNumber = 2;
   private:
-  const ::lego::network::protobuf::GetNetworkNodesResponse& _internal_get_net_nodes_res() const;
+  const ::tenon::network::protobuf::GetNetworkNodesResponse& _internal_get_net_nodes_res() const;
   public:
-  const ::lego::network::protobuf::GetNetworkNodesResponse& get_net_nodes_res() const;
-  ::lego::network::protobuf::GetNetworkNodesResponse* release_get_net_nodes_res();
-  ::lego::network::protobuf::GetNetworkNodesResponse* mutable_get_net_nodes_res();
-  void set_allocated_get_net_nodes_res(::lego::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res);
+  const ::tenon::network::protobuf::GetNetworkNodesResponse& get_net_nodes_res() const;
+  ::tenon::network::protobuf::GetNetworkNodesResponse* release_get_net_nodes_res();
+  ::tenon::network::protobuf::GetNetworkNodesResponse* mutable_get_net_nodes_res();
+  void set_allocated_get_net_nodes_res(::tenon::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res);
 
-  // @@protoc_insertion_point(class_scope:lego.network.protobuf.NetworkMessage)
+  // @@protoc_insertion_point(class_scope:tenon.network.protobuf.NetworkMessage)
  private:
   void set_has_get_net_nodes_req();
   void clear_has_get_net_nodes_req();
@@ -740,8 +740,8 @@ class NetworkMessage : public ::google::protobuf::Message /* @@protoc_insertion_
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::lego::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req_;
-  ::lego::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res_;
+  ::tenon::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req_;
+  ::tenon::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res_;
   friend struct ::protobuf_network_2eproto::TableStruct;
 };
 // ===================================================================
@@ -770,13 +770,13 @@ inline void GetNetworkNodesRequest::clear_net_id() {
   clear_has_net_id();
 }
 inline ::google::protobuf::uint32 GetNetworkNodesRequest::net_id() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.GetNetworkNodesRequest.net_id)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.GetNetworkNodesRequest.net_id)
   return net_id_;
 }
 inline void GetNetworkNodesRequest::set_net_id(::google::protobuf::uint32 value) {
   set_has_net_id();
   net_id_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.GetNetworkNodesRequest.net_id)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.GetNetworkNodesRequest.net_id)
 }
 
 // optional uint32 count = 2;
@@ -794,13 +794,13 @@ inline void GetNetworkNodesRequest::clear_count() {
   clear_has_count();
 }
 inline ::google::protobuf::uint32 GetNetworkNodesRequest::count() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.GetNetworkNodesRequest.count)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.GetNetworkNodesRequest.count)
   return count_;
 }
 inline void GetNetworkNodesRequest::set_count(::google::protobuf::uint32 value) {
   set_has_count();
   count_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.GetNetworkNodesRequest.count)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.GetNetworkNodesRequest.count)
 }
 
 // optional uint32 country = 3;
@@ -818,13 +818,13 @@ inline void GetNetworkNodesRequest::clear_country() {
   clear_has_country();
 }
 inline ::google::protobuf::uint32 GetNetworkNodesRequest::country() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.GetNetworkNodesRequest.country)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.GetNetworkNodesRequest.country)
   return country_;
 }
 inline void GetNetworkNodesRequest::set_country(::google::protobuf::uint32 value) {
   set_has_country();
   country_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.GetNetworkNodesRequest.country)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.GetNetworkNodesRequest.country)
 }
 
 // -------------------------------------------------------------------
@@ -846,41 +846,41 @@ inline void NodeInfo::clear_public_ip() {
   clear_has_public_ip();
 }
 inline const ::std::string& NodeInfo::public_ip() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.public_ip)
   return public_ip_.GetNoArena();
 }
 inline void NodeInfo::set_public_ip(const ::std::string& value) {
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.public_ip)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_public_ip(::std::string&& value) {
   set_has_public_ip();
   public_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.public_ip)
 }
 #endif
 inline void NodeInfo::set_public_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.public_ip)
 }
 inline void NodeInfo::set_public_ip(const void* value, size_t size) {
   set_has_public_ip();
   public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.public_ip)
 }
 inline ::std::string* NodeInfo::mutable_public_ip() {
   set_has_public_ip();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.public_ip)
   return public_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_public_ip() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.public_ip)
   if (!has_public_ip()) {
     return NULL;
   }
@@ -894,7 +894,7 @@ inline void NodeInfo::set_allocated_public_ip(::std::string* public_ip) {
     clear_has_public_ip();
   }
   public_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), public_ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.public_ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.public_ip)
 }
 
 // optional int32 public_port = 2;
@@ -912,13 +912,13 @@ inline void NodeInfo::clear_public_port() {
   clear_has_public_port();
 }
 inline ::google::protobuf::int32 NodeInfo::public_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.public_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.public_port)
   return public_port_;
 }
 inline void NodeInfo::set_public_port(::google::protobuf::int32 value) {
   set_has_public_port();
   public_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.public_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.public_port)
 }
 
 // optional bytes local_ip = 3;
@@ -936,41 +936,41 @@ inline void NodeInfo::clear_local_ip() {
   clear_has_local_ip();
 }
 inline const ::std::string& NodeInfo::local_ip() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.local_ip)
   return local_ip_.GetNoArena();
 }
 inline void NodeInfo::set_local_ip(const ::std::string& value) {
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.local_ip)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_local_ip(::std::string&& value) {
   set_has_local_ip();
   local_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.local_ip)
 }
 #endif
 inline void NodeInfo::set_local_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.local_ip)
 }
 inline void NodeInfo::set_local_ip(const void* value, size_t size) {
   set_has_local_ip();
   local_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.local_ip)
 }
 inline ::std::string* NodeInfo::mutable_local_ip() {
   set_has_local_ip();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.local_ip)
   return local_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_local_ip() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.local_ip)
   if (!has_local_ip()) {
     return NULL;
   }
@@ -984,7 +984,7 @@ inline void NodeInfo::set_allocated_local_ip(::std::string* local_ip) {
     clear_has_local_ip();
   }
   local_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), local_ip);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.local_ip)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.local_ip)
 }
 
 // optional int32 local_port = 4;
@@ -1002,13 +1002,13 @@ inline void NodeInfo::clear_local_port() {
   clear_has_local_port();
 }
 inline ::google::protobuf::int32 NodeInfo::local_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.local_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.local_port)
   return local_port_;
 }
 inline void NodeInfo::set_local_port(::google::protobuf::int32 value) {
   set_has_local_port();
   local_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.local_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.local_port)
 }
 
 // optional bytes id = 5;
@@ -1026,41 +1026,41 @@ inline void NodeInfo::clear_id() {
   clear_has_id();
 }
 inline const ::std::string& NodeInfo::id() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.id)
   return id_.GetNoArena();
 }
 inline void NodeInfo::set_id(const ::std::string& value) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.id)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_id(::std::string&& value) {
   set_has_id();
   id_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.id)
 }
 #endif
 inline void NodeInfo::set_id(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.id)
 }
 inline void NodeInfo::set_id(const void* value, size_t size) {
   set_has_id();
   id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.id)
 }
 inline ::std::string* NodeInfo::mutable_id() {
   set_has_id();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.id)
   return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_id() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.id)
   if (!has_id()) {
     return NULL;
   }
@@ -1074,7 +1074,7 @@ inline void NodeInfo::set_allocated_id(::std::string* id) {
     clear_has_id();
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.id)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.id)
 }
 
 // optional int32 nat_type = 6;
@@ -1092,13 +1092,13 @@ inline void NodeInfo::clear_nat_type() {
   clear_has_nat_type();
 }
 inline ::google::protobuf::int32 NodeInfo::nat_type() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.nat_type)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.nat_type)
   return nat_type_;
 }
 inline void NodeInfo::set_nat_type(::google::protobuf::int32 value) {
   set_has_nat_type();
   nat_type_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.nat_type)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.nat_type)
 }
 
 // optional bytes dht_key = 7;
@@ -1116,41 +1116,41 @@ inline void NodeInfo::clear_dht_key() {
   clear_has_dht_key();
 }
 inline const ::std::string& NodeInfo::dht_key() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.dht_key)
   return dht_key_.GetNoArena();
 }
 inline void NodeInfo::set_dht_key(const ::std::string& value) {
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.dht_key)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_dht_key(::std::string&& value) {
   set_has_dht_key();
   dht_key_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.dht_key)
 }
 #endif
 inline void NodeInfo::set_dht_key(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.dht_key)
 }
 inline void NodeInfo::set_dht_key(const void* value, size_t size) {
   set_has_dht_key();
   dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.dht_key)
 }
 inline ::std::string* NodeInfo::mutable_dht_key() {
   set_has_dht_key();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.dht_key)
   return dht_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_dht_key() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.dht_key)
   if (!has_dht_key()) {
     return NULL;
   }
@@ -1164,7 +1164,7 @@ inline void NodeInfo::set_allocated_dht_key(::std::string* dht_key) {
     clear_has_dht_key();
   }
   dht_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), dht_key);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.dht_key)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.dht_key)
 }
 
 // optional bytes pubkey = 8;
@@ -1182,41 +1182,41 @@ inline void NodeInfo::clear_pubkey() {
   clear_has_pubkey();
 }
 inline const ::std::string& NodeInfo::pubkey() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.pubkey)
   return pubkey_.GetNoArena();
 }
 inline void NodeInfo::set_pubkey(const ::std::string& value) {
   set_has_pubkey();
   pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.pubkey)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_pubkey(::std::string&& value) {
   set_has_pubkey();
   pubkey_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.pubkey)
 }
 #endif
 inline void NodeInfo::set_pubkey(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_pubkey();
   pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.pubkey)
 }
 inline void NodeInfo::set_pubkey(const void* value, size_t size) {
   set_has_pubkey();
   pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.pubkey)
 }
 inline ::std::string* NodeInfo::mutable_pubkey() {
   set_has_pubkey();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.pubkey)
   return pubkey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_pubkey() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.pubkey)
   if (!has_pubkey()) {
     return NULL;
   }
@@ -1230,7 +1230,7 @@ inline void NodeInfo::set_allocated_pubkey(::std::string* pubkey) {
     clear_has_pubkey();
   }
   pubkey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pubkey);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.pubkey)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.pubkey)
 }
 
 // optional uint32 min_svr_port = 9;
@@ -1248,13 +1248,13 @@ inline void NodeInfo::clear_min_svr_port() {
   clear_has_min_svr_port();
 }
 inline ::google::protobuf::uint32 NodeInfo::min_svr_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.min_svr_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.min_svr_port)
   return min_svr_port_;
 }
 inline void NodeInfo::set_min_svr_port(::google::protobuf::uint32 value) {
   set_has_min_svr_port();
   min_svr_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.min_svr_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.min_svr_port)
 }
 
 // optional uint32 max_svr_port = 10;
@@ -1272,13 +1272,13 @@ inline void NodeInfo::clear_max_svr_port() {
   clear_has_max_svr_port();
 }
 inline ::google::protobuf::uint32 NodeInfo::max_svr_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.max_svr_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.max_svr_port)
   return max_svr_port_;
 }
 inline void NodeInfo::set_max_svr_port(::google::protobuf::uint32 value) {
   set_has_max_svr_port();
   max_svr_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.max_svr_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.max_svr_port)
 }
 
 // optional uint32 min_route_port = 11;
@@ -1296,13 +1296,13 @@ inline void NodeInfo::clear_min_route_port() {
   clear_has_min_route_port();
 }
 inline ::google::protobuf::uint32 NodeInfo::min_route_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.min_route_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.min_route_port)
   return min_route_port_;
 }
 inline void NodeInfo::set_min_route_port(::google::protobuf::uint32 value) {
   set_has_min_route_port();
   min_route_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.min_route_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.min_route_port)
 }
 
 // optional uint32 max_route_port = 12;
@@ -1320,13 +1320,13 @@ inline void NodeInfo::clear_max_route_port() {
   clear_has_max_route_port();
 }
 inline ::google::protobuf::uint32 NodeInfo::max_route_port() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.max_route_port)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.max_route_port)
   return max_route_port_;
 }
 inline void NodeInfo::set_max_route_port(::google::protobuf::uint32 value) {
   set_has_max_route_port();
   max_route_port_ = value;
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.max_route_port)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.max_route_port)
 }
 
 // optional bytes node_tag = 13;
@@ -1344,41 +1344,41 @@ inline void NodeInfo::clear_node_tag() {
   clear_has_node_tag();
 }
 inline const ::std::string& NodeInfo::node_tag() const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NodeInfo.node_tag)
   return node_tag_.GetNoArena();
 }
 inline void NodeInfo::set_node_tag(const ::std::string& value) {
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_set:tenon.network.protobuf.NodeInfo.node_tag)
 }
 #if LANG_CXX11
 inline void NodeInfo::set_node_tag(::std::string&& value) {
   set_has_node_tag();
   node_tag_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.network.protobuf.NodeInfo.node_tag)
 }
 #endif
 inline void NodeInfo::set_node_tag(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_set_char:tenon.network.protobuf.NodeInfo.node_tag)
 }
 inline void NodeInfo::set_node_tag(const void* value, size_t size) {
   set_has_node_tag();
   node_tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_set_pointer:tenon.network.protobuf.NodeInfo.node_tag)
 }
 inline ::std::string* NodeInfo::mutable_node_tag() {
   set_has_node_tag();
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NodeInfo.node_tag)
   return node_tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* NodeInfo::release_node_tag() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NodeInfo.node_tag)
   if (!has_node_tag()) {
     return NULL;
   }
@@ -1392,40 +1392,40 @@ inline void NodeInfo::set_allocated_node_tag(::std::string* node_tag) {
     clear_has_node_tag();
   }
   node_tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), node_tag);
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NodeInfo.node_tag)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NodeInfo.node_tag)
 }
 
 // -------------------------------------------------------------------
 
 // GetNetworkNodesResponse
 
-// repeated .lego.network.protobuf.NodeInfo nodes = 1;
+// repeated .tenon.network.protobuf.NodeInfo nodes = 1;
 inline int GetNetworkNodesResponse::nodes_size() const {
   return nodes_.size();
 }
 inline void GetNetworkNodesResponse::clear_nodes() {
   nodes_.Clear();
 }
-inline ::lego::network::protobuf::NodeInfo* GetNetworkNodesResponse::mutable_nodes(int index) {
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.GetNetworkNodesResponse.nodes)
+inline ::tenon::network::protobuf::NodeInfo* GetNetworkNodesResponse::mutable_nodes(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.GetNetworkNodesResponse.nodes)
   return nodes_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::lego::network::protobuf::NodeInfo >*
+inline ::google::protobuf::RepeatedPtrField< ::tenon::network::protobuf::NodeInfo >*
 GetNetworkNodesResponse::mutable_nodes() {
-  // @@protoc_insertion_point(field_mutable_list:lego.network.protobuf.GetNetworkNodesResponse.nodes)
+  // @@protoc_insertion_point(field_mutable_list:tenon.network.protobuf.GetNetworkNodesResponse.nodes)
   return &nodes_;
 }
-inline const ::lego::network::protobuf::NodeInfo& GetNetworkNodesResponse::nodes(int index) const {
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.GetNetworkNodesResponse.nodes)
+inline const ::tenon::network::protobuf::NodeInfo& GetNetworkNodesResponse::nodes(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.GetNetworkNodesResponse.nodes)
   return nodes_.Get(index);
 }
-inline ::lego::network::protobuf::NodeInfo* GetNetworkNodesResponse::add_nodes() {
-  // @@protoc_insertion_point(field_add:lego.network.protobuf.GetNetworkNodesResponse.nodes)
+inline ::tenon::network::protobuf::NodeInfo* GetNetworkNodesResponse::add_nodes() {
+  // @@protoc_insertion_point(field_add:tenon.network.protobuf.GetNetworkNodesResponse.nodes)
   return nodes_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::lego::network::protobuf::NodeInfo >&
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::network::protobuf::NodeInfo >&
 GetNetworkNodesResponse::nodes() const {
-  // @@protoc_insertion_point(field_list:lego.network.protobuf.GetNetworkNodesResponse.nodes)
+  // @@protoc_insertion_point(field_list:tenon.network.protobuf.GetNetworkNodesResponse.nodes)
   return nodes_;
 }
 
@@ -1433,7 +1433,7 @@ GetNetworkNodesResponse::nodes() const {
 
 // NetworkMessage
 
-// optional .lego.network.protobuf.GetNetworkNodesRequest get_net_nodes_req = 1;
+// optional .tenon.network.protobuf.GetNetworkNodesRequest get_net_nodes_req = 1;
 inline bool NetworkMessage::has_get_net_nodes_req() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1447,32 +1447,32 @@ inline void NetworkMessage::clear_get_net_nodes_req() {
   if (get_net_nodes_req_ != NULL) get_net_nodes_req_->Clear();
   clear_has_get_net_nodes_req();
 }
-inline const ::lego::network::protobuf::GetNetworkNodesRequest& NetworkMessage::_internal_get_net_nodes_req() const {
+inline const ::tenon::network::protobuf::GetNetworkNodesRequest& NetworkMessage::_internal_get_net_nodes_req() const {
   return *get_net_nodes_req_;
 }
-inline const ::lego::network::protobuf::GetNetworkNodesRequest& NetworkMessage::get_net_nodes_req() const {
-  const ::lego::network::protobuf::GetNetworkNodesRequest* p = get_net_nodes_req_;
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NetworkMessage.get_net_nodes_req)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::network::protobuf::GetNetworkNodesRequest*>(
-      &::lego::network::protobuf::_GetNetworkNodesRequest_default_instance_);
+inline const ::tenon::network::protobuf::GetNetworkNodesRequest& NetworkMessage::get_net_nodes_req() const {
+  const ::tenon::network::protobuf::GetNetworkNodesRequest* p = get_net_nodes_req_;
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NetworkMessage.get_net_nodes_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::network::protobuf::GetNetworkNodesRequest*>(
+      &::tenon::network::protobuf::_GetNetworkNodesRequest_default_instance_);
 }
-inline ::lego::network::protobuf::GetNetworkNodesRequest* NetworkMessage::release_get_net_nodes_req() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NetworkMessage.get_net_nodes_req)
+inline ::tenon::network::protobuf::GetNetworkNodesRequest* NetworkMessage::release_get_net_nodes_req() {
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NetworkMessage.get_net_nodes_req)
   clear_has_get_net_nodes_req();
-  ::lego::network::protobuf::GetNetworkNodesRequest* temp = get_net_nodes_req_;
+  ::tenon::network::protobuf::GetNetworkNodesRequest* temp = get_net_nodes_req_;
   get_net_nodes_req_ = NULL;
   return temp;
 }
-inline ::lego::network::protobuf::GetNetworkNodesRequest* NetworkMessage::mutable_get_net_nodes_req() {
+inline ::tenon::network::protobuf::GetNetworkNodesRequest* NetworkMessage::mutable_get_net_nodes_req() {
   set_has_get_net_nodes_req();
   if (get_net_nodes_req_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::network::protobuf::GetNetworkNodesRequest>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::network::protobuf::GetNetworkNodesRequest>(GetArenaNoVirtual());
     get_net_nodes_req_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NetworkMessage.get_net_nodes_req)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NetworkMessage.get_net_nodes_req)
   return get_net_nodes_req_;
 }
-inline void NetworkMessage::set_allocated_get_net_nodes_req(::lego::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req) {
+inline void NetworkMessage::set_allocated_get_net_nodes_req(::tenon::network::protobuf::GetNetworkNodesRequest* get_net_nodes_req) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete get_net_nodes_req_;
@@ -1488,10 +1488,10 @@ inline void NetworkMessage::set_allocated_get_net_nodes_req(::lego::network::pro
     clear_has_get_net_nodes_req();
   }
   get_net_nodes_req_ = get_net_nodes_req;
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NetworkMessage.get_net_nodes_req)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NetworkMessage.get_net_nodes_req)
 }
 
-// optional .lego.network.protobuf.GetNetworkNodesResponse get_net_nodes_res = 2;
+// optional .tenon.network.protobuf.GetNetworkNodesResponse get_net_nodes_res = 2;
 inline bool NetworkMessage::has_get_net_nodes_res() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1505,32 +1505,32 @@ inline void NetworkMessage::clear_get_net_nodes_res() {
   if (get_net_nodes_res_ != NULL) get_net_nodes_res_->Clear();
   clear_has_get_net_nodes_res();
 }
-inline const ::lego::network::protobuf::GetNetworkNodesResponse& NetworkMessage::_internal_get_net_nodes_res() const {
+inline const ::tenon::network::protobuf::GetNetworkNodesResponse& NetworkMessage::_internal_get_net_nodes_res() const {
   return *get_net_nodes_res_;
 }
-inline const ::lego::network::protobuf::GetNetworkNodesResponse& NetworkMessage::get_net_nodes_res() const {
-  const ::lego::network::protobuf::GetNetworkNodesResponse* p = get_net_nodes_res_;
-  // @@protoc_insertion_point(field_get:lego.network.protobuf.NetworkMessage.get_net_nodes_res)
-  return p != NULL ? *p : *reinterpret_cast<const ::lego::network::protobuf::GetNetworkNodesResponse*>(
-      &::lego::network::protobuf::_GetNetworkNodesResponse_default_instance_);
+inline const ::tenon::network::protobuf::GetNetworkNodesResponse& NetworkMessage::get_net_nodes_res() const {
+  const ::tenon::network::protobuf::GetNetworkNodesResponse* p = get_net_nodes_res_;
+  // @@protoc_insertion_point(field_get:tenon.network.protobuf.NetworkMessage.get_net_nodes_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::network::protobuf::GetNetworkNodesResponse*>(
+      &::tenon::network::protobuf::_GetNetworkNodesResponse_default_instance_);
 }
-inline ::lego::network::protobuf::GetNetworkNodesResponse* NetworkMessage::release_get_net_nodes_res() {
-  // @@protoc_insertion_point(field_release:lego.network.protobuf.NetworkMessage.get_net_nodes_res)
+inline ::tenon::network::protobuf::GetNetworkNodesResponse* NetworkMessage::release_get_net_nodes_res() {
+  // @@protoc_insertion_point(field_release:tenon.network.protobuf.NetworkMessage.get_net_nodes_res)
   clear_has_get_net_nodes_res();
-  ::lego::network::protobuf::GetNetworkNodesResponse* temp = get_net_nodes_res_;
+  ::tenon::network::protobuf::GetNetworkNodesResponse* temp = get_net_nodes_res_;
   get_net_nodes_res_ = NULL;
   return temp;
 }
-inline ::lego::network::protobuf::GetNetworkNodesResponse* NetworkMessage::mutable_get_net_nodes_res() {
+inline ::tenon::network::protobuf::GetNetworkNodesResponse* NetworkMessage::mutable_get_net_nodes_res() {
   set_has_get_net_nodes_res();
   if (get_net_nodes_res_ == NULL) {
-    auto* p = CreateMaybeMessage<::lego::network::protobuf::GetNetworkNodesResponse>(GetArenaNoVirtual());
+    auto* p = CreateMaybeMessage<::tenon::network::protobuf::GetNetworkNodesResponse>(GetArenaNoVirtual());
     get_net_nodes_res_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:lego.network.protobuf.NetworkMessage.get_net_nodes_res)
+  // @@protoc_insertion_point(field_mutable:tenon.network.protobuf.NetworkMessage.get_net_nodes_res)
   return get_net_nodes_res_;
 }
-inline void NetworkMessage::set_allocated_get_net_nodes_res(::lego::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res) {
+inline void NetworkMessage::set_allocated_get_net_nodes_res(::tenon::network::protobuf::GetNetworkNodesResponse* get_net_nodes_res) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete get_net_nodes_res_;
@@ -1546,7 +1546,7 @@ inline void NetworkMessage::set_allocated_get_net_nodes_res(::lego::network::pro
     clear_has_get_net_nodes_res();
   }
   get_net_nodes_res_ = get_net_nodes_res;
-  // @@protoc_insertion_point(field_set_allocated:lego.network.protobuf.NetworkMessage.get_net_nodes_res)
+  // @@protoc_insertion_point(field_set_allocated:tenon.network.protobuf.NetworkMessage.get_net_nodes_res)
 }
 
 #ifdef __GNUC__
@@ -1563,7 +1563,7 @@ inline void NetworkMessage::set_allocated_get_net_nodes_res(::lego::network::pro
 
 }  // namespace protobuf
 }  // namespace network
-}  // namespace lego
+}  // namespace tenon
 
 // @@protoc_insertion_point(global_scope)
 

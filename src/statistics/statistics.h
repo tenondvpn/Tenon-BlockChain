@@ -14,7 +14,7 @@
 #include "statistics/statis_utils.h"
 #include "db/db_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace statis {
 
@@ -112,4 +112,4 @@ private:
 
 }  // namespace statis
 
-}  // namespace lego
+}  // namespace tenon

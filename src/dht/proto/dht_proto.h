@@ -9,7 +9,7 @@
 #include "dht/node.h"
 #include "dht/base_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
 
@@ -62,5 +62,5 @@ private:
 
 }  // namespace dht
 
-}  //namespace lego
+}  //namespace tenon
 

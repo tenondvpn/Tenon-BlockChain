@@ -14,7 +14,7 @@
 #include "network/network_utils.h"
 #include "network/bootstrap.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -73,7 +73,7 @@ int UniversalManager::CreateNetwork(
         common::GlobalInfo::Instance()->country(),
         common::GlobalInfo::Instance()->id());
     bool client = false;
-    config.Get("lego", "client", client);
+    config.Get("tenon", "client", client);
     dht::NodePtr local_node = std::make_shared<dht::Node>(
         common::GlobalInfo::Instance()->id(),
         dht_key.StrKey(),
@@ -103,8 +103,8 @@ int UniversalManager::CreateNetwork(
     uint64_t bTime = common::TimeUtils::TimestampMs();
     int32_t get_init_msg = 0;
     std::string init_uid;
-    config.Get("lego", "init_uid", init_uid);
-    config.Get("lego", "get_init_msg", get_init_msg);
+    config.Get("tenon", "init_uid", init_uid);
+    config.Get("tenon", "get_init_msg", get_init_msg);
     if (dht_ptr->Bootstrap(boot_nodes, get_init_msg, init_uid) != dht::kDhtSuccess) {
 //         UnRegisterUniversal(network_id);
         NETWORK_ERROR("bootstrap universal network failed!");
@@ -163,4 +163,4 @@ UniversalManager::~UniversalManager() {
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

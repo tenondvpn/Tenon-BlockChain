@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.network.protobuf;
+package tenon.network.protobuf;
 
 message GetNetworkNodesRequest {
 	optional uint32 net_id = 1;

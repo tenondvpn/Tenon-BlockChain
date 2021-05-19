@@ -13,7 +13,7 @@
 #include "sync/proto/sync.pb.h"
 #include "sync/sync_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class BaseDht;
@@ -77,4 +77,4 @@ private:
 
 }  // namespace sync
 
-}  // namespace lego
+}  // namespace tenon

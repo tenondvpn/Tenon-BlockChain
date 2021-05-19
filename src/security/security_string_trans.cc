@@ -5,7 +5,7 @@
 #include "security/schnorr.h"
 #include "security/crypto_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -104,4 +104,4 @@ void SecurityStringTrans::EcPointToString(
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

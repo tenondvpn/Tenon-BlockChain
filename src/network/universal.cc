@@ -15,7 +15,7 @@
 #include "network/dht_manager.h"
 #include "network/proto/network_proto.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -298,4 +298,4 @@ int Universal::Destroy() {
 
 }  // namespace network
 
-}  //namespace lego
+}  //namespace tenon

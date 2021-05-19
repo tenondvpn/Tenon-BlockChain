@@ -43,7 +43,7 @@
 #include "client/proto/client_proto.h"
 #include "client/client_universal_dht.h"
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -91,8 +91,8 @@ std::string VpnClient::UpdateUseVpnNode(
         const std::string& old_ip,
         const std::string& ip,
         const std::string& uid) {
-    auto uni_dht = lego::network::DhtManager::Instance()->GetDht(
-            lego::network::kVpnNetworkId);
+    auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
+            tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
         CLIENT_ERROR("not found vpn server dht.");
         return "";
@@ -227,7 +227,7 @@ void VpnClient::AdReward(const std::string& str) {
 
     transport::protobuf::Header message;
     auto dht = network::UniversalManager::Instance()->GetUniversal(
-            lego::network::kUniversalNetworkId);
+            tenon::network::kUniversalNetworkId);
     if (dht == nullptr) {
         return;
     }
@@ -408,8 +408,8 @@ void VpnClient::HandleHeightResponse(
 }
 
 void VpnClient::SendGetAccountAttrUsedBandwidth() {
-    auto uni_dht = lego::network::DhtManager::Instance()->GetDht(
-            lego::network::kVpnNetworkId);
+    auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
+            tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
         CLIENT_ERROR("not found vpn server dht.");
         return;
@@ -566,20 +566,20 @@ std::string VpnClient::Init(
         common::kContractMessage,
         std::bind(&VpnClient::HandleMessage, this, std::placeholders::_1));
     config_path_ = path;
-    std::string conf_path = path + "/lego.conf";
+    std::string conf_path = path + "/tenon.conf";
     std::string log_conf_path = path + "/log4cpp.properties";
-    std::string log_path = path + "/lego.log";
+    std::string log_path = path + "/tenon.log";
     WriteDefaultLogConf(log_conf_path, log_path);
     log4cpp::PropertyConfigurator::configure(log_conf_path);
     std::string private_key;
     if (ConfigExists(conf_path)) {
         if (!config.Init(conf_path)) {
             CLIENT_ERROR("init config failed!");
-            config.Set("lego", "prikey", std::string(""));
+            config.Set("tenon", "prikey", std::string(""));
         }
 
         std::string priky("");
-        if (!config.Get("lego", "prikey", priky) || priky.empty()) {
+        if (!config.Get("tenon", "prikey", priky) || priky.empty()) {
             CLIENT_ERROR("config[%s] invalid!", conf_path.c_str());
         } else {
             private_key = common::Encode::HexDecode(priky);
@@ -597,19 +597,19 @@ std::string VpnClient::Init(
     }
 
     std::string init_info;
-    config.Get("lego", "init_info", init_info);
+    config.Get("tenon", "init_info", init_info);
     std::string init_info1;
-    config.Get("lego", "init_info", init_info1);
-    config.Get("lego", "first_instasll", first_install_);
-    config.Set("lego", "local_ip", local_ip);
-    config.Set("lego", "local_port", local_port);
-    config.Set("lego", "country", std::string("US"));
-    config.Set("lego", "first_node", false);
-    config.Set("lego", "client", true);
-    config.Set("lego", "bootstrap", bootstrap);
-    config.Set("lego", "id", std::string("test_id"));
+    config.Get("tenon", "init_info", init_info1);
+    config.Get("tenon", "first_instasll", first_install_);
+    config.Set("tenon", "local_ip", local_ip);
+    config.Set("tenon", "local_port", local_port);
+    config.Set("tenon", "country", std::string("US"));
+    config.Set("tenon", "first_node", false);
+    config.Set("tenon", "client", true);
+    config.Set("tenon", "bootstrap", bootstrap);
+    config.Set("tenon", "id", std::string("test_id"));
     std::string boot_net;
-    config.Get("lego", "bootstrap_net", boot_net);
+    config.Get("tenon", "bootstrap_net", boot_net);
     boot_net += "," + bootstrap;
     if (common::GlobalInfo::Instance()->Init(config) != common::kCommonSuccess) {
         CLIENT_ERROR("init global info failed!");
@@ -621,9 +621,9 @@ std::string VpnClient::Init(
         return "ERROR";
     }
 
-    config.Set("lego", "prikey", common::Encode::HexEncode(
+    config.Set("tenon", "prikey", common::Encode::HexEncode(
             security::Schnorr::Instance()->str_prikey()));
-    config.Set("lego", "pubkey", common::Encode::HexEncode(
+    config.Set("tenon", "pubkey", common::Encode::HexEncode(
             security::Schnorr::Instance()->str_pubkey()));
     CLIENT_ERROR("set private key[%s], public key[%s]",
         common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey()).c_str(),
@@ -631,7 +631,7 @@ std::string VpnClient::Init(
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
             security::Schnorr::Instance()->str_pubkey_uncompress());
     common::GlobalInfo::Instance()->set_id(account_address);
-    config.Set("lego", "id", common::Encode::HexEncode(
+    config.Set("tenon", "id", common::Encode::HexEncode(
             common::GlobalInfo::Instance()->id()));
     std::string vpn_us_nodes;
     config.Get("vpn", "US", vpn_us_nodes);
@@ -640,10 +640,10 @@ std::string VpnClient::Init(
     common::Split<> ver_split(version.c_str(), '_', version.size());
     if (ver_split.Count() >= 2) {
         std::string tmp_uid(ver_split[1], ver_split.SubLen(1));
-        config.Set("lego", "init_uid", tmp_uid);
-        config.Set("lego", "version", ver_split[0]);
+        config.Set("tenon", "init_uid", tmp_uid);
+        config.Set("tenon", "version", ver_split[0]);
     } else {
-        config.Set("lego", "version", version);
+        config.Set("tenon", "version", version);
     }
 
     std::string def_conf;
@@ -685,7 +685,7 @@ std::string VpnClient::Init(
         CLIENT_ERROR("InitNetworkSingleton failed!");
     } else {
         init::UpdateVpnInit::Instance()->GetInitInfo(&init_info);
-        config.Set("lego", "init_info", init_info);
+        config.Set("tenon", "init_info", init_info);
         config.DumpConfig(conf_path);
     }
 
@@ -732,9 +732,9 @@ std::string VpnClient::ResetPrivateKey(const std::string& prikey) {
         return "ERROR";
     }
 
-    config.Set("lego", "prikey", common::Encode::HexEncode(
+    config.Set("tenon", "prikey", common::Encode::HexEncode(
             security::Schnorr::Instance()->str_prikey()));
-    config.Set("lego", "pubkey", common::Encode::HexEncode(
+    config.Set("tenon", "pubkey", common::Encode::HexEncode(
             security::Schnorr::Instance()->str_pubkey()));
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
         security::Schnorr::Instance()->str_pubkey_uncompress());
@@ -785,8 +785,8 @@ std::string VpnClient::GetSecretKey(const std::string& peer_pubkey) {
 
 bool VpnClient::SetFirstInstall() {
     first_install_ = true;
-    config.Set("lego", "first_instasll", first_install_);
-    config.DumpConfig(config_path_ + "/lego.conf");
+    config.Set("tenon", "first_instasll", first_install_);
+    config.DumpConfig(config_path_ + "/tenon.conf");
     return true;
 }
 
@@ -948,7 +948,7 @@ int VpnClient::InitNetworkSingleton(uint32_t init_type) {
         return kClientError;
     }
 
-    config.Set("lego", "get_init_msg", init_type);
+    config.Set("tenon", "get_init_msg", init_type);
     if (network::UniversalManager::Instance()->CreateUniversalNetwork(
             config,
             udp_transport_) != network::kNetworkSuccess) {
@@ -956,7 +956,7 @@ int VpnClient::InitNetworkSingleton(uint32_t init_type) {
         return kClientError;
     }
 
-    config.Set("lego", "get_init_msg", dht::kBootstrapNoInit);
+    config.Set("tenon", "get_init_msg", dht::kBootstrapNoInit);
     return CreateClientUniversalNetwork();
 }
 
@@ -1033,8 +1033,8 @@ void VpnClient::SendGetAccountAttrLastBlock(
         const std::string& account,
         uint64_t height) {
     uint64_t rand_num = 0;
-    auto uni_dht = lego::network::DhtManager::Instance()->GetDht(
-        lego::network::kVpnNetworkId);
+    auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
+        tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
         CLIENT_ERROR("not found vpn server dht.");
         return;
@@ -1115,7 +1115,7 @@ void VpnClient::CheckTxExists() {
 
 void VpnClient::GetTxBlocksFromBftNetwork() {
     transport::protobuf::Header message;
-    auto dht = network::UniversalManager::Instance()->GetUniversal(lego::network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal(tenon::network::kUniversalNetworkId);
     if (dht == nullptr) {
         return;
     }
@@ -1283,7 +1283,7 @@ void VpnClient::DumpNodeToConfig() {
     DumpRouteNodes();
     VipDumpVpnNodes();
     VipDumpRouteNodes();
-    config.DumpConfig(config_path_ + "/lego.conf");
+    config.DumpConfig(config_path_ + "/tenon.conf");
     dump_config_tick_->CutOff(
             10ull * 1000ull * 1000ull,
             std::bind(&VpnClient::DumpNodeToConfig, this));
@@ -1405,8 +1405,8 @@ void VpnClient::DumpBootstrapNodes() {
         for (auto iter = bootstrap_set.begin(); iter != bootstrap_set.end(); ++iter) {
             boot_str += *iter + ",";
         }
-        config.Set("lego", "bootstrap_net", boot_str);
-        config.DumpConfig(config_path_ + "/lego.conf");
+        config.Set("tenon", "bootstrap_net", boot_str);
+        config.DumpConfig(config_path_ + "/tenon.conf");
     }
 
     dump_bootstrap_tick_->CutOff(
@@ -1435,4 +1435,4 @@ std::string VpnClient::GetDefaultRouting() {
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

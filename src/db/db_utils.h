@@ -7,7 +7,7 @@
 #define DB_WARN(fmt, ...) TENON_WARN("[db]" fmt, ## __VA_ARGS__)
 #define DB_ERROR(fmt, ...) TENON_ERROR("[db]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 

@@ -7,7 +7,7 @@
 #include "uv/uv.h"
 #include "services/vpn_route/vpn_route_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpnroute {
 
@@ -66,4 +66,4 @@ private:
 
 }  // namespace vpnroute
 
-}  // namespace lego
+}  // namespace tenon

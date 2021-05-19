@@ -3,7 +3,7 @@
 #include "bft/member_manager.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -98,4 +98,4 @@ bool ThisNodeIsLeader() {
 
 }  // namespace bft
 
-}  //namespace lego
+}  //namespace tenon

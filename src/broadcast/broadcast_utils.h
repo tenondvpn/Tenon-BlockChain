@@ -8,7 +8,7 @@
 #define BROAD_WARN(fmt, ...) TENON_WARN("[broadcast]" fmt, ## __VA_ARGS__)
 #define BROAD_ERROR(fmt, ...) TENON_ERROR("[broadcast]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace broadcast {
 
@@ -21,4 +21,4 @@ static const uint32_t kBroadcastIgnBloomfilter = 1u;
 
 }  // namespace broadcast
 
-}  // namespace lego
+}  // namespace tenon

@@ -7,7 +7,7 @@
 #include "common/tick.h"
 #include "network/network_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace dht {
     class BaseDht;
@@ -43,4 +43,4 @@ private:
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "transport/synchro_wait.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -101,4 +101,4 @@ SynchroWait::~SynchroWait() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

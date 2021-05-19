@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package lego.block.protobuf;
+package tenon.block.protobuf;
 
 message GetTxBlockRequest {
     optional bytes tx_gid = 1;

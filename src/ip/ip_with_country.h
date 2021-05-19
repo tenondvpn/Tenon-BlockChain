@@ -4,7 +4,7 @@
 #include "ip/ip_utils.h"
 #include "ip/cidr.h"
 
-namespace lego {
+namespace tenon {
 
 namespace ip {
 
@@ -28,4 +28,4 @@ private:
 
 }  // namespace ip
 
-}  // namespace lego
+}  // namespace tenon

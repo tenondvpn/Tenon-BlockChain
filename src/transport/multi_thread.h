@@ -14,7 +14,7 @@
 #include "transport/proto/transport.pb.h"
 #include "transport/transport.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -94,4 +94,4 @@ private:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

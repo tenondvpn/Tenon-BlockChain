@@ -5,7 +5,7 @@
 #include "limit/limit_utils.h"
 #include "limit/limit_interface.h"
 
-namespace lego {
+namespace tenon {
 
 namespace limit {
 
@@ -39,4 +39,4 @@ private:
 
 }  // namespace limit
 
-}  // namespace lego
+}  // namespace tenon

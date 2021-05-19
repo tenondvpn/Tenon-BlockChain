@@ -7,7 +7,7 @@
 #include "bft/bft_interface.h"
 #include "bft/tx_pool.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -123,4 +123,4 @@ private:
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

@@ -4,7 +4,7 @@
 #include "common/encode.h"
 #include "db/db_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -92,4 +92,4 @@ int DbPoolInfo::GetHeight(uint64_t* height) {
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

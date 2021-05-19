@@ -110,7 +110,7 @@ extern "C" {
 #include "services/vpn_server/tcp_relay_server.h"
 #include "services/bandwidth_manager.h"
 
-using namespace lego;
+using namespace tenon;
 
 static void AcceptCallback(EV_P_ ev_io *w, int revents);
 static void ServerSendCallback(EV_P_ ev_io *w, int revents);
@@ -1525,13 +1525,13 @@ static void AcceptCallback(EV_P_ ev_io *w, int revents) {
     SetNonblocking(serverfd);
 
     server_t *server = NewServer(serverfd, listener);
-//     server->country_code = lego::ip::IpWithCountry::Instance()->GetCountryUintCode(peer_name);
+//     server->country_code = tenon::ip::IpWithCountry::Instance()->GetCountryUintCode(peer_name);
     ev_io_start(EV_A_ & server->recv_ctx->io);
     ev_timer_start(EV_A_ & server->recv_ctx->watcher);
-//     auto login_item = std::make_shared<lego::vpn::LoginCountryItem>();
+//     auto login_item = std::make_shared<tenon::vpn::LoginCountryItem>();
 //     login_item->country = (uint32_t)server->country_code;
 //     login_item->count = 0;
-//     lego::vpn::VpnRoute::Instance()->login_country_queue().push(login_item);
+//     tenon::vpn::VpnRoute::Instance()->login_country_queue().push(login_item);
 }
 
 static int StartTcpServer(
@@ -1576,7 +1576,7 @@ static void StopRoute(listen_ctx_t* listen_ctx) {
 #endif
 }
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -1675,7 +1675,7 @@ void VpnRoute::SendNewClientLogin(const std::string& val) {
     };
 
     std::string gid;
-    lego::client::TransactionClient::Instance()->Transaction(
+    tenon::client::TransactionClient::Instance()->Transaction(
             common::Encode::HexDecode(common::kVpnLoginManageAccount),
             0,
             contract::kVpnClientLoginManager,
@@ -2029,4 +2029,4 @@ void VpnRoute::HandleVpnResponse(
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

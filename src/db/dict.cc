@@ -5,7 +5,7 @@
 #include "common/log.h"
 #include "db/db_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -63,4 +63,4 @@ bool Dict::Hdel(const std::string& key, const std::string& field) {
 
 }  // namespace db
 
-}  // namespace lego
+}  // namespace tenon

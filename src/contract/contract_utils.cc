@@ -2,11 +2,11 @@
 
 #include "common/hash.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
 
 }  // namespace contact
 
-}  // namespace lego
+}  // namespace tenon

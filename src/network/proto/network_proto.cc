@@ -10,7 +10,7 @@
 #include "dht/dht_key.h"
 #include "network/proto/network.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace network {
 
@@ -96,4 +96,4 @@ void NetworkProto::CreateGetNetworkNodesResponse(
 
 }  // namespace network
 
-}  // namespace lego
+}  // namespace tenon

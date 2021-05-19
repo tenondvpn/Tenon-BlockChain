@@ -32,7 +32,7 @@
 // #include "services/vpn_server/server.h"
 // #include "services/vpn_server/vpn_server.h"
 
-namespace lego {
+namespace tenon {
 
 namespace init {
 
@@ -224,7 +224,7 @@ void Command::AddBaseCommands() {
 
 //         auto acc_item = std::make_shared<BandwidthInfo>(
 //                 10, 10, common::Encode::HexDecode(args[0]));
-//         lego::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
+//         tenon::vpn::VpnServer::Instance()->bandwidth_queue().push(acc_item);
 
     });
     AddCommand("ab", [this](const std::vector<std::string>& args) {
@@ -319,7 +319,7 @@ void Command::AddBaseCommands() {
             std::cout << "tx_amount: " << statis::Statistics::Instance()->tx_amount() << std::endl;
             std::cout << "all_tx_amount: " << statis::Statistics::Instance()->all_tx_amount() << std::endl;
         } else if (type == 4) {
-            std::cout << "all lego: " << statis::Statistics::Instance()->get_all_lego() << std::endl;
+            std::cout << "all tenon: " << statis::Statistics::Instance()->get_all_lego() << std::endl;
         } else if (type == 5) {
             std::cout << "tps: " << statis::Statistics::Instance()->tps() << std::endl;
         }
@@ -437,7 +437,7 @@ void Command::AddBaseCommands() {
         if (args.size() > 1) {
             amount = common::StringUtil::ToUint64(args[1]);
         }
-        lego::client::VpnClient::Instance()->Transaction(to, amount, tx_gid);
+        tenon::client::VpnClient::Instance()->Transaction(to, amount, tx_gid);
     });
     AddCommand("pv", [this](const std::vector<std::string>& args) {
         std::string to;
@@ -450,7 +450,7 @@ void Command::AddBaseCommands() {
             amount = common::StringUtil::ToUint64(args[1]);
         }
         std::string gid;
-        auto tx_gid = lego::client::VpnClient::Instance()->PayForVPN(to, gid, amount);
+        auto tx_gid = tenon::client::VpnClient::Instance()->PayForVPN(to, gid, amount);
         std::cout << "pay for vpn: " << tx_gid << std::endl;
     });
     AddCommand("tcping", [this](const std::vector<std::string>& args) {
@@ -476,16 +476,16 @@ void Command::AddBaseCommands() {
 
         std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
         if (is_gid) {
-            block_ptr = lego::client::VpnClient::Instance()->GetBlockWithGid(hash);
+            block_ptr = tenon::client::VpnClient::Instance()->GetBlockWithGid(hash);
         } else {
-            block_ptr = lego::client::VpnClient::Instance()->GetBlockWithHash(hash);
+            block_ptr = tenon::client::VpnClient::Instance()->GetBlockWithHash(hash);
         }
 
         for (int i = 0; i < 3; ++i) {
             if (is_gid) {
-                block_ptr = lego::client::VpnClient::Instance()->GetBlockWithGid(hash);
+                block_ptr = tenon::client::VpnClient::Instance()->GetBlockWithGid(hash);
             } else {
-                block_ptr = lego::client::VpnClient::Instance()->GetBlockWithHash(hash);
+                block_ptr = tenon::client::VpnClient::Instance()->GetBlockWithHash(hash);
             }
             std::this_thread::sleep_for(std::chrono::microseconds(1000000ull));
         }
@@ -550,7 +550,7 @@ void Command::TxPeriod() {
     std::string to = kToVec[std::rand() % kToVec.size()];
     uint32_t amount = std::rand() % 100 + 10;
     std::string tx_gid;
-    lego::client::VpnClient::Instance()->Transaction(to, amount, tx_gid);
+    tenon::client::VpnClient::Instance()->Transaction(to, amount, tx_gid);
     tx_tick_.CutOff(kTransportTestPeriod, std::bind(&Command::TxPeriod, this));
     std::cout << "tx gid:" << tx_gid << " success transaction from: "
         << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
@@ -562,8 +562,8 @@ void Command::VpnHeartbeat(const std::string& dht_key) {
 }
 
 void Command::GetVpnNodes(const std::string& country, bool is_vip) {
-    std::vector<lego::client::VpnServerNodePtr> nodes;
-    lego::client::VpnClient::Instance()->GetVpnServerNodes(country, "", 2, false, is_vip, nodes);
+    std::vector<tenon::client::VpnServerNodePtr> nodes;
+    tenon::client::VpnClient::Instance()->GetVpnServerNodes(country, "", 2, false, is_vip, nodes);
     std::cout << "get vpn_nodes size: " << nodes.size() << std::endl;
     for (uint32_t i = 0; i < nodes.size(); ++i) {
         std::cout << "get vpn_info: " << nodes[i]->ip << ":" << nodes[i]->svr_port
@@ -575,8 +575,8 @@ void Command::GetVpnNodes(const std::string& country, bool is_vip) {
 }
 
 void Command::GetRouteNodes(const std::string& country, bool is_vip) {
-    std::vector<lego::client::VpnServerNodePtr> nodes;
-    lego::client::VpnClient::Instance()->GetVpnServerNodes(country, "", 2, true, is_vip, nodes);
+    std::vector<tenon::client::VpnServerNodePtr> nodes;
+    tenon::client::VpnClient::Instance()->GetVpnServerNodes(country, "", 2, true, is_vip, nodes);
     std::cout << "get route_nodes size: " << nodes.size() << std::endl;
     for (uint32_t i = 0; i < nodes.size(); ++i) {
         std::cout << "get route_info: " << nodes[i]->ip << ":" << nodes[i]->route_port
@@ -762,13 +762,13 @@ int Command::LoadAllTx(
 
 int Command::LoadAllNodesAndCheckPort() {
     common::Config conf;
-    if (conf.Init("./conf/lego.conf")) {
+    if (conf.Init("./conf/tenon.conf")) {
         std::cout << "init conf failed!" << std::endl;
         return kInitError;
     }
 
     std::string config_nodes;
-    conf.Get("lego", "config_nodes", config_nodes);
+    conf.Get("tenon", "config_nodes", config_nodes);
     if (!config_nodes.empty()) {
         common::Split<1024> nodes_split(config_nodes.c_str(), ',', config_nodes.size());
         for (uint32_t i = 0; i < nodes_split.Count(); ++i) {
@@ -817,4 +817,4 @@ int Command::CheckAllNodePortValid() {
 
 }  // namespace init
 
-}  // namespace lego
+}  // namespace tenon

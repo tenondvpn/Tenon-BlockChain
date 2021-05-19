@@ -8,7 +8,7 @@
 #include "kcp/ikcp.h"
 #include "transport/udp/udp_transport.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -56,4 +56,4 @@ private:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

@@ -10,7 +10,7 @@
 #include "contract/contract_manager.h"
 #include "contract/call_parameters.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tvm {
 
@@ -105,4 +105,4 @@ public:
 
 }  // namespace tvm
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 #define private public
 #include "common/config.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -186,4 +186,4 @@ TEST_F(TestConfig, Set) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

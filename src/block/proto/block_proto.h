@@ -7,7 +7,7 @@
 #include "dht/dht_key.h"
 #include "block/proto/block.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace block {
 
@@ -75,4 +75,4 @@ private:
 
 }  // namespace block
 
-}  // namespace lego
+}  // namespace tenon

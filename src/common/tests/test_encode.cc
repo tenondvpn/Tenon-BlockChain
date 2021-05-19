@@ -6,7 +6,7 @@
 #define private public
 #include "common/encode.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -74,4 +74,4 @@ TEST_F(TestEncode, Base64Substr) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

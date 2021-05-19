@@ -24,7 +24,7 @@ namespace protobuf_elect_2eproto {
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_member;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_ElectBlock;
 }  // namespace protobuf_elect_2eproto
-namespace lego {
+namespace tenon {
 namespace elect {
 namespace protobuf {
 class memberDefaultTypeInternal {
@@ -44,17 +44,17 @@ class ElectMessageDefaultTypeInternal {
 } _ElectMessage_default_instance_;
 }  // namespace protobuf
 }  // namespace elect
-}  // namespace lego
+}  // namespace tenon
 namespace protobuf_elect_2eproto {
 static void InitDefaultsmember() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::elect::protobuf::_member_default_instance_;
-    new (ptr) ::lego::elect::protobuf::member();
+    void* ptr = &::tenon::elect::protobuf::_member_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::member();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::elect::protobuf::member::InitAsDefaultInstance();
+  ::tenon::elect::protobuf::member::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_member =
@@ -64,11 +64,11 @@ static void InitDefaultsElectBlock() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::elect::protobuf::_ElectBlock_default_instance_;
-    new (ptr) ::lego::elect::protobuf::ElectBlock();
+    void* ptr = &::tenon::elect::protobuf::_ElectBlock_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::ElectBlock();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::elect::protobuf::ElectBlock::InitAsDefaultInstance();
+  ::tenon::elect::protobuf::ElectBlock::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_ElectBlock =
@@ -79,11 +79,11 @@ static void InitDefaultsElectMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::elect::protobuf::_ElectMessage_default_instance_;
-    new (ptr) ::lego::elect::protobuf::ElectMessage();
+    void* ptr = &::tenon::elect::protobuf::_ElectMessage_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::ElectMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::elect::protobuf::ElectMessage::InitAsDefaultInstance();
+  ::tenon::elect::protobuf::ElectMessage::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_ElectMessage =
@@ -99,22 +99,22 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[3];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, sign_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, net_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, country_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, public_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, public_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, local_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::member, local_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, sign_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, net_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, country_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, local_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, local_port_),
   0,
   1,
   2,
@@ -126,37 +126,37 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   9,
   5,
   10,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, in_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, out_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, acc_pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectBlock, acc_sign_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, in_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, out_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, acc_pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, acc_sign_),
   ~0u,
   ~0u,
   0,
   1,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::elect::protobuf::ElectMessage, elect_block_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, elect_block_),
   0,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 16, sizeof(::lego::elect::protobuf::member)},
-  { 27, 36, sizeof(::lego::elect::protobuf::ElectBlock)},
-  { 40, 46, sizeof(::lego::elect::protobuf::ElectMessage)},
+  { 0, 16, sizeof(::tenon::elect::protobuf::member)},
+  { 27, 36, sizeof(::tenon::elect::protobuf::ElectBlock)},
+  { 40, 46, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::elect::protobuf::_member_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::elect::protobuf::_ElectBlock_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::elect::protobuf::_ElectMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_member_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectBlock_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectMessage_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -186,11 +186,11 @@ void AddDescriptorsImpl() {
       "\022\017\n\007dht_key\030\006 \001(\014\022\020\n\010nat_type\030\007 \001(\005\022\021\n\tp"
       "ublic_ip\030\010 \001(\014\022\023\n\013public_port\030\t \001(\r\022\020\n\010l"
       "ocal_ip\030\n \001(\014\022\022\n\nlocal_port\030\013 \001(\r\"\205\001\n\nEl"
-      "ectBlock\022\'\n\002in\030\001 \003(\0132\033.lego.elect.protob"
-      "uf.member\022(\n\003out\030\002 \003(\0132\033.lego.elect.prot"
+      "ectBlock\022\'\n\002in\030\001 \003(\0132\033.tenon.elect.protob"
+      "uf.member\022(\n\003out\030\002 \003(\0132\033.tenon.elect.prot"
       "obuf.member\022\022\n\nacc_pubkey\030\003 \001(\014\022\020\n\010acc_s"
       "ign\030\004 \001(\014\"D\n\014ElectMessage\0224\n\013elect_block"
-      "\030\001 \001(\0132\037.lego.elect.protobuf.ElectBlock"
+      "\030\001 \001(\0132\037.tenon.elect.protobuf.ElectBlock"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
       descriptor, 439);
@@ -209,7 +209,7 @@ struct StaticDescriptorInitializer {
   }
 } static_descriptor_initializer;
 }  // namespace protobuf_elect_2eproto
-namespace lego {
+namespace tenon {
 namespace elect {
 namespace protobuf {
 
@@ -236,7 +236,7 @@ member::member()
   ::google::protobuf::internal::InitSCC(
       &protobuf_elect_2eproto::scc_info_member.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.member)
 }
 member::member(const member& from)
   : ::google::protobuf::Message(),
@@ -270,7 +270,7 @@ member::member(const member& from)
   ::memcpy(&net_id_, &from.net_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&local_port_) -
     reinterpret_cast<char*>(&net_id_)) + sizeof(local_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.member)
 }
 
 void member::SharedCtor() {
@@ -286,7 +286,7 @@ void member::SharedCtor() {
 }
 
 member::~member() {
-  // @@protoc_insertion_point(destructor:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.member)
   SharedDtor();
 }
 
@@ -314,7 +314,7 @@ const member& member::default_instance() {
 
 
 void member::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.member)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -358,7 +358,7 @@ bool member::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.member)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -518,17 +518,17 @@ bool member::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.member)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.member)
   return false;
 #undef DO_
 }
 
 void member::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.member)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -598,13 +598,13 @@ void member::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.member)
 }
 
 ::google::protobuf::uint8* member::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.member)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -680,12 +680,12 @@ void member::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.member)
   return target;
 }
 
 size_t member::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.member)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -780,22 +780,22 @@ size_t member::ByteSizeLong() const {
 }
 
 void member::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.member)
   GOOGLE_DCHECK_NE(&from, this);
   const member* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const member>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.member)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.elect.protobuf.member)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.member)
     MergeFrom(*source);
   }
 }
 
 void member::MergeFrom(const member& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.member)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -850,14 +850,14 @@ void member::MergeFrom(const member& from) {
 }
 
 void member::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.member)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void member::CopyFrom(const member& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.elect.protobuf.member)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.member)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -916,7 +916,7 @@ ElectBlock::ElectBlock()
   ::google::protobuf::internal::InitSCC(
       &protobuf_elect_2eproto::scc_info_ElectBlock.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.ElectBlock)
 }
 ElectBlock::ElectBlock(const ElectBlock& from)
   : ::google::protobuf::Message(),
@@ -933,7 +933,7 @@ ElectBlock::ElectBlock(const ElectBlock& from)
   if (from.has_acc_sign()) {
     acc_sign_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.acc_sign_);
   }
-  // @@protoc_insertion_point(copy_constructor:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.ElectBlock)
 }
 
 void ElectBlock::SharedCtor() {
@@ -942,7 +942,7 @@ void ElectBlock::SharedCtor() {
 }
 
 ElectBlock::~ElectBlock() {
-  // @@protoc_insertion_point(destructor:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.ElectBlock)
   SharedDtor();
 }
 
@@ -966,7 +966,7 @@ const ElectBlock& ElectBlock::default_instance() {
 
 
 void ElectBlock::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.ElectBlock)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -990,13 +990,13 @@ bool ElectBlock::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.ElectBlock)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .lego.elect.protobuf.member in = 1;
+      // repeated .tenon.elect.protobuf.member in = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -1008,7 +1008,7 @@ bool ElectBlock::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.elect.protobuf.member out = 2;
+      // repeated .tenon.elect.protobuf.member out = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -1056,21 +1056,21 @@ bool ElectBlock::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.ElectBlock)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.ElectBlock)
   return false;
 #undef DO_
 }
 
 void ElectBlock::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.ElectBlock)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .lego.elect.protobuf.member in = 1;
+  // repeated .tenon.elect.protobuf.member in = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->in_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1079,7 +1079,7 @@ void ElectBlock::SerializeWithCachedSizes(
       output);
   }
 
-  // repeated .lego.elect.protobuf.member out = 2;
+  // repeated .tenon.elect.protobuf.member out = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->out_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1105,17 +1105,17 @@ void ElectBlock::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.ElectBlock)
 }
 
 ::google::protobuf::uint8* ElectBlock::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.ElectBlock)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .lego.elect.protobuf.member in = 1;
+  // repeated .tenon.elect.protobuf.member in = 1;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->in_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -1123,7 +1123,7 @@ void ElectBlock::SerializeWithCachedSizes(
         1, this->in(static_cast<int>(i)), deterministic, target);
   }
 
-  // repeated .lego.elect.protobuf.member out = 2;
+  // repeated .tenon.elect.protobuf.member out = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->out_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -1150,12 +1150,12 @@ void ElectBlock::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.ElectBlock)
   return target;
 }
 
 size_t ElectBlock::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.ElectBlock)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1163,7 +1163,7 @@ size_t ElectBlock::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated .lego.elect.protobuf.member in = 1;
+  // repeated .tenon.elect.protobuf.member in = 1;
   {
     unsigned int count = static_cast<unsigned int>(this->in_size());
     total_size += 1UL * count;
@@ -1174,7 +1174,7 @@ size_t ElectBlock::ByteSizeLong() const {
     }
   }
 
-  // repeated .lego.elect.protobuf.member out = 2;
+  // repeated .tenon.elect.protobuf.member out = 2;
   {
     unsigned int count = static_cast<unsigned int>(this->out_size());
     total_size += 1UL * count;
@@ -1207,22 +1207,22 @@ size_t ElectBlock::ByteSizeLong() const {
 }
 
 void ElectBlock::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.ElectBlock)
   GOOGLE_DCHECK_NE(&from, this);
   const ElectBlock* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const ElectBlock>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.ElectBlock)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.elect.protobuf.ElectBlock)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.ElectBlock)
     MergeFrom(*source);
   }
 }
 
 void ElectBlock::MergeFrom(const ElectBlock& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.ElectBlock)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1244,14 +1244,14 @@ void ElectBlock::MergeFrom(const ElectBlock& from) {
 }
 
 void ElectBlock::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.ElectBlock)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void ElectBlock::CopyFrom(const ElectBlock& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.elect.protobuf.ElectBlock)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.ElectBlock)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1286,8 +1286,8 @@ void ElectBlock::InternalSwap(ElectBlock* other) {
 // ===================================================================
 
 void ElectMessage::InitAsDefaultInstance() {
-  ::lego::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->elect_block_ = const_cast< ::lego::elect::protobuf::ElectBlock*>(
-      ::lego::elect::protobuf::ElectBlock::internal_default_instance());
+  ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->elect_block_ = const_cast< ::tenon::elect::protobuf::ElectBlock*>(
+      ::tenon::elect::protobuf::ElectBlock::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ElectMessage::kElectBlockFieldNumber;
@@ -1298,7 +1298,7 @@ ElectMessage::ElectMessage()
   ::google::protobuf::internal::InitSCC(
       &protobuf_elect_2eproto::scc_info_ElectMessage.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.ElectMessage)
 }
 ElectMessage::ElectMessage(const ElectMessage& from)
   : ::google::protobuf::Message(),
@@ -1306,11 +1306,11 @@ ElectMessage::ElectMessage(const ElectMessage& from)
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_elect_block()) {
-    elect_block_ = new ::lego::elect::protobuf::ElectBlock(*from.elect_block_);
+    elect_block_ = new ::tenon::elect::protobuf::ElectBlock(*from.elect_block_);
   } else {
     elect_block_ = NULL;
   }
-  // @@protoc_insertion_point(copy_constructor:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.ElectMessage)
 }
 
 void ElectMessage::SharedCtor() {
@@ -1318,7 +1318,7 @@ void ElectMessage::SharedCtor() {
 }
 
 ElectMessage::~ElectMessage() {
-  // @@protoc_insertion_point(destructor:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.ElectMessage)
   SharedDtor();
 }
 
@@ -1341,7 +1341,7 @@ const ElectMessage& ElectMessage::default_instance() {
 
 
 void ElectMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.ElectMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1359,13 +1359,13 @@ bool ElectMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.ElectMessage)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .lego.elect.protobuf.ElectBlock elect_block = 1;
+      // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -1389,22 +1389,22 @@ bool ElectMessage::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.ElectMessage)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.ElectMessage)
   return false;
 #undef DO_
 }
 
 void ElectMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.ElectMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.elect.protobuf.ElectBlock elect_block = 1;
+  // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_elect_block(), output);
@@ -1414,18 +1414,18 @@ void ElectMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.ElectMessage)
 }
 
 ::google::protobuf::uint8* ElectMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.ElectMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.elect.protobuf.ElectBlock elect_block = 1;
+  // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
   if (cached_has_bits & 0x00000001u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
@@ -1436,12 +1436,12 @@ void ElectMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.ElectMessage)
   return target;
 }
 
 size_t ElectMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.ElectMessage)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1449,7 +1449,7 @@ size_t ElectMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // optional .lego.elect.protobuf.ElectBlock elect_block = 1;
+  // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
   if (has_elect_block()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -1462,41 +1462,41 @@ size_t ElectMessage::ByteSizeLong() const {
 }
 
 void ElectMessage::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.ElectMessage)
   GOOGLE_DCHECK_NE(&from, this);
   const ElectMessage* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const ElectMessage>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.ElectMessage)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.elect.protobuf.ElectMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.ElectMessage)
     MergeFrom(*source);
   }
 }
 
 void ElectMessage::MergeFrom(const ElectMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.ElectMessage)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from.has_elect_block()) {
-    mutable_elect_block()->::lego::elect::protobuf::ElectBlock::MergeFrom(from.elect_block());
+    mutable_elect_block()->::tenon::elect::protobuf::ElectBlock::MergeFrom(from.elect_block());
   }
 }
 
 void ElectMessage::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.ElectMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void ElectMessage::CopyFrom(const ElectMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.elect.protobuf.ElectMessage)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.ElectMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1526,17 +1526,17 @@ void ElectMessage::InternalSwap(ElectMessage* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace protobuf
 }  // namespace elect
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::elect::protobuf::member* Arena::CreateMaybeMessage< ::lego::elect::protobuf::member >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::elect::protobuf::member >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::member* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::member >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::member >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage< ::lego::elect::protobuf::ElectBlock >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::elect::protobuf::ElectBlock >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::ElectBlock >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::ElectBlock >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage< ::lego::elect::protobuf::ElectMessage >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::elect::protobuf::ElectMessage >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::ElectMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::ElectMessage >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

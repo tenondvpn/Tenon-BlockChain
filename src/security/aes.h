@@ -2,7 +2,7 @@
 
 #include "security/crypto_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace security {
 
@@ -23,4 +23,4 @@ private:
 
 }  // namespace security
 
-}  // namespace lego
+}  // namespace tenon

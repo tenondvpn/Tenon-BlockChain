@@ -3,7 +3,7 @@
 #include "services/proto/service.pb.h"
 #include "transport/synchro_wait.h"
 
-namespace lego {
+namespace tenon {
 
 namespace client {
 
@@ -36,4 +36,4 @@ void ClientUniversalDht::SetFrequently(transport::protobuf::Header& msg) {
 
 }  // namespace client
 
-}  // namespace lego
+}  // namespace tenon

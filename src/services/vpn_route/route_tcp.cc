@@ -4,7 +4,7 @@
 
 #include "services/vpn_route/route_tcp.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpnroute {
 
@@ -283,4 +283,4 @@ int TcpRoute::Init(const std::string& local_ip, uint16_t port) {
 
 }  // namespace vpnroute
 
-}  // namespace lego
+}  // namespace tenon

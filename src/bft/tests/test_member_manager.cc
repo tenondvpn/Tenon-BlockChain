@@ -9,7 +9,7 @@
 #include "security/crypto_utils.h"
 #include "security/secp256k1.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -100,4 +100,4 @@ TEST_F(TestMemberManager, SetNetworkMember) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

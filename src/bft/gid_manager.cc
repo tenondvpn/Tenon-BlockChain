@@ -4,7 +4,7 @@
 #include "bft/dispatch_pool.h"
 #include "sync/key_value_sync.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -105,4 +105,4 @@ std::string GidManager::CreateTxInfo(TxItemPtr& tx_ptr) {
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

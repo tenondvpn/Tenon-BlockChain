@@ -8,9 +8,9 @@
 
 int main(int argc, char** argv) {
     log4cpp::PropertyConfigurator::configure("./conf/log4cpp.properties");
-    lego::init::NetworkInit net_init;
-    lego::common::SignalRegister();
-    if (net_init.Init(argc, argv) != lego::init::kInitSuccess) {
+    tenon::init::NetworkInit net_init;
+    tenon::common::SignalRegister();
+    if (net_init.Init(argc, argv) != tenon::init::kInitSuccess) {
         net_init.Destroy();
         std::cout << "exit now." << std::endl;
         exit(1);

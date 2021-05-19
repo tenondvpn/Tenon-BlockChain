@@ -16,7 +16,7 @@
 #define TRANSPORT_WARN(fmt, ...) TENON_WARN("[transport]" fmt, ## __VA_ARGS__)
 #define TRANSPORT_ERROR(fmt, ...) TENON_ERROR("[transport]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -87,4 +87,4 @@ inline void CloseSocket(int sock) {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

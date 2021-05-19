@@ -13,7 +13,7 @@
 #include "dht/node.h"
 #include "dht/proto/dht.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace nat {
     class Detection;
@@ -122,4 +122,4 @@ typedef std::shared_ptr<BaseDht> BaseDhtPtr;
 
 }  // namespace dht
 
-}  // namespace lego
+}  // namespace tenon

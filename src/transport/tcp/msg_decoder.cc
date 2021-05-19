@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "transport/tcp/msg_decoder.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -113,4 +113,4 @@ void MsgDecoder::Free() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

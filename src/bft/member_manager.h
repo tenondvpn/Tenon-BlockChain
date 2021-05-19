@@ -8,7 +8,7 @@
 #include "dht/node.h"
 #include "bft/bft_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace bft {
 
@@ -54,4 +54,4 @@ private:
 
 }  // namespace bft
 
-}  // namespace lego
+}  // namespace tenon

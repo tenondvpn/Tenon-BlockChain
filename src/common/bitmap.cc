@@ -3,7 +3,7 @@
 
 #include "common/bitmap.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -66,4 +66,4 @@ bool Bitmap::operator==(const Bitmap& r) const {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

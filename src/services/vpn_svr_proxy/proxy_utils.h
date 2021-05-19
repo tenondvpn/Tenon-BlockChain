@@ -8,7 +8,7 @@
 #define PROXY_WARN(fmt, ...) TENON_WARN("[proxy]" fmt, ## __VA_ARGS__)
 #define PROXY_ERROR(fmt, ...) TENON_ERROR("[proxy]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -33,4 +33,4 @@ static const std::string kMode = "tcp_and_udp";
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

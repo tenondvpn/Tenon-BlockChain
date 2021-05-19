@@ -7,7 +7,7 @@
 #define private public
 #include "common/thread_safe_queue.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -65,4 +65,4 @@ TEST_F(TestThreadSafeQueue, Hash32) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon
