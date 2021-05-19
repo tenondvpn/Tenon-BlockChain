@@ -325,7 +325,7 @@ int TxBft::BackupCheckContractDefault(
         }
     }
 
-    uint64_t gas_used = kCallContractDefault;
+    uint64_t gas_used = kCallContractDefaultUseGas;
     if (from_balance <= tx_info.gas_limit() || tx_info.gas_limit() < gas_used) {
         if (tx_info.status() != kBftUserSetGasLimitError) {
             return kBftLeaderInfoInvalid;
@@ -1417,7 +1417,7 @@ int TxBft::LeaderCallContractDefault(
         return kBftError;
     }
 
-    gas_used = kCallContractDefault;
+    gas_used = kCallContractDefaultUseGas;
     if (from_balance <= tx_info->tx.gas_limit() || tx.gas_limit() < gas_used) {
         tx.set_status(kBftUserSetGasLimitError);
     }
