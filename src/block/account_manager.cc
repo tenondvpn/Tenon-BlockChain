@@ -240,11 +240,6 @@ int AccountManager::AddNewAccount(
         res += account_info->SetAddressType(kNormalAddress, db_batch);
     }
 
-    res += account_info->SetFullAccountId(tx_info.to(), db_batch);
-    res += account_info->SetInCount(0, db_batch);
-    res += account_info->SetInLego(0, db_batch);
-    res += account_info->SetOutCount(0, db_batch);
-    res += account_info->SetOutLego(0, db_batch);
     res += account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("SetOutLego failed: %s, %llu",
@@ -290,22 +285,33 @@ int AccountManager::AddNewAccount(
     }
 
     account_info->NewHeight(tmp_now_height, db_batch);
-    if (tx_info.to_add()) {
-        res += account_info->SetInCount(1 + in_count, db_batch);
-        res += account_info->SetInLego(tx_info.amount() + in_lego, db_batch);
-    } else {
-        // just sender can modify self attrs
-        res += account_info->SetOutCount(1 + out_count, db_batch);
-        res += account_info->SetOutLego(tx_info.amount() + out_lego, db_batch);
+
+    assert(false);
+    // just sender can modify self attrs
+    if ((tx_info.type() != common::kConsensusCallContract && tx_info.to_add()) ||
+            (tx_info.type() == common::kConsensusCallContract &&
+            tx_info.call_contract_step() == contract::kCallStepContractCalled)) {
         if (exist_height <= tmp_now_height) {
             for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
                 res += account_info->SetAttrWithHeight(
                     tx_info.attr(attr_idx).key(),
                     tmp_now_height,
                     db_batch);
-                account_info->SetAttrValue(
+                res += account_info->SetAttrValue(
                     tx_info.attr(attr_idx).key(),
                     tx_info.attr(attr_idx).value(),
+                    db_batch);
+            }
+
+            for (int32_t storage_idx = 0;
+                    storage_idx < tx_info.storages_size(); ++storage_idx) {
+                res += account_info->SetAttrWithHeight(
+                    tx_info.storages(storage_idx).key(),
+                    tmp_now_height,
+                    db_batch);
+                res += account_info->SetAttrValue(
+                    tx_info.storages(storage_idx).key(),
+                    tx_info.storages(storage_idx).value(),
                     db_batch);
             }
         }
@@ -347,10 +353,6 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
-    res = account_info->SetInCount(0, db_batch);
-    res += account_info->SetInLego(0, db_batch);
-    res += account_info->SetOutCount(0, db_batch);
-    res += account_info->SetOutLego(0, db_batch);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("SetOutLego failed: %s, %llu",
             common::Encode::HexEncode(account_id).c_str());
@@ -371,6 +373,25 @@ int AccountManager::UpdateAccountInfo(
         account_id = tx_info.to();
     } else {
         account_id = tx_info.from();
+    }
+
+    if (tx_info.type() == common::kConsensusCallContract) {
+        switch (tx_info.call_contract_step()) {
+        case contract::kCallStepCallerInited:
+            account_id = tx_info.from();
+            break;
+        case contract::kCallStepContractLocked:
+            account_id = tx_info.to();
+            break;
+        case contract::kCallStepContractCalled:
+            account_id = tx_info.from();
+            break;
+        case contract::kCallStepContractFinal:
+            account_id = tx_info.to();
+            break;
+        default:
+            break;
+        }
     }
 
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
@@ -466,22 +487,30 @@ int AccountManager::UpdateAccountInfo(
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
         }
 
-        if (tx_info.to_add()) {
-            res += account_info->SetInCount(1 + in_count, db_batch);
-            res += account_info->SetInLego(tx_info.amount() + in_lego, db_batch);
-        } else {
-            // just sender can modify self attrs
-            res += account_info->SetOutCount(1 + out_count, db_batch);
-            res += account_info->SetOutLego(tx_info.amount() + out_lego, db_batch);
+        if ((tx_info.type() != common::kConsensusCallContract && tx_info.to_add()) ||
+                (tx_info.type() == common::kConsensusCallContract &&
+                tx_info.call_contract_step() == contract::kCallStepContractCalled)) {
             if (exist_height <= tmp_now_height) {
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
                     res += account_info->SetAttrWithHeight(
                         tx_info.attr(attr_idx).key(),
                         tmp_now_height,
                         db_batch);
-                    account_info->SetAttrValue(
+                    res += account_info->SetAttrValue(
                         tx_info.attr(attr_idx).key(),
                         tx_info.attr(attr_idx).value(),
+                        db_batch);
+                }
+
+                for (int32_t storage_idx = 0;
+                        storage_idx < tx_info.storages_size(); ++storage_idx) {
+                    res += account_info->SetAttrWithHeight(
+                        tx_info.storages(storage_idx).key(),
+                        tmp_now_height,
+                        db_batch);
+                    res += account_info->SetAttrValue(
+                        tx_info.storages(storage_idx).key(),
+                        tx_info.storages(storage_idx).value(),
                         db_batch);
                 }
             }
@@ -493,6 +522,15 @@ int AccountManager::UpdateAccountInfo(
         }
     }
     
+    if (tx_info.type() == common::kConsensusCallContract) {
+        if (tx_info.call_contract_step() == contract::kCallStepContractLocked) {
+            account_info->LockAccount();
+        }
+
+        if (tx_info.call_contract_step() == contract::kCallStepContractCalled) {
+            account_info->UnLockAccount();
+        }
+    }
 
     return kBlockSuccess;
 }

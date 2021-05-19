@@ -33,14 +33,14 @@ public:
             const bft::protobuf::TxInfo& tx_info,
             db::DbWriteBach& db_batch);
     void GetTxHeights(std::vector<uint64_t>* res);
-    int SetOutCount(uint32_t out_count, db::DbWriteBach& db_batch);
-    int GetOutCount(uint32_t* out_count);
-    int SetInCount(uint32_t in_count, db::DbWriteBach& db_batch);
-    int GetInCount(uint32_t* in_count);
-    int SetOutLego(uint64_t out_lego, db::DbWriteBach& db_batch);
-    int GetOutLego(uint64_t* out_lego);
-    int SetInLego(uint64_t in_lego, db::DbWriteBach& db_batch);
-    int GetInLego(uint64_t* in_lego);
+//     int SetOutCount(uint32_t out_count, db::DbWriteBach& db_batch);
+//     int GetOutCount(uint32_t* out_count);
+//     int SetInCount(uint32_t in_count, db::DbWriteBach& db_batch);
+//     int GetInCount(uint32_t* in_count);
+//     int SetOutLego(uint64_t out_lego, db::DbWriteBach& db_batch);
+//     int GetOutLego(uint64_t* out_lego);
+//     int SetInLego(uint64_t in_lego, db::DbWriteBach& db_batch);
+//     int GetInLego(uint64_t* in_lego);
     int SetCreateAccountHeight(uint64_t create_account_height, db::DbWriteBach& db_batch);
     int GetCreateAccountHeight(uint64_t* create_account_height);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
