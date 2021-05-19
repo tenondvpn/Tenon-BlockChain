@@ -8,8 +8,9 @@ message AccountAttributes {
 }
 
 message StorageItem {
-	optional bytes key = 1;
-	optional bytes value = 2;
+	optional bytes id = 1;
+	optional bytes key = 2;
+	optional bytes value = 3;
 }
 
 message TransferItem {

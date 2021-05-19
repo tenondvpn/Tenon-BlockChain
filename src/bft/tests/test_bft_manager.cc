@@ -1814,6 +1814,203 @@ TEST_F(TestBftManager, TestCallContractCallerInitBalaceError) {
     ASSERT_EQ(new_from_balance, 0);
 }
 
+TEST_F(TestBftManager, TestCallContractCallerLockContractError) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    std::string contract_addr;
+    InitOfflineTransferContract(
+        &contract_addr,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price() + 100);
+    // call contract
+    transport::protobuf::Header broadcast_msg;
+    std::string from_prikey = common::Encode::HexDecode(
+        "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    // Default caller init
+    auto from_balance = GetBalanceByPrikey(from_prikey);
+    std::cout << "TTTTTTTTTTTTTTT get from balance: " << from_balance << std::endl;
+    Transfer(from_prikey, contract_addr, 0, kCallContractDefaultUseGas,
+        common::kConsensusCallContract, true, attrs, &broadcast_msg);
+    auto new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, 100);
+}
+
+TEST_F(TestBftManager, TestCallContractCallerLockContractError1) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    std::string contract_addr;
+    InitOfflineTransferContract(
+        &contract_addr,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        (kCallContractDefaultUseGas + kTransferGas ) * common::GlobalInfo::Instance()->gas_price());
+    // call contract
+    transport::protobuf::Header broadcast_msg;
+    std::string from_prikey = common::Encode::HexDecode(
+        "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    // Default caller init
+    auto from_balance = GetBalanceByPrikey(from_prikey);
+    std::cout << "TTTTTTTTTTTTTTT get from balance: " << from_balance << std::endl;
+    Transfer(from_prikey, contract_addr, 0, (kCallContractDefaultUseGas + kTransferGas),
+        common::kConsensusCallContract, true, attrs, &broadcast_msg);
+    auto new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, kTransferGas * common::GlobalInfo::Instance()->gas_price());
+}
+
+TEST_F(TestBftManager, TestCallContractCallerLockContractError2) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    std::string contract_addr;
+    InitOfflineTransferContract(
+        &contract_addr,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        (kCallContractDefaultUseGas + kTransferGas) * common::GlobalInfo::Instance()->gas_price() + 1);
+    // call contract
+    transport::protobuf::Header broadcast_msg;
+    std::string from_prikey = common::Encode::HexDecode(
+        "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    // Default caller init
+    auto from_balance = GetBalanceByPrikey(from_prikey);
+    std::cout << "TTTTTTTTTTTTTTT get from balance: " << from_balance << std::endl;
+    Transfer(from_prikey, contract_addr, 0,
+        (kCallContractDefaultUseGas + kTransferGas),
+        common::kConsensusCallContract, true, attrs, &broadcast_msg);
+    auto new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, kTransferGas * common::GlobalInfo::Instance()->gas_price() + 1);
+
+    // LockContract
+    transport::protobuf::Header leader_init_msg;
+    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+    uint64_t contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+    ASSERT_TRUE(contract_info != nullptr);
+    ASSERT_FALSE(contract_info->locked());
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
+    ASSERT_TRUE(contract_info->locked());
+    uint64_t new_contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+    ASSERT_EQ(contract_balance, new_contract_balance);
+
+    // CallContract
+    from_balance = GetBalanceByPrikey(from_prikey);
+    transport::protobuf::Header leader_lock_msg;
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
+    new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, 1);
+}
+
+TEST_F(TestBftManager, TestCallContractCallerLockContractError3) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    std::string contract_addr;
+    InitOfflineTransferContract(
+        &contract_addr,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        (kCallContractDefaultUseGas + kTransferGas) * common::GlobalInfo::Instance()->gas_price() + 10000);
+    // call contract
+    transport::protobuf::Header broadcast_msg;
+    std::string from_prikey = common::Encode::HexDecode(
+        "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    // Default caller init
+    auto from_balance = GetBalanceByPrikey(from_prikey);
+    std::cout << "TTTTTTTTTTTTTTT get from balance: " << from_balance << std::endl;
+    Transfer(from_prikey, contract_addr, 0,
+        (kCallContractDefaultUseGas + kTransferGas),
+        common::kConsensusCallContract, true, attrs, &broadcast_msg);
+    auto new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, kTransferGas * common::GlobalInfo::Instance()->gas_price() + 10000);
+
+    // LockContract
+    transport::protobuf::Header leader_init_msg;
+    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+    uint64_t contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+    ASSERT_TRUE(contract_info != nullptr);
+    ASSERT_FALSE(contract_info->locked());
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
+    ASSERT_TRUE(contract_info->locked());
+    uint64_t new_contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+    ASSERT_EQ(contract_balance, new_contract_balance);
+
+    // CallContract
+    from_balance = GetBalanceByPrikey(from_prikey);
+    transport::protobuf::Header leader_lock_msg;
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
+    new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, 10000);
+}
+
+TEST_F(TestBftManager, TestCallContractCallerLockContractError4) {
+    // contract owner: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709
+    // contract caller: 348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700
+    std::string contract_addr;
+    InitOfflineTransferContract(
+        &contract_addr,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        (kCallContractDefaultUseGas + kTransferGas) * common::GlobalInfo::Instance()->gas_price() + 98438453 * common::GlobalInfo::Instance()->gas_price());
+    // call contract
+    transport::protobuf::Header broadcast_msg;
+    std::string from_prikey = common::Encode::HexDecode(
+        "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    // Default caller init
+    auto from_balance = GetBalanceByPrikey(from_prikey);
+    std::cout << "TTTTTTTTTTTTTTT get from balance: " << from_balance << std::endl;
+    Transfer(from_prikey, contract_addr, 0,
+        (kCallContractDefaultUseGas + kTransferGas + 98438453),
+        common::kConsensusCallContract, true, attrs, &broadcast_msg);
+    auto new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, kTransferGas * common::GlobalInfo::Instance()->gas_price() + 984384530);
+
+    // LockContract
+    transport::protobuf::Header leader_init_msg;
+    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+    uint64_t contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+    ASSERT_TRUE(contract_info != nullptr);
+    ASSERT_FALSE(contract_info->locked());
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
+    ASSERT_TRUE(contract_info->locked());
+    uint64_t new_contract_balance = 0;
+    ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+    ASSERT_EQ(contract_balance, new_contract_balance);
+
+    // CallContract
+    from_balance = GetBalanceByPrikey(from_prikey);
+    transport::protobuf::Header leader_lock_msg;
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
+    new_from_balance = GetBalanceByPrikey(from_prikey);
+    ASSERT_EQ(new_from_balance, 2658273200);
+
+    // UnlockContract
+    ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+    transport::protobuf::Header leader_called_msg;
+    NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+        true, leader_lock_msg, from_prikey, contract_addr, attrs, &leader_called_msg);
+    ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+    ASSERT_EQ(contract_balance - 2643000000, new_contract_balance);
+}
+
 }  // namespace test
 
 }  // namespace bft
