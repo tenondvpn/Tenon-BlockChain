@@ -275,134 +275,134 @@ void DbAccountInfo::GetTxHeights(std::vector<uint64_t>* res) {
         res->push_back(height_data[i]);
     }
 }
-
-int DbAccountInfo::SetOutCount(uint32_t out_count, db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldOutCount,
-            std::to_string(out_count),
-            db_batch)) {
-        return kBlockError;
-    }
-
-    out_count_ = out_count;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetOutCount(uint32_t* out_count) {
-    if (out_count_ != common::kInvalidUint32) {
-        *out_count = out_count_;
-        return kBlockSuccess;
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldOutCount,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *out_count = common::StringUtil::ToUint32(tmp_str);
-    out_count_ = *out_count;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::SetInCount(uint32_t in_count, db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldInCount,
-            std::to_string(in_count),
-            db_batch)) {
-        return kBlockError;
-    }
-
-    in_count_ = in_count;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetInCount(uint32_t* in_count) {
-    if (in_count_ != common::kInvalidUint32) {
-        *in_count = in_count_;
-        return kBlockSuccess;
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldInCount,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *in_count = common::StringUtil::ToUint32(tmp_str);
-    in_count_ = *in_count;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::SetOutLego(uint64_t out_lego, db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldOutLego,
-            std::to_string(out_lego),
-            db_batch)) {
-        return kBlockError;
-    }
-
-    out_lego_ = out_lego;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetOutLego(uint64_t* out_lego) {
-    if (out_lego_ != common::kInvalidUint64) {
-        *out_lego = out_lego_;
-        return kBlockSuccess;
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldOutLego,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *out_lego = common::StringUtil::ToUint64(tmp_str);
-    out_lego_ = *out_lego;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::SetInLego(uint64_t in_lego, db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldInLego,
-            std::to_string(in_lego),
-            db_batch)) {
-        return kBlockError;
-    }
-
-    in_lego_ = in_lego;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetInLego(uint64_t* in_lego) {
-    if (in_lego_ != common::kInvalidUint64) {
-        *in_lego = in_lego_;
-        return kBlockSuccess;
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldInLego,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *in_lego = common::StringUtil::ToUint64(tmp_str);
-    in_lego_ = *in_lego;
-    return kBlockSuccess;
-}
+// 
+// int DbAccountInfo::SetOutCount(uint32_t out_count, db::DbWriteBach& db_batch) {
+//     if (!db::Dict::Instance()->Hset(
+//             dict_key_,
+//             kFieldOutCount,
+//             std::to_string(out_count),
+//             db_batch)) {
+//         return kBlockError;
+//     }
+// 
+//     out_count_ = out_count;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::GetOutCount(uint32_t* out_count) {
+//     if (out_count_ != common::kInvalidUint32) {
+//         *out_count = out_count_;
+//         return kBlockSuccess;
+//     }
+// 
+//     std::string tmp_str;
+//     if (!db::Dict::Instance()->Hget(
+//             dict_key_,
+//             kFieldOutCount,
+//             &tmp_str)) {
+//         return kBlockError;
+//     }
+// 
+//     *out_count = common::StringUtil::ToUint32(tmp_str);
+//     out_count_ = *out_count;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::SetInCount(uint32_t in_count, db::DbWriteBach& db_batch) {
+//     if (!db::Dict::Instance()->Hset(
+//             dict_key_,
+//             kFieldInCount,
+//             std::to_string(in_count),
+//             db_batch)) {
+//         return kBlockError;
+//     }
+// 
+//     in_count_ = in_count;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::GetInCount(uint32_t* in_count) {
+//     if (in_count_ != common::kInvalidUint32) {
+//         *in_count = in_count_;
+//         return kBlockSuccess;
+//     }
+// 
+//     std::string tmp_str;
+//     if (!db::Dict::Instance()->Hget(
+//             dict_key_,
+//             kFieldInCount,
+//             &tmp_str)) {
+//         return kBlockError;
+//     }
+// 
+//     *in_count = common::StringUtil::ToUint32(tmp_str);
+//     in_count_ = *in_count;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::SetOutLego(uint64_t out_lego, db::DbWriteBach& db_batch) {
+//     if (!db::Dict::Instance()->Hset(
+//             dict_key_,
+//             kFieldOutLego,
+//             std::to_string(out_lego),
+//             db_batch)) {
+//         return kBlockError;
+//     }
+// 
+//     out_lego_ = out_lego;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::GetOutLego(uint64_t* out_lego) {
+//     if (out_lego_ != common::kInvalidUint64) {
+//         *out_lego = out_lego_;
+//         return kBlockSuccess;
+//     }
+// 
+//     std::string tmp_str;
+//     if (!db::Dict::Instance()->Hget(
+//             dict_key_,
+//             kFieldOutLego,
+//             &tmp_str)) {
+//         return kBlockError;
+//     }
+// 
+//     *out_lego = common::StringUtil::ToUint64(tmp_str);
+//     out_lego_ = *out_lego;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::SetInLego(uint64_t in_lego, db::DbWriteBach& db_batch) {
+//     if (!db::Dict::Instance()->Hset(
+//             dict_key_,
+//             kFieldInLego,
+//             std::to_string(in_lego),
+//             db_batch)) {
+//         return kBlockError;
+//     }
+// 
+//     in_lego_ = in_lego;
+//     return kBlockSuccess;
+// }
+// 
+// int DbAccountInfo::GetInLego(uint64_t* in_lego) {
+//     if (in_lego_ != common::kInvalidUint64) {
+//         *in_lego = in_lego_;
+//         return kBlockSuccess;
+//     }
+// 
+//     std::string tmp_str;
+//     if (!db::Dict::Instance()->Hget(
+//             dict_key_,
+//             kFieldInLego,
+//             &tmp_str)) {
+//         return kBlockError;
+//     }
+// 
+//     *in_lego = common::StringUtil::ToUint64(tmp_str);
+//     in_lego_ = *in_lego;
+//     return kBlockSuccess;
+// }
 
 int DbAccountInfo::SetCreateAccountHeight(
         uint64_t create_account_height,
