@@ -254,30 +254,6 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
-    uint32_t in_count = 0;
-    if (account_info->GetInCount(&in_count) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetInCount failed!");
-        return kBlockError;
-    }
-
-    uint32_t out_count = 0;
-    if (account_info->GetOutCount(&out_count) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetOutCount failed!");
-        return kBlockError;
-    }
-
-    uint64_t in_lego = 0;
-    if (account_info->GetInLego(&in_lego) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetInLego failed!");
-        return kBlockError;
-    }
-
-    uint64_t out_lego = 0;
-    if (account_info->GetOutLego(&out_lego) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetOutLego failed!");
-        return kBlockError;
-    }
-
     uint64_t create_height = 0;
     if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
         BLOCK_ERROR("GetCreateAccountHeight failed!");
@@ -451,30 +427,6 @@ int AccountManager::UpdateAccountInfo(
     }
 
     if (tx_info.status() == bft::kBftSuccess) {
-        uint32_t in_count = 0;
-        if (account_info->GetInCount(&in_count) != block::kBlockSuccess) {
-            BLOCK_ERROR("GetInCount failed!");
-            return kBlockError;
-        }
-
-        uint32_t out_count = 0;
-        if (account_info->GetOutCount(&out_count) != block::kBlockSuccess) {
-            BLOCK_ERROR("GetOutCount failed!");
-            return kBlockError;
-        }
-
-        uint64_t in_lego = 0;
-        if (account_info->GetInLego(&in_lego) != block::kBlockSuccess) {
-            BLOCK_ERROR("GetInLego failed!");
-            return kBlockError;
-        }
-
-        uint64_t out_lego = 0;
-        if (account_info->GetOutLego(&out_lego) != block::kBlockSuccess) {
-            BLOCK_ERROR("GetOutLego failed!");
-            return kBlockError;
-        }
-
         int res = 0;
         if (tx_info.type() == common::kConsensusCreateContract) {
             res += account_info->SetAddressType(kContractAddress, db_batch);

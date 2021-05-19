@@ -627,26 +627,6 @@ void HttpTransport::HandleTxInfo(const httplib::Request &req, httplib::Response 
                 BFT_ERROR("tx invalid. account address not exists");
             }
 
-            uint32_t in_count = 0;
-            if (acc_ptr->GetInCount(&in_count) != block::kBlockSuccess) {
-                return;
-            }
-
-            uint32_t out_count = 0;
-            if (acc_ptr->GetOutCount(&out_count) != block::kBlockSuccess) {
-                return;
-            }
-
-            uint64_t in_lego = 0;
-            if (acc_ptr->GetInLego(&in_lego) != block::kBlockSuccess) {
-                return;
-            }
-
-            uint64_t out_lego = 0;
-            if (acc_ptr->GetOutLego(&out_lego) != block::kBlockSuccess) {
-                return;
-            }
-
             uint64_t create_account_height = 0;
             if (acc_ptr->GetCreateAccountHeight(&create_account_height) != block::kBlockSuccess) {
                 return;
@@ -657,10 +637,10 @@ void HttpTransport::HandleTxInfo(const httplib::Request &req, httplib::Response 
                 return;
             }
             res_json["balance"] = db_balance;
-            res_json["in"] = in_count;
-            res_json["out"] = out_count;
-            res_json["in_lego"] = in_lego;
-            res_json["out_lego"] = out_lego;
+            res_json["in"] = 0;
+            res_json["out"] = 0;
+            res_json["in_lego"] = 0;
+            res_json["out_lego"] = 0;
             res_json["create_account_height"] = create_account_height;
             res_json["height"] = height;
         }
