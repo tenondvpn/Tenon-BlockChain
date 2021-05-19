@@ -3,9 +3,7 @@
 
 #ifndef PROTOBUF_INCLUDED_nat_2eproto
 #define PROTOBUF_INCLUDED_nat_2eproto
-#ifdef _WIN32
-#define PROTOBUF_USE_DLLS
-#endif // _WIN32
+
 #include <string>
 
 #include <google/protobuf/stubs/common.h>

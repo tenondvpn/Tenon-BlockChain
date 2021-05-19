@@ -218,25 +218,25 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\rservice.proto\022\025lego.service.protobuf\"u"
-      "\n\021GetVpnInfoRequest\022\016\n\006pubkey\030\001 \001(\014\022\026\n\016s"
-      "ign_challenge\030\002 \001(\014\022\025\n\rsign_response\030\003 \001"
-      "(\014\022\021\n\theartbeat\030\004 \001(\010\022\016\n\006method\030\005 \001(\014\"w\n"
-      "\022GetVpnInfoResponse\022\n\n\002ip\030\001 \001(\014\022\020\n\010svr_p"
-      "ort\030\002 \001(\r\022\022\n\nroute_port\030\003 \001(\r\022\017\n\007country"
-      "\030\004 \001(\014\022\016\n\006secnum\030\005 \001(\005\022\016\n\006pubkey\030\006 \001(\014\"\222"
-      "\001\n\021VlanNodeHeartbeat\022\020\n\010nat_type\030\001 \001(\005\022\017"
-      "\n\007node_id\030\002 \001(\014\022\017\n\007dht_key\030\003 \001(\014\022\022\n\npubl"
-      "ic_key\030\004 \001(\014\022\021\n\tpublic_ip\030\005 \001(\t\022\020\n\010udp_p"
-      "ort\030\006 \001(\005\022\020\n\010tcp_port\030\007 \001(\005\"\311\001\n\016ServiceM"
-      "essage\0229\n\007vpn_req\030\001 \001(\0132(.tenon.service.p"
-      "rotobuf.GetVpnInfoRequest\022:\n\007vpn_res\030\002 \001"
-      "(\0132).tenon.service.protobuf.GetVpnInfoRes"
-      "ponse\022@\n\016vlan_heartbeat\030\003 \001(\0132(.tenon.ser"
-      "vice.protobuf.VlanNodeHeartbeat"
+      "\n\rservice.proto\022\026tenon.service.protobuf\""
+      "u\n\021GetVpnInfoRequest\022\016\n\006pubkey\030\001 \001(\014\022\026\n\016"
+      "sign_challenge\030\002 \001(\014\022\025\n\rsign_response\030\003 "
+      "\001(\014\022\021\n\theartbeat\030\004 \001(\010\022\016\n\006method\030\005 \001(\014\"w"
+      "\n\022GetVpnInfoResponse\022\n\n\002ip\030\001 \001(\014\022\020\n\010svr_"
+      "port\030\002 \001(\r\022\022\n\nroute_port\030\003 \001(\r\022\017\n\007countr"
+      "y\030\004 \001(\014\022\016\n\006secnum\030\005 \001(\005\022\016\n\006pubkey\030\006 \001(\014\""
+      "\222\001\n\021VlanNodeHeartbeat\022\020\n\010nat_type\030\001 \001(\005\022"
+      "\017\n\007node_id\030\002 \001(\014\022\017\n\007dht_key\030\003 \001(\014\022\022\n\npub"
+      "lic_key\030\004 \001(\014\022\021\n\tpublic_ip\030\005 \001(\t\022\020\n\010udp_"
+      "port\030\006 \001(\005\022\020\n\010tcp_port\030\007 \001(\005\"\314\001\n\016Service"
+      "Message\022:\n\007vpn_req\030\001 \001(\0132).tenon.service"
+      ".protobuf.GetVpnInfoRequest\022;\n\007vpn_res\030\002"
+      " \001(\0132*.tenon.service.protobuf.GetVpnInfo"
+      "Response\022A\n\016vlan_heartbeat\030\003 \001(\0132).tenon"
+      ".service.protobuf.VlanNodeHeartbeat"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 631);
+      descriptor, 635);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "service.proto", &protobuf_RegisterTypes);
 }

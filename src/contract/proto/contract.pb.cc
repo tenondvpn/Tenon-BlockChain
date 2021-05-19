@@ -161,17 +161,18 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\016contract.proto\022\026lego.contract.protobuf"
-      "\"6\n\017GetAttrByKeyReq\022\021\n\tcall_addr\030\001 \001(\014\022\020"
-      "\n\010attr_key\030\002 \001(\014\"J\n\017GetAttrByKeyRes\022\021\n\tc"
-      "all_addr\030\001 \001(\014\022\020\n\010attr_key\030\002 \001(\014\022\022\n\nattr"
-      "_value\030\003 \001(\014\"\217\001\n\017ContractMessage\022=\n\014get_"
-      "attr_req\030\001 \001(\0132\'.tenon.contract.protobuf."
-      "GetAttrByKeyReq\022=\n\014get_attr_res\030\002 \001(\0132\'."
-      "tenon.contract.protobuf.GetAttrByKeyRes"
+      "\n\016contract.proto\022\027tenon.contract.protobu"
+      "f\"6\n\017GetAttrByKeyReq\022\021\n\tcall_addr\030\001 \001(\014\022"
+      "\020\n\010attr_key\030\002 \001(\014\"J\n\017GetAttrByKeyRes\022\021\n\t"
+      "call_addr\030\001 \001(\014\022\020\n\010attr_key\030\002 \001(\014\022\022\n\natt"
+      "r_value\030\003 \001(\014\"\221\001\n\017ContractMessage\022>\n\014get"
+      "_attr_req\030\001 \001(\0132(.tenon.contract.protobu"
+      "f.GetAttrByKeyReq\022>\n\014get_attr_res\030\002 \001(\0132"
+      "(.tenon.contract.protobuf.GetAttrByKeyRe"
+      "s"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 318);
+      descriptor, 321);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "contract.proto", &protobuf_RegisterTypes);
 }

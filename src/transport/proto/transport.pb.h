@@ -3,9 +3,6 @@
 
 #ifndef PROTOBUF_INCLUDED_transport_2eproto
 #define PROTOBUF_INCLUDED_transport_2eproto
-#ifdef _WIN32
-#define PROTOBUF_USE_DLLS
-#endif // _WIN32
 
 #include <string>
 
