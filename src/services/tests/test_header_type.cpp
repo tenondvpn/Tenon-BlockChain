@@ -24,7 +24,7 @@ extern "C" {
 #include "security/schnorr.h"
 #include "services/proto/service_proto.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -70,4 +70,4 @@ TEST_F(TestHeaderType, FecOpenFecDecoder1) {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

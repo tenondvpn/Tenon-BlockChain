@@ -4,7 +4,7 @@
 #include "tnet/socket/listen_socket.h"
 #include "tnet/tnet_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -208,4 +208,4 @@ TcpConnection* TcpAcceptor::CreateTcpConnection(
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

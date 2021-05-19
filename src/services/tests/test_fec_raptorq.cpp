@@ -12,7 +12,7 @@
 #include "common/global_info.h"
 #include "services/vpn_server/fec_raptorq.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -143,4 +143,4 @@ TEST_F(TestFecRaptorQ, All) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 
 #include "tnet/event/epoll_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -37,4 +37,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

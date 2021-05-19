@@ -4,7 +4,7 @@
 
 #include "contract/contract_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace contract {
 
@@ -50,4 +50,4 @@ struct CallParameters {
 
 }  // namespace contact
 
-}  // namespace lego
+}  // namespace tenon

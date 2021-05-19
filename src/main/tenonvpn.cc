@@ -32,7 +32,7 @@ std::string GetPrivateKey() {
         return "";
     }
 
-    lego::common::Split<> content_split(content, ',', read_len);
+    tenon::common::Split<> content_split(content, ',', read_len);
     for (uint32_t i = 0; i < content_split.Count(); ++i) {
         if (content_split.SubLen(i) == 64) {
             all_prikeys.push_back(content_split[i]);
@@ -66,8 +66,8 @@ int main(int argc, char** argv) {
     }
 
     std::string old_private_key = GetPrivateKey();
-    lego::common::SignalRegister();
-    auto int_res = lego::client::VpnClient::Instance()->Init(
+    tenon::common::SignalRegister();
+    auto int_res = tenon::client::VpnClient::Instance()->Init(
             "0.0.0.0",
             7981,
             "id:42.51.39.113:9001,id:42.51.33.89:9001,id:42.51.41.173:9001, id:113.17.169.103:9001,id:113.17.169.105:9001,id:113.17.169.106:9001,id:113.17.169.93:9001,id:113.17.169.94:9001,id:113.17.169.95:9001,id:216.108.227.52:9001,id:216.108.231.102:9001,id:216.108.231.103:9001,id:216.108.231.105:9001,id:216.108.231.19:9001,id:3.12.73.217:9001,id:3.137.186.226:9001,id:3.22.68.200:9001,id:3.138.121.98:9001,id:18.188.190.127:9001,",
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    lego::common::Split<> content_split(int_res.c_str(), ',', int_res.size());
+    tenon::common::Split<> content_split(int_res.c_str(), ',', int_res.size());
     if (content_split.Count() < 5) {
         std::cout << "init client failed: " << int_res << std::endl;
         return 1;
@@ -91,13 +91,13 @@ int main(int argc, char** argv) {
     }
 
     const std::string tenon_conf_path = "./tenon.json";
-    std::string local_country = lego::common::global_code_to_country_map[
-            lego::common::GlobalInfo::Instance()->country()];
-    int res = lego::lvpn::NodeManager::Instance()->Init(
+    std::string local_country = tenon::common::global_code_to_country_map[
+            tenon::common::GlobalInfo::Instance()->country()];
+    int res = tenon::lvpn::NodeManager::Instance()->Init(
             tenon_conf_path,
             local_country,
             des_country);
-    if (res != lego::lvpn::kLvpnSuccess) {
+    if (res != tenon::lvpn::kLvpnSuccess) {
         std::cout << "init NodeManager failed: " << res << std::endl;
         return 1;
     }
@@ -113,10 +113,10 @@ int main(int argc, char** argv) {
 
     start_vpn_local(kArgc, (char**)tenonArgv);
     while (true) {
-        lego::lvpn::NodeManager::Instance()->ResetNodesFromConf();
+        tenon::lvpn::NodeManager::Instance()->ResetNodesFromConf();
         std::this_thread::sleep_for(std::chrono::milliseconds(2000ull));
     }
-//     lego::init::Command cmd;
+//     tenon::init::Command cmd;
 //     if (!cmd.Init(false, true, false)) {
 //         std::cout << "init cmd failed!" << std::endl;
 //         return 1;

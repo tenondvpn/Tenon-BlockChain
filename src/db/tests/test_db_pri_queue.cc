@@ -11,7 +11,7 @@
 #include "db/db.h"
 #include "db/db_pri_queue.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -84,4 +84,4 @@ TEST_F(TestDbPriQueue, All) {
 
 }  // namespace db
 
-}  // namespace lego
+}  // namespace tenon

@@ -1,6 +1,6 @@
 #include "common/header_type.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -11,4 +11,4 @@ HeaderType* HeaderType::Instance() {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

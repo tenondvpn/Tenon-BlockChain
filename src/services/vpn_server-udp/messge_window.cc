@@ -1,7 +1,7 @@
 #include "services/vpn_server/messge_window.h"
 
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -14,4 +14,4 @@ namespace vpn {
 
 }  // namespace vpn 
 
-}  // namespace lego
+}  // namespace tenon

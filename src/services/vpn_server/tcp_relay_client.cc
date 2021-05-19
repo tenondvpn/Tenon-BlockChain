@@ -5,7 +5,7 @@
 #include "security/schnorr.h"
 #include "services/proto/service_proto.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -478,4 +478,4 @@ int TcpRelayClientManager::HandleVlanMessage(TnetWithRelayHead* tnet_header, Vla
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

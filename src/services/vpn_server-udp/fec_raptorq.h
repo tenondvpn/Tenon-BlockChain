@@ -4,7 +4,7 @@
 #include "raptorQ/Helper.h"
 #include "raptorQ/Symbol.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -34,4 +34,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

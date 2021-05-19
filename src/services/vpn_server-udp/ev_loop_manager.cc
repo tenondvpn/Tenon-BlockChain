@@ -82,7 +82,7 @@ extern "C" {
 }
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -162,4 +162,4 @@ void EvLoopManager::InitLoop() {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

@@ -4,7 +4,7 @@
 #include "common/global_info.h"
 #include "network/route.h"
 
-namespace lego {
+namespace tenon {
 
 namespace subs {
 
@@ -17,4 +17,4 @@ SubsDht::~SubsDht() {}
 
 }  // namespace subs
 
-}  // namespace lego
+}  // namespace tenon

@@ -8,7 +8,7 @@
 #define LVPN_WARN(fmt, ...) TENON_WARN("[lvpn]" fmt, ## __VA_ARGS__)
 #define LVPN_ERROR(fmt, ...) TENON_ERROR("[lvpn]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace lvpn {
 
@@ -19,4 +19,4 @@ enum LvpnErrorCode {
 
 }  // namespace lvpn
 
-}  // namespace lego
+}  // namespace tenon

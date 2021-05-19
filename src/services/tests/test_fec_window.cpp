@@ -13,7 +13,7 @@
 #include "common/global_info.h"
 #include "services/vpn_server/fec_window.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -90,4 +90,4 @@ TEST_F(TestFecWindow, SendPush) {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

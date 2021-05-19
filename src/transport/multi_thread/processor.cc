@@ -1,6 +1,6 @@
 #include "transport/multi_thread/processor.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -20,7 +20,7 @@ void Processor::UnRegisterProcessor(uint32_t type) {
     message_processor_[type] = nullptr;
 }
 
-void Processor::HandleMessage(lego::transport::protobuf::Header& message) {
+void Processor::HandleMessage(tenon::transport::protobuf::Header& message) {
 #ifdef LEGO_TRACE_MESSAGE
     LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(
             std::string("processor handle, ") + std::to_string(message.type()),
@@ -42,4 +42,4 @@ Processor::~Processor() {}
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

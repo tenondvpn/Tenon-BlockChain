@@ -8,7 +8,7 @@
 #include "db/db_utils.h"
 #include "db/dict.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -104,4 +104,4 @@ bool UniqueQueue::get(uint32_t index, std::string* value) {
 
 }  // db
 
-}  // lego
+}  // tenon

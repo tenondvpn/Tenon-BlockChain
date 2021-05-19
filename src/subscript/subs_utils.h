@@ -8,7 +8,7 @@
 #define SUBS_WARN(fmt, ...) WARN("[SUBS]" fmt, ## __VA_ARGS__)
 #define SUBS_ERROR(fmt, ...) ERROR("[SUBS]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace subs {
 
@@ -19,4 +19,4 @@ enum SubsErrorCode {
 
 }  // namespace subs
 
-}  // namespace lego
+}  // namespace tenon

@@ -6,7 +6,7 @@
 #include "subscript/subs_dht.h"
 #include "subscript/subs_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace subs {
 
@@ -32,4 +32,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

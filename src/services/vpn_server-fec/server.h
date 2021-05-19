@@ -74,7 +74,7 @@ static const uint32_t kPeerTimeout = 30 * 1000 * 1000;  // 30s
 static const int64_t kTransactionTimeout = 1ll * 1000ll * 1000ll;  // 1 s
 static const uint32_t kMaxBandwidthFreeUse = 2048u * 1024u * 1024u;
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -89,19 +89,19 @@ struct PeerInfo {
             : pubkey(pub), method(mtd) {}
 
     bool init() {
-        sec_num = lego::common::Random::RandomInt32();
-        account = lego::network::GetAccountAddressByPublicKey(pubkey);
-        lego::security::PublicKey pub_key;
+        sec_num = tenon::common::Random::RandomInt32();
+        account = tenon::network::GetAccountAddressByPublicKey(pubkey);
+        tenon::security::PublicKey pub_key;
         if (pub_key.Deserialize(pubkey) != 0) {
             return false;
         }
 
-        auto res = lego::security::EcdhCreateKey::Instance()->CreateKey(pub_key, seckey);
-        if (res != lego::security::kSecuritySuccess) {
+        auto res = tenon::security::EcdhCreateKey::Instance()->CreateKey(pub_key, seckey);
+        if (res != tenon::security::kSecuritySuccess) {
             return false;
         }
 
-        seckey = lego::common::Encode::HexEncode(seckey);
+        seckey = tenon::common::Encode::HexEncode(seckey);
         timeout = std::chrono::steady_clock::now() + std::chrono::microseconds(kPeerTimeout);
         crypto = crypto_init(seckey.c_str(), NULL, method.c_str());
         if (crypto == NULL) {
@@ -128,19 +128,19 @@ struct BandwidthInfo {
         pre_bandwidth_get_time = std::chrono::steady_clock::now();
         pre_payfor_get_time = std::chrono::steady_clock::now();
         if (plat == "ios") {
-            client_platform = lego::common::kIos;
+            client_platform = tenon::common::kIos;
         }
 
         if (plat == "and") {
-            client_platform = lego::common::kAndroid;
+            client_platform = tenon::common::kAndroid;
         }
 
         if (plat == "win") {
-            client_platform = lego::common::kWindows;
+            client_platform = tenon::common::kWindows;
         }
 
         if (plat == "mac") {
-            client_platform = lego::common::kMac;
+            client_platform = tenon::common::kMac;
         }
         today_used_bandwidth = 0;
     }
@@ -151,13 +151,13 @@ struct BandwidthInfo {
         }
 
         if (IsVip()) {
-            if (today_used_bandwidth <= lego::init::UpdateVpnInit::Instance()->max_vip_bandwidth()) {
+            if (today_used_bandwidth <= tenon::init::UpdateVpnInit::Instance()->max_vip_bandwidth()) {
                 return true;
             }
             return false;
         }
 
-        if (today_used_bandwidth <= lego::init::UpdateVpnInit::Instance()->max_free_bandwidth()) {
+        if (today_used_bandwidth <= tenon::init::UpdateVpnInit::Instance()->max_free_bandwidth()) {
             return true;
         }
         return false;
@@ -177,8 +177,8 @@ struct BandwidthInfo {
 
 
     bool IsVip() {
-        uint32_t now_day_timestamp = lego::common::TimeUtils::TimestampDays();
-        int32_t vip_days = vip_payed_tenon / lego::common::kVpnVipMinPayfor;
+        uint32_t now_day_timestamp = tenon::common::TimeUtils::TimestampDays();
+        int32_t vip_days = vip_payed_tenon / tenon::common::kVpnVipMinPayfor;
         if (vip_days > 0 && ((vip_timestamp + vip_days + 1) >= now_day_timestamp)) {
             return true;
         }
@@ -198,9 +198,9 @@ struct BandwidthInfo {
     std::chrono::steady_clock::time_point pre_payfor_get_time;
     uint64_t vpn_login_height{ 0 };
     uint64_t vpn_pay_for_height{ 0 };
-    uint32_t client_platform{ lego::common::kUnknown };
-    lego::limit::TockenBucket tocken_bucket_{
-            lego::common::GlobalInfo::Instance()->config_default_stream_limit() };
+    uint32_t client_platform{ tenon::common::kUnknown };
+    tenon::limit::TockenBucket tocken_bucket_{
+            tenon::common::GlobalInfo::Instance()->config_default_stream_limit() };
 };
 typedef std::shared_ptr<BandwidthInfo> BandwidthInfoPtr;
 
@@ -277,7 +277,7 @@ typedef struct server {
     uint32_t id;
     bool freed;
     uint32_t msg_no;
-    lego::vpn::EndPoint* endpoint;
+    tenon::vpn::EndPoint* endpoint;
 } server_t;
 
 typedef struct query {

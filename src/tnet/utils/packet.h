@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -38,4 +38,4 @@ protected:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

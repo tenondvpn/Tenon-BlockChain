@@ -2,7 +2,7 @@
 
 #include "tnet/socket/tcp_socket.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -24,4 +24,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

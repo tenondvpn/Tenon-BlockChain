@@ -22,7 +22,7 @@ struct user_ev_io_t {
     int sock;
 };
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -73,4 +73,4 @@ typedef std::shared_ptr<EvUdpTransport> EvUdpTransportPtr;
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

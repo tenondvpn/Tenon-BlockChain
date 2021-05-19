@@ -19,7 +19,7 @@
 #include "transport/rudp/rudp.h"
 #include "services/vpn_server/ev_loop_manager.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -184,4 +184,4 @@ uint64_t EvUdpTransport::GetMessageHash(transport::protobuf::Header& message) {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

@@ -5,7 +5,7 @@
 #include "transport/tcp/msg_packet.h"
 #include "transport/tcp/tcp_transport.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -185,4 +185,4 @@ VlanNodeInfoPtr TcpRelayServerManager::IsVlanNode(
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

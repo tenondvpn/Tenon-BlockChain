@@ -1,6 +1,6 @@
 #include "transport/multi_thread/synchro_wait.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -100,4 +100,4 @@ SynchroWait::~SynchroWait() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

@@ -3,7 +3,7 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -239,4 +239,4 @@ void EpollManager::HandleWakeup() {
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

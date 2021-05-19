@@ -5,7 +5,7 @@
 #include "common/string_utils.h"
 #include "db/db_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -85,4 +85,4 @@ bool Queue::get(uint32_t index, std::string* value) {
 
 }  // db
 
-}  // lego
+}  // tenon

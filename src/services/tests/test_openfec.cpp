@@ -14,7 +14,7 @@
 #include "services/vpn_server/fec_openfec_encoder.h"
 #include "services/vpn_server/fec_openfec_decoder.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -191,4 +191,4 @@ TEST_F(TestOpenFec, FecOpenFecDecoder1) {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

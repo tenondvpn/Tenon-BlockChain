@@ -4,7 +4,7 @@
 
 #include "tnet/tnet_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -105,4 +105,4 @@ void EventLoop::RunTask() {
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

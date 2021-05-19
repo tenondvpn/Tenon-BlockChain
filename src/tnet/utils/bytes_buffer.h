@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -57,4 +57,4 @@ typedef std::shared_ptr<ByteBuffer> ByteBufferPtr;
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

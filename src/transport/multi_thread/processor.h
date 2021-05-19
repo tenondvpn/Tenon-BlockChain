@@ -3,7 +3,7 @@
 #include "common/utils.h"
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -12,7 +12,7 @@ public:
     static Processor* Instance();
     void RegisterProcessor(uint32_t type, MessageProcessor processor);
     void UnRegisterProcessor(uint32_t type);
-    void HandleMessage(lego::transport::protobuf::Header& message);
+    void HandleMessage(tenon::transport::protobuf::Header& message);
 
 private:
     Processor();
@@ -25,4 +25,4 @@ private:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

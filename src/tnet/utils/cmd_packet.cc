@@ -1,6 +1,6 @@
 #include "tnet/utils/cmd_packet.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -67,4 +67,4 @@ CmdPacket& CmdPacketFactory::Create(int type) {
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

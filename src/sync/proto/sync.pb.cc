@@ -25,7 +25,7 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::intern
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncValueRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SyncValueResponse;
 }  // namespace protobuf_sync_2eproto
-namespace lego {
+namespace tenon {
 namespace sync {
 namespace protobuf {
 class SyncValueRequestDefaultTypeInternal {
@@ -50,17 +50,17 @@ class SyncMessageDefaultTypeInternal {
 } _SyncMessage_default_instance_;
 }  // namespace protobuf
 }  // namespace sync
-}  // namespace lego
+}  // namespace tenon
 namespace protobuf_sync_2eproto {
 static void InitDefaultsSyncValueRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::sync::protobuf::_SyncValueRequest_default_instance_;
-    new (ptr) ::lego::sync::protobuf::SyncValueRequest();
+    void* ptr = &::tenon::sync::protobuf::_SyncValueRequest_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::SyncValueRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::sync::protobuf::SyncValueRequest::InitAsDefaultInstance();
+  ::tenon::sync::protobuf::SyncValueRequest::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_SyncValueRequest =
@@ -70,11 +70,11 @@ static void InitDefaultsSyncResItem() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::sync::protobuf::_SyncResItem_default_instance_;
-    new (ptr) ::lego::sync::protobuf::SyncResItem();
+    void* ptr = &::tenon::sync::protobuf::_SyncResItem_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::SyncResItem();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::sync::protobuf::SyncResItem::InitAsDefaultInstance();
+  ::tenon::sync::protobuf::SyncResItem::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_SyncResItem =
@@ -84,11 +84,11 @@ static void InitDefaultsSyncValueResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::sync::protobuf::_SyncValueResponse_default_instance_;
-    new (ptr) ::lego::sync::protobuf::SyncValueResponse();
+    void* ptr = &::tenon::sync::protobuf::_SyncValueResponse_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::SyncValueResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::sync::protobuf::SyncValueResponse::InitAsDefaultInstance();
+  ::tenon::sync::protobuf::SyncValueResponse::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_SyncValueResponse =
@@ -99,11 +99,11 @@ static void InitDefaultsSyncMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::sync::protobuf::_SyncMessage_default_instance_;
-    new (ptr) ::lego::sync::protobuf::SyncMessage();
+    void* ptr = &::tenon::sync::protobuf::_SyncMessage_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::SyncMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::sync::protobuf::SyncMessage::InitAsDefaultInstance();
+  ::tenon::sync::protobuf::SyncMessage::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<2> scc_info_SyncMessage =
@@ -121,55 +121,55 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[4];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueRequest, network_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueRequest, keys_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, keys_),
   0,
   ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncResItem, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncResItem, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncResItem, key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncResItem, value_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, value_),
   0,
   1,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueResponse, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueResponse, network_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncValueResponse, res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, res_),
   0,
   ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncMessage, sync_value_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::sync::protobuf::SyncMessage, sync_value_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncMessage, sync_value_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncMessage, sync_value_res_),
   0,
   1,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 7, sizeof(::lego::sync::protobuf::SyncValueRequest)},
-  { 9, 16, sizeof(::lego::sync::protobuf::SyncResItem)},
-  { 18, 25, sizeof(::lego::sync::protobuf::SyncValueResponse)},
-  { 27, 34, sizeof(::lego::sync::protobuf::SyncMessage)},
+  { 0, 7, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
+  { 9, 16, sizeof(::tenon::sync::protobuf::SyncResItem)},
+  { 18, 25, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
+  { 27, 34, sizeof(::tenon::sync::protobuf::SyncMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::sync::protobuf::_SyncValueRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::sync::protobuf::_SyncResItem_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::sync::protobuf::_SyncValueResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::sync::protobuf::_SyncMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncResItem_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncMessage_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -197,11 +197,11 @@ void AddDescriptorsImpl() {
       "ValueRequest\022\022\n\nnetwork_id\030\001 \001(\r\022\014\n\004keys"
       "\030\002 \003(\014\")\n\013SyncResItem\022\013\n\003key\030\001 \001(\014\022\r\n\005va"
       "lue\030\002 \001(\014\"U\n\021SyncValueResponse\022\022\n\nnetwor"
-      "k_id\030\001 \001(\r\022,\n\003res\030\002 \003(\0132\037.lego.sync.prot"
+      "k_id\030\001 \001(\r\022,\n\003res\030\002 \003(\0132\037.tenon.sync.prot"
       "obuf.SyncResItem\"\212\001\n\013SyncMessage\022<\n\016sync"
-      "_value_req\030\001 \001(\0132$.lego.sync.protobuf.Sy"
+      "_value_req\030\001 \001(\0132$.tenon.sync.protobuf.Sy"
       "ncValueRequest\022=\n\016sync_value_res\030\002 \001(\0132%"
-      ".lego.sync.protobuf.SyncValueResponse"
+      ".tenon.sync.protobuf.SyncValueResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
       descriptor, 357);
@@ -220,7 +220,7 @@ struct StaticDescriptorInitializer {
   }
 } static_descriptor_initializer;
 }  // namespace protobuf_sync_2eproto
-namespace lego {
+namespace tenon {
 namespace sync {
 namespace protobuf {
 
@@ -238,7 +238,7 @@ SyncValueRequest::SyncValueRequest()
   ::google::protobuf::internal::InitSCC(
       &protobuf_sync_2eproto::scc_info_SyncValueRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.SyncValueRequest)
 }
 SyncValueRequest::SyncValueRequest(const SyncValueRequest& from)
   : ::google::protobuf::Message(),
@@ -247,7 +247,7 @@ SyncValueRequest::SyncValueRequest(const SyncValueRequest& from)
       keys_(from.keys_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   network_id_ = from.network_id_;
-  // @@protoc_insertion_point(copy_constructor:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncValueRequest)
 }
 
 void SyncValueRequest::SharedCtor() {
@@ -255,7 +255,7 @@ void SyncValueRequest::SharedCtor() {
 }
 
 SyncValueRequest::~SyncValueRequest() {
-  // @@protoc_insertion_point(destructor:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.SyncValueRequest)
   SharedDtor();
 }
 
@@ -277,7 +277,7 @@ const SyncValueRequest& SyncValueRequest::default_instance() {
 
 
 void SyncValueRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.SyncValueRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -292,7 +292,7 @@ bool SyncValueRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.SyncValueRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -336,17 +336,17 @@ bool SyncValueRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.SyncValueRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.SyncValueRequest)
   return false;
 #undef DO_
 }
 
 void SyncValueRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.SyncValueRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -366,13 +366,13 @@ void SyncValueRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.SyncValueRequest)
 }
 
 ::google::protobuf::uint8* SyncValueRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.SyncValueRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -392,12 +392,12 @@ void SyncValueRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.SyncValueRequest)
   return target;
 }
 
 size_t SyncValueRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.SyncValueRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -426,22 +426,22 @@ size_t SyncValueRequest::ByteSizeLong() const {
 }
 
 void SyncValueRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.SyncValueRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const SyncValueRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const SyncValueRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.SyncValueRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.sync.protobuf.SyncValueRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.SyncValueRequest)
     MergeFrom(*source);
   }
 }
 
 void SyncValueRequest::MergeFrom(const SyncValueRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.SyncValueRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -454,14 +454,14 @@ void SyncValueRequest::MergeFrom(const SyncValueRequest& from) {
 }
 
 void SyncValueRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.SyncValueRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void SyncValueRequest::CopyFrom(const SyncValueRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.sync.protobuf.SyncValueRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.SyncValueRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -503,7 +503,7 @@ SyncResItem::SyncResItem()
   ::google::protobuf::internal::InitSCC(
       &protobuf_sync_2eproto::scc_info_SyncResItem.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.SyncResItem)
 }
 SyncResItem::SyncResItem(const SyncResItem& from)
   : ::google::protobuf::Message(),
@@ -518,7 +518,7 @@ SyncResItem::SyncResItem(const SyncResItem& from)
   if (from.has_value()) {
     value_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.value_);
   }
-  // @@protoc_insertion_point(copy_constructor:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncResItem)
 }
 
 void SyncResItem::SharedCtor() {
@@ -527,7 +527,7 @@ void SyncResItem::SharedCtor() {
 }
 
 SyncResItem::~SyncResItem() {
-  // @@protoc_insertion_point(destructor:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.SyncResItem)
   SharedDtor();
 }
 
@@ -551,7 +551,7 @@ const SyncResItem& SyncResItem::default_instance() {
 
 
 void SyncResItem::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.SyncResItem)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -573,7 +573,7 @@ bool SyncResItem::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.SyncResItem)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -615,17 +615,17 @@ bool SyncResItem::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.SyncResItem)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.SyncResItem)
   return false;
 #undef DO_
 }
 
 void SyncResItem::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.SyncResItem)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -646,13 +646,13 @@ void SyncResItem::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.SyncResItem)
 }
 
 ::google::protobuf::uint8* SyncResItem::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.SyncResItem)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -675,12 +675,12 @@ void SyncResItem::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.SyncResItem)
   return target;
 }
 
 size_t SyncResItem::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.SyncResItem)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -710,22 +710,22 @@ size_t SyncResItem::ByteSizeLong() const {
 }
 
 void SyncResItem::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.SyncResItem)
   GOOGLE_DCHECK_NE(&from, this);
   const SyncResItem* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const SyncResItem>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.SyncResItem)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.sync.protobuf.SyncResItem)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.SyncResItem)
     MergeFrom(*source);
   }
 }
 
 void SyncResItem::MergeFrom(const SyncResItem& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.SyncResItem)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -745,14 +745,14 @@ void SyncResItem::MergeFrom(const SyncResItem& from) {
 }
 
 void SyncResItem::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.SyncResItem)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void SyncResItem::CopyFrom(const SyncResItem& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.sync.protobuf.SyncResItem)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.SyncResItem)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -796,7 +796,7 @@ SyncValueResponse::SyncValueResponse()
   ::google::protobuf::internal::InitSCC(
       &protobuf_sync_2eproto::scc_info_SyncValueResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.SyncValueResponse)
 }
 SyncValueResponse::SyncValueResponse(const SyncValueResponse& from)
   : ::google::protobuf::Message(),
@@ -805,7 +805,7 @@ SyncValueResponse::SyncValueResponse(const SyncValueResponse& from)
       res_(from.res_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   network_id_ = from.network_id_;
-  // @@protoc_insertion_point(copy_constructor:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncValueResponse)
 }
 
 void SyncValueResponse::SharedCtor() {
@@ -813,7 +813,7 @@ void SyncValueResponse::SharedCtor() {
 }
 
 SyncValueResponse::~SyncValueResponse() {
-  // @@protoc_insertion_point(destructor:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.SyncValueResponse)
   SharedDtor();
 }
 
@@ -835,7 +835,7 @@ const SyncValueResponse& SyncValueResponse::default_instance() {
 
 
 void SyncValueResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.SyncValueResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -850,7 +850,7 @@ bool SyncValueResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.SyncValueResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -870,7 +870,7 @@ bool SyncValueResponse::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .lego.sync.protobuf.SyncResItem res = 2;
+      // repeated .tenon.sync.protobuf.SyncResItem res = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -894,17 +894,17 @@ bool SyncValueResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.SyncValueResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.SyncValueResponse)
   return false;
 #undef DO_
 }
 
 void SyncValueResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.SyncValueResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -914,7 +914,7 @@ void SyncValueResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->network_id(), output);
   }
 
-  // repeated .lego.sync.protobuf.SyncResItem res = 2;
+  // repeated .tenon.sync.protobuf.SyncResItem res = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->res_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -927,13 +927,13 @@ void SyncValueResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.SyncValueResponse)
 }
 
 ::google::protobuf::uint8* SyncValueResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.SyncValueResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -943,7 +943,7 @@ void SyncValueResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->network_id(), target);
   }
 
-  // repeated .lego.sync.protobuf.SyncResItem res = 2;
+  // repeated .tenon.sync.protobuf.SyncResItem res = 2;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->res_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -955,12 +955,12 @@ void SyncValueResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.SyncValueResponse)
   return target;
 }
 
 size_t SyncValueResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.SyncValueResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -968,7 +968,7 @@ size_t SyncValueResponse::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated .lego.sync.protobuf.SyncResItem res = 2;
+  // repeated .tenon.sync.protobuf.SyncResItem res = 2;
   {
     unsigned int count = static_cast<unsigned int>(this->res_size());
     total_size += 1UL * count;
@@ -992,22 +992,22 @@ size_t SyncValueResponse::ByteSizeLong() const {
 }
 
 void SyncValueResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.SyncValueResponse)
   GOOGLE_DCHECK_NE(&from, this);
   const SyncValueResponse* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const SyncValueResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.SyncValueResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.sync.protobuf.SyncValueResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.SyncValueResponse)
     MergeFrom(*source);
   }
 }
 
 void SyncValueResponse::MergeFrom(const SyncValueResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.SyncValueResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1020,14 +1020,14 @@ void SyncValueResponse::MergeFrom(const SyncValueResponse& from) {
 }
 
 void SyncValueResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.SyncValueResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void SyncValueResponse::CopyFrom(const SyncValueResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.sync.protobuf.SyncValueResponse)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.SyncValueResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1058,10 +1058,10 @@ void SyncValueResponse::InternalSwap(SyncValueResponse* other) {
 // ===================================================================
 
 void SyncMessage::InitAsDefaultInstance() {
-  ::lego::sync::protobuf::_SyncMessage_default_instance_._instance.get_mutable()->sync_value_req_ = const_cast< ::lego::sync::protobuf::SyncValueRequest*>(
-      ::lego::sync::protobuf::SyncValueRequest::internal_default_instance());
-  ::lego::sync::protobuf::_SyncMessage_default_instance_._instance.get_mutable()->sync_value_res_ = const_cast< ::lego::sync::protobuf::SyncValueResponse*>(
-      ::lego::sync::protobuf::SyncValueResponse::internal_default_instance());
+  ::tenon::sync::protobuf::_SyncMessage_default_instance_._instance.get_mutable()->sync_value_req_ = const_cast< ::tenon::sync::protobuf::SyncValueRequest*>(
+      ::tenon::sync::protobuf::SyncValueRequest::internal_default_instance());
+  ::tenon::sync::protobuf::_SyncMessage_default_instance_._instance.get_mutable()->sync_value_res_ = const_cast< ::tenon::sync::protobuf::SyncValueResponse*>(
+      ::tenon::sync::protobuf::SyncValueResponse::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int SyncMessage::kSyncValueReqFieldNumber;
@@ -1073,7 +1073,7 @@ SyncMessage::SyncMessage()
   ::google::protobuf::internal::InitSCC(
       &protobuf_sync_2eproto::scc_info_SyncMessage.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.SyncMessage)
 }
 SyncMessage::SyncMessage(const SyncMessage& from)
   : ::google::protobuf::Message(),
@@ -1081,16 +1081,16 @@ SyncMessage::SyncMessage(const SyncMessage& from)
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_sync_value_req()) {
-    sync_value_req_ = new ::lego::sync::protobuf::SyncValueRequest(*from.sync_value_req_);
+    sync_value_req_ = new ::tenon::sync::protobuf::SyncValueRequest(*from.sync_value_req_);
   } else {
     sync_value_req_ = NULL;
   }
   if (from.has_sync_value_res()) {
-    sync_value_res_ = new ::lego::sync::protobuf::SyncValueResponse(*from.sync_value_res_);
+    sync_value_res_ = new ::tenon::sync::protobuf::SyncValueResponse(*from.sync_value_res_);
   } else {
     sync_value_res_ = NULL;
   }
-  // @@protoc_insertion_point(copy_constructor:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncMessage)
 }
 
 void SyncMessage::SharedCtor() {
@@ -1100,7 +1100,7 @@ void SyncMessage::SharedCtor() {
 }
 
 SyncMessage::~SyncMessage() {
-  // @@protoc_insertion_point(destructor:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.SyncMessage)
   SharedDtor();
 }
 
@@ -1124,7 +1124,7 @@ const SyncMessage& SyncMessage::default_instance() {
 
 
 void SyncMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.SyncMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1148,13 +1148,13 @@ bool SyncMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.SyncMessage)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+      // optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -1166,7 +1166,7 @@ bool SyncMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+      // optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -1190,28 +1190,28 @@ bool SyncMessage::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.SyncMessage)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.SyncMessage)
   return false;
 #undef DO_
 }
 
 void SyncMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.SyncMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+  // optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_sync_value_req(), output);
   }
 
-  // optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+  // optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_sync_value_res(), output);
@@ -1221,25 +1221,25 @@ void SyncMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.SyncMessage)
 }
 
 ::google::protobuf::uint8* SyncMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.SyncMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+  // optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
   if (cached_has_bits & 0x00000001u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_sync_value_req(), deterministic, target);
   }
 
-  // optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+  // optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
   if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
@@ -1250,12 +1250,12 @@ void SyncMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.SyncMessage)
   return target;
 }
 
 size_t SyncMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.SyncMessage)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1264,14 +1264,14 @@ size_t SyncMessage::ByteSizeLong() const {
         _internal_metadata_.unknown_fields());
   }
   if (_has_bits_[0 / 32] & 3u) {
-    // optional .lego.sync.protobuf.SyncValueRequest sync_value_req = 1;
+    // optional .tenon.sync.protobuf.SyncValueRequest sync_value_req = 1;
     if (has_sync_value_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *sync_value_req_);
     }
 
-    // optional .lego.sync.protobuf.SyncValueResponse sync_value_res = 2;
+    // optional .tenon.sync.protobuf.SyncValueResponse sync_value_res = 2;
     if (has_sync_value_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -1285,22 +1285,22 @@ size_t SyncMessage::ByteSizeLong() const {
 }
 
 void SyncMessage::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.SyncMessage)
   GOOGLE_DCHECK_NE(&from, this);
   const SyncMessage* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const SyncMessage>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.SyncMessage)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.sync.protobuf.SyncMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.SyncMessage)
     MergeFrom(*source);
   }
 }
 
 void SyncMessage::MergeFrom(const SyncMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.SyncMessage)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1309,23 +1309,23 @@ void SyncMessage::MergeFrom(const SyncMessage& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_sync_value_req()->::lego::sync::protobuf::SyncValueRequest::MergeFrom(from.sync_value_req());
+      mutable_sync_value_req()->::tenon::sync::protobuf::SyncValueRequest::MergeFrom(from.sync_value_req());
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_sync_value_res()->::lego::sync::protobuf::SyncValueResponse::MergeFrom(from.sync_value_res());
+      mutable_sync_value_res()->::tenon::sync::protobuf::SyncValueResponse::MergeFrom(from.sync_value_res());
     }
   }
 }
 
 void SyncMessage::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.SyncMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void SyncMessage::CopyFrom(const SyncMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.sync.protobuf.SyncMessage)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.SyncMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1356,20 +1356,20 @@ void SyncMessage::InternalSwap(SyncMessage* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace protobuf
 }  // namespace sync
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage< ::lego::sync::protobuf::SyncValueRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::sync::protobuf::SyncValueRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncValueRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::SyncValueRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage< ::lego::sync::protobuf::SyncResItem >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::sync::protobuf::SyncResItem >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncResItem >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::SyncResItem >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::sync::protobuf::SyncValueResponse* Arena::CreateMaybeMessage< ::lego::sync::protobuf::SyncValueResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::sync::protobuf::SyncValueResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncValueResponse* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncValueResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::SyncValueResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage< ::lego::sync::protobuf::SyncMessage >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::sync::protobuf::SyncMessage >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::SyncMessage >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

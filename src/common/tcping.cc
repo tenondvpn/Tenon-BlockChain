@@ -21,7 +21,7 @@
 #include <netdb.h>
 #endif
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -117,4 +117,4 @@ int RemoteReachable(const std::string& ip, uint16_t port, bool* reachable) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

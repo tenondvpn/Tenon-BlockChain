@@ -12,7 +12,7 @@
 #include "client/trans_client.h"
 #include "init/init_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace subs {
 
@@ -100,7 +100,7 @@ int SubsConsensus::Init(int argc, char** argv) {
 
     std::string gid;
     std::map<std::string, std::string> attrs;
-    lego::client::TransactionClient::Instance()->Transaction(
+    tenon::client::TransactionClient::Instance()->Transaction(
             "",
             0,
             "",
@@ -130,4 +130,4 @@ int SubsConsensus::StartSubscription() {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

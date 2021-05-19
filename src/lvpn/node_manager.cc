@@ -29,7 +29,7 @@ extern "C" {
 #include "lvpn/lvpn_utils.h"
 #include "client/vpn_client.h"
 
-namespace lego {
+namespace tenon {
 
 namespace lvpn {
 
@@ -326,4 +326,4 @@ void NodeManager::ChangeDesCountry() {
 
 }  // namespace lvpn
 
-}  // namespace lego
+}  // namespace tenon

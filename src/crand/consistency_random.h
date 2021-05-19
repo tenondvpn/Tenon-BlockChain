@@ -2,7 +2,7 @@
 
 #include "common/utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace crand {
 
@@ -24,4 +24,4 @@ private:
 
 }  // namespace crand
 
-}  // namespace lego
+}  // namespace tenon

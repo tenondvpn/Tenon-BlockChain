@@ -18,7 +18,7 @@
 #include "transport/udp/ev_udp_transport.h"
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -153,4 +153,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

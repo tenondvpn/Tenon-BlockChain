@@ -24,7 +24,7 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_service_2eproto ::google::protobuf::int
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_service_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetVpnInfoResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_service_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_VlanNodeHeartbeat;
 }  // namespace protobuf_service_2eproto
-namespace lego {
+namespace tenon {
 namespace service {
 namespace protobuf {
 class GetVpnInfoRequestDefaultTypeInternal {
@@ -49,17 +49,17 @@ class ServiceMessageDefaultTypeInternal {
 } _ServiceMessage_default_instance_;
 }  // namespace protobuf
 }  // namespace service
-}  // namespace lego
+}  // namespace tenon
 namespace protobuf_service_2eproto {
 static void InitDefaultsGetVpnInfoRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::service::protobuf::_GetVpnInfoRequest_default_instance_;
-    new (ptr) ::lego::service::protobuf::GetVpnInfoRequest();
+    void* ptr = &::tenon::service::protobuf::_GetVpnInfoRequest_default_instance_;
+    new (ptr) ::tenon::service::protobuf::GetVpnInfoRequest();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::service::protobuf::GetVpnInfoRequest::InitAsDefaultInstance();
+  ::tenon::service::protobuf::GetVpnInfoRequest::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_GetVpnInfoRequest =
@@ -69,11 +69,11 @@ static void InitDefaultsGetVpnInfoResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::service::protobuf::_GetVpnInfoResponse_default_instance_;
-    new (ptr) ::lego::service::protobuf::GetVpnInfoResponse();
+    void* ptr = &::tenon::service::protobuf::_GetVpnInfoResponse_default_instance_;
+    new (ptr) ::tenon::service::protobuf::GetVpnInfoResponse();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::service::protobuf::GetVpnInfoResponse::InitAsDefaultInstance();
+  ::tenon::service::protobuf::GetVpnInfoResponse::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_GetVpnInfoResponse =
@@ -83,11 +83,11 @@ static void InitDefaultsVlanNodeHeartbeat() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::service::protobuf::_VlanNodeHeartbeat_default_instance_;
-    new (ptr) ::lego::service::protobuf::VlanNodeHeartbeat();
+    void* ptr = &::tenon::service::protobuf::_VlanNodeHeartbeat_default_instance_;
+    new (ptr) ::tenon::service::protobuf::VlanNodeHeartbeat();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::service::protobuf::VlanNodeHeartbeat::InitAsDefaultInstance();
+  ::tenon::service::protobuf::VlanNodeHeartbeat::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_VlanNodeHeartbeat =
@@ -97,11 +97,11 @@ static void InitDefaultsServiceMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::lego::service::protobuf::_ServiceMessage_default_instance_;
-    new (ptr) ::lego::service::protobuf::ServiceMessage();
+    void* ptr = &::tenon::service::protobuf::_ServiceMessage_default_instance_;
+    new (ptr) ::tenon::service::protobuf::ServiceMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::lego::service::protobuf::ServiceMessage::InitAsDefaultInstance();
+  ::tenon::service::protobuf::ServiceMessage::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<3> scc_info_ServiceMessage =
@@ -120,50 +120,50 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[4];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, pubkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, sign_challenge_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, sign_response_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, heartbeat_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoRequest, method_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, sign_challenge_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, sign_response_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, heartbeat_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoRequest, method_),
   0,
   1,
   2,
   4,
   3,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, svr_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, route_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, country_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, secnum_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::GetVpnInfoResponse, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, svr_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, route_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, country_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, secnum_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::GetVpnInfoResponse, pubkey_),
   0,
   3,
   4,
   1,
   5,
   2,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, nat_type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, node_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, public_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, public_ip_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, udp_port_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::VlanNodeHeartbeat, tcp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, nat_type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, node_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, public_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, udp_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::VlanNodeHeartbeat, tcp_port_),
   4,
   0,
   1,
@@ -171,30 +171,30 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   3,
   5,
   6,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::ServiceMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::ServiceMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::ServiceMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::ServiceMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::ServiceMessage, vpn_req_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::ServiceMessage, vpn_res_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::lego::service::protobuf::ServiceMessage, vlan_heartbeat_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::ServiceMessage, vpn_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::ServiceMessage, vpn_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::service::protobuf::ServiceMessage, vlan_heartbeat_),
   0,
   1,
   2,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 10, sizeof(::lego::service::protobuf::GetVpnInfoRequest)},
-  { 15, 26, sizeof(::lego::service::protobuf::GetVpnInfoResponse)},
-  { 32, 44, sizeof(::lego::service::protobuf::VlanNodeHeartbeat)},
-  { 51, 59, sizeof(::lego::service::protobuf::ServiceMessage)},
+  { 0, 10, sizeof(::tenon::service::protobuf::GetVpnInfoRequest)},
+  { 15, 26, sizeof(::tenon::service::protobuf::GetVpnInfoResponse)},
+  { 32, 44, sizeof(::tenon::service::protobuf::VlanNodeHeartbeat)},
+  { 51, 59, sizeof(::tenon::service::protobuf::ServiceMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::service::protobuf::_GetVpnInfoRequest_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::service::protobuf::_GetVpnInfoResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::service::protobuf::_VlanNodeHeartbeat_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::lego::service::protobuf::_ServiceMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::service::protobuf::_GetVpnInfoRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::service::protobuf::_GetVpnInfoResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::service::protobuf::_VlanNodeHeartbeat_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::service::protobuf::_ServiceMessage_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -229,10 +229,10 @@ void AddDescriptorsImpl() {
       "\n\007node_id\030\002 \001(\014\022\017\n\007dht_key\030\003 \001(\014\022\022\n\npubl"
       "ic_key\030\004 \001(\014\022\021\n\tpublic_ip\030\005 \001(\t\022\020\n\010udp_p"
       "ort\030\006 \001(\005\022\020\n\010tcp_port\030\007 \001(\005\"\311\001\n\016ServiceM"
-      "essage\0229\n\007vpn_req\030\001 \001(\0132(.lego.service.p"
+      "essage\0229\n\007vpn_req\030\001 \001(\0132(.tenon.service.p"
       "rotobuf.GetVpnInfoRequest\022:\n\007vpn_res\030\002 \001"
-      "(\0132).lego.service.protobuf.GetVpnInfoRes"
-      "ponse\022@\n\016vlan_heartbeat\030\003 \001(\0132(.lego.ser"
+      "(\0132).tenon.service.protobuf.GetVpnInfoRes"
+      "ponse\022@\n\016vlan_heartbeat\030\003 \001(\0132(.tenon.ser"
       "vice.protobuf.VlanNodeHeartbeat"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
@@ -252,7 +252,7 @@ struct StaticDescriptorInitializer {
   }
 } static_descriptor_initializer;
 }  // namespace protobuf_service_2eproto
-namespace lego {
+namespace tenon {
 namespace service {
 namespace protobuf {
 
@@ -273,7 +273,7 @@ GetVpnInfoRequest::GetVpnInfoRequest()
   ::google::protobuf::internal::InitSCC(
       &protobuf_service_2eproto::scc_info_GetVpnInfoRequest.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(constructor:tenon.service.protobuf.GetVpnInfoRequest)
 }
 GetVpnInfoRequest::GetVpnInfoRequest(const GetVpnInfoRequest& from)
   : ::google::protobuf::Message(),
@@ -297,7 +297,7 @@ GetVpnInfoRequest::GetVpnInfoRequest(const GetVpnInfoRequest& from)
     method_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.method_);
   }
   heartbeat_ = from.heartbeat_;
-  // @@protoc_insertion_point(copy_constructor:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(copy_constructor:tenon.service.protobuf.GetVpnInfoRequest)
 }
 
 void GetVpnInfoRequest::SharedCtor() {
@@ -309,7 +309,7 @@ void GetVpnInfoRequest::SharedCtor() {
 }
 
 GetVpnInfoRequest::~GetVpnInfoRequest() {
-  // @@protoc_insertion_point(destructor:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(destructor:tenon.service.protobuf.GetVpnInfoRequest)
   SharedDtor();
 }
 
@@ -335,7 +335,7 @@ const GetVpnInfoRequest& GetVpnInfoRequest::default_instance() {
 
 
 void GetVpnInfoRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(message_clear_start:tenon.service.protobuf.GetVpnInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -364,7 +364,7 @@ bool GetVpnInfoRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(parse_start:tenon.service.protobuf.GetVpnInfoRequest)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -444,17 +444,17 @@ bool GetVpnInfoRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(parse_success:tenon.service.protobuf.GetVpnInfoRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(parse_failure:tenon.service.protobuf.GetVpnInfoRequest)
   return false;
 #undef DO_
 }
 
 void GetVpnInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(serialize_start:tenon.service.protobuf.GetVpnInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -492,13 +492,13 @@ void GetVpnInfoRequest::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(serialize_end:tenon.service.protobuf.GetVpnInfoRequest)
 }
 
 ::google::protobuf::uint8* GetVpnInfoRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.service.protobuf.GetVpnInfoRequest)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -540,12 +540,12 @@ void GetVpnInfoRequest::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.service.protobuf.GetVpnInfoRequest)
   return target;
 }
 
 size_t GetVpnInfoRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(message_byte_size_start:tenon.service.protobuf.GetVpnInfoRequest)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -594,22 +594,22 @@ size_t GetVpnInfoRequest::ByteSizeLong() const {
 }
 
 void GetVpnInfoRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.service.protobuf.GetVpnInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const GetVpnInfoRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const GetVpnInfoRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.service.protobuf.GetVpnInfoRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.service.protobuf.GetVpnInfoRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.service.protobuf.GetVpnInfoRequest)
     MergeFrom(*source);
   }
 }
 
 void GetVpnInfoRequest::MergeFrom(const GetVpnInfoRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.service.protobuf.GetVpnInfoRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -641,14 +641,14 @@ void GetVpnInfoRequest::MergeFrom(const GetVpnInfoRequest& from) {
 }
 
 void GetVpnInfoRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.service.protobuf.GetVpnInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void GetVpnInfoRequest::CopyFrom(const GetVpnInfoRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.service.protobuf.GetVpnInfoRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.service.protobuf.GetVpnInfoRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -701,7 +701,7 @@ GetVpnInfoResponse::GetVpnInfoResponse()
   ::google::protobuf::internal::InitSCC(
       &protobuf_service_2eproto::scc_info_GetVpnInfoResponse.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(constructor:tenon.service.protobuf.GetVpnInfoResponse)
 }
 GetVpnInfoResponse::GetVpnInfoResponse(const GetVpnInfoResponse& from)
   : ::google::protobuf::Message(),
@@ -723,7 +723,7 @@ GetVpnInfoResponse::GetVpnInfoResponse(const GetVpnInfoResponse& from)
   ::memcpy(&svr_port_, &from.svr_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&secnum_) -
     reinterpret_cast<char*>(&svr_port_)) + sizeof(secnum_));
-  // @@protoc_insertion_point(copy_constructor:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(copy_constructor:tenon.service.protobuf.GetVpnInfoResponse)
 }
 
 void GetVpnInfoResponse::SharedCtor() {
@@ -736,7 +736,7 @@ void GetVpnInfoResponse::SharedCtor() {
 }
 
 GetVpnInfoResponse::~GetVpnInfoResponse() {
-  // @@protoc_insertion_point(destructor:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(destructor:tenon.service.protobuf.GetVpnInfoResponse)
   SharedDtor();
 }
 
@@ -761,7 +761,7 @@ const GetVpnInfoResponse& GetVpnInfoResponse::default_instance() {
 
 
 void GetVpnInfoResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(message_clear_start:tenon.service.protobuf.GetVpnInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -791,7 +791,7 @@ bool GetVpnInfoResponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(parse_start:tenon.service.protobuf.GetVpnInfoResponse)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -887,17 +887,17 @@ bool GetVpnInfoResponse::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(parse_success:tenon.service.protobuf.GetVpnInfoResponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(parse_failure:tenon.service.protobuf.GetVpnInfoResponse)
   return false;
 #undef DO_
 }
 
 void GetVpnInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(serialize_start:tenon.service.protobuf.GetVpnInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -939,13 +939,13 @@ void GetVpnInfoResponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(serialize_end:tenon.service.protobuf.GetVpnInfoResponse)
 }
 
 ::google::protobuf::uint8* GetVpnInfoResponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.service.protobuf.GetVpnInfoResponse)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -990,12 +990,12 @@ void GetVpnInfoResponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.service.protobuf.GetVpnInfoResponse)
   return target;
 }
 
 size_t GetVpnInfoResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(message_byte_size_start:tenon.service.protobuf.GetVpnInfoResponse)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1053,22 +1053,22 @@ size_t GetVpnInfoResponse::ByteSizeLong() const {
 }
 
 void GetVpnInfoResponse::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.service.protobuf.GetVpnInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
   const GetVpnInfoResponse* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const GetVpnInfoResponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.service.protobuf.GetVpnInfoResponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.service.protobuf.GetVpnInfoResponse)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.service.protobuf.GetVpnInfoResponse)
     MergeFrom(*source);
   }
 }
 
 void GetVpnInfoResponse::MergeFrom(const GetVpnInfoResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.service.protobuf.GetVpnInfoResponse)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1102,14 +1102,14 @@ void GetVpnInfoResponse::MergeFrom(const GetVpnInfoResponse& from) {
 }
 
 void GetVpnInfoResponse::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.service.protobuf.GetVpnInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void GetVpnInfoResponse::CopyFrom(const GetVpnInfoResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.service.protobuf.GetVpnInfoResponse)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.service.protobuf.GetVpnInfoResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1163,7 +1163,7 @@ VlanNodeHeartbeat::VlanNodeHeartbeat()
   ::google::protobuf::internal::InitSCC(
       &protobuf_service_2eproto::scc_info_VlanNodeHeartbeat.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(constructor:tenon.service.protobuf.VlanNodeHeartbeat)
 }
 VlanNodeHeartbeat::VlanNodeHeartbeat(const VlanNodeHeartbeat& from)
   : ::google::protobuf::Message(),
@@ -1189,7 +1189,7 @@ VlanNodeHeartbeat::VlanNodeHeartbeat(const VlanNodeHeartbeat& from)
   ::memcpy(&nat_type_, &from.nat_type_,
     static_cast<size_t>(reinterpret_cast<char*>(&tcp_port_) -
     reinterpret_cast<char*>(&nat_type_)) + sizeof(tcp_port_));
-  // @@protoc_insertion_point(copy_constructor:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(copy_constructor:tenon.service.protobuf.VlanNodeHeartbeat)
 }
 
 void VlanNodeHeartbeat::SharedCtor() {
@@ -1203,7 +1203,7 @@ void VlanNodeHeartbeat::SharedCtor() {
 }
 
 VlanNodeHeartbeat::~VlanNodeHeartbeat() {
-  // @@protoc_insertion_point(destructor:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(destructor:tenon.service.protobuf.VlanNodeHeartbeat)
   SharedDtor();
 }
 
@@ -1229,7 +1229,7 @@ const VlanNodeHeartbeat& VlanNodeHeartbeat::default_instance() {
 
 
 void VlanNodeHeartbeat::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(message_clear_start:tenon.service.protobuf.VlanNodeHeartbeat)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1262,7 +1262,7 @@ bool VlanNodeHeartbeat::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(parse_start:tenon.service.protobuf.VlanNodeHeartbeat)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1327,7 +1327,7 @@ bool VlanNodeHeartbeat::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->public_ip().data(), static_cast<int>(this->public_ip().length()),
             ::google::protobuf::internal::WireFormat::PARSE,
-            "lego.service.protobuf.VlanNodeHeartbeat.public_ip");
+            "tenon.service.protobuf.VlanNodeHeartbeat.public_ip");
         } else {
           goto handle_unusual;
         }
@@ -1374,17 +1374,17 @@ bool VlanNodeHeartbeat::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(parse_success:tenon.service.protobuf.VlanNodeHeartbeat)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(parse_failure:tenon.service.protobuf.VlanNodeHeartbeat)
   return false;
 #undef DO_
 }
 
 void VlanNodeHeartbeat::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(serialize_start:tenon.service.protobuf.VlanNodeHeartbeat)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1417,7 +1417,7 @@ void VlanNodeHeartbeat::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->public_ip().data(), static_cast<int>(this->public_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.service.protobuf.VlanNodeHeartbeat.public_ip");
+      "tenon.service.protobuf.VlanNodeHeartbeat.public_ip");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       5, this->public_ip(), output);
   }
@@ -1436,13 +1436,13 @@ void VlanNodeHeartbeat::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(serialize_end:tenon.service.protobuf.VlanNodeHeartbeat)
 }
 
 ::google::protobuf::uint8* VlanNodeHeartbeat::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.service.protobuf.VlanNodeHeartbeat)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1478,7 +1478,7 @@ void VlanNodeHeartbeat::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->public_ip().data(), static_cast<int>(this->public_ip().length()),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "lego.service.protobuf.VlanNodeHeartbeat.public_ip");
+      "tenon.service.protobuf.VlanNodeHeartbeat.public_ip");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         5, this->public_ip(), target);
@@ -1498,12 +1498,12 @@ void VlanNodeHeartbeat::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.service.protobuf.VlanNodeHeartbeat)
   return target;
 }
 
 size_t VlanNodeHeartbeat::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(message_byte_size_start:tenon.service.protobuf.VlanNodeHeartbeat)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1568,22 +1568,22 @@ size_t VlanNodeHeartbeat::ByteSizeLong() const {
 }
 
 void VlanNodeHeartbeat::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.service.protobuf.VlanNodeHeartbeat)
   GOOGLE_DCHECK_NE(&from, this);
   const VlanNodeHeartbeat* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const VlanNodeHeartbeat>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.service.protobuf.VlanNodeHeartbeat)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.service.protobuf.VlanNodeHeartbeat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.service.protobuf.VlanNodeHeartbeat)
     MergeFrom(*source);
   }
 }
 
 void VlanNodeHeartbeat::MergeFrom(const VlanNodeHeartbeat& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.service.protobuf.VlanNodeHeartbeat)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1621,14 +1621,14 @@ void VlanNodeHeartbeat::MergeFrom(const VlanNodeHeartbeat& from) {
 }
 
 void VlanNodeHeartbeat::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.service.protobuf.VlanNodeHeartbeat)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void VlanNodeHeartbeat::CopyFrom(const VlanNodeHeartbeat& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.service.protobuf.VlanNodeHeartbeat)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.service.protobuf.VlanNodeHeartbeat)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1668,12 +1668,12 @@ void VlanNodeHeartbeat::InternalSwap(VlanNodeHeartbeat* other) {
 // ===================================================================
 
 void ServiceMessage::InitAsDefaultInstance() {
-  ::lego::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vpn_req_ = const_cast< ::lego::service::protobuf::GetVpnInfoRequest*>(
-      ::lego::service::protobuf::GetVpnInfoRequest::internal_default_instance());
-  ::lego::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vpn_res_ = const_cast< ::lego::service::protobuf::GetVpnInfoResponse*>(
-      ::lego::service::protobuf::GetVpnInfoResponse::internal_default_instance());
-  ::lego::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vlan_heartbeat_ = const_cast< ::lego::service::protobuf::VlanNodeHeartbeat*>(
-      ::lego::service::protobuf::VlanNodeHeartbeat::internal_default_instance());
+  ::tenon::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vpn_req_ = const_cast< ::tenon::service::protobuf::GetVpnInfoRequest*>(
+      ::tenon::service::protobuf::GetVpnInfoRequest::internal_default_instance());
+  ::tenon::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vpn_res_ = const_cast< ::tenon::service::protobuf::GetVpnInfoResponse*>(
+      ::tenon::service::protobuf::GetVpnInfoResponse::internal_default_instance());
+  ::tenon::service::protobuf::_ServiceMessage_default_instance_._instance.get_mutable()->vlan_heartbeat_ = const_cast< ::tenon::service::protobuf::VlanNodeHeartbeat*>(
+      ::tenon::service::protobuf::VlanNodeHeartbeat::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ServiceMessage::kVpnReqFieldNumber;
@@ -1686,7 +1686,7 @@ ServiceMessage::ServiceMessage()
   ::google::protobuf::internal::InitSCC(
       &protobuf_service_2eproto::scc_info_ServiceMessage.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(constructor:tenon.service.protobuf.ServiceMessage)
 }
 ServiceMessage::ServiceMessage(const ServiceMessage& from)
   : ::google::protobuf::Message(),
@@ -1694,21 +1694,21 @@ ServiceMessage::ServiceMessage(const ServiceMessage& from)
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_vpn_req()) {
-    vpn_req_ = new ::lego::service::protobuf::GetVpnInfoRequest(*from.vpn_req_);
+    vpn_req_ = new ::tenon::service::protobuf::GetVpnInfoRequest(*from.vpn_req_);
   } else {
     vpn_req_ = NULL;
   }
   if (from.has_vpn_res()) {
-    vpn_res_ = new ::lego::service::protobuf::GetVpnInfoResponse(*from.vpn_res_);
+    vpn_res_ = new ::tenon::service::protobuf::GetVpnInfoResponse(*from.vpn_res_);
   } else {
     vpn_res_ = NULL;
   }
   if (from.has_vlan_heartbeat()) {
-    vlan_heartbeat_ = new ::lego::service::protobuf::VlanNodeHeartbeat(*from.vlan_heartbeat_);
+    vlan_heartbeat_ = new ::tenon::service::protobuf::VlanNodeHeartbeat(*from.vlan_heartbeat_);
   } else {
     vlan_heartbeat_ = NULL;
   }
-  // @@protoc_insertion_point(copy_constructor:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(copy_constructor:tenon.service.protobuf.ServiceMessage)
 }
 
 void ServiceMessage::SharedCtor() {
@@ -1718,7 +1718,7 @@ void ServiceMessage::SharedCtor() {
 }
 
 ServiceMessage::~ServiceMessage() {
-  // @@protoc_insertion_point(destructor:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(destructor:tenon.service.protobuf.ServiceMessage)
   SharedDtor();
 }
 
@@ -1743,7 +1743,7 @@ const ServiceMessage& ServiceMessage::default_instance() {
 
 
 void ServiceMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(message_clear_start:tenon.service.protobuf.ServiceMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -1771,13 +1771,13 @@ bool ServiceMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(parse_start:tenon.service.protobuf.ServiceMessage)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .lego.service.protobuf.GetVpnInfoRequest vpn_req = 1;
+      // optional .tenon.service.protobuf.GetVpnInfoRequest vpn_req = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -1789,7 +1789,7 @@ bool ServiceMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.service.protobuf.GetVpnInfoResponse vpn_res = 2;
+      // optional .tenon.service.protobuf.GetVpnInfoResponse vpn_res = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
@@ -1801,7 +1801,7 @@ bool ServiceMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .lego.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
+      // optional .tenon.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
@@ -1825,34 +1825,34 @@ bool ServiceMessage::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(parse_success:tenon.service.protobuf.ServiceMessage)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(parse_failure:tenon.service.protobuf.ServiceMessage)
   return false;
 #undef DO_
 }
 
 void ServiceMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(serialize_start:tenon.service.protobuf.ServiceMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.service.protobuf.GetVpnInfoRequest vpn_req = 1;
+  // optional .tenon.service.protobuf.GetVpnInfoRequest vpn_req = 1;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_vpn_req(), output);
   }
 
-  // optional .lego.service.protobuf.GetVpnInfoResponse vpn_res = 2;
+  // optional .tenon.service.protobuf.GetVpnInfoResponse vpn_res = 2;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_vpn_res(), output);
   }
 
-  // optional .lego.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
+  // optional .tenon.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->_internal_vlan_heartbeat(), output);
@@ -1862,32 +1862,32 @@ void ServiceMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(serialize_end:tenon.service.protobuf.ServiceMessage)
 }
 
 ::google::protobuf::uint8* ServiceMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.service.protobuf.ServiceMessage)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional .lego.service.protobuf.GetVpnInfoRequest vpn_req = 1;
+  // optional .tenon.service.protobuf.GetVpnInfoRequest vpn_req = 1;
   if (cached_has_bits & 0x00000001u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_vpn_req(), deterministic, target);
   }
 
-  // optional .lego.service.protobuf.GetVpnInfoResponse vpn_res = 2;
+  // optional .tenon.service.protobuf.GetVpnInfoResponse vpn_res = 2;
   if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, this->_internal_vpn_res(), deterministic, target);
   }
 
-  // optional .lego.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
+  // optional .tenon.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
   if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
@@ -1898,12 +1898,12 @@ void ServiceMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.service.protobuf.ServiceMessage)
   return target;
 }
 
 size_t ServiceMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(message_byte_size_start:tenon.service.protobuf.ServiceMessage)
   size_t total_size = 0;
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1912,21 +1912,21 @@ size_t ServiceMessage::ByteSizeLong() const {
         _internal_metadata_.unknown_fields());
   }
   if (_has_bits_[0 / 32] & 7u) {
-    // optional .lego.service.protobuf.GetVpnInfoRequest vpn_req = 1;
+    // optional .tenon.service.protobuf.GetVpnInfoRequest vpn_req = 1;
     if (has_vpn_req()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *vpn_req_);
     }
 
-    // optional .lego.service.protobuf.GetVpnInfoResponse vpn_res = 2;
+    // optional .tenon.service.protobuf.GetVpnInfoResponse vpn_res = 2;
     if (has_vpn_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *vpn_res_);
     }
 
-    // optional .lego.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
+    // optional .tenon.service.protobuf.VlanNodeHeartbeat vlan_heartbeat = 3;
     if (has_vlan_heartbeat()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -1940,22 +1940,22 @@ size_t ServiceMessage::ByteSizeLong() const {
 }
 
 void ServiceMessage::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.service.protobuf.ServiceMessage)
   GOOGLE_DCHECK_NE(&from, this);
   const ServiceMessage* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const ServiceMessage>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.service.protobuf.ServiceMessage)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:lego.service.protobuf.ServiceMessage)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.service.protobuf.ServiceMessage)
     MergeFrom(*source);
   }
 }
 
 void ServiceMessage::MergeFrom(const ServiceMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.service.protobuf.ServiceMessage)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -1964,26 +1964,26 @@ void ServiceMessage::MergeFrom(const ServiceMessage& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_vpn_req()->::lego::service::protobuf::GetVpnInfoRequest::MergeFrom(from.vpn_req());
+      mutable_vpn_req()->::tenon::service::protobuf::GetVpnInfoRequest::MergeFrom(from.vpn_req());
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_vpn_res()->::lego::service::protobuf::GetVpnInfoResponse::MergeFrom(from.vpn_res());
+      mutable_vpn_res()->::tenon::service::protobuf::GetVpnInfoResponse::MergeFrom(from.vpn_res());
     }
     if (cached_has_bits & 0x00000004u) {
-      mutable_vlan_heartbeat()->::lego::service::protobuf::VlanNodeHeartbeat::MergeFrom(from.vlan_heartbeat());
+      mutable_vlan_heartbeat()->::tenon::service::protobuf::VlanNodeHeartbeat::MergeFrom(from.vlan_heartbeat());
     }
   }
 }
 
 void ServiceMessage::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.service.protobuf.ServiceMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void ServiceMessage::CopyFrom(const ServiceMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:lego.service.protobuf.ServiceMessage)
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.service.protobuf.ServiceMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2015,20 +2015,20 @@ void ServiceMessage::InternalSwap(ServiceMessage* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace protobuf
 }  // namespace service
-}  // namespace lego
+}  // namespace tenon
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::service::protobuf::GetVpnInfoRequest* Arena::CreateMaybeMessage< ::lego::service::protobuf::GetVpnInfoRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::service::protobuf::GetVpnInfoRequest >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::service::protobuf::GetVpnInfoRequest* Arena::CreateMaybeMessage< ::tenon::service::protobuf::GetVpnInfoRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::service::protobuf::GetVpnInfoRequest >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::service::protobuf::GetVpnInfoResponse* Arena::CreateMaybeMessage< ::lego::service::protobuf::GetVpnInfoResponse >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::service::protobuf::GetVpnInfoResponse >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::service::protobuf::GetVpnInfoResponse* Arena::CreateMaybeMessage< ::tenon::service::protobuf::GetVpnInfoResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::service::protobuf::GetVpnInfoResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::service::protobuf::VlanNodeHeartbeat* Arena::CreateMaybeMessage< ::lego::service::protobuf::VlanNodeHeartbeat >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::service::protobuf::VlanNodeHeartbeat >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::service::protobuf::VlanNodeHeartbeat* Arena::CreateMaybeMessage< ::tenon::service::protobuf::VlanNodeHeartbeat >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::service::protobuf::VlanNodeHeartbeat >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::lego::service::protobuf::ServiceMessage* Arena::CreateMaybeMessage< ::lego::service::protobuf::ServiceMessage >(Arena* arena) {
-  return Arena::CreateInternal< ::lego::service::protobuf::ServiceMessage >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::service::protobuf::ServiceMessage* Arena::CreateMaybeMessage< ::tenon::service::protobuf::ServiceMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::service::protobuf::ServiceMessage >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

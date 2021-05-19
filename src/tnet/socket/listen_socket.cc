@@ -2,7 +2,7 @@
 
 #include "tnet/socket/server_socket.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -56,4 +56,4 @@ bool ListenSocket::Accept(ServerSocket** socket) const
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

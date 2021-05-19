@@ -17,7 +17,7 @@
 #define TNET_WARN(fmt, ...) TENON_WARN("[tnet]" fmt, ## __VA_ARGS__)
 #define TNET_ERROR(fmt, ...) TENON_ERROR("[tnet]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -77,4 +77,4 @@ inline static bool ParseSpec(const std::string& s, in_addr_t* addr, uint16_t* po
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

@@ -34,7 +34,7 @@ extern "C" {
 #define VPNSVR_WARN(fmt, ...) TENON_WARN("[vpn_svr]" fmt, ## __VA_ARGS__)
 #define VPNSVR_ERROR(fmt, ...) TENON_WARN("[vpn_svr]" fmt, ## __VA_ARGS__)
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -108,4 +108,4 @@ static const double kLossRate = 0.30;
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

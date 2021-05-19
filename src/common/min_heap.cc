@@ -1,6 +1,6 @@
 #include "common/min_heap.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -31,4 +31,4 @@ uint64_t MinHeapUniqueVal(const int32_t& val) {
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

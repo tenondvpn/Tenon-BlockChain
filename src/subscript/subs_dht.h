@@ -8,7 +8,7 @@
 #include "dht/node.h"
 #include "subscript/subs_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace subs {
 
@@ -24,4 +24,4 @@ private:
 
 }  // namespace subs
 
-}  // namespace lego
+}  // namespace tenon

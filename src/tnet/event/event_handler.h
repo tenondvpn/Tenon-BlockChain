@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -29,4 +29,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

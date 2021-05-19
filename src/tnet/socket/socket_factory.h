@@ -5,7 +5,7 @@
 #include "tnet/socket/listen_socket.h"
 #include "tnet/socket/server_socket.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -96,4 +96,4 @@ public:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

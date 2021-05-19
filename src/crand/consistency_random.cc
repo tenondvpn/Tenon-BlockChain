@@ -1,6 +1,6 @@
 #include "crand/consistency_random.h"
 
-namespace lego {
+namespace tenon {
 
 namespace crand {
 
@@ -11,4 +11,4 @@ ConsistencyRandom* ConsistencyRandom::Instance() {
     
 }  // namespace crand
 
-}  // namespace lego
+}  // namespace tenon

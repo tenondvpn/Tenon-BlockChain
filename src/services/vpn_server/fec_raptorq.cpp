@@ -1,6 +1,6 @@
 #include "services/vpn_server/fec_raptorq.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -33,4 +33,4 @@ Symbol* FecRaptorQ::RecoverData(int32_t lost_index) {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

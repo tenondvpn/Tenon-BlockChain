@@ -5,7 +5,7 @@
 
 #include "transport/transport_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -23,4 +23,4 @@ protected:
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon

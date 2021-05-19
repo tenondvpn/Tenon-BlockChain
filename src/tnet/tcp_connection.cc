@@ -4,7 +4,7 @@
 #include "tnet/socket/client_socket.h"
 #include "transport/proto/transport.pb.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -412,4 +412,4 @@ void TcpConnection::ReleaseByIOThread() {
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

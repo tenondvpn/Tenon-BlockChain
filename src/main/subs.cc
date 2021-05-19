@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
     log4cpp::PropertyConfigurator::configure("./conf/log4cpp.properties");
-    lego::common::SignalRegister();
-    lego::subs::SubsConsensus::Instance()->Init(argc, argv);
+    tenon::common::SignalRegister();
+    tenon::subs::SubsConsensus::Instance()->Init(argc, argv);
     return 0;
 }

@@ -13,7 +13,7 @@
 #include "tnet/tcp_acceptor.h"
 #include "services/vpn_server/vpn_svr_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -100,4 +100,4 @@ private:
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include "common/hash.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -192,4 +192,4 @@ public:
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

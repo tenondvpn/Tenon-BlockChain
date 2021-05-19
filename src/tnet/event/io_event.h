@@ -2,7 +2,7 @@
 
 #include "tnet/event/event_handler.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -60,4 +60,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

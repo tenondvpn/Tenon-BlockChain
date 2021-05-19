@@ -8,7 +8,7 @@
 #include "tnet/utils/packet_decoder.h"
 #include "tnet/utils/packet_encoder.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -120,4 +120,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

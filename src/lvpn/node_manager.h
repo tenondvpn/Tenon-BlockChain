@@ -5,7 +5,7 @@
 #include "lvpn/lvpn_utils.h"
 #include "common/tick.h"
 
-namespace lego {
+namespace tenon {
 
 namespace lvpn {
 
@@ -54,4 +54,4 @@ private:
 
 }  // namespace lvpn
 
-}  // namespace lego
+}  // namespace tenon

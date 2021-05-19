@@ -5,7 +5,7 @@
 #include "tnet/socket/client_socket.h"
 #include "tnet/utils/packet_factory.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -62,4 +62,4 @@ private:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

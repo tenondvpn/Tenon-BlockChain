@@ -22,7 +22,7 @@ extern "C" {
 #include "services/vpn_server/ev_loop_manager.h"
 #include "services/vpn_server/vpn_svr_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -640,4 +640,4 @@ public:
 
 }  // namespace vpn 
 
-}  // namespace lego
+}  // namespace tenon

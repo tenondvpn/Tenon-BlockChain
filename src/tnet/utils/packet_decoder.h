@@ -4,7 +4,7 @@
 #include "tnet/utils/packet.h"
 #include "tnet/utils/bytes_buffer.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -23,4 +23,4 @@ protected:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

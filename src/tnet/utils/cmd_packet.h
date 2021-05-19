@@ -4,7 +4,7 @@
 
 #include "tnet/utils/packet.h"
 
-namespace lego {
+namespace tenon {
 
 namespace tnet {
 
@@ -54,4 +54,4 @@ public:
 
 }  // namespace tnet
 
-}  // namespace lego
+}  // namespace tenon

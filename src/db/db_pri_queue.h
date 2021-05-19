@@ -6,7 +6,7 @@
 #include "common/min_heap.h"
 #include "db/db_utils.h"
 
-namespace lego {
+namespace tenon {
 
 namespace db {
 
@@ -195,4 +195,4 @@ private:
 
 }  // db
 
-}  // lego
+}  // tenon

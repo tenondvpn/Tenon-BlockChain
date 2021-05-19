@@ -15,7 +15,7 @@ extern "C" {
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
 
-namespace lego {
+namespace tenon {
 
 namespace common {
 
@@ -295,4 +295,4 @@ private:
 
 }  // namespace common
 
-}  // namespace lego
+}  // namespace tenon

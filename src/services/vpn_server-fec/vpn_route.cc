@@ -107,7 +107,7 @@ extern "C" {
 #include "services/vpn_server/fec_openfec_encoder.h"
 #include "services/vpn_svr_proxy/shadowsocks_proxy.h"
 
-using namespace lego;
+using namespace tenon;
 
 static void AcceptCallback(EV_P_ ev_io *w, int revents);
 static void ServerSendCallback(EV_P_ ev_io *w, int revents);
@@ -685,7 +685,7 @@ static void ServerRecvCallback(EV_P_ ev_io *w, int revents) {
         if (vlan_node) {
             server->id = global_server_idx++;
             global_server_map[server->id] = server;
-            server->endpoint = new lego::vpn::EndPoint(vlan_node->udp_user_data, server->id);
+            server->endpoint = new tenon::vpn::EndPoint(vlan_node->udp_user_data, server->id);
             vpn::VpnRoute::Instance()->SendStreamData(server);
             server->stage = STAGE_STREAM;
         } else {
@@ -1166,14 +1166,14 @@ static void AcceptCallback(EV_P_ ev_io *w, int revents) {
     SetNonblocking(serverfd);
 
     server_t *server = NewServer(serverfd, listener);
-    server->country_code = lego::ip::IpWithCountry::Instance()->GetCountryUintCode(peer_name);
+    server->country_code = tenon::ip::IpWithCountry::Instance()->GetCountryUintCode(peer_name);
     ev_io_start(EV_A_ & server->recv_ctx->io);
     ev_timer_start(EV_A_ & server->recv_ctx->watcher);
 
-    auto login_item = std::make_shared<lego::vpn::LoginCountryItem>();
+    auto login_item = std::make_shared<tenon::vpn::LoginCountryItem>();
     login_item->country = (uint32_t)server->country_code;
     login_item->count = 0;
-    lego::vpn::VpnRoute::Instance()->login_country_queue().push(login_item);
+    tenon::vpn::VpnRoute::Instance()->login_country_queue().push(login_item);
 }
 
 static int StartTcpServer(
@@ -1340,10 +1340,10 @@ static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
                             user_ev_io,
                             hb_msg,
                             (struct sockaddr*)&from_addr);
-                    lego::vpn::VpnRoute::Instance()->SendHeartbeat(
+                    tenon::vpn::VpnRoute::Instance()->SendHeartbeat(
                             user_ev_io, (struct sockaddr*)&from_addr, 0);
                 } else {
-                    lego::vpn::VpnRoute::Instance()->SendHeartbeat(
+                    tenon::vpn::VpnRoute::Instance()->SendHeartbeat(
                         user_ev_io, (struct sockaddr*)&from_addr, global_context_idx++);
                 }
             }
@@ -1417,7 +1417,7 @@ static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
     bTime = common::TimeUtils::TimestampUs();
 }
 
-namespace lego {
+namespace tenon {
 
 namespace vpn {
 
@@ -1558,7 +1558,7 @@ void VpnRoute::SendNewClientLogin(const std::string& val) {
     };
 
     std::string gid;
-    lego::client::TransactionClient::Instance()->Transaction(
+    tenon::client::TransactionClient::Instance()->Transaction(
             common::Encode::HexDecode(common::kVpnLoginManageAccount),
             0,
             contract::kVpnClientLoginManager,
@@ -1856,4 +1856,4 @@ VlanNodeInfoPtr VpnRoute::IsVlanNode(const std::string& ip, uint16_t port) {
 
 }  // namespace vpn
 
-}  // namespace lego
+}  // namespace tenon

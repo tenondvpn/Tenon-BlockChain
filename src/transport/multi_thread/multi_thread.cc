@@ -4,7 +4,7 @@
 #include "transport/multi_thread/processor.h"
 #include "transport/multi_thread/message_filter.h"
 
-namespace lego {
+namespace tenon {
 
 namespace transport {
 
@@ -193,4 +193,4 @@ void MultiThreadHandler::Join() {
 
 }  // namespace transport
 
-}  // namespace lego
+}  // namespace tenon
