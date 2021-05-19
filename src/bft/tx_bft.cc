@@ -312,6 +312,10 @@ int TxBft::BackupCheckContractDefault(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
+    if (tx_info.gas_price() != common::GlobalInfo::Instance()->gas_price()) {
+        return kBftLeaderInfoInvalid;
+    }
+
     // gas just consume by from
     uint64_t from_balance = 0;
     uint64_t to_balance = 0;
@@ -320,22 +324,21 @@ int TxBft::BackupCheckContractDefault(
         acc_balance_map,
         &from_balance);
     if (balance_status != kBftSuccess) {
-        if (tx_info.status() != balance_status) {
+        if (tx_info.status() != (uint32_t)balance_status) {
             return kBftLeaderInfoInvalid;
         }
     }
 
     uint64_t gas_used = kCallContractDefaultUseGas;
-    if (from_balance <= tx_info.gas_limit() || tx_info.gas_limit() < gas_used) {
+    if (from_balance <= tx_info.gas_limit() * tx_info.gas_price() || tx_info.gas_limit() < gas_used) {
         if (tx_info.status() != kBftUserSetGasLimitError) {
             return kBftLeaderInfoInvalid;
         }
     }
 
-    if (from_balance >= gas_used) {
-        from_balance -= gas_used;
+    if (from_balance >= gas_used * tx_info.gas_price()) {
+        from_balance -= gas_used * tx_info.gas_price();
     } else {
-        gas_used = from_balance;
         from_balance = 0;
         if (tx_info.status() != kBftAccountBalanceError) {
             return kBftLeaderInfoInvalid;
@@ -434,6 +437,9 @@ int TxBft::BackupCheckContractInited(
     }
 
     locked_account_map[local_tx_ptr->tx.to()] = true;
+    if (tx_info.balance() != to_balance) {
+        return kBftLeaderInfoInvalid;
+    }
     // account lock must new block coming
     return kBftSuccess;
 }
@@ -442,6 +448,10 @@ int TxBft::BackupCheckContractLocked(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
+    if (tx_info.gas_price() != common::GlobalInfo::Instance()->gas_price()) {
+        return kBftLeaderInfoInvalid;
+    }
+
     uint64_t gas_used = 0;
     // gas just consume by from
     uint64_t from_balance = 0;
@@ -569,34 +579,32 @@ int TxBft::BackupCheckContractLocked(
             }
         }
 
-        uint64_t dec_amount = tx_info.amount() + gas_used;
+        uint64_t dec_amount = tx_info.amount() + gas_used * tx_info.gas_price();
         if (caller_balance_add < 0) {
             dec_amount += caller_balance_add;
         } else {
             from_balance += caller_balance_add;
         }
 
-        if (from_balance >= gas_used) {
+        if (from_balance >= gas_used * tx_info.gas_price()) {
             if (from_balance >= dec_amount) {
                 from_balance -= dec_amount;
             } else {
-                from_balance -= gas_used;
+                from_balance -= gas_used * tx_info.gas_price();
                 if (tx_info.status() != kBftAccountBalanceError) {
                     return kBftLeaderInfoInvalid;
                 }
             }
         } else {
-            gas_used = from_balance;
             from_balance = 0;
             if (tx_info.status() != kBftAccountBalanceError) {
                 return kBftLeaderInfoInvalid;
             }
         }
     } else {
-        if (from_balance >= gas_used) {
-            from_balance -= gas_used;
+        if (from_balance >= gas_used * tx_info.gas_price()) {
+            from_balance -= gas_used * tx_info.gas_price();
         } else {
-            gas_used = from_balance;
             from_balance = 0;
             if (tx_info.status() != kBftAccountBalanceError) {
                 return kBftLeaderInfoInvalid;
@@ -676,6 +684,10 @@ int TxBft::BackupNormalCheck(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
+    if (tx_info.gas_price() != common::GlobalInfo::Instance()->gas_price()) {
+        return kBftLeaderInfoInvalid;
+    }
+
     uint64_t gas_used = 0;
     // gas just consume by from
     uint64_t from_balance = 0;
@@ -691,7 +703,23 @@ int TxBft::BackupNormalCheck(
             return kBftLeaderInfoInvalid;
         }
 
+        if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price()) {
+            if (tx_info.status() != kBftUserSetGasLimitError) {
+                BFT_ERROR("gas_limit error and status ne[%d][%d]!",
+                    tx_info.status(), kBftUserSetGasLimitError);
+                return kBftLeaderInfoInvalid;
+            }
+        }
+
         gas_used = kTransferGas;
+        if (local_tx_ptr->tx.gas_limit() < gas_used) {
+            if (tx_info.status() != kBftUserSetGasLimitError) {
+                BFT_ERROR("gas_limit error and status ne[%d][%d]!",
+                    tx_info.status(), kBftUserSetGasLimitError);
+                return kBftLeaderInfoInvalid;
+            }
+        }
+
         for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
             gas_used += (local_tx_ptr->tx.attr(i).key().size() +
                 local_tx_ptr->tx.attr(i).value().size()) * kKeyValueStorageEachBytes;
@@ -724,13 +752,14 @@ int TxBft::BackupNormalCheck(
         }
 
         to_balance = to_balance + local_tx_ptr->tx.amount();
+        acc_balance_map[local_tx_ptr->tx.to()] = to_balance;
     } else {
         uint64_t real_transfer_amount = local_tx_ptr->tx.amount();
         if (local_tx_ptr->tx.gas_limit() < gas_used) {
             real_transfer_amount = 0;
         }
 
-        if (from_balance <= gas_used) {
+        if (from_balance <= gas_used * tx_info.gas_price()) {
             if (tx_info.status() != kBftAccountBalanceError) {
                 BFT_ERROR("balance error and status ne[%llu][%llu]!",
                     from_balance, gas_used);
@@ -739,17 +768,17 @@ int TxBft::BackupNormalCheck(
 
             from_balance = 0;
         } else {
-            if (from_balance < (real_transfer_amount + gas_used)) {
+            if (from_balance < (real_transfer_amount + gas_used * tx_info.gas_price())) {
                 if (tx_info.status() != kBftAccountBalanceError) {
                     BFT_ERROR("balance error and status ne[%llu][%llu] status[%d][%d]!",
-                        from_balance, real_transfer_amount + gas_used,
+                        from_balance, real_transfer_amount + gas_used * tx_info.gas_price(),
                         tx_info.status(), kBftAccountBalanceError);
                     return kBftLeaderInfoInvalid;
                 }
 
-                from_balance -= gas_used;
+                from_balance -= gas_used * tx_info.gas_price();
             } else {
-                from_balance -= (real_transfer_amount + gas_used);
+                from_balance -= (real_transfer_amount + gas_used * tx_info.gas_price());
             }
         }
 
@@ -758,7 +787,11 @@ int TxBft::BackupNormalCheck(
                 tx_info.balance(), from_balance);
             return kBftLeaderInfoInvalid;
         }
-                
+        
+        if (tx_info.gas_used() != gas_used) {
+            return kBftLeaderInfoInvalid;
+        }
+
         acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     }
 
@@ -1103,7 +1136,7 @@ void TxBft::LeaderCreateTxBlock(
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
         protobuf::TxInfo tx = tx_vec[i]->tx;
         tx.set_version(common::kTransactionVersion);
-        tx.set_gas_price(0);
+        tx.set_gas_price(common::GlobalInfo::Instance()->gas_price());
         tx.set_status(kBftSuccess);
         if (tx.type() != common::kConsensusCallContract) {
             if (LeaderAddNormalTransaction(tx_vec[i], acc_balance_map, tx) != kBftSuccess) {
@@ -1163,7 +1196,12 @@ int TxBft::LeaderAddNormalTransaction(
         do 
         {
             gas_used = kTransferGas;
-            if (from_balance <= tx_info->tx.gas_limit()) {
+            if (from_balance <= tx_info->tx.gas_limit()  * tx.gas_price()) {
+                tx.set_status(kBftUserSetGasLimitError);
+                break;
+            }
+
+            if (tx.gas_limit() < gas_used) {
                 tx.set_status(kBftUserSetGasLimitError);
                 break;
             }
@@ -1209,25 +1247,23 @@ int TxBft::LeaderAddNormalTransaction(
         if (tx_info->tx.to_add()) {
             to_balance = to_balance + tx_info->tx.amount();
         } else {
-            uint64_t dec_amount = tx_info->tx.amount() + gas_used;
-            if (from_balance >= gas_used) {
+            uint64_t dec_amount = tx_info->tx.amount() + gas_used * tx.gas_price();
+            if (from_balance >= gas_used * tx.gas_price()) {
                 if (from_balance >= dec_amount) {
                     from_balance -= dec_amount;
                 } else {
-                    from_balance -= gas_used;
+                    from_balance -= gas_used * tx.gas_price();
                     tx.set_status(kBftAccountBalanceError);
                 }
             } else {
-                gas_used = from_balance;
                 from_balance = 0;
                 tx.set_status(kBftAccountBalanceError);
             }
         }
     } else {
-        if (from_balance >= gas_used) {
-            from_balance -= gas_used;
+        if (from_balance >= gas_used * tx.gas_price()) {
+            from_balance -= gas_used * tx.gas_price();
         } else {
-            gas_used = from_balance;
             from_balance = 0;
             tx.set_status(kBftAccountBalanceError);
         }
@@ -1270,7 +1306,7 @@ int TxBft::LeaderCheckCallContract(
     tvm::TenonHost tenon_host;
     do
     {
-        if (from_balance <= tx_info->tx.gas_limit()) {
+        if (from_balance <= tx_info->tx.gas_limit() * tx.gas_price()) {
             tx.set_status(kBftUserSetGasLimitError);
             break;
         }
@@ -1345,30 +1381,28 @@ int TxBft::LeaderCheckCallContract(
             }
         }
 
-        uint64_t dec_amount = tx_info->tx.amount() + gas_used;
+        uint64_t dec_amount = tx_info->tx.amount() + gas_used * tx.gas_price();
         if (caller_balance_add < 0) {
             dec_amount += caller_balance_add;
         } else {
             from_balance += caller_balance_add;
         }
 
-        if (from_balance >= gas_used) {
+        if (from_balance >= gas_used * tx.gas_price()) {
             if (from_balance >= dec_amount) {
                 from_balance -= dec_amount;
             } else {
-                from_balance -= gas_used;
+                from_balance -= gas_used * tx.gas_price();
                 tx.set_status(kBftAccountBalanceError);
             }
         } else {
-            gas_used = from_balance;
             from_balance = 0;
             tx.set_status(kBftAccountBalanceError);
         }
     } else {
-        if (from_balance >= gas_used) {
-            from_balance -= gas_used;
+        if (from_balance >= gas_used * tx.gas_price()) {
+            from_balance -= gas_used * tx.gas_price();
         } else {
-            gas_used = from_balance;
             from_balance = 0;
             tx.set_status(kBftAccountBalanceError);
         }
@@ -1406,8 +1440,6 @@ int TxBft::LeaderCallContractDefault(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx) {
-        uint64_t gas_used = 0;
-    // gas just consume by from
     uint64_t from_balance = 0;
     uint64_t to_balance = 0;
     int balance_status = GetTempAccountBalance(tx.from(), acc_balance_map, &from_balance);
@@ -1417,15 +1449,14 @@ int TxBft::LeaderCallContractDefault(
         return kBftError;
     }
 
-    gas_used = kCallContractDefaultUseGas;
-    if (from_balance <= tx_info->tx.gas_limit() || tx.gas_limit() < gas_used) {
+    uint64_t gas_used = kCallContractDefaultUseGas;
+    if (from_balance <= tx_info->tx.gas_limit() * tx.gas_price() || tx.gas_limit() < gas_used) {
         tx.set_status(kBftUserSetGasLimitError);
     }
 
-    if (from_balance >= gas_used) {
-        from_balance -= gas_used;
+    if (from_balance >= gas_used * tx.gas_price()) {
+        from_balance -= gas_used * tx.gas_price();
     } else {
-        gas_used = from_balance;
         from_balance = 0;
         tx.set_status(kBftAccountBalanceError);
     }
@@ -1474,6 +1505,7 @@ int TxBft::LeaderCallContractLock(
     balace_attr->set_value(std::to_string(balance));
     locked_account_map[tx_info->tx.to()] = true;
     tx.set_call_contract_step(contract::kCallStepContractLocked);
+    tx.set_balance(balance);
     // account lock must new block coming
     return kBftSuccess;
 }

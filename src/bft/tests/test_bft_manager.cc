@@ -1749,16 +1749,29 @@ TEST_F(TestBftManager, TestCallContract) {
         Transfer(from_prikey, contract_addr, 0, 100000000,
             common::kConsensusCallContract, true, attrs, &broadcast_msg);
         auto new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, new_from_balance - kCallContractDefaultUseGas);
+        ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas);
+
         // LockContract
         transport::protobuf::Header leader_init_msg;
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        ASSERT_TRUE(contract_info != nullptr);
+        ASSERT_FALSE(contract_info->locked());
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
+        ASSERT_TRUE(contract_info->locked());
+        uint64_t new_contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+        ASSERT_EQ(contract_balance, new_contract_balance);
 
         // CallContract
+        from_balance = GetBalanceByPrikey(from_prikey);
         transport::protobuf::Header leader_lock_msg;
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
+        new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - kTransferGas + 2643000000);
 
         // UnlockContract
         transport::protobuf::Header leader_called_msg;
