@@ -1242,7 +1242,7 @@ inline bool read_headers(Stream &strm, Headers &headers) {
   for (;;) {
     if (!reader.getline()) { return false; }
     if (!strcmp(reader.ptr(), "\r\n")) { break; }
-    lego::common::Split<> split(reader.ptr(), ':');
+    tenon::common::Split<> split(reader.ptr(), ':');
     if (split.Count() >= 2) {
         auto key = std::string(split[0]);
         auto val = std::string(split[1]);
@@ -2136,13 +2136,13 @@ inline void Server::stop() {
 }
 
 inline bool Server::parse_request_line(const char *s, Request &req) {
-    lego::common::Split<> split(s, ' ', strlen(s));
+    tenon::common::Split<> split(s, ' ', strlen(s));
     if (split.Count() < 3) {
         return false;
     }
     req.method = std::string(split[0]);
     req.target = std::string(split[1]);
-    lego::common::Split<> target_split(split[1], '?');
+    tenon::common::Split<> target_split(split[1], '?');
     req.path = detail::decode_url(target_split[0]);
     if (target_split.SubLen(1) > 0) {
         detail::parse_query_text(target_split[1], req.params);
