@@ -138,6 +138,7 @@ int BftInterface::LeaderCommitOk(
             BFT_ERROR("leader create commit agg sign failed!");
             return kBftOppose;
         }
+
         return kBftAgree;
     }
 
@@ -158,6 +159,7 @@ int BftInterface::LeaderCommitOk(
         BFT_ERROR("oppose count limited!");
         return kBftOppose;
     }
+
     return kBftWaitingBackup;
 }
 

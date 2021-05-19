@@ -157,16 +157,14 @@ int BftManager::CreateGenisisBlock(
 }
 
 bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
-    if (!block.has_agg_sign() || block.agg_sign().size() < 64 || block.bitmap_size() <= 0) {
+    if (!block.has_agg_sign_challenge() || !block.has_agg_sign_response() || block.bitmap_size() <= 0) {
         BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
-            "block.agg_sign().size(): %u, block.bitmap_size(): %u",
-            block.has_agg_sign(), block.agg_sign().size(), block.bitmap_size());
+            "block.bitmap_size(): %u",
+            block.has_agg_sign(), block.bitmap_size());
         return false;
     }
 
-    std::string agg_sign_challenge = block.agg_sign().substr(0, 32);
-    std::string agg_sign_response = block.agg_sign().substr(32, 32);
-    auto sign = security::Signature(agg_sign_challenge, agg_sign_response);
+    auto sign = security::Signature(block.agg_sign_challenge(), block.agg_sign_response());
     std::vector<uint64_t> data;
     for (int32_t i = 0; i < block.bitmap_size(); ++i) {
         data.push_back(block.bitmap(i));
@@ -792,7 +790,8 @@ int BftManager::LeaderCommit(
         std::string agg_sign_challenge_str;
         std::string agg_sign_response_str;
         bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
-        tenon_block->set_agg_sign(agg_sign_challenge_str + agg_sign_response_str);
+        tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
+        tenon_block->set_agg_sign_response(agg_sign_response_str);
         tenon_block->set_pool_index(bft_ptr->pool_index());
         const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
         for (uint32_t i = 0; i < bitmap_data.size(); ++i) {

@@ -1064,7 +1064,7 @@ TEST_F(TestBftManager, RootCreateNewAccount) {
 
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_amount - all_gas);
+    ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
     ASSERT_EQ(to_balance, all_amount);
 }
 
@@ -1089,7 +1089,7 @@ TEST_F(TestBftManager, TransferGasLimitError) {
         common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price());
     ASSERT_EQ(to_balance, common::kInvalidUint64);
 }
 
@@ -1114,7 +1114,7 @@ TEST_F(TestBftManager, TransferGasLimitJustOk) {
         common::kConsensusTransaction, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
     ASSERT_EQ(to_balance, all_amount);
 }
 
@@ -1145,7 +1145,7 @@ TEST_F(TestBftManager, TransferGasLimitCover) {
         common::kConsensusTransaction, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
     ASSERT_EQ(to_balance, all_amount);
 }
 
@@ -1168,7 +1168,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsOk) {
 
     Transaction(from_prikey, "", 0, all_gas, common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
         GetIdByPrikey(from_prikey));
     for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
@@ -1197,7 +1197,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasError) {
 
     Transaction(from_prikey, "", 0, all_gas - 1, common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
         GetIdByPrikey(from_prikey));
     for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
@@ -1227,7 +1227,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasCover) {
     Transaction(from_prikey, "", 0, all_gas + 1,
         common::kConsensusTransaction, false, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
     auto from_account = block::AccountManager::Instance()->GetAcountInfo(
         GetIdByPrikey(from_prikey));
     for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
@@ -1263,7 +1263,7 @@ TEST_F(TestBftManager, CreateContractOk) {
         from_prikey, "", amount, all_gas + 1,
         common::kConsensusCreateContract, true, false, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
 }
 
 TEST_F(TestBftManager, TestWithTvm) {
@@ -1379,7 +1379,7 @@ TEST_F(TestBftManager, TestExecution) {
             attrs);
         from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
     
@@ -1456,7 +1456,7 @@ TEST_F(TestBftManager, TestExecution) {
             false,
             attrs);
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         contract_addr = attrs["res_contract_addr"];
     }
 
@@ -1478,7 +1478,7 @@ TEST_F(TestBftManager, TestExecution) {
         ASSERT_TRUE(contract_info != nullptr);
         uint64_t to_balance;
         ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
 
@@ -1508,7 +1508,7 @@ TEST_F(TestBftManager, TestExecution) {
             attrs);
         auto from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
 
@@ -1605,7 +1605,7 @@ TEST_F(TestBftManager, TestCallContract) {
             attrs);
         from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
 
@@ -1681,7 +1681,7 @@ TEST_F(TestBftManager, TestCallContract) {
             false,
             attrs);
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         contract_addr = attrs["res_contract_addr"];
     }
 
@@ -1703,7 +1703,7 @@ TEST_F(TestBftManager, TestCallContract) {
         ASSERT_TRUE(contract_info != nullptr);
         uint64_t to_balance;
         ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
 
@@ -1733,7 +1733,7 @@ TEST_F(TestBftManager, TestCallContract) {
             attrs);
         auto from_balance = GetBalanceByPrikey(from_prikey);
         to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
+        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
         ASSERT_EQ(to_balance, all_amount);
     }
 
@@ -1749,7 +1749,7 @@ TEST_F(TestBftManager, TestCallContract) {
         Transfer(from_prikey, contract_addr, 0, 100000000,
             common::kConsensusCallContract, true, attrs, &broadcast_msg);
         auto new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas);
+        ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price());
 
         // LockContract
         transport::protobuf::Header leader_init_msg;
