@@ -1068,8 +1068,6 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_version(common::kTransactionVersion);
         tx.set_gas_price(0);
         tx.set_status(kBftSuccess);
-        std::cout << "LeaderCreateTxBlock called, type: " << tx.type()
-            << ", call contract step: " << tx.call_contract_step() << std::endl;
         if (tx.type() != common::kConsensusCallContract) {
             if (LeaderAddNormalTransaction(tx_vec[i], acc_balance_map, tx) != kBftSuccess) {
                 continue;
@@ -1084,8 +1082,6 @@ void TxBft::LeaderCreateTxBlock(
             }
         }
 
-        std::cout << "DDDDDDDDDDDDDDD LeaderCreateTxBlock called, type: " << tx.type()
-            << ", call contract step: " << tx.call_contract_step() << std::endl;
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -1395,7 +1391,6 @@ int TxBft::LeaderAddCallContract(
         locked_account_map[tx_info->tx.to()] = true;
         out_tx.set_call_contract_step(contract::kCallStepContractLocked);
         // account lock must new block coming
-        std::cout << "out tx set contract::kCallStepContractLocked." << std::endl;
         return kBftSuccess;
     }
 

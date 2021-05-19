@@ -228,7 +228,6 @@ int AccountManager::AddNewAccount(
     }
 
     if (tx_info.type() == common::kConsensusCreateContract) {
-        std::cout << "11 kConsensusCreateContract: " << common::Encode::HexEncode(account_id) << ":" << kContractAddress << std::endl;
         res += account_info->SetAddressType(kContractAddress, db_batch);
         for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
             if (tx_info.attr(i).key() == bft::kContractBytesCode) {
@@ -238,7 +237,6 @@ int AccountManager::AddNewAccount(
 
         res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
     } else {
-        std::cout << "11 00 kConsensusCreateContract: " << common::Encode::HexEncode(account_id) << ":" << kNormalAddress << std::endl;
         res += account_info->SetAddressType(kNormalAddress, db_batch);
     }
 
@@ -458,7 +456,6 @@ int AccountManager::UpdateAccountInfo(
 
         int res = 0;
         if (tx_info.type() == common::kConsensusCreateContract) {
-            std::cout << "0 kConsensusCreateContract: " << common::Encode::HexEncode(account_id) << ":" << kContractAddress << std::endl;
             res += account_info->SetAddressType(kContractAddress, db_batch);
             for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
                 if (tx_info.attr(i).key() == bft::kContractBytesCode) {

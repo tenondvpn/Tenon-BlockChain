@@ -101,7 +101,6 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 
             if (iter->second->time_valid <= timestamp_now) {
                 if (IsTxContractLocked(iter->second)) {
-                    std::cout << "account address locked: " << common::Encode::HexEncode(iter->second->tx.to()) << std::endl;
                     ++iter;
                     continue;
                 }

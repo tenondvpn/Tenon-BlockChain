@@ -963,11 +963,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (tx_list[i].status() != kBftSuccess) {
-            std::cout << "TTTTTTTTTTTTTT i: " << i << ", tx type: " << tx_list[i].type() << ", bft error: " << tx_list[i].status() << std::endl;
             continue;
         }
 
-        std::cout << "TTTTTTTTTTTTTT i: " << i << ", tx type: " << tx_list[i].type() << std::endl;
         if ((tx_list[i].has_to() && !tx_list[i].to_add()) ||
                 tx_list[i].type() == common::kConsensusCreateContract) {
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
@@ -982,7 +980,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
 
         if (tx_list[i].type() == common::kConsensusCallContract) {
             std::string id = "";
-            std::cout << "TTTTTTTTTTTTTTTTT kConsensusCallContract: " << tx_list[i].call_contract_step() << std::endl;
             if (tx_list[i].call_contract_step() == contract::kCallStepCallerInited) {
                 id = tx_list[i].to();
             } else if (tx_list[i].call_contract_step() == contract::kCallStepContractLocked) {
@@ -1004,7 +1001,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             }
 
             broadcast_nets.insert(network_id);
-            std::cout << "TTTTTTTTTTTTTTTTT kConsensusCallContract: " << tx_list[i].call_contract_step() << ", network_id: " << network_id << std::endl;
         }
     }
 
@@ -1019,15 +1015,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
         to_leader_broadcast_msg_ = msg;
-
-        protobuf::BftMessage bft_msg;
-        bft_msg.ParseFromString(to_leader_broadcast_msg_.data());
-        protobuf::TxBft tx_bft;
-        tx_bft.ParseFromString(bft_msg.data());
-        for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list_size(); ++i) {
-            std::cout << "TTTTTTTTTTTTTTTTT call_contract_step: " << tx_bft.to_tx().block().tx_list(i).call_contract_step() << std::endl;
-        }
-        std::cout << "TTTTTTTTTTTTTTTTT CreateLeaderBroadcastToAccount: " << *iter << std::endl;
     }
 
     transport::protobuf::Header msg;

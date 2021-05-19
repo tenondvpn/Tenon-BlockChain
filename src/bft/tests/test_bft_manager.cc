@@ -5,8 +5,6 @@
 
 #define private public
 #include "bft/bft_utils.h"
-uint32_t lego::bft::kBftStartDeltaTime = 1000;
-
 #include "dht/dht_key.h"
 #include "network/network_utils.h"
 #include "transport/transport_utils.h"
@@ -59,6 +57,8 @@ public:
     }
 
     static void SetUpTestCase() {
+        lego::bft::kBftStartDeltaTime = 1000;
+
         uint32_t* wait_bft_delay = const_cast<uint32_t*>(&bft::kBftStartDeltaTime);
         *wait_bft_delay = 1000;
         system("rm -rf ./core.* ./test_db");
