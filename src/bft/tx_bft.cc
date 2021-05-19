@@ -312,15 +312,52 @@ int TxBft::BackupCheckContractDefault(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
-    int check_res = BackupNormalCheck(local_tx_ptr, tx_info, acc_balance_map);
-    if (check_res != kBftSuccess) {
-        return check_res;
+    // gas just consume by from
+    uint64_t from_balance = 0;
+    uint64_t to_balance = 0;
+    int balance_status = GetTempAccountBalance(
+        local_tx_ptr->tx.from(),
+        acc_balance_map,
+        &from_balance);
+    if (balance_status != kBftSuccess) {
+        if (tx_info.status() != balance_status) {
+            return kBftLeaderInfoInvalid;
+        }
     }
-    
+
+    uint64_t gas_used = kCallContractDefault;
+    if (from_balance <= tx_info.gas_limit() || tx_info.gas_limit() < gas_used) {
+        if (tx_info.status() != kBftUserSetGasLimitError) {
+            return kBftLeaderInfoInvalid;
+        }
+    }
+
+    if (from_balance >= gas_used) {
+        from_balance -= gas_used;
+    } else {
+        gas_used = from_balance;
+        from_balance = 0;
+        if (tx_info.status() != kBftAccountBalanceError) {
+            return kBftLeaderInfoInvalid;
+        }
+    }
+
+    if (tx_info.balance() != from_balance) {
+        return kBftLeaderInfoInvalid;
+    }
+
+    if (tx_info.gas_used() != gas_used) {
+        return kBftLeaderInfoInvalid;
+    }
+
     if (tx_info.call_contract_step() != contract::kCallStepCallerInited) {
         return kBftLeaderInfoInvalid;
     }
 
+    if (tx_info.gas_limit() != local_tx_ptr->tx.gas_limit() - gas_used) {
+        return kBftLeaderInfoInvalid;
+    }
+    
     return kBftSuccess;
 }
 
@@ -1380,19 +1417,10 @@ int TxBft::LeaderCallContractDefault(
         return kBftError;
     }
 
-    do 
-    {
-        if (from_balance <= tx_info->tx.gas_limit()) {
-            tx.set_status(kBftUserSetGasLimitError);
-            break;
-        }
-
-        gas_used = kCallContractDefault;
-        if (tx.gas_limit() < gas_used) {
-            tx.set_status(kBftUserSetGasLimitError);
-            break;
-        }
-    } while (0);
+    gas_used = kCallContractDefault;
+    if (from_balance <= tx_info->tx.gas_limit() || tx.gas_limit() < gas_used) {
+        tx.set_status(kBftUserSetGasLimitError);
+    }
 
     if (from_balance >= gas_used) {
         from_balance -= gas_used;
