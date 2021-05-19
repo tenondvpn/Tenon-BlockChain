@@ -261,7 +261,6 @@ int AccountManager::AddNewAccount(
     }
 
     account_info->NewHeight(tmp_now_height, db_batch);
-
     if (SetAccountAttrs(
             tx_info,
             exist_height,

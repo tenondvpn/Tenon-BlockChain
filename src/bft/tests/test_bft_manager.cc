@@ -1759,7 +1759,6 @@ TEST_F(TestBftManager, TestCallContract) {
         transport::protobuf::Header leader_called_msg;
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_lock_msg, from_prikey, contract_addr, attrs, &leader_called_msg);
-
     }
 }
 

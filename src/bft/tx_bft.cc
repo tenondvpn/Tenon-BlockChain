@@ -1340,6 +1340,7 @@ int TxBft::LeaderCheckCallContract(
     acc_balance_map[tx_info->tx.from()] = from_balance;
     tx.set_balance(from_balance);
     tx.set_gas_used(gas_used);
+    tx.set_call_contract_step(contract::kCallStepContractCalled);
     return kBftSuccess;
 }
 
@@ -1348,75 +1349,105 @@ int TxBft::LeaderAddCallContract(
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& out_tx) {
-    if (tx_info->tx.call_contract_step() == contract::kCallStepDefault) {
-        int res = LeaderAddNormalTransaction(tx_info, acc_balance_map, out_tx);
-        if (res != kBftSuccess) {
-            return res;
-        }
-
-        out_tx.set_call_contract_step(contract::kCallStepCallerInited);
-        return kBftSuccess;
-    }
-
-    if (tx_info->tx.call_contract_step() == contract::kCallStepCallerInited) {
-        // lock contract and 
-        if (locked_account_map.find(tx_info->tx.to()) != locked_account_map.end()) {
-            BFT_ERROR("contract has locked[%s]", common::Encode::HexEncode(tx_info->tx.to()).c_str());
-            return kBftContractAddressLocked;
-        }
-
-        auto contract_acc = block::AccountManager::Instance()->GetContractInfoByAddress(tx_info->tx.to());
-        assert(contract_acc != nullptr);
-        if (contract_acc->locked()) {
-            BFT_ERROR("contract has locked[%s]", common::Encode::HexEncode(tx_info->tx.to()).c_str());
-            return kBftContractAddressLocked;
-        }
-
-        std::string bytes_code;
-        if (contract_acc->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
-            return kBftContractBytesCodeError;
-        }
-
-        uint64_t balance = 0;
-        if (contract_acc->GetBalance(&balance) != block::kBlockSuccess) {
-            return kBftAccountBalanceError;
-        }
-
-        auto bytes_code_attr = out_tx.add_attr();
-        bytes_code_attr->set_key(kContractBytesCode);
-        bytes_code_attr->set_value(bytes_code);
-        auto balace_attr = out_tx.add_attr();
-        balace_attr->set_key(kContractBalance);
-        balace_attr->set_value(std::to_string(balance));
-        locked_account_map[tx_info->tx.to()] = true;
-        out_tx.set_call_contract_step(contract::kCallStepContractLocked);
-        // account lock must new block coming
-        return kBftSuccess;
-    }
-
-    if (tx_info->tx.call_contract_step() == contract::kCallStepContractLocked) {
-        // now caller call contract
-        int res = LeaderCheckCallContract(tx_info, acc_balance_map, out_tx);
-        if (res != kBftSuccess) {
-            return res;
-        }
-
-        out_tx.set_call_contract_step(contract::kCallStepContractCalled);
-        return kBftSuccess;
-    }
-
-    if (tx_info->tx.call_contract_step() == contract::kCallStepContractCalled) {
-        // contract unlock it
-        int res = LeaderAddContractCalled(tx_info, acc_balance_map, out_tx);
-        if (res != kBftSuccess) {
-            return res;
-        }
-
-        out_tx.set_call_contract_step(contract::kCallStepContractFinal);
-        return kBftSuccess;
+    switch (tx_info->tx.call_contract_step()) {
+    case contract::kCallStepDefault:
+        return LeaderCallContractDefault(tx_info, acc_balance_map, out_tx);
+    case contract::kCallStepCallerInited:
+        return LeaderCallContractLock(tx_info, acc_balance_map, locked_account_map, out_tx);
+    case contract::kCallStepContractLocked:
+        return LeaderCheckCallContract(tx_info, acc_balance_map, out_tx);
+    case contract::kCallStepContractCalled:
+        return LeaderAddContractCalled(tx_info, acc_balance_map, out_tx);
+    default:
+        break;
     }
 
     return kBftError;
+}
+
+int TxBft::LeaderCallContractDefault(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        protobuf::TxInfo& tx) {
+        uint64_t gas_used = 0;
+    // gas just consume by from
+    uint64_t from_balance = 0;
+    uint64_t to_balance = 0;
+    int balance_status = GetTempAccountBalance(tx.from(), acc_balance_map, &from_balance);
+    if (balance_status != kBftSuccess) {
+        tx.set_status(balance_status);
+        assert(false);
+        return kBftError;
+    }
+
+    do 
+    {
+        if (from_balance <= tx_info->tx.gas_limit()) {
+            tx.set_status(kBftUserSetGasLimitError);
+            break;
+        }
+
+        gas_used = kCallContractDefault;
+        if (tx.gas_limit() < gas_used) {
+            tx.set_status(kBftUserSetGasLimitError);
+            break;
+        }
+    } while (0);
+
+    if (from_balance >= gas_used) {
+        from_balance -= gas_used;
+    } else {
+        gas_used = from_balance;
+        from_balance = 0;
+        tx.set_status(kBftAccountBalanceError);
+    }
+    
+    acc_balance_map[tx_info->tx.from()] = from_balance;
+    tx.set_balance(from_balance);
+    tx.set_gas_used(gas_used);
+    tx.set_call_contract_step(contract::kCallStepCallerInited);
+    tx.set_gas_limit(tx_info->tx.gas_limit() - gas_used);
+    return kBftSuccess;
+}
+
+int TxBft::LeaderCallContractLock(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
+        protobuf::TxInfo& tx) {
+    // lock contract and 
+    if (locked_account_map.find(tx_info->tx.to()) != locked_account_map.end()) {
+        BFT_ERROR("contract has locked[%s]", common::Encode::HexEncode(tx_info->tx.to()).c_str());
+        return kBftContractAddressLocked;
+    }
+
+    auto contract_acc = block::AccountManager::Instance()->GetContractInfoByAddress(tx_info->tx.to());
+    assert(contract_acc != nullptr);
+    if (contract_acc->locked()) {
+        BFT_ERROR("contract has locked[%s]", common::Encode::HexEncode(tx_info->tx.to()).c_str());
+        return kBftContractAddressLocked;
+    }
+
+    std::string bytes_code;
+    if (contract_acc->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
+        return kBftContractBytesCodeError;
+    }
+
+    uint64_t balance = 0;
+    if (contract_acc->GetBalance(&balance) != block::kBlockSuccess) {
+        return kBftAccountBalanceError;
+    }
+
+    auto bytes_code_attr = tx.add_attr();
+    bytes_code_attr->set_key(kContractBytesCode);
+    bytes_code_attr->set_value(bytes_code);
+    auto balace_attr = tx.add_attr();
+    balace_attr->set_key(kContractBalance);
+    balace_attr->set_value(std::to_string(balance));
+    locked_account_map[tx_info->tx.to()] = true;
+    tx.set_call_contract_step(contract::kCallStepContractLocked);
+    // account lock must new block coming
+    return kBftSuccess;
 }
 
 int TxBft::CallContract(
@@ -1485,6 +1516,7 @@ int TxBft::LeaderAddContractCalled(
     acc_balance_map[tx_info->tx.to()] = to_balance;
     tx.set_balance(to_balance);
     tx.set_gas_used(0);
+    tx.set_call_contract_step(contract::kCallStepContractFinal);
     return kBftSuccess;
 }
 

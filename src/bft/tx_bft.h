@@ -60,6 +60,15 @@ private:
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
+    int LeaderCallContractDefault(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        protobuf::TxInfo& tx);
+    int LeaderCallContractLock(
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
+        protobuf::TxInfo& tx);
     int LeaderCheckCallContract(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,

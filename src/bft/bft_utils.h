@@ -153,6 +153,7 @@ static const std::string kContractBalance = "__ccontractbalance";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;
+static const uint64_t kCallContractDefault = 10000llu;
 static const uint64_t kKeyValueStorageEachBytes = 100llu;
 
 std::string StatusToString(uint32_t status);
