@@ -4,6 +4,9 @@
 #include <chrono>
 
 #define private public
+#include "bft/bft_utils.h"
+uint32_t lego::bft::kBftStartDeltaTime = 1000;
+
 #include "dht/dht_key.h"
 #include "network/network_utils.h"
 #include "transport/transport_utils.h"
@@ -16,7 +19,6 @@
 #include "bft/tests/test_transport.h"
 #include "bft/tx_pool.h"
 #include "bft/gid_manager.h"
-#include "bft/bft_utils.h"
 #include "common/random.h"
 #include "contract/contract_utils.h"
 #include "security/secp256k1.h"
