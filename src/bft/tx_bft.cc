@@ -481,24 +481,24 @@ int TxBft::BackupCheckContractLocked(
             if (tx_info.storages_size() != 0) {
                 return kBftLeaderInfoInvalid;
             }
-        }
-
-        if (account_iter->second.storage.size() != (uint32_t)tx_info.storages_size()) {
-            return kBftLeaderInfoInvalid;
-        }
-
-        // storage just caller can add
-        for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
-            evmc::bytes32 key;
-            memcpy(key.bytes, tx_info.storages(i).key().c_str(), sizeof(key.bytes));
-            auto iter = account_iter->second.storage.find(key);
-            if (iter == account_iter->second.storage.end()) {
+        } else {
+            if (account_iter->second.storage.size() != (uint32_t)tx_info.storages_size()) {
                 return kBftLeaderInfoInvalid;
             }
 
-            std::string value((char*)iter->second.value.bytes, sizeof(iter->second.value.bytes));
-            if (value != tx_info.storages(i).value()) {
-                return kBftLeaderInfoInvalid;
+            // storage just caller can add
+            for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+                evmc::bytes32 key;
+                memcpy(key.bytes, tx_info.storages(i).key().c_str(), sizeof(key.bytes));
+                auto iter = account_iter->second.storage.find(key);
+                if (iter == account_iter->second.storage.end()) {
+                    return kBftLeaderInfoInvalid;
+                }
+
+                std::string value((char*)iter->second.value.bytes, sizeof(iter->second.value.bytes));
+                if (value != tx_info.storages(i).value()) {
+                    return kBftLeaderInfoInvalid;
+                }
             }
         }
 
@@ -1084,6 +1084,8 @@ void TxBft::LeaderCreateTxBlock(
             }
         }
 
+        std::cout << "DDDDDDDDDDDDDDD LeaderCreateTxBlock called, type: " << tx.type()
+            << ", call contract step: " << tx.call_contract_step() << std::endl;
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -1393,6 +1395,7 @@ int TxBft::LeaderAddCallContract(
         locked_account_map[tx_info->tx.to()] = true;
         out_tx.set_call_contract_step(contract::kCallStepContractLocked);
         // account lock must new block coming
+        std::cout << "out tx set contract::kCallStepContractLocked." << std::endl;
         return kBftSuccess;
     }
 

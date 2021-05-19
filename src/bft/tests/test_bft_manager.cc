@@ -16,6 +16,7 @@
 #include "bft/tests/test_transport.h"
 #include "bft/tx_pool.h"
 #include "bft/gid_manager.h"
+#include "bft/bft_utils.h"
 #include "common/random.h"
 #include "contract/contract_utils.h"
 #include "security/secp256k1.h"
@@ -56,6 +57,8 @@ public:
     }
 
     static void SetUpTestCase() {
+        uint32_t* wait_bft_delay = const_cast<uint32_t*>(&bft::kBftStartDeltaTime);
+        *wait_bft_delay = 1000;
         system("rm -rf ./core.* ./test_db");
         common::global_stop = true;
         db::Db::Instance()->Init("./test_db");
@@ -267,7 +270,6 @@ public:
             new_tx->set_to(to_prikey);
         }
 
-        std::cout << "DDDDDDDDDDDDDDDDDDDDD tx_type: " << tx_type << ", " << common::kConsensusCreateContract << std::endl;
         if (tx_type == common::kConsensusCreateContract) {
             ASSERT_TRUE(attrs.find(bft::kContractBytesCode) != attrs.end());
             std::string contract_addres = security::Secp256k1::Instance()->GetContractAddress(
@@ -585,7 +587,7 @@ public:
         
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
-        usleep(500000);
+        usleep(bft::kBftStartDeltaTime);
         ASSERT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
@@ -698,7 +700,7 @@ public:
         // prepare
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
-        usleep(500000);
+        usleep(bft::kBftStartDeltaTime);
         EXPECT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
@@ -784,7 +786,6 @@ public:
 
         // check broadcast msg
         auto leader_broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
-        std::cout << "DDDDDDDDDDDDDDDDDDDDDDDDDDD: " << leader_broadcast_msg.type() << ", " << common::kBftMessage << std::endl;
         ASSERT_EQ(leader_broadcast_msg.type(), common::kBftMessage);
         protobuf::BftMessage bft_msg_t;
         ASSERT_TRUE(bft_msg_t.ParseFromString(leader_broadcast_msg.data()));
@@ -851,7 +852,7 @@ public:
             return;
         }
 
-        usleep(500000);
+        usleep(bft::kBftStartDeltaTime);
         ASSERT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
@@ -903,7 +904,6 @@ public:
             ASSERT_EQ(bft_msg.gid(), bft_gid);
         }
 
-        *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
         bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
@@ -964,6 +964,7 @@ public:
             db::Db::Instance()->Put(db_batch);
         }
 
+        *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
         bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
@@ -1006,7 +1007,6 @@ public:
             uint32_t des_network_id = dht::DhtKeyManager::DhtKeyGetNetId(broadcast_msg.des_dht_key());
             if (des_network_id == network::kRootCongressNetworkId) {
                 transport::protobuf::Header to_root_broadcast_msg;
-                std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD called CreateNewAccount now." << std::endl;
                 CreateNewAccount(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
                 transport::protobuf::Header tmp_broadcast_msg;
@@ -1379,7 +1379,6 @@ TEST_F(TestBftManager, TestExecution) {
         to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 1 " << std::endl;
     }
     
 
@@ -1457,7 +1456,6 @@ TEST_F(TestBftManager, TestExecution) {
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         contract_addr = attrs["res_contract_addr"];
-        std::cout << "MMMMMMMMMMMMMMMMM 2 " << std::endl;
     }
 
     // transfer to contract address
@@ -1480,7 +1478,6 @@ TEST_F(TestBftManager, TestExecution) {
         ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 3 " << std::endl;
     }
 
     // create contract caller
@@ -1511,7 +1508,6 @@ TEST_F(TestBftManager, TestExecution) {
         to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 4 " << std::endl;
     }
 
     // direct call contract
@@ -1609,7 +1605,6 @@ TEST_F(TestBftManager, TestCallContract) {
         to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 1 " << std::endl;
     }
 
     // create contract
@@ -1686,7 +1681,6 @@ TEST_F(TestBftManager, TestCallContract) {
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         contract_addr = attrs["res_contract_addr"];
-        std::cout << "MMMMMMMMMMMMMMMMM 2 " << std::endl;
     }
 
     // transfer to contract address
@@ -1709,7 +1703,6 @@ TEST_F(TestBftManager, TestCallContract) {
         ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 3 " << std::endl;
     }
 
     // create contract caller
@@ -1740,7 +1733,6 @@ TEST_F(TestBftManager, TestCallContract) {
         to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_gas - all_amount);
         ASSERT_EQ(to_balance, all_amount);
-        std::cout << "MMMMMMMMMMMMMMMMM 4 " << std::endl;
     }
 
     // call contract
@@ -1751,17 +1743,21 @@ TEST_F(TestBftManager, TestCallContract) {
         std::map<std::string, std::string> attrs;
         attrs[bft::kContractInputCode] = common::Encode::HexDecode("a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
         // Default caller init
-        std::cout << "CCCCCCCCCC caller init." << std::endl;
-        Transfer(from_prikey, contract_addr, 0, 100000000, common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        Transfer(from_prikey, contract_addr, 0, 100000000,
+            common::kConsensusCallContract, true, attrs, &broadcast_msg);
         // LockContract
-        std::cout << "CCCCCCCCCC contact lock contract." << std::endl;
         transport::protobuf::Header leader_init_msg;
-        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
         // CallContract
         transport::protobuf::Header leader_lock_msg;
-        std::cout << "CCCCCCCCCC caller call contract." << std::endl;
-        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract, true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         // UnlockContract
+        transport::protobuf::Header leader_called_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_lock_msg, from_prikey, contract_addr, attrs, &leader_called_msg);
+
     }
 }
 
