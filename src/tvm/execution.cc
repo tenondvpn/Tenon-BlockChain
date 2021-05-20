@@ -52,7 +52,6 @@ int Execution::execute(
     const size_t code_size = bytes_code.size();
     int64_t gas = gas_limit;
     auto rev = EVMC_ISTANBUL;
-    auto create = false;
     auto create_gas = gas_limit;
 
     evmc_message msg{};
@@ -70,7 +69,7 @@ int Execution::execute(
         sizeof(msg.destination.bytes));
     const uint8_t* exec_code_data = nullptr;
     size_t exec_code_size = 0;
-    if (create) {
+    if (is_create) {
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
         create_msg.destination = msg.destination;        create_msg.gas = create_gas;

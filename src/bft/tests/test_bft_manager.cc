@@ -1974,6 +1974,7 @@ TEST_F(TestBftManager, TestCallContractCallerLockContractError4) {
 }
 
 TEST_F(TestBftManager, TestContractCreateExcution) {
+    // create owner
     {
         std::string from_prikey = common::Encode::HexDecode(
             "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
@@ -2005,150 +2006,20 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
         ASSERT_EQ(to_balance, all_amount);
     }
 
-
-    // create contract
-    std::string contract_addr;
+    // direct call contract to create
     {
         std::string from_prikey = common::Encode::HexDecode(
             "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t all_amount = 0;
-        uint64_t amount = 0;
-        uint64_t all_gas = 0;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        attrs.insert(std::make_pair(kContractBytesCode, common::Encode::HexDecode(
-            "60806040523480156100115760006000fd5b50600436106100465760003560e01c806"
-            "341c0e1b51461004c578063a90ae88714610056578063cfb5192814610072576100465"
-            "65b60006000fd5b6100546100a2565b005b610070600480360381019061006b9190610"
-            "402565b61011a565b005b61008c600480360381019061008791906103be565b61029c5"
-            "65b604051610099919061048d565b60405180910390f35b600060009054906101000a9"
-            "00473ffffffffffffffffffffffffffffffffffffffff1673fffffffffffffffffffff"
-            "fffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141"
-            "5156100ff5760006000fd5b3373ffffffffffffffffffffffffffffffffffffffff16f"
-            "f5b565b6000601b905060007f3d584400dc77e383a2a2860d15fd181b1c36117d7b6c1"
-            "e5d54e2f21d9491b66e60001b905060007f043a539fab3f2e42ba806da59b30e100077"
-            "a7dba7439de3fce427eaa75dce5c460001b905060007ff559642966b18c5e58a82106d"
-            "7cbb6dfaa449e1820dda477580b08bab68b93d560001b9050600060018286868660405"
-            "1600081526020016040526040516101bd94939291906104a9565b60206040516020810"
-            "39080840390855afa1580156101e0573d600060003e3d6000fd5b50505060206040510"
-            "3519050600060009054906101000a900473fffffffffffffffffffffffffffffffffff"
-            "fffff1673ffffffffffffffffffffffffffffffffffffffff168173fffffffffffffff"
-            "fffffffffffffffffffffffff161415156102495760006000fd5b3373fffffffffffff"
-            "fffffffffffffffffffffffffff166108fc89908115029060405160006040518083038"
-            "1858888f19350505050158015610290573d600060003e3d6000fd5b5050505050505b5"
-            "05050565b600060008290506000815114156102ba57600060001b9150506102c3565b6"
-            "0208301519150505b9190505661063e565b60006102df6102da84610516565b6104ef5"
-            "65b9050828152602081018484840111156102f85760006000fd5b61030384828561059"
-            "e565b505b9392505050565b600061031f61031a84610548565b6104ef565b905082815"
-            "2602081018484840111156103385760006000fd5b61034384828561059e565b505b939"
-            "2505050565b600082601f83011215156103605760006000fd5b8135610370848260208"
-            "6016102cc565b9150505b92915050565b600082601f830112151561038e5760006000f"
-            "d5b813561039e84826020860161030c565b9150505b92915050565b600081359050610"
-            "3b781610623565b5b92915050565b6000602082840312156103d15760006000fd5b600"
-            "082013567ffffffffffffffff8111156103ec5760006000fd5b6103f88482850161037"
-            "a565b9150505b92915050565b600060006000606084860312156104195760006000fd5"
-            "b6000610427868287016103a8565b9350506020610438868287016103a8565b9250506"
-            "04084013567ffffffffffffffff8111156104565760006000fd5b61046286828701610"
-            "34c565b9150505b9250925092565b6104768161057a565b82525b5050565b610486816"
-            "10590565b82525b5050565b60006020820190506104a2600083018461046d565b5b929"
-            "15050565b60006080820190506104be600083018761046d565b6104cb6020830186610"
-            "47d565b6104d8604083018561046d565b6104e5606083018461046d565b5b959450505"
-            "05050565b60006104f961050b565b905061050582826105ae565b5b919050565b60006"
-            "0405190505b90565b600067ffffffffffffffff821115610531576105306105e0565b5"
-            "b61053a82610611565b90506020810190505b919050565b600067ffffffffffffffff8"
-            "21115610563576105626105e0565b5b61056c82610611565b90506020810190505b919"
-            "050565b60008190505b919050565b60008190505b919050565b600060ff821690505b9"
-            "19050565b828183376000838301525b505050565b6105b782610611565b81018181106"
-            "7ffffffffffffffff821117156105d6576105d56105e0565b5b80604052505b5050565"
-            "b7f4e487b7100000000000000000000000000000000000000000000000000000000600"
-            "052604160045260246000fd5b565b6000601f19601f83011690505b919050565b61062"
-            "c81610585565b8114151561063a5760006000fd5b5b50565bfea264697066735822122"
-            "05df1f066520c41781aa6e597f682192d353de3fdfe0f68038958a4170a2bf34264736"
-            "f6c63430008030033")));
-        all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size()) *
-            bft::kKeyValueStorageEachBytes;
-        Transaction(
-            from_prikey,
-            "",
-            amount,
-            all_gas + 1,
-            common::kConsensusCreateContract,
-            true,
-            false,
-            attrs);
-        uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
-        contract_addr = attrs["res_contract_addr"];
-    }
-
-    // transfer to contract address
-    {
-        std::string from_prikey = common::Encode::HexDecode(
-            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
-        std::string to_prikey = contract_addr;
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t all_amount = 0;
-        uint64_t amount = 100llu * common::kTenonMiniTransportUnit;
-        uint64_t all_gas = 0;
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        Transaction(from_prikey, to_prikey, amount, all_gas + 1, common::kConsensusTransaction, true, true, attrs);
-        auto from_balance = GetBalanceByPrikey(from_prikey);
-        auto contract_info = block::AccountManager::Instance()->GetAcountInfo(contract_addr);
-        ASSERT_TRUE(contract_info != nullptr);
-        uint64_t to_balance;
-        ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
-        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
-        ASSERT_EQ(to_balance, all_amount);
-    }
-
-    // create contract caller
-    {
-        std::string from_prikey = common::Encode::HexDecode(
-            "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
-        std::string to_prikey = common::Encode::HexDecode(
-            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(to_balance, common::kInvalidUint64);
-        uint64_t all_amount = 0;
-        uint64_t amount = 10000llu * common::kTenonMiniTransportUnit;
-        uint64_t all_gas = 0;
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        Transaction(
-            from_prikey,
-            to_prikey,
-            amount,
-            all_gas + 1,
-            common::kConsensusTransaction,
-            true,
-            false,
-            attrs);
-        auto from_balance = GetBalanceByPrikey(from_prikey);
-        to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
-        ASSERT_EQ(to_balance, all_amount);
-    }
-
-    // direct call contract
-    {
-        std::string from_prikey = common::Encode::HexDecode(
-            "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
         tvm::Execution exec;
-        std::string contract_address = contract_addr;
-        std::string input = common::Encode::HexDecode(
-            "a90ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+        std::string contract_address = "348ce564d427a3311b6536bbcff9390d69395b06";
+        std::string input;
         std::string from = GetIdByPrikey(from_prikey);
         std::string to = contract_address;
         std::string origin_address = from;
         uint64_t value = 0;
-        uint64_t gas_limit = 100000000;
+        uint64_t gas_limit = 100000000000;
         uint32_t depth = 0;
-        bool is_create = false;
+        bool is_create = true;
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
@@ -2159,16 +2030,8 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
         tenon_host.AddTmpAccountBalance(
             from,
             caller_balance);
-        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
-            contract_address);
-        ASSERT_TRUE(contract_info != nullptr);
-        uint64_t contract_balance = 0;
-        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
-        tenon_host.AddTmpAccountBalance(
-            contract_address,
-            contract_balance);
         exec.execute(
-            receive_pays,
+            ballot_str,
             input,
             from,
             to,
