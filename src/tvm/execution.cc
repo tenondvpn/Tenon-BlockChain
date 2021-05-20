@@ -18,12 +18,8 @@ Execution::Execution() {}
 
 Execution::~Execution() {}
 
-static void set_value(evmc_message* msg, uint64_t x) noexcept {
-    for (std::size_t i = 0; i < sizeof(x); ++i) {
-        msg->value.bytes[sizeof(msg->value) - 1 - i] = static_cast<uint8_t>(x >> (8 * i));
-    }
-}
-
+// create no param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000
+//       has param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000007b00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000 + encode params
 int Execution::execute(
         const std::string& contract_address,
         const std::string& str_input,
@@ -93,36 +89,30 @@ int Execution::execute(
         msg.destination.bytes,
         to_address.c_str(),
         sizeof(msg.destination.bytes));
-    set_value(&msg, 0);
-
-    std::cout << "msg.input_size: " << msg.input_size << std::endl;
     const uint8_t* exec_code_data = nullptr;
     size_t exec_code_size = 0;
     if (create) {
-//         evmc_message create_msg{};
-//         create_msg.kind = EVMC_CREATE;
-//         create_msg.destination = create_address;
-//         create_msg.gas = create_gas;
-// 
-//         const auto create_result = evm.execute(
-//             host,
-//             rev,
-//             create_msg,
-//             (uint8_t*)contract_address.c_str(),
-//             contract_address.size());
-//         if (create_result.status_code != EVMC_SUCCESS)
-//         {
-//             std::cout << "Contract creation failed: " << create_result.status_code << "\n";
-//             return create_result.status_code;
-//         }
-// 
-//         auto& created_account = host.accounts[create_address];
-//         created_account.code = evmc::bytes(create_result.output_data, create_result.output_size);
-// 
-//         msg.destination = create_address;
-// 
-//         exec_code_data = created_account.code.data();
-//         exec_code_size = created_account.code.size();
+        evmc_message create_msg{};
+        create_msg.kind = EVMC_CREATE;
+        create_msg.destination = msg.destination;        create_msg.gas = create_gas;
+        const auto create_result = evm.execute(
+            host,
+            rev,
+            create_msg,
+            (uint8_t*)contract_address.c_str(),
+            contract_address.size());
+        if (create_result.status_code != EVMC_SUCCESS) {
+            std::cout << "Contract creation failed: " << create_result.status_code << "\n";
+            return create_result.status_code;
+        }
+
+        auto& created_account = host.accounts_[msg.destination];
+        created_account.code = evmc::bytes(create_result.output_data, create_result.output_size);
+        msg.destination = msg.destination;
+        exec_code_data = created_account.code.data();
+        exec_code_size = created_account.code.size();
+        std::cout << "create contract success." << std::endl;
+        return 0;
     } else {
         exec_code_data = (uint8_t*)bytes_code.c_str();
         exec_code_size = bytes_code.size();
