@@ -1563,9 +1563,30 @@ int TxBft::CallContract(
         input = iter->second;
     }
 
+    auto contract_info = block::AccountManager::Instance()->GetAcountInfo(tx_info->tx.to());
+    if (contract_info == nullptr) {
+        BFT_ERROR("contract address not exists[%s]",
+            common::Encode::HexEncode(tx_info->tx.to()).c_str());
+        return kBftError;
+    }
+
+    uint32_t address_type = block::kNormalAddress;
+    if (contract_info->GetAddressType(&address_type) != block::kBlockSuccess) {
+        BFT_ERROR("contract address not exists[%s]",
+            common::Encode::HexEncode(tx_info->tx.to()).c_str());
+        return kBftError;
+    }
+
+    std::string bytes_code;
+    if (contract_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
+        BFT_ERROR("contract address not exists[%s]",
+            common::Encode::HexEncode(tx_info->tx.to()).c_str());
+        return kBftError;
+    }
+
     tvm::Execution exec;
     int exec_res = exec.execute(
-        tx_info->tx.to(),
+        bytes_code,
         input,
         tx_info->tx.from(),
         tx_info->tx.to(),

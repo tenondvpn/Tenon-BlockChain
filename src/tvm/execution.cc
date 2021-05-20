@@ -21,7 +21,7 @@ Execution::~Execution() {}
 // create no param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000
 //       has param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000007b00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000 + encode params
 int Execution::execute(
-        const std::string& contract_address,
+        const std::string& bytes_code,
         const std::string& str_input,
         const std::string& from_address,
         const std::string& to_address,
@@ -32,27 +32,6 @@ int Execution::execute(
         bool is_create,
         tenon::tvm::TenonHost& host,
         evmc::result* out_res) {
-    auto contract_info = block::AccountManager::Instance()->GetAcountInfo(contract_address);
-    if (contract_info == nullptr) {
-        TVM_ERROR("contract address not exists[%s]",
-            common::Encode::HexEncode(contract_address).c_str());
-        return kTvmContractNotExists;
-    }
-
-    uint32_t address_type = block::kNormalAddress;
-    if (contract_info->GetAddressType(&address_type) != block::kBlockSuccess) {
-        TVM_ERROR("contract address not exists[%s]",
-            common::Encode::HexEncode(contract_address).c_str());
-        return kTvmContractNotExists;
-    }
-
-    std::string bytes_code;
-    if (contract_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
-        TVM_ERROR("contract address not exists[%s]",
-            common::Encode::HexEncode(contract_address).c_str());
-        return kTvmContractNotExists;
-    }
-
     evmc::VM evm;
     evmc_loader_error_code ec;
     evm = evmc::VM{ evmc_load_and_configure("./libevmone.so", &ec) };
@@ -99,8 +78,8 @@ int Execution::execute(
             host,
             rev,
             create_msg,
-            (uint8_t*)contract_address.c_str(),
-            contract_address.size());
+            (uint8_t*)bytes_code.c_str(),
+            bytes_code.size());
         if (create_result.status_code != EVMC_SUCCESS) {
             std::cout << "Contract creation failed: " << create_result.status_code << "\n";
             return create_result.status_code;
