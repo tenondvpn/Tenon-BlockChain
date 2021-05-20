@@ -62,9 +62,15 @@ evmc_storage_status TenonHost::set_storage(
         const evmc::bytes32& key,
         const evmc::bytes32& value) noexcept {
     // just set temporary map storage, when commit set to db and block
-    const auto it = accounts_.find(addr);
-    if (it == accounts_.end())
-        return EVMC_STORAGE_UNCHANGED;
+    std::cout << "set storage called id: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes)))
+        << ", key: " << common::Encode::HexEncode(std::string((char*)key.bytes, sizeof(key.bytes)))
+        << ", value: " << common::Encode::HexEncode(std::string((char*)value.bytes, sizeof(value.bytes)))
+        << std::endl;
+    auto it = accounts_.find(addr);
+    if (it == accounts_.end()) {
+        accounts_[addr] = MockedAccount();
+        it = accounts_.find(addr);
+    }
 
     auto& old = it->second.storage[key];
     if (old.value == value)

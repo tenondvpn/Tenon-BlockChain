@@ -2041,17 +2041,21 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
             tenon_host,
             &res);
         ASSERT_EQ(res.status_code, EVMC_SUCCESS);
-        ASSERT_EQ(tenon_host.accounts_.size(), 0);
-        ASSERT_EQ(tenon_host.to_account_value_.size(), 1);
+        ASSERT_EQ(tenon_host.accounts_.size(), 1);
+        ASSERT_EQ(tenon_host.to_account_value_.size(), 0);
+        for (auto account_iter = tenon_host.accounts_.begin(); account_iter != tenon_host.accounts_.end(); ++account_iter) {
+            for (auto key_iter = account_iter->second.storage.begin(); key_iter != account_iter->second.storage.end(); ++key_iter) {
+                std::cout << "id: " << common::Encode::HexEncode(std::string((char*)account_iter->first.bytes, sizeof(account_iter->first.bytes)))
+                    << ", key: " << common::Encode::HexEncode(std::string((char*)key_iter->first.bytes, sizeof(key_iter->first.bytes)))
+                    << ", value: " << common::Encode::HexEncode(std::string((char*)key_iter->second.value.bytes, sizeof(key_iter->second.value.bytes)))
+                    << std::endl;
+            }
+        }
 
         std::cout << "from: " << common::Encode::HexEncode(from)
             << ", to(contract address): " << common::Encode::HexEncode(to)
             << ", owner: " << common::Encode::HexEncode(GetIdByPrikey(common::Encode::HexDecode("348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709")))
             << std::endl;
-        auto iter = tenon_host.to_account_value_.begin();
-        std::cout << "from: " << common::Encode::HexEncode(iter->first) << std::endl;
-        auto sec_iter = iter->second.begin();
-        std::cout << "to: " << common::Encode::HexEncode(sec_iter->first) << " : " << sec_iter->second << std::endl;
     }
 }
 
