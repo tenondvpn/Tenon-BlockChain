@@ -80,16 +80,20 @@ int Execution::execute(
             (uint8_t*)bytes_code.c_str(),
             bytes_code.size());
         if (create_result.status_code != EVMC_SUCCESS) {
-            std::cout << "Contract creation failed: " << create_result.status_code << "\n";
+            const auto gas_used = create_msg.gas - create_result.gas_left;
+            std::cout << "\nResult:   " << create_result.status_code << "\nGas used: " << gas_used << "\n";
             return create_result.status_code;
         }
 
         auto& created_account = host.accounts_[msg.destination];
         created_account.code = evmc::bytes(create_result.output_data, create_result.output_size);
-        msg.destination = msg.destination;
         exec_code_data = created_account.code.data();
         exec_code_size = created_account.code.size();
-        std::cout << "create contract success." << std::endl;
+        const auto gas_used = create_msg.gas - create_result.gas_left;
+        std::cout << "\nResult:   " << create_result.status_code << "\nGas used: " << gas_used << "\n";
+
+        if (create_result.status_code == EVMC_SUCCESS || create_result.status_code == EVMC_REVERT)
+            std::cout << "Output:   " << evmc::hex(create_result.output_data, create_result.output_size) << "\n";
         return 0;
     } else {
         exec_code_data = (uint8_t*)bytes_code.c_str();
