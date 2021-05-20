@@ -351,10 +351,25 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // optional bytes key = 1;
+  // optional bytes id = 1;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // optional bytes key = 2;
   bool has_key() const;
   void clear_key();
-  static const int kKeyFieldNumber = 1;
+  static const int kKeyFieldNumber = 2;
   const ::std::string& key() const;
   void set_key(const ::std::string& value);
   #if LANG_CXX11
@@ -366,10 +381,10 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_key();
   void set_allocated_key(::std::string* key);
 
-  // optional bytes value = 2;
+  // optional bytes value = 3;
   bool has_value() const;
   void clear_value();
-  static const int kValueFieldNumber = 2;
+  static const int kValueFieldNumber = 3;
   const ::std::string& value() const;
   void set_value(const ::std::string& value);
   #if LANG_CXX11
@@ -383,6 +398,8 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.StorageItem)
  private:
+  void set_has_id();
+  void clear_has_id();
   void set_has_key();
   void clear_has_key();
   void set_has_value();
@@ -391,6 +408,7 @@ class StorageItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::internal::ArenaStringPtr key_;
   ::google::protobuf::internal::ArenaStringPtr value_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
@@ -2774,15 +2792,81 @@ inline void AccountAttributes::set_allocated_value(::std::string* value) {
 
 // StorageItem
 
-// optional bytes key = 1;
-inline bool StorageItem::has_key() const {
+// optional bytes id = 1;
+inline bool StorageItem::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void StorageItem::set_has_key() {
+inline void StorageItem::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void StorageItem::clear_has_key() {
+inline void StorageItem::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void StorageItem::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& StorageItem::id() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.StorageItem.id)
+  return id_.GetNoArena();
+}
+inline void StorageItem::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.StorageItem.id)
+}
+#if LANG_CXX11
+inline void StorageItem::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.StorageItem.id)
+}
+#endif
+inline void StorageItem::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.StorageItem.id)
+}
+inline void StorageItem::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.StorageItem.id)
+}
+inline ::std::string* StorageItem::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.StorageItem.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* StorageItem::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.StorageItem.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void StorageItem::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.StorageItem.id)
+}
+
+// optional bytes key = 2;
+inline bool StorageItem::has_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void StorageItem::set_has_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void StorageItem::clear_has_key() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void StorageItem::clear_key() {
   key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -2840,15 +2924,15 @@ inline void StorageItem::set_allocated_key(::std::string* key) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.StorageItem.key)
 }
 
-// optional bytes value = 2;
+// optional bytes value = 3;
 inline bool StorageItem::has_value() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void StorageItem::set_has_value() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void StorageItem::clear_has_value() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void StorageItem::clear_value() {
   value_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
