@@ -22,7 +22,7 @@ public:
         uint64_t value,
         uint64_t max_gas,
         uint32_t depth,
-        bool is_create,
+        uint32_t call_mode,
         tenon::tvm::TenonHost& host,
         evmc::result* res);
     int InitEnvironment(tenon::tvm::TenonHost& tenon_host, evmc_message* msg);

@@ -1594,7 +1594,7 @@ int TxBft::CallContract(
         tx_info->tx.amount(),
         tx_info->tx.gas_limit(),
         0,
-        false,
+        tvm::kJustCall,
         *tenon_host,
         out_res);
     if (exec_res != tvm::kTvmSuccess) {

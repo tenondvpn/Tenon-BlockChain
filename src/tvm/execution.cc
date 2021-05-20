@@ -29,7 +29,7 @@ int Execution::execute(
         uint64_t value,
         uint64_t gas_limit,
         uint32_t depth,
-        bool is_create,
+        uint32_t call_mode,
         tenon::tvm::TenonHost& host,
         evmc::result* out_res) {
     evmc::VM evm;
@@ -69,32 +69,34 @@ int Execution::execute(
         sizeof(msg.destination.bytes));
     const uint8_t* exec_code_data = nullptr;
     size_t exec_code_size = 0;
-    if (is_create) {
+    if (call_mode == kJustCreate || call_mode == kCreateAndCall) {
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
         create_msg.destination = msg.destination;        create_msg.gas = create_gas;
-        const auto create_result = evm.execute(
+        *out_res = evm.execute(
             host,
             rev,
             create_msg,
             (uint8_t*)bytes_code.c_str(),
             bytes_code.size());
-        if (create_result.status_code != EVMC_SUCCESS) {
-            const auto gas_used = create_msg.gas - create_result.gas_left;
-            std::cout << "\nResult:   " << create_result.status_code << "\nGas used: " << gas_used << "\n";
-            return create_result.status_code;
+        if (out_res->status_code != EVMC_SUCCESS) {
+            const auto gas_used = create_msg.gas - out_res->gas_left;
+            std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
+            return out_res->status_code;
         }
 
         auto& created_account = host.accounts_[msg.destination];
-        created_account.code = evmc::bytes(create_result.output_data, create_result.output_size);
+        created_account.code = evmc::bytes(out_res->output_data, out_res->output_size);
         exec_code_data = created_account.code.data();
         exec_code_size = created_account.code.size();
-        const auto gas_used = create_msg.gas - create_result.gas_left;
-        std::cout << "\nResult:   " << create_result.status_code << "\nGas used: " << gas_used << "\n";
+        const auto gas_used = create_msg.gas - out_res->gas_left;
+        std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
 
-        if (create_result.status_code == EVMC_SUCCESS || create_result.status_code == EVMC_REVERT)
-            std::cout << "Output:   " << evmc::hex(create_result.output_data, create_result.output_size) << "\n";
-        return 0;
+        if (out_res->status_code == EVMC_SUCCESS || out_res->status_code == EVMC_REVERT)
+            std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
+        if (call_mode == kJustCreate) {
+            return 0;
+        }
     } else {
         exec_code_data = (uint8_t*)bytes_code.c_str();
         exec_code_size = bytes_code.size();

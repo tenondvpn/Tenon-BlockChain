@@ -1646,7 +1646,6 @@ TEST_F(TestBftManager, TestExecution) {
         uint64_t value = 0;
         uint64_t gas_limit = 100000000;
         uint32_t depth = 0;
-        bool is_create = false;
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
@@ -1674,7 +1673,7 @@ TEST_F(TestBftManager, TestExecution) {
             value,
             gas_limit,
             depth,
-            is_create,
+            tvm::kJustCall,
             tenon_host,
             &res);
         ASSERT_EQ(res.status_code, EVMC_SUCCESS);
@@ -2019,7 +2018,6 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
         uint64_t value = 0;
         uint64_t gas_limit = 100000000000;
         uint32_t depth = 0;
-        bool is_create = true;
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
@@ -2039,7 +2037,7 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
             value,
             gas_limit,
             depth,
-            is_create,
+            tvm::kJustCreate,
             tenon_host,
             &res);
         ASSERT_EQ(res.status_code, EVMC_SUCCESS);

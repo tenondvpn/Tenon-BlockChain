@@ -265,7 +265,7 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
                     params.apparent_value,
                     params.gas,
                     depth_,
-                    false,
+                    tvm::kJustCall,
                     *this,
                     &evmc_res);
             }
