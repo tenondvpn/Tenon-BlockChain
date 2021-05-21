@@ -125,7 +125,7 @@ enum BftLeaderCheckStatus {
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;
 // bft will delay 500ms for all node ready
-static uint32_t kBftStartDeltaTime = 500u * 1000u;
+static const uint32_t kBftStartDeltaTime = 1000u;
 
 // broadcast default param
 static const uint32_t kBftBroadcastIgnBloomfilterHop = 1u;

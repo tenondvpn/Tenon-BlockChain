@@ -70,7 +70,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
     BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
+        "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s]!",
         tx_ptr->tx.to_add(),
         pool_index_,
         tx_ptr->tx.type(),
@@ -105,6 +105,15 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                     continue;
                 }
 
+                BFT_ERROR("get tx [to: %d] [pool idx: %d] type: %d,"
+                    "call_contract_step: %d has tx[%s]to[%s][%s]!",
+                    iter->second->tx.to_add(),
+                    pool_index_,
+                    iter->second->tx.type(),
+                    iter->second->tx.call_contract_step(),
+                    common::Encode::HexEncode(iter->second->tx.from()).c_str(),
+                    common::Encode::HexEncode(iter->second->tx.to()).c_str(),
+                    common::Encode::HexEncode(iter->second->tx.gid()).c_str());
                 res_vec.push_back(iter->second);
                 if (res_vec.size() >= kBftOneConsensusMaxCount) {
                     break;

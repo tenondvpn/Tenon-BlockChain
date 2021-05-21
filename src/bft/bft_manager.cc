@@ -358,7 +358,9 @@ void BftManager::HandleToAccountTxBlock(
             if (account_ptr != nullptr) {
                 // root just create account address and assignment consensus network id
                 just_broadcast = true;
-                BFT_ERROR("account address exists error and broadcast it!");
+                BFT_ERROR("account address exists error and broadcast it from [%s] to [%s]!",
+                    common::Encode::HexEncode(tx_list[i].from()).c_str(),
+                    common::Encode::HexEncode(tx_list[i].to()).c_str());
                 continue;
             }
 
@@ -975,6 +977,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
                 account_ptr->GetConsensuseNetId(&network_id);
             }
 
+            std::cout << common::Encode::HexEncode(tx_list[i].to()) << " broadcast to network: " << network_id << std::endl;
             broadcast_nets.insert(network_id);
         }
 
