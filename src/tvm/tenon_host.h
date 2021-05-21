@@ -101,6 +101,7 @@ public:
     uint32_t depth_{ 0 };
     std::unordered_map<std::string, std::unordered_map<std::string, uint64_t>> to_account_value_;
     std::unordered_map<evmc::address, evmc::uint256be> account_balance_;
+    std::string create_bytes_code_;
 };
 
 }  // namespace tvm

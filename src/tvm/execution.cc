@@ -85,18 +85,18 @@ int Execution::execute(
             return out_res->status_code;
         }
 
+        host.create_bytes_code_ = std::string((char*)out_res->output_data, out_res->output_size);
+        const auto gas_used = create_msg.gas - out_res->gas_left;
+        std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
+        std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
+        if (call_mode == kJustCreate) {
+            return 0;
+        }
+
         auto& created_account = host.accounts_[msg.destination];
         created_account.code = evmc::bytes(out_res->output_data, out_res->output_size);
         exec_code_data = created_account.code.data();
         exec_code_size = created_account.code.size();
-        const auto gas_used = create_msg.gas - out_res->gas_left;
-        std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
-
-        if (out_res->status_code == EVMC_SUCCESS || out_res->status_code == EVMC_REVERT)
-            std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
-        if (call_mode == kJustCreate) {
-            return 0;
-        }
     } else {
         exec_code_data = (uint8_t*)bytes_code.c_str();
         exec_code_size = bytes_code.size();

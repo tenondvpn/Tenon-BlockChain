@@ -77,6 +77,12 @@ private:
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
+    int CreateContractCallExcute(
+        const TxItemPtr& tx_info,
+        uint64_t gas_limit,
+        const std::string& bytes_code,
+        tvm::TenonHost* tenon_host,
+        evmc::result* out_res);
     int BackupNormalCheck(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
