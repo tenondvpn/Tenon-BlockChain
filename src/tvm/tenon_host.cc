@@ -234,6 +234,7 @@ void TenonHost::selfdestruct(
         const evmc::address& addr,
         const evmc::address& beneficiary) noexcept {
     recorded_selfdestructs_.push_back({addr, beneficiary});
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF selfdestruct called!" << std::endl;
 }
 
 evmc::result TenonHost::call(const evmc_message& msg) noexcept {
@@ -310,10 +311,12 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
 }
 
 evmc_tx_context TenonHost::get_tx_context() const noexcept {
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF get_tx_context called!" << std::endl;
     return tx_context_;
 }
 
 evmc::bytes32 TenonHost::get_block_hash(int64_t block_number) const noexcept {
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF get_block_hash called!" << std::endl;
     return block_hash_;
 }
 
@@ -322,7 +325,8 @@ void TenonHost::emit_log(const evmc::address& addr,
                 size_t data_size,
                 const evmc::bytes32 topics[],
                 size_t topics_count) noexcept {
-    recorded_logs_.push_back({addr, {data, data_size}, {topics, topics + topics_count}});
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF emit_log called!" << (char*)data << std::endl;
+    recorded_logs_.push_back({ addr, {data, data_size}, {topics, topics + topics_count} });
 }
 
 void TenonHost::AddTmpAccountBalance(const std::string& address, uint64_t balance) {

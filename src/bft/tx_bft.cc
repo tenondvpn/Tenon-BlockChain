@@ -474,6 +474,7 @@ int TxBft::BackupCheckContractExceute(
             }
         }
 
+        backup_storage_size += 2;  // add add_amount and gas_used
         if (backup_storage_size != (uint32_t)tx_info.storages_size()) {
             BFT_ERROR("backup_storage_size[%u] != (uint32_t)tx_info.storages_size()[%d]",
                 backup_storage_size, tx_info.storages_size());
@@ -482,12 +483,17 @@ int TxBft::BackupCheckContractExceute(
 
         // storage just caller can add
         for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+            if (tx_info.storages(i).key() == kContractCallerChangeAmount ||
+                    tx_info.storages(i).key() == kContractCallerGasUsed) {
+                continue;
+            }
+
             evmc::address id;
             memcpy(id.bytes, tx_info.storages(i).id().c_str(), sizeof(id.bytes));
             auto account_iter = tenon_host.accounts_.find(id);
             if (account_iter == tenon_host.accounts_.end()) {
-                BFT_ERROR("tx_info.storages(i).id() not exists",
-                    common::Encode::HexEncode(tx_info.storages(i).id()));
+                BFT_ERROR("tx_info.storages(i).id()[%s] not exists",
+                    common::Encode::HexEncode(tx_info.storages(i).id()).c_str());
                 return kBftLeaderInfoInvalid;
             }
 
@@ -549,21 +555,29 @@ int TxBft::BackupCheckContractExceute(
             }
         }
 
-        if (caller_balance >= gas_used * local_tx_info->tx.gas_price()) {
+        if ((int64_t)caller_balance + caller_balance_add - (int64_t)(local_tx_info->tx.amount()) >= gas_used * local_tx_info->tx.gas_price()) {
         } else {
-            if (!(tx_info.status() == kBftSuccess && caller_balance_add > 0 &&
-                    caller_balance + caller_balance_add > gas_used * local_tx_info->tx.gas_price())) {
-                if (tx_info.balance() != 0 || tx_info.status() != kBftAccountBalanceError) {
-                    BFT_ERROR("tx_info.balance() != 0");
-                    return kBftLeaderInfoInvalid;
-                }
+            if (tx_info.status() != kBftAccountBalanceError) {
+                BFT_ERROR("tx_info.balance() != 0");
+                return kBftLeaderInfoInvalid;
             }
         }
 
         if (tx_info.status() == kBftSuccess) {
             if (caller_balance_add < 0) {
-                if (caller_balance < (uint64_t)(-caller_balance_add)) {
-                    if (tx_info.status() == kBftAccountBalanceError) {
+                if (caller_balance < (uint64_t)(-caller_balance_add) + local_tx_info->tx.amount()) {
+                    if (tx_info.status() != kBftAccountBalanceError) {
+                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
+                        return kBftLeaderInfoInvalid;
+                    }
+                }
+            }
+        }
+
+        if (tx_info.status() == kBftSuccess) {
+            if (local_tx_info->tx.amount() > 0) {
+                if (caller_balance < local_tx_info->tx.amount()) {
+                    if (tx_info.status() != kBftAccountBalanceError) {
                         BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                         return kBftLeaderInfoInvalid;
                     }
@@ -574,7 +588,7 @@ int TxBft::BackupCheckContractExceute(
         if (tx_info.status() == kBftSuccess) {
             if (contract_balance_add < 0) {
                 if (contract_balance < (uint64_t)(-contract_balance_add)) {
-                    if (tx_info.status() == kBftAccountBalanceError) {
+                    if (tx_info.status() != kBftAccountBalanceError) {
                         BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                         return kBftLeaderInfoInvalid;
                     }
@@ -600,14 +614,17 @@ int TxBft::BackupCheckContractExceute(
     bool caller_gas_used_valid = false;
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         if (tx_info.storages(i).key() == kContractCallerChangeAmount) {
-            BFT_ERROR("caller_balance_add[%lu], tx_info.storages(i).value(): %s", caller_balance_add, tx_info.storages(i).value().c_str());
-            if (caller_balance_add == common::StringUtil::ToInt64(tx_info.storages(i).value())) {
+            BFT_ERROR("caller_balance_add[%lu], tx_info.storages(i).value(): %s",
+                caller_balance_add, tx_info.storages(i).value().c_str());
+            if (caller_balance_add - (int64_t)(local_tx_info->tx.amount()) ==
+                    common::StringUtil::ToInt64(tx_info.storages(i).value())) {
                 caller_balance_valid = true;
             }
         }
 
         if (tx_info.storages(i).key() == kContractCallerGasUsed) {
-            BFT_ERROR("gas_used[%lu], tx_info.storages(i).value(): %s", gas_used, tx_info.storages(i).value().c_str());
+            BFT_ERROR("gas_used[%lu], tx_info.storages(i).value(): %s",
+                gas_used, tx_info.storages(i).value().c_str());
             if (gas_used == common::StringUtil::ToUint64(tx_info.storages(i).value())) {
                 caller_gas_used_valid = true;
             }
@@ -1855,19 +1872,26 @@ int TxBft::LeaderCallContractExceute(
             }
         }
 
-        if (caller_balance >= gas_used * tx.gas_price()) {
+        if ((int64_t)caller_balance + caller_balance_add - tx_info->tx.amount() >= gas_used * tx.gas_price()) {
         } else {
-            if (!(tx.status() == kBftSuccess && caller_balance_add > 0 &&
-                    caller_balance + caller_balance_add > gas_used * tx.gas_price())) {
-                if (tx.status() == kBftSuccess) {
-                    tx.set_status(kBftAccountBalanceError);
-                }
+            if (tx.status() == kBftSuccess) {
+                tx.set_status(kBftAccountBalanceError);
             }
         }
 
         if (tx.status() == kBftSuccess) {
             if (caller_balance_add < 0) {
-                if (caller_balance < (uint64_t)(-caller_balance_add)) {
+                if (caller_balance < (uint64_t)(-caller_balance_add) + tx_info->tx.amount()) {
+                    if (tx.status() == kBftSuccess) {
+                        tx.set_status(kBftAccountBalanceError);
+                    }
+                }
+            }
+        }
+
+        if (tx.status() == kBftSuccess) {
+            if (tx_info->tx.amount() > 0) {
+                if (caller_balance < tx_info->tx.amount()) {
                     if (tx.status() == kBftSuccess) {
                         tx.set_status(kBftAccountBalanceError);
                     }
@@ -1900,7 +1924,7 @@ int TxBft::LeaderCallContractExceute(
 
     auto caller_balance_attr = tx.add_storages();
     caller_balance_attr->set_key(kContractCallerChangeAmount);
-    caller_balance_attr->set_value(std::to_string(caller_balance_add));
+    caller_balance_attr->set_value(std::to_string(caller_balance_add - (int64_t)tx_info->tx.amount()));
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
