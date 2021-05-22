@@ -125,7 +125,7 @@ enum BftLeaderCheckStatus {
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;
 // bft will delay 500ms for all node ready
-static const uint32_t kBftStartDeltaTime = 1000u;
+static const uint32_t kBftStartDeltaTime = 10000u;
 
 // broadcast default param
 static const uint32_t kBftBroadcastIgnBloomfilterHop = 1u;
@@ -150,7 +150,8 @@ static const std::string kContractAddress = "__caddress";
 static const std::string kContractBytesCode = "__cbytescode";
 static const std::string kContractCreatedBytesCode = "__cbytescode_created";
 static const std::string kContractInputCode = "__cinput";
-static const std::string kContractBalance = "__ccontractbalance";
+static const std::string kContractCallerChangeAmount = "__ccontractcallerchangeamount";
+static const std::string kContractCallerGasUsed = "__ccontractcallergasused";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;

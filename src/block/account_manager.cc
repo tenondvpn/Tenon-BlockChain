@@ -229,9 +229,9 @@ int AccountManager::AddNewAccount(
 
     if (tx_info.type() == common::kConsensusCreateContract) {
         res += account_info->SetAddressType(kContractAddress, db_batch);
-        for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-            if (tx_info.attr(i).key() == bft::kContractBytesCode) {
-                res += account_info->SetBytesCode(tx_info.attr(i).value(), db_batch);
+        for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+            if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
+                res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
             }
         }
 
@@ -415,16 +415,32 @@ int AccountManager::UpdateAccountInfo(
     }
     
     if (tx_info.type() == common::kConsensusCallContract) {
-        if (tx_info.call_contract_step() == contract::kCallStepContractLocked) {
-            account_info->LockAccount();
-        }
-
-        if (tx_info.call_contract_step() == contract::kCallStepContractCalled) {
+        if (tx_info.call_contract_step() == contract::kCallStepContractFinal) {
             account_info->UnLockAccount();
         }
     }
 
     return kBlockSuccess;
+}
+
+bool AccountManager::IsInvalidKey(const std::string& key) {
+    if (key.size() < 2) {
+        return false;
+    }
+
+    if (key[0] == '_' && key[1] == '_') {
+        return true;
+    }
+
+    if (key == kFieldContractOwner) {
+        return true;
+    }
+
+    if (key == kFieldFullAddress) {
+        return true;
+    }
+
+    return false;
 }
 
 int AccountManager::SetAccountAttrs(
@@ -436,11 +452,11 @@ int AccountManager::SetAccountAttrs(
         db::DbWriteBach& db_batch) {
     if (tx_info.status() == bft::kBftSuccess) {
         int res = 0;
-        if (tx_info.type() == common::kConsensusCreateContract) {
+        if (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add()) {
             res += account_info->SetAddressType(kContractAddress, db_batch);
-            for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-                if (tx_info.attr(i).key() == bft::kContractBytesCode) {
-                    res += account_info->SetBytesCode(tx_info.attr(i).value(), db_batch);
+            for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+                if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
+                    res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
                 }
             }
 
@@ -449,9 +465,15 @@ int AccountManager::SetAccountAttrs(
 
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
                 (tx_info.type() == common::kConsensusCallContract &&
-                tx_info.call_contract_step() == contract::kCallStepContractCalled)) {
+                (tx_info.call_contract_step() == contract::kCallStepContractCalled ||
+                tx_info.call_contract_step() == contract::kCallStepContractFinal)) ||
+                (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add())) {
             if (exist_height <= tmp_now_height) {
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
+                    if (IsInvalidKey(tx_info.attr(attr_idx).key())) {
+                        continue;
+                    }
+
                     res += account_info->SetAttrWithHeight(
                         tx_info.attr(attr_idx).key(),
                         tmp_now_height,
@@ -465,6 +487,10 @@ int AccountManager::SetAccountAttrs(
                 for (int32_t storage_idx = 0;
                         storage_idx < tx_info.storages_size(); ++storage_idx) {
                     if (tx_info.storages(storage_idx).id() != account_id) {
+                        continue;
+                    }
+
+                    if (IsInvalidKey(tx_info.storages(storage_idx).key())) {
                         continue;
                     }
 

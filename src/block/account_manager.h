@@ -56,6 +56,7 @@ private:
         uint64_t tmp_now_height,
         block::DbAccountInfo* account_info,
         db::DbWriteBach& db_batch);
+    bool IsInvalidKey(const std::string& key);
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
     std::mutex acc_map_mutex_;

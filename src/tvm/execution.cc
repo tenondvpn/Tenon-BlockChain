@@ -109,6 +109,8 @@ int Execution::execute(
 
     if (out_res->status_code == EVMC_SUCCESS || out_res->status_code == EVMC_REVERT)
         std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
+    std::cout << "from: " << common::Encode::HexEncode(from_address) << ", to: " << common::Encode::HexEncode(to_address) << std::endl;
+    std::cout << "input: " << common::Encode::HexEncode(str_input) << std::endl;
 
     return 0;
 }

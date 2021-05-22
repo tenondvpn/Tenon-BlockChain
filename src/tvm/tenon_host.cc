@@ -20,10 +20,16 @@ evmc::bytes32 TenonHost::get_storage(
     // first find from temporary map storage
     std::string id((char*)addr.bytes, sizeof(addr.bytes));
     std::string key_str((char*)key.bytes, sizeof(key.bytes));
+
+    std::cout << "get storage called id: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes)))
+        << ", key: " << common::Encode::HexEncode(std::string((char*)key.bytes, sizeof(key.bytes)));
+
     const auto account_iter = accounts_.find(addr);
     if (account_iter != accounts_.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
         if (storage_iter != account_iter->second.storage.end()) {
+            std::cout << ", value: " << common::Encode::HexEncode(std::string((char*)storage_iter->second.value.bytes, sizeof(storage_iter->second.value.bytes)))
+                << std::endl;
             return storage_iter->second.value;
         }
     }
@@ -32,6 +38,7 @@ evmc::bytes32 TenonHost::get_storage(
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(
         std::string((char*)addr.bytes, sizeof(addr.bytes)));
     if (account_info == nullptr) {
+        std::cout << ", 0 value: empty" << std::endl;
         return {};
     }
 
@@ -47,13 +54,12 @@ evmc::bytes32 TenonHost::get_storage(
         }
 
         memcpy(tmp_val.bytes + offset, val.c_str(), length);
-        std::cout << "get_storage addr: " << common::Encode::HexEncode(id)
-            << ", key: " << common::Encode::HexEncode(key_str)
-            << ", value: " << common::Encode::HexEncode(val)
+        std::cout << ", value: " << common::Encode::HexEncode(val)
             << std::endl;
         return tmp_val;
     }
 
+    std::cout << ", 1 value: empty" << std::endl;
     return {};
 }
 

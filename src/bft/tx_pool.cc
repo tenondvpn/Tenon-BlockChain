@@ -90,11 +90,13 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
         for (auto iter = tx_pool_.begin(); iter != tx_pool_.end();) {
             if (iter->second->timeout <= now_time) {
                 tx_pool_.erase(iter++);
+                BFT_ERROR("timeout and remove tx.");
                 continue;
             }
 
             if (iter->second == nullptr) {
                 ++iter;
+                BFT_ERROR("iter second invalid.");
                 continue;
             }
 
@@ -102,19 +104,21 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
             if (iter->second->time_valid <= timestamp_now) {
                 if (IsTxContractLocked(iter->second)) {
                     ++iter;
+                    BFT_ERROR("IsTxContractLocked error.");
                     continue;
                 }
 
+                res_vec.push_back(iter->second);
                 BFT_ERROR("get tx [to: %d] [pool idx: %d] type: %d,"
-                    "call_contract_step: %d has tx[%s]to[%s][%s]!",
+                    "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!",
                     iter->second->tx.to_add(),
                     pool_index_,
                     iter->second->tx.type(),
                     iter->second->tx.call_contract_step(),
                     common::Encode::HexEncode(iter->second->tx.from()).c_str(),
                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
-                    common::Encode::HexEncode(iter->second->tx.gid()).c_str());
-                res_vec.push_back(iter->second);
+                    common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+                    res_vec.size());
                 if (res_vec.size() >= kBftOneConsensusMaxCount) {
                     break;
                 }
@@ -124,6 +128,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
         }
     }
 
+    BFT_ERROR("get tx size[%u]", res_vec.size());
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }

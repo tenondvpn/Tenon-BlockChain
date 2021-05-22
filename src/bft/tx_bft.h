@@ -63,17 +63,13 @@ private:
     int LeaderCallContractDefault(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
-        protobuf::TxInfo& tx);
-    int LeaderCallContractLock(
-        TxItemPtr& tx_info,
-        std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
-    int LeaderCheckCallContract(
+    int LeaderCallContractExceute(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
-    int LeaderAddContractCalled(
+    int LeaderCallContractCalled(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
@@ -90,13 +86,14 @@ private:
     int BackupCheckContractDefault(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractInited(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map);
-    int BackupCheckContractLocked(
+    int BackupCheckContractExceute(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);

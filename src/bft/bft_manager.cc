@@ -491,6 +491,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr) {
     std::string prepare_data;
     int res = bft_ptr->Prepare(true, prepare_data);
     if (res != kBftSuccess) {
+        BFT_ERROR("bft_ptr->Prepare failed![%d]", res);
         return res;
     }
 
@@ -977,7 +978,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
                 account_ptr->GetConsensuseNetId(&network_id);
             }
 
-            std::cout << common::Encode::HexEncode(tx_list[i].to()) << " broadcast to network: " << network_id << std::endl;
             broadcast_nets.insert(network_id);
         }
 
@@ -985,10 +985,8 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             std::string id = "";
             if (tx_list[i].call_contract_step() == contract::kCallStepCallerInited) {
                 id = tx_list[i].to();
-            } else if (tx_list[i].call_contract_step() == contract::kCallStepContractLocked) {
-                id = tx_list[i].from();
             } else if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
-                id = tx_list[i].to();
+                id = tx_list[i].from();
             } else {
                 continue;
             }

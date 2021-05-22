@@ -298,6 +298,7 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
     }
 
     tx_pool_[valid_pool].GetTx(res_vec);
+    BFT_ERROR("pool index: %d get tx size: %u", valid_pool, res_vec.size());
     if (res_vec.empty()) {
         waiting_pools_.UnSet(valid_pool);
         return;
