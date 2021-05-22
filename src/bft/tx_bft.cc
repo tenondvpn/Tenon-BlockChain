@@ -426,6 +426,7 @@ int TxBft::BackupCheckContractExceute(
 
         if (caller_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price()) {
             if (tx_info.status() != kBftUserSetGasLimitError) {
+                BFT_ERROR("caller_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price()");
                 return kBftLeaderInfoInvalid;
             }
 
@@ -443,6 +444,7 @@ int TxBft::BackupCheckContractExceute(
         gas_used = local_tx_info->tx.gas_limit() - res.gas_left;
         if (call_res != kBftSuccess) {
             if (tx_info.status() != kBftExecuteContractFailed) {
+                BFT_ERROR("tx_info.status()[%d] != kBftExecuteContractFailed", tx_info.status());
                 return kBftLeaderInfoInvalid;
             }
 
@@ -451,6 +453,7 @@ int TxBft::BackupCheckContractExceute(
 
         if (res.status_code != EVMC_SUCCESS) {
             if (tx_info.status() != kBftExecuteContractFailed) {
+                BFT_ERROR("tx_info.status() != kBftExecuteContractFailed", tx_info.status());
                 return kBftLeaderInfoInvalid;
             }
 
@@ -472,6 +475,8 @@ int TxBft::BackupCheckContractExceute(
         }
 
         if (backup_storage_size != (uint32_t)tx_info.storages_size()) {
+            BFT_ERROR("backup_storage_size[%u] != (uint32_t)tx_info.storages_size()[%d]",
+                backup_storage_size, tx_info.storages_size());
             return kBftLeaderInfoInvalid;
         }
 
@@ -481,6 +486,8 @@ int TxBft::BackupCheckContractExceute(
             memcpy(id.bytes, tx_info.storages(i).id().c_str(), sizeof(id.bytes));
             auto account_iter = tenon_host.accounts_.find(id);
             if (account_iter == tenon_host.accounts_.end()) {
+                BFT_ERROR("tx_info.storages(i).id() not exists",
+                    common::Encode::HexEncode(tx_info.storages(i).id()));
                 return kBftLeaderInfoInvalid;
             }
 
@@ -488,32 +495,40 @@ int TxBft::BackupCheckContractExceute(
             memcpy(key.bytes, tx_info.storages(i).key().c_str(), sizeof(key.bytes));
             auto iter = account_iter->second.storage.find(key);
             if (iter == account_iter->second.storage.end()) {
+                BFT_ERROR("tx_info.storages(i).key() not exists",
+                    common::Encode::HexEncode(tx_info.storages(i).key()));
                 return kBftLeaderInfoInvalid;
             }
 
             std::string value((char*)iter->second.value.bytes, sizeof(iter->second.value.bytes));
             if (value != tx_info.storages(i).value()) {
+                BFT_ERROR("tx_info.storages(i).value() not exists",
+                    common::Encode::HexEncode(tx_info.storages(i).value()));
                 return kBftLeaderInfoInvalid;
             }
         }
 
         auto& transfers = tenon_host.to_account_value_;
         if ((uint32_t)tx_info.transfers_size() != transfers.size()) {
+            BFT_ERROR("tx_info.transfers_size() != transfers.size()");
             return kBftLeaderInfoInvalid;
         }
 
         for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
             auto iter = transfers.find(tx_info.transfers(i).from());
             if (iter == transfers.end()) {
+                BFT_ERROR("transfers.find(tx_info.transfers(i).from()) failed");
                 return kBftLeaderInfoInvalid;
             }
 
             auto to_iter = iter->second.find(tx_info.transfers(i).to());
             if (to_iter == iter->second.end()) {
+                BFT_ERROR("iter->second.find(tx_info.transfers(i).to()) failed");
                 return kBftLeaderInfoInvalid;
             }
 
             if (to_iter->second != to_iter->second) {
+                BFT_ERROR("to_iter->second != to_iter->second");
                 return kBftLeaderInfoInvalid;
             }
 
@@ -539,6 +554,7 @@ int TxBft::BackupCheckContractExceute(
             if (!(tx_info.status() == kBftSuccess && caller_balance_add > 0 &&
                     caller_balance + caller_balance_add > gas_used * local_tx_info->tx.gas_price())) {
                 if (tx_info.balance() != 0 || tx_info.status() != kBftAccountBalanceError) {
+                    BFT_ERROR("tx_info.balance() != 0");
                     return kBftLeaderInfoInvalid;
                 }
             }
@@ -548,6 +564,7 @@ int TxBft::BackupCheckContractExceute(
             if (caller_balance_add < 0) {
                 if (caller_balance < (uint64_t)(-caller_balance_add)) {
                     if (tx_info.status() == kBftAccountBalanceError) {
+                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                         return kBftLeaderInfoInvalid;
                     }
                 }
@@ -558,6 +575,7 @@ int TxBft::BackupCheckContractExceute(
             if (contract_balance_add < 0) {
                 if (contract_balance < (uint64_t)(-contract_balance_add)) {
                     if (tx_info.status() == kBftAccountBalanceError) {
+                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                         return kBftLeaderInfoInvalid;
                     }
                 }
@@ -572,6 +590,7 @@ int TxBft::BackupCheckContractExceute(
         if (caller_balance >= gas_used * tx_info.gas_price()) {
         } else {
             if (tx_info.status() != kBftAccountBalanceError) {
+                BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                 return kBftLeaderInfoInvalid;
             }
         }
@@ -581,12 +600,14 @@ int TxBft::BackupCheckContractExceute(
     bool caller_gas_used_valid = false;
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         if (tx_info.storages(i).key() == kContractCallerChangeAmount) {
+            BFT_ERROR("caller_balance_add[%lu], tx_info.storages(i).value(): %s", caller_balance_add, tx_info.storages(i).value().c_str());
             if (caller_balance_add == common::StringUtil::ToInt64(tx_info.storages(i).value())) {
                 caller_balance_valid = true;
             }
         }
 
         if (tx_info.storages(i).key() == kContractCallerGasUsed) {
+            BFT_ERROR("gas_used[%lu], tx_info.storages(i).value(): %s", gas_used, tx_info.storages(i).value().c_str());
             if (gas_used == common::StringUtil::ToUint64(tx_info.storages(i).value())) {
                 caller_gas_used_valid = true;
             }
@@ -594,18 +615,22 @@ int TxBft::BackupCheckContractExceute(
     }
 
     if (!caller_balance_valid || !caller_gas_used_valid) {
+        BFT_ERROR("!caller_balance_valid || !caller_gas_used_valid");
         return kBftLeaderInfoInvalid;
     }
 
     if (contract_balance != tx_info.balance()) {
+        BFT_ERROR("contract_balance != tx_info.balance()");
         return kBftLeaderInfoInvalid;
     }
 
     if (tx_info.gas_used() != 0) {
+        BFT_ERROR("tx_info.gas_used() != 0");
         return kBftLeaderInfoInvalid;
     }
 
     if (tx_info.call_contract_step() != contract::kCallStepContractCalled) {
+        BFT_ERROR("tx_info.call_contract_step() != contract::kCallStepContractCalled");
         return kBftLeaderInfoInvalid;
     }
 
@@ -1753,11 +1778,6 @@ int TxBft::LeaderCallContractExceute(
             break;
         }
 
-        if (tx_info->attr_map.find(kContractBytesCode) == tx_info->attr_map.end()) {
-            tx.set_status(kBftExecuteContractFailed);
-            break;
-        }
-
         // will return from address's remove tenon and gas used
         tenon_host.AddTmpAccountBalance(
             tx_info->tx.from(),
@@ -1884,6 +1904,7 @@ int TxBft::LeaderCallContractExceute(
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
+    std::cout << "leader execute caller_balance_add add: " << caller_balance_add << ", gas_used: " << gas_used << std::endl;
     acc_balance_map[tx_info->tx.to()] = contract_balance;
     tx.set_balance(contract_balance);
     tx.set_gas_used(0);

@@ -412,6 +412,10 @@ int AccountManager::UpdateAccountInfo(
     }
     
     if (tx_info.type() == common::kConsensusCallContract) {
+        if (tx_info.call_contract_step() == contract::kCallStepCallerInited) {
+            account_info->LockAccount();
+        }
+
         if (tx_info.call_contract_step() == contract::kCallStepContractFinal) {
             account_info->UnLockAccount();
         }
