@@ -334,14 +334,11 @@ int AccountManager::UpdateAccountInfo(
         case contract::kCallStepCallerInited:
             account_id = tx_info.from();
             break;
-        case contract::kCallStepContractLocked:
-            account_id = tx_info.to();
-            break;
         case contract::kCallStepContractCalled:
-            account_id = tx_info.from();
+            account_id = tx_info.to();
             break;
         case contract::kCallStepContractFinal:
-            account_id = tx_info.to();
+            account_id = tx_info.from();
             break;
         default:
             break;
