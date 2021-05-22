@@ -471,7 +471,7 @@ int TxBft::BackupCheckContractExceute(
             }
         }
 
-        if (backup_storage_size != tx_info.storages_size()) {
+        if (backup_storage_size != (uint32_t)tx_info.storages_size()) {
             return kBftLeaderInfoInvalid;
         }
 
@@ -628,7 +628,7 @@ int TxBft::BackupCheckContractCalled(
             acc_balance_map,
             &from_balance);
         if (balance_status != kBftSuccess) {
-            if (tx_info.status() != balance_status) {
+            if (tx_info.status() != (uint32_t)balance_status) {
                 return kBftLeaderInfoInvalid;
             }
 
@@ -663,9 +663,11 @@ int TxBft::BackupCheckContractCalled(
                     from_balance -= caller_gas_used * local_tx_ptr->tx.gas_price();
                 } else {
                     from_balance = 0;
-                    if (tx.status() == kBftSuccess) {
-                        tx.set_status(kBftAccountBalanceError);
+                    if (tx_info.status() != kBftAccountBalanceError) {
+                        return kBftLeaderInfoInvalid;
                     }
+
+                    break;
                 }
             }
         }
@@ -845,7 +847,7 @@ int TxBft::BackupNormalCheck(
                 }
 
                 // add bytes code one
-                if (tx_info.storages_size() != storage_size + 1) {
+                if ((uint32_t)tx_info.storages_size() != storage_size + 1) {
                     BFT_ERROR("storage size ne[%u][%u]!",
                         tx_info.storages_size(), storage_size + 1);
                     return kBftLeaderInfoInvalid;
@@ -891,7 +893,7 @@ int TxBft::BackupNormalCheck(
                     }
                 }
 
-                if (transfer_count != tx_info.transfers_size()) {
+                if (transfer_count != (uint32_t)tx_info.transfers_size()) {
                     BFT_ERROR("transfer size not eq!");
                     return kBftLeaderInfoInvalid;
                 }
