@@ -433,9 +433,9 @@ bool AccountManager::IsInvalidKey(const std::string& key) {
         return true;
     }
 
-    if (key == kFieldContractOwner) {
-        return true;
-    }
+//     if (key == kFieldContractOwner) {
+//         return true;
+//     }
 
     if (key == kFieldFullAddress) {
         return true;

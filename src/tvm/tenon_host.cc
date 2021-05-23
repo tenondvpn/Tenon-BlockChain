@@ -326,7 +326,7 @@ void TenonHost::emit_log(const evmc::address& addr,
                 size_t data_size,
                 const evmc::bytes32 topics[],
                 size_t topics_count) noexcept {
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF emit_log called!" << (char*)data << std::endl;
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF emit_log called!" << std::endl;
     recorded_logs_.push_back({ addr, {data, data_size}, {topics, topics + topics_count} });
 }
 
