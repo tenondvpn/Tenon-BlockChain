@@ -623,50 +623,6 @@ int DbAccountInfo::GetBytesCode(std::string* bytes_code) {
     return kBlockSuccess;
 }
 
-int DbAccountInfo::SetFullAccountId(
-        const std::string& full_account_id,
-        db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldFullAddress,
-            full_account_id,
-            db_batch)) {
-        return kBlockError;
-    }
-
-    {
-        std::lock_guard<std::mutex> guard(full_account_id_mutex_);
-        full_account_id_ = full_account_id;
-    }
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetFullAccountId(std::string* full_account_id) {
-    {
-        std::lock_guard<std::mutex> guard(full_account_id_mutex_);
-        if (!full_account_id_.empty()) {
-            *full_account_id = full_account_id_;
-            return kBlockSuccess;
-        }
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldFullAddress,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *full_account_id = tmp_str;
-    {
-        std::lock_guard<std::mutex> guard(full_account_id_mutex_);
-        full_account_id_ = tmp_str;
-    }
-
-    return kBlockSuccess;
-}
-
 int DbAccountInfo::SetAddressType(uint32_t address_type, db::DbWriteBach& db_batch) {
     if (!db::Dict::Instance()->Hset(
             dict_key_,

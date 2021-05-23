@@ -51,8 +51,6 @@ public:
     int GetBytesCode(std::string* bytes_code);
     int SetAddressType(uint32_t address_type, db::DbWriteBach& db_batch);
     int GetAddressType(uint32_t* address_type);
-    int SetFullAccountId(const std::string& full_account_id, db::DbWriteBach& db_batch);
-    int GetFullAccountId(std::string* full_account_id);
     size_t VmCodeSize();
     std::string VmCodeHash();
     std::string GetCode();
