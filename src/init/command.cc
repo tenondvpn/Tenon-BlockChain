@@ -398,10 +398,14 @@ void Command::AddBaseCommands() {
         } else {
             std::string pool_hash;
             uint64_t pool_height = 0;
+            uint64_t tm;
+            uint32_t last_pool_idx = 0;
             int res = block::AccountManager::Instance()->GetBlockInfo(
-                    common::StringUtil::ToUint32(args[0]),
-                    &pool_height,
-                    &pool_hash);
+                common::StringUtil::ToUint32(args[0]),
+                &pool_height,
+                &pool_hash,
+                &tm,
+                &last_pool_idx);
             if (res != block::kBlockSuccess) {
                 return;
             }

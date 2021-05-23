@@ -93,7 +93,7 @@ int TxBft::LeaderCreatePrepare(std::string& bft_str) {
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         RootLeaderCreateNewAccountTxBlock(pool_index, tx_vec, ltx_prepare);
     } else {
-        LeaderCreateTxBlock(pool_index, tx_vec, ltx_prepare);
+        LeaderCreateTxBlock(tx_vec, ltx_prepare);
     }
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
@@ -1801,7 +1801,7 @@ int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
         &last_pool_index);
     if (res != block::kBlockSuccess) {
         assert(false);
-        return;
+        return kBftError;
     }
 
     tvm::Uint64ToEvmcBytes32(

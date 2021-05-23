@@ -241,10 +241,14 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
         if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
             std::string pool_hash;
             uint64_t pool_height = 0;
+            uint64_t tm;
+            uint32_t last_pool_index = common::kImmutablePoolSize;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 i,
                 &pool_height,
-                &pool_hash);
+                &pool_hash,
+                &tm,
+                &last_pool_index);
             if (res != block::kBlockSuccess) {
                 BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                     "tx_pool_.empty(): %u, res: %d",
@@ -264,10 +268,14 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
             if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
                 std::string pool_hash;
                 uint64_t pool_height = 0;
+                uint64_t tm;
+                uint32_t last_pool_index = common::kImmutablePoolSize;
                 int res = block::AccountManager::Instance()->GetBlockInfo(
-                        i,
-                        &pool_height,
-                        &pool_hash);
+                    i,
+                    &pool_height,
+                    &pool_hash,
+                    &tm,
+                    &last_pool_index);
                 if (res != block::kBlockSuccess) {
                     BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                         "tx_pool_.empty(): %u, res: %d",
