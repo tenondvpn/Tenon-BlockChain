@@ -196,10 +196,14 @@ public:
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
             uint64_t pool_height = 0;
+            uint64_t tm;
+            uint32_t last_pool_idx = common::kImmutablePoolSize;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 iter->first,
                 &pool_height,
-                &pool_hash);
+                &pool_hash,
+                &tm,
+                &last_pool_idx);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 0);
             ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
@@ -369,10 +373,14 @@ public:
         std::string pool_hash;
         uint64_t pool_height = 0;
         uint32_t pool_index = common::GetPoolIndex(id);
+        uint64_t tm;
+        uint32_t last_pool_idx = common::kImmutablePoolSize;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             pool_index,
             &pool_height,
-            &pool_hash);
+            &pool_hash,
+            &tm,
+            &last_pool_idx);
         if (res != block::kBlockSuccess) {
             assert(false);
             return;
