@@ -22,7 +22,12 @@ public:
         db::DbWriteBach& db_batch);
     DbAccountInfo* GetAcountInfo(const std::string& acc_id);
     bool AccountExists(const std::string& acc_id);
-    int GetBlockInfo(uint32_t pool_idx, uint64_t* height, std::string* hash);
+    int GetBlockInfo(
+        uint32_t pool_idx,
+        uint64_t* height,
+        std::string* hash,
+        uint64_t* tm,
+        uint32_t* pool_index);
     int AddNewAccount(
         const bft::protobuf::TxInfo& tx_info,
         uint64_t tmp_now_height,

@@ -519,7 +519,9 @@ int AccountManager::SetAccountAttrs(
 int AccountManager::GetBlockInfo(
         uint32_t pool_idx,
         uint64_t* height,
-        std::string* hash) {
+        std::string* hash,
+        uint64_t* tm,
+        uint32_t* pool_index) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_idx] == nullptr) {
         auto db_pool_info = new block::DbPoolInfo(pool_idx);

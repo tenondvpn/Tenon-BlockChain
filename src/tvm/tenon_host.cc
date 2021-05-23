@@ -292,6 +292,7 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
         } else {
             std::string from_str = std::string((char*)msg.sender.bytes, sizeof(msg.sender.bytes));
             std::string dest_str = std::string((char*)msg.destination.bytes, sizeof(msg.destination.bytes));
+            std::cout << "transfer from: " << common::Encode::HexEncode(from_str) << ", to: " << common::Encode::HexEncode(dest_str) << ", " << params.value << std::endl;
             auto sender_iter = to_account_value_.find(from_str);
             if (sender_iter == to_account_value_.end()) {
                 to_account_value_[from_str] = std::unordered_map<std::string, uint64_t>();

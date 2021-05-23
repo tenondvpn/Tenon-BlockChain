@@ -117,7 +117,7 @@ var auctionEndCode = web3.eth.abi.encodeFunctionSignature('auctionEnd()');
 console.log("auctionEndCode function code: " + auctionEndCode);
 
 // params
-var contriuctParam = web3.eth.abi.encodeParameters(['uint256', 'address'], ['1000', '0x953928cb519f5706111240aad891db442208c27d']);
+var contriuctParam = web3.eth.abi.encodeParameters(['uint256', 'address'], ['1000', '0xd31f18f44c3b6c3d4f9e23ea7317805488cee731']);
 console.log("contriuctParam: " + contriuctParam);
 
 

@@ -10,6 +10,7 @@ namespace block {
 
 static const std::string kPoolHeight = "pool_height";
 static const std::string kPoolHash = "pool_hash";
+static const std::string kPoolLastBlockStr = "pool_last_block_str";
 
 DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
@@ -54,6 +55,54 @@ int DbPoolInfo::GetHash(std::string* hash) {
         hash_ = tmp_str;
     }
 
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::SetLastBlock(const bft::protobuf::Block& block_item, db::DbWriteBach& db_batch) {
+    std::string block_str = block_item.SerializeAsString();
+    if (!db::Dict::Instance()->Hset(
+            dict_key_,
+            kPoolLastBlockStr,
+            block_str,
+            db_batch)) {
+        return kBlockError;
+    }
+
+    std::lock_guard<std::mutex> guard(hash_mutex_);
+    last_block_str_ = block_str;
+    last_block_ = block_item;
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index) {
+    {
+        std::lock_guard<std::mutex> guard(hash_mutex_);
+        if (!last_block_str_.empty()) {
+            *block_height = last_block_.height();
+            *block_tm = last_block_.timestamp();
+            *pool_index = last_block_.pool_index();
+            return kBlockSuccess;
+        }
+    }
+
+    std::string tmp_str;
+    if (!db::Dict::Instance()->Hget(
+            dict_key_,
+            kPoolLastBlockStr,
+            &tmp_str)) {
+        return kBlockError;
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(hash_mutex_);
+        last_block_str_ = tmp_str;
+        bool res = last_block_.ParseFromString(last_block_str_);
+        assert(res);
+    }
+
+    *block_height = last_block_.height();
+    *block_tm = last_block_.timestamp();
+    *pool_index = last_block_.pool_index();
     return kBlockSuccess;
 }
 

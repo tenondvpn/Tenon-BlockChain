@@ -35,7 +35,6 @@ private:
         const protobuf::TxInfo& tx_info,
         TxItemPtr* local_tx);
     void LeaderCreateTxBlock(
-        uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& bft_msg);
     void RootLeaderCreateNewAccountTxBlock(
@@ -101,7 +100,7 @@ private:
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
-
+    int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

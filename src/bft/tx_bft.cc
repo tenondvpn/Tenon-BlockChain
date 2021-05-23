@@ -408,6 +408,7 @@ int TxBft::BackupCheckContractExceute(
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
+    InitTenonTvmContext(tenon_host);
     do
     {
         int balance_status = GetTempAccountBalance(
@@ -747,6 +748,7 @@ int TxBft::BackupNormalCheck(
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
+    InitTenonTvmContext(tenon_host);
     int64_t caller_balance_add = 0;
     if (!local_tx_ptr->tx.to_add()) {
         do 
@@ -1069,10 +1071,14 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
 
     std::string pool_hash;
     uint64_t pool_height = 0;
+    uint64_t tm = 0;
+    uint32_t last_pool_index = common::kImmutablePoolSize;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
-        &pool_hash);
+        &pool_hash,
+        &tm,
+        &last_pool_index);
     if (res != block::kBlockSuccess) {
         BFT_ERROR("GetBlockInfo failed!");
         return kBftBlockHashError;
@@ -1090,7 +1096,9 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
         res = block::AccountManager::Instance()->GetBlockInfo(
                 pool_index(),
                 &pool_height,
-                &pool_hash);
+                &pool_hash,
+                &tm,
+                &last_pool_index);
         if (res != block::kBlockSuccess) {
             BFT_ERROR("GetBlockInfo failed!");
             return kBftBlockHashError;
@@ -1253,10 +1261,14 @@ int TxBft::CheckTxInfo(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
+    uint64_t tm = 0;
+    uint32_t last_pool_index = common::kImmutablePoolSize;
     int res = block::AccountManager::Instance()->GetBlockInfo(
-            pool_index(),
-            &pool_height,
-            &pool_hash);
+        pool_index(),
+        &pool_height,
+        &pool_hash,
+        &tm,
+        &last_pool_index);
     if (res != block::kBlockSuccess) {
         BFT_ERROR("get account block info failed!");
         return kBftBlockHeightError;
@@ -1338,10 +1350,14 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
+    uint64_t tm = 0;
+    uint32_t last_pool_index = common::kImmutablePoolSize;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
-        &pool_hash);
+        &pool_hash,
+        &tm,
+        &last_pool_index);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1386,7 +1402,6 @@ int TxBft::GetTempAccountBalance(
 }
 
 void TxBft::LeaderCreateTxBlock(
-        uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
@@ -1418,10 +1433,14 @@ void TxBft::LeaderCreateTxBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
+    uint64_t tm = 0;
+    uint32_t last_pool_index = common::kImmutablePoolSize;
     int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_idx,
+        pool_index(),
         &pool_height,
-        &pool_hash);
+        &pool_hash,
+        &tm,
+        &last_pool_index);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1448,6 +1467,7 @@ int TxBft::LeaderAddNormalTransaction(
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
+    InitTenonTvmContext(tenon_host);
     if (!tx.to_add()) {
         int balance_status = GetTempAccountBalance(tx.from(), acc_balance_map, &from_balance);
         if (balance_status != kBftSuccess) {
@@ -1689,10 +1709,10 @@ int TxBft::CreateContractCallExcute(
 }
 
 int TxBft::LeaderAddCallContract(
-    TxItemPtr& tx_info,
-    std::unordered_map<std::string, int64_t>& acc_balance_map,
-    std::unordered_map<std::string, bool>& locked_account_map,
-    protobuf::TxInfo& out_tx) {
+        TxItemPtr& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
+        protobuf::TxInfo& out_tx) {
     switch (tx_info->tx.call_contract_step()) {
     case contract::kCallStepDefault:
         return LeaderCallContractDefault(tx_info, acc_balance_map, locked_account_map, out_tx);
@@ -1768,6 +1788,39 @@ int TxBft::LeaderCallContractDefault(
     return kBftSuccess;
 }
 
+int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
+    uint64_t last_height = 0;
+    std::string pool_hash;
+    uint64_t tm = 0;
+    uint32_t last_pool_index = common::kImmutablePoolSize;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_index(),
+        &last_height,
+        &pool_hash,
+        &tm,
+        &last_pool_index);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return;
+    }
+
+    tvm::Uint64ToEvmcBytes32(
+        tenon_host.tx_context_.tx_gas_price,
+        common::GlobalInfo::Instance()->gas_price());
+    tenon_host.tx_context_.tx_origin = evmc::address{};
+    tenon_host.tx_context_.block_coinbase = evmc::address{};
+    tenon_host.tx_context_.block_number = last_height;
+    tenon_host.tx_context_.block_timestamp = tm;
+    tenon_host.tx_context_.block_gas_limit = 0;
+    tenon_host.tx_context_.block_difficulty = evmc_uint256be{};
+    uint64_t chanin_id = (((uint64_t)common::GlobalInfo::Instance()->network_id()) << 32 |
+        (uint64_t)last_pool_index);
+    tvm::Uint64ToEvmcBytes32(
+        tenon_host.tx_context_.chain_id,
+        chanin_id);
+    return kBftSuccess;
+}
+
 int TxBft::LeaderCallContractExceute(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
@@ -1786,6 +1839,7 @@ int TxBft::LeaderCallContractExceute(
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
+    InitTenonTvmContext(tenon_host);
     do
     {
         if (caller_balance < tx_info->tx.gas_limit() * tx.gas_price()) {

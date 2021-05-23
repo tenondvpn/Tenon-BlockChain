@@ -50,7 +50,7 @@ contract SimpleAuction {
 
         // 如果出价不够高，返还你的钱
         require(
-            msg.value >= highestBid,
+            msg.value > highestBid,
             "There already is a higher bid."
         );
 
@@ -96,7 +96,7 @@ contract SimpleAuction {
         // 则它也会被认为是与外部合约有交互的。
 
         // 1. 条件
-        require(block.timestamp >= auctionEndVal, "Auction not yet ended.");
+        //require(block.timestamp >= auctionEndVal, "Auction not yet ended.");
         require(!ended, "auctionEnd has already been called.");
 
         // 2. 生效
@@ -104,6 +104,7 @@ contract SimpleAuction {
         emit AuctionEnded(highestBidder, highestBid);
 
         // 3. 交互
-        beneficiary.transfer(highestBid);
+        payable(msg.sender).transfer(highestBid);
+        //beneficiary.transfer(highestBid);
     }
 }
