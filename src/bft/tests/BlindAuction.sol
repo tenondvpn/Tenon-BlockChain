@@ -25,8 +25,14 @@ contract BlindAuction {
     /// 使用 modifier 可以更便捷的校验函数的入参。
     /// `onlyBefore` 会被用于后面的 `bid` 函数：
     /// 新的函数体是由 modifier 本身的函数体，并用原函数体替换 `_;` 语句来组成的。
-    modifier onlyBefore(uint _time) { require(block.timestamp < _time); _; }
-    modifier onlyAfter(uint _time) { require(block.timestamp > _time); _; }
+    modifier onlyBefore(uint _time) { 
+        //require(block.timestamp < _time);
+        _;
+    }
+    modifier onlyAfter(uint _time) {
+        //require(block.timestamp > _time);
+        _;
+    }
 
     constructor(
         uint _biddingTime,
@@ -36,6 +42,7 @@ contract BlindAuction {
         beneficiary = _beneficiary;
         biddingEnd = block.timestamp + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
+        highestBid = 0;
     }
 
     /// 可以通过 `_blindedBid` = keccak256(value, fake, secret)
@@ -61,10 +68,7 @@ contract BlindAuction {
         uint[] memory _values,
         bool[] memory _fake,
         bytes32[] memory _secret
-    )
-        public
-        onlyAfter(biddingEnd)
-        onlyBefore(revealEnd)
+    ) public
     {
         uint length = bids[msg.sender].length;
         require(_values.length == length);
@@ -82,10 +86,11 @@ contract BlindAuction {
                 continue;
             }
             refund += tmp_bid.deposit;
-            if (!fake && tmp_bid.deposit >= value) {
+            if (!fake) {
                 if (placeBid(msg.sender, value))
                     refund -= value;
             }
+
             // 使发送者不可能再次认领同一笔订金
             tmp_bid.blindedBid = bytes32(0);
         }

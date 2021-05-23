@@ -74,6 +74,7 @@ int Execution::execute(
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
         create_msg.destination = msg.destination;        create_msg.gas = create_gas;
+        Uint64ToEvmcBytes32(create_msg.value, value);
         *out_res = evm.execute(
             host,
             rev,

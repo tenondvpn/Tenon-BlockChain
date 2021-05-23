@@ -111,7 +111,7 @@ console.log('recover: ' + recover);
 var bidCode = web3.eth.abi.encodeFunctionSignature('bid(bytes32)');
 console.log("bidCode function code: " + bidCode);
 
-var revealCode = web3.eth.abi.encodeFunctionSignature('reveal(uint256[], bool[], bytes32[])');
+var revealCode = web3.eth.abi.encodeFunctionSignature('reveal(uint256[],bool[],bytes32[])');
 console.log("revealCode function code: " + revealCode);
 
 var withdrawCode = web3.eth.abi.encodeFunctionSignature('withdraw()');
@@ -124,15 +124,15 @@ console.log("auctionEndCode function code: " + auctionEndCode);
 var contriuctParam = web3.eth.abi.encodeParameters(['uint256', 'uint256', 'address'], ['1000', '2000', '0xd31f18f44c3b6c3d4f9e23ea7317805488cee731']);
 console.log("contriuctParam: " + contriuctParam);
 
-var blindedBid1_1 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['4000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d1']));
+var blindedBid1_1 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['4000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d1']));
 var bidParma1_1 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid1_1]);
-var blindedBid1_2 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['3000', 'true', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d2']));
+var blindedBid1_2 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['3000', true, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d2']));
 var bidParma1_2 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid1_2]);
-var blindedBid1_3 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['2000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d3']));
+var blindedBid1_3 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['2000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d3']));
 var bidParma1_3 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid1_3]);
-var blindedBid1_4 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d4']));
+var blindedBid1_4 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d4']));
 var bidParma1_4 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid1_4]);
-var blindedBid1_5 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['7000', 'true', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d5']));
+var blindedBid1_5 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['7000', true, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d5']));
 var bidParma1_5 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid1_5]);
 console.log("bidParma1_1: " + bidParma1_1);
 console.log("bidParma1_2: " + bidParma1_2);
@@ -142,7 +142,7 @@ console.log("bidParma1_5: " + bidParma1_5);
 
 var revealParam1 = web3.eth.abi.encodeParameters(['uint256[]', 'bool[]', 'bytes32[]'], [
     ['4000', '3000', '2000', '6000', '7000'],
-    ['false', 'true', 'false', 'false', 'true'],
+    [false, true, false, false, true],
     ['0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d1',
         '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d2',
         '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93d3',
@@ -151,15 +151,15 @@ var revealParam1 = web3.eth.abi.encodeParameters(['uint256[]', 'bool[]', 'bytes3
 ]);
 console.log("revealParam1: " + revealParam1);
 
-var blindedBid2_1 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['5000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c1']));
+var blindedBid2_1 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['5000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c1']));
 var bidParma2_1 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid2_1]);
-var blindedBid2_2 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', 'true', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c2']));
+var blindedBid2_2 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', true, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c2']));
 var bidParma2_2 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid2_2]);
-var blindedBid2_3 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['7000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c3']));
+var blindedBid2_3 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['7000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c3']));
 var bidParma2_3 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid2_3]);
-var blindedBid2_4 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', 'false', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c4']));
+var blindedBid2_4 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['6000', false, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c4']));
 var bidParma2_4 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid2_4]);
-var blindedBid2_5 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['4000', 'true', '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c5']));
+var blindedBid2_5 = web3.utils.keccak256(web3.eth.abi.encodeParameters(['uint256', 'bool', 'bytes32'], ['4000', true, '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c5']));
 var bidParma2_5 = web3.eth.abi.encodeParameters(['bytes32'], [blindedBid2_5]);
 console.log("bidParma2_1: " + bidParma2_1);
 console.log("bidParma2_2: " + bidParma2_2);
@@ -169,7 +169,7 @@ console.log("bidParma2_5: " + bidParma2_5);
 
 var revealParam2 = web3.eth.abi.encodeParameters(['uint256[]', 'bool[]', 'bytes32[]'], [
     ['5000', '6000', '7000', '6000', '4000'],
-    ['false', 'true', 'false', 'false', 'true'],
+    [false, true, false, false, true],
     ['0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c1',
         '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c2',
         '0xf559642966b18c5e58a82106d7cbb6dfaa449e1820dda477580b08bab68b93c3',
