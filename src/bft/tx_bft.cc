@@ -2021,7 +2021,7 @@ int TxBft::CallContract(
         return kBftError;
     }
 
-    std::cout << "MMMMMMMMMMMMMMMMMMMMMM called contract." << std::endl;
+    std::cout << "MMMMMMMMMMMMMMMMMMMMMM called contract." << common::Encode::HexEncode(bytes_code) << std::endl;
     tvm::Execution exec;
     int exec_res = exec.execute(
         bytes_code,

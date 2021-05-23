@@ -51,6 +51,7 @@ contract Purchase {
     constructor() payable {
         seller = payable(msg.sender);
         value = msg.value / 2;
+        state = State.Created;
         require((2 * value) == msg.value, "Value has to be even.");
     }
 
