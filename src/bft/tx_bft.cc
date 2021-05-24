@@ -307,13 +307,6 @@ int TxBft::BackupCheckContractDefault(
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
-    if (locked_account_map.find(local_tx_ptr->tx.from()) != locked_account_map.end()) {
-        if (tx_info.status() != kBftContractAddressLocked) {
-            BFT_ERROR("backup account locked error.");
-            return kBftLeaderInfoInvalid;
-        }
-    }
-
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(local_tx_ptr->tx.from());
     if (account_info->locked()) {
         locked_account_map[local_tx_ptr->tx.from()] = true;
@@ -329,36 +322,61 @@ int TxBft::BackupCheckContractDefault(
     // gas just consume by from
     uint64_t from_balance = 0;
     uint64_t to_balance = 0;
-    int balance_status = GetTempAccountBalance(
-        local_tx_ptr->tx.from(),
-        acc_balance_map,
-        &from_balance);
-    if (balance_status != kBftSuccess) {
-        if (tx_info.status() != (uint32_t)balance_status) {
-            BFT_ERROR("get balace error.");
-            return kBftLeaderInfoInvalid;
-        }
-    }
+    int backup_status = kBftSuccess;
+    uint64_t gas_used = 0;
+    do
+    {
+        if (locked_account_map.find(local_tx_ptr->tx.from()) != locked_account_map.end()) {
+            if (tx_info.status() != kBftContractAddressLocked) {
+                BFT_ERROR("backup account locked error.");
+                return kBftLeaderInfoInvalid;
+            }
 
-    uint64_t gas_used = kCallContractDefaultUseGas;
-    if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price() ||
-            from_balance <= (gas_used + kTransferGas) * tx_info.gas_price() ||
-            local_tx_ptr->tx.gas_limit() < (gas_used + kTransferGas)) {
-        if (tx_info.status() != kBftAccountBalanceError) {
-            BFT_ERROR("gas limit error not eq[%d][%d].", tx_info.status(), kBftAccountBalanceError);
-            return kBftLeaderInfoInvalid;
+            backup_status = tx_info.status();
+            break;
         }
-    }
 
-    if (from_balance >= gas_used * tx_info.gas_price()) {
-        from_balance -= gas_used * tx_info.gas_price();
-    } else {
-        from_balance = 0;
-        if (tx_info.status() != kBftAccountBalanceError) {
-            BFT_ERROR("gas limit error not eq[%d][%d].", tx_info.status(), kBftAccountBalanceError);
-            return kBftLeaderInfoInvalid;
+        int balance_status = GetTempAccountBalance(
+            local_tx_ptr->tx.from(),
+            acc_balance_map,
+            &from_balance);
+        if (balance_status != kBftSuccess) {
+            if (tx_info.status() != (uint32_t)balance_status) {
+                BFT_ERROR("get balace error.");
+                return kBftLeaderInfoInvalid;
+            }
+
+            backup_status = tx_info.status();
+            break;
         }
-    }
+
+        gas_used = kCallContractDefaultUseGas;
+        if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price() ||
+                from_balance <= (gas_used + kTransferGas) * tx_info.gas_price() ||
+                local_tx_ptr->tx.gas_limit() < (gas_used + kTransferGas)) {
+            if (tx_info.status() != kBftAccountBalanceError) {
+                BFT_ERROR("gas limit error not eq[%d][%d].", tx_info.status(), kBftAccountBalanceError);
+                return kBftLeaderInfoInvalid;
+            }
+
+            backup_status = tx_info.status();
+            break;
+        }
+
+        if (from_balance >= gas_used * tx_info.gas_price()) {
+            from_balance -= gas_used * tx_info.gas_price();
+        } else {
+            from_balance = 0;
+            if (tx_info.status() != kBftAccountBalanceError) {
+                BFT_ERROR("gas limit error not eq[%d][%d].", tx_info.status(), kBftAccountBalanceError);
+                return kBftLeaderInfoInvalid;
+            }
+
+            backup_status = tx_info.status();
+            break;
+        }
+    } while (0);
+    
 
     if (tx_info.balance() != from_balance) {
         BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
@@ -382,6 +400,10 @@ int TxBft::BackupCheckContractDefault(
         }
 
         locked_account_map[local_tx_ptr->tx.from()] = true;
+    }
+
+    if (backup_status != tx_info.status()) {
+        return kBftLeaderInfoInvalid;
     }
     
     return kBftSuccess;
@@ -409,6 +431,7 @@ int TxBft::BackupCheckContractExceute(
     evmc::result res{ evmc_res };
     tvm::TenonHost tenon_host;
     InitTenonTvmContext(tenon_host);
+    int backup_status = kBftSuccess;
     do
     {
         int balance_status = GetTempAccountBalance(
@@ -422,6 +445,7 @@ int TxBft::BackupCheckContractExceute(
                 return kBftLeaderInfoInvalid;
             }
 
+            backup_status = tx_info.status();
             break;
         }
 
@@ -431,6 +455,7 @@ int TxBft::BackupCheckContractExceute(
                 return kBftLeaderInfoInvalid;
             }
 
+            backup_status = tx_info.status();
             break;
         }
 
@@ -449,6 +474,7 @@ int TxBft::BackupCheckContractExceute(
                 return kBftLeaderInfoInvalid;
             }
 
+            backup_status = tx_info.status();
             break;
         }
 
@@ -458,6 +484,7 @@ int TxBft::BackupCheckContractExceute(
                 return kBftLeaderInfoInvalid;
             }
 
+            backup_status = tx_info.status();
             break;
         }
     } while (0);
@@ -556,58 +583,82 @@ int TxBft::BackupCheckContractExceute(
             }
         }
 
-        if ((int64_t)caller_balance + caller_balance_add - (int64_t)(local_tx_info->tx.amount()) >= gas_used * local_tx_info->tx.gas_price()) {
-        } else {
-            if (tx_info.status() != kBftAccountBalanceError) {
-                BFT_ERROR("tx_info.balance() != 0");
-                return kBftLeaderInfoInvalid;
-            }
-        }
-
-        if (tx_info.status() == kBftSuccess) {
-            if (caller_balance_add < 0) {
-                if (caller_balance < (uint64_t)(-caller_balance_add) + local_tx_info->tx.amount()) {
-                    if (tx_info.status() != kBftAccountBalanceError) {
-                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
-                        return kBftLeaderInfoInvalid;
-                    }
-                }
-            }
-        }
-
-        if (tx_info.status() == kBftSuccess) {
-            if (local_tx_info->tx.amount() > 0) {
-                if (caller_balance < local_tx_info->tx.amount()) {
-                    if (tx_info.status() != kBftAccountBalanceError) {
-                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
-                        return kBftLeaderInfoInvalid;
-                    }
-                }
-            }
-        }
-
-        if (tx_info.status() == kBftSuccess) {
-            if (contract_balance_add < 0) {
-                if (contract_balance < (uint64_t)(-contract_balance_add)) {
-                    if (tx_info.status() != kBftAccountBalanceError) {
-                        BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
-                        return kBftLeaderInfoInvalid;
-                    }
-                }
-                else {
-                    contract_balance -= (uint64_t)(-contract_balance_add);
-                }
+        do 
+        {
+             if (((int64_t)caller_balance + caller_balance_add -
+                 (int64_t)(local_tx_info->tx.amount())) >=
+                 gas_used * local_tx_info->tx.gas_price()) {
             } else {
-                contract_balance += contract_balance_add;
+                if (backup_status != kBftSuccess &&
+                        tx_info.status() != kBftAccountBalanceError) {
+                    BFT_ERROR("tx_info.balance() != 0");
+                    return kBftLeaderInfoInvalid;
+                }
+
+                backup_status = tx_info.status();
+                break;
+             }
+
+            if (tx_info.status() == kBftSuccess) {
+                if (caller_balance_add < 0) {
+                    if (caller_balance <
+                            (uint64_t)(-caller_balance_add) + local_tx_info->tx.amount()) {
+                        if (backup_status != kBftSuccess &&
+                                tx_info.status() != kBftAccountBalanceError) {
+                            BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
+                            return kBftLeaderInfoInvalid;
+                        }
+
+                        backup_status = tx_info.status();
+                        break;
+                    }
+                }
             }
-        }
+
+            if (tx_info.status() == kBftSuccess) {
+                if (local_tx_info->tx.amount() > 0) {
+                    if (caller_balance < local_tx_info->tx.amount()) {
+                        if (backup_status != kBftSuccess &&
+                                tx_info.status() != kBftAccountBalanceError) {
+                            BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
+                            return kBftLeaderInfoInvalid;
+                        }
+
+                        backup_status = tx_info.status();
+                        break;
+                    }
+                }
+            }
+
+            if (tx_info.status() == kBftSuccess) {
+                if (contract_balance_add < 0) {
+                    if (contract_balance < (uint64_t)(-contract_balance_add)) {
+                        if (backup_status != kBftSuccess &&
+                                tx_info.status() != kBftAccountBalanceError) {
+                            BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
+                            return kBftLeaderInfoInvalid;
+                        }
+
+                        backup_status = tx_info.status();
+                        break;
+                    }
+                    else {
+                        contract_balance -= (uint64_t)(-contract_balance_add);
+                    }
+                } else {
+                    contract_balance += contract_balance_add;
+                }
+            }
+        } while (0);
     } else {
         if (caller_balance >= gas_used * tx_info.gas_price()) {
         } else {
-            if (tx_info.status() != kBftAccountBalanceError) {
+            if (backup_status != kBftSuccess && tx_info.status() != kBftAccountBalanceError) {
                 BFT_ERROR("tx_info.status() == kBftAccountBalanceError");
                 return kBftLeaderInfoInvalid;
             }
+
+            backup_status = tx_info.status();
         }
     }
 
@@ -652,6 +703,10 @@ int TxBft::BackupCheckContractExceute(
         return kBftLeaderInfoInvalid;
     }
 
+    if (backup_status != tx_info.status()) {
+        return kBftLeaderInfoInvalid;
+    }
+
     acc_balance_map[local_tx_ptr->tx.from()] = contract_balance;
     return kBftSuccess;
 }
@@ -664,6 +719,7 @@ int TxBft::BackupCheckContractCalled(
     uint64_t from_balance = 0;
     int64_t caller_balance_add = 0;
     uint64_t caller_gas_used = 0;
+    int backup_status = kBftSuccess;
     do 
     {
         int balance_status = GetTempAccountBalance(
@@ -675,6 +731,7 @@ int TxBft::BackupCheckContractCalled(
                 return kBftLeaderInfoInvalid;
             }
 
+            backup_status = tx_info.status();
             break;
         }
 
@@ -711,6 +768,7 @@ int TxBft::BackupCheckContractCalled(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
             }
@@ -726,6 +784,10 @@ int TxBft::BackupCheckContractCalled(
     }
 
     if (tx_info.call_contract_step() != contract::kCallStepContractFinal) {
+        return kBftLeaderInfoInvalid;
+    }
+
+    if (backup_status != tx_info.status()) {
         return kBftLeaderInfoInvalid;
     }
 
