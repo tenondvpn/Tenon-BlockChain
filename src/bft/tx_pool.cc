@@ -135,7 +135,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 }
 
 bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
-    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
+    auto contract_info = block::AccountManager::Instance()->GetAcountInfo(
         tx_ptr->tx.from());
     assert(contract_info != nullptr);
     if (contract_info->locked()) {
