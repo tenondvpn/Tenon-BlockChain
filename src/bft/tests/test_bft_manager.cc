@@ -1388,7 +1388,7 @@ TEST_F(TestBftManager, CreateContractOk) {
     all_amount += amount;
     all_gas += bft::kTransferGas;
     std::map<std::string, std::string> attrs;
-    attrs.insert(std::make_pair(kContractBytesCode, "kContractBytesCode"));
+    attrs.insert(std::make_pair(kContractBytesCode, receive_pays));
     all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size())*
         bft::kKeyValueStorageEachBytes;
     for (int i = 0; i < 10; ++i) {
