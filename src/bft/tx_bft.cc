@@ -752,6 +752,8 @@ int TxBft::BackupNormalCheck(
     tvm::TenonHost tenon_host;
     InitTenonTvmContext(tenon_host);
     int64_t caller_balance_add = 0;
+    int backup_status = kBftSuccess;
+    gas_used = kTransferGas;
     if (!local_tx_ptr->tx.to_add()) {
         if (locked_account_map.find(local_tx_ptr->tx.from()) != locked_account_map.end()) {
             BFT_ERROR("contract has locked[%s]",
@@ -766,7 +768,7 @@ int TxBft::BackupNormalCheck(
             return kBftError;
         }
 
-        do 
+        do
         {
             int balance_status = GetTempAccountBalance(
                 local_tx_ptr->tx.from(),
@@ -779,6 +781,7 @@ int TxBft::BackupNormalCheck(
                     return kBftLeaderInfoInvalid;
                 }
 
+                backup_status = tx_info.status();
                 break;
             }
 
@@ -789,10 +792,10 @@ int TxBft::BackupNormalCheck(
                     return kBftLeaderInfoInvalid;
                 }
 
+                backup_status = tx_info.status();
                 break;
             }
 
-            gas_used = kTransferGas;
             if (local_tx_ptr->tx.gas_limit() < gas_used) {
                 if (tx_info.status() != kBftUserSetGasLimitError) {
                     BFT_ERROR("gas_limit error and status ne[%d][%d]!",
@@ -800,6 +803,7 @@ int TxBft::BackupNormalCheck(
                     return kBftLeaderInfoInvalid;
                 }
 
+                backup_status = tx_info.status();
                 break;
             }
 
@@ -815,6 +819,7 @@ int TxBft::BackupNormalCheck(
                     return kBftLeaderInfoInvalid;
                 }
 
+                backup_status = tx_info.status();
                 break;
             }
 
@@ -826,6 +831,7 @@ int TxBft::BackupNormalCheck(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
 
@@ -837,6 +843,7 @@ int TxBft::BackupNormalCheck(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
 
@@ -857,6 +864,7 @@ int TxBft::BackupNormalCheck(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
 
@@ -867,6 +875,7 @@ int TxBft::BackupNormalCheck(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
 
@@ -877,6 +886,7 @@ int TxBft::BackupNormalCheck(
                         return kBftLeaderInfoInvalid;
                     }
 
+                    backup_status = tx_info.status();
                     break;
                 }
 
@@ -982,6 +992,7 @@ int TxBft::BackupNormalCheck(
                                 return kBftLeaderInfoInvalid;
                             }
 
+                            backup_status = tx_info.status();
                             break;
                         }
 
@@ -995,6 +1006,7 @@ int TxBft::BackupNormalCheck(
                                 return kBftLeaderInfoInvalid;
                             }
 
+                            backup_status = tx_info.status();
                             break;
                         }
 
@@ -1049,11 +1061,12 @@ int TxBft::BackupNormalCheck(
             if (from_balance >= gas_used * tx_info.gas_price()) {
                 from_balance -= gas_used * tx_info.gas_price();
             } else {
-                if (tx_info.status() != kBftAccountBalanceError) {
+                if (backup_status == kBftSuccess && tx_info.status() != kBftAccountBalanceError) {
                     BFT_ERROR("transfer kBftAccountBalanceError invalid!");
                     return kBftLeaderInfoInvalid;
                 }
 
+                backup_status = tx_info.status();
                 from_balance = 0;
             }
         }
@@ -1067,6 +1080,10 @@ int TxBft::BackupNormalCheck(
         if (tx_info.gas_used() != gas_used) {
             BFT_ERROR("transfer gas_used invalid!");
             return kBftLeaderInfoInvalid;
+        }
+
+        if (backup_status != tx_info.status()) {
+            BFT_ERROR("backup_status[%d] != tx_info.status()[%d]!", backup_status, tx_info.status());
         }
 
         acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
