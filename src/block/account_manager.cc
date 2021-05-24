@@ -112,20 +112,20 @@ int AccountManager::AddBlockItem(
     // one block must be one consensus pool
     uint32_t consistent_pool_index = common::kImmutablePoolSize;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].to_add()) {
-            if (UpdateAccountInfo(
-                    tx_list[i],
-                    block_item.height(),
-                    block_item.timestamp(),
-                    block_item.hash(),
-                    db_batch) != kBlockSuccess) {
-                BLOCK_ERROR("to add account failed: %s, %llu",
-                        common::Encode::HexEncode(block_item.hash()).c_str(),
-                        block_item.height());
-                assert(false);
-                continue;
-            }
+        if (UpdateAccountInfo(
+                tx_list[i],
+                block_item.height(),
+                block_item.timestamp(),
+                block_item.hash(),
+                db_batch) != kBlockSuccess) {
+            BLOCK_ERROR("to add account failed: %s, %llu",
+                common::Encode::HexEncode(block_item.hash()).c_str(),
+                block_item.height());
+            assert(false);
+            continue;
+        }
 
+        if (tx_list[i].to_add()) {
             uint32_t pool_idx = common::GetPoolIndex(tx_list[i].to());
             if (consistent_pool_index == common::kImmutablePoolSize) {
                 consistent_pool_index = pool_idx;
@@ -141,19 +141,6 @@ int AccountManager::AddBlockItem(
             std::string tx_gid = common::GetTxDbKey(false, tx_list[i].gid());
             db_batch.Put(tx_gid, block_item.hash());
         } else {
-            if (UpdateAccountInfo(
-                    tx_list[i],
-                    block_item.height(),
-                    block_item.timestamp(),
-                    block_item.hash(),
-                    db_batch) != kBlockSuccess) {
-                BLOCK_ERROR("from add account failed: %s, %llu",
-                        common::Encode::HexEncode(block_item.hash()).c_str(),
-                        block_item.height());
-                assert(false);
-                continue;
-            }
-
             uint32_t pool_idx = common::GetPoolIndex(tx_list[i].from());
             if (consistent_pool_index == common::kImmutablePoolSize) {
                 consistent_pool_index = pool_idx;
@@ -322,6 +309,12 @@ int AccountManager::UpdateAccountInfo(
         uint64_t timestamp,
         const std::string& hash,
         db::DbWriteBach& db_batch) {
+    if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
+        if (tx_info.type() != common::kConsensusCallContract) {
+            return kBlockSuccess;
+        }
+    }
+
     std::string account_id;
     if (tx_info.to_add()) {
         account_id = tx_info.to();
@@ -411,7 +404,7 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
     
-    if (tx_info.type() == common::kConsensusCallContract) {
+    if (tx_info.status() == bft::kBftSuccess && tx_info.type() == common::kConsensusCallContract) {
         if (tx_info.call_contract_step() == contract::kCallStepCallerInited) {
             account_info->LockAccount();
         }
