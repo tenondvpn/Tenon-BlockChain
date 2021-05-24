@@ -1502,7 +1502,7 @@ TEST_F(TestBftManagerForFailCase, TestTransactionGasUsedBiggerThanBalance2) {
     Transfer(from_prikey, contract_addr, 0, kTransferGas + gas_used - 1,
         common::kConsensusTransaction, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - (kTransferGas + gas_used) * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, 0);
     ASSERT_FALSE(caller_info->locked());
 }
 

@@ -351,6 +351,14 @@ int TxBft::BackupCheckContractDefault(
         }
 
         gas_used = kCallContractDefaultUseGas;
+        if (!local_tx_ptr->attr_map.empty()) {
+            for (auto iter = local_tx_ptr->attr_map.begin();
+                    iter != local_tx_ptr->attr_map.end(); ++iter) {
+                gas_used += (iter->first.size() + iter->second.size()) *
+                    kKeyValueStorageEachBytes;
+            }
+        }
+
         if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price() ||
                 from_balance <= (gas_used + kTransferGas) * tx_info.gas_price() ||
                 local_tx_ptr->tx.gas_limit() < (gas_used + kTransferGas)) {
@@ -848,17 +856,6 @@ int TxBft::BackupNormalCheck(
             }
 
             if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price()) {
-                if (tx_info.status() != kBftUserSetGasLimitError) {
-                    BFT_ERROR("gas_limit error and status ne[%d][%d]!",
-                        tx_info.status(), kBftUserSetGasLimitError);
-                    return kBftLeaderInfoInvalid;
-                }
-
-                backup_status = tx_info.status();
-                break;
-            }
-
-            if (local_tx_ptr->tx.gas_limit() < gas_used) {
                 if (tx_info.status() != kBftUserSetGasLimitError) {
                     BFT_ERROR("gas_limit error and status ne[%d][%d]!",
                         tx_info.status(), kBftUserSetGasLimitError);
@@ -1591,11 +1588,6 @@ int TxBft::LeaderAddNormalTransaction(
                 break;
             }
 
-            if (tx.gas_limit() < gas_used) {
-                tx.set_status(kBftUserSetGasLimitError);
-                break;
-            }
-
             if (!tx_info->attr_map.empty()) {
                 for (auto iter = tx_info->attr_map.begin();
                         iter != tx_info->attr_map.end(); ++iter) {
@@ -1859,6 +1851,14 @@ int TxBft::LeaderCallContractDefault(
     }
 
     uint64_t gas_used = kCallContractDefaultUseGas;
+    if (!tx_info->attr_map.empty()) {
+        for (auto iter = tx_info->attr_map.begin();
+            iter != tx_info->attr_map.end(); ++iter) {
+            gas_used += (iter->first.size() + iter->second.size()) *
+                kKeyValueStorageEachBytes;
+        }
+    }
+
     // at least kCallContractDefaultUseGas + kTransferGas to call contract.
     if (from_balance < tx.gas_limit() * tx.gas_price() ||
             from_balance <= (gas_used + kTransferGas) * tx.gas_price() ||
