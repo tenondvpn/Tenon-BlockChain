@@ -250,7 +250,7 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
         }
 
         if (local_tx_info->tx.type() != common::kConsensusCallContract) {
-            int check_res = BackupNormalCheck(local_tx_info, tx_info, acc_balance_map);
+            int check_res = BackupNormalCheck(local_tx_info, tx_info, locked_account_map, acc_balance_map);
             if (check_res != kBftSuccess) {
                 BFT_ERROR("BackupNormalCheck failed!");
                 return check_res;
