@@ -1982,7 +1982,10 @@ int TxBft::LeaderCallContractExceute(
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
-    std::cout << "leader execute caller_balance_add add: " << caller_balance_add << ", gas_used: " << gas_used << std::endl;
+    std::cout << "leader execute caller_balance_add add: " << caller_balance_add
+        << ", gas_used: " << gas_used
+        << ", status: " << tx.status()
+        << std::endl;
     acc_balance_map[tx_info->tx.to()] = contract_balance;
     tx.set_balance(contract_balance);
     tx.set_gas_used(0);

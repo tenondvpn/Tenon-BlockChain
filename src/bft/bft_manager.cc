@@ -936,6 +936,7 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    std::cout << "LeaderBroadcastToAcc called!" << std::endl;
     if (!ThisNodeIsLeader()) {
         return;
     }
@@ -967,7 +968,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         // contract must unlock caller
         if (tx_list[i].status() != kBftSuccess &&
-                (tx_list[i].type() != common::kConsensusCreateContract ||
+                (tx_list[i].type() != common::kConsensusCreateContract &&
                 tx_list[i].type() != common::kConsensusCallContract)) {
             continue;
         }
@@ -1019,6 +1020,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
         to_leader_broadcast_msg_ = msg;
+        std::cout << "called broadcast to: " << *iter << std::endl;
     }
 
     transport::protobuf::Header msg;
