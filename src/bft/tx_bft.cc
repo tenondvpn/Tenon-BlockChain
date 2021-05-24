@@ -736,6 +736,7 @@ int TxBft::BackupCheckContractCalled(
 int TxBft::BackupNormalCheck(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     if (tx_info.gas_price() != common::GlobalInfo::Instance()->gas_price()) {
         BFT_ERROR("gas price error!");
@@ -752,6 +753,19 @@ int TxBft::BackupNormalCheck(
     InitTenonTvmContext(tenon_host);
     int64_t caller_balance_add = 0;
     if (!local_tx_ptr->tx.to_add()) {
+        if (locked_account_map.find(local_tx_ptr->tx.from()) != locked_account_map.end()) {
+            BFT_ERROR("contract has locked[%s]",
+                common::Encode::HexEncode(local_tx_ptr->tx.from()).c_str());
+            return kBftContractAddressLocked;
+        }
+
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(
+            local_tx_ptr->tx.from());
+        if (account_info->locked()) {
+            locked_account_map[local_tx_ptr->tx.from()] = true;
+            return kBftError;
+        }
+
         do 
         {
             int balance_status = GetTempAccountBalance(
@@ -1415,7 +1429,7 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_gas_price(common::GlobalInfo::Instance()->gas_price());
         tx.set_status(kBftSuccess);
         if (tx.type() != common::kConsensusCallContract) {
-            if (LeaderAddNormalTransaction(tx_vec[i], acc_balance_map, tx) != kBftSuccess) {
+            if (LeaderAddNormalTransaction(tx_vec[i], acc_balance_map, locked_account_map, tx) != kBftSuccess) {
                 continue;
             }
         } else {
@@ -1460,6 +1474,7 @@ void TxBft::LeaderCreateTxBlock(
 int TxBft::LeaderAddNormalTransaction(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx) {
     uint64_t gas_used = 0;
     // gas just consume by from
@@ -1470,6 +1485,17 @@ int TxBft::LeaderAddNormalTransaction(
     tvm::TenonHost tenon_host;
     InitTenonTvmContext(tenon_host);
     if (!tx.to_add()) {
+        if (locked_account_map.find(tx.from()) != locked_account_map.end()) {
+            BFT_ERROR("contract has locked[%s]", common::Encode::HexEncode(tx_info->tx.to()).c_str());
+            return kBftContractAddressLocked;
+        }
+
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx.from());
+        if (account_info->locked()) {
+            locked_account_map[tx.from()] = true;
+            return kBftError;
+        }
+
         int balance_status = GetTempAccountBalance(tx.from(), acc_balance_map, &from_balance);
         if (balance_status != kBftSuccess) {
             tx.set_status(balance_status);

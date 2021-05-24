@@ -53,6 +53,7 @@ private:
     int LeaderAddNormalTransaction(
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
+        std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
     int LeaderAddCallContract(
         TxItemPtr& tx_info,

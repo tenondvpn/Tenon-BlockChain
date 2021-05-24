@@ -135,17 +135,11 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 }
 
 bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
-    if (tx_ptr->tx.type() == common::kConsensusCallContract &&
-            tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
-        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
-            tx_ptr->tx.to());
-        assert(contract_info != nullptr);
-        if (contract_info->locked()) {
-            return true;
-        }
-
-        // lock contract until kCallStepContractCalled coming and unlock it
-//         contract_info->LockAccount();
+    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(
+        tx_ptr->tx.from());
+    assert(contract_info != nullptr);
+    if (contract_info->locked()) {
+        return true;
     }
 
     return false;
