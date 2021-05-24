@@ -85,10 +85,10 @@ std::string Hash::Hash192(const std::string& str) {
 }
 
 std::string Hash::Sha256(const std::string& str) {
-    return security::Secp256k1::Instance()->sha3(str);
-//     security::Sha256 sha256;
-//     sha256.Update(str);
-//     return sha256.Finalize();
+//     return security::Secp256k1::Instance()->sha3(str);
+    security::Sha256 sha256;
+    sha256.Update(str);
+    return sha256.Finalize();
 }
 
 namespace rmd160

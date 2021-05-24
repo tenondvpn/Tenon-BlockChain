@@ -33,6 +33,14 @@ static const std::string kToUseBandwidthOneDay = "to_use_bw_one_day";
 static const std::string kVpnClientLoginManager = "kVpnClientLoginManager";
 static const std::string kVpnMining = "kVpnMining";
 static const std::string kContractEcrecover = common::Encode::HexDecode("0000000000000000000000000000000000000001");
+static const std::string kContractSha256 = common::Encode::HexDecode("0000000000000000000000000000000000000002");
+static const std::string kContractRipemd160 = common::Encode::HexDecode("0000000000000000000000000000000000000003");
+static const std::string kContractIdentity = common::Encode::HexDecode("0000000000000000000000000000000000000004");
+static const std::string kContractModexp = common::Encode::HexDecode("0000000000000000000000000000000000000005");
+static const std::string kContractAlt_bn128_G1_add = common::Encode::HexDecode("0000000000000000000000000000000000000006");
+static const std::string kContractAlt_bn128_G1_mul = common::Encode::HexDecode("0000000000000000000000000000000000000007");
+static const std::string kContractAlt_bn128_pairing_product = common::Encode::HexDecode("0000000000000000000000000000000000000008");
+static const std::string kContractBlake2_compression = common::Encode::HexDecode("0000000000000000000000000000000000000009");
 
 }  // namespace contact
 

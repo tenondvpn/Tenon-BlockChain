@@ -965,7 +965,10 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].status() != kBftSuccess) {
+        // contract must unlock caller
+        if (tx_list[i].status() != kBftSuccess &&
+                (tx_list[i].type() != common::kConsensusCreateContract ||
+                tx_list[i].type() != common::kConsensusCallContract)) {
             continue;
         }
 

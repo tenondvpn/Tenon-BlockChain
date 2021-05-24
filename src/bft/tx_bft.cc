@@ -1472,6 +1472,7 @@ int TxBft::LeaderAddNormalTransaction(
         int balance_status = GetTempAccountBalance(tx.from(), acc_balance_map, &from_balance);
         if (balance_status != kBftSuccess) {
             tx.set_status(balance_status);
+            // will never happen
             assert(false);
             return kBftError;
         }
@@ -1556,7 +1557,6 @@ int TxBft::LeaderAddNormalTransaction(
         }
     }
 
-    std::cout << "LeaderAddNormalTransaction called from: " << common::Encode::HexEncode(tx.from()) << ", to: " << common::Encode::HexEncode(tx.to()) << ", status: " << tx.status() << std::endl;
     if (tx.status() == kBftSuccess) {
         for (auto account_iter = tenon_host.accounts_.begin();
                 account_iter != tenon_host.accounts_.end(); ++account_iter) {

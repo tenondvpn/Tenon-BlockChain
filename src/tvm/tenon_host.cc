@@ -233,7 +233,7 @@ size_t TenonHost::copy_code(
 void TenonHost::selfdestruct(
         const evmc::address& addr,
         const evmc::address& beneficiary) noexcept {
-    recorded_selfdestructs_.push_back({addr, beneficiary});
+    recorded_selfdestructs_.push_back({ addr, beneficiary });
     std::cout << "FFFFFFFFFFFFFFFFFFFFF selfdestruct called!" << std::endl;
 }
 
