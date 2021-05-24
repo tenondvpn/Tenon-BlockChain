@@ -705,6 +705,7 @@ int TxBft::BackupCheckContractCalled(
                 if (from_balance >= caller_gas_used * local_tx_ptr->tx.gas_price()) {
                     from_balance -= caller_gas_used * local_tx_ptr->tx.gas_price();
                 } else {
+                    assert(local_tx_ptr->tx.status() != kBftSuccess);
                     from_balance = 0;
                     if (tx_info.status() != kBftAccountBalanceError) {
                         return kBftLeaderInfoInvalid;
@@ -2058,10 +2059,6 @@ int TxBft::LeaderCallContractCalled(
         return kBftError;
     }
 
-    if (tx_info->tx.status() != kBftSuccess) {
-        return kBftSuccess;
-    }
-
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info->tx.from());
     if (!account_info->locked()) {
         return kBftError;
@@ -2090,6 +2087,7 @@ int TxBft::LeaderCallContractCalled(
             if (from_balance >= caller_gas_used * tx_info->tx.gas_price()) {
                 from_balance -= caller_gas_used * tx_info->tx.gas_price();
             } else {
+                assert(tx_info->tx.status() != kBftSuccess);
                 from_balance = 0;
                 if (tx.status() == kBftSuccess) {
                     tx.set_status(kBftAccountBalanceError);

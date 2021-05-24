@@ -347,7 +347,9 @@ void BftManager::HandleToAccountTxBlock(
             continue;
         }
 
-        if (tx_list[i].status() != 0) {
+        if (tx_list[i].status() != 0 &&
+                tx_list[i].type() != common::kConsensusCreateContract &&
+                tx_list[i].type() != common::kConsensusCallContract) {
             BFT_ERROR("status error!");
             continue;
         }

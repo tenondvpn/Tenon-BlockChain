@@ -1221,8 +1221,8 @@ TEST_F(TestBftManagerForFailCase, TestCallContractSuccess) {
     NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
         true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
     new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - 64194 * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
+    ASSERT_EQ(new_from_balance, from_balance - 64194 * common::GlobalInfo::Instance()->gas_price());
 }
 
 }  // namespace test
