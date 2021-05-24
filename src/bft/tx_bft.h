@@ -82,6 +82,7 @@ private:
     int BackupNormalCheck(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractDefault(
         const TxItemPtr& local_tx_ptr,
