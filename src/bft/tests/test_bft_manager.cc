@@ -513,6 +513,7 @@ public:
         auto transport_ptr = std::dynamic_pointer_cast<transport::Transport>(
             std::make_shared<transport::TestTransport>());
         transport::MultiThreadHandler::Instance()->Init(transport_ptr, transport_ptr);
+        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         AddGenisisBlock(common::kConsensusCreateGenesisAcount);
     }
 

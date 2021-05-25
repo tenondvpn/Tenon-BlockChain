@@ -1004,7 +1004,7 @@ int TxBft::BackupNormalCheck(
             if (tx_info.balance() != to_balance + local_tx_ptr->tx.amount()) {
                 BFT_ERROR("balance error and status ne[%llu][%llu]!",
                     tx_info.balance(),
-                    to_balance + local_tx_ptr->tx.amount() + caller_balance_add);
+                    to_balance + local_tx_ptr->tx.amount());
                 return kBftAccountBalanceError;
             }
 
