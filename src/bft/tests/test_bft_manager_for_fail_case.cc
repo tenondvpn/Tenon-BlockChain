@@ -513,6 +513,7 @@ public:
         auto transport_ptr = std::dynamic_pointer_cast<transport::Transport>(
             std::make_shared<transport::TestTransport>());
         transport::MultiThreadHandler::Instance()->Init(transport_ptr, transport_ptr);
+        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         AddGenisisBlock(common::kConsensusCreateGenesisAcount);
     }
 
@@ -828,14 +829,14 @@ public:
     }
 
     void NewAccountDestNetworkTransfer(
-            bool is_from_root,
-            uint32_t tx_type,
-            bool just_to_id,
-            transport::protobuf::Header& root_leader_msg,
-            const std::string& from_prikey,
-            const std::string& to_prikey,
-            std::map<std::string, std::string>& attrs,
-            transport::protobuf::Header* leader_broadcast_msg) {
+        bool is_from_root,
+        uint32_t tx_type,
+        bool just_to_id,
+        transport::protobuf::Header& root_leader_msg,
+        const std::string& from_prikey,
+        const std::string& to_prikey,
+        std::map<std::string, std::string>& attrs,
+        transport::protobuf::Header* leader_broadcast_msg) {
         // root create new account and add to consensus network
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(root_leader_msg);
@@ -845,7 +846,7 @@ public:
             protobuf::TxBft tx_bft;
             ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
             auto src_block = tx_bft.to_tx().block();
-            auto& tx_list =  tx_bft.to_tx().block().tx_list();
+            auto& tx_list = tx_bft.to_tx().block().tx_list();
             std::string contract_address;
             std::string tx_bytes_code;
             for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list(0).attr_size(); ++i) {
@@ -865,12 +866,8 @@ public:
             std::string bytes_code;
             std::string owner;
             ASSERT_EQ(contract_addr_info->GetAddressType(&address_type), block::kBlockSuccess);
-            ASSERT_EQ(contract_addr_info->GetBytesCode(&bytes_code), block::kBlockSuccess);
-//             ASSERT_EQ(contract_addr_info->GetAttrValue(block::kFieldContractOwner, &owner), block::kBlockSuccess);
             ASSERT_EQ(address_type, block::kContractAddress);
-//             ASSERT_EQ(block::UnicastAddress(owner), tx_bft.to_tx().block().tx_list(0).from());
             attrs["res_contract_addr"] = contract_address;
-            return;
         }
 
         usleep(bft::kBftStartDeltaTime);
@@ -948,13 +945,22 @@ public:
         }
 
         // commit
-        std::string to_id = GetIdByPrikey(to_prikey);
-        if (just_to_id) {
+        std::string to_id;
+        if (just_to_id && !to_prikey.empty()) {
             to_id = to_prikey;
+        }
+        else if (tx_type == common::kConsensusCreateContract) {
+            to_id = attrs["res_contract_addr"];
+        }
+        else {
+            to_id = GetIdByPrikey(to_prikey);
         }
 
         uint64_t src_balance = 0;
         {
+            std::cout << "to id: " << common::Encode::HexEncode(to_id)
+                << ", contract address: " << common::Encode::HexEncode(attrs["res_contract_addr"])
+                << std::endl;
             auto to_acc_info = block::AccountManager::Instance()->GetAcountInfo(to_id);
             ASSERT_TRUE(to_acc_info != nullptr);
             src_balance = to_acc_info->balance_;
@@ -1194,6 +1200,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractAffterLock) {
         "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("190ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
     // Default caller init and lock caller
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
@@ -1201,7 +1208,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractAffterLock) {
     Transfer(from_prikey, contract_addr, 0, 20000000,
         common::kConsensusCallContract, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
     ASSERT_TRUE(caller_info->locked());
 
     // now call transfer will fail
@@ -1273,6 +1280,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractSuccess) {
         "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("190ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
     // Default caller init and lock caller
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
@@ -1280,7 +1288,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractSuccess) {
     Transfer(from_prikey, contract_addr, 0, 20000000,
         common::kConsensusCallContract, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
     ASSERT_TRUE(caller_info->locked());
 
     // CallContract
@@ -1325,6 +1333,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractGasLimitBiggerThanBalance) {
         "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("190ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
     // Default caller init and lock caller
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
@@ -1333,7 +1342,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractGasLimitBiggerThanBalance) {
     Transfer(from_prikey, contract_addr, 0, 101llu * common::kTenonMiniTransportUnit,
         common::kConsensusCallContract, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -1356,6 +1365,7 @@ TEST_F(TestBftManagerForFailCase, TestTransactionGasLimitBiggerThanBalance) {
         "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("190ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
     // Default caller init and lock caller
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
@@ -1363,7 +1373,7 @@ TEST_F(TestBftManagerForFailCase, TestTransactionGasLimitBiggerThanBalance) {
     Transfer(from_prikey, contract_addr, 0, 100llu * common::kTenonMiniTransportUnit,
         common::kConsensusTransaction, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - kTransferGas * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, from_balance - (kTransferGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -1386,6 +1396,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractGasUsedBiggerThanBalance) {
         "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("190ae887000000000000000000000000000000000000000000000000000000009d88fac000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004129e687739c0fd3ceb3afe3bad915dd8994f9303e5d853589397c8abadb85a9e85e9c890353c564900a7f3dc6d1b7667e5af80035f63da7a9094bb054811ec7181c00000000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
     // Default caller init and lock caller
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
@@ -1393,7 +1404,7 @@ TEST_F(TestBftManagerForFailCase, TestCallContractGasUsedBiggerThanBalance) {
     Transfer(from_prikey, contract_addr, 0, kCallContractDefaultUseGas - 1,
         common::kConsensusCallContract, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - kCallContractDefaultUseGas * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 

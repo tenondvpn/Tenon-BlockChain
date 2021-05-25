@@ -20,16 +20,10 @@ evmc::bytes32 TenonHost::get_storage(
     // first find from temporary map storage
     std::string id((char*)addr.bytes, sizeof(addr.bytes));
     std::string key_str((char*)key.bytes, sizeof(key.bytes));
-
-    std::cout << "get storage called id: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes)))
-        << ", key: " << common::Encode::HexEncode(std::string((char*)key.bytes, sizeof(key.bytes)));
-
     const auto account_iter = accounts_.find(addr);
     if (account_iter != accounts_.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
         if (storage_iter != account_iter->second.storage.end()) {
-            std::cout << ", value: " << common::Encode::HexEncode(std::string((char*)storage_iter->second.value.bytes, sizeof(storage_iter->second.value.bytes)))
-                << std::endl;
             return storage_iter->second.value;
         }
     }
@@ -38,7 +32,6 @@ evmc::bytes32 TenonHost::get_storage(
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(
         std::string((char*)addr.bytes, sizeof(addr.bytes)));
     if (account_info == nullptr) {
-        std::cout << ", 0 value: empty" << std::endl;
         return {};
     }
 
@@ -54,12 +47,9 @@ evmc::bytes32 TenonHost::get_storage(
         }
 
         memcpy(tmp_val.bytes + offset, val.c_str(), length);
-        std::cout << ", value: " << common::Encode::HexEncode(val)
-            << std::endl;
         return tmp_val;
     }
 
-    std::cout << ", 1 value: empty" << std::endl;
     return {};
 }
 
@@ -68,10 +58,6 @@ evmc_storage_status TenonHost::set_storage(
         const evmc::bytes32& key,
         const evmc::bytes32& value) noexcept {
     // just set temporary map storage, when commit set to db and block
-    std::cout << "set storage called id: " << common::Encode::HexEncode(std::string((char*)addr.bytes, sizeof(addr.bytes)))
-        << ", key: " << common::Encode::HexEncode(std::string((char*)key.bytes, sizeof(key.bytes)))
-        << ", value: " << common::Encode::HexEncode(std::string((char*)value.bytes, sizeof(value.bytes)))
-        << std::endl;
     auto it = accounts_.find(addr);
     if (it == accounts_.end()) {
         accounts_[addr] = MockedAccount();
@@ -234,7 +220,6 @@ void TenonHost::selfdestruct(
         const evmc::address& addr,
         const evmc::address& beneficiary) noexcept {
     recorded_selfdestructs_.push_back({ addr, beneficiary });
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF selfdestruct called!" << std::endl;
 }
 
 evmc::result TenonHost::call(const evmc_message& msg) noexcept {
@@ -249,10 +234,6 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     params.to = msg.kind == EVMC_CALL ? params.code_address : my_address_;
     params.data = std::string((char*)msg.input_data, msg.input_size);
     params.on_op = {};
-    std::cout << "code address is: " << common::Encode::HexEncode(params.code_address) << std::endl;
-    std::cout << "sender is: " << common::Encode::HexEncode(params.from) << std::endl;
-    std::cout << "receiver is: " << common::Encode::HexEncode(params.to) << std::endl;
-    std::cout << "value is: " << params.value << std::endl;
     evmc_result call_result = {};
     evmc::result evmc_res{ call_result };
     evmc_result* raw_result = (evmc_result*)&evmc_res;
@@ -262,26 +243,28 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
             origin_address_,
             raw_result) != contract::kContractNotExists) {
     } else {
-        auto account_info = block::AccountManager::Instance()->GetAcountInfo(params.code_address);
+        auto account_info = block::AccountManager::Instance()->GetContractInfoByAddress(params.code_address);
         if (account_info != nullptr) {
-            uint32_t address_type = block::kNormalAddress;
-            if (account_info->GetAddressType(&address_type) == block::kBlockSuccess &&
-                    address_type == block::kContractAddress) {
-                Execution exec;
-                ++depth_;
-                int res_status = exec.execute(
-                    params.code_address,
-                    params.data,
-                    params.from,
-                    params.to,
-                    origin_address_,
-                    params.apparent_value,
-                    params.gas,
-                    depth_,
-                    tvm::kJustCall,
-                    *this,
-                    &evmc_res);
+            std::string bytes_code;
+            if (account_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
+                evmc_res.status_code = EVMC_REVERT;
+                return evmc_res;
             }
+
+            Execution exec;
+            ++depth_;
+            int res_status = exec.execute(
+                params.code_address,
+                params.data,
+                params.from,
+                params.to,
+                origin_address_,
+                params.apparent_value,
+                params.gas,
+                depth_,
+                tvm::kJustCall,
+                *this,
+                &evmc_res);
         }
     }
 
@@ -292,7 +275,6 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
         } else {
             std::string from_str = std::string((char*)msg.sender.bytes, sizeof(msg.sender.bytes));
             std::string dest_str = std::string((char*)msg.destination.bytes, sizeof(msg.destination.bytes));
-            std::cout << "transfer from: " << common::Encode::HexEncode(from_str) << ", to: " << common::Encode::HexEncode(dest_str) << ", " << params.value << std::endl;
             auto sender_iter = to_account_value_.find(from_str);
             if (sender_iter == to_account_value_.end()) {
                 to_account_value_[from_str] = std::unordered_map<std::string, uint64_t>();
@@ -312,12 +294,10 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
 }
 
 evmc_tx_context TenonHost::get_tx_context() const noexcept {
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF get_tx_context called!" << std::endl;
     return tx_context_;
 }
 
 evmc::bytes32 TenonHost::get_block_hash(int64_t block_number) const noexcept {
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF get_block_hash called!" << std::endl;
     return block_hash_;
 }
 
@@ -326,7 +306,6 @@ void TenonHost::emit_log(const evmc::address& addr,
                 size_t data_size,
                 const evmc::bytes32 topics[],
                 size_t topics_count) noexcept {
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF emit_log called!" << std::endl;
     recorded_logs_.push_back({ addr, {data, data_size}, {topics, topics + topics_count} });
 }
 

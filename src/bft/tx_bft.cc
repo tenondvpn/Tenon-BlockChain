@@ -958,6 +958,11 @@ int TxBft::BackupNormalCheck(
                 break;
             }
 
+            for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
+                gas_used += (local_tx_ptr->tx.attr(i).key().size() +
+                    local_tx_ptr->tx.attr(i).value().size()) * kKeyValueStorageEachBytes;
+            }
+
             if (from_balance < local_tx_ptr->tx.gas_limit() * tx_info.gas_price()) {
                 if (tx_info.status() != kBftUserSetGasLimitError) {
                     BFT_ERROR("gas_limit error and status ne[%d][%d]!",
@@ -967,11 +972,6 @@ int TxBft::BackupNormalCheck(
 
                 backup_status = tx_info.status();
                 break;
-            }
-
-            for (int32_t i = 0; i < local_tx_ptr->tx.attr_size(); ++i) {
-                gas_used += (local_tx_ptr->tx.attr(i).key().size() +
-                    local_tx_ptr->tx.attr(i).value().size()) * kKeyValueStorageEachBytes;
             }
 
             if (local_tx_ptr->tx.gas_limit() < gas_used) {
@@ -1314,10 +1314,6 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         protobuf::TxInfo tx = tx_vec[i]->tx;
         tx.set_version(common::kTransactionVersion);
         tx.set_status(kBftSuccess);
-        std::cout << "RRRRRRRRRRRR leader create tx: " << tx.balance()
-            << ", gas limit: " << tx.gas_limit()
-            << ", call step: " << tx.call_contract_step()
-            << std::endl;
             // create address must to and have transfer amount
         if (!tx.to_add() || (tx.amount() <= 0 && tx.type() != common::kConsensusCreateContract)) {
             continue;
@@ -1497,17 +1493,17 @@ int TxBft::LeaderAddNormalTransaction(
         do 
         {
             gas_used = kTransferGas;
-            if (from_balance < tx_info->tx.gas_limit()  * tx.gas_price()) {
-                tx.set_status(kBftUserSetGasLimitError);
-                break;
-            }
-
             if (!tx_info->attr_map.empty()) {
                 for (auto iter = tx_info->attr_map.begin();
-                        iter != tx_info->attr_map.end(); ++iter) {
+                    iter != tx_info->attr_map.end(); ++iter) {
                     gas_used += (iter->first.size() + iter->second.size()) *
                         kKeyValueStorageEachBytes;
                 }
+            }
+
+            if (from_balance < tx_info->tx.gas_limit()  * tx.gas_price()) {
+                tx.set_status(kBftUserSetGasLimitError);
+                break;
             }
 
             if (tx.gas_limit() < gas_used) {
@@ -1549,7 +1545,6 @@ int TxBft::LeaderAddNormalTransaction(
         acc_balance_map[tx_info->tx.from()] = from_balance;
         tx.set_balance(from_balance);
         tx.set_gas_used(gas_used);
-        std::cout << "leader create tx block balance is: " << from_balance << std::endl;
     } else {
         if (tx.status() == kBftSuccess) {
             to_balance += tx_info->tx.amount();
@@ -1558,7 +1553,6 @@ int TxBft::LeaderAddNormalTransaction(
         acc_balance_map[tx_info->tx.to()] = to_balance;
         tx.set_balance(to_balance);
         tx.set_gas_used(0);
-        std::cout << "leader create to tx block balance is: " << to_balance << std::endl;
     }
 
     return kBftSuccess;
@@ -1649,13 +1643,6 @@ int TxBft::LeaderCallContractDefault(
         locked_account_map[tx.from()] = true;
     }
 
-    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact default: " << tx_info->tx.type()
-        << ", status: " << tx.status()
-        << ", from_balance: " << from_balance
-        << ", gas_limit: " << tx.gas_limit()
-        << ", gas_used: " << gas_used
-        << ", set_call_contract_step: " << tx.call_contract_step()
-        << std::endl;
     return kBftSuccess;
 }
 
@@ -1902,10 +1889,6 @@ int TxBft::LeaderCallContractExceute(
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
-    std::cout << "CCCCCCCCCCCCCCCCCCC leader execute caller_balance_add add: " << caller_balance_add
-        << ", gas_used: " << gas_used
-        << ", status: " << tx.status()
-        << std::endl;
     acc_balance_map[tx_info->tx.to()] = contract_balance;
     tx.set_balance(contract_balance);
     tx.set_gas_used(0);
@@ -1977,7 +1960,6 @@ int TxBft::CallContract(
         return kBftError;
     }
 
-    std::cout << "MMMMMMMMMMMMMMMMMMMMMM called contract." << common::Encode::HexEncode(bytes_code) << std::endl;
     tvm::Execution exec;
     int exec_res = exec.execute(
         bytes_code,
@@ -2003,7 +1985,6 @@ int TxBft::LeaderCallContractCalled(
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx) {
     // gas just consume by from
-    std::cout << "CCCCCCCCCCCCCCCCCC LeaderCallContractCalled called!" << std::endl;
     uint64_t from_balance = 0;
     int balance_status = GetTempAccountBalance(tx_info->tx.from(), acc_balance_map, &from_balance);
     if (balance_status != kBftSuccess) {
@@ -2012,7 +1993,6 @@ int TxBft::LeaderCallContractCalled(
         return kBftError;
     }
 
-    std::cout << "0 CCCCCCCCCCCCCCCCCC LeaderCallContractCalled called, from_balance: " << from_balance << std::endl;
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info->tx.from());
     if (!account_info->locked()) {
         return kBftError;
@@ -2020,7 +2000,6 @@ int TxBft::LeaderCallContractCalled(
 
     int64_t caller_balance_add = 0;
     uint64_t caller_gas_used = 0;
-    std::cout << "1 CCCCCCCCCCCCCCCCCC LeaderCallContractCalled called!" << std::endl;
     for (int32_t i = 0; i < tx_info->tx.storages_size(); ++i) {
         if (tx_info->tx.storages(i).key() == kContractCallerChangeAmount) {
             caller_balance_add = common::StringUtil::ToInt64(tx_info->tx.storages(i).value());
@@ -2055,13 +2034,6 @@ int TxBft::LeaderCallContractCalled(
     tx.set_balance(from_balance);
     tx.set_gas_used(caller_gas_used);
     tx.set_call_contract_step(contract::kCallStepContractFinal);
-    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact called: " << tx_info->tx.type()
-        << ", status: " << tx.status()
-        << ", storage size: " << tx_info->tx.storages_size()
-        << ", caller_gas_used: " << caller_gas_used
-        << ", caller_balance_add: " << caller_balance_add
-        << ", from_balance: " << from_balance
-        << std::endl;
     return kBftSuccess;
 }
 

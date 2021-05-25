@@ -124,9 +124,6 @@ TEST_F(TestFilterBroadcast, LayerGetNodes) {
     broad_param->set_hop_to_layer(0);
     auto bloomfilter = filter_broad.GetBloomfilter(message);
     auto nodes = filter_broad.GetlayerNodes(base_dht, bloomfilter, message);
-    for (uint32_t i = 0; i < nodes.size(); ++i) {
-        std::cout << nodes[i]->id_hash << " ";
-    }
 }
 
 TEST_F(TestFilterBroadcast, BroadcastingNoOverlap) {

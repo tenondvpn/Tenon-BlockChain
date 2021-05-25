@@ -45,7 +45,6 @@ int Ecrecover::call(
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));
-    std::cout << "ec recover data output: " << common::Encode::HexEncode(addr_sha3) << std::endl;
     return kContractSuccess;
 }
 

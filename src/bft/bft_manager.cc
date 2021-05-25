@@ -243,7 +243,6 @@ void BftManager::HandleRootTxBlock(
         }
 
         db::DbWriteBach db_batch;
-        std::cout << "HandleRootTxBlock add new account called!" << std::endl;
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 tx_bft.to_tx().block().height(),
@@ -937,7 +936,6 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    std::cout << "LeaderBroadcastToAcc called!" << std::endl;
     if (!ThisNodeIsLeader()) {
         return;
     }
@@ -1021,7 +1019,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
         to_leader_broadcast_msg_ = msg;
-        std::cout << "called broadcast to: " << *iter << std::endl;
     }
 
     transport::protobuf::Header msg;

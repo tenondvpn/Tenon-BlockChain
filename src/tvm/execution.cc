@@ -90,9 +90,6 @@ int Execution::execute(
 
         host.create_bytes_code_ = std::string((char*)out_res->output_data, out_res->output_size);
         const auto gas_used = create_msg.gas - out_res->gas_left;
-        std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\ncall mode: " << call_mode << "\n";
-        std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
-        std::cout << "from: " << common::Encode::HexEncode(from_address) << ", to: " << common::Encode::HexEncode(to_address) << std::endl;
         if (call_mode == kJustCreate) {
             return 0;
         }
@@ -110,7 +107,7 @@ int Execution::execute(
     const auto gas_used = msg.gas - out_res->gas_left;
     std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
 
-    if (out_res->status_code == EVMC_SUCCESS || out_res->status_code == EVMC_REVERT)
+    if (out_res->status_code != EVMC_SUCCESS)
         std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
     std::cout << "from: " << common::Encode::HexEncode(from_address) << ", to: " << common::Encode::HexEncode(to_address) << std::endl;
     std::cout << "input: " << common::Encode::HexEncode(str_input) << std::endl;
