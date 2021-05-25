@@ -105,10 +105,6 @@ int Execution::execute(
 
     *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
-
-    if (out_res->status_code != EVMC_SUCCESS)
-        std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
-
     return 0;
 }
 

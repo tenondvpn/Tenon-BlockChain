@@ -958,9 +958,6 @@ public:
 
         uint64_t src_balance = 0;
         {
-            std::cout << "to id: " << common::Encode::HexEncode(to_id)
-                << ", contract address: " << common::Encode::HexEncode(attrs["res_contract_addr"])
-                << std::endl;
             auto to_acc_info = block::AccountManager::Instance()->GetAcountInfo(to_id);
             ASSERT_TRUE(to_acc_info != nullptr);
             src_balance = to_acc_info->balance_;
@@ -1338,7 +1335,6 @@ TEST_F(TestBftManagerForFailCase, TestCallContractGasLimitBiggerThanBalance) {
     auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
     auto from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_FALSE(caller_info->locked());
-    std::cout << "from_balance: " << from_balance << ", gas limit: " << 101llu * common::kTenonMiniTransportUnit * common::GlobalInfo::Instance()->gas_price() << std::endl;
     Transfer(from_prikey, contract_addr, 0, 101llu * common::kTenonMiniTransportUnit,
         common::kConsensusCallContract, true, attrs, &broadcast_msg);
     auto new_from_balance = GetBalanceByPrikey(from_prikey);
