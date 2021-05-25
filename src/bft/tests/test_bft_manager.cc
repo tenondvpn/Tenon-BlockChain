@@ -1035,6 +1035,10 @@ public:
                 transport::protobuf::Header tmp_broadcast_msg;
                 std::cout << "0 create NewAccountDestNetworkTransfer called." << std::endl;
                 NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
+                if (tx_type == common::kConsensusCreateContract) {
+                    transport::protobuf::Header tmp_broadcast_msg2;
+                    NewAccountDestNetworkTransfer(true, tx_type, just_to_id, tmp_broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg2);
+                }
             } else {
                 transport::protobuf::Header tmp_broadcast_msg;
                 std::cout << "1 create NewAccountDestNetworkTransfer called." << std::endl;
@@ -1405,10 +1409,10 @@ TEST_F(TestBftManager, CreateContractOk) {
     }
 
     Transaction(
-        from_prikey, "", amount, all_gas + 1,
+        from_prikey, "", amount, all_gas + 1000000,
         common::kConsensusCreateContract, true, true, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
+    ASSERT_EQ(from_balance, init_balance - (all_gas + 21224) * common::GlobalInfo::Instance()->gas_price());
 }
 
 TEST_F(TestBftManager, TestWithTvm) {

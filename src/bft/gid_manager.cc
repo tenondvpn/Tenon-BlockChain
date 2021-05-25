@@ -18,7 +18,7 @@ std::string GidManager::GetUniversalGid(
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid) {
-    if (tx_type != common::kConsensusCallContract) {
+    if (tx_type != common::kConsensusCallContract && tx_type != common::kConsensusCreateContract) {
         return std::to_string(common::GlobalInfo::Instance()->network_id()) +
             (add_to ? std::string("_t_") : std::string("_")) +
             gid;

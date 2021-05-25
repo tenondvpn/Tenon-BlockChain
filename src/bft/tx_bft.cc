@@ -613,6 +613,10 @@ int TxBft::BackupCheckContractExceute(
         }
 
         backup_storage_size += 2;  // add add_amount and gas_used
+        if (tx_info.type() == common::kConsensusCreateContract) {
+            backup_storage_size += 1;  // add contract kContractCreatedBytesCode
+        }
+
         if (backup_storage_size != (uint32_t)tx_info.storages_size()) {
             BFT_ERROR("backup_storage_size[%u] != (uint32_t)tx_info.storages_size()[%d]",
                 backup_storage_size, tx_info.storages_size());
@@ -622,7 +626,8 @@ int TxBft::BackupCheckContractExceute(
         // storage just caller can add
         for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
             if (tx_info.storages(i).key() == kContractCallerChangeAmount ||
-                    tx_info.storages(i).key() == kContractCallerGasUsed) {
+                    tx_info.storages(i).key() == kContractCallerGasUsed ||
+                    tx_info.storages(i).key() == kContractCreatedBytesCode) {
                 continue;
             }
 
@@ -1312,7 +1317,8 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         protobuf::TxInfo tx = tx_vec[i]->tx;
         tx.set_version(common::kTransactionVersion);
         tx.set_status(kBftSuccess);
-        // create address must to and have transfer amount
+        std::cout << "RRRRRRRRRRRR leader create tx: " << tx.balance() << ", gas limit: " << tx.gas_limit() << std::endl;
+            // create address must to and have transfer amount
         if (!tx.to_add() || (tx.amount() <= 0 && tx.type() != common::kConsensusCreateContract)) {
             continue;
         }
@@ -1728,6 +1734,8 @@ int TxBft::LeaderCallContractDefault(
     std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact default: " << tx_info->tx.type()
         << ", status: " << tx.status()
         << ", from_balance: " << from_balance
+        << ", gas_limit: " << tx.gas_limit()
+        << ", gas_used: " << gas_used
         << std::endl;
     return kBftSuccess;
 }
@@ -2124,7 +2132,11 @@ int TxBft::LeaderCallContractCalled(
     tx.set_balance(from_balance);
     tx.set_gas_used(caller_gas_used);
     tx.set_call_contract_step(contract::kCallStepContractFinal);
-    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact called: " << tx_info->tx.type() << ", status: " << tx.status() << std::endl;
+    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact called: " << tx_info->tx.type()
+        << ", status: " << tx.status()
+        << ", storage size: " << tx_info->tx.storages_size()
+        << ", caller_gas_used: " << caller_gas_used
+        << std::endl;
     return kBftSuccess;
 }
 
