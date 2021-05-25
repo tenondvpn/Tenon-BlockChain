@@ -1203,13 +1203,13 @@ TEST_F(TestBftManager, RootCreateNewAccount) {
     Transaction(
         from_prikey, to_prikey, amount, 1000000,
         common::kConsensusTransaction, true, false, attrs);
-    for (uint32_t i = 0; i < 10; ++i) {
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        Transaction(
-            from_prikey, to_prikey, amount, 1000000,
-            common::kConsensusTransaction, true, false, attrs);
-    }
+//     for (uint32_t i = 0; i < 10; ++i) {
+//         all_amount += amount;
+//         all_gas += bft::kTransferGas;
+//         Transaction(
+//             from_prikey, to_prikey, amount, 1000000,
+//             common::kConsensusTransaction, true, false, attrs);
+//     }
 
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);
@@ -1412,7 +1412,9 @@ TEST_F(TestBftManager, CreateContractOk) {
         from_prikey, "", amount, all_gas + 1000000,
         common::kConsensusCreateContract, true, true, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(from_balance, init_balance - (all_gas + 21224) * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(from_balance, init_balance - (all_gas + 21224 - bft::kTransferGas) * common::GlobalInfo::Instance()->gas_price() - all_amount);
+    auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(attrs["res_contract_addr"]);
+    ASSERT_EQ(contract_info->balance_, all_amount);
 }
 
 TEST_F(TestBftManager, TestWithTvm) {

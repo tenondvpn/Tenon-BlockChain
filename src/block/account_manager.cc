@@ -328,7 +328,8 @@ int AccountManager::UpdateAccountInfo(
         account_id = tx_info.from();
     }
 
-    if (tx_info.type() == common::kConsensusCallContract) {
+    if (tx_info.type() == common::kConsensusCallContract ||
+            tx_info.type() == common::kConsensusCreateContract) {
         switch (tx_info.call_contract_step()) {
         case contract::kCallStepCallerInited:
             account_id = tx_info.from();
@@ -410,7 +411,9 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
     
-    if (tx_info.status() == bft::kBftSuccess && tx_info.type() == common::kConsensusCallContract) {
+    if (tx_info.status() == bft::kBftSuccess &&
+            (tx_info.type() == common::kConsensusCallContract ||
+            tx_info.type() == common::kConsensusCreateContract)) {
         if (tx_info.call_contract_step() == contract::kCallStepCallerInited) {
             account_info->LockAccount();
         }
