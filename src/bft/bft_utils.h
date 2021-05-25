@@ -150,6 +150,7 @@ static const std::string kContractAddress = "__caddress";
 static const std::string kContractBytesCode = "__cbytescode";
 static const std::string kContractCreatedBytesCode = "__cbytescode_created";
 static const std::string kContractInputCode = "__cinput";
+static const std::string kContractCallerbalance = "__ccontractcallerbalance";
 static const std::string kContractCallerChangeAmount = "__ccontractcallerchangeamount";
 static const std::string kContractCallerGasUsed = "__ccontractcallergasused";
 

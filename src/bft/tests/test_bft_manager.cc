@@ -863,12 +863,8 @@ public:
             std::string bytes_code;
             std::string owner;
             ASSERT_EQ(contract_addr_info->GetAddressType(&address_type), block::kBlockSuccess);
-            ASSERT_EQ(contract_addr_info->GetBytesCode(&bytes_code), block::kBlockSuccess);
-//             ASSERT_EQ(contract_addr_info->GetAttrValue(block::kFieldContractOwner, &owner), block::kBlockSuccess);
             ASSERT_EQ(address_type, block::kContractAddress);
-//             ASSERT_EQ(block::UnicastAddress(owner), tx_bft.to_tx().block().tx_list(0).from());
             attrs["res_contract_addr"] = contract_address;
-            return;
         }
 
         usleep(bft::kBftStartDeltaTime);
@@ -946,13 +942,20 @@ public:
         }
 
         // commit
-        std::string to_id = GetIdByPrikey(to_prikey);
-        if (just_to_id) {
+        std::string to_id;
+        if (just_to_id && !to_prikey.empty()) {
             to_id = to_prikey;
+        } else if (tx_type == common::kConsensusCreateContract) {
+            to_id = attrs["res_contract_addr"];
+        }  else {
+            to_id = GetIdByPrikey(to_prikey);
         }
 
         uint64_t src_balance = 0;
         {
+            std::cout << "to id: " << common::Encode::HexEncode(to_id)
+                << ", contract address: " << common::Encode::HexEncode(attrs["res_contract_addr"])
+                << std::endl;
             auto to_acc_info = block::AccountManager::Instance()->GetAcountInfo(to_id);
             ASSERT_TRUE(to_acc_info != nullptr);
             src_balance = to_acc_info->balance_;
@@ -1026,12 +1029,15 @@ public:
             uint32_t des_network_id = dht::DhtKeyManager::DhtKeyGetNetId(broadcast_msg.des_dht_key());
             if (des_network_id == network::kRootCongressNetworkId) {
                 transport::protobuf::Header to_root_broadcast_msg;
+                std::cout << "create account called." << std::endl;
                 CreateNewAccount(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
                 transport::protobuf::Header tmp_broadcast_msg;
+                std::cout << "0 create NewAccountDestNetworkTransfer called." << std::endl;
                 NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
             } else {
                 transport::protobuf::Header tmp_broadcast_msg;
+                std::cout << "1 create NewAccountDestNetworkTransfer called." << std::endl;
                 NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
             }
         }
@@ -1386,7 +1392,7 @@ TEST_F(TestBftManager, CreateContractOk) {
     uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
     uint64_t all_gas = 0;
     all_amount += amount;
-    all_gas += bft::kTransferGas;
+    all_gas += bft::kTransferGas + bft::kCallContractDefaultUseGas;
     std::map<std::string, std::string> attrs;
     attrs.insert(std::make_pair(kContractBytesCode, receive_pays));
     all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size())*
@@ -1400,7 +1406,7 @@ TEST_F(TestBftManager, CreateContractOk) {
 
     Transaction(
         from_prikey, "", amount, all_gas + 1,
-        common::kConsensusCreateContract, true, false, attrs);
+        common::kConsensusCreateContract, true, true, attrs);
     from_balance = GetBalanceByPrikey(from_prikey);
     ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
 }

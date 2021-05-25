@@ -249,8 +249,13 @@ int TxBft::BackupCheckPrepare(std::string& bft_str) {
             return tmp_res;
         }
 
-        if (local_tx_info->tx.type() != common::kConsensusCallContract) {
-            int check_res = BackupNormalCheck(local_tx_info, tx_info, locked_account_map, acc_balance_map);
+        if (local_tx_info->tx.type() != common::kConsensusCallContract &&
+                local_tx_info->tx.type() != common::kConsensusCreateContract) {
+            int check_res = BackupNormalCheck(
+                local_tx_info,
+                tx_info,
+                locked_account_map,
+                acc_balance_map);
             if (check_res != kBftSuccess) {
                 BFT_ERROR("BackupNormalCheck failed!");
                 return check_res;
@@ -384,6 +389,26 @@ int TxBft::BackupCheckContractDefault(
         backup_status = tx_info.status();
     }
 
+    bool from_balance_storage_valid = false;
+    if (tx_info.status() == kBftSuccess) {
+        for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+            if (tx_info.storages(i).key() == kContractCallerbalance) {
+                if (from_balance != common::StringUtil::ToUint64(tx_info.storages(i).value())) {
+                    BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
+                    return kBftLeaderInfoInvalid;
+                }
+
+                from_balance_storage_valid = true;
+                break;
+            }
+        }
+    }
+
+    if (!from_balance_storage_valid) {
+        BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
+        return kBftLeaderInfoInvalid;
+    }
+
     if (tx_info.balance() != from_balance) {
         BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
         return kBftLeaderInfoInvalid;
@@ -425,7 +450,7 @@ int TxBft::BackupCheckContractExceute(
 
     uint64_t gas_used = 0;
     // gas just consume by from
-    uint64_t caller_balance = local_tx_ptr->tx.balance();
+    uint64_t caller_balance = 0;
     uint64_t contract_balance = 0;
     auto local_tx_info = DispatchPool::Instance()->GetTx(
         pool_index(),
@@ -440,6 +465,23 @@ int TxBft::BackupCheckContractExceute(
     int backup_status = kBftSuccess;
     do
     {
+        bool call_balance_valid = false;
+        for (int32_t i = 0; i < local_tx_info->tx.storages_size(); ++i) {
+            if (local_tx_info->tx.storages(i).key() == kContractCallerbalance) {
+                caller_balance = common::StringUtil::ToUint64(local_tx_info->tx.storages(i).value());
+                call_balance_valid = true;
+                break;
+            }
+        }
+
+        if (!call_balance_valid) {
+            if (tx_info.status() != kBftAccountBalanceError) {
+                return kBftLeaderInfoInvalid;
+            }
+
+            backup_status = tx_info.status();
+            break;
+        }
         int balance_status = GetTempAccountBalance(
             local_tx_ptr->tx.to(),
             acc_balance_map,
@@ -1708,6 +1750,16 @@ int TxBft::LeaderCallContractDefault(
         locked_account_map[tx.from()] = true;
     }
 
+    if (tx.status() == kBftSuccess) {
+        auto caller_balance_storage = tx.add_storages();
+        caller_balance_storage->set_key(kContractCallerbalance);
+        caller_balance_storage->set_value(from_balance);
+    }
+
+    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact default: " << tx_info->tx.type()
+        << ", status: " << tx.status()
+        << ", from_balance: " << from_balance
+        << std::endl;
     return kBftSuccess;
 }
 
@@ -1750,7 +1802,7 @@ int TxBft::LeaderCallContractExceute(
         protobuf::TxInfo& tx) {
     uint64_t gas_used = 0;
     // gas just consume by from
-    uint64_t caller_balance = tx_info->tx.balance();
+    uint64_t caller_balance = 0;
     uint64_t contract_balance = 0;
     int balance_status = GetTempAccountBalance(
         tx_info->tx.to(),
@@ -1768,6 +1820,20 @@ int TxBft::LeaderCallContractExceute(
     InitTenonTvmContext(tenon_host);
     do
     {
+        bool call_balance_valid = false;
+        for (int32_t i = 0; i < tx_info->tx.storages_size(); ++i) {
+            if (tx_info->tx.storages(i).key() == kContractCallerbalance) {
+                caller_balance = common::StringUtil::ToUint64(tx_info->tx.storages(i).value());
+                call_balance_valid = true;
+                break;
+            }
+        }
+
+        if (!call_balance_valid) {
+            tx.set_status(kBftAccountBalanceError);
+            break;
+        }
+
         if (caller_balance < tx_info->tx.gas_limit() * tx.gas_price()) {
             BFT_ERROR("caller_balance: %lu <= tx_info->tx.gas_limit() * tx.gas_price(): %lu ",
                 caller_balance, tx_info->tx.gas_limit() * tx.gas_price());
@@ -1953,7 +2019,7 @@ int TxBft::LeaderCallContractExceute(
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
-    std::cout << "leader execute caller_balance_add add: " << caller_balance_add
+    std::cout << "CCCCCCCCCCCCCCCCCCC leader execute caller_balance_add add: " << caller_balance_add
         << ", gas_used: " << gas_used
         << ", status: " << tx.status()
         << std::endl;
@@ -2103,6 +2169,7 @@ int TxBft::LeaderCallContractCalled(
     tx.set_balance(from_balance);
     tx.set_gas_used(caller_gas_used);
     tx.set_call_contract_step(contract::kCallStepContractFinal);
+    std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCC leader call contact called: " << tx_info->tx.type() << ", status: " << tx.status() << std::endl;
     return kBftSuccess;
 }
 

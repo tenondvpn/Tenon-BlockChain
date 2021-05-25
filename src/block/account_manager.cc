@@ -182,6 +182,7 @@ int AccountManager::AddNewAccount(
     }
 
     std::string account_id = tx_info.to();
+    std::cout << "0 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
     block::DbAccountInfo* account_info = nullptr;
     auto iter = acc_map_.find(account_id);
@@ -189,14 +190,17 @@ int AccountManager::AddNewAccount(
         return kBlockSuccess;
     }
 
+    std::cout << "1 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     if (block::DbAccountInfo::AccountExists(account_id)) {
         return kBlockSuccess;
     }
 
+    std::cout << "2 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     if (tx_info.amount() == 0 && tx_info.type() != common::kConsensusCreateContract) {
         return kBlockSuccess;
     }
 
+    std::cout << "3 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     account_info = new block::DbAccountInfo(account_id);
     if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
         BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
@@ -208,12 +212,14 @@ int AccountManager::AddNewAccount(
     account_info->NewHeight(tmp_now_height, db_batch);
     int res = account_info->SetBalance(0, db_batch);
     res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
+    std::cout << "4 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     if (res != 0) {
         BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
             common::Encode::HexEncode(account_id).c_str());
         return kBlockError;
     }
 
+    std::cout << "5 TTTTTTTTTTTTTT tx_info.type(): " << tx_info.type() << ", address: " << common::Encode::HexEncode(account_id) << std::endl;
     if (tx_info.type() == common::kConsensusCreateContract) {
         res += account_info->SetAddressType(kContractAddress, db_batch);
         for (int32_t i = 0; i < tx_info.storages_size(); ++i) {

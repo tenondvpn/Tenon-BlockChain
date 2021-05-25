@@ -243,6 +243,7 @@ void BftManager::HandleRootTxBlock(
         }
 
         db::DbWriteBach db_batch;
+        std::cout << "HandleRootTxBlock add new account called!" << std::endl;
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 tx_bft.to_tx().block().height(),
@@ -256,10 +257,8 @@ void BftManager::HandleRootTxBlock(
             exit(0);
         }
 
-        if (tx_list[i].type() == common::kConsensusTransaction) {
-            if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
-                BFT_ERROR("dispatch pool failed!");
-            }
+        if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
+            BFT_ERROR("dispatch pool failed!");
         }
     }
 
