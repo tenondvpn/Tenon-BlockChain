@@ -1659,9 +1659,6 @@ TEST_F(TestBftManager, TestExecution) {
         ASSERT_EQ(res.status_code, EVMC_SUCCESS);
         ASSERT_EQ(tenon_host.accounts_.size(), 0);
         ASSERT_EQ(tenon_host.to_account_value_.size(), 1);
-
-        auto iter = tenon_host.to_account_value_.begin();
-        auto sec_iter = iter->second.begin();
     }
 }
 
@@ -2670,7 +2667,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
         4000, 3000, 2000, 6000, 7000
     };
 
-    for (int32_t i = 0; i < bider1_vec.size(); ++i) {
+    for (uint32_t i = 0; i < bider1_vec.size(); ++i) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode("0348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
         std::map<std::string, std::string> attrs;
@@ -2722,7 +2719,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
     std::vector<uint64_t> bider2_values_vec = {
         5000, 6000, 7000, 6000, 4000
     };
-    for (int32_t i = 0; i < bider2_vec.size(); ++i) {
+    for (uint32_t i = 0; i < bider2_vec.size(); ++i) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode("1348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
         std::map<std::string, std::string> attrs;
@@ -2773,7 +2770,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
         3000 + 2000 + 7000,
         5000 + 6000 + 6000 + 4000,
     };
-    for (int32_t i = 0; i < reveal_vec.size(); ++i) {
+    for (uint32_t i = 0; i < reveal_vec.size(); ++i) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode(std::to_string(i) + "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
         std::map<std::string, std::string> attrs;
@@ -2824,7 +2821,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
         0
     };
 
-    for (int32_t i = 0; i < reveal_vec.size(); ++i) {
+    for (uint32_t i = 0; i < reveal_vec.size(); ++i) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode(std::to_string(i) + "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
         std::map<std::string, std::string> attrs;

@@ -105,12 +105,9 @@ int Execution::execute(
 
     *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
-    std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n";
 
     if (out_res->status_code != EVMC_SUCCESS)
         std::cout << "Output:   " << evmc::hex(out_res->output_data, out_res->output_size) << "\n";
-    std::cout << "from: " << common::Encode::HexEncode(from_address) << ", to: " << common::Encode::HexEncode(to_address) << std::endl;
-    std::cout << "input: " << common::Encode::HexEncode(str_input) << std::endl;
 
     return 0;
 }
