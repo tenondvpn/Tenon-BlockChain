@@ -1098,7 +1098,6 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
                 &pool_height,
                 &pool_hash,
                 &tm);
-        std::cout << "pool_idx: " << pool_index() << ", height: " << pool_height << ", CheckBlockInfo " << __FILE__ << ":" << __LINE__ << std::endl;
         if (res != block::kBlockSuccess) {
             BFT_ERROR("GetBlockInfo failed!");
             return kBftBlockHashError;
@@ -1270,7 +1269,6 @@ int TxBft::CheckTxInfo(
         &pool_height,
         &pool_hash,
         &tm);
-    std::cout << "pool_idx: " << pool_index() << ", height: " << pool_height << ", CheckBlockInfo " << __FILE__ << ":" << __LINE__ << std::endl;
     if (res != block::kBlockSuccess) {
         BFT_ERROR("get account block info failed!");
         return kBftBlockHeightError;
@@ -1356,7 +1354,6 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
         &pool_height,
         &pool_hash,
         &tm);
-    std::cout << "pool_idx: " << pool_index() << ", height: " << pool_height << ", CheckBlockInfo " << __FILE__ << ":" << __LINE__ << std::endl;
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1444,7 +1441,6 @@ void TxBft::LeaderCreateTxBlock(
         &pool_height,
         &pool_hash,
         &tm);
-    std::cout << "pool_idx: " << pool_index() << ", height: " << pool_height << ", CheckBlockInfo " << __FILE__ << ":" << __LINE__ << std::endl;
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1608,8 +1604,6 @@ int TxBft::LeaderCallContractDefault(
             kKeyValueStorageEachBytes;
     }
 
-    std::cout << "LeaderCallContractDefault gas_used: " << gas_used << std::endl;
-
     // at least kCallContractDefaultUseGas + kTransferGas to call contract.
     if (from_balance < tx.gas_limit() * tx.gas_price() ||
             from_balance <= (gas_used + kTransferGas) * tx.gas_price() ||
@@ -1655,7 +1649,6 @@ int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
         &last_height,
         &pool_hash,
         &tm);
-    std::cout << "pool_idx: " << pool_index() << ", height: " << last_height << ", CheckBlockInfo " << __FILE__ << ":" << __LINE__ << std::endl;
     if (res != block::kBlockSuccess) {
         assert(false);
         return kBftError;
@@ -1753,9 +1746,7 @@ int TxBft::LeaderCallContractExceute(
                 tx_info->attr_map[kContractBytesCode],
                 &tenon_host,
                 &res);
-            std::cout << "create contract gas_used: " << gas_used << ", tx.gas_limit(): " << tx.gas_limit() << ", res.gas_left: " << res.gas_left << std::endl;
             gas_used += tx.gas_limit() - gas_used - res.gas_left;
-            std::cout << "gas_used: " << gas_used << std::endl;
             if (call_res != kBftSuccess) {
                 tx.set_status(kBftCreateContractKeyError);
                 break;
@@ -1890,7 +1881,6 @@ int TxBft::LeaderCallContractExceute(
     auto gas_limit_attr = tx.add_storages();
     gas_limit_attr->set_key(kContractCallerGasUsed);
     gas_limit_attr->set_value(std::to_string(gas_used));
-    std::cout << "add storage kContractCallerGasUsed: " << gas_used << std::endl;
     acc_balance_map[tx_info->tx.to()] = contract_balance;
     tx.set_balance(contract_balance);
     tx.set_gas_used(0);
@@ -2019,9 +2009,6 @@ int TxBft::LeaderCallContractCalled(
         }
 
         if (tx_info->tx.storages(i).key() == kContractCallerGasUsed) {
-            std::cout << "LeaderCallContractCalled kContractCallerGasUsed: " << kContractCallerGasUsed
-                << ", from_balance: " << from_balance
-                << ", value: " << tx_info->tx.storages(i).value() << ", gas price: " << tx_info->tx.gas_price() <<  std::endl;
             caller_gas_used = common::StringUtil::ToUint64(tx_info->tx.storages(i).value());
             if (from_balance >= caller_gas_used * tx_info->tx.gas_price()) {
                 from_balance -= caller_gas_used * tx_info->tx.gas_price();

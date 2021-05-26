@@ -398,7 +398,6 @@ int AccountManager::UpdateAccountInfo(
 
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t pool_idx = common::GetPoolIndex(account_id);
-        std::cout << "pool_idx: " << pool_idx << ", exist_height: " << exist_height << ", tmp_now_height: " << tmp_now_height << ", balance: " << tx_info.balance() << std::endl;
         if (exist_height <= tmp_now_height) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }

@@ -132,11 +132,6 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
 
             pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
-            // caller called and now contract execute contract
-            if (!CheckCallContractAddressValid(tx_ptr->tx.to())) {
-                return kBftError;
-            }
-
             pool_index = common::GetPoolIndex(tx_ptr->tx.to());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
             // just contract's network handle this message and unlock it
