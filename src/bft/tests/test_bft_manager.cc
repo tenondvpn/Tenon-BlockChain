@@ -1198,13 +1198,13 @@ TEST_F(TestBftManager, RootCreateNewAccount) {
     Transaction(
         from_prikey, to_prikey, amount, 1000000,
         common::kConsensusTransaction, true, false, attrs);
-//     for (uint32_t i = 0; i < 10; ++i) {
-//         all_amount += amount;
-//         all_gas += bft::kTransferGas;
-//         Transaction(
-//             from_prikey, to_prikey, amount, 1000000,
-//             common::kConsensusTransaction, true, false, attrs);
-//     }
+    for (uint32_t i = 0; i < 10; ++i) {
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+    }
 
     from_balance = GetBalanceByPrikey(from_prikey);
     to_balance = GetBalanceByPrikey(to_prikey);

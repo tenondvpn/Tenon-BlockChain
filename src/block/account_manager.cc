@@ -112,7 +112,32 @@ int AccountManager::AddBlockItem(
     // one block must be one consensus pool
     uint32_t consistent_pool_index = common::kImmutablePoolSize;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        std::string account_id;
+        if (tx_list[i].to_add()) {
+            account_id = tx_list[i].to();
+        } else {
+            account_id = tx_list[i].from();
+        }
+
+        if (tx_list[i].type() == common::kConsensusCallContract ||
+            tx_list[i].type() == common::kConsensusCreateContract) {
+            switch (tx_list[i].call_contract_step()) {
+            case contract::kCallStepCallerInited:
+                account_id = tx_list[i].from();
+                break;
+            case contract::kCallStepContractCalled:
+                account_id = tx_list[i].to();
+                break;
+            case contract::kCallStepContractFinal:
+                account_id = tx_list[i].from();
+                break;
+            default:
+                break;
+            }
+        }
+
         if (UpdateAccountInfo(
+                account_id,
                 tx_list[i],
                 block_item.height(),
                 block_item.timestamp(),
@@ -125,37 +150,39 @@ int AccountManager::AddBlockItem(
             continue;
         }
 
-        if (tx_list[i].to_add()) {
-            uint32_t pool_idx = common::GetPoolIndex(tx_list[i].to());
-            if (consistent_pool_index == common::kImmutablePoolSize) {
-                consistent_pool_index = pool_idx;
-            }
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
+        if (consistent_pool_index == common::kImmutablePoolSize) {
+            consistent_pool_index = pool_idx;
+        }
 
-            if (consistent_pool_index != pool_idx) {
-                BLOCK_ERROR("block pool index not consistent[%u][%u]",
-                    consistent_pool_index, pool_idx);
-                assert(false);
-                exit(0);
-            }
+        if (consistent_pool_index != pool_idx) {
+            BLOCK_ERROR("block pool index not consistent[%u][%u][%s]",
+                consistent_pool_index, pool_idx,
+                common::Encode::HexEncode(account_id).c_str());
+            assert(false);
+            exit(0);
+        }
 
-            std::string tx_gid = common::GetTxDbKey(false, tx_list[i].gid());
-            db_batch.Put(tx_gid, block_item.hash());
-        } else {
-            uint32_t pool_idx = common::GetPoolIndex(tx_list[i].from());
-            if (consistent_pool_index == common::kImmutablePoolSize) {
-                consistent_pool_index = pool_idx;
+        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+            std::string account_gid;
+            if (tx_list[i].type() != common::kConsensusCallContract &&
+                    tx_list[i].type() != common::kConsensusCreateContract) {
+                if (tx_list[i].to_add()) {
+                    account_gid = tx_list[i].to() + tx_list[i].gid();
+                } else {
+                    account_gid = tx_list[i].from() + tx_list[i].gid();
+                }
+            } else {
+                if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
+                    account_gid = tx_list[i].to() + tx_list[i].gid();
+                } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
+                    account_gid = tx_list[i].from() + tx_list[i].gid();
+                }
             }
-
-            if (consistent_pool_index != pool_idx) {
-                BLOCK_ERROR("block pool index not consistent[%u][%u][%s]",
-                    consistent_pool_index, pool_idx,
-                    common::Encode::HexEncode(tx_list[i].from()).c_str());
-                assert(false);
-                exit(0);
+            
+            if (!account_gid.empty()) {
+                db_batch.Put(account_gid, block_item.hash());
             }
-
-            std::string tx_gid = common::GetTxDbKey(true, tx_list[i].gid());
-            db_batch.Put(tx_gid, block_item.hash());
         }
     }
 
@@ -304,6 +331,7 @@ int AccountManager::GenesisAddAccountInfo(
 }
 
 int AccountManager::UpdateAccountInfo(
+        const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         uint64_t tmp_now_height,
         uint64_t timestamp,
@@ -312,30 +340,6 @@ int AccountManager::UpdateAccountInfo(
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract) {
             return kBlockSuccess;
-        }
-    }
-
-    std::string account_id;
-    if (tx_info.to_add()) {
-        account_id = tx_info.to();
-    } else {
-        account_id = tx_info.from();
-    }
-
-    if (tx_info.type() == common::kConsensusCallContract ||
-            tx_info.type() == common::kConsensusCreateContract) {
-        switch (tx_info.call_contract_step()) {
-        case contract::kCallStepCallerInited:
-            account_id = tx_info.from();
-            break;
-        case contract::kCallStepContractCalled:
-            account_id = tx_info.to();
-            break;
-        case contract::kCallStepContractFinal:
-            account_id = tx_info.from();
-            break;
-        default:
-            break;
         }
     }
 
@@ -534,7 +538,8 @@ int AccountManager::GetBlockInfo(
         }
 
         network_block_[pool_idx] = db_pool_info;
-        return network_block_[pool_idx]->GetHash(hash);
+        int res = network_block_[pool_idx]->GetHash(hash);
+        return res;
     }
 
     int res = network_block_[pool_idx]->GetHeight(height);
@@ -543,7 +548,8 @@ int AccountManager::GetBlockInfo(
         return res;
     }
 
-    return network_block_[pool_idx]->GetHash(hash);
+    res = network_block_[pool_idx]->GetHash(hash);
+    return res;
 }
 
 void AccountManager::SetPool(

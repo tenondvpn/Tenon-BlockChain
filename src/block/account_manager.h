@@ -40,6 +40,7 @@ private:
     AccountManager();
     ~AccountManager();
     int UpdateAccountInfo(
+        const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         uint64_t now_height,
         uint64_t timestamp,
