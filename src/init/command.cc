@@ -404,8 +404,7 @@ void Command::AddBaseCommands() {
                 common::StringUtil::ToUint32(args[0]),
                 &pool_height,
                 &pool_hash,
-                &tm,
-                &last_pool_idx);
+                &tm);
             if (res != block::kBlockSuccess) {
                 return;
             }

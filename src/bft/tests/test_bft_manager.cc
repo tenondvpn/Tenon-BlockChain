@@ -205,8 +205,7 @@ public:
                 iter->first,
                 &pool_height,
                 &pool_hash,
-                &tm,
-                &last_pool_idx);
+                &tm);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 0);
             ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
@@ -388,8 +387,7 @@ public:
             pool_index,
             &pool_height,
             &pool_hash,
-            &tm,
-            &last_pool_idx);
+            &tm);
         if (res != block::kBlockSuccess) {
             assert(false);
             return;
@@ -1536,6 +1534,7 @@ TEST_F(TestBftManager, TestExecution) {
         std::string from_prikey = common::Encode::HexDecode(
             "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
         uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        std::cout << "init_balance: " << init_balance << std::endl;
         uint64_t all_amount = 0;
         uint64_t amount = 0;
         uint64_t all_gas = 0;
@@ -1544,6 +1543,7 @@ TEST_F(TestBftManager, TestExecution) {
         attrs.insert(std::make_pair(kContractBytesCode, receive_pays));
         all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size()) *
             bft::kKeyValueStorageEachBytes;
+        std::cout << "all_gas: " << all_gas << std::endl;
         Transaction(
             from_prikey,
             "",
@@ -1554,6 +1554,7 @@ TEST_F(TestBftManager, TestExecution) {
             true,
             attrs);
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+        std::cout << "from_balance: " << from_balance << std::endl;
         ASSERT_EQ(from_balance, init_balance - (all_gas + 21224) * common::GlobalInfo::Instance()->gas_price() - all_amount);
         contract_addr = attrs["res_contract_addr"];
     }

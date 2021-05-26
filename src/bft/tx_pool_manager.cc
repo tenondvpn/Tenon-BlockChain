@@ -104,9 +104,26 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         return kBftError;
     }
 
+    if (!tx_ptr->tx.to().empty()) {
+        auto from_account = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
+        if (from_account == nullptr) {
+            return kBftError;
+        }
+
+        uint64_t balance = 0;
+        if (from_account->GetBalance(&balance) != block::kBlockSuccess) {
+            return kBftError;
+        }
+
+        if (balance <= 0 || balance >= common::kTenonMaxAmount) {
+            return kBftError;
+        }
+    }
+
     // call contract and init
     uint32_t pool_index = common::kInvalidPoolIndex;
-    if (tx_ptr->tx.type() == common::kConsensusCallContract) {
+    if (tx_ptr->tx.type() == common::kConsensusCallContract ||
+            tx_ptr->tx.type() == common::kConsensusCreateContract) {
         if (tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
             // caller network to consensus and consume gas, no balance will fail
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
@@ -247,8 +264,7 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
                 i,
                 &pool_height,
                 &pool_hash,
-                &tm,
-                &last_pool_index);
+                &tm);
             if (res != block::kBlockSuccess) {
                 BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                     "tx_pool_.empty(): %u, res: %d",
@@ -274,8 +290,7 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
                     i,
                     &pool_height,
                     &pool_hash,
-                    &tm,
-                    &last_pool_index);
+                    &tm);
                 if (res != block::kBlockSuccess) {
                     BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                         "tx_pool_.empty(): %u, res: %d",

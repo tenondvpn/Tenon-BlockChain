@@ -86,6 +86,20 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     // (TODO): check sign for gid
     assert(tx_bft.has_new_tx());
     auto tx_ptr = std::make_shared<TxItem>(tx_bft.new_tx());
+    auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
+    if (account_info == nullptr) {
+        return kBftError;
+    }
+
+    uint64_t balance = 0;
+    if (account_info->GetBalance(&balance) != block::kBlockSuccess) {
+        return kBftError;
+    }
+
+    if (balance < 0 || balance >= common::kTenonMaxAmount) {
+        return kBftError;
+    }
+
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
         BFT_ERROR("gid invalid.[%s]", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return kBftError;

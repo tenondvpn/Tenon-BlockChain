@@ -338,7 +338,8 @@ int AccountManager::UpdateAccountInfo(
         const std::string& hash,
         db::DbWriteBach& db_batch) {
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
-        if (tx_info.type() != common::kConsensusCallContract) {
+        if (tx_info.type() != common::kConsensusCallContract &&
+                tx_info.type() != common::kConsensusCreateContract) {
             return kBlockSuccess;
         }
     }
@@ -396,6 +397,8 @@ int AccountManager::UpdateAccountInfo(
     }
 
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
+        std::cout << "pool_idx: " << pool_idx << ", exist_height: " << exist_height << ", tmp_now_height: " << tmp_now_height << ", balance: " << tx_info.balance() << std::endl;
         if (exist_height <= tmp_now_height) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }
@@ -526,8 +529,7 @@ int AccountManager::GetBlockInfo(
         uint32_t pool_idx,
         uint64_t* height,
         std::string* hash,
-        uint64_t* tm,
-        uint32_t* pool_index) {
+        uint64_t* tm) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_idx] == nullptr) {
         auto db_pool_info = new block::DbPoolInfo(pool_idx);

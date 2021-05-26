@@ -972,8 +972,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             continue;
         }
 
-        if ((tx_list[i].has_to() && !tx_list[i].to_add()) ||
-                tx_list[i].type() == common::kConsensusCreateContract) {
+        if (tx_list[i].has_to() && !tx_list[i].to_add() &&
+                tx_list[i].type() != common::kConsensusCallContract &&
+                tx_list[i].type() != common::kConsensusCreateContract) {
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
                 tx_list[i].to());
             uint32_t network_id = network::kRootCongressNetworkId;
@@ -984,7 +985,8 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             broadcast_nets.insert(network_id);
         }
 
-        if (tx_list[i].type() == common::kConsensusCallContract) {
+        if (tx_list[i].type() == common::kConsensusCallContract ||
+                tx_list[i].type() == common::kConsensusCreateContract) {
             std::string id = "";
             if (tx_list[i].call_contract_step() == contract::kCallStepCallerInited) {
                 id = tx_list[i].to();

@@ -109,8 +109,8 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
 
                 res_vec.push_back(iter->second);
-                BFT_ERROR("get tx [to: %d] [pool idx: %d] type: %d,"
-                    "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!",
+                printf("get tx [to: %d] [pool idx: %d] type: %d,"
+                    "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
                     iter->second->tx.to_add(),
                     pool_index_,
                     iter->second->tx.type(),

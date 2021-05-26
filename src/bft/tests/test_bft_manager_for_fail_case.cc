@@ -205,8 +205,7 @@ public:
                 iter->first,
                 &pool_height,
                 &pool_hash,
-                &tm,
-                &last_pool_idx);
+                &tm);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 0);
             ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
@@ -388,8 +387,7 @@ public:
             pool_index,
             &pool_height,
             &pool_hash,
-            &tm,
-            &last_pool_idx);
+            &tm);
         if (res != block::kBlockSuccess) {
             assert(false);
             return;
