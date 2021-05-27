@@ -40,6 +40,7 @@ public:
     MembersPtr GetNetworkMembers(uint32_t network_id);
     BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
     BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
+    uint32_t GetMemberCount(uint32_t network_id);
 
 private:
     MemberManager();

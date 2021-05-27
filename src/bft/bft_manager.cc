@@ -93,7 +93,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         bft_ptr->set_randm_num(bft_msg.rand());
         bft_ptr->set_pool_index(bft_msg.pool_index());
         bft_ptr->set_status(kBftPrepare);
-        bft_ptr->set_member_count(3);
+        bft_ptr->set_member_count(MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
         if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
             BFT_ERROR("BackupPrepare leader invalid", bft_ptr, header);
             return;
@@ -432,7 +432,8 @@ int BftManager::StartBft(const std::string& gid) {
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
     bft_ptr->set_randm_num(crand::ConsistencyRandom::Instance()->Random());
-    bft_ptr->set_member_count(3);
+    bft_ptr->set_member_count(MemberManager::Instance()->GetMemberCount(
+        common::GlobalInfo::Instance()->network_id()));
     int leader_pre = LeaderPrepare(bft_ptr);
     if (leader_pre != kBftSuccess) {
         return leader_pre;

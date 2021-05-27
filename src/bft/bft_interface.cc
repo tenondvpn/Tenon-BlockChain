@@ -91,6 +91,7 @@ int BftInterface::LeaderPrecommitOk(
         backup_res->secret = secret;
         backup_prepare_response_.insert(std::make_pair(index, backup_res));
         prepare_bitmap_.Set(index);
+        std::cout << "prepare bitmap size: " << prepare_bitmap_.valid_count() << std::endl;
     } else {
         precommit_oppose_set_.insert(id);
     }
@@ -128,6 +129,8 @@ int BftInterface::LeaderCommitOk(
         backup_res->response = res;
         backup_res->index = index;
         backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
+        std::cout << "precommit bitmap size: " << precommit_bitmap_.valid_count() << std::endl;
+
     } else {
         commit_oppose_set_.insert(id);
     }

@@ -54,6 +54,12 @@ MembersPtr MemberManager::GetNetworkMembers(uint32_t network_id) {
     return network_members_[network_id];
 }
 
+uint32_t MemberManager::GetMemberCount(uint32_t network_id) {
+    std::lock_guard<std::mutex> guard(all_mutex_);
+    assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
+    return network_members_[network_id]->size();
+}
+
 bool MemberManager::IsLeader(
         uint32_t network_id,
         const std::string& node_id,
