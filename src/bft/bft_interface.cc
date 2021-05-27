@@ -93,8 +93,6 @@ int BftInterface::LeaderPrecommitOk(
         prepare_bitmap_.Set(index);
         std::string sec_str;
         secret.Serialize(sec_str);
-        std::cout << "TTTTTTTTTTTTT GG i: " << index << ", id: " << common::Encode::HexEncode(id) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
-
     } else {
         precommit_oppose_set_.insert(id);
     }
@@ -132,9 +130,6 @@ int BftInterface::LeaderCommitOk(
         backup_res->response = res;
         backup_res->index = index;
         backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
-        std::cout << "precommit bitmap size: " << precommit_bitmap_.valid_count()
-            << ", prepare_bitmap_: " << prepare_bitmap_.valid_count()
-            << std::endl;
     } else {
         commit_oppose_set_.insert(id);
     }
@@ -153,11 +148,6 @@ int BftInterface::LeaderCommitOk(
     res.Serialize(res_str);
 
     auto now_timestamp = std::chrono::steady_clock::now();
-    std::cout << "LeaderCommitOk index: " << index
-        << ", res_str: " << common::Encode::HexEncode(res_str)
-        << ", id: " << common::Encode::HexEncode(id)
-        << ", precommit_bitmap_: " << precommit_bitmap_.valid_count()
-        << std::endl;
     if (now_timestamp >= precommit_timeout_) {
         // todo re-challenge
         if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
@@ -177,7 +167,6 @@ int BftInterface::LeaderCommitOk(
         return kBftOppose;
     }
 
-    std::cout << "index now kBftWaitingBackup: " << index << std::endl;
     return kBftWaitingBackup;
 }
 
@@ -207,11 +196,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
         points.push_back(security::CommitPoint(iter->second->secret));
-        std::string pubkey_str;
-        mem_ptr->pubkey.Serialize(pubkey_str);
-        std::string sec_str;
-        iter->second->secret.Serialize(sec_str);
-        std::cout << "TTTTTTTTTTTTT i: " << i << ", pubkey: " << common::Encode::HexEncode(pubkey_str) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -219,17 +203,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     auto agg_commit = security::MultiSign::AggregateCommits(points);
     assert(agg_commit != nullptr);
     challenge_ = security::Challenge(*agg_commit, *agg_pubkey, prepare_hash());
-    std::string agg_pub_str;
-    agg_pubkey->Serialize(agg_pub_str);
-    std::string cha_str;
-    challenge_.Serialize(cha_str);
-    std::string commit_str;
-    agg_commit->Serialize(commit_str, true);
-    std::cout << "LeaderCreatePreCommitAggChallenge: " << common::Encode::HexEncode(agg_pub_str) 
-        << ", hash: " << common::Encode::HexEncode(prepare_hash())
-        << ", cha_str: " << common::Encode::HexEncode(cha_str)
-        << ", commit_str: " << common::Encode::HexEncode(commit_str)
-        << std::endl;
     assert(challenge_.inited());
     return kBftSuccess;
 }
@@ -249,11 +222,6 @@ int BftInterface::LeaderCreateCommitAggSign() {
         assert(iter != backup_precommit_response_.end());
         responses.push_back(iter->second->response);
         pubkeys.push_back(mem_ptr->pubkey);
-        std::string res_str;
-        std::string pub_str;
-        iter->second->response.Serialize(res_str);
-        mem_ptr->pubkey.Serialize(pub_str);
-        std::cout << "i: " << i << ", res: " << common::Encode::HexEncode(res_str) << ", pub: " << common::Encode::HexEncode(pub_str) << std::endl;
     }
 
     auto agg_response = security::MultiSign::AggregateResponses(responses);
@@ -262,14 +230,6 @@ int BftInterface::LeaderCreateCommitAggSign() {
     assert(agg_sign_ != nullptr);
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
     assert(agg_pubkey != nullptr);
-    std::string agg_pub_str;
-    agg_pubkey->Serialize(agg_pub_str);
-    std::string cha_str;
-    challenge_.Serialize(cha_str);
-    std::cout << "LeaderCreateCommitAggSign: " << common::Encode::HexEncode(agg_pub_str)
-        << ", hash: " << common::Encode::HexEncode(prepare_hash())
-        << ", cha_str: " << common::Encode::HexEncode(cha_str)
-        << std::endl;
     if (!security::MultiSign::Instance()->MultiSigVerify(
             prepare_hash(),
             *agg_sign_,

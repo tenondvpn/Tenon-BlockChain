@@ -99,10 +99,8 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
             return;
         }
 
-        std::cout << "add bft gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         AddBft(bft_ptr);
     } else {
-        std::cout << "bft gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             BFT_ERROR("get bft failed[%s]!", common::Encode::HexEncode(bft_msg.gid()).c_str());
@@ -470,7 +468,6 @@ BftInterfacePtr BftManager::GetBft(const std::string& gid) {
 }
 
 void BftManager::RemoveBft(const std::string& gid) {
-    std::cout << "bft removed: " << common::Encode::HexEncode(gid) << std::endl;
     BftInterfacePtr bft_ptr{ nullptr };
     {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
@@ -746,14 +743,6 @@ int BftManager::BackupPrecommit(
     bft_ptr->secret().Serialize(sec_key_str);
     std::string pub_key_str;
     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-
-    std::cout << "TTTTTTTTTTTTT BackupPrecommit coming." << common::Encode::HexEncode(agg_res_str)
-        << ", prikey: " << common::Encode::HexEncode(pri_key_str)
-        << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
-        << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
-        << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
-        << ", id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-        << std::endl;
     return kBftSuccess;
 }
 
@@ -799,7 +788,6 @@ int BftManager::LeaderCommit(
         bft_msg.agree(),
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
-    std::cout << "LeaderCommitOk called res: " << res << std::endl;
     if (res == kBftAgree) {
         // check pre-commit multi sign and leader commit
         transport::protobuf::Header msg;
@@ -860,9 +848,8 @@ int BftManager::LeaderCommit(
             return kBftError;
         }
 
-        auto mem_ptr = MemberManager::Instance()->GetMember(bft_ptr->network_id(), member_idx);
         security::Response sec_res(
-            mem_ptr->secret,
+            bft_ptr->secret(),
             bft_ptr->challenge(),
             *(security::Schnorr::Instance()->prikey()));
         if (bft_ptr->LeaderCommitOk(
@@ -885,15 +872,6 @@ int BftManager::LeaderCommit(
         bft_ptr->secret().Serialize(sec_key_str);
         std::string pub_key_str;
         security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-        std::cout << "TTTTTTTTTTTTT LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
-            << ", gid: " << common::Encode::HexEncode(bft_msg.gid())
-            << ", prikey: " << common::Encode::HexEncode(pri_key_str)
-            << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
-            << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
-            << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
-            << ", id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-            << std::endl;
-
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
         BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);

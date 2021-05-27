@@ -619,7 +619,6 @@ public:
         }
         std::string sec_str;
         mem_ptr->secret.Serialize(sec_str);
-        std::cout << "MMMMMMMMMMMResetBftSecret member_index: " << member_index << ", id: " << common::Encode::HexEncode(id) << ", mem_ptr->secret: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     void Transfer(
@@ -1152,9 +1151,6 @@ public:
             const std::string& to_prikey,
             transport::protobuf::Header& msg,
             transport::protobuf::Header* broadcast_msg) {
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
@@ -1182,20 +1178,12 @@ public:
             security::PublicKey pubkey(prikey);
             std::string pubkey_str;
             EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
-
-            std::cout << "TTTTTTTTTTTTT leader sec: " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str) << std::endl;
         }
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
-        std::cout << "TTTTTTTT bft gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
         std::vector<transport::protobuf::Header> backup_msgs;
-        std::cout << std::endl;
-//         invalid_root_node_vec = std::set<uint32_t>{
-//             3, 5, 7, 10, 19,
-//         };
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 if (rand() % 3 < 2) {
-                    std::cout << "invalid node index: " << i << std::endl;
                     continue;
                 }
             }
@@ -1215,7 +1203,6 @@ public:
             }
         }
 
-        std::cout << " prepare backup size: " << backup_msgs.size() << std::endl;
         // precommit
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         uint32_t prepare_count = 0;
@@ -1224,7 +1211,6 @@ public:
             if (prepare_count >= backup_msgs.size()) {
                 auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
                 bft_ptr->prepare_timeout_ = std::chrono::steady_clock::now();
-                std::cout << "FFFFFFFFFFFFFFFFFFFFFF" << std::endl;
             }
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
@@ -1239,9 +1225,6 @@ public:
             security::PublicKey pubkey(prikey);
             std::string pubkey_str;
             EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
-
-            std::cout << "TTTTTTTTTTTTT leader sec: " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str)
-                << ", gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
         }
     backup_reprecommit_goto_tag:
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
@@ -1264,7 +1247,6 @@ public:
             }
         }
 
-        std::cout << " pre commit backup size: " << backup_msgs.size() << std::endl;
         // commit
         uint32_t member_index = MemberManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
@@ -1277,10 +1259,6 @@ public:
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
             auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
-            std::cout << "test bft gid: " << common::Encode::HexEncode(
-                bft::BftManager::Instance()->bft_hash_map_.begin()->first)
-                << ", backup_msgs size: " << backup_msgs.size()
-                << std::endl;
             if (handled_count >= backup_msgs.size()) {
                 ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
@@ -1293,7 +1271,6 @@ public:
 
             if (handled_count >= backup_msgs.size()) {
                 backup_msgs.clear();
-                std::cout << "goto backup_reprecommit_goto_tag" << std::endl;
                 usleep(1000000);
                 goto backup_reprecommit_goto_tag;
             }
