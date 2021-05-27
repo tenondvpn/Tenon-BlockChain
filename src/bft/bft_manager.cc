@@ -661,12 +661,28 @@ int BftManager::LeaderPrecommit(
             return kBftError;
         }
 
+        std::string agg_res_str;
+        sec_res.Serialize(agg_res_str);
+        std::string agg_cha_str;
+        bft_ptr->challenge().Serialize(agg_cha_str);
+        std::string pri_key_str;
+        security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
+        std::string sec_key_str;
+        bft_ptr->secret().Serialize(sec_key_str);
+        std::string pub_key_str;
+        security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+        std::cout << "LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
+            << ", prikey: " << common::Encode::HexEncode(pri_key_str)
+            << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
+            << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
+            << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
+            << std::endl;
+
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
         BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
         leader_precommit_msg_ = msg;
-        std::cout << "DDDDDDDDDDDDDDDDDDDDDDDDDDD leader_precommit_msg_ ok." << std::endl;
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
         BFT_ERROR("LeaderPrecommit oppose", bft_ptr);
@@ -738,6 +754,23 @@ int BftManager::BackupPrecommit(
     }
 
     backup_precommit_msg_ = msg;
+    std::string agg_res_str;
+    agg_res.Serialize(agg_res_str);
+    std::string agg_cha_str;
+    agg_challenge.Serialize(agg_cha_str);
+    std::string pri_key_str;
+    security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
+    std::string sec_key_str;
+    bft_ptr->secret().Serialize(sec_key_str);
+    std::string pub_key_str;
+    security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+
+    std::cout << "BackupPrecommit coming." << common::Encode::HexEncode(agg_res_str)
+        << ", prikey: " << common::Encode::HexEncode(pri_key_str)
+        << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
+        << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
+        << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
+        << std::endl;
     return kBftSuccess;
 }
 
@@ -836,7 +869,7 @@ int BftManager::LeaderCommit(
         BFT_ERROR("LeaderCommit");
     }  else if (res == kBftReChallenge) {
         transport::protobuf::Header msg;
-        BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+        bft_ptr->init_precommit_timeout();
         uint32_t member_idx = GetMemberIndex(
             bft_ptr->network_id(),
             common::GlobalInfo::Instance()->id());
@@ -858,9 +891,10 @@ int BftManager::LeaderCommit(
             return kBftError;
         }
 
-        leader_precommit_msg_ = msg;
-        BFT_ERROR("LeaderCommit rechallenge", bft_ptr);
+        BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
+        BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
+        leader_precommit_msg_ = msg;
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
         BFT_ERROR("LeaderCommit oppose", bft_ptr);

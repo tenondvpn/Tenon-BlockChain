@@ -171,6 +171,7 @@ int BftInterface::LeaderCommitOk(
         return kBftOppose;
     }
 
+    std::cout << "index now kBftWaitingBackup: " << index << std::endl;
     return kBftWaitingBackup;
 }
 
@@ -200,6 +201,11 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
         points.push_back(security::CommitPoint(iter->second->secret));
+        std::string pubkey_str;
+        mem_ptr->pubkey.Serialize(pubkey_str);
+        std::string sec_str;
+        iter->second->secret.Serialize(sec_str);
+        std::cout << "i: " << i << ", pubkey: " << common::Encode::HexEncode(pubkey_str) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -207,6 +213,14 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     auto agg_commit = security::MultiSign::AggregateCommits(points);
     assert(agg_commit != nullptr);
     challenge_ = security::Challenge(*agg_commit, *agg_pubkey, prepare_hash());
+    std::string agg_pub_str;
+    agg_pubkey->Serialize(agg_pub_str);
+    std::string cha_str;
+    challenge_.Serialize(cha_str);
+    std::cout << "LeaderCreatePreCommitAggChallenge: " << common::Encode::HexEncode(agg_pub_str) 
+        << ", hash: " << common::Encode::HexEncode(prepare_hash())
+        << ", cha_str: " << common::Encode::HexEncode(cha_str)
+        << std::endl;
     assert(challenge_.inited());
     return kBftSuccess;
 }
@@ -234,6 +248,14 @@ int BftInterface::LeaderCreateCommitAggSign() {
     assert(agg_sign_ != nullptr);
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
     assert(agg_pubkey != nullptr);
+    std::string agg_pub_str;
+    agg_pubkey->Serialize(agg_pub_str);
+    std::string cha_str;
+    challenge_.Serialize(cha_str);
+    std::cout << "LeaderCreateCommitAggSign: " << common::Encode::HexEncode(agg_pub_str)
+        << ", hash: " << common::Encode::HexEncode(prepare_hash())
+        << ", cha_str: " << common::Encode::HexEncode(cha_str)
+        << std::endl;
     if (!security::MultiSign::Instance()->MultiSigVerify(
             prepare_hash(),
             *agg_sign_,
