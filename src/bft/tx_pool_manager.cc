@@ -104,6 +104,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         return kBftError;
     }
 
+    // from must valid
     if (!tx_ptr->tx.to_add()) {
         auto from_account = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
         if (from_account == nullptr) {
