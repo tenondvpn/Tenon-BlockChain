@@ -34,6 +34,8 @@ public:
         for (uint32_t i = 0; i < data_.size(); ++i) {
             data_[i] = 0;
         }
+
+        valid_count_ = 0;
     }
 
 private:

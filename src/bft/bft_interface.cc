@@ -173,6 +173,9 @@ void BftInterface::RechallengePrecommitClear() {
     leader_handled_commit_ = false;
     init_precommit_timeout();
     precommit_bitmap_.clear();
+    commit_aggree_set_.clear();
+    backup_precommit_response_.clear();
+    commit_oppose_set_.clear();
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge() {

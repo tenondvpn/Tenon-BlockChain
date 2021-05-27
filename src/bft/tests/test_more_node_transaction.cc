@@ -1238,21 +1238,20 @@ backup_reprecommit_goto_tag:
         uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
-            if (bft::BftManager::Instance()->bft_hash_map_.empty()) {
-                break;
-            }
-
             auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
             std::cout << "test bft gid: " << common::Encode::HexEncode(
                 bft::BftManager::Instance()->bft_hash_map_.begin()->first) << std::endl;
-            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size() - 1) {
+            if (handled_count >= backup_msgs.size()) {
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
             }
 
             bft::BftManager::Instance()->HandleMessage(*iter);
-            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size() - 1) {
+            if (bft::BftManager::Instance()->bft_hash_map_.empty()) {
+                break;
+            }
+
+            if (handled_count >= backup_msgs.size()) {
                 backup_msgs.clear();
-                bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
                 std::cout << "goto backup_reprecommit_goto_tag" << std::endl;
                 usleep(1000000);
                 goto backup_reprecommit_goto_tag;
