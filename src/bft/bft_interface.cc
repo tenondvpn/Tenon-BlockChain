@@ -208,7 +208,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         mem_ptr->pubkey.Serialize(pubkey_str);
         std::string sec_str;
         iter->second->secret.Serialize(sec_str);
-        std::cout << "i: " << i << ", pubkey: " << common::Encode::HexEncode(pubkey_str) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
+        std::cout << "TTTTTTTTTTTTT i: " << i << ", pubkey: " << common::Encode::HexEncode(pubkey_str) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -220,9 +220,12 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     agg_pubkey->Serialize(agg_pub_str);
     std::string cha_str;
     challenge_.Serialize(cha_str);
+    std::string commit_str;
+    agg_commit->Serialize(commit_str, true);
     std::cout << "LeaderCreatePreCommitAggChallenge: " << common::Encode::HexEncode(agg_pub_str) 
         << ", hash: " << common::Encode::HexEncode(prepare_hash())
         << ", cha_str: " << common::Encode::HexEncode(cha_str)
+        << ", commit_str: " << common::Encode::HexEncode(commit_str)
         << std::endl;
     assert(challenge_.inited());
     return kBftSuccess;

@@ -614,6 +614,9 @@ public:
         uint32_t member_index = MemberManager::Instance()->GetMemberIndex(net_id, id);
         auto mem_ptr = MemberManager::Instance()->GetMember(net_id, member_index);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
+        std::string sec_str;
+        mem_ptr->secret.Serialize(sec_str);
+        std::cout << "MMMMMMMMMMMResetBftSecret member_index: " << member_index << ", id: " << common::Encode::HexEncode(id) << ", mem_ptr->secret: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     void Transfer(
@@ -1167,6 +1170,9 @@ public:
         std::cout << "TTTTTTTT bft gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
         std::vector<transport::protobuf::Header> backup_msgs;
         std::cout << std::endl;
+//         invalid_root_node_vec = std::set<uint32_t>{
+//             3, 5, 7, 10, 19,
+//         };
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 if (rand() % 3 < 2) {
@@ -1261,6 +1267,7 @@ backup_reprecommit_goto_tag:
             }
         }
 
+        exit(0);
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {

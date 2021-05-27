@@ -747,7 +747,7 @@ int BftManager::BackupPrecommit(
     std::string pub_key_str;
     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
 
-    std::cout << "BackupPrecommit coming." << common::Encode::HexEncode(agg_res_str)
+    std::cout << "TTTTTTTTTTTTT BackupPrecommit coming." << common::Encode::HexEncode(agg_res_str)
         << ", prikey: " << common::Encode::HexEncode(pri_key_str)
         << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
         << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
@@ -884,7 +884,7 @@ int BftManager::LeaderCommit(
         bft_ptr->secret().Serialize(sec_key_str);
         std::string pub_key_str;
         security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-        std::cout << "LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
+        std::cout << "TTTTTTTTTTTTT LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
             << ", prikey: " << common::Encode::HexEncode(pri_key_str)
             << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
             << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
