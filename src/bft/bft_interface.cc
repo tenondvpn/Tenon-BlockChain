@@ -129,8 +129,9 @@ int BftInterface::LeaderCommitOk(
         backup_res->response = res;
         backup_res->index = index;
         backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
-        std::cout << "precommit bitmap size: " << precommit_bitmap_.valid_count() << std::endl;
-
+        std::cout << "precommit bitmap size: " << precommit_bitmap_.valid_count()
+            << ", prepare_bitmap_: " << prepare_bitmap_.valid_count()
+            << std::endl;
     } else {
         commit_oppose_set_.insert(id);
     }
@@ -146,7 +147,11 @@ int BftInterface::LeaderCommitOk(
     }
 
     auto now_timestamp = std::chrono::steady_clock::now();
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF: " << now_timestamp.time_since_epoch().count() << ":" << precommit_timeout_.time_since_epoch().count() << std::endl;
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF: " << now_timestamp.time_since_epoch().count()
+        << ":" << precommit_timeout_.time_since_epoch().count()
+        << ", prepare_bitmap_: " << prepare_bitmap_.valid_count()
+        << ", precommit_bitmap_: " << precommit_bitmap_.valid_count()
+        << std::endl;
     if (now_timestamp >= precommit_timeout_) {
         // todo re-challenge
         if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {

@@ -1240,7 +1240,9 @@ backup_reprecommit_goto_tag:
             ++handled_count;
             auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
             std::cout << "test bft gid: " << common::Encode::HexEncode(
-                bft::BftManager::Instance()->bft_hash_map_.begin()->first) << std::endl;
+                bft::BftManager::Instance()->bft_hash_map_.begin()->first)
+                << ", backup_msgs size: " << backup_msgs.size()
+                << std::endl;
             if (handled_count >= backup_msgs.size()) {
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
             }

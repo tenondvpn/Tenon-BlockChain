@@ -837,6 +837,27 @@ int BftManager::LeaderCommit(
     }  else if (res == kBftReChallenge) {
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+        uint32_t member_idx = GetMemberIndex(
+            bft_ptr->network_id(),
+            common::GlobalInfo::Instance()->id());
+        if (member_idx == kInvalidMemberIndex) {
+            return kBftError;
+        }
+
+        security::Response sec_res(
+            bft_ptr->secret(),
+            bft_ptr->challenge(),
+            *(security::Schnorr::Instance()->prikey()));
+        if (bft_ptr->LeaderCommitOk(
+                member_idx,
+                true,
+                sec_res,
+                common::GlobalInfo::Instance()->id()) == kBftOppose) {
+            BFT_ERROR("leader commit failed!");
+            RemoveBft(bft_ptr->gid());
+            return kBftError;
+        }
+
         leader_precommit_msg_ = msg;
         BFT_ERROR("LeaderCommit rechallenge", bft_ptr);
         network::Route::Instance()->Send(msg);

@@ -53,6 +53,7 @@ Bitmap& Bitmap::operator=(const Bitmap& src) {
 
     data_ = src.data_;
     hash_count_ = src.hash_count_;
+    valid_count_ = src.valid_count_;
     return *this;
 }
 
