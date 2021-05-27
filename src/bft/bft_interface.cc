@@ -180,7 +180,10 @@ void BftInterface::RechallengePrecommitClear() {
     precommit_bitmap_.clear();
     commit_aggree_set_.clear();
     backup_precommit_response_.clear();
+    precommit_aggree_set_.clear();
+    precommit_oppose_set_.clear();
     commit_oppose_set_.clear();
+
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge() {
@@ -197,8 +200,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
         points.push_back(security::CommitPoint(iter->second->secret));
-        std::string secret_str;
-        iter->second->secret.Serialize(secret_str);
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -206,13 +207,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     auto agg_commit = security::MultiSign::AggregateCommits(points);
     assert(agg_commit != nullptr);
     challenge_ = security::Challenge(*agg_commit, *agg_pubkey, prepare_hash());
-    std::string leader_challenge;
-    challenge_.Serialize(leader_challenge);
     assert(challenge_.inited());
-    precommit_aggree_set_.clear();
-    precommit_oppose_set_.clear();
-    commit_aggree_set_.clear();
-    commit_oppose_set_.clear();
     return kBftSuccess;
 }
 

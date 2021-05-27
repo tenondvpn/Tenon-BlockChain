@@ -1244,6 +1244,7 @@ backup_reprecommit_goto_tag:
                 << ", backup_msgs size: " << backup_msgs.size()
                 << std::endl;
             if (handled_count >= backup_msgs.size()) {
+                ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
             }
 
