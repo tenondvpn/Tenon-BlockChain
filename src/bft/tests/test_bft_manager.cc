@@ -2310,7 +2310,7 @@ TEST_F(TestBftManager, TestCallContractBallotSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        if (i < 4 || i == 6) {
+        if ((i <= 4 && i > 2) || i == 7) {
             ASSERT_EQ(new_from_balance, from_balance - 44994 * common::GlobalInfo::Instance()->gas_price());
         } else {
             ASSERT_EQ(new_from_balance, from_balance - 64194 * common::GlobalInfo::Instance()->gas_price());

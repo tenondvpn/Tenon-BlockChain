@@ -149,6 +149,7 @@ int BftInterface::LeaderCommitOk(
             BFT_ERROR("precommit_bitmap_.valid_count() failed!");
             return kBftOppose;
         }
+
         prepare_bitmap_ = precommit_bitmap_;
         LeaderCreatePreCommitAggChallenge();
         return kBftReChallenge;

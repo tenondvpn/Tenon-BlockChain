@@ -396,6 +396,7 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
+    uint32_t pool_idx = common::GetPoolIndex(account_id);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (exist_height <= tmp_now_height) {
