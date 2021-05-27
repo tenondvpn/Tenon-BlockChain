@@ -146,6 +146,7 @@ int BftInterface::LeaderCommitOk(
     }
 
     auto now_timestamp = std::chrono::steady_clock::now();
+    std::cout << "FFFFFFFFFFFFFFFFFFFFF: " << now_timestamp.time_since_epoch().count() << ":" << precommit_timeout_.time_since_epoch().count() << std::endl;
     if (now_timestamp >= precommit_timeout_) {
         // todo re-challenge
         if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {

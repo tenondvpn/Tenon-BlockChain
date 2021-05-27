@@ -1146,6 +1146,9 @@ public:
             const std::string& to_prikey,
             transport::protobuf::Header& msg,
             transport::protobuf::Header* broadcast_msg) {
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
@@ -1161,6 +1164,7 @@ public:
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
+        std::cout << "TTTTTTTT bft gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
         std::vector<transport::protobuf::Header> backup_msgs;
         std::cout << std::endl;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
@@ -1182,13 +1186,21 @@ public:
                 protobuf::BftMessage bft_msg;
                 ASSERT_TRUE(bft_msg.ParseFromString(bft::BftManager::Instance()->backup_prepare_msg_.data()));
                 ASSERT_TRUE(bft_msg.agree());
+                ASSERT_EQ(bft_msg.gid(), bft_gid);
             }
         }
 
         std::cout << " prepare backup size: " << backup_msgs.size() << std::endl;
         // precommit
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        uint32_t prepare_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
+            ++prepare_count;
+            if (prepare_count >= backup_msgs.size()) {
+                auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
+                bft_ptr->prepare_timeout_ = std::chrono::steady_clock::now();
+                std::cout << "FFFFFFFFFFFFFFFFFFFFFF" << std::endl;
+            }
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
         backup_msgs.clear();
@@ -1226,19 +1238,29 @@ backup_reprecommit_goto_tag:
         uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
-            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size()) {
-                auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
+            if (bft::BftManager::Instance()->bft_hash_map_.empty()) {
+                break;
+            }
+
+            auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
+            std::cout << "test bft gid: " << common::Encode::HexEncode(
+                bft::BftManager::Instance()->bft_hash_map_.begin()->first) << std::endl;
+            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size() - 1) {
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
             }
 
             bft::BftManager::Instance()->HandleMessage(*iter);
-            backup_msgs.clear();
-            goto backup_reprecommit_goto_tag;
+            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size() - 1) {
+                backup_msgs.clear();
+                bft_ptr->precommit_bitmap_.clear();
+                bft_ptr->precommit_timeout_ = (std::chrono::steady_clock::now() +
+                    std::chrono::microseconds(kBftLeaderPrepareWaitPeriod));
+                goto backup_reprecommit_goto_tag;
+            }
         }
 
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
-
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 continue;
@@ -1247,7 +1269,7 @@ backup_reprecommit_goto_tag:
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
-            SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kRootCongressNetworkId);
+            SetGloableInfo(from_data, network::kRootCongressNetworkId);
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
         }

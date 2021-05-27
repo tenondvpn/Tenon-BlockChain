@@ -99,8 +99,10 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
             return;
         }
 
+        std::cout << "add bft gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         AddBft(bft_ptr);
     } else {
+        std::cout << "bft gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             BFT_ERROR("get bft failed[%s]!", common::Encode::HexEncode(bft_msg.gid()).c_str());
@@ -468,6 +470,7 @@ BftInterfacePtr BftManager::GetBft(const std::string& gid) {
 }
 
 void BftManager::RemoveBft(const std::string& gid) {
+    std::cout << "bft removed: " << common::Encode::HexEncode(gid) << std::endl;
     BftInterfacePtr bft_ptr{ nullptr };
     {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
@@ -663,6 +666,7 @@ int BftManager::LeaderPrecommit(
         network::Route::Instance()->Send(msg);
         BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
         leader_precommit_msg_ = msg;
+        std::cout << "DDDDDDDDDDDDDDDDDDDDDDDDDDD leader_precommit_msg_ ok." << std::endl;
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
         BFT_ERROR("LeaderPrecommit oppose", bft_ptr);
@@ -779,6 +783,7 @@ int BftManager::LeaderCommit(
         bft_msg.agree(),
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+    std::cout << "LeaderCommitOk called res: " << res << std::endl;
     if (res == kBftAgree) {
         // check pre-commit multi sign and leader commit
         transport::protobuf::Header msg;
@@ -832,6 +837,7 @@ int BftManager::LeaderCommit(
     }  else if (res == kBftReChallenge) {
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+        leader_precommit_msg_ = msg;
         BFT_ERROR("LeaderCommit rechallenge", bft_ptr);
         network::Route::Instance()->Send(msg);
     } else if (res == kBftOppose) {

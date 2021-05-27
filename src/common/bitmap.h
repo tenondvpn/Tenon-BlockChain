@@ -30,6 +30,12 @@ public:
         return valid_count_;
     }
 
+    void clear() {
+        for (uint32_t i = 0; i < data_.size(); ++i) {
+            data_[i] = 0;
+        }
+    }
+
 private:
     std::vector<uint64_t> data_;
     uint32_t hash_count_{ 1 };
