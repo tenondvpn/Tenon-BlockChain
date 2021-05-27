@@ -156,6 +156,7 @@ int BftInterface::LeaderCommitOk(
 
         prepare_bitmap_ = precommit_bitmap_;
         LeaderCreatePreCommitAggChallenge();
+        RechallengePrecommitClear();
         return kBftReChallenge;
     }
 
@@ -166,6 +167,12 @@ int BftInterface::LeaderCommitOk(
     }
 
     return kBftWaitingBackup;
+}
+
+void BftInterface::RechallengePrecommitClear() {
+    leader_handled_commit_ = false;
+    init_precommit_timeout();
+    precommit_bitmap_.clear();
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge() {

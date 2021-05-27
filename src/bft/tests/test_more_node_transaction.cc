@@ -1252,9 +1252,9 @@ backup_reprecommit_goto_tag:
             bft::BftManager::Instance()->HandleMessage(*iter);
             if (handled_count >= kRootNodeCount - invalid_root_node_vec.size() - 1) {
                 backup_msgs.clear();
-                bft_ptr->precommit_bitmap_.clear();
-                bft_ptr->precommit_timeout_ = (std::chrono::steady_clock::now() +
-                    std::chrono::microseconds(kBftLeaderPrepareWaitPeriod));
+                bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
+                std::cout << "goto backup_reprecommit_goto_tag" << std::endl;
+                usleep(1000000);
                 goto backup_reprecommit_goto_tag;
             }
         }

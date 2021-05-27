@@ -206,6 +206,7 @@ protected:
 private:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
+    void RechallengePrecommitClear();
 
     uint32_t pool_index_{ (std::numeric_limits<uint32_t>::max)() };
     std::string gid_;
