@@ -146,10 +146,13 @@ int BftInterface::LeaderCommitOk(
         return kBftAgree;
     }
 
+    std::string res_str;
+    res.Serialize(res_str);
+
     auto now_timestamp = std::chrono::steady_clock::now();
-    std::cout << "FFFFFFFFFFFFFFFFFFFFF: " << now_timestamp.time_since_epoch().count()
-        << ":" << precommit_timeout_.time_since_epoch().count()
-        << ", prepare_bitmap_: " << prepare_bitmap_.valid_count()
+    std::cout << "LeaderCommitOk index: " << index
+        << ", res_str: " << common::Encode::HexEncode(res_str)
+        << ", id: " << common::Encode::HexEncode(id)
         << ", precommit_bitmap_: " << precommit_bitmap_.valid_count()
         << std::endl;
     if (now_timestamp >= precommit_timeout_) {
@@ -240,6 +243,11 @@ int BftInterface::LeaderCreateCommitAggSign() {
         assert(iter != backup_precommit_response_.end());
         responses.push_back(iter->second->response);
         pubkeys.push_back(mem_ptr->pubkey);
+        std::string res_str;
+        std::string pub_str;
+        iter->second->response.Serialize(res_str);
+        mem_ptr->pubkey.Serialize(pub_str);
+        std::cout << "i: " << i << ", res: " << common::Encode::HexEncode(res_str) << ", pub: " << common::Encode::HexEncode(pub_str) << std::endl;
     }
 
     auto agg_response = security::MultiSign::AggregateResponses(responses);

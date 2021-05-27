@@ -660,24 +660,6 @@ int BftManager::LeaderPrecommit(
             RemoveBft(bft_ptr->gid());
             return kBftError;
         }
-
-        std::string agg_res_str;
-        sec_res.Serialize(agg_res_str);
-        std::string agg_cha_str;
-        bft_ptr->challenge().Serialize(agg_cha_str);
-        std::string pri_key_str;
-        security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
-        std::string sec_key_str;
-        bft_ptr->secret().Serialize(sec_key_str);
-        std::string pub_key_str;
-        security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-        std::cout << "LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
-            << ", prikey: " << common::Encode::HexEncode(pri_key_str)
-            << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
-            << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
-            << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
-            << std::endl;
-
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
@@ -770,6 +752,7 @@ int BftManager::BackupPrecommit(
         << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
         << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
         << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
+        << ", id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
         << std::endl;
     return kBftSuccess;
 }
@@ -890,6 +873,24 @@ int BftManager::LeaderCommit(
             RemoveBft(bft_ptr->gid());
             return kBftError;
         }
+
+        std::string agg_res_str;
+        sec_res.Serialize(agg_res_str);
+        std::string agg_cha_str;
+        bft_ptr->challenge().Serialize(agg_cha_str);
+        std::string pri_key_str;
+        security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
+        std::string sec_key_str;
+        bft_ptr->secret().Serialize(sec_key_str);
+        std::string pub_key_str;
+        security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+        std::cout << "LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
+            << ", prikey: " << common::Encode::HexEncode(pri_key_str)
+            << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
+            << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
+            << ", agg cha: " << common::Encode::HexEncode(agg_cha_str)
+            << ", id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+            << std::endl;
 
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
