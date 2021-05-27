@@ -1193,6 +1193,7 @@ public:
         }
         backup_msgs.clear();
 
+backup_reprecommit_goto_tag:
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 continue;
@@ -1222,9 +1223,19 @@ public:
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
+            ++handled_count;
+            if (handled_count >= kRootNodeCount - invalid_root_node_vec.size()) {
+                auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
+                bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
+            }
+
             bft::BftManager::Instance()->HandleMessage(*iter);
+            backup_msgs.clear();
+            goto backup_reprecommit_goto_tag;
         }
+
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
 

@@ -16,57 +16,6 @@
 #define BFT_WARN(fmt, ...) TENON_WARN("[bft]" fmt, ## __VA_ARGS__)
 #define BFT_ERROR(fmt, ...) TENON_ERROR("[bft]" fmt, ## __VA_ARGS__)
 
-#ifdef LEGO_TRACE_BFT
-#define LEGO_BFT_DEBUG_FOR_CONSENSUS(pre, bft_ptr) \
-    do { \
-        BFT_DEBUG("[CONSENSUS]%s: [gid: %s][status: %d(%s)][item_cnt: %d]" \
-                "[pool_index: %d][network_id: %d]" \
-                "[rand_num: %llu][l_pc_agree: %d][l_c_aggree: %d]" \
-                "[member_count: %d][min_cnt: %d]", \
-                std::string(pre).c_str(), \
-                common::Encode::HexEncode(bft_ptr->gid()).c_str(), \
-                bft_ptr->status(), \
-                StatusToString(bft_ptr->status()).c_str(), \
-                bft_ptr->bft_item_count(), \
-                bft_ptr->pool_index(), \
-                bft_ptr->network_id(), \
-                bft_ptr->rand_num(), \
-                bft_ptr->leader_precommit_agree(), \
-                bft_ptr->leader_commit_agree(), \
-                bft_ptr->member_count(), \
-                bft_ptr->min_agree_member_count()); \
-    } while (0)
-
-#define LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE(pre, bft_ptr, message) \
-    do { \
-        BFT_DEBUG("[CONSENSUS]%s: [hash: %llu][id: %u][hop: %d][broad: %d]" \
-                "[gid: %s][status: %d(%s)][item_cnt: %d]" \
-                "[pool_index: %d][network_id: %d]" \
-                "[rand_num: %llu][l_pc_agree: %d][l_c_aggree: %d]" \
-                "[member_count: %d][min_cnt: %d]", \
-                std::string(pre).c_str(), \
-                message.hash(), \
-                message.id(), \
-                message.hop_count(), \
-                message.has_broadcast(), \
-                common::Encode::HexEncode(bft_ptr->gid()).c_str(), \
-                bft_ptr->status(), \
-                StatusToString(bft_ptr->status()).c_str(), \
-                bft_ptr->bft_item_count(), \
-                bft_ptr->pool_index(), \
-                bft_ptr->network_id(), \
-                bft_ptr->rand_num(), \
-                bft_ptr->leader_precommit_agree(), \
-                bft_ptr->leader_commit_agree(), \
-                bft_ptr->member_count(), \
-                bft_ptr->min_agree_member_count()); \
-    } while (0)
-
-#else
-#define LEGO_BFT_DEBUG_FOR_CONSENSUS(pre, bft_ptr)
-#define LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE(pre, bft_ptr, message)
-#endif
-
 namespace tenon {
 
 namespace bft {

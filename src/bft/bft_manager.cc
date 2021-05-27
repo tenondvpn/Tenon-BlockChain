@@ -480,7 +480,7 @@ void BftManager::RemoveBft(const std::string& gid) {
 
     if (bft_ptr) {
         DispatchPool::Instance()->BftOver(bft_ptr);
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("remove", bft_ptr);
+        BFT_ERROR("remove", bft_ptr);
     }
 }
 
@@ -563,7 +563,6 @@ int BftManager::BackupPrepare(
             false,
             msg);
         RemoveBft(bft_ptr->gid());
-        LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE("BackupPrepare error", bft_ptr, header);
     } else {
         BftProto::BackupCreatePrepare(
             header,
@@ -573,7 +572,6 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             true,
             msg);
-        LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE("BackupPrepare succ", bft_ptr, header);
     }
 
     if (!msg.has_data()) {
@@ -663,13 +661,13 @@ int BftManager::LeaderPrecommit(
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
         network::Route::Instance()->Send(msg);
-        LEGO_BFT_DEBUG_FOR_CONSENSUS_AND_MESSAGE("LeaderPrecommit agree", bft_ptr, msg);
+        BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
         leader_precommit_msg_ = msg;
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("LeaderPrecommit oppose", bft_ptr);
+        BFT_ERROR("LeaderPrecommit oppose", bft_ptr);
     } else {
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("LeaderPrecommit waiting", bft_ptr);
+        BFT_ERROR("LeaderPrecommit waiting", bft_ptr);
         // continue waiting, do nothing.
     }
 
@@ -834,14 +832,14 @@ int BftManager::LeaderCommit(
     }  else if (res == kBftReChallenge) {
         transport::protobuf::Header msg;
         BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("LeaderCommit rechallenge", bft_ptr);
+        BFT_ERROR("LeaderCommit rechallenge", bft_ptr);
         network::Route::Instance()->Send(msg);
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("LeaderCommit oppose", bft_ptr);
+        BFT_ERROR("LeaderCommit oppose", bft_ptr);
     } else {
         // continue waiting, do nothing.
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("LeaderCommit waiting", bft_ptr);
+        BFT_ERROR("LeaderCommit waiting", bft_ptr);
     }
     return kBftSuccess;
 }
@@ -1050,7 +1048,7 @@ void BftManager::CheckTimeout() {
 
     for (uint32_t i = 0; i < timeout_vec.size(); ++i) {
         DispatchPool::Instance()->BftOver(timeout_vec[i]);
-        LEGO_BFT_DEBUG_FOR_CONSENSUS("Timeout", timeout_vec[i]);
+        BFT_ERROR("Timeout", timeout_vec[i]);
     }
 
     timeout_tick_.CutOff(
