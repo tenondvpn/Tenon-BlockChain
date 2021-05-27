@@ -1635,6 +1635,30 @@ TEST_F(TestBftManagerForFailCase, TestTransactionAmountBiggerThanBalance1) {
     ASSERT_FALSE(caller_info->locked());
 }
 
+TEST_F(TestBftManagerForFailCase, TransferFromNotExists) {
+    std::string from_prikey = common::Encode::HexDecode(
+        "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b2");
+    std::string to_prikey = common::Encode::HexDecode(
+        "11115f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e");
+    uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+    uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+    ASSERT_EQ(from_balance, common::kInvalidUint64);
+    ASSERT_EQ(to_balance, common::kInvalidUint64);
+    uint64_t all_amount = 0;
+    uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
+    uint64_t all_gas = 0;
+    all_amount += amount;
+    all_gas += bft::kTransferGas;
+    std::map<std::string, std::string> attrs;
+    Transaction(
+        from_prikey, to_prikey, amount, all_gas,
+        common::kConsensusTransaction, true, false, attrs);
+    from_balance = GetBalanceByPrikey(from_prikey);
+    to_balance = GetBalanceByPrikey(to_prikey);
+    ASSERT_EQ(from_balance, common::kInvalidUint64);
+    ASSERT_EQ(to_balance, common::kInvalidUint64);
+}
+
 }  // namespace test
 
 }  // namespace bft
