@@ -860,8 +860,9 @@ int BftManager::LeaderCommit(
             return kBftError;
         }
 
+        auto mem_ptr = MemberManager::Instance()->GetMember(bft_ptr->network_id(), member_idx);
         security::Response sec_res(
-            bft_ptr->secret(),
+            mem_ptr->secret,
             bft_ptr->challenge(),
             *(security::Schnorr::Instance()->prikey()));
         if (bft_ptr->LeaderCommitOk(
