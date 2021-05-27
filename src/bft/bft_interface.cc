@@ -91,7 +91,10 @@ int BftInterface::LeaderPrecommitOk(
         backup_res->secret = secret;
         backup_prepare_response_.insert(std::make_pair(index, backup_res));
         prepare_bitmap_.Set(index);
-        std::cout << "prepare bitmap size: " << prepare_bitmap_.valid_count() << std::endl;
+        std::string sec_str;
+        secret.Serialize(sec_str);
+        std::cout << "TTTTTTTTTTTTT GG i: " << index << ", id: " << common::Encode::HexEncode(id) << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
+
     } else {
         precommit_oppose_set_.insert(id);
     }

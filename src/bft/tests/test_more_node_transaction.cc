@@ -1163,9 +1163,25 @@ public:
         usleep(bft::kBftStartDeltaTime);
         EXPECT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
 
+
+
+
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
+        {
+            uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
+            auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+            bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
+            std::string sec_str;
+            mem_ptr->secret.Serialize(sec_str);
+            security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
+            security::PublicKey pubkey(prikey);
+            std::string pubkey_str;
+            EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
+
+            std::cout << "TTTTTTTTTTTTT leader sec: " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str) << std::endl;
+        }
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         std::cout << "TTTTTTTT bft gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
         std::vector<transport::protobuf::Header> backup_msgs;
@@ -1210,8 +1226,21 @@ public:
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
         backup_msgs.clear();
+        {
+            uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
+            auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+            bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
+            std::string sec_str;
+            mem_ptr->secret.Serialize(sec_str);
+            security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
+            security::PublicKey pubkey(prikey);
+            std::string pubkey_str;
+            EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
 
-backup_reprecommit_goto_tag:
+            std::cout << "TTTTTTTTTTTTT leader sec: " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str)
+                << ", gid: " << common::Encode::HexEncode(bft_gid) << std::endl;
+        }
+    backup_reprecommit_goto_tag:
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 continue;
@@ -1250,7 +1279,33 @@ backup_reprecommit_goto_tag:
                 << ", backup_msgs size: " << backup_msgs.size()
                 << std::endl;
             if (handled_count >= backup_msgs.size()) {
+                {
+                    uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
+                    auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+                    bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
+                    std::string sec_str;
+                    mem_ptr->secret.Serialize(sec_str);
+                    security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
+                    security::PublicKey pubkey(prikey);
+                    std::string pubkey_str;
+                    EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
+
+                    std::cout << "TTTTTTTTTTTTT leader sec 000 : " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str) << std::endl;
+                }
                 ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+                {
+                    uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
+                    auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+                    bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
+                    std::string sec_str;
+                    mem_ptr->secret.Serialize(sec_str);
+                    security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
+                    security::PublicKey pubkey(prikey);
+                    std::string pubkey_str;
+                    EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
+
+                    std::cout << "TTTTTTTTTTTTT leader sec 111: " << member_index << ", pub: " << common::Encode::HexEncode(pubkey_str) << ", : " << common::Encode::HexEncode(sec_str) << std::endl;
+                }
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
             }
 

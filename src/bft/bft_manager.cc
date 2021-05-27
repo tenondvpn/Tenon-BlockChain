@@ -885,6 +885,7 @@ int BftManager::LeaderCommit(
         std::string pub_key_str;
         security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
         std::cout << "TTTTTTTTTTTTT LeaderCommitOk coming." << common::Encode::HexEncode(agg_res_str)
+            << ", gid: " << common::Encode::HexEncode(bft_msg.gid())
             << ", prikey: " << common::Encode::HexEncode(pri_key_str)
             << ", pub_key_str: " << common::Encode::HexEncode(pub_key_str)
             << ", sec_key_str: " << common::Encode::HexEncode(sec_key_str)
