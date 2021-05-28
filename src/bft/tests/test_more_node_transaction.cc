@@ -604,7 +604,6 @@ public:
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
         std::string sec_str;
         mem_ptr->secret.Serialize(sec_str);
-        std::cout << "ResetBftSecret: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     void Transfer(
@@ -1137,7 +1136,6 @@ public:
             const std::string& to_prikey,
             transport::protobuf::Header& msg,
             transport::protobuf::Header* broadcast_msg) {
-        std::cout << std::endl << std::endl << std::endl << "now CreateNewAccountWithInvalidNode." << std::endl;
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
@@ -1153,23 +1151,15 @@ public:
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         auto leader_sec = iter->second->secret_;
         iter->second->backup_prepare_response_[0]->secret = leader_sec;
-        {
-            std::string leader_sec_str;
-            leader_sec.Serialize(leader_sec_str);
-            std::cout << "00000 FFFFFFFFFFFFFFFFFFFF leader sec key get: " << common::Encode::HexEncode(leader_sec_str) << std::endl;
-        }
-
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         std::vector<transport::protobuf::Header> backup_msgs;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
-                if (i == 10) {
-                    std::cout << "invalid node index: " << i << std::endl;
+                if (rand() % 3 < 2) {
                     continue;
                 }
             }
 
-            std::cout << "set valid node index: " << i << std::endl;
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
@@ -1190,12 +1180,6 @@ public:
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = leader_sec;
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->backup_prepare_response_[0]->secret = leader_sec;
-        {
-            std::string leader_sec_str;
-            leader_sec.Serialize(leader_sec_str);
-            std::cout << "1 FFFFFFFFFFFFFFFFFFFF leader sec key get: " << common::Encode::HexEncode(leader_sec_str) << std::endl;
-        }
-
         uint32_t prepare_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++prepare_count;
@@ -1212,7 +1196,6 @@ public:
                 continue;
             }
 
-            std::cout << "call valid index: " << i << std::endl;
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
@@ -1237,32 +1220,26 @@ public:
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = leader_sec;
         bft_ptr->backup_prepare_response_[0]->secret = leader_sec;
-        {
-            std::string leader_sec_str;
-            leader_sec.Serialize(leader_sec_str);
-            std::cout << "2 FFFFFFFFFFFFFFFFFFFF leader sec key get: " << common::Encode::HexEncode(leader_sec_str) << std::endl;
-        }
-
         uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
             auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
             bft::BftManager::Instance()->HandleMessage(*iter);
             if (bft::BftManager::Instance()->bft_hash_map_.empty()) {
-                std::cout << "leader commit over!" << std::endl;
                 break;
             }
 
             if (handled_count >= backup_msgs.size()) {
                 bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
                 int res = bft_ptr->CheckTimeout();
-                std::cout << "bft check timeout res: " << res << std::endl;
+                if (res == kTimeoutCallReChallenge) {
+                    bft::BftManager::Instance()->LeaderReChallenge(bft_ptr);
+                }
                 backup_msgs.clear();
                 goto backup_reprecommit_goto_tag;
             }
         }
 
-        exit(0);
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
@@ -1303,7 +1280,6 @@ public:
         invalid_root_node_vec.clear();
         invalid_consensus_node_vec.clear();
         uint32_t root_invalid_count = (uint32_t)((float)kRootNodeCount * invalid_root_node_rate);
-        std::cout << "TTTTTTTTT: " << root_invalid_count << std::endl;
         while (invalid_root_node_vec.size() < (root_invalid_count - 1)) {
             invalid_root_node_vec.insert(rand() % kRootNodeCount);
         }

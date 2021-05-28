@@ -92,7 +92,6 @@ int BftInterface::LeaderPrecommitOk(
         backup_prepare_response_.insert(std::make_pair(index, backup_res));
         std::string sec_str;
         secret.Serialize(sec_str);
-        std::cout << "LeaderPrecommitOk called: " << index << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
         prepare_bitmap_.Set(index);
     } else {
         precommit_oppose_set_.insert(id);
@@ -125,7 +124,6 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (!prepare_bitmap_.Valid(index)) {
-        std::cout << "not prepared index: " << index << std::endl;
         return kBftWaitingBackup;
     }
 
@@ -142,7 +140,6 @@ int BftInterface::LeaderCommitOk(
 
     if (precommit_bitmap_ == prepare_bitmap_) {
         leader_handled_commit_ = true;
-        std::cout << "LeaderCreateCommitAggSign called: " << std::endl;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {
             BFT_ERROR("leader create commit agg sign failed!");
             return kBftOppose;
@@ -246,9 +243,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
         points.push_back(security::CommitPoint(iter->second->secret));
-        std::string sec_str;
-        iter->second->secret.Serialize(sec_str);
-        std::cout << "LeaderCreatePreCommitAggChallenge leader sec string: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -270,7 +264,6 @@ int BftInterface::LeaderCreateCommitAggSign() {
             continue;
         }
 
-        std::cout << "valid index: " << i << std::endl;
         auto mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
         auto iter = backup_precommit_response_.find(i);
         assert(iter != backup_precommit_response_.end());

@@ -1509,11 +1509,6 @@ int TxBft::LeaderAddNormalTransaction(
     } else {
         int balance_status = GetTempAccountBalance(tx.to(), acc_balance_map, &to_balance);
         if (balance_status != kBftSuccess) {
-            std::cout << "account address not exists: " << common::Encode::HexEncode(tx.to())
-                << ", from: " << common::Encode::HexEncode(tx.from())
-                << ", amount: " << tx.amount()
-                << ", gid: " << common::Encode::HexEncode(tx.gid())
-                << std::endl;
             tx.set_status(balance_status);
             assert(false);
             return kBftError;

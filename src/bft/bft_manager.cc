@@ -243,12 +243,6 @@ void BftManager::HandleRootTxBlock(
         }
 
         db::DbWriteBach db_batch;
-        std::cout << "AddNewAccount called: " << tx_list[i].to_add()
-            << ", id: " << common::Encode::HexEncode(tx_list[i].to())
-            << ", from: " << common::Encode::HexEncode(tx_list[i].from())
-            << ", amount: " << tx_list[i].amount()
-            << ", gid: " << common::Encode::HexEncode(tx_list[i].gid())
-            << std::endl;
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 tx_bft.to_tx().block().height(),
