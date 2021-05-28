@@ -75,7 +75,7 @@ enum BftCheckTimeoutStatus {
     kTimeoutNormal = 0,
     kTimeout = 1,
     kTimeoutCallPrecommit = 2,
-    kTimeoutCallCommit = 3,
+    kTimeoutCallReChallenge = 3,
     kTimeoutWaitingBackup = 4,
 };
 

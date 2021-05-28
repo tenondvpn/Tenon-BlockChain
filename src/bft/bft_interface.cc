@@ -179,7 +179,7 @@ int BftInterface::LeaderCommitOk(
 
 int BftInterface::CheckTimeout() {
     if (timeout_ <= std::chrono::steady_clock::now()) {
-        return kBftTimeout;
+        return kTimeout;
     }
 
     if (!ThisNodeIsLeader()) {
@@ -194,10 +194,10 @@ int BftInterface::CheckTimeout() {
                 now_timestamp >= prepare_timeout_)) {
             LeaderCreatePreCommitAggChallenge();
             leader_handled_precommit_ = true;
-            return kBftAgree;
+            return kTimeoutCallPrecommit;
         }
 
-        return kBftWaitingBackup;
+        return kTimeoutWaitingBackup;
     }
 
     if (!leader_handled_commit_) {
@@ -205,19 +205,19 @@ int BftInterface::CheckTimeout() {
         if (now_timestamp >= precommit_timeout_) {
             if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
                 BFT_ERROR("precommit_bitmap_.valid_count() failed!");
-                return kBftOppose;
+                return kTimeout;
             }
 
             prepare_bitmap_ = precommit_bitmap_;
             LeaderCreatePreCommitAggChallenge();
             RechallengePrecommitClear();
-            return kBftReChallenge;
+            return kTimeoutCallReChallenge;
         }
 
-        return kBftWaitingBackup;
+        return kTimeoutWaitingBackup;
     }
 
-    return kBftSuccess;
+    return kTimeoutNormal;
 }
 
 void BftInterface::RechallengePrecommitClear() {

@@ -1247,11 +1247,6 @@ public:
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
             auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.begin()->second;
-            if (handled_count >= backup_msgs.size()) {
-                bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
-                std::cout << "leader commit failed!" << std::endl << std::endl << std::endl << std::endl << std::endl;
-            }
-
             bft::BftManager::Instance()->HandleMessage(*iter);
             if (bft::BftManager::Instance()->bft_hash_map_.empty()) {
                 std::cout << "leader commit over!" << std::endl;
@@ -1259,6 +1254,9 @@ public:
             }
 
             if (handled_count >= backup_msgs.size()) {
+                bft_ptr->precommit_timeout_ = std::chrono::steady_clock::now();
+                int res = bft_ptr->CheckTimeout();
+                std::cout << "bft check timeout res: " << res << std::endl;
                 backup_msgs.clear();
                 goto backup_reprecommit_goto_tag;
             }

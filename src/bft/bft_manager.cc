@@ -805,43 +805,7 @@ int BftManager::LeaderCommit(
     if (res == kBftAgree) {
         return LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {
-        transport::protobuf::Header msg;
-        bft_ptr->init_precommit_timeout();
-        uint32_t member_idx = GetMemberIndex(
-            bft_ptr->network_id(),
-            common::GlobalInfo::Instance()->id());
-        if (member_idx == kInvalidMemberIndex) {
-            return kBftError;
-        }
-
-        security::Response sec_res(
-            bft_ptr->secret(),
-            bft_ptr->challenge(),
-            *(security::Schnorr::Instance()->prikey()));
-        if (bft_ptr->LeaderCommitOk(
-                member_idx,
-                true,
-                sec_res,
-                common::GlobalInfo::Instance()->id()) == kBftOppose) {
-            BFT_ERROR("leader commit failed!");
-            RemoveBft(bft_ptr->gid());
-            return kBftError;
-        }
-
-        std::string agg_res_str;
-        sec_res.Serialize(agg_res_str);
-        std::string agg_cha_str;
-        bft_ptr->challenge().Serialize(agg_cha_str);
-        std::string pri_key_str;
-        security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
-        std::string sec_key_str;
-        bft_ptr->secret().Serialize(sec_key_str);
-        std::string pub_key_str;
-        security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-        BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
-        network::Route::Instance()->Send(msg);
-        BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
-        leader_precommit_msg_ = msg;
+        return LeaderReChallenge(bft_ptr);
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
         BFT_ERROR("LeaderCommit oppose", bft_ptr);
@@ -849,6 +813,7 @@ int BftManager::LeaderCommit(
         // continue waiting, do nothing.
         BFT_ERROR("LeaderCommit waiting", bft_ptr);
     }
+
     return kBftSuccess;
 }
 
@@ -904,6 +869,49 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     RemoveBft(bft_ptr->gid());
     leader_commit_msg_ = msg;
     BFT_ERROR("LeaderCommit");
+    return kBftSuccess;
+}
+
+int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
+    transport::protobuf::Header msg;
+    bft_ptr->init_precommit_timeout();
+    uint32_t member_idx = GetMemberIndex(
+        bft_ptr->network_id(),
+        common::GlobalInfo::Instance()->id());
+    if (member_idx == kInvalidMemberIndex) {
+        return kBftError;
+    }
+
+    security::Response sec_res(
+        bft_ptr->secret(),
+        bft_ptr->challenge(),
+        *(security::Schnorr::Instance()->prikey()));
+    if (bft_ptr->LeaderCommitOk(
+            member_idx,
+            true,
+            sec_res,
+            common::GlobalInfo::Instance()->id()) == kBftOppose) {
+        BFT_ERROR("leader commit failed!");
+        RemoveBft(bft_ptr->gid());
+        return kBftError;
+    }
+
+    std::string agg_res_str;
+    sec_res.Serialize(agg_res_str);
+    std::string agg_cha_str;
+    bft_ptr->challenge().Serialize(agg_cha_str);
+    std::string pri_key_str;
+    security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
+    std::string sec_key_str;
+    bft_ptr->secret().Serialize(sec_key_str);
+    std::string pub_key_str;
+    security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+    network::Route::Instance()->Send(msg);
+    BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
+    leader_precommit_msg_ = msg;
     return kBftSuccess;
 }
 
@@ -1111,8 +1119,8 @@ void BftManager::CheckTimeout() {
                     LeaderCallPrecommit(iter->second);
                     break;
                 }
-                case kTimeoutCallCommit: {
-                    LeaderCallCommit(iter->second);
+                case kTimeoutCallReChallenge: {
+                    LeaderReChallenge(iter->second);
                     break;
                 }
                 case kTimeoutNormal:
