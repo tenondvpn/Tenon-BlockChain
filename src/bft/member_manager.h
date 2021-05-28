@@ -5,6 +5,7 @@
 
 #include "security/public_key.h"
 #include "security/commit_secret.h"
+#include "security/commit_point.h"
 #include "dht/node.h"
 #include "bft/bft_utils.h"
 
