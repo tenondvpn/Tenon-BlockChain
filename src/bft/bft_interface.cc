@@ -248,13 +248,12 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             continue;
         }
 
-        auto mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
+        BftMemberPtr mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
-        auto commit_point = security::CommitPoint(iter->second->secret);
-        points.push_back(commit_point);
-        mem_ptr->commit_point = commit_point;
+        mem_ptr->commit_point = security::CommitPoint(iter->second->secret);
+        points.push_back(mem_ptr->commit_point);
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);

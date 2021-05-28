@@ -1200,7 +1200,10 @@ public:
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
             SetGloableInfo(from_data, network::kRootCongressNetworkId);
-            ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+            if (i != 7) {
+                ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+            }
+
             bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
             backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);

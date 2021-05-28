@@ -33,6 +33,9 @@ protected:
     ContractInterface(const std::string& create_address) : create_address_(create_address) {}
     virtual ~ContractInterface() {}
 
+    uint64_t ComputeGasUsed(uint32_t base, uint32_t word, uint32_t data_size) {
+        return static_cast<uint64_t>(base + (data_size + 31) / 32 * word);
+    }
     std::string create_address_;
 
     DISALLOW_COPY_AND_ASSIGN(ContractInterface);

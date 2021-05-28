@@ -31,6 +31,10 @@ int Ecrecover::call(
         uint64_t gas,
         const std::string& origin_address,
         evmc_result* res) {
+    if (res->gas_left < gas_cast_) {
+        return kContractError;
+    }
+
     if (param.data.size() != 128) {
         return kContractError;
     }
@@ -45,6 +49,7 @@ int Ecrecover::call(
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));
+    res->gas_left -= gas_cast_;
     return kContractSuccess;
 }
 
