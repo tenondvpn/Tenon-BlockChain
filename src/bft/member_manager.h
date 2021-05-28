@@ -20,6 +20,7 @@ struct BftMember {
     security::PublicKey pubkey;
     uint32_t index;
     security::CommitSecret secret;
+    security::CommitPoint commit_point;
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;

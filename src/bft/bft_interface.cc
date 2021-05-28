@@ -128,6 +128,16 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (agree) {
+        auto mem_ptr = MemberManager::Instance()->GetMember(network_id_, index);
+        if (!security::MultiSign::Instance()->VerifyResponse(
+                res,
+                challenge_,
+                mem_ptr->pubkey,
+                mem_ptr->commit_point)) {
+            BFT_ERROR("invalid backup response.");
+            return kBftWaitingBackup;
+        }
+
         commit_aggree_set_.insert(id);
         precommit_bitmap_.Set(index);
         auto backup_res = std::make_shared<BackupResponse>();
@@ -242,7 +252,9 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         pubkeys.push_back(mem_ptr->pubkey);
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
-        points.push_back(security::CommitPoint(iter->second->secret));
+        auto commit_point = security::CommitPoint(iter->second->secret);
+        points.push_back(commit_point);
+        mem_ptr->commit_point = commit_point;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
