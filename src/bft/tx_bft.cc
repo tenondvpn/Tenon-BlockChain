@@ -1512,7 +1512,8 @@ int TxBft::LeaderAddNormalTransaction(
             std::cout << "account address not exists: " << common::Encode::HexEncode(tx.to())
                 << ", from: " << common::Encode::HexEncode(tx.from())
                 << ", amount: " << tx.amount()
-                <<  std::endl;
+                << ", gid: " << common::Encode::HexEncode(tx.gid())
+                << std::endl;
             tx.set_status(balance_status);
             assert(false);
             return kBftError;

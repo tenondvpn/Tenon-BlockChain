@@ -340,18 +340,9 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
         if (bft_ptr->prpare_block()->height() ==
                 (waiting_pools_height_[bft_ptr->pool_index()] + 1)) {
             waiting_pools_.UnSet(bft_ptr->pool_index());
+            BFT_ERROR("bft over pool index: %d", bft_ptr->pool_index());
         }
     }
-}
-
-bool TxPoolManager::LockPool(uint32_t pool_index) {
-    std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
-    if (waiting_pools_.Valid(pool_index)) {
-        return false;
-    }
-
-    waiting_pools_.Set(pool_index);
-    return true;
 }
 
 }  // namespace bft

@@ -247,6 +247,7 @@ void BftManager::HandleRootTxBlock(
             << ", id: " << common::Encode::HexEncode(tx_list[i].to())
             << ", from: " << common::Encode::HexEncode(tx_list[i].from())
             << ", amount: " << tx_list[i].amount()
+            << ", gid: " << common::Encode::HexEncode(tx_list[i].gid())
             << std::endl;
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],

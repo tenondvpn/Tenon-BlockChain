@@ -22,7 +22,6 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
-    bool TxLockPool(uint32_t pool_index);
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);
 
 private:

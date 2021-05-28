@@ -20,7 +20,6 @@ public:
     int AddTx(TxItemPtr& tx_ptr);
     void GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec);
     void BftOver(BftInterfacePtr& bft_ptr);
-    bool LockPool(uint32_t pool_index);
     TxItemPtr GetTx(
         uint32_t pool_index,
         bool add_to,

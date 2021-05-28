@@ -126,10 +126,6 @@ void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {
     tx_pool_.BftOver(bft_ptr);
 }
 
-bool DispatchPool::TxLockPool(uint32_t pool_index) {
-    return tx_pool_.LockPool(pool_index);
-}
-
 }  // namespace bft
 
 }  // namespace tenon
