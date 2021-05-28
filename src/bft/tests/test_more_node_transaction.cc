@@ -38,10 +38,8 @@ static const std::string purchase = common::Encode::HexDecode(std::string("60806
 static const std::string simple_payment_channel = common::Encode::HexDecode(std::string("608060405260405162000cc638038062000cc6833981810160405281019062000029919062000144565b5b30600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555033600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508042620000fb919062000188565b60026000508190909055505b5050620002955662000294565b600081519050620001258162000258565b5b92915050565b6000815190506200013d8162000276565b5b92915050565b60006000604083850312156200015a5760006000fd5b60006200016a8582860162000114565b92505060206200017d858286016200012c565b9150505b9250929050565b600062000195826200021c565b9150620001a2836200021c565b9250827fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff03821115620001da57620001d962000227565b5b82820190505b92915050565b6000620001f382620001fb565b90505b919050565b600073ffffffffffffffffffffffffffffffffffffffff821690505b919050565b60008190505b919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b565b6200026381620001e6565b81141515620002725760006000fd5b5b50565b62000281816200021c565b81141515620002905760006000fd5b5b50565b5b610a2180620002a56000396000f3fe60806040523480156100115760006000fd5b50600436106100825760003560e01c806366d003ac1161005c57806366d003ac146100cc57806367e404ce146100ea5780639714378c14610108578063d4dca69b1461012457610082565b80630e1da6c314610088578063415ffba7146100925780634665096d146100ae57610082565b60006000fd5b610090610142565b005b6100ac60048036038101906100a79190610640565b610194565b005b6100b66102c2565b6040516100c39190610803565b60405180910390f35b6100d46102cb565b6040516100e19190610777565b60405180910390f35b6100f26102f1565b6040516100ff9190610777565b60405180910390f35b610122600480360381019061011d9190610615565b610317565b005b61012c610398565b604051610139919061075b565b60405180910390f35b60026000505442101515156101575760006000fd5b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156101f15760006000fd5b81600260005081909090555061020d82826103be63ffffffff16565b15156102195760006000fd5b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc839081150290604051600060405180830381858888f19350505050158015610282573d600060003e3d6000fd5b50600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b5050565b60026000505481565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156103745760006000fd5b600260005054811115156103885760006000fd5b8060026000508190909055505b50565b600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600060007fdce7816498efeb01170e62af6c6b04b5aaf83832e6331f4cfdd8db2edc473bbb60001b9050600061042130866040516020016104009291906107d9565b6040516020818303038152906040528051906020012061049463ffffffff16565b9050600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1661046c82866104c963ffffffff16565b73ffffffffffffffffffffffffffffffffffffffff16149250505061048e5650505b92915050565b6000816040516020016104a79190610734565b6040516020818303038152906040528051906020012090506104c4565b919050565b60006000600060006104e08561054963ffffffff16565b925092509250600186848484604051600081526020016040526040516105099493929190610793565b6020604051602081039080840390855afa15801561052c573d600060003e3d6000fd5b505050602060405103519350505050610543565050505b92915050565b600060006000604184511415156105605760006000fd5b6020840151915060408401519050606084015160001a9250828282925092509250610586565b9193909250566109ea565b60006105a461059f84610846565b61081f565b9050828152602081018484840111156105bd5760006000fd5b6105c8848285610915565b505b9392505050565b600082601f83011215156105e55760006000fd5b81356105f5848260208601610591565b9150505b92915050565b60008135905061060e816109cf565b5b92915050565b6000602082840312156106285760006000fd5b6000610636848285016105ff565b9150505b92915050565b60006000604083850312156106555760006000fd5b6000610663858286016105ff565b925050602083013567ffffffffffffffff8111156106815760006000fd5b61068d858286016105d1565b9150505b9250929050565b6106a181610897565b82525b5050565b6106b181610884565b82525b5050565b6106c1816108aa565b82525b5050565b6106d96106d4826108aa565b610957565b82525b5050565b6106e9816108ef565b82525b5050565b60006106fd601c83610878565b9150610708826109a5565b601c820190505b919050565b61071d816108d6565b82525b5050565b61072d816108e1565b82525b5050565b600061073f826106f0565b915061074b82846106c8565b6020820191508190505b92915050565b600060208201905061077060008301846106a8565b5b92915050565b600060208201905061078c6000830184610698565b5b92915050565b60006080820190506107a860008301876106b8565b6107b56020830186610724565b6107c260408301856106b8565b6107cf60608301846106b8565b5b95945050505050565b60006040820190506107ee60008301856106e0565b6107fb6020830184610714565b5b9392505050565b60006020820190506108186000830184610714565b5b92915050565b600061082961083b565b90506108358282610925565b5b919050565b600060405190505b90565b600067ffffffffffffffff82111561086157610860610962565b5b61086a82610993565b90506020810190505b919050565b60008190505b92915050565b600061088f826108b5565b90505b919050565b60006108a2826108b5565b90505b919050565b60008190505b919050565b600073ffffffffffffffffffffffffffffffffffffffff821690505b919050565b60008190505b919050565b600060ff821690505b919050565b60006108fa82610902565b90505b919050565b600061090d826108b5565b90505b919050565b828183376000838301525b505050565b61092e82610993565b810181811067ffffffffffffffff8211171561094d5761094c610962565b5b80604052505b5050565b60008190505b919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b565b6000601f19601f83011690505b919050565b7f19457468657265756d205369676e6564204d6573736167653a0a33320000000060008201525b50565b6109d8816108d6565b811415156109e65760006000fd5b5b50565bfea2646970667358221220fc03ff6709710340badcd8689b1c985de83ff2c3a15931de9a062182a0e5c3c364736f6c63430008030033") + "000000000000000000000000dc09e1166271813aac21ff255960dcf39ccc000b0000000000000000000000000000000000000000000000000000000000000064");
 
 static const uint32_t kRootNodeCount = 31u;
-float invalid_root_node_rate = 0.2f;
 std::set<uint32_t> invalid_root_node_vec;
 static const uint32_t kConsensusNodeCount = 31u;
-float invalid_consensus_node_rate = 0.2f;
 std::set<uint32_t> invalid_consensus_node_vec;
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 static const char* kConsensusNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
@@ -55,16 +53,6 @@ public:
         file = fopen(log_conf_path.c_str(), "w");
         if (file == NULL) {
             return;
-        }
-
-        uint32_t root_invalid_count = (uint32_t)((float)kRootNodeCount * invalid_root_node_rate);
-        while (invalid_root_node_vec.size() < (root_invalid_count - 1)) {
-            invalid_root_node_vec.insert(rand() % kRootNodeCount);
-        }
-
-        uint32_t cons_invalid_count = (uint32_t)((float)kConsensusNodeCount * invalid_consensus_node_rate);
-        while (invalid_consensus_node_vec.size() < (cons_invalid_count - 1)) {
-            invalid_consensus_node_vec.insert(rand() % kConsensusNodeCount);
         }
 
         std::string log_str = ("# log4cpp.properties\n"
@@ -1161,29 +1149,15 @@ public:
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
         EXPECT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
-
-
-
-
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
-        {
-            uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
-            auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
-            bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
-            std::string sec_str;
-            mem_ptr->secret.Serialize(sec_str);
-            security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
-            security::PublicKey pubkey(prikey);
-            std::string pubkey_str;
-            EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
-        }
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         std::vector<transport::protobuf::Header> backup_msgs;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 if (rand() % 3 < 2) {
+                    std::cout << "invalid node index: " << i << std::endl;
                     continue;
                 }
             }
@@ -1215,17 +1189,6 @@ public:
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
         backup_msgs.clear();
-        {
-            uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, GetIdByPrikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e")));
-            auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
-            bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
-            std::string sec_str;
-            mem_ptr->secret.Serialize(sec_str);
-            security::PrivateKey prikey(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
-            security::PublicKey pubkey(prikey);
-            std::string pubkey_str;
-            EXPECT_EQ(pubkey.Serialize(pubkey_str, true), security::kPublicKeyUncompressSize);
-        }
     backup_reprecommit_goto_tag:
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
@@ -1253,7 +1216,6 @@ public:
             common::GlobalInfo::Instance()->id());
         auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
-
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
@@ -1271,12 +1233,10 @@ public:
 
             if (handled_count >= backup_msgs.size()) {
                 backup_msgs.clear();
-                usleep(1000000);
                 goto backup_reprecommit_goto_tag;
             }
         }
 
-        exit(0);
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
@@ -1313,6 +1273,21 @@ public:
         ASSERT_EQ(GetTxMessageHash(tx_bft.to_tx().block().tx_list(0)), GetTxMessageHash(tx_bft_t.to_tx().block().tx_list(0)));
     }
 
+    void ResetInvalidNodes(float invalid_root_node_rate, float invalid_consensus_node_rate) {
+        invalid_root_node_vec.clear();
+        invalid_consensus_node_vec.clear();
+        uint32_t root_invalid_count = (uint32_t)((float)kRootNodeCount * invalid_root_node_rate);
+        std::cout << "TTTTTTTTT: " << root_invalid_count << std::endl;
+        while (invalid_root_node_vec.size() < (root_invalid_count - 1)) {
+            invalid_root_node_vec.insert(rand() % kRootNodeCount);
+        }
+
+        uint32_t cons_invalid_count = (uint32_t)((float)kConsensusNodeCount * invalid_consensus_node_rate);
+        while (invalid_consensus_node_vec.size() < (cons_invalid_count - 1)) {
+            invalid_consensus_node_vec.insert(rand() % kConsensusNodeCount);
+        }
+    }
+
 private:
     static std::map<uint32_t, std::string> pool_index_map_;
     std::unordered_set<std::string> created_gids_;
@@ -1320,6 +1295,7 @@ private:
 
 std::map<uint32_t, std::string> TestMoreNodeTransaction::pool_index_map_;
 TEST_F(TestMoreNodeTransaction, RootCreateNewAccount) {
+    ResetInvalidNodes(0.2, 0.2);
     std::string from_prikey = common::Encode::HexDecode(
         "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
     // create 1000 address
@@ -1378,6 +1354,7 @@ TEST_F(TestMoreNodeTransaction, RootCreateNewAccount) {
 }
 
 TEST_F(TestMoreNodeTransaction, SomeNodeInvalid) {
+    ResetInvalidNodes(0.2, 0.2);
     std::string from_prikey = common::Encode::HexDecode(
         "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
     // create 1000 address
@@ -1435,6 +1412,182 @@ TEST_F(TestMoreNodeTransaction, SomeNodeInvalid) {
     }
 }
 
+TEST_F(TestMoreNodeTransaction, SomeNodeInvalid1) {
+    ResetInvalidNodes(0.1, 0.1);
+    std::string from_prikey = common::Encode::HexDecode(
+        "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+    // create 1000 address
+    for (int32_t i = 0; i < 10; ++i)
+    {
+        char data[128];
+        snprintf(data, sizeof(data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", i);
+        std::string to_prikey = common::Encode::HexDecode(data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(to_balance, common::kInvalidUint64);
+        uint64_t all_amount = 0;
+        uint64_t amount = 1000000llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, all_amount);
+    }
+
+    for (int32_t i = 0; i < 2; ++i) {
+        uint32_t rand_from = rand() % 10;
+        uint32_t rand_to = rand() % 10;
+        if (rand_from == rand_to) {
+            continue;
+        }
+
+        char from_data[128];
+        snprintf(from_data, sizeof(from_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_from);
+        char to_data[128];
+        snprintf(to_data, sizeof(to_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_to);
+        std::string from_prikey = common::Encode::HexDecode(from_data);
+        std::string to_prikey = common::Encode::HexDecode(to_data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t init_to_balance = GetBalanceByPrikey(to_prikey);
+        uint64_t all_amount = 0;
+        uint64_t amount = (rand() % 10000) * common::kTenonMiniTransportUnit + 1;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, init_to_balance + all_amount);
+    }
+}
+
+TEST_F(TestMoreNodeTransaction, SomeNodeInvalid2) {
+    ResetInvalidNodes(0.3, 0.3);
+    std::string from_prikey = common::Encode::HexDecode(
+        "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+    // create 1000 address
+    for (int32_t i = 0; i < 10; ++i)
+    {
+        char data[128];
+        snprintf(data, sizeof(data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", i);
+        std::string to_prikey = common::Encode::HexDecode(data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(to_balance, common::kInvalidUint64);
+        uint64_t all_amount = 0;
+        uint64_t amount = 1000000llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, all_amount);
+    }
+
+    for (int32_t i = 0; i < 2; ++i) {
+        uint32_t rand_from = rand() % 10;
+        uint32_t rand_to = rand() % 10;
+        if (rand_from == rand_to) {
+            continue;
+        }
+
+        char from_data[128];
+        snprintf(from_data, sizeof(from_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_from);
+        char to_data[128];
+        snprintf(to_data, sizeof(to_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_to);
+        std::string from_prikey = common::Encode::HexDecode(from_data);
+        std::string to_prikey = common::Encode::HexDecode(to_data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t init_to_balance = GetBalanceByPrikey(to_prikey);
+        uint64_t all_amount = 0;
+        uint64_t amount = (rand() % 10000) * common::kTenonMiniTransportUnit + 1;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, init_to_balance + all_amount);
+    }
+}
+
+TEST_F(TestMoreNodeTransaction, SomeNodeInvalid3) {
+    ResetInvalidNodes(0.33, 0.33);
+    std::string from_prikey = common::Encode::HexDecode(
+        "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+    // create 1000 address
+    for (int32_t i = 0; i < 10; ++i)
+    {
+        char data[128];
+        snprintf(data, sizeof(data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", i);
+        std::string to_prikey = common::Encode::HexDecode(data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(to_balance, common::kInvalidUint64);
+        uint64_t all_amount = 0;
+        uint64_t amount = 1000000llu * common::kTenonMiniTransportUnit;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, all_amount);
+    }
+
+    for (int32_t i = 0; i < 2; ++i) {
+        uint32_t rand_from = rand() % 10;
+        uint32_t rand_to = rand() % 10;
+        if (rand_from == rand_to) {
+            continue;
+        }
+
+        char from_data[128];
+        snprintf(from_data, sizeof(from_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_from);
+        char to_data[128];
+        snprintf(to_data, sizeof(to_data), "%03df72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_to);
+        std::string from_prikey = common::Encode::HexDecode(from_data);
+        std::string to_prikey = common::Encode::HexDecode(to_data);
+        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t init_to_balance = GetBalanceByPrikey(to_prikey);
+        uint64_t all_amount = 0;
+        uint64_t amount = (rand() % 10000) * common::kTenonMiniTransportUnit + 1;
+        uint64_t all_gas = 0;
+        all_amount += amount;
+        all_gas += bft::kTransferGas;
+        std::map<std::string, std::string> attrs;
+        Transaction(
+            from_prikey, to_prikey, amount, 1000000,
+            common::kConsensusTransaction, true, false, attrs);
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(to_balance, init_to_balance + all_amount);
+    }
+}
 }  // namespace test
 
 }  // namespace bft

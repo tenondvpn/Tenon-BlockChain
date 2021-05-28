@@ -90,6 +90,7 @@ int BftInterface::LeaderPrecommitOk(
         backup_res->index = index;
         backup_res->secret = secret;
         backup_prepare_response_.insert(std::make_pair(index, backup_res));
+        std::cout << "LeaderPrecommitOk called: " << index << std::endl;
         prepare_bitmap_.Set(index);
         std::string sec_str;
         secret.Serialize(sec_str);
@@ -121,6 +122,10 @@ int BftInterface::LeaderCommitOk(
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_commit_) {
         return kBftHandled;
+    }
+
+    if (!prepare_bitmap_.Valid(index)) {
+        return kBftWaitingBackup;
     }
 
     if (agree) {
