@@ -641,33 +641,7 @@ int BftManager::LeaderPrecommit(
             backup_secret,
             security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
     if (res == kBftAgree) {
-        // check pre-commit multi sign
-        bft_ptr->init_precommit_timeout();
-        uint32_t member_idx = GetMemberIndex(
-                bft_ptr->network_id(),
-                common::GlobalInfo::Instance()->id());
-        if (member_idx == kInvalidMemberIndex) {
-            return kBftError;
-        }
-
-        security::Response sec_res(
-                bft_ptr->secret(),
-                bft_ptr->challenge(),
-                *(security::Schnorr::Instance()->prikey()));
-        if (bft_ptr->LeaderCommitOk(
-                member_idx,
-                true,
-                sec_res,
-                common::GlobalInfo::Instance()->id()) == kBftOppose) {
-            BFT_ERROR("leader commit failed!");
-            RemoveBft(bft_ptr->gid());
-            return kBftError;
-        }
-        transport::protobuf::Header msg;
-        BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
-        network::Route::Instance()->Send(msg);
-        BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
-        leader_precommit_msg_ = msg;
+        return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
         BFT_ERROR("LeaderPrecommit oppose", bft_ptr);
@@ -677,6 +651,40 @@ int BftManager::LeaderPrecommit(
     }
 
     // broadcast pre-commit to backups
+    return kBftSuccess;
+}
+
+int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
+    // check pre-commit multi sign
+    bft_ptr->init_precommit_timeout();
+    uint32_t member_idx = GetMemberIndex(
+            bft_ptr->network_id(),
+            common::GlobalInfo::Instance()->id());
+    if (member_idx == kInvalidMemberIndex) {
+        return kBftError;
+    }
+
+    security::Response sec_res(
+            bft_ptr->secret(),
+            bft_ptr->challenge(),
+            *(security::Schnorr::Instance()->prikey()));
+    if (bft_ptr->LeaderCommitOk(
+            member_idx,
+            true,
+            sec_res,
+            common::GlobalInfo::Instance()->id()) == kBftOppose) {
+        BFT_ERROR("leader commit failed!");
+        RemoveBft(bft_ptr->gid());
+        return kBftError;
+    }
+
+    transport::protobuf::Header msg;
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+    network::Route::Instance()->Send(msg);
+    BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
+    leader_precommit_msg_ = msg;
     return kBftSuccess;
 }
 
@@ -795,55 +803,7 @@ int BftManager::LeaderCommit(
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
     if (res == kBftAgree) {
-        // check pre-commit multi sign and leader commit
-        transport::protobuf::Header msg;
-        BftProto::LeaderCreateCommit(local_node, bft_ptr, msg);
-        if (!msg.has_data()) {
-            BFT_ERROR("leader create commit message failed!");
-            return kBftError;
-        }
-
-        auto tenon_block = bft_ptr->prpare_block();
-        std::string agg_sign_challenge_str;
-        std::string agg_sign_response_str;
-        bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
-        tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
-        tenon_block->set_agg_sign_response(agg_sign_response_str);
-        tenon_block->set_pool_index(bft_ptr->pool_index());
-        const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
-        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
-            tenon_block->add_bitmap(bitmap_data[i]);
-        }
-
-        assert(tenon_block->bitmap_size() > 0);
-        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-            db::DbWriteBach db_batch;
-            RootCommitAddNewAccount(*tenon_block, db_batch);
-            auto st = db::Db::Instance()->Put(db_batch);
-            if (!st.ok()) {
-                exit(0);
-            }
-        }
-
-        db::DbWriteBach db_batch;
-        if (block::BlockManager::Instance()->AddNewBlock(
-                *tenon_block,
-                db_batch) != block::kBlockSuccess) {
-            BFT_ERROR("leader add block to db failed!");
-            return kBftError;
-        }
-
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
-        }
-
-        bft_ptr->set_status(kBftCommited);
-        network::Route::Instance()->Send(msg);
-        LeaderBroadcastToAcc(bft_ptr->prpare_block());
-        RemoveBft(bft_ptr->gid());
-        leader_commit_msg_ = msg;
-        BFT_ERROR("LeaderCommit");
+        return LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {
         transport::protobuf::Header msg;
         bft_ptr->init_precommit_timeout();
@@ -889,6 +849,61 @@ int BftManager::LeaderCommit(
         // continue waiting, do nothing.
         BFT_ERROR("LeaderCommit waiting", bft_ptr);
     }
+    return kBftSuccess;
+}
+
+int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
+    // check pre-commit multi sign and leader commit
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    transport::protobuf::Header msg;
+    BftProto::LeaderCreateCommit(local_node, bft_ptr, msg);
+    if (!msg.has_data()) {
+        BFT_ERROR("leader create commit message failed!");
+        return kBftError;
+    }
+
+    auto tenon_block = bft_ptr->prpare_block();
+    std::string agg_sign_challenge_str;
+    std::string agg_sign_response_str;
+    bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
+    tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
+    tenon_block->set_agg_sign_response(agg_sign_response_str);
+    tenon_block->set_pool_index(bft_ptr->pool_index());
+    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
+    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+        tenon_block->add_bitmap(bitmap_data[i]);
+    }
+
+    assert(tenon_block->bitmap_size() > 0);
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        db::DbWriteBach db_batch;
+        RootCommitAddNewAccount(*tenon_block, db_batch);
+        auto st = db::Db::Instance()->Put(db_batch);
+        if (!st.ok()) {
+            exit(0);
+        }
+    }
+
+    db::DbWriteBach db_batch;
+    if (block::BlockManager::Instance()->AddNewBlock(
+            *tenon_block,
+            db_batch) != block::kBlockSuccess) {
+        BFT_ERROR("leader add block to db failed!");
+        return kBftError;
+    }
+
+    auto st = db::Db::Instance()->Put(db_batch);
+    if (!st.ok()) {
+        exit(0);
+    }
+
+    bft_ptr->set_status(kBftCommited);
+    network::Route::Instance()->Send(msg);
+    LeaderBroadcastToAcc(bft_ptr->prpare_block());
+    RemoveBft(bft_ptr->gid());
+    leader_commit_msg_ = msg;
+    BFT_ERROR("LeaderCommit");
     return kBftSuccess;
 }
 
@@ -1085,12 +1100,31 @@ void BftManager::CheckTimeout() {
     {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
         for (auto iter = bft_hash_map_.begin(); iter != bft_hash_map_.end();) {
-            if (iter->second->timeout()) {
-                timeout_vec.push_back(iter->second);
-                bft_hash_map_.erase(iter++);
-                continue;
+            int timeout_res = iter->second->CheckTimeout();
+            switch (timeout_res) {
+                case kTimeout: {
+                    timeout_vec.push_back(iter->second);
+                    bft_hash_map_.erase(iter++);
+                    break;
+                }
+                case kTimeoutCallPrecommit: {
+                    LeaderCallPrecommit(iter->second);
+                    break;
+                }
+                case kTimeoutCallCommit: {
+                    LeaderCallCommit(iter->second);
+                    break;
+                }
+                case kTimeoutNormal:
+                case kTimeoutWaitingBackup:
+                    break;
+                default:
+                    break;
             }
-            ++iter;
+            
+            if (timeout_res != kTimeout) {
+                ++iter;
+            }
         }
     }
 

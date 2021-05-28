@@ -93,6 +93,8 @@ private:
         bft::protobuf::BftMessage& bft_msg);
     bool AggSignValid(const bft::protobuf::Block& block);
     void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
+    int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
+    int LeaderCallCommit(BftInterfacePtr& bft_ptr);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;

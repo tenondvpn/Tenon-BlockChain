@@ -90,10 +90,10 @@ int BftInterface::LeaderPrecommitOk(
         backup_res->index = index;
         backup_res->secret = secret;
         backup_prepare_response_.insert(std::make_pair(index, backup_res));
-        std::cout << "LeaderPrecommitOk called: " << index << std::endl;
-        prepare_bitmap_.Set(index);
         std::string sec_str;
         secret.Serialize(sec_str);
+        std::cout << "LeaderPrecommitOk called: " << index << ", sec: " << common::Encode::HexEncode(sec_str) << std::endl;
+        prepare_bitmap_.Set(index);
     } else {
         precommit_oppose_set_.insert(id);
     }
@@ -125,6 +125,7 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (!prepare_bitmap_.Valid(index)) {
+        std::cout << "not prepared index: " << index << std::endl;
         return kBftWaitingBackup;
     }
 
@@ -141,6 +142,7 @@ int BftInterface::LeaderCommitOk(
 
     if (precommit_bitmap_ == prepare_bitmap_) {
         leader_handled_commit_ = true;
+        std::cout << "LeaderCreateCommitAggSign called: " << std::endl;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {
             BFT_ERROR("leader create commit agg sign failed!");
             return kBftOppose;
@@ -175,6 +177,49 @@ int BftInterface::LeaderCommitOk(
     return kBftWaitingBackup;
 }
 
+int BftInterface::CheckTimeout() {
+    if (timeout_ <= std::chrono::steady_clock::now()) {
+        return kBftTimeout;
+    }
+
+    if (!ThisNodeIsLeader()) {
+        return kBftSuccess;
+    }
+
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (!leader_handled_precommit_) {
+        auto now_timestamp = std::chrono::steady_clock::now();
+        if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
+                (precommit_aggree_set_.size() > min_aggree_member_count_ &&
+                now_timestamp >= prepare_timeout_)) {
+            LeaderCreatePreCommitAggChallenge();
+            leader_handled_precommit_ = true;
+            return kBftAgree;
+        }
+
+        return kBftWaitingBackup;
+    }
+
+    if (!leader_handled_commit_) {
+        auto now_timestamp = std::chrono::steady_clock::now();
+        if (now_timestamp >= precommit_timeout_) {
+            if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
+                BFT_ERROR("precommit_bitmap_.valid_count() failed!");
+                return kBftOppose;
+            }
+
+            prepare_bitmap_ = precommit_bitmap_;
+            LeaderCreatePreCommitAggChallenge();
+            RechallengePrecommitClear();
+            return kBftReChallenge;
+        }
+
+        return kBftWaitingBackup;
+    }
+
+    return kBftSuccess;
+}
+
 void BftInterface::RechallengePrecommitClear() {
     leader_handled_commit_ = false;
     init_precommit_timeout();
@@ -201,6 +246,9 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
         points.push_back(security::CommitPoint(iter->second->secret));
+        std::string sec_str;
+        iter->second->secret.Serialize(sec_str);
+        std::cout << "LeaderCreatePreCommitAggChallenge leader sec string: " << common::Encode::HexEncode(sec_str) << std::endl;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -222,6 +270,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
             continue;
         }
 
+        std::cout << "valid index: " << i << std::endl;
         auto mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
         auto iter = backup_precommit_response_.find(i);
         assert(iter != backup_precommit_response_.end());

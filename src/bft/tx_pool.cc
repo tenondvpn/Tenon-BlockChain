@@ -194,6 +194,7 @@ bool TxPool::TxPoolEmpty() {
 
 void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     auto item_vec = bft_ptr->item_index_vec();
+    BFT_ERROR("bft over called pool index: %d, status: %d.", pool_index_, bft_ptr->status());
     if (bft_ptr->status() != kBftCommited) {
         return;
     }
@@ -202,6 +203,11 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     for (uint32_t i = 0; i < item_vec.size(); ++i) {
         auto iter = tx_pool_.find(item_vec[i]);
         if (iter != tx_pool_.end()) {
+            BFT_ERROR("remove tx from: %s, to: %s, gid: %s, amount: lu.",
+                common::Encode::HexEncode(iter->second->tx.from()),
+                common::Encode::HexEncode(iter->second->tx.to()),
+                common::Encode::HexEncode(iter->second->tx.gid()),
+                iter->second->tx.amount());
             tx_pool_.erase(iter);
         }
     }

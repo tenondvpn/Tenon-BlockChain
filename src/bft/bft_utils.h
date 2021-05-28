@@ -71,6 +71,14 @@ enum BftLeaderCheckStatus {
     kBftReChallenge = 4,
 };
 
+enum BftCheckTimeoutStatus {
+    kTimeoutNormal = 0,
+    kTimeout = 1,
+    kTimeoutCallPrecommit = 2,
+    kTimeoutCallCommit = 3,
+    kTimeoutWaitingBackup = 4,
+};
+
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;
 // bft will delay 500ms for all node ready

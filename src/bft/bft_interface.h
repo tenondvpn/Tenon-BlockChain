@@ -50,6 +50,7 @@ public:
             const security::Response& res,
             const std::string& id);
     int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
+    int CheckTimeout();
 
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;
@@ -118,10 +119,6 @@ public:
     void reset_timeout() {
         timeout_ = (std::chrono::steady_clock::now() +
                 std::chrono::microseconds(kBftTimeout));
-    }
-
-    bool timeout() {
-        return (timeout_ <= std::chrono::steady_clock::now());
     }
 
     uint32_t member_count() {
