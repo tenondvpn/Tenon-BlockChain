@@ -8,10 +8,10 @@ namespace tenon {
 
 namespace contract {
 
-class Identity : public ContractInterface {
+class Modexp : public ContractInterface {
 public:
-    Identity(const std::string& create_address);
-    virtual ~Identity();
+    Modexp(const std::string& create_address);
+    virtual ~Modexp();
     virtual int InitWithAttr(
             const bft::protobuf::Block& block_item,
             const bft::protobuf::TxInfo& tx_info,
@@ -25,8 +25,9 @@ public:
         evmc_result* res);
 
 private:
+    uint64_t GetGasPrice(const std::string& data);
 
-    DISALLOW_COPY_AND_ASSIGN(Identity);
+    DISALLOW_COPY_AND_ASSIGN(Modexp);
 };
 
 }  // namespace contract

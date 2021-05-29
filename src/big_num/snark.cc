@@ -1,4 +1,4 @@
-#include "security/snark.h"
+#include "big_num/snark.h"
 
 namespace tenon {
 

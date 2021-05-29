@@ -1,22 +1,6 @@
 #pragma once
 
-#pragma warning(push)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include <boost/multiprecision/cpp_int.hpp>
-#pragma warning(pop)
-#pragma GCC diagnostic pop
-
-#include <libff/algebra/curves/alt_bn128/alt_bn128_g1.hpp>
-#include <libff/algebra/curves/alt_bn128/alt_bn128_g2.hpp>
-#include <libff/algebra/curves/alt_bn128/alt_bn128_pairing.hpp>
-#include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
-
 #include "common/utils.h"
-
-using namespace boost::multiprecision::literals;
-using bigint = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>>;
-using u256 = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<256, 256, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void>>;
 
 namespace tenon {
 

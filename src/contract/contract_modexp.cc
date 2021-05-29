@@ -1,32 +1,49 @@
-#include "contract/contract_identity.h"
+#include "contract/contract_modexp.h"
+
+#include <cassert>
+#include <limits>
+#include <boost/multiprecision/integer.hpp>
 
 #include "security/secp256k1.h"
+#include "big_num/snark.h"
+#include "big_num/bignum_utils.h"
 
 namespace tenon {
 
 namespace contract {
 
-Identity::Identity(const std::string& create_address)
+Modexp::Modexp(const std::string& create_address)
         : ContractInterface(create_address) {}
 
-Identity::~Identity() {}
+Modexp::~Modexp() {}
 
-int Identity::InitWithAttr(
+int Modexp::InitWithAttr(
         const bft::protobuf::Block& block_item,
         const bft::protobuf::TxInfo& tx_info,
         db::DbWriteBach& db_batch) {
     return kContractSuccess;
 }
 
-int Identity::GetAttrWithKey(const std::string& key, std::string& value) {
+int Modexp::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int Identity::Execute(bft::TxItemPtr& tx_item) {
+int Modexp::Execute(bft::TxItemPtr& tx_item) {
     return kContractSuccess;
 }
 
-int Identity::call(
+uint64_t Modexp::GetGasPrice(const std::string& data) {
+    bigint const baseLength(ParseBigEndianRightPadded(_in, 0, 32));
+    bigint const expLength(ParseBigEndianRightPadded(_in, 32, 32));
+    bigint const modLength(ParseBigEndianRightPadded(_in, 64, 32));
+
+    bigint const maxLength((std::max)(modLength, baseLength));
+    bigint const adjustedExpLength(expLengthAdjust(baseLength + 96, expLength, _in));
+
+    return multComplexity(maxLength) * max<bigint>(adjustedExpLength, 1) / 20;
+}
+
+int Modexp::call(
         const CallParameters& param,
         uint64_t gas,
         const std::string& origin_address,
@@ -40,9 +57,23 @@ int Identity::call(
         return kContractError;
     }
 
-    res->output_data = new uint8_t[param.data.size()];
-    memcpy((void*)res->output_data, param.data.c_str(), param.data.size());
-    res->output_size = param.data.size();
+    bigint const baseLength(ParseBigEndianRightPadded(param.data, 0, 32));
+    bigint const expLength(ParseBigEndianRightPadded(param.data, 32, 32));
+    bigint const modLength(ParseBigEndianRightPadded(param.data, 64, 32));
+    assert(modLength <= std::numeric_limits<size_t>::max() / 8);
+    assert(baseLength <= std::numeric_limits<size_t>::max() / 8);
+    if (modLength == 0 && baseLength == 0) {
+        return kContractError;
+    }
+
+    assert(expLength <= std::numeric_limits<size_t>::max() / 8);
+    bigint const base(ParseBigEndianRightPadded(param.data, 96, baseLength));
+    bigint const exp(ParseBigEndianRightPadded(param.data, 96 + baseLength, expLength));
+    bigint const mod(ParseBigEndianRightPadded(param.data, 96 + baseLength + expLength, modLength));
+    bigint const result = mod != 0 ? boost::multiprecision::powm(base, exp, mod) : bigint{ 0 };
+    res->output_data = new uint8_t[modLength];
+    bignum::ToBigEndian(result, res->output_data);
+    res->output_size = modLength;
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));
