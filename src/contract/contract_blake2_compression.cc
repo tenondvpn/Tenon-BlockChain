@@ -8,8 +8,7 @@ namespace contract {
 
 constexpr size_t BLAKE2B_BLOCKBYTES = 128;
 
-struct blake2b_state
-{
+struct Blake2bState {
     uint64_t h[8];
     uint64_t t[2];
     uint64_t f[2];
@@ -19,17 +18,14 @@ struct blake2b_state
     uint8_t last_node;
 };
 
-// clang-format off
-constexpr uint64_t blake2b_IV[8] =
-{
+constexpr uint64_t Blake2bIv[8] = {
     0x6a09e667f3bcc908ULL, 0xbb67ae8584caa73bULL,
     0x3c6ef372fe94f82bULL, 0xa54ff53a5f1d36f1ULL,
     0x510e527fade682d1ULL, 0x9b05688c2b3e6c1fULL,
     0x1f83d9abfb41bd6bULL, 0x5be0cd19137e2179ULL
 };
 
-constexpr uint8_t blake2b_sigma[12][16] =
-{
+constexpr uint8_t Blake2bSigma[12][16] = {
     {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15 } ,
     { 14, 10,  4,  8,  9, 15, 13,  6,  1, 12,  0,  2, 11,  7,  5,  3 } ,
     { 11,  8, 12,  0,  5,  2, 15, 13, 10, 14,  3,  6,  7,  1,  9,  4 } ,
@@ -41,35 +37,36 @@ constexpr uint8_t blake2b_sigma[12][16] =
     {  6, 15, 14,  9, 11,  3,  0,  8, 12,  2, 13,  7,  1,  4, 10,  5 } ,
     { 10,  2,  8,  4,  7,  6,  1,  5, 15, 11,  9, 14,  3, 12, 13 , 0 } ,
 };
-// clang-format on
 
-inline uint64_t load64(const void* src) noexcept
-{
+inline uint64_t Load64(const void* src) noexcept {
     uint64_t w;
     memcpy(&w, src, sizeof w);
     return w;
 }
 
-inline constexpr uint64_t rotr64(uint64_t w, unsigned c) noexcept
-{
+inline constexpr uint64_t Rotr64(uint64_t w, unsigned c) noexcept {
     return (w >> c) | (w << (64 - c));
 }
 
-inline void G(uint8_t r, uint8_t i, uint64_t& a, uint64_t& b, uint64_t& c, uint64_t& d,
-    const uint64_t* m) noexcept
-{
-    a = a + b + m[blake2b_sigma[r][2 * i + 0]];
-    d = rotr64(d ^ a, 32);
+inline void G(
+        uint8_t r,
+        uint8_t i,
+        uint64_t& a,
+        uint64_t& b,
+        uint64_t& c,
+        uint64_t& d,
+        const uint64_t* m) noexcept {
+    a = a + b + m[Blake2bSigma[r][2 * i + 0]];
+    d = Rotr64(d ^ a, 32);
     c = c + d;
-    b = rotr64(b ^ c, 24);
-    a = a + b + m[blake2b_sigma[r][2 * i + 1]];
-    d = rotr64(d ^ a, 16);
+    b = Rotr64(b ^ c, 24);
+    a = a + b + m[Blake2bSigma[r][2 * i + 1]];
+    d = Rotr64(d ^ a, 16);
     c = c + d;
-    b = rotr64(b ^ c, 63);
+    b = Rotr64(b ^ c, 63);
 }
 
-inline void ROUND(uint32_t round, uint64_t* v, const uint64_t* m) noexcept
-{
+inline void Round(uint32_t round, uint64_t* v, const uint64_t* m) noexcept {
     uint8_t const r = round % 10;
     G(r, 0, v[0], v[4], v[8], v[12], m);
     G(r, 1, v[1], v[5], v[9], v[13], m);
@@ -81,66 +78,69 @@ inline void ROUND(uint32_t round, uint64_t* v, const uint64_t* m) noexcept
     G(r, 7, v[3], v[4], v[9], v[14], m);
 }
 
-
-void blake2b_compress(
-    uint32_t rounds, blake2b_state* S, const uint8_t block[BLAKE2B_BLOCKBYTES]) noexcept
-{
+void Blake2bCompress(
+        uint32_t rounds,
+        Blake2bState* S,
+        const uint8_t block[BLAKE2B_BLOCKBYTES]) noexcept {
     uint64_t m[16];
     uint64_t v[16];
 
-    for (size_t i = 0; i < 16; ++i)
-        m[i] = load64(block + i * sizeof(m[i]));
+    for (size_t i = 0; i < 16; ++i) {
+        m[i] = Load64(block + i * sizeof(m[i]));
+    }
 
-    for (size_t i = 0; i < 8; ++i)
+    for (size_t i = 0; i < 8; ++i) {
         v[i] = S->h[i];
+    }
 
-    v[8] = blake2b_IV[0];
-    v[9] = blake2b_IV[1];
-    v[10] = blake2b_IV[2];
-    v[11] = blake2b_IV[3];
-    v[12] = blake2b_IV[4] ^ S->t[0];
-    v[13] = blake2b_IV[5] ^ S->t[1];
-    v[14] = blake2b_IV[6] ^ S->f[0];
-    v[15] = blake2b_IV[7] ^ S->f[1];
+    v[8] = Blake2bIv[0];
+    v[9] = Blake2bIv[1];
+    v[10] = Blake2bIv[2];
+    v[11] = Blake2bIv[3];
+    v[12] = Blake2bIv[4] ^ S->t[0];
+    v[13] = Blake2bIv[5] ^ S->t[1];
+    v[14] = Blake2bIv[6] ^ S->f[0];
+    v[15] = Blake2bIv[7] ^ S->f[1];
 
-    for (uint32_t r = 0; r < rounds; ++r)
-        ROUND(r, v, m);
+    for (uint32_t r = 0; r < rounds; ++r) {
+        Round(r, v, m);
+    }
 
-    for (size_t i = 0; i < 8; ++i)
+    for (size_t i = 0; i < 8; ++i) {
         S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
+    }
 }
 
-
-std::string blake2FCompression(
-        uint32_t _rounds,
-        const std::string& _stateVector,
-        const std::string& _t0,
-        const std::string& _t1,
-        bool _lastBlock,
-        const std::string& _messageBlockVector) {
-    if (_stateVector.size() != sizeof(blake2b_state::h)) {
+std::string Blake2FCompression(
+        uint32_t rounds,
+        const std::string& state_vector,
+        const std::string& t0,
+        const std::string& t1,
+        bool last_block,
+        const std::string& message_block_vector) {
+    if (state_vector.size() != sizeof(Blake2bState::h)) {
         assert(false);
         return "";
     }
 
-    blake2b_state s{};
-    std::memcpy(&s.h, _stateVector.data(), _stateVector.size());
-    if (_t0.size() != sizeof(s.t[0]) || _t1.size() != sizeof(s.t[1])) {
+    Blake2bState s{};
+    std::memcpy(&s.h, state_vector.data(), state_vector.size());
+    if (t0.size() != sizeof(s.t[0]) || t1.size() != sizeof(s.t[1])) {
         assert(false);
         return "";
     }
 
-    s.t[0] = load64(_t0.data());
-    s.t[1] = load64(_t1.data());
-    s.f[0] = _lastBlock ? std::numeric_limits<uint64_t>::max() : 0;
-    if (_messageBlockVector.size() != BLAKE2B_BLOCKBYTES) {
+    s.t[0] = Load64(t0.data());
+    s.t[1] = Load64(t1.data());
+    s.f[0] = last_block ? std::numeric_limits<uint64_t>::max() : 0;
+    if (message_block_vector.size() != BLAKE2B_BLOCKBYTES) {
         assert(false);
         return "";
     }
 
     uint8_t block[BLAKE2B_BLOCKBYTES];
-    std::copy(_messageBlockVector.begin(), _messageBlockVector.end(), &block[0]);
-    blake2b_compress(_rounds, &s, block);
+    std::copy(message_block_vector.begin(), message_block_vector.end(), &block[0]);
+    Blake2bCompress(rounds, &s, block);
     return std::string((char*)&s.h[0], sizeof(s.h));
 }
 
@@ -206,7 +206,7 @@ int Blake2Compression::call(
         return kContractError;
     }
 
-    std::string blake2_res = blake2FCompression(
+    std::string blake2_res = Blake2FCompression(
         rounds,
         stateVector,
         offsetCounter0,
