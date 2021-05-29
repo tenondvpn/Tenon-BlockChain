@@ -596,6 +596,56 @@ TEST_F(TestSnark, bn256Add) {
     ASSERT_EQ(res, output);
 }
 
+TEST_F(TestSnark, bn256ScalarMul) {
+    contract::CallParameters params;
+    params.gas = 100000000;
+    params.apparent_value = 0;
+    params.value = params.apparent_value;
+    params.from = common::Encode::HexDecode("b8ce9ab6943e0eced004cde8e3bbed6568b2fa01");
+    params.code_address = contract::kContractAlt_bn128_G1_mul;
+    params.to = params.code_address;
+    params.data = common::Encode::HexDecode(
+        "2bd3e6d0f3b142924f5ca7b49ce5b9d54c4703d7ae5648e61d02268b1a0a9fb721611ce0a6af85915e2f1d70300909ce2e49dfad4a4619c8390cae66cefdb20400000000000000000000000000000000000000000000000011138ce750fa15c2");
+    params.on_op = {};
+    evmc_result call_result = {};
+    evmc::result evmc_res{ call_result };
+    evmc_result* raw_result = (evmc_result*)&evmc_res;
+    raw_result->gas_left = params.gas;
+    ASSERT_EQ(contract::ContractManager::Instance()->call(
+        params,
+        10000000,
+        "",
+        raw_result), contract::kContractSuccess);
+    std::string res = common::Encode::HexDecode("070a8d6a982153cae4be29d434e8faef8a47b274a053f5a4ee2a6c9c13c31e5c031b8ce914eba3a9ffb989f9cdd5b0f01943074bf4f0f315690ec3cec6981afc");
+    std::string output = std::string((char*)raw_result->output_data, raw_result->output_size);
+    ASSERT_EQ(res, output);
+}
+
+TEST_F(TestSnark, bn256Pairing) {
+    contract::CallParameters params;
+    params.gas = 100000000;
+    params.apparent_value = 0;
+    params.value = params.apparent_value;
+    params.from = common::Encode::HexDecode("b8ce9ab6943e0eced004cde8e3bbed6568b2fa01");
+    params.code_address = contract::kContractAlt_bn128_pairing_product;
+    params.to = params.code_address;
+    params.data = common::Encode::HexDecode(
+        "1c76476f4def4bb94541d57ebba1193381ffa7aa76ada664dd31c16024c43f593034dd2920f673e204fee2811c678745fc819b55d3e9d294e45c9b03a76aef41209dd15ebff5d46c4bd888e51a93cf99a7329636c63514396b4a452003a35bf704bf11ca01483bfa8b34b43561848d28905960114c8ac04049af4b6315a416782bb8324af6cfc93537a2ad1a445cfd0ca2a71acd7ac41fadbf933c2a51be344d120a2a4cf30c1bf9845f20c6fe39e07ea2cce61f0c9bb048165fe5e4de877550111e129f1cf1097710d41c4ac70fcdfa5ba2023c6ff1cbeac322de49d1b6df7c2032c61a830e3c17286de9462bf242fca2883585b93870a73853face6a6bf411198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c21800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed090689d0585ff075ec9e99ad690c3395bc4b313370b38ef355acdadcd122975b12c85ea5db8c6deb4aab71808dcb408fe3d1e7690c43d37b4ce6cc0166fa7daa");
+    params.on_op = {};
+    evmc_result call_result = {};
+    evmc::result evmc_res{ call_result };
+    evmc_result* raw_result = (evmc_result*)&evmc_res;
+    raw_result->gas_left = params.gas;
+    ASSERT_EQ(contract::ContractManager::Instance()->call(
+        params,
+        10000000,
+        "",
+        raw_result), contract::kContractSuccess);
+    std::string res = common::Encode::HexDecode("0000000000000000000000000000000000000000000000000000000000000001");
+    std::string output = std::string((char*)raw_result->output_data, raw_result->output_size);
+    ASSERT_EQ(res, output);
+}
+
 }  // namespace test
 
 }  // namespace bignum

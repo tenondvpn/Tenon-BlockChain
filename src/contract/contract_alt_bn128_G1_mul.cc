@@ -2,6 +2,7 @@
 
 #include "security/secp256k1.h"
 #include "big_num/snark.h"
+#include "big_num/libsnark.h"
 
 namespace tenon {
 
@@ -40,10 +41,15 @@ int ContractAltBn128G1Mul::call(
         return kContractError;
     }
 
-    std::string out = bignum::Snark::Instance()->AltBn128G1Mul(param.data);
-    res->output_data = new uint8_t[out.size()];
-    memcpy((void*)res->output_data, out.c_str(), out.size());
-    res->output_size = out.size();
+    bytesConstRef bytes_ref((byte*)param.data.c_str(), param.data.size());
+    std::pair<bool, bytes> add_res = alt_bn128_G1_mul(bytes_ref);
+    if (!add_res.first) {
+        return kContractError;
+    }
+
+    res->output_data = new uint8_t[add_res.second.size()];
+    memcpy((void*)res->output_data, &add_res.second.at(0), add_res.second.size());
+    res->output_size = add_res.second.size();
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));
