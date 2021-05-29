@@ -84,7 +84,11 @@ int Execution::execute(
             bytes_code.size());
         if (out_res->status_code != EVMC_SUCCESS) {
             const auto gas_used = create_msg.gas - out_res->gas_left;
-            std::cout << "\nResult:   " << out_res->status_code << "\nGas used: " << gas_used << "\n gas limit: " << create_gas << "\nbytes code: " << common::Encode::HexEncode(bytes_code) << std::endl;
+            std::cout << "\nResult:   " << out_res->status_code
+                << "\nGas used: " << gas_used 
+                << "\n gas limit: " << create_gas
+                << "\nbytes code: " << common::Encode::HexEncode(bytes_code)
+                << std::endl;
             return out_res->status_code;
         }
 
