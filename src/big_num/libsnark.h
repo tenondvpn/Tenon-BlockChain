@@ -7,7 +7,14 @@
 #include <algorithm>
 #include <random>
 #include <boost/functional/hash.hpp>
+
+#include "common/encode.h"
 #include "big_num/bignum_utils.h"
+
+using namespace tenon;
+extern std::random_device s_fixedHashEngine;
+template <unsigned N> struct StaticLog2 { enum { result = 1 + StaticLog2<N / 2>::result }; };
+template <> struct StaticLog2<1> { enum { result = 0 }; };
 
 template <class _T>
 class vector_ref
@@ -102,6 +109,16 @@ template<class _T> vector_ref<_T const> ref(_T const& _t) { return vector_ref<_T
 template<class _T> vector_ref<_T> ref(_T& _t) { return vector_ref<_T>(&_t, 1); }
 template<class _T> vector_ref<_T const> ref(std::vector<_T> const& _t) { return vector_ref<_T const>(&_t); }
 template<class _T> vector_ref<_T> ref(std::vector<_T>& _t) { return vector_ref<_T>(&_t); }
+// Binary data types.
+using byte = uint8_t;
+using bytes = std::vector<byte>;
+using bytesRef = vector_ref<byte>;
+using bytesConstRef = vector_ref<byte const>;
+
+inline bytes asBytes(std::string const& _b)
+{
+    return bytes((byte const*)_b.data(), (byte const*)(_b.data() + _b.size()));
+}
 
 template <unsigned N>
 class FixedHash
@@ -129,10 +146,10 @@ public:
     template <unsigned M> explicit FixedHash(FixedHash<M> const& _h, ConstructFromHashType _t = AlignLeft) { m_data.fill(0); unsigned c = std::min(M, N); for (unsigned i = 0; i < c; ++i) m_data[_t == AlignRight ? N - 1 - i : i] = _h[_t == AlignRight ? M - 1 - i : i]; }
 
     /// Convert from the corresponding arithmetic type.
-    FixedHash(Arith const& _arith) { toBigEndian(_arith, m_data); }
+    FixedHash(Arith const& _arith) { bignum::ToBigEndian(_arith, m_data); }
 
     /// Convert from unsigned
-    explicit FixedHash(unsigned _u) { toBigEndian(_u, m_data); }
+    explicit FixedHash(unsigned _u) { bignum::ToBigEndian(_u, m_data); }
 
     /// Explicitly construct, copying from a byte array.
     explicit FixedHash(bytes const& _b, ConstructFromHashType _t = FailIfDifferent) { if (_b.size() == N) memcpy(m_data.data(), _b.data(), std::min<unsigned>(_b.size(), N)); else { m_data.fill(0); if (_t != FailIfDifferent) { auto c = std::min<unsigned>(_b.size(), N); for (unsigned i = 0; i < c; ++i) m_data[_t == AlignRight ? N - 1 - i : i] = _b[_t == AlignRight ? _b.size() - 1 - i : i]; } } }
@@ -144,10 +161,10 @@ public:
     explicit FixedHash(byte const* _bs, ConstructFromPointerType) { memcpy(m_data.data(), _bs, N); }
 
     /// Explicitly construct, copying from a  string.
-    explicit FixedHash(std::string const& _s, ConstructFromStringType _t = FromHex, ConstructFromHashType _ht = FailIfDifferent) : FixedHash(_t == FromHex ? fromHex(_s, WhenError::Throw) : dev::asBytes(_s), _ht) {}
+    explicit FixedHash(std::string const& _s, ConstructFromStringType _t = FromHex, ConstructFromHashType _ht = FailIfDifferent) : FixedHash(_t == FromHex ? common::Encode::HexDecode(_s) : asBytes(_s), _ht) {}
 
     /// Convert to arithmetic type.
-    operator Arith() const { return fromBigEndian<Arith>(m_data); }
+    operator Arith() const { return bignum::FromBigEndian<Arith>(m_data); }
 
     /// @returns true iff this is the empty hash.
     explicit operator bool() const { return std::any_of(m_data.begin(), m_data.end(), [](byte _b) { return _b != 0; }); }
@@ -289,11 +306,6 @@ private:
     std::array<byte, N> m_data;        ///< The binary data.
 };
 
-// Binary data types.
-using byte = uint8_t;
-using bytes = std::vector<byte>;
-using bytesRef = vector_ref<byte>;
-using bytesConstRef = vector_ref<byte const>;
 using h256 = FixedHash<32>;
 
 std::pair<bool, bytes> alt_bn128_pairing_product(bytesConstRef _in);

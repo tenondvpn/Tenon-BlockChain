@@ -68,9 +68,10 @@ bytes encodePointG1(libff::alt_bn128_G1 _p)
 	if (_p.is_zero())
 		return bytes(64, 0);
 	_p.to_affine_coordinates();
-	return
-		fromLibsnarkBigint(_p.X.as_bigint()).asBytes() +
-		fromLibsnarkBigint(_p.Y.as_bigint()).asBytes();
+    bytes a = fromLibsnarkBigint(_p.X.as_bigint()).asBytes();
+    bytes b = fromLibsnarkBigint(_p.Y.as_bigint()).asBytes();
+    a.insert(a.end(), b.begin(), b.end());
+    return a;
 }
 
 libff::alt_bn128_Fq2 decodeFq2Element(bytesConstRef _data)
