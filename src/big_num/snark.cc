@@ -63,7 +63,7 @@ std::string Snark::AltBn128G1Add(const std::string& in) {
 std::string Snark::AltBn128G1Mul(const std::string& in) {
     try {
         InitLibSnark();
-        libff::alt_bn128_G1 const p = DecodePointG1(in);
+        libff::alt_bn128_G1 const p = DecodePointG1(in.substr(0, in.size()));
         libff::alt_bn128_G1 const result = ToLibsnarkBigint(in.substr(64, in.size() - 64)) * p;
         return EncodePointG1(result);
     } catch (...) {
@@ -72,9 +72,17 @@ std::string Snark::AltBn128G1Mul(const std::string& in) {
 }
 
 void Snark::InitLibSnark() {
-    libff::inhibit_profiling_info = true;
-    libff::inhibit_profiling_counters = true;
-    libff::alt_bn128_pp::init_public_params();
+    static bool s_initialized = []() noexcept
+    {
+        libff::inhibit_profiling_info = true;
+        libff::inhibit_profiling_counters = true;
+        libff::alt_bn128_pp::init_public_params();
+        return true;
+    }();
+    (void)s_initialized;
+//     libff::inhibit_profiling_info = true;
+//     libff::inhibit_profiling_counters = true;
+//     libff::alt_bn128_pp::init_public_params();
 }
 
 libff::bigint<libff::alt_bn128_q_limbs> Snark::ToLibsnarkBigint(const std::string& in_x) {
@@ -110,13 +118,13 @@ std::string Snark::FromLibsnarkBigint(libff::bigint<libff::alt_bn128_q_limbs> co
 libff::alt_bn128_Fq Snark::DecodeFqElement(const std::string& data) {
     char xbin[32];
     memset(xbin, 0, sizeof(xbin));
-    memcpy(xbin, data.c_str(), sizeof(xbin));
-    return ToLibsnarkBigint(xbin);
+    memcpy(xbin, data.c_str(), data.size() > sizeof(xbin) ? sizeof(xbin) : data.size());
+    return ToLibsnarkBigint(std::string(xbin, sizeof(xbin)));
 }
 
 libff::alt_bn128_G1 Snark::DecodePointG1(const std::string& data) {
     assert(data.size() > 32);
-    libff::alt_bn128_Fq x = DecodeFqElement(data);
+    libff::alt_bn128_Fq x = DecodeFqElement(data.substr(0, data.size()));
     libff::alt_bn128_Fq y = DecodeFqElement(data.substr(32, data.size() - 32));
     if (x == libff::alt_bn128_Fq::zero() && y == libff::alt_bn128_Fq::zero()) {
         return libff::alt_bn128_G1::zero();
@@ -143,7 +151,7 @@ libff::alt_bn128_Fq2 Snark::DecodeFq2Element(const std::string& data) {
     assert(data.size() > 32);
     return libff::alt_bn128_Fq2(
         DecodeFqElement(data.substr(32, data.size() - 32)),
-        DecodeFqElement(data.substr(0, 32)));
+        DecodeFqElement(data.substr(0, data.size())));
 }
 
 libff::alt_bn128_G2 Snark::DecodePointG2(const std::string& data) {
