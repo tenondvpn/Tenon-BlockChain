@@ -33,14 +33,14 @@ int Modexp::Execute(bft::TxItemPtr& tx_item) {
 }
 
 uint64_t Modexp::GetGasPrice(const std::string& data) {
-    bigint const baseLength(ParseBigEndianRightPadded(_in, 0, 32));
-    bigint const expLength(ParseBigEndianRightPadded(_in, 32, 32));
-    bigint const modLength(ParseBigEndianRightPadded(_in, 64, 32));
+    bigint const baseLength(ParseBigEndianRightPadded(data, 0, 32));
+    bigint const expLength(ParseBigEndianRightPadded(data, 32, 32));
+    bigint const modLength(ParseBigEndianRightPadded(data, 64, 32));
 
     bigint const maxLength((std::max)(modLength, baseLength));
-    bigint const adjustedExpLength(expLengthAdjust(baseLength + 96, expLength, _in));
+    bigint const adjustedExpLength(ExpLengthAdjust(baseLength + 96, expLength, data));
 
-    return multComplexity(maxLength) * max<bigint>(adjustedExpLength, 1) / 20;
+    return static_cast<uint64_t>(MultComplexity(maxLength) * (adjustedExpLength > 1 ? adjustedExpLength : 1)) / 20;
 }
 
 int Modexp::call(
@@ -52,7 +52,7 @@ int Modexp::call(
         return kContractError;
     }
 
-    uint64_t gas_used = ComputeGasUsed(15, 3, param.data.size());
+    uint64_t gas_used = GetGasPrice(param.data);
     if (res->gas_left < gas_used) {
         return kContractError;
     }
@@ -71,9 +71,9 @@ int Modexp::call(
     bigint const exp(ParseBigEndianRightPadded(param.data, 96 + baseLength, expLength));
     bigint const mod(ParseBigEndianRightPadded(param.data, 96 + baseLength + expLength, modLength));
     bigint const result = mod != 0 ? boost::multiprecision::powm(base, exp, mod) : bigint{ 0 };
-    res->output_data = new uint8_t[modLength];
-    bignum::ToBigEndian(result, res->output_data);
-    res->output_size = modLength;
+    res->output_data = new uint8_t[static_cast<size_t>(modLength)];
+    bignum::ToBigEndian(result, (uint8_t*)res->output_data, static_cast<size_t>(modLength));
+    res->output_size = static_cast<size_t>(modLength);
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));

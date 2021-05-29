@@ -46,11 +46,16 @@ protected:
             return 0;
         }
 
+        auto min_size = count;
+        if (min_size > (in.size() - begin)) {
+            min_size = (in.size() - begin);
+        }
+
         assert(count <= std::numeric_limits<size_t>::max() / 8);
-        std::string cropped = in.substr(begin, (std::min)(count, in.size() - begin));
+        std::string cropped = in.substr(static_cast<size_t>(begin), static_cast<size_t>(min_size));
         bigint ret = bignum::FromBigEndian<bigint>(cropped);
         assert(count - cropped.size() <= std::numeric_limits<size_t>::max() / 8);
-        ret <<= 8 * (count - cropped.size());
+        ret <<= 8 * (static_cast<size_t>(count) - cropped.size());
         return ret;
     }
 

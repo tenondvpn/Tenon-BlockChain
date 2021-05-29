@@ -27,7 +27,7 @@ template <class T, class _In>
 inline T FromBigEndian(_In const& _bytes) {
     T ret = (T)0;
     for (auto i : _bytes)
-        ret = (T)((ret << 8) | (byte)(typename std::make_unsigned<decltype(i)>::type)i);
+        ret = (T)((ret << 8) | (uint8_t)(typename std::make_unsigned<decltype(i)>::type)i);
     return ret;
 }
 
@@ -37,6 +37,13 @@ inline void ToBigEndian(T _val, Out& o_out) {
     for (auto i = o_out.size(); i != 0; _val >>= 8, i--) {
         T v = _val & (T)0xff;
         o_out[i - 1] = (typename Out::value_type)(uint8_t)v;
+    }
+}
+
+inline void ToBigEndian(bigint _val, uint8_t* out, uint32_t out_size) {
+    for (auto i = out_size; i != 0; _val >>= 8, i--) {
+        bigint v = _val & (bigint)0xff;
+        out[i - 1] = (uint8_t)v;
     }
 }
 

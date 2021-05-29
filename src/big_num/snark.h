@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/utils.h"
+#include "big_num/bignum_utils.h"
 
 namespace tenon {
 
