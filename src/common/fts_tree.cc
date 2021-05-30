@@ -59,7 +59,7 @@ void FtsTree::GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& 
         return;
     }
 
-    if (count > nodes.size() / 3) {
+    if (count > fts_nodes_.size() / 3) {
         assert(false);
         return;
     }
@@ -67,6 +67,7 @@ void FtsTree::GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& 
     std::mt19937_64 g2(init_rand_num);
     while (nodes.size() < count) {
         nodes.insert(GetOneNode(g2));
+        std::cout << std::endl << std::endl << std::endl << "nodes.size(): " << nodes.size() << std::endl;
     }
 }
 
@@ -75,18 +76,29 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     uint32_t choose_idx = root_node_index_;
     while (true) {
         auto rand_value = g2() % fts_nodes_[choose_idx].fts_value;
-        if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value >
-                fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
-            if (rand_value < fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
-                choose_idx = fts_nodes_[choose_idx].right;
-            } else {
-                choose_idx = fts_nodes_[choose_idx].left;
-            }
+        std::cout << "rand_value: " << rand_value
+            << ", left value: " << fts_nodes_[fts_nodes_[choose_idx].left].fts_value
+            << ", right  value: " << fts_nodes_[fts_nodes_[choose_idx].right].fts_value
+            << std::endl;
+        if (fts_nodes_[fts_nodes_[choose_idx].right].fts_value == 0) {
+            choose_idx = fts_nodes_[choose_idx].right;
+        } else if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value == 0) {
+            choose_idx = fts_nodes_[choose_idx].left;
+
         } else {
-            if (rand_value < fts_nodes_[fts_nodes_[choose_idx].left].fts_value) {
-                choose_idx = fts_nodes_[choose_idx].left;
+            if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value >
+                    fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
+                if (rand_value < fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
+                    choose_idx = fts_nodes_[choose_idx].right;
+                } else {
+                    choose_idx = fts_nodes_[choose_idx].left;
+                }
             } else {
-                choose_idx = fts_nodes_[choose_idx].right;
+                if (rand_value < fts_nodes_[fts_nodes_[choose_idx].left].fts_value) {
+                    choose_idx = fts_nodes_[choose_idx].left;
+                } else {
+                    choose_idx = fts_nodes_[choose_idx].right;
+                }
             }
         }
 
