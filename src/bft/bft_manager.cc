@@ -431,7 +431,7 @@ int BftManager::StartBft(const std::string& gid) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
-    bft_ptr->set_randm_num(::Instance()->EpochRandom());
+    bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
     bft_ptr->set_member_count(MemberManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
     int leader_pre = LeaderPrepare(bft_ptr);

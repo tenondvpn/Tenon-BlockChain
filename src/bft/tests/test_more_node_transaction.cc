@@ -405,7 +405,7 @@ public:
         block->set_version(common::kTransactionVersion);
         block->set_elect_ver(common::GlobalInfo::Instance()->now_elect_version());
         block->set_network_id(common::GlobalInfo::Instance()->network_id());
-        block->set_consistency_random(::Instance()->EpochRandom());
+        block->set_consistency_random(vss::VssManager::Instance()->EpochRandom());
         block->set_height(pool_height + 1);
         block->set_timestamp(common::TimeStampMsec());
         block->set_hash(GetBlockHash(*block));
@@ -508,7 +508,7 @@ public:
             ASSERT_TRUE(bft::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id(),
-                ::Instance()->EpochRandom()));
+                vss::VssManager::Instance()->EpochRandom()));
         }
 
         {
