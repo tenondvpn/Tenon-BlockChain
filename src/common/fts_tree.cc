@@ -1,6 +1,9 @@
 #include "common/fts_tree.h"
 
 #include <cassert>
+#include <random>
+
+#include "common/random.h"
 
 namespace tenon {
 
@@ -31,21 +34,28 @@ void FtsTree::CreateFtsTree() {
         fts_nodes_.push_back({ common::kInvalidUint64, 0, 0, 0, nullptr });
     }
 
-    root_node_index_ = (uint32_t)pow(2.0f, (float)base_count) - 1;
+    root_node_index_ = (uint32_t)pow(2.0f, (float)(base_count + 1)) - 1;
+    std::cout << ", base_count: " << base_count
+        << ", valid_nodes_size: " << valid_nodes_size
+        << ", root_node_index_: " << root_node_index_
+        << ", base_node_index_: " << base_node_index_
+        << std::endl;
     for (uint32_t i = 0; ; ++i) {
+        std::cout << "i: " << i << std::endl;
         fts_nodes_[i].parent = i / 2 + (uint32_t)pow(2.0f, (float)(base_count - 1));
         if (i % 2 == 0) {
             continue;
         }
 
+        auto sum_val = fts_nodes_[i - 1].fts_value + fts_nodes_[i].fts_value;
         fts_nodes_.push_back({
-            fts_nodes_[i - 1].fts_value + fts_nodes_[i].fts_value,
+            sum_val,
             i - 1,
             i,
             0,
             nullptr });
 
-        if (i == root_node_index_ - 1) {
+        if (i == root_node_index_) {
             break;
         }
     }
@@ -56,11 +66,11 @@ void* FtsTree::GetOneNode(uint64_t init_rand_num) {
         return nullptr;
     }
 
-    srand(init_rand_num);
+    std::mt19937_64 g2(init_rand_num);
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
     while (true) {
-        auto rand_value = rand() % fts_nodes_[choose_idx].fts_value;
+        auto rand_value = g2() % fts_nodes_[choose_idx].fts_value;
         if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value >
                 fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
             if (rand_value < fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {

@@ -28,7 +28,7 @@ public:
 
 TEST_F(TestSplit, StrSplit) {
     std::string test_str("Hello world!    dddd  ddd");
-    Split line_split(test_str.c_str(), ' ');
+    Split<> line_split(test_str.c_str(), ' ');
     ASSERT_EQ(line_split.Count(), 8);
     ASSERT_EQ(line_split[0], std::string("Hello"));
     ASSERT_EQ(line_split[1], std::string("world!"));
@@ -51,7 +51,7 @@ TEST_F(TestSplit, StrSplit) {
 
 TEST_F(TestSplit, SplitWithLen) {
     std::string test_str("Hello world!    dddd  ddd");
-    Split line_split(test_str.c_str(), ' ', test_str.size());
+    Split<> line_split(test_str.c_str(), ' ', test_str.size());
     ASSERT_EQ(line_split.Count(), 8);
     ASSERT_EQ(line_split[0], std::string("Hello"));
     ASSERT_EQ(line_split[1], std::string("world!"));
@@ -74,7 +74,7 @@ TEST_F(TestSplit, SplitWithLen) {
 
 TEST_F(TestSplit, SplitWithBadChar) {
     std::string test_str("Hel\t\nlo$world!\0$$$$dd\0dd$$ddd", 29);
-    Split line_split(test_str.c_str(), '$', test_str.size());
+    Split<> line_split(test_str.c_str(), '$', test_str.size());
     ASSERT_EQ(line_split.Count(), 8);
     ASSERT_EQ(line_split[0], std::string("Hel\t\nlo"));
     ASSERT_EQ(std::string(line_split[1], line_split.SubLen(1)), std::string("world!\0", 7));

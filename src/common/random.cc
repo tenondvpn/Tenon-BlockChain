@@ -55,6 +55,10 @@ String GetRandomString(size_t size) {
     return random_string;
 }
 
+int8_t Random::RandomInt8() {
+    return RandomInt<int8_t>();
+}
+
 int16_t Random::RandomInt16() {
     return RandomInt<int16_t>();
 }
@@ -65,6 +69,10 @@ int32_t Random::RandomInt32() {
 
 int64_t Random::RandomInt64() {
     return RandomInt<int64_t>();
+}
+
+uint8_t Random::RandomUint8() {
+    return RandomInt<uint8_t>();
 }
 
 uint16_t Random::RandomUint16() {
