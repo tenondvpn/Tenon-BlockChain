@@ -516,6 +516,7 @@ void NetworkInit::CreateNewElectBlock() {
         assert(false);
 		return;
     }
+
     elect::ElectProto::CreateElectBlock(dht->local_node(), msg);
     if (!msg.has_data()) {
         test_new_elect_tick_.CutOff(
@@ -523,6 +524,7 @@ void NetworkInit::CreateNewElectBlock() {
                 std::bind(&NetworkInit::CreateNewElectBlock, this));
         return;
     }
+
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);
     ec_block_ok_ = true;

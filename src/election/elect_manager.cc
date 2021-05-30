@@ -42,6 +42,7 @@ int ElectManager::Join(uint32_t network_id) {
             ELECT_INFO("this node has join network[%u]", network_id);
             return kElectNetworkJoined;
         }
+
         elect_network_map_[network_id] = elect_node_ptr_;
     }
 
@@ -58,9 +59,11 @@ int ElectManager::Quit(uint32_t network_id) {
             ELECT_INFO("this node has join network[%u]", network_id);
             return kElectNetworkNotJoined;
         }
+
         elect_node = iter->second;
         elect_network_map_.erase(iter);
     }
+
     elect_node->Destroy();
     return kElectSuccess;
 }

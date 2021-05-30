@@ -646,6 +646,63 @@ TEST_F(TestSnark, bn256Pairing) {
     ASSERT_EQ(res, output);
 }
 
+TEST_F(TestSnark, blake2compression) {
+    contract::CallParameters params;
+    params.gas = 100000000;
+    params.apparent_value = 0;
+    params.value = params.apparent_value;
+    params.from = common::Encode::HexDecode("b8ce9ab6943e0eced004cde8e3bbed6568b2fa01");
+    params.code_address = contract::kContractBlake2_compression;
+    params.to = params.code_address;
+    params.data = common::Encode::HexDecode(
+        "0000000048c9bdf267e6096a3ba7ca8485ae67bb2bf894fe72f36e3cf1361d5f3af54fa5d182e6ad7f520e511f6c3"
+        "e2b8c68059b6bbd41fbabd9831f79217e1319cde05b61626300000000000000000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "000000000000000000000300000000000000000000000000000001");
+    params.on_op = {};
+    evmc_result call_result = {};
+    evmc::result evmc_res{ call_result };
+    evmc_result* raw_result = (evmc_result*)&evmc_res;
+    raw_result->gas_left = params.gas;
+    ASSERT_EQ(contract::ContractManager::Instance()->call(
+        params,
+        10000000,
+        "",
+        raw_result), contract::kContractSuccess);
+    std::string res = common::Encode::HexDecode(
+        "08c9bcf367e6096a3ba7ca8485ae67bb2bf894fe72f36e3cf1361d5f3af54fa5d282e6ad7f520e511f6c3e2b8c"
+        "68059b9442be0454267ce079217e1319cde05b");
+    std::string output = std::string((char*)raw_result->output_data, raw_result->output_size);
+    ASSERT_EQ(res, output);
+}
+
+TEST_F(TestSnark, blake2compressionFail) {
+    contract::CallParameters params;
+    params.gas = 100000000;
+    params.apparent_value = 0;
+    params.value = params.apparent_value;
+    params.from = common::Encode::HexDecode("b8ce9ab6943e0eced004cde8e3bbed6568b2fa01");
+    params.code_address = contract::kContractBlake2_compression;
+    params.to = params.code_address;
+    params.data = common::Encode::HexDecode(
+        "00000c48c9bdf267e6096a3ba7ca8485ae67bb2bf894fe72f36e3cf1361d5f3af54fa5d182e6ad7f520e511f6c3e2"
+        "b8c68059b6bbd41fbabd9831f79217e1319cde05b6162630000000000000000000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "0000000000000000000300000000000000000000000000000001");
+    params.on_op = {};
+    evmc_result call_result = {};
+    evmc::result evmc_res{ call_result };
+    evmc_result* raw_result = (evmc_result*)&evmc_res;
+    raw_result->gas_left = params.gas;
+    ASSERT_EQ(contract::ContractManager::Instance()->call(
+        params,
+        10000000,
+        "",
+        raw_result), contract::kContractError);
+}
+
 }  // namespace test
 
 }  // namespace bignum

@@ -68,6 +68,7 @@ int ElectNode::JoinUniversal() {
         ELECT_ERROR("init universal role dht failed!");
         return kElectError;
     }
+
     network::UniversalManager::Instance()->RegisterUniversal(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
@@ -97,6 +98,7 @@ int ElectNode::JoinShard() {
         ELECT_ERROR("init shard role dht failed!");
         return kElectError;
     }
+
     network::DhtManager::Instance()->RegisterDht(network_id_, elect_dht_);
     auto boot_nodes = network::Bootstrap::Instance()->GetNetworkBootstrap(network_id_, 3);
     if (boot_nodes.empty()) {

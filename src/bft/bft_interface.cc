@@ -28,11 +28,11 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     if (!MemberManager::Instance()->IsLeader(
             common::GlobalInfo::Instance()->network_id(),
             bft_msg.node_id(),
-            crand::ConsistencyRandom::Instance()->Random())) {
+            ::Instance()->EpochRandom())) {
         BFT_ERROR("prepare message not leader.[%u][%s][%u]",
                 common::GlobalInfo::Instance()->network_id(),
                 common::Encode::HexEncode(bft_msg.node_id()).c_str(),
-                crand::ConsistencyRandom::Instance()->Random());
+                ::Instance()->EpochRandom());
         return false;
     }
 

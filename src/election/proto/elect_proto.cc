@@ -47,6 +47,7 @@ void ElectProto::CreateElectBlock(
     if (readonly_dht.size() < 2) {
         return;
     }
+
     // now just for test
     protobuf::ElectMessage ec_msg;
     auto ec_block = ec_msg.mutable_elect_block();
@@ -62,7 +63,6 @@ void ElectProto::CreateElectBlock(
     in->set_public_port(local_node->public_port);
     in->set_local_ip(local_node->local_ip());
     in->set_local_port(local_node->local_port);
-
     for (auto iter = readonly_dht.begin(); iter != readonly_dht.end(); ++iter) {
         auto in = ec_block->add_in();
         in->set_id((*iter)->id());

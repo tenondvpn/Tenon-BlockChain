@@ -78,7 +78,7 @@ std::string GetBlockHash(
 
 uint32_t NewAccountGetNetworkId(const std::string& addr) {
     return static_cast<uint32_t>((common::Hash::Hash64(addr) *
-        crand::ConsistencyRandom::Instance()->Random()) %
+        ::Instance()->EpochRandom()) %
         common::GlobalInfo::Instance()->consensus_shard_count()) +
         network::kConsensusShardBeginNetworkId;
 }
@@ -93,7 +93,7 @@ bool ThisNodeIsLeader() {
     return MemberManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id(),
-        crand::ConsistencyRandom::Instance()->Random());
+        ::Instance()->EpochRandom());
 }
 
 }  // namespace bft

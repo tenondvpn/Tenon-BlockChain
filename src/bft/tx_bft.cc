@@ -1363,7 +1363,7 @@ void TxBft::RootLeaderCreateNewAccountTxBlock(
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_elect_ver(common::GlobalInfo::Instance()->now_elect_version());
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_consistency_random(crand::ConsistencyRandom::Instance()->Random());
+    tenon_block.set_consistency_random(::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -1450,7 +1450,7 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_elect_ver(common::GlobalInfo::Instance()->now_elect_version());
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_consistency_random(crand::ConsistencyRandom::Instance()->Random());
+    tenon_block.set_consistency_random(::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_hash(GetBlockHash(tenon_block));

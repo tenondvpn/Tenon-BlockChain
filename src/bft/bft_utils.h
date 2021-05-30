@@ -6,7 +6,7 @@
 #include "common/log.h"
 #include "common/hash.h"
 #include "common/global_info.h"
-#include "crand/consistency_random.h"
+#include "vss/vss_manager.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/member_manager.h"
