@@ -2,6 +2,9 @@
 
 #include <algorithm>
 
+#include "common/fts_tree.h"
+#include "vss/vss_manager.h"
+
 namespace tenon {
 
 namespace elect {
@@ -33,8 +36,17 @@ void ElectPool::FtsGetNodes(
         uint32_t count,
         const std::vector<NodeDetailPtr>& src_nodes,
         std::vector<NodeDetailPtr>& res_nodes) {
+    common::FtsTree fts_tree;
+    for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
+        fts_tree.AppendFtsNode((*iter)->balance, (void*)&(*iter));
+    }
 
-
+    fts_tree.CreateFtsTree();
+    std::set<void*> tmp_res_nodes;
+    fts_tree.GetNodes(vss::VssManager::Instance()->EpochRandom(), count, tmp_res_nodes);
+    for (auto iter = tmp_res_nodes.begin(); iter != tmp_res_nodes.end(); ++iter) {
+        res_nodes.push_back(*((NodeDetailPtr*)(*iter)));
+    }
 }
 
 void ElectPool::GetAllValidNodes(

@@ -1,7 +1,6 @@
 #include "common/fts_tree.h"
 
 #include <cassert>
-#include <random>
 
 #include "common/random.h"
 
@@ -31,42 +30,47 @@ void FtsTree::CreateFtsTree() {
 
     uint32_t valid_nodes_size = fts_nodes_.size();
     for (uint32_t i = valid_nodes_size; i < base_node_index_; ++i) {
-        fts_nodes_.push_back({ common::kInvalidUint64, 0, 0, 0, nullptr });
+        fts_nodes_.push_back({ 0, 0, 0, 0, nullptr });
     }
 
-    root_node_index_ = (uint32_t)pow(2.0f, (float)(base_count + 1)) - 1;
-    std::cout << ", base_count: " << base_count
-        << ", valid_nodes_size: " << valid_nodes_size
-        << ", root_node_index_: " << root_node_index_
-        << ", base_node_index_: " << base_node_index_
-        << std::endl;
+    root_node_index_ = (uint32_t)pow(2.0f, (float)(base_count + 1)) - 2;
     for (uint32_t i = 0; ; ++i) {
-        std::cout << "i: " << i << std::endl;
-        fts_nodes_[i].parent = i / 2 + (uint32_t)pow(2.0f, (float)(base_count - 1));
-        if (i % 2 == 0) {
+        fts_nodes_[i].parent = i / 2 + (uint32_t)pow(2.0f, (float)(base_count));
+        if (i % 2 != 0) {
             continue;
         }
-
-        auto sum_val = fts_nodes_[i - 1].fts_value + fts_nodes_[i].fts_value;
-        fts_nodes_.push_back({
-            sum_val,
-            i - 1,
-            i,
-            0,
-            nullptr });
 
         if (i == root_node_index_) {
             break;
         }
+
+        auto sum_val = fts_nodes_[i].fts_value + fts_nodes_[i + 1].fts_value;
+        fts_nodes_.push_back({
+            sum_val,
+            0,
+            i,
+            i + 1,
+            nullptr });
     }
 }
 
-void* FtsTree::GetOneNode(uint64_t init_rand_num) {
+void FtsTree::GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& nodes) {
     if (fts_nodes_.empty()) {
-        return nullptr;
+        return;
+    }
+
+    if (count > nodes.size() / 3) {
+        assert(false);
+        return;
     }
 
     std::mt19937_64 g2(init_rand_num);
+    while (nodes.size() < count) {
+        nodes.insert(GetOneNode(g2));
+    }
+}
+
+void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
     while (true) {

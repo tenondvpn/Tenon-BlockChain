@@ -22,6 +22,7 @@ void TickThreadPool::AddTick(uint32_t idx, int64_t cutoff_us, TickCallbackFuncti
             return;
         }
     }
+
     auto end_time = std::chrono::steady_clock::now() + std::chrono::microseconds(cutoff_us);
     auto item = std::make_shared<Item>(end_time, call, idx);
     {
@@ -40,6 +41,7 @@ void TickThreadPool::Destroy() {
     for (auto iter = thread_pool_.begin(); iter != thread_pool_.end(); ++iter) {
         (*iter)->join();
     }
+
     thread_pool_.clear();
     std::lock_guard<std::mutex> items_guard(tick_items_mutex_);
     tick_items_.clear();

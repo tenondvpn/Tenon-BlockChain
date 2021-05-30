@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <vector>
+#include <random>
+#include <set>
 
 #include "common/utils.h"
 
@@ -23,9 +25,11 @@ public:
     ~FtsTree();
     void AppendFtsNode(uint64_t fts_value, void* data);
     void CreateFtsTree();
-    void* GetOneNode(uint64_t init_rand_num);
+    void GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& nodes);
 
 private:
+    void* GetOneNode(std::mt19937_64& g2);
+
     std::vector<FtsNode> fts_nodes_;
     uint32_t root_node_index_{ 0 };
     uint32_t base_node_index_{ 0 };

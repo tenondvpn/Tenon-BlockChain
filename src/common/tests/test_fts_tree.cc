@@ -34,11 +34,11 @@ private:
 };
 
 TEST_F(TestFtsTree, all) {
-    const uint32_t kTestCount = 3u;
+    const uint32_t kTestCount = 31u;
     FtsTree fts_tree;
     std::vector<std::string*> test_vec;
     for (uint32_t i = 0; i < kTestCount; ++i) {
-        uint64_t fts_value = i;
+        uint64_t fts_value = common::Random::RandomUint64();
         std::string* new_data = new std::string(
             common::Encode::HexEncode(common::Random::RandomString(32)) +
             "_" + std::to_string(fts_value));
@@ -47,10 +47,6 @@ TEST_F(TestFtsTree, all) {
     }
 
     fts_tree.CreateFtsTree();
-    for (auto iter = fts_tree.fts_nodes_.rbegin(); iter != fts_tree.fts_nodes_.rend(); ++iter) {
-        std::cout << iter->fts_value << std::endl;
-    }
-
     std::string* data = (std::string*)fts_tree.GetOneNode(1000);
     std::cout << *data << std::endl;
     for (auto iter = test_vec.begin(); iter != test_vec.end(); ++iter) {
