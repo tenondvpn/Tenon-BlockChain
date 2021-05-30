@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include "common/tick.h"
+#include "common/bloom_filter.h"
 #include "election/elect_utils.h"
 #include "election/elect_node_detail.h"
 
@@ -17,10 +18,15 @@ public:
     ~ElectPool();
     void AddNewNode(NodeDetailPtr& node_ptr);
     void RemoveNodes(const std::vector<NodeDetailPtr>& nodes);
-    void FtsGetNodes(uint32_t count, std::vector<NodeDetailPtr>& nodes);
+    void FtsGetNodes(
+        uint32_t count,
+        const std::vector<NodeDetailPtr>& src_nodes,
+        std::vector<NodeDetailPtr>& res_nodes);
+    void GetAllValidNodes(common::BloomFilter& nodes_filter, std::vector<NodeDetailPtr>& nodes);
 
 private:
     void UpdateNodeHeartbeat();
+    void CreateFtsTree(const std::vector<NodeDetailPtr>& src_nodes);
 
     std::unordered_map<std::string, NodeDetailPtr> node_map_;
     std::mutex node_map_mutex_;
