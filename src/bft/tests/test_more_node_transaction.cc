@@ -427,15 +427,15 @@ public:
     }
 
     static void CreateElectionBlock(uint32_t network_id, std::vector<std::string>& pri_vec) {
-        std::map<uint32_t, bft::MembersPtr> in_members;
-        std::map<uint32_t, bft::MembersPtr> out_members;
-        std::map<uint32_t, bft::NodeIndexMapPtr> in_index_members;
+        std::map<uint32_t, elect::MembersPtr> in_members;
+        std::map<uint32_t, elect::MembersPtr> out_members;
+        std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
         std::map<uint32_t, uint32_t> begin_index_map_;
         for (uint32_t i = 0; i < pri_vec.size(); ++i) {
             auto net_id = network_id;
             auto iter = in_members.find(net_id);
             if (iter == in_members.end()) {
-                in_members[net_id] = std::make_shared<bft::Members>();
+                in_members[net_id] = std::make_shared<elect::Members>();
                 in_index_members[net_id] = std::make_shared<
                     std::unordered_map<std::string, uint32_t>>();
                 begin_index_map_[net_id] = 0;
@@ -447,8 +447,8 @@ public:
             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
             security::CommitSecret secret;
-            in_members[net_id]->push_back(std::make_shared<bft::BftMember>(
-                net_id, id, pubkey_str, begin_index_map_[net_id]));
+            in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
+                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, ""));
             in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
             ++begin_index_map_[net_id];
         }
