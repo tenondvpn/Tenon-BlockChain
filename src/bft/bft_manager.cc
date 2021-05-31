@@ -221,7 +221,7 @@ void BftManager::HandleRootTxBlock(
     }
 
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == kInvalidMemberIndex) {
+    if (mem_index == elect::kInvalidMemberIndex) {
         BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
         return;
     }
@@ -298,7 +298,7 @@ void BftManager::HandleToAccountTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == kInvalidMemberIndex) {
+    if (mem_index == elect::kInvalidMemberIndex) {
         BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
         return;
     }
@@ -499,7 +499,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr) {
     uint32_t member_idx = GetMemberIndex(
         bft_ptr->network_id(),
         common::GlobalInfo::Instance()->id());
-    if (member_idx == kInvalidMemberIndex) {
+    if (member_idx == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 
@@ -610,7 +610,7 @@ int BftManager::LeaderPrecommit(
     }
 
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == kInvalidMemberIndex) {
+    if (mem_index == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 
@@ -654,7 +654,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     uint32_t member_idx = GetMemberIndex(
             bft_ptr->network_id(),
             common::GlobalInfo::Instance()->id());
-    if (member_idx == kInvalidMemberIndex) {
+    if (member_idx == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 
@@ -763,7 +763,7 @@ int BftManager::LeaderCommit(
     }
 
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == kInvalidMemberIndex) {
+    if (mem_index == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 
@@ -872,7 +872,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
     uint32_t member_idx = GetMemberIndex(
         bft_ptr->network_id(),
         common::GlobalInfo::Instance()->id());
-    if (member_idx == kInvalidMemberIndex) {
+    if (member_idx == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 

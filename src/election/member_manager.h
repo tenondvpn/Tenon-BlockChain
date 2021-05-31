@@ -9,6 +9,7 @@
 #include "dht/node.h"
 #include "bft/bft_utils.h"
 #include "election/elect_node_detail.h"
+#include "election/elect_utils.h"
 
 namespace tenon {
 

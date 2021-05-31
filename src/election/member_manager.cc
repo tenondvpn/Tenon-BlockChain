@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "elect/member_manager.h"
+#include "election/member_manager.h"
 
 #include <cassert>
 
@@ -91,7 +91,7 @@ uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& n
     assert(!node_index_map->empty());
     auto iter = node_index_map->find(node_id);
     if (iter == node_index_map->end()) {
-        return kInvalidMemberIndex;
+        return elect::kInvalidMemberIndex;
     }
     assert(iter != node_index_map->end());
     return iter->second;
@@ -102,7 +102,7 @@ elect::BftMemberPtr MemberManager::GetMember(
         const std::string& node_id) {
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
     uint32_t mem_index = GetMemberIndex(network_id, node_id);
-    if (mem_index == kInvalidMemberIndex) {
+    if (mem_index == elect::kInvalidMemberIndex) {
         return nullptr;
     }
     std::lock_guard<std::mutex> guard(all_mutex_);

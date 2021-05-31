@@ -27,6 +27,7 @@ static const uint32_t kElectBroadcastStopTimes = 2u;
 static const uint32_t kElectHopLimit = 5u;
 static const uint32_t kElectHopToLayer = 2u;
 static const uint32_t kElectNeighborCount = 7u;
+static const uint32_t kInvalidMemberIndex = (std::numeric_limits<uint32_t>::max)();
 
 // Nodes can participate in the election for more than 30 minutes after joining
 // Set aside 5 minutes as the tolerance range, that is, each consensus node judges

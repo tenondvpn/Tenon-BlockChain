@@ -94,7 +94,6 @@ static const uint32_t kBftTimeout = 6u * 1000u * 1000u;  // bft timeout 6s
 static const uint32_t kTxPoolTimeout = 30u * 1000u * 1000u;  // tx pool timeout 15s
 static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
 static const uint32_t kBftLeaderPrepareWaitPeriod = 3u * 1000u * 1000u;
-static const uint32_t kInvalidMemberIndex = (std::numeric_limits<uint32_t>::max)();
 static const uint32_t kPrevTransportVersion = 0;
 static const uint32_t kTransportVersion = 1;
 
