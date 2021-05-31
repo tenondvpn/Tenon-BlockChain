@@ -75,7 +75,7 @@ void FtsTree::GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& 
 
         if (nodes_size == nodes.size()) {
             ++same_times;
-            if (same_times >= 9) {
+            if (same_times >= count) {
                 return;
             }
 

@@ -11,6 +11,7 @@
 #include "network/route.h"
 #include "client/trans_client.h"
 #include "init/init_utils.h"
+#include "subscript/subs_utils.h"
 
 namespace tenon {
 

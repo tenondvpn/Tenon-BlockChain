@@ -583,8 +583,8 @@ public:
     }
 
     void ResetBftSecret(const std::string& bft_gid, uint32_t net_id, const std::string& id) {
-        uint32_t member_index = MemberManager::Instance()->GetMemberIndex(net_id, id);
-        auto mem_ptr = MemberManager::Instance()->GetMember(net_id, member_index);
+        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(net_id, id);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(net_id, member_index);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
     }
 
@@ -682,8 +682,8 @@ public:
         }
 
         // commit
-        uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        auto mem_ptr = MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
+        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
@@ -782,10 +782,10 @@ public:
         }
 
         // commit
-        uint32_t member_index = MemberManager::Instance()->GetMemberIndex(
+        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
             common::GlobalInfo::Instance()->id());
-        auto mem_ptr = MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
@@ -961,8 +961,8 @@ public:
             src_balance = to_acc_info->balance_;
         }
 
-        uint32_t member_index = MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        auto mem_ptr = MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
+        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
