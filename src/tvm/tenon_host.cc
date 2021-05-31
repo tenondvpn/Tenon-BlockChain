@@ -237,20 +237,15 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     evmc_result call_result = {};
     evmc::result evmc_res{ call_result };
     evmc_result* raw_result = (evmc_result*)&evmc_res;
-    std::cout << "call from: " << common::Encode::HexEncode(params.from) << std::endl;
-    std::cout << "call to: " << common::Encode::HexEncode(params.to) << std::endl;
-    std::cout << "call code_address: " << common::Encode::HexEncode(params.code_address) << std::endl;
-    std::cout << "call msg.gas: " << msg.gas << std::endl;
+    raw_result->gas_left = msg.gas;
     if (contract::ContractManager::Instance()->call(
             params,
             gas_price_,
             origin_address_,
             raw_result) != contract::kContractNotExists) {
-        std::cout << "call precompiled success." << std::endl;
     } else {
         auto account_info = block::AccountManager::Instance()->GetContractInfoByAddress(params.code_address);
         if (account_info != nullptr) {
-            std::cout << "call code_address: " << common::Encode::HexEncode(params.code_address) << std::endl;
             std::string bytes_code;
             if (account_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
                 evmc_res.status_code = EVMC_REVERT;

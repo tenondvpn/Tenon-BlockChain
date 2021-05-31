@@ -3144,7 +3144,7 @@ TEST_F(TestBftManager, TestCallSimplePaymentChannelSuccess) {
         auto from_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_FALSE(caller_info->locked());
         uint64_t bid_amount = 0;
-        Transfer(from_prikey, contract_addr, bid_amount, 20000000,
+        Transfer(from_prikey, contract_addr, bid_amount, 30000000,
             common::kConsensusCallContract, true, attrs, &broadcast_msg);
         auto new_from_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
@@ -3170,7 +3170,7 @@ TEST_F(TestBftManager, TestCallSimplePaymentChannelSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 19674613 * common::GlobalInfo::Instance()->gas_price() + 10000000);
+        ASSERT_EQ(new_from_balance, from_balance - 42790 * common::GlobalInfo::Instance()->gas_price() + 10000000);
         ASSERT_FALSE(caller_info->locked());
     }
 }
