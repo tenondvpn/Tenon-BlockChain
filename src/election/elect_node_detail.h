@@ -18,6 +18,8 @@ struct ElectNodeDetail {
     std::string public_ip;
     uint16_t public_port;
     std::string dht_key;
+    uint64_t choosed_height;
+    uint64_t choosed_balance;
     std::chrono::steady_clock::time_point join_tm{ std::chrono::steady_clock::now() };
     std::map<uint64_t, uint32_t> heatbeat_succ_count;
     std::map<uint64_t, uint32_t> heatbeat_fail_count;

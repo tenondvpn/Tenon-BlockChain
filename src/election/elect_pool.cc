@@ -5,7 +5,7 @@
 #include "common/fts_tree.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
-#include "bft/member_manager.h"
+#include "election/member_manager.h"
 
 namespace tenon {
 
@@ -40,7 +40,7 @@ void ElectPool::FtsGetNodes(
         std::vector<NodeDetailPtr>& res_nodes) {
     common::FtsTree fts_tree;
     for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
-        fts_tree.AppendFtsNode((*iter)->balance, (void*)&(*iter));
+        fts_tree.AppendFtsNode((*iter)->choosed_balance, (void*)&(*iter));
     }
 
     fts_tree.CreateFtsTree();
@@ -68,7 +68,7 @@ void ElectPool::GetAllValidNodes(
     std::vector<NodeDetailPtr> choosed_nodes;
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         // for fts poise
-        if (iter->second->balance < min_balance || iter->second->balance > max_balance) {
+        if (iter->second->choosed_balance < min_balance || iter->second->choosed_balance > max_balance) {
             continue;
         }
 

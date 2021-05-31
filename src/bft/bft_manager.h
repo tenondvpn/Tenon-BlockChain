@@ -8,7 +8,7 @@
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "bft/bft_interface.h"
-#include "bft/member_manager.h"
+#include "election/member_manager.h"
 #include "bft/proto/bft.pb.h"
 
 namespace tenon {
@@ -29,7 +29,7 @@ public:
         elect::NodeIndexMapPtr& node_index_map);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id) {
-        return MemberManager::Instance()->GetNetworkMembers(network_id);
+        return elect::MemberManager::Instance()->GetNetworkMembers(network_id);
     }
 
     int AddGenisisBlock(const bft::protobuf::Block& genesis_block);

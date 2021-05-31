@@ -69,6 +69,11 @@ void ElectPoolManager::UpdateNodeInfoWithBlock(const bft::protobuf::Block& block
         auto iter = all_node_map_.find(account_id);
         if (iter != all_node_map_.end()) {
             std::lock_guard<std::mutex> guard2(iter->second->height_with_balance_mutex);
+            if (!iter->second->height_with_balance.empty()) {
+                iter->second->choosed_height = iter->second->height_with_balance.rbegin()->first;
+                iter->second->choosed_balance = iter->second->height_with_balance.rbegin()->second;
+            }
+
             iter->second->height_with_balance[block_info.height()] = tx_list[i].balance();
             if (iter->second->height_with_balance.size() > 9) {
                 // map sort with height

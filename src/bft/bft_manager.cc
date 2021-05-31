@@ -6,7 +6,6 @@
 #include "bft/bft_utils.h"
 #include "bft/tx_pool_manager.h"
 #include "bft/tx_bft.h"
-#include "bft/member_manager.h"
 #include "bft/proto/bft_proto.h"
 #include "bft/dispatch_pool.h"
 #include "block/block_manager.h"
@@ -15,6 +14,7 @@
 #include "common/global_info.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
+#include "election/member_manager.h"
 #include "election/elect_dht.h"
 #include "network/dht_manager.h"
 #include "network/route.h"
@@ -47,11 +47,11 @@ void BftManager::NetworkMemberChange(
         uint32_t network_id,
         elect::MembersPtr& members_ptr,
         elect::NodeIndexMapPtr& node_index_map) {
-    MemberManager::Instance()->SetNetworkMember(network_id, members_ptr, node_index_map);
+    elect::MemberManager::Instance()->SetNetworkMember(network_id, members_ptr, node_index_map);
 }
 
 uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
-    return MemberManager::Instance()->GetMemberIndex(network_id, node_id);
+    return elect::MemberManager::Instance()->GetMemberIndex(network_id, node_id);
 }
 
 void BftManager::HandleMessage(transport::protobuf::Header& header) {
@@ -93,7 +93,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         bft_ptr->set_randm_num(bft_msg.rand());
         bft_ptr->set_pool_index(bft_msg.pool_index());
         bft_ptr->set_status(kBftPrepare);
-        bft_ptr->set_member_count(MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
+        bft_ptr->set_member_count(elect::MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
         if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
             BFT_ERROR("BackupPrepare leader invalid", bft_ptr, header);
             return;
@@ -178,7 +178,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
             continue;
         }
 
-        auto mem_ptr = MemberManager::Instance()->GetMember(block.network_id(), i);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(block.network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
     }
 
@@ -432,7 +432,7 @@ int BftManager::StartBft(const std::string& gid) {
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
-    bft_ptr->set_member_count(MemberManager::Instance()->GetMemberCount(
+    bft_ptr->set_member_count(elect::MemberManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
     int leader_pre = LeaderPrepare(bft_ptr);
     if (leader_pre != kBftSuccess) {
@@ -1181,7 +1181,7 @@ int BftManager::VerifySignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
+    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
     if (!mem_ptr) {
         return kBftError;
     }
@@ -1205,7 +1205,7 @@ int BftManager::VerifyBlockSignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
+    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
     if (!mem_ptr) {
         return kBftError;
     }
@@ -1232,7 +1232,7 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = MemberManager::Instance()->GetMember(bft_msg.net_id(), bft_ptr->leader_index());
+    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), bft_ptr->leader_index());
     if (!mem_ptr) {
         return kBftError;
     }
