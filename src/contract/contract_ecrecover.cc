@@ -31,11 +31,13 @@ int Ecrecover::call(
         uint64_t gas,
         const std::string& origin_address,
         evmc_result* res) {
-    if (res->gas_left < gas_cast_) {
+    if (param.gas < gas_cast_) {
+        std::cout << "res->gas_left < gas_cast_" << res->gas_left << ":" << gas_cast_ << std::endl;
         return kContractError;
     }
 
     if (param.data.size() != 128) {
+        std::cout << "param.data.size() != 128: " << param.data.size() << std::endl;
         return kContractError;
     }
 
@@ -43,13 +45,14 @@ int Ecrecover::call(
     std::string sign(param.data.c_str() + 32, param.data.size() - 32);
     std::string pubkey = security::Secp256k1::Instance()->recover(sign, hash);
     std::string addr_sha3 = security::Secp256k1::Instance()->sha3(pubkey);
+    std::cout << "out address: " << common::Encode::HexEncode(addr_sha3) << std::endl;
     res->output_data = new uint8_t[addr_sha3.size()];
     memcpy((void*)res->output_data, addr_sha3.c_str(), addr_sha3.size());
     res->output_size = addr_sha3.size();
     memcpy(res->create_address.bytes,
         create_address_.c_str(),
         sizeof(res->create_address.bytes));
-    res->gas_left -= gas_cast_;
+    res->gas_left = param.gas - gas_cast_;
     return kContractSuccess;
 }
 

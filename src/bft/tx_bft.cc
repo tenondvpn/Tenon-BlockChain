@@ -1683,6 +1683,7 @@ int TxBft::LeaderCallContractExceute(
         tx_info->tx.to(),
         acc_balance_map,
         &contract_balance);
+    std::cout << "get contract balance: " << common::Encode::HexEncode(tx_info->tx.to()) << ", " << contract_balance << std::endl;
     if (balance_status != kBftSuccess) {
         tx.set_status(balance_status);
         assert(false);
@@ -1852,13 +1853,13 @@ int TxBft::LeaderCallContractExceute(
         }
 
         if (tx.status() == kBftSuccess) {
+            std::cout << "contract_balance: " << contract_balance << ", contract_balance_add: " << contract_balance_add << std::endl;
             if (contract_balance_add < 0) {
                 if (contract_balance < (uint64_t)(-contract_balance_add)) {
                     if (tx.status() == kBftSuccess) {
                         tx.set_status(kBftAccountBalanceError);
                     }
-                }
-                else {
+                } else {
                     contract_balance -= (uint64_t)(-contract_balance_add);
                 }
             } else {
@@ -1874,6 +1875,7 @@ int TxBft::LeaderCallContractExceute(
         }
     }
 
+    std::cout << "leader call contract status: " << tx.status() << std::endl;
     contract_balance += tx_info->tx.amount();
     auto caller_balance_attr = tx.add_storages();
     caller_balance_attr->set_key(kContractCallerChangeAmount);

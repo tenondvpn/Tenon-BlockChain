@@ -3155,6 +3155,7 @@ TEST_F(TestBftManager, TestCallSimplePaymentChannelSuccess) {
         auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
         uint64_t contract_balance = 0;
         ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        std::cout << "test get contract balance: " << common::Encode::HexEncode(contract_addr) << ", " << contract_balance << std::endl;
         ASSERT_TRUE(contract_info != nullptr);
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, broadcast_msg, from_prikey, contract_addr, attrs, &leader_init_msg);
