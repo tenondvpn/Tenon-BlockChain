@@ -9,7 +9,6 @@
 #include "vss/vss_manager.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
-#include "bft/member_manager.h"
 
 #define BFT_DEBUG(fmt, ...) TENON_DEBUG("[bft]" fmt, ## __VA_ARGS__)
 #define BFT_INFO(fmt, ...) TENON_INFO("[bft]" fmt, ## __VA_ARGS__)

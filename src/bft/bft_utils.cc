@@ -1,6 +1,6 @@
 #include "bft/bft_utils.h"
 
-#include "bft/member_manager.h"
+#include "election/member_manager.h"
 #include "network/network_utils.h"
 
 namespace tenon {
@@ -90,7 +90,7 @@ std::string GetUniversalGid(bool to, const std::string& gid) {
 }
 
 bool ThisNodeIsLeader() {
-    return MemberManager::Instance()->IsLeader(
+    return elect::MemberManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id(),
         vss::VssManager::Instance()->EpochRandom());
