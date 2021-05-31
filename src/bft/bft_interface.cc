@@ -4,6 +4,7 @@
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
+#include "election/member_manager.h"
 
 namespace tenon {
 
@@ -25,7 +26,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if (!MemberManager::Instance()->IsLeader(
+    if (!elect::MemberManager::Instance()->IsLeader(
             common::GlobalInfo::Instance()->network_id(),
             bft_msg.node_id(),
             vss::VssManager::Instance()->EpochRandom())) {
@@ -41,7 +42,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto leader_mem_ptr = MemberManager::Instance()->GetMember(
+    auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
     if (leader_mem_ptr == nullptr) {
@@ -61,7 +62,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto local_mem_ptr = MemberManager::Instance()->GetMember(
+    auto local_mem_ptr = elect::MemberManager::Instance()->GetMember(
             bft_msg.net_id(),
             common::GlobalInfo::Instance()->id());
     if (local_mem_ptr == nullptr) {
@@ -128,7 +129,7 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (agree) {
-        auto mem_ptr = MemberManager::Instance()->GetMember(network_id_, index);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id_, index);
         if (!security::MultiSign::Instance()->VerifyResponse(
                 res,
                 challenge_,
@@ -248,7 +249,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             continue;
         }
 
-        BftMemberPtr mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
+        elect::BftMemberPtr mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
@@ -275,7 +276,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
             continue;
         }
 
-        auto mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
         auto iter = backup_precommit_response_.find(i);
         assert(iter != backup_precommit_response_.end());
         responses.push_back(iter->second->response);
@@ -324,7 +325,7 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
             continue;
         }
 
-        auto mem_ptr = MemberManager::Instance()->GetMember(network_id(), i);
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
     }
 

@@ -452,8 +452,8 @@ public:
                 iter->first,
                 iter->second,
                 index_map_iter->second);
-            ASSERT_TRUE(bft::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(bft::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 
@@ -493,7 +493,7 @@ public:
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e"));
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e"));
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_TRUE(bft::MemberManager::Instance()->IsLeader(
+            ASSERT_TRUE(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id(),
                 vss::VssManager::Instance()->EpochRandom()));

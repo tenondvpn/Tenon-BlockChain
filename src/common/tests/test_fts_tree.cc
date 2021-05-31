@@ -8,7 +8,6 @@
 #include "common/fts_tree.h"
 #include "common/random.h"
 #include "common/encode.h"
-#include "common/smooth_data.h"
 
 namespace tenon {
 
@@ -35,22 +34,6 @@ private:
 };
 
 TEST_F(TestFtsTree, all) {
-    std::vector<std::vector<uint64_t>> vv = {
-        {19, 26, 63},
-        {13, 62, 65},
-        {16, 69, 15},
-        {14, 56, 17},
-        {19, 6, 15},
-        {11, 42, 15},
-        {18, 58, 36},
-        {12, 77, 33},
-        {10, 75, 47},
-        {15, 54, 70},
-        {10017, 1421077, 4196},
-    };
-
-    ProcessVector(vv);
-    exit(0);
     for (uint32_t i = 3; i < 4097; ++i) {
         if (i != 1000) {
             continue;
@@ -61,7 +44,7 @@ TEST_F(TestFtsTree, all) {
         std::vector<std::string*> test_vec;
         std::mt19937_64 g2(1000);
         for (uint32_t i = 0; i < kTestCount; ++i) {
-            uint64_t fts_value = common::Random::RandomUint64();
+            uint64_t fts_value = 1000000000llu + common::Random::RandomUint64() % 100000;
             std::string* new_data = new std::string(
                 common::Encode::HexEncode(common::Random::RandomString(32)) +
                 "_" + std::to_string(fts_value));

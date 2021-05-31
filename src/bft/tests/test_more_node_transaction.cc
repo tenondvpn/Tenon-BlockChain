@@ -460,8 +460,8 @@ public:
                 iter->first,
                 iter->second,
                 index_map_iter->second);
-            ASSERT_TRUE(bft::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(bft::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 
@@ -505,7 +505,7 @@ public:
             }
 
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_TRUE(bft::MemberManager::Instance()->IsLeader(
+            ASSERT_TRUE(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id(),
                 vss::VssManager::Instance()->EpochRandom()));

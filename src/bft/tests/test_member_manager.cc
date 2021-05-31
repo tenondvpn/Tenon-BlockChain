@@ -4,7 +4,7 @@
 #include <chrono>
 
 #define private public
-#include "bft/member_manager.h"
+#include "election/member_manager.h"
 #include "network/network_utils.h"
 #include "security/crypto_utils.h"
 #include "security/secp256k1.h"
@@ -35,15 +35,15 @@ private:
 };
 
 TEST_F(TestMemberManager, SetNetworkMember) {
-    std::map<uint32_t, bft::MembersPtr> in_members;
-    std::map<uint32_t, bft::MembersPtr> out_members;
-    std::map<uint32_t, bft::NodeIndexMapPtr> in_index_members;
+    std::map<uint32_t, elect::MembersPtr> in_members;
+    std::map<uint32_t, elect::MembersPtr> out_members;
+    std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map_;
     for (int32_t i = 0; i < 1024; ++i) {
         auto net_id = network::kConsensusShardBeginNetworkId + std::rand() % 5;
         auto iter = in_members.find(net_id);
         if (iter == in_members.end()) {
-            in_members[net_id] = std::make_shared<bft::Members>();
+            in_members[net_id] = std::make_shared<elect::Members>();
             in_index_members[net_id] = std::make_shared<
                 std::unordered_map<std::string, uint32_t>>();
             begin_index_map_[net_id] = 0;
@@ -55,7 +55,7 @@ TEST_F(TestMemberManager, SetNetworkMember) {
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeySize);
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);;
         security::CommitSecret secret;
-        in_members[net_id]->push_back(std::make_shared<bft::BftMember>(
+        in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
             net_id, id, pubkey_str, begin_index_map_[net_id]));
         in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
         dht::NodePtr node = std::make_shared<dht::Node>(
@@ -72,7 +72,7 @@ TEST_F(TestMemberManager, SetNetworkMember) {
         ++begin_index_map_[net_id];
     }
 
-    MemberManager mem_manager;
+    elect::MemberManager mem_manager;
     for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
         auto index_map_iter = in_index_members.find(iter->first);
         ASSERT_TRUE(index_map_iter != in_index_members.end());

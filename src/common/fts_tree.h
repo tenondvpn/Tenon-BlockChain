@@ -33,6 +33,7 @@ private:
     std::vector<FtsNode> fts_nodes_;
     uint32_t root_node_index_{ 0 };
     uint32_t base_node_index_{ 0 };
+    uint32_t valid_nodes_size_{ 0 };
 };
 
 };  // namespace common

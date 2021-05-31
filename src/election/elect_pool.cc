@@ -3,7 +3,9 @@
 #include <algorithm>
 
 #include "common/fts_tree.h"
+#include "common/global_info.h"
 #include "vss/vss_manager.h"
+#include "bft/member_manager.h"
 
 namespace tenon {
 
@@ -50,6 +52,8 @@ void ElectPool::FtsGetNodes(
 }
 
 void ElectPool::GetAllValidNodes(
+        uint64_t min_balance,
+        uint64_t max_balance,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
     std::unordered_map<std::string, NodeDetailPtr> node_map;
@@ -63,6 +67,11 @@ void ElectPool::GetAllValidNodes(
         - (1000000000llu * 1800llu)) / (1000000000llu * 300llu);
     std::vector<NodeDetailPtr> choosed_nodes;
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
+        // for fts poise
+        if (iter->second->balance < min_balance || iter->second->balance > max_balance) {
+            continue;
+        }
+
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime);
         if (valid_join_time > now_tm) {

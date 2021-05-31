@@ -28,8 +28,8 @@ void FtsTree::CreateFtsTree() {
         base_node_index_ = (uint32_t)(pow(2.0, (float)base_count));
     }
 
-    uint32_t valid_nodes_size = fts_nodes_.size();
-    for (uint32_t i = valid_nodes_size; i < base_node_index_; ++i) {
+    valid_nodes_size_ = fts_nodes_.size();
+    for (uint32_t i = valid_nodes_size_; i < base_node_index_; ++i) {
         fts_nodes_.push_back({ 0, 0, 0, 0, nullptr });
     }
 
@@ -64,10 +64,25 @@ void FtsTree::GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& 
         return;
     }
 
+    uint32_t same_times = 0;
     std::mt19937_64 g2(init_rand_num);
-    while (nodes.size() < count) {
-        nodes.insert(GetOneNode(g2));
-        std::cout << std::endl << std::endl << std::endl << "nodes.size(): " << nodes.size() << std::endl;
+    uint32_t nodes_size = nodes.size();
+    while (nodes_size < count) {
+        auto res_node = GetOneNode(g2);
+        if (res_node != nullptr) {
+            nodes.insert(res_node);
+        }
+
+        if (nodes_size == nodes.size()) {
+            ++same_times;
+            if (same_times >= 9) {
+                return;
+            }
+
+            continue;
+        }
+
+        nodes_size = nodes.size();
     }
 }
 
@@ -75,16 +90,15 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
     while (true) {
-        auto rand_value = g2() % fts_nodes_[choose_idx].fts_value;
-        std::cout << "rand_value: " << rand_value
-            << ", left value: " << fts_nodes_[fts_nodes_[choose_idx].left].fts_value
-            << ", right  value: " << fts_nodes_[fts_nodes_[choose_idx].right].fts_value
-            << std::endl;
+        auto rand_value = 0;
+        if (fts_nodes_[choose_idx].fts_value > 0) {
+            rand_value = g2() % fts_nodes_[choose_idx].fts_value;
+        }
+
         if (fts_nodes_[fts_nodes_[choose_idx].right].fts_value == 0) {
             choose_idx = fts_nodes_[choose_idx].right;
         } else if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value == 0) {
             choose_idx = fts_nodes_[choose_idx].left;
-
         } else {
             if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value >
                     fts_nodes_[fts_nodes_[choose_idx].right].fts_value) {
@@ -102,8 +116,10 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
             }
         }
 
-        if (choose_idx < base_node_index_) {
+        if (choose_idx < valid_nodes_size_) {
             return fts_nodes_[choose_idx].data;
+        } else if (choose_idx < base_node_index_) {
+            return nullptr;
         }
     }
 

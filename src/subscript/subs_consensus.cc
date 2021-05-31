@@ -29,7 +29,28 @@ void SubsConsensus::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    std::cout << "receive consensus block message." << std::endl;
+    // agg verify, callback all
+    bft::protobuf::BftMessage bft_msg;
+    if (!bft_msg.ParseFromString(header.data())) {
+        return;
+    }
+
+    bft::protobuf::TxBft tx_bft;
+    if (!tx_bft.ParseFromString(bft_msg.data())) {
+        return;
+    }
+
+    // callbacks all
+    // just lock it
+    std::lock_guard<std::mutex> guard(callbacks_mutex_);
+    for (auto iter = callbacks_.begin(); iter != callbacks_.end(); ++iter) {
+        (*iter)(tx_bft.to_tx().block());
+    }
+}
+
+void SubsConsensus::AddCallback(BlockSubsCallbackFunction callback) {
+    std::lock_guard<std::mutex> guard(callbacks_mutex_);
+    callbacks_.push_back(callback);
 }
 
 SubsConsensus* SubsConsensus::Instance() {
@@ -37,83 +58,84 @@ SubsConsensus* SubsConsensus::Instance() {
     return &ins;
 }
 
-int SubsConsensus::Init(int argc, char** argv) {
-    std::lock_guard<std::mutex> guard(init_mutex_);
-    if (inited_) {
-        SUBS_ERROR("network inited!");
-        return kSubsError;
-    }
-
-    if (InitConfigWithArgs(argc, argv) != init::kInitSuccess) {
-        SUBS_ERROR("init config with args failed!");
-        return kSubsError;
-    }
-
-    if (ip::IpWithCountry::Instance()->Init(
-            "./conf/geolite.conf",
-            "./conf/geo_country.conf") != ip::kIpSuccess) {
-        SUBS_ERROR("init ip config with args failed!");
-        return kSubsError;
-    }
-
-    if (common::GlobalInfo::Instance()->Init(conf_) != common::kCommonSuccess) {
-        SUBS_ERROR("init global info failed!");
-        return kSubsError;
-    }
-
-    if (SetPriAndPubKey("") != init::kInitSuccess) {
-        SUBS_ERROR("set node private and public key failed!");
-        return kSubsError;
-    }
-
-    if (security::EcdhCreateKey::Instance()->Init() != security::kSecuritySuccess) {
-        SUBS_ERROR("init ecdh create secret key failed!");
-        return kSubsError;
-    }
-
-    network::DhtManager::Instance();
-    network::UniversalManager::Instance();
-    network::Route::Instance();
-    if (InitTransport() != init::kInitSuccess) {
-        SUBS_ERROR("init transport failed!");
-        return kSubsError;
-    }
-
-    if (InitHttpTransport() != transport::kTransportSuccess) {
-        SUBS_ERROR("init http transport failed!");
-        return kSubsError;
-    }
-
-    if (InitNetworkSingleton() != init::kInitSuccess) {
-        SUBS_ERROR("InitNetworkSingleton failed!");
-        return kSubsError;
-    }
-
-    if (StartSubscription() != kSubsSuccess) {
-        return kSubsError;
-    }
-
-    if (InitCommand() != init::kInitSuccess) {
-        SUBS_ERROR("InitNetworkSingleton failed!");
-        return kSubsError;
-    }
-
-    std::string gid;
-    std::map<std::string, std::string> attrs;
-    tenon::client::TransactionClient::Instance()->Transaction(
-            "",
-            0,
-            "",
-            attrs,
-            common::kConsensusCreateAcount,
-            gid);
-    // check account address valid
-    inited_ = true;
-    cmd_.Run();
-    transport_->Stop();
-    network::DhtManager::Instance()->Destroy();
-    std::cout << "exit now." << std::endl;
-    exit(0);
+int SubsConsensus::Init() {
+//     std::lock_guard<std::mutex> guard(init_mutex_);
+//     if (inited_) {
+//         SUBS_ERROR("network inited!");
+//         return kSubsError;
+//     }
+// 
+//     if (InitConfigWithArgs(argc, argv) != init::kInitSuccess) {
+//         SUBS_ERROR("init config with args failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (ip::IpWithCountry::Instance()->Init(
+//             "./conf/geolite.conf",
+//             "./conf/geo_country.conf") != ip::kIpSuccess) {
+//         SUBS_ERROR("init ip config with args failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (common::GlobalInfo::Instance()->Init(conf_) != common::kCommonSuccess) {
+//         SUBS_ERROR("init global info failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (SetPriAndPubKey("") != init::kInitSuccess) {
+//         SUBS_ERROR("set node private and public key failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (security::EcdhCreateKey::Instance()->Init() != security::kSecuritySuccess) {
+//         SUBS_ERROR("init ecdh create secret key failed!");
+//         return kSubsError;
+//     }
+// 
+//     network::DhtManager::Instance();
+//     network::UniversalManager::Instance();
+//     network::Route::Instance();
+//     if (InitTransport() != init::kInitSuccess) {
+//         SUBS_ERROR("init transport failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (InitHttpTransport() != transport::kTransportSuccess) {
+//         SUBS_ERROR("init http transport failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (InitNetworkSingleton() != init::kInitSuccess) {
+//         SUBS_ERROR("InitNetworkSingleton failed!");
+//         return kSubsError;
+//     }
+// 
+//     if (StartSubscription() != kSubsSuccess) {
+//         return kSubsError;
+//     }
+// 
+//     if (InitCommand() != init::kInitSuccess) {
+//         SUBS_ERROR("InitNetworkSingleton failed!");
+//         return kSubsError;
+//     }
+// 
+//     std::string gid;
+//     std::map<std::string, std::string> attrs;
+//     tenon::client::TransactionClient::Instance()->Transaction(
+//             "",
+//             0,
+//             "",
+//             attrs,
+//             common::kConsensusCreateAcount,
+//             gid);
+//     // check account address valid
+//     inited_ = true;
+//     cmd_.Run();
+//     transport_->Stop();
+//     network::DhtManager::Instance()->Destroy();
+//     std::cout << "exit now." << std::endl;
+//     exit(0);
+    StartSubscription();
     return kSubsSuccess;
 }
 

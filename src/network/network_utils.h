@@ -38,7 +38,8 @@ static const uint32_t kConsensusShardEndNetworkId = 4099u;  // less
 static const uint32_t kConsensusShardNetworkCount = (
         kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId + 1);
 static const uint32_t kServiceShardBeginNetworkId = kConsensusShardEndNetworkId;  // eq
-static const uint32_t kServiceShardEndNetworkId = kNetworkMaxDhtCount;  // less
+static const uint32_t kServiceShardEndNetworkId = kNetworkMaxDhtCount - 10;  // less
+static const uint32_t kWaitingPoolNetworkId = kServiceShardEndNetworkId + 1;
 
 enum ServiceNetworkType {
     kVpnNetworkId = kServiceShardBeginNetworkId,

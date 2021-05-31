@@ -12,6 +12,7 @@
 #include "block/account_manager.h"
 #include "security/crypto_utils.h"
 #include "election/elect_dht.h"
+#include "election/member_manager.h"
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
 #include "bft/tests/test_transport.h"
@@ -452,8 +453,8 @@ public:
                 iter->first,
                 iter->second,
                 index_map_iter->second);
-            ASSERT_TRUE(bft::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(bft::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 
@@ -493,7 +494,7 @@ public:
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e"));
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e"));
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_TRUE(bft::MemberManager::Instance()->IsLeader(
+            ASSERT_TRUE(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id(),
                 vss::VssManager::Instance()->EpochRandom()));
@@ -1484,7 +1485,7 @@ TEST_F(TestBftManager, InitBft) {
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(id);
     EXPECT_EQ(account_info, nullptr);
     EXPECT_EQ(bft_manager.InitBft(msg, bft_msg), kBftError);
-    EXPECT_FALSE(bft::MemberManager::Instance()->IsLeader(
+    EXPECT_FALSE(elect::MemberManager::Instance()->IsLeader(
         network::kConsensusShardBeginNetworkId,
         common::GlobalInfo::Instance()->id(),
         0));

@@ -16,7 +16,6 @@
 #include "security/response.h"
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
-#include "bft/member_manager.h"
 #include "bft/proto/bft.pb.h"
 
 namespace tenon {

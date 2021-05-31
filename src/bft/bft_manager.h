@@ -25,12 +25,13 @@ public:
     void RemoveBft(const std::string& gid);
     void NetworkMemberChange(
         uint32_t network_id,
-        MembersPtr& members_ptr,
-        NodeIndexMapPtr& node_index_map);
+        elect::MembersPtr& members_ptr,
+        elect::NodeIndexMapPtr& node_index_map);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
-    MembersPtr GetNetworkMembers(uint32_t network_id) {
+    elect::MembersPtr GetNetworkMembers(uint32_t network_id) {
         return MemberManager::Instance()->GetNetworkMembers(network_id);
     }
+
     int AddGenisisBlock(const bft::protobuf::Block& genesis_block);
 
 private:

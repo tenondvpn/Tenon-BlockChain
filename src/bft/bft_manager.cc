@@ -29,11 +29,11 @@ namespace bft {
 
 BftManager::BftManager() {
     network::Route::Instance()->RegisterMessage(
-            common::kBftMessage,
-            std::bind(&BftManager::HandleMessage, this, std::placeholders::_1));
+        common::kBftMessage,
+        std::bind(&BftManager::HandleMessage, this, std::placeholders::_1));
     timeout_tick_.CutOff(
-            kBftTimeoutCheckPeriod,
-            std::bind(&BftManager::CheckTimeout, this));
+        kBftTimeoutCheckPeriod,
+        std::bind(&BftManager::CheckTimeout, this));
 }
 
 BftManager::~BftManager() {}
@@ -45,8 +45,8 @@ BftManager* BftManager::Instance() {
 
 void BftManager::NetworkMemberChange(
         uint32_t network_id,
-        MembersPtr& members_ptr,
-        NodeIndexMapPtr& node_index_map) {
+        elect::MembersPtr& members_ptr,
+        elect::NodeIndexMapPtr& node_index_map) {
     MemberManager::Instance()->SetNetworkMember(network_id, members_ptr, node_index_map);
 }
 

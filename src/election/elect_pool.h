@@ -22,7 +22,12 @@ public:
         uint32_t count,
         const std::vector<NodeDetailPtr>& src_nodes,
         std::vector<NodeDetailPtr>& res_nodes);
-    void GetAllValidNodes(common::BloomFilter& nodes_filter, std::vector<NodeDetailPtr>& nodes);
+    // now shard min balance and max balance is 2/3 nodes middle balance
+    void GetAllValidNodes(
+        uint64_t min_balance,
+        uint64_t max_balance,
+        common::BloomFilter& nodes_filter,
+        std::vector<NodeDetailPtr>& nodes);
 
 private:
     void UpdateNodeHeartbeat();
@@ -31,7 +36,11 @@ private:
     std::unordered_map<std::string, NodeDetailPtr> node_map_;
     std::mutex node_map_mutex_;
     common::Tick heartbeat_tick_;
+
+    DISALLOW_COPY_AND_ASSIGN(ElectPool);
 };
+
+typedef std::shared_ptr<ElectPool> ElectPoolPtr;
 
 };  // namespace elect
 
