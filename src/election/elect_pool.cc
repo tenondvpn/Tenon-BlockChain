@@ -23,6 +23,7 @@ ElectPool::~ElectPool() {}
 void ElectPool::AddNewNode(NodeDetailPtr& node_ptr) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     node_map_[node_ptr->id] = node_ptr;
+    std::cout << "AddNewNode: " << common::Encode::HexEncode(node_ptr->id) << std::endl;
 }
 
 void ElectPool::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
