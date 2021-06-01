@@ -13,6 +13,7 @@ public:
     ElectPoolManager();
     ~ElectPoolManager();
     void NetworkMemberChange(uint32_t network_id, MembersPtr& members_ptr);
+    void AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& node_ptr);
     void UpdateNodeInfoWithBlock(const bft::protobuf::Block& block_info);
     int LeaderCreateElectionBlockTx(
         uint32_t shard_netid,

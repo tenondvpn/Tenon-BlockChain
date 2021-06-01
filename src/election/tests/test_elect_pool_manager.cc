@@ -21,10 +21,42 @@ namespace elect {
 namespace test {
 
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
+static const char* kWaitingNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
 class TestElectPoolManager : public testing::Test {
 public:
+    static void WriteDefaultLogConf(
+        const std::string& log_conf_path,
+        const std::string& log_path) {
+        FILE* file = NULL;
+        file = fopen(log_conf_path.c_str(), "w");
+        if (file == NULL) {
+            return;
+        }
+        std::string log_str = ("# log4cpp.properties\n"
+            "log4cpp.rootCategory = WARN\n"
+            "log4cpp.category.sub1 = WARN, programLog\n"
+            "log4cpp.appender.rootAppender = ConsoleAppender\n"
+            "log4cpp.appender.rootAppender.layout = PatternLayout\n"
+            "log4cpp.appender.rootAppender.layout.ConversionPattern = %d [%p] %m%n\n"
+            "log4cpp.appender.programLog = RollingFileAppender\n"
+            "log4cpp.appender.programLog.fileName = ") + log_path + "\n" +
+            std::string("log4cpp.appender.programLog.maxFileSize = 1073741824\n"
+                "log4cpp.appender.programLog.maxBackupIndex = 1\n"
+                "log4cpp.appender.programLog.layout = PatternLayout\n"
+                "log4cpp.appender.programLog.layout.ConversionPattern = %d [%p] %m%n\n");
+        fwrite(log_str.c_str(), log_str.size(), 1, file);
+        fclose(file);
+    }
+
     static void SetUpTestCase() {    
+        common::global_stop = true;
+        std::string config_path_ = "./";
+        std::string conf_path = config_path_ + "/tenon.conf";
+        std::string log_conf_path = config_path_ + "/log4cpp.properties";
+        std::string log_path = config_path_ + "/tenon.log";
+        WriteDefaultLogConf(log_conf_path, log_path);
+        log4cpp::PropertyConfigurator::configure(log_conf_path);
     }
 
     static void TearDownTestCase() {
@@ -49,7 +81,7 @@ public:
         security::PrivateKey prikey(private_key);
         security::PublicKey pubkey(prikey);
         std::string pubkey_str;
-        EXPECT_EQ(pubkey.Serialize(pubkey_str, compress), security::kPublicKeyUncompressSize);
+        EXPECT_EQ(pubkey.Serialize(pubkey_str, compress), security::kPublicKeySize);
         return pubkey_str;
     }
 
@@ -106,10 +138,26 @@ public:
             auto tx_info = tx_list->Add();
             tx_info->set_from(GetIdByPrikey(prikey));
             tx_info->set_to(GetIdByPrikey(to_prikey));
-            tx_info->set_balance(common::Random::RandomUint64() % common::kTenonMaxAmount);
+            tx_info->set_balance(common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000));
         }
 
         elect_pool_manager_.UpdateNodeInfoWithBlock(block_info);
+    }
+
+    void AddWaitingPoolNetworkNodes(int32_t member_count, uint32_t network_id) {
+        for (int32_t i = 0; i < member_count; ++i) {
+            NodeDetailPtr new_node = std::make_shared<ElectNodeDetail>();
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kWaitingNodeIdEndFix);
+            std::string prikey = common::Encode::HexDecode(from_data);
+            new_node->id = GetIdByPrikey(prikey);
+            new_node->public_key = GetPubkeyByPrikey(prikey);
+            new_node->dht_key = "";
+            new_node->public_ip = "";
+            new_node->public_port = 0;
+            new_node->choosed_balance = common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000);
+            elect_pool_manager_.AddWaitingPoolNode(network_id, new_node);
+        }
     }
 
 private:
@@ -118,11 +166,13 @@ private:
 
 TEST_F(TestElectPoolManager, All) {
     const uint32_t kMemberCount = 31;
+    const uint32_t kWaitingCount = 11;
     CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
     for (uint32_t i = 0; i < 20; ++i) {
         UpdateNodeInfoWithBlock(kMemberCount, i);
     }
 
+    AddWaitingPoolNetworkNodes(kWaitingCount, network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
     bft::protobuf::BftMessage bft_msg;
     ASSERT_EQ(elect_pool_manager_.LeaderCreateElectionBlockTx(
         network::kConsensusShardBeginNetworkId,

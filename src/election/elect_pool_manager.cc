@@ -32,6 +32,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
             exists_shard_nodes,
             weed_out_vec,
             pick_in_vec) != kElectSuccess) {
+        ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
         return kElectError;
     }
 
@@ -190,6 +191,27 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
     return kElectSuccess;
 }
 
+void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& node_ptr) {
+    if (network_id < network::kConsensusWaitingShardBeginNetworkId ||
+            network_id >= network::kConsensusWaitingShardEndNetworkId) {
+        return;
+    }
+
+    ElectPoolPtr waiting_pool_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
+        auto iter = elect_pool_map_.find(network_id);
+        if (iter == elect_pool_map_.end()) {
+            waiting_pool_ptr = std::make_shared<ElectPool>();
+            elect_pool_map_[network_id] = waiting_pool_ptr;
+        } else {
+            waiting_pool_ptr = iter->second;
+        }
+    }
+
+    waiting_pool_ptr->AddNewNode(node_ptr);
+}
+
 int ElectPoolManager::GetAllBloomFilerAndNodes(
         uint32_t shard_netid,
         common::BloomFilter* cons_all,
@@ -204,6 +226,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
         auto iter = elect_pool_map_.find(shard_netid);
         if (iter == elect_pool_map_.end()) {
+            ELECT_ERROR("find shard network failed [%u]!", shard_netid);
             return kElectError;
         }
 
@@ -228,6 +251,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
         auto iter = elect_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
         if (iter == elect_pool_map_.end()) {
+            ELECT_ERROR("find waiting shard network failed [%u]!",
+                shard_netid + network::kConsensusWaitingShardOffset);
             return kElectError;
         }
 
@@ -338,6 +363,8 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         std::lock_guard<std::mutex> guard(all_node_map_mutex_);
         all_node_map_[elect_node->id] = elect_node;
     }
+
+    pool_ptr->ReplaceWithElectNodes(node_vec);
 }
 
 // leader get all node balance block and broadcast to all root and waiting root

@@ -31,7 +31,6 @@
 #include "init/init_utils.h"
 #include "client/vpn_client.h"
 #include "security/secp256k1.h"
-#include "subscript/subs_consensus.h"
 
 namespace tenon {
 
@@ -130,13 +129,6 @@ int NetworkInit::Init(int argc, char** argv) {
     if (InitBft() != kInitSuccess) {
         INIT_ERROR("int bft failed!");
         return kInitError;
-    }
-
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        if (subs::SubsConsensus::Instance()->Init() != subs::kSubsSuccess) {
-            INIT_ERROR("int SubsConsensus failed!");
-            return kInitError;
-        }
     }
 
     sync::KeyValueSync::Instance();
