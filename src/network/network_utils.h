@@ -34,12 +34,14 @@ static const uint32_t kUniversalNetworkId = 0u;  // all network join(for find ne
 static const uint32_t kNodeNetworkId = 1u;  // just node id join(for broadcast)
 static const uint32_t kRootCongressNetworkId = 2u;
 static const uint32_t kConsensusShardBeginNetworkId = 3u;  // eq
-static const uint32_t kConsensusShardEndNetworkId = 4099u;  // less
+static const uint32_t kConsensusShardEndNetworkId = 1027u;  // less
+static const uint32_t kConsensusWaitingShardBeginNetworkId = kConsensusShardEndNetworkId;  // eq
+static const uint32_t kConsensusWaitingShardEndNetworkId = kConsensusWaitingShardBeginNetworkId + kConsensusShardEndNetworkId;  // less
+static const uint32_t kConsensusWaitingShardOffset = kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId;  // less
 static const uint32_t kConsensusShardNetworkCount = (
         kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId + 1);
-static const uint32_t kServiceShardBeginNetworkId = kConsensusShardEndNetworkId;  // eq
-static const uint32_t kServiceShardEndNetworkId = kNetworkMaxDhtCount - 10;  // less
-static const uint32_t kWaitingPoolNetworkId = kServiceShardEndNetworkId + 1;
+static const uint32_t kServiceShardBeginNetworkId = kConsensusWaitingShardEndNetworkId;  // eq
+static const uint32_t kServiceShardEndNetworkId = 2048;  // less
 
 enum ServiceNetworkType {
     kVpnNetworkId = kServiceShardBeginNetworkId,
@@ -50,6 +52,7 @@ enum ServiceNetworkType {
     kVpnRouteVipLevel3NetworkId,
     kVpnRouteVipLevel4NetworkId,
     kVpnRouteVipLevel5NetworkId,
+    kWaitingPoolNetworkId,
 };
 
 }  // namespace network

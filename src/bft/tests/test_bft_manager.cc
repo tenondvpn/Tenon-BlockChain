@@ -1708,7 +1708,7 @@ TEST_F(TestBftManager, TestCallContractSuccess) {
     NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
         true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
     new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, from_balance - 19665222 * common::GlobalInfo::Instance()->gas_price() + 2643000000);
+    ASSERT_EQ(new_from_balance, from_balance - 14091 * common::GlobalInfo::Instance()->gas_price() + 2643000000);
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -1835,7 +1835,7 @@ TEST_F(TestBftManager, TestCallContractCallerLockContractError2) {
     NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
         true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
     new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 1085652 * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 14091 * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -1886,7 +1886,7 @@ TEST_F(TestBftManager, TestCallContractCallerLockContractError3) {
     NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
         true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
     new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 1108884 * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 14091 * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -1937,7 +1937,7 @@ TEST_F(TestBftManager, TestCallContractCallerLockContractError4) {
     NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
         true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
     new_from_balance = GetBalanceByPrikey(from_prikey);
-    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 19665222 * common::GlobalInfo::Instance()->gas_price());
+    ASSERT_EQ(new_from_balance, 2643000000 + from_balance - 14091 * common::GlobalInfo::Instance()->gas_price());
     ASSERT_FALSE(caller_info->locked());
 }
 
@@ -2524,7 +2524,7 @@ TEST_F(TestBftManager, TestCallContractSimpleActionSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 12035 * common::GlobalInfo::Instance()->gas_price() + bid_amount);
+        ASSERT_EQ(new_from_balance, from_balance - 9735 * common::GlobalInfo::Instance()->gas_price() + bid_amount);
         ASSERT_FALSE(caller_info->locked());
     }
 
@@ -2567,7 +2567,7 @@ TEST_F(TestBftManager, TestCallContractSimpleActionSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 35773 * common::GlobalInfo::Instance()->gas_price() + 100009);
+        ASSERT_EQ(new_from_balance, from_balance - 33473 * common::GlobalInfo::Instance()->gas_price() + 100009);
         ASSERT_FALSE(caller_info->locked());
 
         auto beneficiary_balance = GetBalanceByPrikey(from_prikey);
@@ -2807,9 +2807,9 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
         if (i == 0) {
-            ASSERT_EQ(new_from_balance, from_balance - 111124 * common::GlobalInfo::Instance()->gas_price() + reveal_sum[i]);
+            ASSERT_EQ(new_from_balance, from_balance - 108824 * common::GlobalInfo::Instance()->gas_price() + reveal_sum[i]);
         } else {
-            ASSERT_EQ(new_from_balance, from_balance - 107550 * common::GlobalInfo::Instance()->gas_price() + reveal_sum[i]);
+            ASSERT_EQ(new_from_balance, from_balance - 105250 * common::GlobalInfo::Instance()->gas_price() + reveal_sum[i]);
         }
         ASSERT_FALSE(caller_info->locked());
     }
@@ -2858,7 +2858,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
         if (i == 0) {
-            ASSERT_EQ(new_from_balance, from_balance - 11894 * common::GlobalInfo::Instance()->gas_price() + withdraw_vec[i]);
+            ASSERT_EQ(new_from_balance, from_balance - 9594 * common::GlobalInfo::Instance()->gas_price() + withdraw_vec[i]);
         } else {
             ASSERT_EQ(new_from_balance, from_balance - 1172 * common::GlobalInfo::Instance()->gas_price() + withdraw_vec[i]);
         }
@@ -2904,7 +2904,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 36584 * common::GlobalInfo::Instance()->gas_price() + bid_amount);
+        ASSERT_EQ(new_from_balance, from_balance - 34284 * common::GlobalInfo::Instance()->gas_price() + bid_amount);
         ASSERT_FALSE(caller_info->locked());
 
         auto beneficiary_balance = GetBalanceByPrikey(from_prikey);
@@ -3038,7 +3038,7 @@ TEST_F(TestBftManager, TestCallContractPurchaseSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 35154 * common::GlobalInfo::Instance()->gas_price() + item_value);
+        ASSERT_EQ(new_from_balance, from_balance - 32854 * common::GlobalInfo::Instance()->gas_price() + item_value);
         ASSERT_FALSE(caller_info->locked());
     }
 
@@ -3080,7 +3080,7 @@ TEST_F(TestBftManager, TestCallContractPurchaseSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 35411 * common::GlobalInfo::Instance()->gas_price() + item_value * 3);
+        ASSERT_EQ(new_from_balance, from_balance - 33111 * common::GlobalInfo::Instance()->gas_price() + item_value * 3);
         ASSERT_FALSE(caller_info->locked());
     }
 }

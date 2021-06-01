@@ -136,7 +136,7 @@ int SubsConsensus::Init() {
 //     network::DhtManager::Instance()->Destroy();
 //     std::cout << "exit now." << std::endl;
 //     exit(0);
-    StartSubscription();
+//     StartSubscription();
     return kSubsSuccess;
 }
 

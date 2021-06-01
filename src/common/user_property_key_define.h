@@ -24,6 +24,10 @@ enum ConsensusType {
     kConsensusVpnBandwidth,
     kConsensusVpnMining,
     kConsensusVpnMiningPayToNode,
+    kConsensusRootElectRoot,  // root network election
+    kConsensusRootElectShard,  // shard consensus network election
+    kConsensusRootTimeBlock,  // create time block
+    kConsensusRootVssBlock,  // create vss block
 };
 
 enum ClientStatus {

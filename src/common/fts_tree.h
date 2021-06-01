@@ -25,10 +25,9 @@ public:
     ~FtsTree();
     void AppendFtsNode(uint64_t fts_value, void* data);
     void CreateFtsTree();
-    void GetNodes(uint64_t init_rand_num, uint32_t count, std::set<void*>& nodes);
+    void* GetOneNode(std::mt19937_64& g2);
 
 private:
-    void* GetOneNode(std::mt19937_64& g2);
 
     std::vector<FtsNode> fts_nodes_;
     uint32_t root_node_index_{ 0 };

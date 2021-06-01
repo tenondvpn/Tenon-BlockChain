@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "common/bloom_filter.h"
+#include "common/u16_bit_count.h"
 
 namespace tenon {
 
@@ -15,6 +16,14 @@ BloomFilter::BloomFilter(uint32_t bit_count, uint32_t hash_count) : hash_count_(
         data_.push_back(0ull);
     }
     assert(!data_.empty());
+}
+
+void BloomFilter::Deserialize(const uint64_t* data, uint32_t count, uint32_t hash_count) {
+    for (uint32_t i = 0; i < count; ++i) {
+        data_.push_back(data[i]);
+    }
+
+    hash_count_ = hash_count;
 }
 
 BloomFilter::BloomFilter(const std::vector<uint64_t>& data, uint32_t hash_count)
@@ -47,6 +56,24 @@ bool BloomFilter::Contain(uint64_t hash) {
     return true;
 }
 
+uint32_t BloomFilter::DiffCount(const BloomFilter& other) {
+    if (data_.size() != other.data_.size()) {
+        return (std::numeric_limits<uint32_t>::max)();
+    }
+
+    uint32_t diff_count = 0;
+    for (uint32_t i = 0; i < data_.size(); ++i) {
+        uint16_t* u16_data_l = (uint16_t*)(&data_[i]);
+        uint16_t* u16_data_r = (uint16_t*)(&other.data_[i]);
+        for (uint32_t i = 0; i < 4; ++i) {
+            diff_count += common::U16BitCount::Instance()->DiffCount(
+                u16_data_l[i] ^ u16_data_r[i]);
+        }
+    }
+
+    return diff_count;
+}
+
 BloomFilter& BloomFilter::operator=(const BloomFilter& src) {
     if (this == &src) {
         return *this;
@@ -63,6 +90,14 @@ bool BloomFilter::operator==(const BloomFilter& r) const {
     }
 
     return (data_ == r.data_ && hash_count_ == r.hash_count_);
+}
+
+bool BloomFilter::operator!=(const BloomFilter& r) const {
+    if (this == &r) {
+        return true;
+    }
+
+    return !(data_ == r.data_ && hash_count_ == r.hash_count_);
 }
 
 }  // namespace common

@@ -116,7 +116,6 @@ void ElectManager::ProcessNewElectBlock(
         bool load_from_db) {
     assert(elect_msg.has_elect_block());
     std::map<uint32_t, MembersPtr> in_members;
-    std::map<uint32_t, MembersPtr> out_members;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map_;
     auto in = elect_msg.elect_block().in();

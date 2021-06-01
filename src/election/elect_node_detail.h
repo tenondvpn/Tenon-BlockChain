@@ -18,8 +18,8 @@ struct ElectNodeDetail {
     std::string public_ip;
     uint16_t public_port;
     std::string dht_key;
-    uint64_t choosed_height;
-    uint64_t choosed_balance;
+    std::atomic <uint64_t> choosed_height;
+    std::atomic <uint64_t> choosed_balance;
     std::chrono::steady_clock::time_point join_tm{ std::chrono::steady_clock::now() };
     std::map<uint64_t, uint32_t> heatbeat_succ_count;
     std::map<uint64_t, uint32_t> heatbeat_fail_count;
@@ -27,9 +27,9 @@ struct ElectNodeDetail {
     // for election, give nearest 9 heights for every node consensus balance
     std::map<uint64_t, uint64_t> height_with_balance;
     std::mutex height_with_balance_mutex;
-    // for election, give nearest 9 heights for every node consensus tx count
-    std::map<uint64_t, uint64_t> height_with_success_tx_count;
-    std::mutex height_with_success_tx_count_mutex;
+    // for election, last period every node consensus success tx count
+    std::atomic<uint32_t> success_tx_count;
+    uint64_t fts_value;
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;
@@ -73,10 +73,16 @@ typedef std::shared_ptr<Members> MembersPtr;
 
 typedef std::shared_ptr<std::unordered_map<std::string, uint32_t>> NodeIndexMapPtr;
 
-inline static bool ElectNodeCompare(
+inline static bool ElectNodeIdCompare(
         const NodeDetailPtr& left,
         const NodeDetailPtr& right) {
     return left->id < right->id;
+}
+
+inline static bool ElectNodeBalanceCompare(
+    const NodeDetailPtr& left,
+    const NodeDetailPtr& right) {
+    return left->choosed_balance < right->choosed_balance;
 }
 
 };  // namespace elect

@@ -28,6 +28,18 @@ static const uint32_t kElectHopLimit = 5u;
 static const uint32_t kElectHopToLayer = 2u;
 static const uint32_t kElectNeighborCount = 7u;
 static const uint32_t kInvalidMemberIndex = (std::numeric_limits<uint32_t>::max)();
+static const uint32_t kMinShardingNetworkNodesCount = 7u;
+// weed out and pick 1/10 nodes each epoch
+static const uint32_t kFtsWeedoutDividRate = 10u;
+// Tolerate 5% difference between leader and backup
+static const uint32_t kTolerateLeaderBackupFiffRate = 5u;  // kTolerateLeaderBackupFiffRate %;
+static const uint64_t kSmoothGradientAmount = 100llu;
+
+static const std::string kElectNodeAttrKeyAllBloomfilter = "__allbloomfilter";
+static const std::string kElectNodeAttrKeyWeedoutBloomfilter = "__weedoutbloomfilter";
+static const std::string kElectNodeAttrKeyAllPickBloomfilter = "__allpickbloomfilter";
+static const std::string kElectNodeAttrKeyAllPickInBloomfilter = "__allpickinbloomfilter";
+static const std::string kElectNodeAttrElectBlock = "__electblock";
 
 // Nodes can participate in the election for more than 30 minutes after joining
 // Set aside 5 minutes as the tolerance range, that is, each consensus node judges
