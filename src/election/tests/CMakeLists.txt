@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.8)
 
 add_compile_options(-Wno-unused-parameter)
 
-aux_source_directory(./ db_test_src)
-add_executable(db_test ${db_test_src})
+aux_source_directory(./ elect_test_src)
+add_executable(elect_test ${elect_test_src})
 
-add_dependencies(db_test db)
+add_dependencies(elect_test elect)
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(db_test PRIVATE db bz2 gtest gtest_main gmock gmock_main pthread dl)
+    target_link_libraries(elect_test PRIVATE election bz2 gtest gtest_main gmock gmock_main pthread dl)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    target_link_libraries(db_test PRIVATE db gtest gtest_main gmock gmock_main)
+    target_link_libraries(elect_test PRIVATE election gtest gtest_main gmock gmock_main)
 endif()

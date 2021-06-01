@@ -202,7 +202,7 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
         auto iter = elect_pool_map_.find(network_id);
         if (iter == elect_pool_map_.end()) {
-            waiting_pool_ptr = std::make_shared<ElectPool>();
+            waiting_pool_ptr = std::make_shared<ElectPool>(network_id);
             elect_pool_map_[network_id] = waiting_pool_ptr;
         } else {
             waiting_pool_ptr = iter->second;
