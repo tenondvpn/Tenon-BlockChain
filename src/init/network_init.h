@@ -10,10 +10,10 @@
 
 namespace tenon {
 
-namespace congress {
-	class CongressInit;
-	typedef std::shared_ptr<CongressInit> CongressInitPtr;
-}  // namespace congress
+namespace root {
+	class RootInit;
+	typedef std::shared_ptr<RootInit> CongressInitPtr;
+}  // namespace root
 
 namespace init {
 

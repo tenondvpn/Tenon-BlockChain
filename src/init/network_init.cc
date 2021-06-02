@@ -176,8 +176,8 @@ int NetworkInit::CreateConfigNetwork() {
 	}
 
 	if (net_id == network::kRootCongressNetworkId) {
-		congress_ = std::make_shared<congress::CongressInit>();
-		if (congress_->Init() != congress::kCongressSuccess) {
+		congress_ = std::make_shared<congress::RootInit>();
+		if (congress_->Init() != congress::kRootSuccess) {
 			INIT_ERROR("init congress failed!");
 			return kInitError;
 		}

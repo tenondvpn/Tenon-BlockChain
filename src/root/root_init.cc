@@ -1,28 +1,28 @@
 #include "stdafx.h"
-#include "root_congress/congress_init.h"
+#include "root/root_init.h"
 
 #include "common/global_info.h"
 
 namespace tenon {
 
-namespace congress {
+namespace root {
 
-CongressInit::CongressInit() {}
+RootInit::RootInit() {}
 
-CongressInit::~CongressInit() {}
+RootInit::~RootInit() {}
 
-int CongressInit::Init() {
-	congress_node_ = std::make_shared<CongressNode>(network::kRootCongressNetworkId);
+int RootInit::Init() {
+	congress_node_ = std::make_shared<RootNode>(network::kRootCongressNetworkId);
 	if (congress_node_->Init() != network::kNetworkSuccess) {
 		congress_node_ = nullptr;
 		CONGRESS_ERROR("node join network [%u] failed!", network::kRootCongressNetworkId);
-		return kCongressError;
+		return kRootError;
 	}
 
 	common::GlobalInfo::Instance()->set_network_id(network::kRootCongressNetworkId);
-	return kCongressSuccess;
+	return kRootSuccess;
 }
 
-}  // namespace congress
+}  // namespace root
 
 }  // namespace tenon

@@ -19,7 +19,7 @@ public:
     int LeaderCreateElectionBlockTx(
         uint32_t shard_netid,
         bft::protobuf::BftMessage& bft_msg);
-    int BackupCheckElectionBlockTx(const bft::protobuf::BftMessage& bft_msg);
+    int BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx_info);
     void GetAllWaitingNodes(
         uint64_t time_offset_milli,
         uint32_t waiting_shard_id,
