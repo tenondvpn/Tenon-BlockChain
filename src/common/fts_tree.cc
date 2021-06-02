@@ -55,7 +55,7 @@ void FtsTree::CreateFtsTree() {
 }
 
 void FtsTree::PrintFtsTree() {
-    for (int32_t i = 0; i < fts_nodes_.size(); ++i) {
+    for (uint32_t i = 0; i < fts_nodes_.size(); ++i) {
         std::cout << fts_nodes_[i].fts_value << " ";
     }
 
@@ -86,7 +86,7 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
     while (true) {
-        auto rand_value = 0;
+        uint64_t rand_value = 0;
         if (fts_nodes_[choose_idx].fts_value > 0) {
             rand_value = g2() % fts_nodes_[choose_idx].fts_value;
         }
