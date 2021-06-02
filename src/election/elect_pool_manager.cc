@@ -251,7 +251,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     consensus_pool_ptr->FtsGetNodes(
         true,
         weed_out_count,
-        *cons_weed_out,
+        cons_weed_out,
         exists_shard_nodes,
         weed_out_vec);
     ElectPoolPtr waiting_pool_ptr = nullptr;
@@ -272,7 +272,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     waiting_pool_ptr->FtsGetNodes(
         false,
         weed_out_count,
-        *pick_in,
+        pick_in,
         pick_all_vec,
         pick_in_vec);
     return kElectSuccess;

@@ -43,7 +43,7 @@ void ElectPool::ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes) {
 void ElectPool::FtsGetNodes(
         bool weed_out,
         uint32_t count,
-        common::BloomFilter& nodes_filter,
+        common::BloomFilter* nodes_filter,
         const std::vector<NodeDetailPtr>& src_nodes,
         std::vector<NodeDetailPtr>& res_nodes) {
     auto sort_vec = src_nodes;
@@ -76,7 +76,7 @@ void ElectPool::FtsGetNodes(
         tmp_res_nodes.insert(data);
         NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
         res_nodes.push_back(node_ptr);
-        nodes_filter.Add(common::Hash::Hash64(node_ptr->id));
+        nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
     }
 }
 

@@ -22,7 +22,7 @@ public:
     void FtsGetNodes(
         bool weed_out,
         uint32_t count,
-        common::BloomFilter& nodes_filter,
+        common::BloomFilter* nodes_filter,
         const std::vector<NodeDetailPtr>& src_nodes,
         std::vector<NodeDetailPtr>& res_nodes);
     // now shard min balance and max balance is 2/3 nodes middle balance
