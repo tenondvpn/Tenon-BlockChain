@@ -1,7 +1,12 @@
 #include "election/elect_pool_manager.h"
 
 #include <functional>
+#include <algorithm>
+#include <random>
 
+#include "common/fts_tree.h"
+#include "common/random.h"
+#include "vss/vss_manager.h"
 #include "security/secp256k1.h"
 #include "network/network_utils.h"
 
@@ -294,17 +299,17 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     uint64_t max_balance = 0;
     consensus_pool_ptr->GetAllValidNodes(0, *cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() / kFtsWeedoutDividRate;
-    consensus_pool_ptr->FtsGetNodes(
+    FtsGetNodes(
         true,
         weed_out_count,
         cons_weed_out,
         exists_shard_nodes,
         weed_out_vec);
-    ElectPoolPtr waiting_pool_ptr = nullptr;
+    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
-        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        auto iter = elect_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
-        if (iter == elect_pool_map_.end()) {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        auto iter = waiting_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
+        if (iter == waiting_pool_map_.end()) {
             ELECT_ERROR("find waiting shard network failed [%u]!",
                 shard_netid + network::kConsensusWaitingShardOffset);
             return kElectError;
@@ -315,13 +320,77 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
 
     std::vector<NodeDetailPtr> pick_all_vec;
     waiting_pool_ptr->GetAllValidNodes(0, *pick_all, pick_all_vec);
-    waiting_pool_ptr->FtsGetNodes(
+    FtsGetNodes(
         false,
         weed_out_count,
         pick_in,
         pick_all_vec,
         pick_in_vec);
     return kElectSuccess;
+}
+
+void ElectPoolManager::FtsGetNodes(
+        bool weed_out,
+        uint32_t count,
+        common::BloomFilter* nodes_filter,
+        const std::vector<NodeDetailPtr>& src_nodes,
+        std::vector<NodeDetailPtr>& res_nodes) {
+    auto sort_vec = src_nodes;
+    SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), sort_vec);
+    std::set<void*> tmp_res_nodes;
+    std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+    while (tmp_res_nodes.size() < count) {
+        common::FtsTree fts_tree;
+        for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
+            void* data = (void*)&(*iter);
+            if (tmp_res_nodes.find(data) != tmp_res_nodes.end()) {
+                continue;
+            }
+
+            uint64_t fts_value = (*iter)->fts_value;
+            if (weed_out) {
+                fts_value = common::kTenonMaxAmount - fts_value;
+            }
+
+            fts_tree.AppendFtsNode(fts_value, data);
+        }
+
+        fts_tree.CreateFtsTree();
+        void* data = fts_tree.GetOneNode(g2);
+        if (data == nullptr) {
+            continue;
+        }
+
+        tmp_res_nodes.insert(data);
+        NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
+        res_nodes.push_back(node_ptr);
+        nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
+    }
+}
+
+void ElectPoolManager::SmoothFtsValue(
+        int32_t count,
+        std::vector<NodeDetailPtr>& sort_vec) {
+    assert(sort_vec.size() > count);
+    std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
+    for (uint32_t i = 1; i < sort_vec.size(); ++i) {
+        sort_vec[i]->balance_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
+    }
+
+    std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceDiffCompare);
+    uint64_t diff_2b3 = sort_vec[sort_vec.size() * 2 / 3]->balance_diff;
+    std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
+    sort_vec[0]->fts_value = 100llu;  // diff with default node fts value 0
+    for (uint32_t i = 1; i < sort_vec.size(); ++i) {
+        uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
+        if (fts_val_diff < diff_2b3) {
+            auto rand_val = fts_val_diff + common::Random::RandomUint64() % (diff_2b3 - fts_val_diff);
+            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / (diff_2b3 - fts_val_diff);
+        } else {
+            auto rand_val = diff_2b3 + common::Random::RandomUint64() % (fts_val_diff + 1 - diff_2b3);
+            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / (fts_val_diff + 1 - diff_2b3);
+        }
+    }
 }
 
 int ElectPoolManager::GetAllLeaderBloomFiler(

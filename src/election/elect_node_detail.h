@@ -21,6 +21,7 @@ struct ElectNodeDetail {
     std::string dht_key;
     std::atomic<uint64_t> choosed_height;
     std::atomic<uint64_t> choosed_balance;
+    uint64_t balance_diff{ 0 };
     std::chrono::steady_clock::time_point join_tm{ std::chrono::steady_clock::now() };
     std::map<uint64_t, uint32_t> heatbeat_succ_count;
     std::map<uint64_t, uint32_t> heatbeat_fail_count;
@@ -85,6 +86,12 @@ inline static bool ElectNodeBalanceCompare(
     const NodeDetailPtr& left,
     const NodeDetailPtr& right) {
     return left->choosed_balance < right->choosed_balance;
+}
+
+inline static bool ElectNodeBalanceDiffCompare(
+        const NodeDetailPtr& left,
+        const NodeDetailPtr& right) {
+    return left->balance_diff < right->balance_diff;
 }
 
 };  // namespace elect

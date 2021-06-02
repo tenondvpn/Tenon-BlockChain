@@ -47,6 +47,15 @@ private:
         std::vector<NodeDetailPtr>& exists_shard_nodes,
         std::vector<NodeDetailPtr>& weed_out_vec,
         std::vector<NodeDetailPtr>& pick_in_vec);
+    void FtsGetNodes(
+        bool weed_out,
+        uint32_t count,
+        common::BloomFilter* nodes_filter,
+        const std::vector<NodeDetailPtr>& src_nodes,
+        std::vector<NodeDetailPtr>& res_nodes);
+    void SmoothFtsValue(
+        int32_t count,
+        std::vector<NodeDetailPtr>& src_nodes);
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;
