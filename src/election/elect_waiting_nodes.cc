@@ -56,12 +56,17 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         std::lock_guard<std::mutex> gaurd(consensus_waiting_count_mutex_);
         auto count_iter = consensus_waiting_count_.find((*iter)->id);
         if (count_iter == consensus_waiting_count_.end()) {
-            (*iter)->consensus_count = 1;
+            {
+                std::lock_guard<std::mutex> gaurd((*iter)->valid_node_set_mutex);
+                (*iter)->valid_node_set.insert(root_node_id);
+            }
+
             consensus_waiting_count_[(*iter)->id] = *iter;
             continue;
         }
 
-        ++count_iter->second->consensus_count;
+        std::lock_guard<std::mutex> gaurd((*iter)->valid_node_set_mutex);
+        count_iter->second->valid_node_set.insert(root_node_id);
     }
 }
 
@@ -78,7 +83,8 @@ void ElectWaitingNodes::GetAllValidNodes(
     uint32_t valid_count = (member_count * 2 / 3 + 1);
     for (auto iter = consensus_waiting_count_.begin();
             iter != consensus_waiting_count_.end(); ++iter) {
-        if (iter->second->consensus_count >= valid_count) {
+        std::lock_guard<std::mutex> gaurd(iter->second->valid_node_set_mutex);
+        if (iter->second->valid_node_set.size() >= valid_count) {
             nodes.push_back(iter->second);
         }
 

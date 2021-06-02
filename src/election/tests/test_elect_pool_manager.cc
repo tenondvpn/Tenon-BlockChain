@@ -156,10 +156,15 @@ public:
             new_node->dht_key = "";
             new_node->public_ip = "";
             new_node->public_port = 0;
+            new_node->consensus_count = member_count;
             new_node->join_tm = std::chrono::steady_clock::now() - std::chrono::microseconds(kElectAvailableJoinTime + 1000);
             new_node->choosed_balance = common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000);
             elect_pool_manager_.AddWaitingPoolNode(network_id, new_node);
         }
+    }
+
+    void UpdateWaitingNodes() {
+
     }
 
 private:
@@ -174,8 +179,9 @@ TEST_F(TestElectPoolManager, All) {
         UpdateNodeInfoWithBlock(kMemberCount, i);
     }
 
-    std::cout << "network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset: " << (network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset) << std::endl;
-    AddWaitingPoolNetworkNodes(kWaitingCount, network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+    AddWaitingPoolNetworkNodes(
+        kWaitingCount,
+        network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
     bft::protobuf::BftMessage bft_msg;
     ASSERT_EQ(elect_pool_manager_.LeaderCreateElectionBlockTx(
         network::kConsensusShardBeginNetworkId,

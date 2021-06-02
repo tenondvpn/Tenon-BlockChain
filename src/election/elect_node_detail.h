@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <atomic>
+#include <set>
 
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
@@ -32,7 +33,8 @@ struct ElectNodeDetail {
     // for election, last period every node consensus success tx count
     std::atomic<uint32_t> success_tx_count;
     uint64_t fts_value;
-    std::atomic<uint32_t> consensus_count{ 0 };
+    std::unordered_set<std::string> valid_node_set;
+    std::mutex valid_node_set_mutex;
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;
