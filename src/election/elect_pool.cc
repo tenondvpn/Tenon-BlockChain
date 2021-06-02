@@ -77,6 +77,7 @@ void ElectPool::FtsGetNodes(
         NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
         res_nodes.push_back(node_ptr);
         nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
+        std::cout << "add fts node: " << common::Hash::Hash64(node_ptr->id) << std::endl;
     }
 }
 

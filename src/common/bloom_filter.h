@@ -30,18 +30,7 @@ public:
         return hash_count_;
     }
 
-    std::string Serialize() {
-        assert(!data_.empty());
-        uint64_t* data = new uint64_t[data_.size()];
-        for (uint32_t i = 0; i < data_.size(); ++i) {
-            data[i] = data_[i];
-        }
-
-        std::string res((char*)data, data_.size() * sizeof(data[0]));
-        delete[] data;
-        return res;
-    }
-
+    std::string Serialize();
     void Deserialize(const uint64_t* data, uint32_t count, uint32_t hash_count);
 
 private:

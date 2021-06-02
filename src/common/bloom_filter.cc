@@ -19,11 +19,24 @@ BloomFilter::BloomFilter(uint32_t bit_count, uint32_t hash_count) : hash_count_(
 }
 
 void BloomFilter::Deserialize(const uint64_t* data, uint32_t count, uint32_t hash_count) {
+    data_.clear();
     for (uint32_t i = 0; i < count; ++i) {
         data_.push_back(data[i]);
     }
 
     hash_count_ = hash_count;
+}
+
+std::string BloomFilter::Serialize() {
+    assert(!data_.empty());
+    uint64_t* data = new uint64_t[data_.size()];
+    for (uint32_t i = 0; i < data_.size(); ++i) {
+        data[i] = data_[i];
+    }
+
+    std::string res((char*)data, data_.size() * sizeof(data[0]));
+    delete[] data;
+    return res;
 }
 
 BloomFilter::BloomFilter(const std::vector<uint64_t>& data, uint32_t hash_count)

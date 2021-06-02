@@ -79,8 +79,8 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     }
 
     auto ec_block_attr = tx_info->add_attr();
-    pick_in_attr->set_key(kElectNodeAttrElectBlock);
-    pick_in_attr->set_value(ec_block.SerializeAsString());
+    ec_block_attr->set_key(kElectNodeAttrElectBlock);
+    ec_block_attr->set_value(ec_block.SerializeAsString());
     bft_msg.set_net_id(shard_netid);
     bft_msg.set_data(tx_bft.SerializeAsString());
     return kElectSuccess;
