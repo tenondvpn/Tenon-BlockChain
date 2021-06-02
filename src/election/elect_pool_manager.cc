@@ -234,16 +234,14 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     }
 
     // get consensus shard nodes and weed out nodes
-    common::BloomFilter exits_filters(kBloomfilterSize, kBloomfilterHashCount);
     uint64_t min_balance = 0;
     uint64_t max_balance = 0;
-    consensus_pool_ptr->GetAllValidNodes(exits_filters, exists_shard_nodes);
+    consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() / kFtsWeedoutDividRate;
-    common::BloomFilter weed_out_filters(kBloomfilterSize, kBloomfilterHashCount);
     consensus_pool_ptr->FtsGetNodes(
         true,
         weed_out_count,
-        weed_out_filters,
+        *cons_weed_out,
         exists_shard_nodes,
         weed_out_vec);
     ElectPoolPtr waiting_pool_ptr = nullptr;
@@ -260,14 +258,12 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         waiting_pool_ptr = iter->second;
     }
 
-    common::BloomFilter pick_all_filters(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> pick_all_vec;
-    waiting_pool_ptr->GetAllValidNodes(pick_all_filters, pick_all_vec);
-    common::BloomFilter pick_in_filters(kBloomfilterSize, kBloomfilterHashCount);
+    waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
     waiting_pool_ptr->FtsGetNodes(
         false,
         weed_out_count,
-        pick_in_filters,
+        *pick_in,
         pick_all_vec,
         pick_in_vec);
     return kElectSuccess;
@@ -355,6 +351,9 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         elect_node->public_ip = (*iter)->public_ip;
         elect_node->public_port = (*iter)->public_port;
         elect_node->dht_key = (*iter)->dht_key;
+        std::string pubkey_str;
+        (*iter)->pubkey.Serialize(pubkey_str);
+        elect_node->public_key = pubkey_str;
         node_vec.push_back(elect_node);
         {
             std::lock_guard<std::mutex> guard(node_ip_set_mutex_);

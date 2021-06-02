@@ -54,6 +54,34 @@ void FtsTree::CreateFtsTree() {
     }
 }
 
+void FtsTree::PrintFtsTree() {
+    for (int32_t i = 0; i < fts_nodes_.size(); ++i) {
+        std::cout << fts_nodes_[i].fts_value << " ";
+    }
+
+    std::cout << std::endl << std::endl;
+    int32_t level_count = 0;
+    int32_t end_idx = root_node_index_;
+    while (true) {
+        int32_t count = (int32_t)pow(2.0, (float)level_count);
+        std::cout << "count: " << count << std::endl;
+        if (level_count > 5) {
+            break;
+        }
+        for (int32_t i = end_idx - count + 1; i <= end_idx; ++i) {
+            std::cout << fts_nodes_[i].fts_value << " ";
+        }
+
+        std::cout << std::endl;
+        ++level_count;
+        if (end_idx - count < 0) {
+            break;
+        }
+
+        end_idx = end_idx - count;
+    }
+}
+
 void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
@@ -85,8 +113,10 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
         }
 
         if (choose_idx < valid_nodes_size_) {
+            std::cout << "choose_idx: " << choose_idx << std::endl;
             return fts_nodes_[choose_idx].data;
         } else if (choose_idx < base_node_index_) {
+            std::cout << "choose_idx: " << choose_idx << std::endl;
             return nullptr;
         }
     }

@@ -138,6 +138,7 @@ public:
             auto tx_info = tx_list->Add();
             tx_info->set_from(GetIdByPrikey(prikey));
             tx_info->set_to(GetIdByPrikey(to_prikey));
+            tx_info->set_from_pubkey(GetPubkeyByPrikey(prikey));
             tx_info->set_balance(common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000));
         }
 

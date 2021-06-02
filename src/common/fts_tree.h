@@ -26,9 +26,9 @@ public:
     void AppendFtsNode(uint64_t fts_value, void* data);
     void CreateFtsTree();
     void* GetOneNode(std::mt19937_64& g2);
+    void PrintFtsTree();
 
 private:
-
     std::vector<FtsNode> fts_nodes_;
     uint32_t root_node_index_{ 0 };
     uint32_t base_node_index_{ 0 };

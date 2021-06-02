@@ -52,7 +52,8 @@ void ElectPool::FtsGetNodes(
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
     SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), sort_vec);
     std::set<void*> tmp_res_nodes;
-    for (uint32_t i = 0; i < count; ++i) {
+    std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+    while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
         for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
             void* data = (void*)&(*iter);
@@ -69,13 +70,16 @@ void ElectPool::FtsGetNodes(
         }
 
         fts_tree.CreateFtsTree();
-        std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
-        tmp_res_nodes.insert(fts_tree.GetOneNode(g2));
-    }
+        void* data = fts_tree.GetOneNode(g2);
+        if (data == nullptr) {
+            continue;
+        }
 
-    for (auto iter = tmp_res_nodes.begin(); iter != tmp_res_nodes.end(); ++iter) {
-        res_nodes.push_back(*((NodeDetailPtr*)(*iter)));
-        nodes_filter.Add(common::Hash::Hash64((*((NodeDetailPtr*)(*iter)))->id));
+        tmp_res_nodes.insert(data);
+        NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
+        res_nodes.push_back(node_ptr);
+        std::cout << "add bloomfilter id: " << common::Encode::HexEncode(node_ptr->id) << ", hash: " << common::Hash::Hash64(node_ptr->id) << std::endl;
+        nodes_filter.Add(common::Hash::Hash64(node_ptr->id));
     }
 }
 
