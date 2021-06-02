@@ -15,7 +15,7 @@ namespace security {
 class Signature {
 public:
     Signature();
-    explicit Signature(const std::string& challenge_src, const std::string& response_src);
+    Signature(const std::string& challenge_src, const std::string& response_src);
     Signature(const Signature& src);
     ~Signature();
     Signature& operator=(const Signature& src);

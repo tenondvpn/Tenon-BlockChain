@@ -6,6 +6,7 @@
 #include "dht/dht_utils.h"
 #include "network/route.h"
 #include "bft/bft_manager.h"
+#include "security/secp256k1.h"
 
 namespace tenon {
 
@@ -77,6 +78,14 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    if (!security::IsValidPublicKey(ec_msg.pubkey())) {
+        return;
+    }
+
+    if (!security::IsValidSignature(ec_msg.sign_ch(), ec_msg.sign_res())) {
+        return;
+    }
+
     if (ec_msg.has_elect_block()) {
         ProcessNewElectBlock(header, ec_msg, false);
         SaveElectBlock(header);
@@ -84,14 +93,15 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
 
     if (ec_msg.has_waiting_nodes()) {
         std::vector<uint64_t> filter_vec;
-        for (int32_t i = 0; i < ec_msg.waiting_nodes.nodes_filter_size(); ++i) {
-            filter_vec.push_back(ec_msg.waiting_nodes.nodes_filter(i));
+        for (int32_t i = 0; i < ec_msg.waiting_nodes().nodes_filter_size(); ++i) {
+            filter_vec.push_back(ec_msg.waiting_nodes().nodes_filter(i));
         }
 
         common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
+        auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         pool_manager_.UpdateWaitingNodes(
-            ec_msg.waiting_nodes.waiting_shard_id(),
-            ec_msg.waiting_nodes.id(),
+            ec_msg.waiting_nodes().waiting_shard_id(),
+            id,
             fiter);
     }
 }

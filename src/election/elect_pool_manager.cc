@@ -233,9 +233,9 @@ void ElectPoolManager::GetAllWaitingNodes(
 
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
-        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        auto iter = elect_pool_map_.find(waiting_shard_id);
-        if (iter == elect_pool_map_.end()) {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        auto iter = waiting_pool_map_.find(waiting_shard_id);
+        if (iter == waiting_pool_map_.end()) {
             return;
         }
       
@@ -256,9 +256,9 @@ void ElectPoolManager::UpdateWaitingNodes(
 
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
-        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        auto iter = elect_pool_map_.find(waiting_shard_id);
-        if (iter == elect_pool_map_.end()) {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        auto iter = waiting_pool_map_.find(waiting_shard_id);
+        if (iter == waiting_pool_map_.end()) {
             return;
         }
 

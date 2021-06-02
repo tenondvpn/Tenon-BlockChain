@@ -85,6 +85,7 @@ int Signature::Deserialize(const std::string& challenge_src, const std::string& 
         CRYPTO_ERROR("Signature response copy failed");
         return -1;
     }
+
     return 0;
 }
 

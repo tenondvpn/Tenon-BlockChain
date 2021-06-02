@@ -44,9 +44,6 @@ PublicKey::PublicKey(PrivateKey& privkey)
 
 PublicKey::PublicKey(const std::string& src) {
     assert(src.size() == kPublicKeyUncompressSize || src.size() == kPublicKeySize);
-    if (src.size() == kPublicKeyUncompressSize) {
-
-    }
     ec_point_ = SecurityStringTrans::Instance()->StringToEcPoint(src);
     assert(ec_point_ != nullptr);
 }
