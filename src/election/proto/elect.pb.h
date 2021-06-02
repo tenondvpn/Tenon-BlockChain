@@ -38,7 +38,7 @@ namespace protobuf_elect_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[3];
+  static const ::google::protobuf::internal::ParseTable schema[4];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -54,6 +54,9 @@ extern ElectBlockDefaultTypeInternal _ElectBlock_default_instance_;
 class ElectMessage;
 class ElectMessageDefaultTypeInternal;
 extern ElectMessageDefaultTypeInternal _ElectMessage_default_instance_;
+class WaitingNodesMessage;
+class WaitingNodesMessageDefaultTypeInternal;
+extern WaitingNodesMessageDefaultTypeInternal _WaitingNodesMessage_default_instance_;
 class member;
 class memberDefaultTypeInternal;
 extern memberDefaultTypeInternal _member_default_instance_;
@@ -64,6 +67,7 @@ namespace google {
 namespace protobuf {
 template<> ::tenon::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectBlock>(Arena*);
 template<> ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectMessage>(Arena*);
+template<> ::tenon::elect::protobuf::WaitingNodesMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodesMessage>(Arena*);
 template<> ::tenon::elect::protobuf::member* Arena::CreateMaybeMessage<::tenon::elect::protobuf::member>(Arena*);
 }  // namespace protobuf
 }  // namespace google
@@ -501,6 +505,133 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
 };
 // -------------------------------------------------------------------
 
+class WaitingNodesMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.WaitingNodesMessage) */ {
+ public:
+  WaitingNodesMessage();
+  virtual ~WaitingNodesMessage();
+
+  WaitingNodesMessage(const WaitingNodesMessage& from);
+
+  inline WaitingNodesMessage& operator=(const WaitingNodesMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  WaitingNodesMessage(WaitingNodesMessage&& from) noexcept
+    : WaitingNodesMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline WaitingNodesMessage& operator=(WaitingNodesMessage&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const WaitingNodesMessage& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const WaitingNodesMessage* internal_default_instance() {
+    return reinterpret_cast<const WaitingNodesMessage*>(
+               &_WaitingNodesMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(WaitingNodesMessage* other);
+  friend void swap(WaitingNodesMessage& a, WaitingNodesMessage& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline WaitingNodesMessage* New() const final {
+    return CreateMaybeMessage<WaitingNodesMessage>(NULL);
+  }
+
+  WaitingNodesMessage* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<WaitingNodesMessage>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const WaitingNodesMessage& from);
+  void MergeFrom(const WaitingNodesMessage& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WaitingNodesMessage* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint64 nodes_filter = 1;
+  int nodes_filter_size() const;
+  void clear_nodes_filter();
+  static const int kNodesFilterFieldNumber = 1;
+  ::google::protobuf::uint64 nodes_filter(int index) const;
+  void set_nodes_filter(int index, ::google::protobuf::uint64 value);
+  void add_nodes_filter(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      nodes_filter() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_nodes_filter();
+
+  // optional uint32 waiting_shard_id = 2;
+  bool has_waiting_shard_id() const;
+  void clear_waiting_shard_id();
+  static const int kWaitingShardIdFieldNumber = 2;
+  ::google::protobuf::uint32 waiting_shard_id() const;
+  void set_waiting_shard_id(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.WaitingNodesMessage)
+ private:
+  void set_has_waiting_shard_id();
+  void clear_has_waiting_shard_id();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > nodes_filter_;
+  ::google::protobuf::uint32 waiting_shard_id_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.ElectMessage) */ {
  public:
   ElectMessage();
@@ -543,7 +674,7 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_ElectMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(ElectMessage* other);
   friend void swap(ElectMessage& a, ElectMessage& b) {
@@ -595,6 +726,51 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
 
   // accessors -------------------------------------------------------
 
+  // optional bytes pubkey = 3;
+  bool has_pubkey() const;
+  void clear_pubkey();
+  static const int kPubkeyFieldNumber = 3;
+  const ::std::string& pubkey() const;
+  void set_pubkey(const ::std::string& value);
+  #if LANG_CXX11
+  void set_pubkey(::std::string&& value);
+  #endif
+  void set_pubkey(const char* value);
+  void set_pubkey(const void* value, size_t size);
+  ::std::string* mutable_pubkey();
+  ::std::string* release_pubkey();
+  void set_allocated_pubkey(::std::string* pubkey);
+
+  // optional bytes sign_ch = 4;
+  bool has_sign_ch() const;
+  void clear_sign_ch();
+  static const int kSignChFieldNumber = 4;
+  const ::std::string& sign_ch() const;
+  void set_sign_ch(const ::std::string& value);
+  #if LANG_CXX11
+  void set_sign_ch(::std::string&& value);
+  #endif
+  void set_sign_ch(const char* value);
+  void set_sign_ch(const void* value, size_t size);
+  ::std::string* mutable_sign_ch();
+  ::std::string* release_sign_ch();
+  void set_allocated_sign_ch(::std::string* sign_ch);
+
+  // optional bytes sign_res = 5;
+  bool has_sign_res() const;
+  void clear_sign_res();
+  static const int kSignResFieldNumber = 5;
+  const ::std::string& sign_res() const;
+  void set_sign_res(const ::std::string& value);
+  #if LANG_CXX11
+  void set_sign_res(::std::string&& value);
+  #endif
+  void set_sign_res(const char* value);
+  void set_sign_res(const void* value, size_t size);
+  ::std::string* mutable_sign_res();
+  ::std::string* release_sign_res();
+  void set_allocated_sign_res(::std::string* sign_res);
+
   // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
   bool has_elect_block() const;
   void clear_elect_block();
@@ -607,15 +783,39 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::elect::protobuf::ElectBlock* mutable_elect_block();
   void set_allocated_elect_block(::tenon::elect::protobuf::ElectBlock* elect_block);
 
+  // optional .tenon.elect.protobuf.WaitingNodesMessage waiting_nodes = 2;
+  bool has_waiting_nodes() const;
+  void clear_waiting_nodes();
+  static const int kWaitingNodesFieldNumber = 2;
+  private:
+  const ::tenon::elect::protobuf::WaitingNodesMessage& _internal_waiting_nodes() const;
+  public:
+  const ::tenon::elect::protobuf::WaitingNodesMessage& waiting_nodes() const;
+  ::tenon::elect::protobuf::WaitingNodesMessage* release_waiting_nodes();
+  ::tenon::elect::protobuf::WaitingNodesMessage* mutable_waiting_nodes();
+  void set_allocated_waiting_nodes(::tenon::elect::protobuf::WaitingNodesMessage* waiting_nodes);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectMessage)
  private:
   void set_has_elect_block();
   void clear_has_elect_block();
+  void set_has_waiting_nodes();
+  void clear_has_waiting_nodes();
+  void set_has_pubkey();
+  void clear_has_pubkey();
+  void set_has_sign_ch();
+  void clear_has_sign_ch();
+  void set_has_sign_res();
+  void clear_has_sign_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr pubkey_;
+  ::google::protobuf::internal::ArenaStringPtr sign_ch_;
+  ::google::protobuf::internal::ArenaStringPtr sign_res_;
   ::tenon::elect::protobuf::ElectBlock* elect_block_;
+  ::tenon::elect::protobuf::WaitingNodesMessage* waiting_nodes_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // ===================================================================
@@ -1343,17 +1543,75 @@ inline void ElectBlock::set_allocated_acc_sign(::std::string* acc_sign) {
 
 // -------------------------------------------------------------------
 
+// WaitingNodesMessage
+
+// repeated uint64 nodes_filter = 1;
+inline int WaitingNodesMessage::nodes_filter_size() const {
+  return nodes_filter_.size();
+}
+inline void WaitingNodesMessage::clear_nodes_filter() {
+  nodes_filter_.Clear();
+}
+inline ::google::protobuf::uint64 WaitingNodesMessage::nodes_filter(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.WaitingNodesMessage.nodes_filter)
+  return nodes_filter_.Get(index);
+}
+inline void WaitingNodesMessage::set_nodes_filter(int index, ::google::protobuf::uint64 value) {
+  nodes_filter_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.WaitingNodesMessage.nodes_filter)
+}
+inline void WaitingNodesMessage::add_nodes_filter(::google::protobuf::uint64 value) {
+  nodes_filter_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.WaitingNodesMessage.nodes_filter)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+WaitingNodesMessage::nodes_filter() const {
+  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.WaitingNodesMessage.nodes_filter)
+  return nodes_filter_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+WaitingNodesMessage::mutable_nodes_filter() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.WaitingNodesMessage.nodes_filter)
+  return &nodes_filter_;
+}
+
+// optional uint32 waiting_shard_id = 2;
+inline bool WaitingNodesMessage::has_waiting_shard_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void WaitingNodesMessage::set_has_waiting_shard_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void WaitingNodesMessage::clear_has_waiting_shard_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void WaitingNodesMessage::clear_waiting_shard_id() {
+  waiting_shard_id_ = 0u;
+  clear_has_waiting_shard_id();
+}
+inline ::google::protobuf::uint32 WaitingNodesMessage::waiting_shard_id() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.WaitingNodesMessage.waiting_shard_id)
+  return waiting_shard_id_;
+}
+inline void WaitingNodesMessage::set_waiting_shard_id(::google::protobuf::uint32 value) {
+  set_has_waiting_shard_id();
+  waiting_shard_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.WaitingNodesMessage.waiting_shard_id)
+}
+
+// -------------------------------------------------------------------
+
 // ElectMessage
 
 // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
 inline bool ElectMessage::has_elect_block() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void ElectMessage::set_has_elect_block() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void ElectMessage::clear_has_elect_block() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void ElectMessage::clear_elect_block() {
   if (elect_block_ != NULL) elect_block_->Clear();
@@ -1403,9 +1661,267 @@ inline void ElectMessage::set_allocated_elect_block(::tenon::elect::protobuf::El
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.elect_block)
 }
 
+// optional .tenon.elect.protobuf.WaitingNodesMessage waiting_nodes = 2;
+inline bool ElectMessage::has_waiting_nodes() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ElectMessage::set_has_waiting_nodes() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ElectMessage::clear_has_waiting_nodes() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ElectMessage::clear_waiting_nodes() {
+  if (waiting_nodes_ != NULL) waiting_nodes_->Clear();
+  clear_has_waiting_nodes();
+}
+inline const ::tenon::elect::protobuf::WaitingNodesMessage& ElectMessage::_internal_waiting_nodes() const {
+  return *waiting_nodes_;
+}
+inline const ::tenon::elect::protobuf::WaitingNodesMessage& ElectMessage::waiting_nodes() const {
+  const ::tenon::elect::protobuf::WaitingNodesMessage* p = waiting_nodes_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.waiting_nodes)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::WaitingNodesMessage*>(
+      &::tenon::elect::protobuf::_WaitingNodesMessage_default_instance_);
+}
+inline ::tenon::elect::protobuf::WaitingNodesMessage* ElectMessage::release_waiting_nodes() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.waiting_nodes)
+  clear_has_waiting_nodes();
+  ::tenon::elect::protobuf::WaitingNodesMessage* temp = waiting_nodes_;
+  waiting_nodes_ = NULL;
+  return temp;
+}
+inline ::tenon::elect::protobuf::WaitingNodesMessage* ElectMessage::mutable_waiting_nodes() {
+  set_has_waiting_nodes();
+  if (waiting_nodes_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodesMessage>(GetArenaNoVirtual());
+    waiting_nodes_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.waiting_nodes)
+  return waiting_nodes_;
+}
+inline void ElectMessage::set_allocated_waiting_nodes(::tenon::elect::protobuf::WaitingNodesMessage* waiting_nodes) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete waiting_nodes_;
+  }
+  if (waiting_nodes) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      waiting_nodes = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, waiting_nodes, submessage_arena);
+    }
+    set_has_waiting_nodes();
+  } else {
+    clear_has_waiting_nodes();
+  }
+  waiting_nodes_ = waiting_nodes;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.waiting_nodes)
+}
+
+// optional bytes pubkey = 3;
+inline bool ElectMessage::has_pubkey() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ElectMessage::set_has_pubkey() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ElectMessage::clear_has_pubkey() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ElectMessage::clear_pubkey() {
+  pubkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_pubkey();
+}
+inline const ::std::string& ElectMessage::pubkey() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.pubkey)
+  return pubkey_.GetNoArena();
+}
+inline void ElectMessage::set_pubkey(const ::std::string& value) {
+  set_has_pubkey();
+  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectMessage.pubkey)
+}
+#if LANG_CXX11
+inline void ElectMessage::set_pubkey(::std::string&& value) {
+  set_has_pubkey();
+  pubkey_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.ElectMessage.pubkey)
+}
+#endif
+inline void ElectMessage::set_pubkey(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_pubkey();
+  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.ElectMessage.pubkey)
+}
+inline void ElectMessage::set_pubkey(const void* value, size_t size) {
+  set_has_pubkey();
+  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.ElectMessage.pubkey)
+}
+inline ::std::string* ElectMessage::mutable_pubkey() {
+  set_has_pubkey();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.pubkey)
+  return pubkey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ElectMessage::release_pubkey() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.pubkey)
+  if (!has_pubkey()) {
+    return NULL;
+  }
+  clear_has_pubkey();
+  return pubkey_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ElectMessage::set_allocated_pubkey(::std::string* pubkey) {
+  if (pubkey != NULL) {
+    set_has_pubkey();
+  } else {
+    clear_has_pubkey();
+  }
+  pubkey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pubkey);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.pubkey)
+}
+
+// optional bytes sign_ch = 4;
+inline bool ElectMessage::has_sign_ch() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ElectMessage::set_has_sign_ch() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ElectMessage::clear_has_sign_ch() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ElectMessage::clear_sign_ch() {
+  sign_ch_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_sign_ch();
+}
+inline const ::std::string& ElectMessage::sign_ch() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.sign_ch)
+  return sign_ch_.GetNoArena();
+}
+inline void ElectMessage::set_sign_ch(const ::std::string& value) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectMessage.sign_ch)
+}
+#if LANG_CXX11
+inline void ElectMessage::set_sign_ch(::std::string&& value) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.ElectMessage.sign_ch)
+}
+#endif
+inline void ElectMessage::set_sign_ch(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.ElectMessage.sign_ch)
+}
+inline void ElectMessage::set_sign_ch(const void* value, size_t size) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.ElectMessage.sign_ch)
+}
+inline ::std::string* ElectMessage::mutable_sign_ch() {
+  set_has_sign_ch();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.sign_ch)
+  return sign_ch_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ElectMessage::release_sign_ch() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.sign_ch)
+  if (!has_sign_ch()) {
+    return NULL;
+  }
+  clear_has_sign_ch();
+  return sign_ch_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ElectMessage::set_allocated_sign_ch(::std::string* sign_ch) {
+  if (sign_ch != NULL) {
+    set_has_sign_ch();
+  } else {
+    clear_has_sign_ch();
+  }
+  sign_ch_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sign_ch);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.sign_ch)
+}
+
+// optional bytes sign_res = 5;
+inline bool ElectMessage::has_sign_res() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ElectMessage::set_has_sign_res() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ElectMessage::clear_has_sign_res() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ElectMessage::clear_sign_res() {
+  sign_res_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_sign_res();
+}
+inline const ::std::string& ElectMessage::sign_res() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.sign_res)
+  return sign_res_.GetNoArena();
+}
+inline void ElectMessage::set_sign_res(const ::std::string& value) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectMessage.sign_res)
+}
+#if LANG_CXX11
+inline void ElectMessage::set_sign_res(::std::string&& value) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.ElectMessage.sign_res)
+}
+#endif
+inline void ElectMessage::set_sign_res(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.ElectMessage.sign_res)
+}
+inline void ElectMessage::set_sign_res(const void* value, size_t size) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.ElectMessage.sign_res)
+}
+inline ::std::string* ElectMessage::mutable_sign_res() {
+  set_has_sign_res();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.sign_res)
+  return sign_res_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ElectMessage::release_sign_res() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.sign_res)
+  if (!has_sign_res()) {
+    return NULL;
+  }
+  clear_has_sign_res();
+  return sign_res_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ElectMessage::set_allocated_sign_res(::std::string* sign_res) {
+  if (sign_res != NULL) {
+    set_has_sign_res();
+  } else {
+    clear_has_sign_res();
+  }
+  sign_res_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sign_res);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.sign_res)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
