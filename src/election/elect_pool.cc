@@ -20,7 +20,6 @@ void ElectPool::ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes) {
 }
 
 void ElectPool::GetAllValidNodes(
-        uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
     std::unordered_map<std::string, NodeDetailPtr> node_map;

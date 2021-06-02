@@ -18,7 +18,6 @@ public:
     void ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes);
     // now shard min balance and max balance is 2/3 nodes middle balance
     void GetAllValidNodes(
-        uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
 

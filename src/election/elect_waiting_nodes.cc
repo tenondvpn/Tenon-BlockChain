@@ -70,7 +70,9 @@ void ElectWaitingNodes::NewElectBlockClear() {
     consensus_waiting_count_.clear();
 }
 
-void ElectWaitingNodes::GetValidWaitingNodes(std::vector<NodeDetailPtr>& nodes) {
+void ElectWaitingNodes::GetAllValidNodes(
+        common::BloomFilter& nodes_filter,
+        std::vector<NodeDetailPtr>& nodes) {
     uint32_t member_count = MemberManager::Instance()->GetMemberCount(
         waiting_shard_id_ - network::kConsensusWaitingShardOffset);
     uint32_t valid_count = (member_count * 2 / 3 + 1);
@@ -79,7 +81,11 @@ void ElectWaitingNodes::GetValidWaitingNodes(std::vector<NodeDetailPtr>& nodes) 
         if (iter->second->consensus_count >= valid_count) {
             nodes.push_back(iter->second);
         }
+
+        nodes_filter.Add(common::Hash::Hash64(iter->second->id));
     }
+
+    std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
 }
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
@@ -97,7 +103,7 @@ void ElectWaitingNodes::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
     }
 }
 
-void ElectWaitingNodes::GetAllValidNodes(
+void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
@@ -189,7 +195,7 @@ void ElectWaitingNodes::SendConsensusNodes() {
 
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> pick_all_vec;
-    GetAllValidNodes(0, pick_all, pick_all_vec);
+    GetAllValidHeartbeatNodes(0, pick_all, pick_all_vec);
     if (!pick_all_vec.empty()) {
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),

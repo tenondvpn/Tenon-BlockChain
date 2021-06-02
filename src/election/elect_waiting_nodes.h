@@ -22,17 +22,19 @@ public:
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter);
     void NewElectBlockClear();
-    void GetValidWaitingNodes(std::vector<NodeDetailPtr>& nodes);
     void AddNewNode(NodeDetailPtr& node_ptr);
     void RemoveNodes(const std::vector<NodeDetailPtr>& nodes);
     void GetAllValidNodes(
-        uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
 
 private:
     void UpdateNodeHeartbeat();
     void SendConsensusNodes();
+    void GetAllValidHeartbeatNodes(
+        uint64_t time_offset_milli,
+        common::BloomFilter& nodes_filter,
+        std::vector<NodeDetailPtr>& nodes);
 
     std::unordered_map<std::string, NodeDetailPtr> consensus_waiting_count_;
     std::mutex consensus_waiting_count_mutex_;
