@@ -27,7 +27,7 @@
 #include "bft/bft_manager.h"
 #include "bft/proto/bft_proto.h"
 #include "sync/key_value_sync.h"
-#include "root_congress/congress_init.h"
+#include "root/root_init.h"
 #include "init/init_utils.h"
 #include "client/vpn_client.h"
 #include "security/secp256k1.h"
@@ -176,8 +176,8 @@ int NetworkInit::CreateConfigNetwork() {
 	}
 
 	if (net_id == network::kRootCongressNetworkId) {
-		congress_ = std::make_shared<congress::RootInit>();
-		if (congress_->Init() != congress::kRootSuccess) {
+        root_ = std::make_shared<root::RootInit>();
+		if (root_->Init() != root::kRootSuccess) {
 			INIT_ERROR("init congress failed!");
 			return kInitError;
 		}

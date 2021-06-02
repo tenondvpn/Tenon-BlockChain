@@ -9,7 +9,7 @@ namespace tenon {
 namespace root {
 
 typedef network::ShardNetwork<RootDht> RootNode;
-typedef std::shared_ptr<RootNode> CongressNodePtr;
+typedef std::shared_ptr<RootNode> RootNodePtr;
 
 class RootInit {
 public:
@@ -18,7 +18,7 @@ public:
 	int Init();
 
 private:
-	CongressNodePtr congress_node_{ nullptr };
+	RootNodePtr congress_node_{ nullptr };
 
 	DISALLOW_COPY_AND_ASSIGN(RootInit);
 };

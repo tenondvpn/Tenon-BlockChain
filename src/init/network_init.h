@@ -12,7 +12,7 @@ namespace tenon {
 
 namespace root {
 	class RootInit;
-	typedef std::shared_ptr<RootInit> CongressInitPtr;
+	typedef std::shared_ptr<RootInit> RootInitPtr;
 }  // namespace root
 
 namespace init {
@@ -61,7 +61,7 @@ protected:
     common::Tick test_new_elect_tick_;
     common::Tick test_start_bft_tick_;
     bool ec_block_ok_{ false };
-	congress::CongressInitPtr congress_{ nullptr };
+	root::RootInitPtr root_{ nullptr };
     std::string config_path_;
     std::set<uint16_t> started_port_set_;
 
