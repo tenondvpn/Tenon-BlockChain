@@ -27,7 +27,7 @@ void BloomFilter::Deserialize(const uint64_t* data, uint32_t count, uint32_t has
     hash_count_ = hash_count;
 }
 
-std::string BloomFilter::Serialize() {
+std::string BloomFilter::Serialize() const {
     assert(!data_.empty());
     uint64_t* data = new uint64_t[data_.size()];
     for (uint32_t i = 0; i < data_.size(); ++i) {

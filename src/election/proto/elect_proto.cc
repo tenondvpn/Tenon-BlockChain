@@ -108,10 +108,26 @@ void ElectProto::CreateElectWaitingNodes(
         waiting_nodes_msg->add_nodes_filter(nodes_filter.data()[i]);
     }
 
+    std::string hash_str = nodes_filter.Serialize() + std::to_string(waiting_shard_id);
     waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
+    auto message_hash = common::Hash::keccak256(hash_str);
+    security::Signature sign;
+    bool sign_res = security::Schnorr::Instance()->Sign(
+        message_hash,
+        *(security::Schnorr::Instance()->prikey()),
+        *(security::Schnorr::Instance()->pubkey()),
+        sign);
+    if (!sign_res) {
+        ELECT_ERROR("signature error.");
+        return;
+    }
+
+    std::string sign_challenge_str;
+    std::string sign_response_str;
+    sign.Serialize(sign_challenge_str, sign_response_str);
+    ec_msg.set_sign_ch(sign_challenge_str);
+    ec_msg.set_sign_res(sign_response_str);
     ec_msg.set_pubkey("acc_pubkey");
-    ec_msg.set_sign_ch("acc_sign");
-    ec_msg.set_sign_res("acc_sign");
     auto broad_param = msg.mutable_broadcast();
     SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());

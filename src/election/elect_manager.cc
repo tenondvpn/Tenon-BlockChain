@@ -98,6 +98,15 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
         }
 
         common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
+        std::string hash_str = fiter.Serialize() +
+            std::to_string(ec_msg.waiting_nodes().waiting_shard_id());
+        auto message_hash = common::Hash::keccak256(hash_str);
+        auto pubkey = security::PublicKey(ec_msg.pubkey());
+        auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
+        if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+            return;
+        }
+
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         pool_manager_.UpdateWaitingNodes(
             ec_msg.waiting_nodes().waiting_shard_id(),
