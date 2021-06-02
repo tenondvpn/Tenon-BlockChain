@@ -9,6 +9,7 @@
 
 #define private public
 #include "election/elect_pool_manager.h"
+#include "election/member_manager.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
 #include "network/network_utils.h"
@@ -85,15 +86,55 @@ public:
         return pubkey_str;
     }
 
+    void CreateElectionBlockMemeber(uint32_t network_id, std::vector<std::string>& pri_vec) {
+        std::map<uint32_t, elect::MembersPtr> in_members;
+        std::map<uint32_t, elect::MembersPtr> out_members;
+        std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
+        std::map<uint32_t, uint32_t> begin_index_map_;
+        for (uint32_t i = 0; i < pri_vec.size(); ++i) {
+            auto net_id = network_id;
+            auto iter = in_members.find(net_id);
+            if (iter == in_members.end()) {
+                in_members[net_id] = std::make_shared<elect::Members>();
+                in_index_members[net_id] = std::make_shared<
+                    std::unordered_map<std::string, uint32_t>>();
+                begin_index_map_[net_id] = 0;
+            }
+
+            security::PrivateKey prikey(pri_vec[i]);
+            security::PublicKey pubkey(prikey);
+            std::string pubkey_str;
+            ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+            std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+            security::CommitSecret secret;
+            in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
+                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, ""));
+            in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
+            ++begin_index_map_[net_id];
+        }
+
+        for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
+            auto index_map_iter = in_index_members.find(iter->first);
+            ASSERT_TRUE(index_map_iter != in_index_members.end());
+            MemberManager::Instance()->SetNetworkMember(
+                iter->first,
+                iter->second,
+                index_map_iter->second);
+            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
+            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
+        }
+    }
+
     void CreateElectBlocks(int32_t member_count, uint32_t network_id) {
         std::map<uint32_t, MembersPtr> in_members;
         std::map<uint32_t, NodeIndexMapPtr> in_index_members;
         std::map<uint32_t, uint32_t> begin_index_map_;
+        std::vector<std::string> pri_vec;
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             std::string prikey = common::Encode::HexDecode(from_data);
-
+            pri_vec.push_back(prikey);
             auto net_id = network_id;
             auto iter = in_members.find(net_id);
             if (iter == in_members.end()) {
@@ -120,6 +161,8 @@ public:
             assert(index_map_iter != in_index_members.end());
             elect_pool_manager_.NetworkMemberChange(iter->first, iter->second);
         }
+
+        CreateElectionBlockMemeber(network_id, pri_vec);
     }
 
     void UpdateNodeInfoWithBlock(int32_t member_count, uint64_t height) {
@@ -156,15 +199,28 @@ public:
             new_node->dht_key = "";
             new_node->public_ip = "";
             new_node->public_port = 0;
-            new_node->consensus_count = member_count;
             new_node->join_tm = std::chrono::steady_clock::now() - std::chrono::microseconds(kElectAvailableJoinTime + 1000);
             new_node->choosed_balance = common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000);
             elect_pool_manager_.AddWaitingPoolNode(network_id, new_node);
         }
     }
 
-    void UpdateWaitingNodes() {
-
+    void UpdateWaitingNodesConsensusCount(int32_t member_count) {
+        common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+        std::vector<NodeDetailPtr> pick_all_vec;
+        elect_pool_manager_.waiting_pool_map_[
+            network::kConsensusShardBeginNetworkId +
+            network::kConsensusWaitingShardOffset]->GetAllValidHeartbeatNodes(
+            0, pick_all, pick_all_vec);
+        for (int32_t i = 0; i < member_count; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            std::string prikey = common::Encode::HexDecode(from_data);
+            elect_pool_manager_.waiting_pool_map_[
+                network::kConsensusShardBeginNetworkId +
+                network::kConsensusWaitingShardOffset]->UpdateWaitingNodes(
+                GetIdByPrikey(prikey), pick_all);
+        }
     }
 
 private:
@@ -182,6 +238,7 @@ TEST_F(TestElectPoolManager, All) {
     AddWaitingPoolNetworkNodes(
         kWaitingCount,
         network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+    UpdateWaitingNodesConsensusCount(kMemberCount);
     bft::protobuf::BftMessage bft_msg;
     ASSERT_EQ(elect_pool_manager_.LeaderCreateElectionBlockTx(
         network::kConsensusShardBeginNetworkId,

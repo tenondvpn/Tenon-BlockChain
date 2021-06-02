@@ -27,14 +27,14 @@ public:
     void GetAllValidNodes(
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
-
-private:
-    void UpdateNodeHeartbeat();
-    void SendConsensusNodes();
     void GetAllValidHeartbeatNodes(
         uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
+
+private:
+    void UpdateNodeHeartbeat();
+    void SendConsensusNodes();
 
     std::unordered_map<std::string, NodeDetailPtr> consensus_waiting_count_;
     std::mutex consensus_waiting_count_mutex_;

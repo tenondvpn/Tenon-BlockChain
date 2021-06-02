@@ -44,6 +44,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         waiting_shard_id_,
         &pick_all,
         nodes);
+    std::cout << "UpdateWaitingNodes: " << nodes.empty() << std::endl;
     if (nodes.empty()) {
         return;
     }
@@ -57,7 +58,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         auto count_iter = consensus_waiting_count_.find((*iter)->id);
         if (count_iter == consensus_waiting_count_.end()) {
             {
-                std::lock_guard<std::mutex> gaurd((*iter)->valid_node_set_mutex);
+                std::lock_guard<std::mutex> set_gaurd((*iter)->valid_node_set_mutex);
                 (*iter)->valid_node_set.insert(root_node_id);
             }
 
@@ -65,8 +66,10 @@ void ElectWaitingNodes::UpdateWaitingNodes(
             continue;
         }
 
-        std::lock_guard<std::mutex> gaurd((*iter)->valid_node_set_mutex);
-        count_iter->second->valid_node_set.insert(root_node_id);
+        {
+            std::lock_guard<std::mutex> set_gaurd(count_iter->second->valid_node_set_mutex);
+            count_iter->second->valid_node_set.insert(root_node_id);
+        }
     }
 }
 
@@ -84,11 +87,11 @@ void ElectWaitingNodes::GetAllValidNodes(
     for (auto iter = consensus_waiting_count_.begin();
             iter != consensus_waiting_count_.end(); ++iter) {
         std::lock_guard<std::mutex> gaurd(iter->second->valid_node_set_mutex);
+        std::cout << "iter->second->valid_node_set.size(): " << iter->second->valid_node_set.size() << ":" << valid_count << std::endl;
         if (iter->second->valid_node_set.size() >= valid_count) {
             nodes.push_back(iter->second);
+            nodes_filter.Add(common::Hash::Hash64(iter->second->id));
         }
-
-        nodes_filter.Add(common::Hash::Hash64(iter->second->id));
     }
 
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
@@ -211,7 +214,6 @@ void ElectWaitingNodes::SendConsensusNodes() {
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
-            network::Route::Instance()->SendToLocal(msg);
         }
     }
     

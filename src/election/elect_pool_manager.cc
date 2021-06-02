@@ -248,7 +248,7 @@ void ElectPoolManager::GetAllWaitingNodes(
         waiting_pool_ptr = iter->second;
     }
 
-    waiting_pool_ptr->GetAllValidNodes(*pick_all, nodes);
+    waiting_pool_ptr->GetAllValidHeartbeatNodes(time_offset_milli, *pick_all, nodes);
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
@@ -331,6 +331,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         pick_in,
         pick_all_vec,
         pick_in_vec);
+    std::cout << "get pick_in_vec size: " << pick_in_vec.size() << std::endl;
     return kElectSuccess;
 }
 
