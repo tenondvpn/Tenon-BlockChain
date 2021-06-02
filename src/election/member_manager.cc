@@ -57,6 +57,10 @@ elect::MembersPtr MemberManager::GetNetworkMembers(uint32_t network_id) {
 uint32_t MemberManager::GetMemberCount(uint32_t network_id) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
+    if (network_members_[network_id] == nullptr) {
+        return 0;
+    }
+
     return network_members_[network_id]->size();
 }
 
@@ -87,6 +91,10 @@ uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& n
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
     assert(node_index_map_[network_id] != nullptr);
     elect::NodeIndexMapPtr node_index_map = node_index_map_[network_id];
+    if (node_index_map == nullptr) {
+        return kInvalidMemberIndex;
+    }
+
     assert(node_index_map != nullptr);
     assert(!node_index_map->empty());
     auto iter = node_index_map->find(node_id);
@@ -115,6 +123,10 @@ elect::BftMemberPtr MemberManager::GetMember(
 elect::BftMemberPtr MemberManager::GetMember(uint32_t network_id, uint32_t index) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     elect::MembersPtr member_ptr = network_members_[network_id];
+    if (member_ptr == nullptr) {
+        return nullptr;
+    }
+
     assert(member_ptr != nullptr);
     assert(!member_ptr->empty());
     return (*member_ptr)[index];
