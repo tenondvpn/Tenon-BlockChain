@@ -16,10 +16,10 @@ ElectPoolManager::~ElectPoolManager() {}
 int ElectPoolManager::LeaderCreateElectionBlockTx(
         uint32_t shard_netid,
         bft::protobuf::BftMessage& bft_msg) {
-    common::BloomFilter cons_all;
-    common::BloomFilter cons_weed_out;
-    common::BloomFilter pick_all;
-    common::BloomFilter pick_in;
+    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> exists_shard_nodes;
     std::vector<NodeDetailPtr> weed_out_vec;
     std::vector<NodeDetailPtr> pick_in_vec;
@@ -92,10 +92,10 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         return kElectError;
     }
 
-    common::BloomFilter leader_cons_all;
-    common::BloomFilter leader_cons_weed_out;
-    common::BloomFilter leader_pick_all;
-    common::BloomFilter leader_pick_in;
+    common::BloomFilter leader_cons_all(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter leader_cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter leader_pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+    common::BloomFilter leader_pick_in(kBloomfilterSize, kBloomfilterHashCount);
     elect::protobuf::ElectBlock leader_ec_block;
     if (GetAllLeaderBloomFiler(
             tx_bft.new_tx(),
@@ -107,10 +107,10 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         return kElectError;
     }
 
-    common::BloomFilter cons_all;
-    common::BloomFilter cons_weed_out;
-    common::BloomFilter pick_all;
-    common::BloomFilter pick_in;
+    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> exists_shard_nodes;
     std::vector<NodeDetailPtr> weed_out_vec;
     std::vector<NodeDetailPtr> pick_in_vec;
@@ -247,7 +247,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     ElectPoolPtr waiting_pool_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        std::cout << "shard_netid + network::kConsensusWaitingShardOffset: " << (shard_netid + network::kConsensusWaitingShardOffset) << std::endl;
         auto iter = elect_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
         if (iter == elect_pool_map_.end()) {
             ELECT_ERROR("find waiting shard network failed [%u]!",

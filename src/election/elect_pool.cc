@@ -23,7 +23,6 @@ ElectPool::~ElectPool() {}
 void ElectPool::AddNewNode(NodeDetailPtr& node_ptr) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     node_map_[node_ptr->id] = node_ptr;
-    std::cout << "AddNewNode: " << common::Encode::HexEncode(node_ptr->id) << std::endl;
 }
 
 void ElectPool::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
@@ -39,7 +38,6 @@ void ElectPool::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
 void ElectPool::ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     elect_nodes_ = nodes;
-    std::cout << "elect_nodes_ size: " << elect_nodes_.size() << std::endl;
 }
 
 void ElectPool::FtsGetNodes(
@@ -78,7 +76,6 @@ void ElectPool::FtsGetNodes(
         tmp_res_nodes.insert(data);
         NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
         res_nodes.push_back(node_ptr);
-        std::cout << "add bloomfilter id: " << common::Encode::HexEncode(node_ptr->id) << ", hash: " << common::Hash::Hash64(node_ptr->id) << std::endl;
         nodes_filter.Add(common::Hash::Hash64(node_ptr->id));
     }
 }
