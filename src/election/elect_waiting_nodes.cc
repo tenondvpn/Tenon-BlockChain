@@ -2,8 +2,14 @@
 
 #include "common/hash.h"
 #include "network/network_utils.h"
+#include "network/dht_manager.h"
+#include "network/route.h"
+#include "dht/base_dht.h"
+#include "transport/proto/transport.pb.h"
 #include "election/elect_pool_manager.h"
 #include "election/member_manager.h"
+#include "election/proto/elect.pb.h"
+#include "election/proto/elect_proto.h"
 
 namespace tenon {
 
@@ -12,8 +18,11 @@ namespace elect {
 ElectWaitingNodes::ElectWaitingNodes(uint32_t waiting_shard_id, ElectPoolManager* pool_manager)
     : waiting_shard_id_(waiting_shard_id), pool_manager_(pool_manager) {
     heartbeat_tick_.CutOff(
-        30llu * 60llu * 10000000llu,
+        60llu * 10000000llu,
         std::bind(&ElectWaitingNodes::UpdateNodeHeartbeat, this));
+    heartbeat_tick_.CutOff(
+        60llu * 10000000llu,
+        std::bind(&ElectWaitingNodes::SendConsensusNodes, this));
 }
 
 ElectWaitingNodes::~ElectWaitingNodes() {}
@@ -65,7 +74,8 @@ void ElectWaitingNodes::GetValidWaitingNodes(std::vector<NodeDetailPtr>& nodes) 
     uint32_t member_count = MemberManager::Instance()->GetMemberCount(
         waiting_shard_id_ - network::kConsensusWaitingShardOffset);
     uint32_t valid_count = (member_count * 2 / 3 + 1);
-    for (auto iter = consensus_waiting_count_.begin(); iter != consensus_waiting_count_.end(); ++iter) {
+    for (auto iter = consensus_waiting_count_.begin();
+            iter != consensus_waiting_count_.end(); ++iter) {
         if (iter->second->consensus_count >= valid_count) {
             nodes.push_back(iter->second);
         }
@@ -166,6 +176,35 @@ void ElectWaitingNodes::UpdateNodeHeartbeat() {
     heartbeat_tick_.CutOff(
         60llu * 10000000llu,
         std::bind(&ElectWaitingNodes::UpdateNodeHeartbeat, this));
+}
+
+void ElectWaitingNodes::SendConsensusNodes() {
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        assert(false);
+        return;
+    }
+
+    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+    std::vector<NodeDetailPtr> pick_all_vec;
+    GetAllValidNodes(0, pick_all, pick_all_vec);
+    if (!pick_all_vec.empty()) {
+        elect::ElectProto::CreateElectWaitingNodes(
+            dht->local_node(),
+            waiting_shard_id_,
+            pick_all,
+            msg);
+        if (msg.has_data()) {
+            network::Route::Instance()->Send(msg);
+            network::Route::Instance()->SendToLocal(msg);
+        }
+    }
+    
+    waiting_nodes_tick_.CutOff(
+        60llu * 10000000llu,
+        std::bind(&ElectWaitingNodes::SendConsensusNodes, this));
 }
 
 };  // namespace elect

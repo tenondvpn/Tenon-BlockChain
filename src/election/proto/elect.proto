@@ -24,6 +24,14 @@ message ElectBlock {
 	optional bytes acc_sign = 4;
 }
 
+messsage WaitingNodesMessage {
+    repeated uint64_t nodes_filter = 1;
+    optional uint32_t waiting_shard_id = 2;
+}
+
 message ElectMessage {
 	optional ElectBlock elect_block = 1;
+    optional WaitingNodesMessage waiting_nodes = 2;
+    optional bytes pubkey = 3;
+	optional bytes sign = 4;
 }

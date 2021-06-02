@@ -70,6 +70,7 @@ int ElectManager::Quit(uint32_t network_id) {
 
 void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     assert(header.type() == common::kElectMessage);
+    // TODO: verify message signature
     protobuf::ElectMessage ec_msg;
     if (!ec_msg.ParseFromString(header.data())) {
         ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
@@ -80,6 +81,25 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
         ProcessNewElectBlock(header, ec_msg, false);
         SaveElectBlock(header);
     }
+
+    if (ec_msg.has_waiting_nodes()) {
+        std::vector<uint64_t> filter_vec;
+        for (int32_t i = 0; i < ec_msg.waiting_nodes.nodes_filter_size(); ++i) {
+            filter_vec.push_back(ec_msg.waiting_nodes.nodes_filter(i));
+        }
+
+        common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
+        pool_manager_.UpdateWaitingNodes(
+            ec_msg.waiting_nodes.waiting_shard_id(),
+            ec_msg.waiting_nodes.id(),
+            fiter);
+    }
+}
+
+void ElectManager::ProcessWaitingNodes(
+        transport::protobuf::Header& header,
+        protobuf::ElectMessage& elect_msg) {
+    pool_manager_.
 }
 
 void ElectManager::SaveElectBlock(transport::protobuf::Header& header) {

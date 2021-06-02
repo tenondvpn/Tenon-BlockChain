@@ -231,7 +231,7 @@ void ElectPoolManager::GetAllWaitingNodes(
         return;
     }
 
-    ElectPoolPtr waiting_pool_ptr = nullptr;
+    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
         auto iter = elect_pool_map_.find(waiting_shard_id);
@@ -243,6 +243,29 @@ void ElectPoolManager::GetAllWaitingNodes(
     }
 
     waiting_pool_ptr->GetAllValidNodes(time_offset_milli, *pick_all, nodes);
+}
+
+void ElectPoolManager::UpdateWaitingNodes(
+        uint32_t waiting_shard_id,
+        const std::string& root_node_id,
+        const common::BloomFilter& nodes_filter) {
+    if (waiting_shard_id < network::kConsensusWaitingShardBeginNetworkId ||
+        waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
+        return;
+    }
+
+    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
+        auto iter = elect_pool_map_.find(waiting_shard_id);
+        if (iter == elect_pool_map_.end()) {
+            return;
+        }
+
+        waiting_pool_ptr = iter->second;
+    }
+
+    waiting_pool_ptr->UpdateWaitingNodes(root_node_id, nodes_filter);
 }
 
 int ElectPoolManager::GetAllBloomFilerAndNodes(

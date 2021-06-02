@@ -25,6 +25,10 @@ public:
         uint32_t waiting_shard_id,
         common::BloomFilter* pick_all,
         std::vector<NodeDetailPtr>& nodes);
+    void UpdateWaitingNodes(
+        uint32_t waiting_shard_id,
+        const std::string& root_node_id,
+        const common::BloomFilter& nodes_filter);
 
 private:
     int GetAllLeaderBloomFiler(

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <atomic>
 
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
@@ -18,8 +19,8 @@ struct ElectNodeDetail {
     std::string public_ip;
     uint16_t public_port;
     std::string dht_key;
-    std::atomic <uint64_t> choosed_height;
-    std::atomic <uint64_t> choosed_balance;
+    std::atomic<uint64_t> choosed_height;
+    std::atomic<uint64_t> choosed_balance;
     std::chrono::steady_clock::time_point join_tm{ std::chrono::steady_clock::now() };
     std::map<uint64_t, uint32_t> heatbeat_succ_count;
     std::map<uint64_t, uint32_t> heatbeat_fail_count;
@@ -30,7 +31,7 @@ struct ElectNodeDetail {
     // for election, last period every node consensus success tx count
     std::atomic<uint32_t> success_tx_count;
     uint64_t fts_value;
-    uint32_t consensus_count{ 0 };
+    std::atomic<uint32_t> consensus_count{ 0 };
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;

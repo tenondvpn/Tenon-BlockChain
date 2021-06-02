@@ -32,6 +32,7 @@ public:
 
 private:
     void UpdateNodeHeartbeat();
+    void SendConsensusNodes();
 
     std::unordered_map<std::string, NodeDetailPtr> consensus_waiting_count_;
     std::mutex consensus_waiting_count_mutex_;
@@ -40,6 +41,7 @@ private:
     std::unordered_map<std::string, NodeDetailPtr> node_map_;
     std::mutex node_map_mutex_;
     common::Tick heartbeat_tick_;
+    common::Tick waiting_nodes_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectWaitingNodes);
 };

@@ -86,6 +86,36 @@ void ElectProto::CreateElectBlock(
     msg.set_data(ec_msg.SerializeAsString());
 }
 
+void ElectProto::CreateElectWaitingNodes(
+        const dht::NodePtr& local_node,
+        uint32_t waiting_shard_id,
+        const common::BloomFilter& nodes_filter,
+        transport::protobuf::Header& msg) {
+    msg.set_src_dht_key(local_node->dht_key());
+    dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_priority(transport::kTransportPriorityHigh);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kElectMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_universal(false);
+    msg.set_hop_count(0);
+
+    // now just for test
+    protobuf::ElectMessage ec_msg;
+    auto waiting_nodes_msg = ec_msg.mutable_waiting_nodes();
+    for (uint32_t i = 0; i < nodes_filter.data().size(); ++i) {
+        waiting_nodes_msg->add_nodes_filter(nodes_filter.data()[i]);
+    }
+
+    waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
+    ec_msg.set_pubkey("acc_pubkey");
+    ec_msg.set_sign("acc_sign");
+    auto broad_param = msg.mutable_broadcast();
+    SetDefaultBroadcastParam(broad_param);
+    msg.set_data(ec_msg.SerializeAsString());
+}
+
 }  // namespace elect
 
 }  // namespace tenon

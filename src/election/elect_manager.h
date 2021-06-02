@@ -9,6 +9,7 @@
 #include "network/shard_network.h"
 #include "election/elect_utils.h"
 #include "election/proto/elect.pb.h"
+#include "election/elect_pool_manager.h"
 
 namespace tenon {
 
@@ -32,11 +33,13 @@ private:
             bool load_from_db);
     void SaveElectBlock(transport::protobuf::Header& header);
     void LoadElectBlock();
+    void ProcessWaitingNodes(transport::protobuf::Header& header, protobuf::ElectMessage& elect_msg);
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
     std::mutex elect_network_map_mutex_;
     std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
+    ElectPoolManager pool_manager_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };
