@@ -12,6 +12,7 @@
 #include "election/member_manager.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
+#include "security/schnorr.h"
 #include "network/network_utils.h"
 #include "common/random.h"
 
@@ -125,6 +126,18 @@ public:
         }
     }
 
+    void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
+        security::PrivateKey prikey(private_key);
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        common::GlobalInfo::Instance()->set_id(id);
+        common::GlobalInfo::Instance()->set_consensus_shard_count(1);
+        common::GlobalInfo::Instance()->set_network_id(network_id);
+    }
+
     void CreateElectBlocks(int32_t member_count, uint32_t network_id) {
         std::map<uint32_t, MembersPtr> in_members;
         std::map<uint32_t, NodeIndexMapPtr> in_index_members;
@@ -162,6 +175,7 @@ public:
             elect_pool_manager_.NetworkMemberChange(iter->first, iter->second);
         }
 
+        SetGloableInfo(pri_vec[0], network::kConsensusShardBeginNetworkId);
         CreateElectionBlockMemeber(network_id, pri_vec);
     }
 
