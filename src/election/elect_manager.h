@@ -33,7 +33,6 @@ private:
             bool load_from_db);
     void SaveElectBlock(transport::protobuf::Header& header);
     void LoadElectBlock();
-    void ProcessWaitingNodes(transport::protobuf::Header& header, protobuf::ElectMessage& elect_msg);
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;

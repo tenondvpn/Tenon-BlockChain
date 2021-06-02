@@ -110,7 +110,8 @@ void ElectProto::CreateElectWaitingNodes(
 
     waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
     ec_msg.set_pubkey("acc_pubkey");
-    ec_msg.set_sign("acc_sign");
+    ec_msg.set_sign_ch("acc_sign");
+    ec_msg.set_sign_res("acc_sign");
     auto broad_param = msg.mutable_broadcast();
     SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());

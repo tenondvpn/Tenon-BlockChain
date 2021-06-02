@@ -106,12 +106,6 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     }
 }
 
-void ElectManager::ProcessWaitingNodes(
-        transport::protobuf::Header& header,
-        protobuf::ElectMessage& elect_msg) {
-    pool_manager_.
-}
-
 void ElectManager::SaveElectBlock(transport::protobuf::Header& header) {
     std::string parse_str = header.SerializeAsString();
     db::Db::Instance()->Put(db::kGlobalDbElectBlock, parse_str);
