@@ -44,7 +44,6 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         waiting_shard_id_,
         &pick_all,
         nodes);
-    std::cout << "UpdateWaitingNodes: " << nodes.empty() << std::endl;
     if (nodes.empty()) {
         return;
     }
@@ -87,7 +86,6 @@ void ElectWaitingNodes::GetAllValidNodes(
     for (auto iter = consensus_waiting_count_.begin();
             iter != consensus_waiting_count_.end(); ++iter) {
         std::lock_guard<std::mutex> gaurd(iter->second->valid_node_set_mutex);
-        std::cout << "iter->second->valid_node_set.size(): " << iter->second->valid_node_set.size() << ":" << valid_count << std::endl;
         if (iter->second->valid_node_set.size() >= valid_count) {
             nodes.push_back(iter->second);
             nodes_filter.Add(common::Hash::Hash64(iter->second->id));
