@@ -30,10 +30,6 @@ public:
         return hash_count_;
     }
 
-    uint32_t valid_count() {
-        return valid_count_;
-    }
-
     std::string Serialize() {
         assert(!data_.empty());
         uint64_t* data = new uint64_t[data_.size()];
@@ -51,7 +47,6 @@ public:
 private:
     std::vector<uint64_t> data_;
     uint32_t hash_count_{ 0 };
-    uint32_t valid_count_{ 0 };
 };
 
 }  // namespace common

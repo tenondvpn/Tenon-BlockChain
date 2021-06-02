@@ -38,7 +38,7 @@ static const uint64_t kSmoothGradientAmount = 100llu;
 static const std::string kElectNodeAttrKeyAllBloomfilter = "__allbloomfilter";
 static const std::string kElectNodeAttrKeyWeedoutBloomfilter = "__weedoutbloomfilter";
 static const std::string kElectNodeAttrKeyAllPickBloomfilter = "__allpickbloomfilter";
-static const std::string kElectNodeAttrKeyAllPickInBloomfilter = "__allpickinbloomfilter";
+static const std::string kElectNodeAttrKeyPickInBloomfilter = "__pickinbloomfilter";
 static const std::string kElectNodeAttrElectBlock = "__electblock";
 
 // Nodes can participate in the election for more than 30 minutes after joining

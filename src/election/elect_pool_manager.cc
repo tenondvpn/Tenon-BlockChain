@@ -50,7 +50,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     all_pick_attr->set_key(kElectNodeAttrKeyAllPickBloomfilter);
     all_pick_attr->set_value(pick_all.Serialize());
     auto pick_in_attr = tx_info->add_attr();
-    pick_in_attr->set_key(kElectNodeAttrKeyAllPickInBloomfilter);
+    pick_in_attr->set_key(kElectNodeAttrKeyPickInBloomfilter);
     pick_in_attr->set_value(pick_in.Serialize());
     std::set<std::string> weed_out_id_set;
     for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
@@ -89,13 +89,14 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
 int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage& bft_msg) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
+        ELECT_ERROR("tx_bft.ParseFromString failed!");
         return kElectError;
     }
 
-    common::BloomFilter leader_cons_all(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter leader_cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter leader_pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
-    common::BloomFilter leader_pick_in(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter leader_cons_all;
+    common::BloomFilter leader_cons_weed_out;
+    common::BloomFilter leader_pick_all;
+    common::BloomFilter leader_pick_in;
     elect::protobuf::ElectBlock leader_ec_block;
     if (GetAllLeaderBloomFiler(
             tx_bft.new_tx(),
@@ -104,6 +105,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
             &leader_pick_all,
             &leader_pick_in,
             &leader_ec_block) != kElectSuccess) {
+        ELECT_ERROR("GetAllLeaderBloomFiler failed!");
         return kElectError;
     }
 
@@ -123,26 +125,28 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
             exists_shard_nodes,
             weed_out_vec,
             pick_in_vec) != kElectSuccess) {
+        ELECT_ERROR("local GetAllBloomFilerAndNodes failed!");
         return kElectError;
     }
 
     // exists shard nodes must equal
     if (cons_all != leader_cons_all) {
+        ELECT_ERROR("cons_all != leader_cons_all!");
         return kElectError;
     }
 
-    if (cons_weed_out.DiffCount(leader_cons_weed_out) * (100 / kTolerateLeaderBackupFiffRate) >
-            cons_weed_out.valid_count()) {
+    if (cons_weed_out != leader_cons_weed_out) {
+        ELECT_ERROR("cons_weed_out != leader_cons_weed_out!");
         return kElectError;
     }
     
-    if (pick_all.DiffCount(leader_pick_all) * (100 / kTolerateLeaderBackupFiffRate) >
-            pick_all.valid_count()) {
+    if (pick_all != leader_pick_all) {
+        ELECT_ERROR("pick_all != leader_pick_all!");
         return kElectError;
     }
 
-    if (pick_in.DiffCount(leader_pick_in) * (100 / kTolerateLeaderBackupFiffRate) >
-            pick_in.valid_count()) {
+    if (pick_in != leader_pick_in) {
+        ELECT_ERROR("pick_in != leader_pick_in");
         return kElectError;
     }
 
@@ -152,6 +156,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
     }
 
     if (leader_ec_block.in_size() < exists_shard_nodes.size() - weed_out_id_set.size()) {
+        ELECT_ERROR("leader_ec_block.in_size() error!");
         return kElectError;
     }
 
@@ -162,18 +167,22 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         }
 
         if (leader_ec_block.in(leader_idx).pubkey() != (*iter)->public_key) {
+            ELECT_ERROR("leader_ec_block public key not equal local public key error!");
             return kElectError;
         }
 
         if (leader_ec_block.in(leader_idx).dht_key() != (*iter)->dht_key) {
+            ELECT_ERROR("leader_ec_block dht key not equal local dht key error!");
             return kElectError;
         }
 
         if (leader_ec_block.in(leader_idx).public_ip() != (*iter)->public_ip) {
+            ELECT_ERROR("leader_ec_block public_ip not equal local public_ip error!");
             return kElectError;
         }
 
         if (leader_ec_block.in(leader_idx).public_port() != (*iter)->public_port) {
+            ELECT_ERROR("leader_ec_block public_port not equal local public_port error!");
             return kElectError;
         }
 
@@ -184,6 +193,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
             leader_ec_block.in(leader_idx).pubkey());
         if (!leader_pick_in.Contain(common::Hash::Hash64(id))) {
+            ELECT_ERROR("leader_pick_in.Contain error!");
             return kElectError;
         }
     }
@@ -309,7 +319,7 @@ int ElectPoolManager::GetAllLeaderBloomFiler(
                 kBloomfilterWaitingHashCount);
         }
 
-        if (tx_info.attr(i).key() == kElectNodeAttrKeyAllPickInBloomfilter) {
+        if (tx_info.attr(i).key() == kElectNodeAttrKeyPickInBloomfilter) {
             if (tx_info.attr(i).value().size() != kBloomfilterSize / 8) {
                 return kElectError;
             }

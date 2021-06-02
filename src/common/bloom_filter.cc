@@ -58,6 +58,8 @@ bool BloomFilter::Contain(uint64_t hash) {
 
 uint32_t BloomFilter::DiffCount(const BloomFilter& other) {
     if (data_.size() != other.data_.size()) {
+        TENON_ERROR("data_.size()[%u] != other.data_.size()[%u]",
+            data_.size(), other.data_.size());
         return (std::numeric_limits<uint32_t>::max)();
     }
 
