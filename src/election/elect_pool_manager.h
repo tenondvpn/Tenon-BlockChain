@@ -3,6 +3,7 @@
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
+#include "elect_waiting_nodes.h"
 
 namespace tenon {
 
@@ -19,6 +20,11 @@ public:
         uint32_t shard_netid,
         bft::protobuf::BftMessage& bft_msg);
     int BackupCheckElectionBlockTx(const bft::protobuf::BftMessage& bft_msg);
+    void GetAllWaitingNodes(
+        uint64_t time_offset_milli,
+        uint32_t waiting_shard_id,
+        common::BloomFilter* pick_all,
+        std::vector<NodeDetailPtr>& nodes);
 
 private:
     int GetAllLeaderBloomFiler(
@@ -38,11 +44,6 @@ private:
         std::vector<NodeDetailPtr>& weed_out_vec,
         std::vector<NodeDetailPtr>& pick_in_vec);
 
-    static const uint32_t kBloomfilterHashCount = 7u;
-    static const uint32_t kBloomfilterSize = 20480u;
-    static const uint32_t kBloomfilterWaitingSize = 40960u;
-    static const uint32_t kBloomfilterWaitingHashCount = 9u;
-
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;
     // one ip just one node
@@ -50,6 +51,8 @@ private:
     std::mutex node_ip_set_mutex_;
     std::unordered_map<std::string, NodeDetailPtr> all_node_map_;
     std::mutex all_node_map_mutex_;
+    std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map_;
+    std::mutex waiting_pool_map_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectPoolManager);
 };

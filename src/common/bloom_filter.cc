@@ -55,7 +55,7 @@ void BloomFilter::Add(uint64_t hash) {
     }
 }
 
-bool BloomFilter::Contain(uint64_t hash) {
+bool BloomFilter::Contain(uint64_t hash) const{
     uint32_t hash_high = static_cast<uint32_t>((hash >> 32) & 0x00000000FFFFFFFFull);
     uint32_t hash_low = static_cast<uint32_t>(hash & 0x00000000FFFFFFFFull);
     for (uint32_t i = 0; i < hash_count_; ++i) {
@@ -66,6 +66,7 @@ bool BloomFilter::Contain(uint64_t hash) {
             return false;
         }
     }
+
     return true;
 }
 

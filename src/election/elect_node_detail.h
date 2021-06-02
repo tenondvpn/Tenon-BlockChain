@@ -30,6 +30,7 @@ struct ElectNodeDetail {
     // for election, last period every node consensus success tx count
     std::atomic<uint32_t> success_tx_count;
     uint64_t fts_value;
+    uint32_t consensus_count{ 0 };
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;

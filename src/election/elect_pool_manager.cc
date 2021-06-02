@@ -207,19 +207,42 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
         return;
     }
 
-    ElectPoolPtr waiting_pool_ptr = nullptr;
+    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
-        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        auto iter = elect_pool_map_.find(network_id);
-        if (iter == elect_pool_map_.end()) {
-            waiting_pool_ptr = std::make_shared<ElectPool>(network_id);
-            elect_pool_map_[network_id] = waiting_pool_ptr;
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        auto iter = waiting_pool_map_.find(network_id);
+        if (iter == waiting_pool_map_.end()) {
+            waiting_pool_map_[network_id] = std::make_shared<ElectWaitingNodes>(network_id, this);
         } else {
             waiting_pool_ptr = iter->second;
         }
     }
 
     waiting_pool_ptr->AddNewNode(node_ptr);
+}
+
+void ElectPoolManager::GetAllWaitingNodes(
+        uint64_t time_offset_milli,
+        uint32_t waiting_shard_id,
+        common::BloomFilter* pick_all,
+        std::vector<NodeDetailPtr>& nodes) {
+    if (waiting_shard_id < network::kConsensusWaitingShardBeginNetworkId ||
+            waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
+        return;
+    }
+
+    ElectPoolPtr waiting_pool_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
+        auto iter = elect_pool_map_.find(waiting_shard_id);
+        if (iter == elect_pool_map_.end()) {
+            return;
+        }
+      
+        waiting_pool_ptr = iter->second;
+    }
+
+    waiting_pool_ptr->GetAllValidNodes(time_offset_milli, *pick_all, nodes);
 }
 
 int ElectPoolManager::GetAllBloomFilerAndNodes(
@@ -246,7 +269,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     // get consensus shard nodes and weed out nodes
     uint64_t min_balance = 0;
     uint64_t max_balance = 0;
-    consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
+    consensus_pool_ptr->GetAllValidNodes(0, *cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() / kFtsWeedoutDividRate;
     consensus_pool_ptr->FtsGetNodes(
         true,
@@ -268,7 +291,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     }
 
     std::vector<NodeDetailPtr> pick_all_vec;
-    waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
+    waiting_pool_ptr->GetAllValidNodes(0, *pick_all, pick_all_vec);
     waiting_pool_ptr->FtsGetNodes(
         false,
         weed_out_count,

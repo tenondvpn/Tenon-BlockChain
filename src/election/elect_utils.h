@@ -35,6 +35,13 @@ static const uint32_t kFtsWeedoutDividRate = 10u;
 static const uint32_t kTolerateLeaderBackupFiffRate = 5u;  // kTolerateLeaderBackupFiffRate %;
 static const uint64_t kSmoothGradientAmount = 100llu;
 
+static const uint32_t kBloomfilterHashCount = 7u;
+static const uint32_t kBloomfilterSize = 20480u;
+static const uint32_t kBloomfilterWaitingSize = 40960u;
+static const uint32_t kBloomfilterWaitingHashCount = 9u;
+
+static const uint64_t kWaitingNodesGetTimeoffsetMilli = 30000llu;
+
 static const std::string kElectNodeAttrKeyAllBloomfilter = "__allbloomfilter";
 static const std::string kElectNodeAttrKeyWeedoutBloomfilter = "__weedoutbloomfilter";
 static const std::string kElectNodeAttrKeyAllPickBloomfilter = "__allpickbloomfilter";

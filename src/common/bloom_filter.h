@@ -16,7 +16,7 @@ public:
     BloomFilter(const std::vector<uint64_t>& data, uint32_t hash_count);
     ~BloomFilter();
     void Add(uint64_t hash);
-    bool Contain(uint64_t hash);
+    bool Contain(uint64_t hash) const;
     uint32_t DiffCount(const BloomFilter& other);
     BloomFilter& operator=(const BloomFilter& src);
     bool operator==(const BloomFilter& r) const;
