@@ -37,7 +37,7 @@ int ContractaltBn128PairingProduct::call(
         return kContractError;
     }
 
-    const uint64_t gas_used = (45000 + param.data.size() * 34000);
+    const int64_t gas_used = (45000 + param.data.size() * 34000);
     if (res->gas_left < gas_used) {
         return kContractError;
     }

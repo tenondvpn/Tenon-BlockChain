@@ -25,7 +25,7 @@ public:
         evmc_result* res);
 
 private:
-    uint64_t gas_cast_{ 150llu };
+    int64_t gas_cast_{ 150ll };
 
     DISALLOW_COPY_AND_ASSIGN(ContractAltBn128G1Add);
 };

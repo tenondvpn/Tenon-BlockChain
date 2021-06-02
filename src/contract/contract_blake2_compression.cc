@@ -173,7 +173,7 @@ int Blake2Compression::call(
         return kContractError;
     }
 
-    uint64_t gas_used = bignum::FromBigEndian<uint32_t>(param.data.substr(0, 4));;
+    int64_t gas_used = bignum::FromBigEndian<uint32_t>(param.data.substr(0, 4));;
     if (res->gas_left < gas_used) {
         return kContractError;
     }

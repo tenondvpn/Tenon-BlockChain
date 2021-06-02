@@ -53,7 +53,7 @@ int Modexp::call(
         return kContractError;
     }
 
-    uint64_t gas_used = GetGasPrice(param.data);
+    int64_t gas_used = GetGasPrice(param.data);
     if (res->gas_left < gas_used) {
         std::cout << "res->gas_left < gas_used" << res->gas_left << ", " << gas_used << std::endl;
         return kContractError;

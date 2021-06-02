@@ -35,7 +35,7 @@ int Identity::call(
         return kContractError;
     }
 
-    uint64_t gas_used = ComputeGasUsed(15, 3, param.data.size());
+    int64_t gas_used = ComputeGasUsed(15, 3, param.data.size());
     if (res->gas_left < gas_used) {
         return kContractError;
     }

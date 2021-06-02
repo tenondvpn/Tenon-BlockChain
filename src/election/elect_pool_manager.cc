@@ -160,7 +160,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         weed_out_id_set.insert((*iter)->id);
     }
 
-    if (leader_ec_block.in_size() < exists_shard_nodes.size() - weed_out_id_set.size()) {
+    if ((uint32_t)leader_ec_block.in_size() < exists_shard_nodes.size() - weed_out_id_set.size()) {
         ELECT_ERROR("leader_ec_block.in_size() error!");
         return kElectError;
     }
@@ -194,7 +194,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::BftMessage
         ++leader_idx;
     }
 
-    for (uint32_t i = leader_idx; i < leader_ec_block.in_size(); ++i) {
+    for (int32_t i = leader_idx; i < leader_ec_block.in_size(); ++i) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
             leader_ec_block.in(leader_idx).pubkey());
         if (!leader_pick_in.Contain(common::Hash::Hash64(id))) {
@@ -371,7 +371,7 @@ void ElectPoolManager::FtsGetNodes(
 void ElectPoolManager::SmoothFtsValue(
         int32_t count,
         std::vector<NodeDetailPtr>& sort_vec) {
-    assert(sort_vec.size() > count);
+    assert(sort_vec.size() > (uint32_t)count);
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         sort_vec[i]->balance_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
