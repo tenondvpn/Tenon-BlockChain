@@ -165,7 +165,8 @@ void ElectWaitingNodes::UpdateNodeHeartbeat() {
         node_map = node_map_;
     }
 
-    auto now_tm = std::chrono::steady_clock::now().time_since_epoch().count() / (1000000000llu * 300llu);
+    auto now_tm = std::chrono::steady_clock::now().time_since_epoch().count() /
+        (1000000000llu * 300llu);
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         bool reacheable = false;
         common::RemoteReachable(iter->second->public_ip, iter->second->public_port, &reacheable);

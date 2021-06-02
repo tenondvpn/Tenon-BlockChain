@@ -248,7 +248,7 @@ void ElectPoolManager::GetAllWaitingNodes(
         waiting_pool_ptr = iter->second;
     }
 
-    waiting_pool_ptr->GetAllValidNodes(time_offset_milli, *pick_all, nodes);
+    waiting_pool_ptr->GetAllValidNodes(*pick_all, nodes);
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
@@ -298,7 +298,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     // get consensus shard nodes and weed out nodes
     uint64_t min_balance = 0;
     uint64_t max_balance = 0;
-    consensus_pool_ptr->GetAllValidNodes(0, *cons_all, exists_shard_nodes);
+    consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() / kFtsWeedoutDividRate;
     FtsGetNodes(
         true,
@@ -320,7 +320,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     }
 
     std::vector<NodeDetailPtr> pick_all_vec;
-    waiting_pool_ptr->GetAllValidNodes(0, *pick_all, pick_all_vec);
+    waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
     FtsGetNodes(
         false,
         weed_out_count,
