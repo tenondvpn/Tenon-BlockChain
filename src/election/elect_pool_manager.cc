@@ -321,6 +321,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
 
     std::vector<NodeDetailPtr> pick_all_vec;
     waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
+    if (pick_all_vec.empty()) {
+        return kElectSuccess;
+    }
+
     FtsGetNodes(
         false,
         weed_out_count,
