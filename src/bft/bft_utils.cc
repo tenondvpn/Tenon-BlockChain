@@ -106,7 +106,6 @@ bool IsRootSingleBlockTx(uint32_t tx_type) {
 
     return false;
 }
-}
 
 }  // namespace bft
 
