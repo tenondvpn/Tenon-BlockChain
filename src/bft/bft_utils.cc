@@ -96,6 +96,18 @@ bool ThisNodeIsLeader() {
         vss::VssManager::Instance()->EpochRandom());
 }
 
+bool IsRootSingleBlockTx(uint32_t tx_type) {
+    if (tx_type == common::kConsensusRootElectRoot ||
+        tx_type == common::kConsensusRootElectShard ||
+        tx_type == common::kConsensusRootTimeBlock ||
+        tx_type == common::kConsensusRootVssBlock) {
+        return true;
+    }
+
+    return false;
+}
+}
+
 }  // namespace bft
 
 }  //namespace tenon

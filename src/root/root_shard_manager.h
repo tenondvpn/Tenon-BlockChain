@@ -10,8 +10,6 @@ namespace tenon {
 
 namespace root {
 
-typedef std::shared_ptr<ShardInfo> ShardInfoPtr;
-
 class RootShardManager {
 public:
     RootShardManager();

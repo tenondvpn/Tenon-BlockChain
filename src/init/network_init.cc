@@ -19,6 +19,7 @@
 #include "transport/http/http_transport.h"
 #include "election/elect_dht.h"
 #include "election/proto/elect_proto.h"
+#include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
@@ -184,7 +185,7 @@ int NetworkInit::CreateConfigNetwork() {
 		return kInitSuccess;
 	}
 
-	if (elect_mgr_.Join(net_id) != elect::kElectSuccess) {
+	if (elect::ElectManager::Instance()->Join(net_id) != elect::kElectSuccess) {
 		INIT_ERROR("join network [%u] failed!", net_id);
 		return kInitError;
 	}

@@ -13,6 +13,11 @@ namespace tenon {
 
 namespace elect {
 
+ElectManager* ElectManager::Instance() {
+    static ElectManager ins;
+    return &ins;
+}
+
 ElectManager::ElectManager() {
     network::Route::Instance()->RegisterMessage(
             common::kElectMessage,
@@ -48,7 +53,7 @@ int ElectManager::Join(uint32_t network_id) {
         elect_network_map_[network_id] = elect_node_ptr_;
     }
 
-    //LoadElectBlock();
+    // LoadElectBlock();
     return kElectSuccess;
 }
 
@@ -68,6 +73,12 @@ int ElectManager::Quit(uint32_t network_id) {
 
     elect_node->Destroy();
     return kElectSuccess;
+}
+
+int ElectManager::BackupCheckElectConsensusShard(
+        uint32_t shrard_id,
+        const bft::protobuf::TxInfo& tx_info) {
+    return pool_manager_.BackupCheckElectionBlockTx(shrard_id, tx_info);
 }
 
 void ElectManager::HandleMessage(transport::protobuf::Header& header) {

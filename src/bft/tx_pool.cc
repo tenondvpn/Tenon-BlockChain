@@ -108,6 +108,11 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                     continue;
                 }
 
+                // root single block tx must just one tx
+                if (!res_vec.empty() && IsRootSingleBlockTx(iter->second->tx.type())) {
+                    break;
+                }
+
                 res_vec.push_back(iter->second);
                 BFT_ERROR("get tx [to: %d] [pool idx: %d] type: %d,"
                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
@@ -119,6 +124,10 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                     common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
                     res_vec.size());
+                if (IsRootSingleBlockTx(iter->second->tx.type())) {
+                    break;
+                }
+
                 if (res_vec.size() >= kBftOneConsensusMaxCount) {
                     break;
                 }

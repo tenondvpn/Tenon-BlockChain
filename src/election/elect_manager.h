@@ -20,12 +20,15 @@ typedef std::shared_ptr<ElectNode> ElectNodePtr;
 
 class ElectManager {
 public:
-    ElectManager();
-    ~ElectManager();
+    static ElectManager* Instance();
     int Join(uint32_t network_id);
     int Quit(uint32_t network_id);
+    int BackupCheckElectConsensusShard(uint32_t shrard_id, const bft::protobuf::TxInfo& tx_info);
 
 private:
+    ElectManager();
+    ~ElectManager();
+
     void HandleMessage(transport::protobuf::Header& header);
     void ProcessNewElectBlock(
             transport::protobuf::Header& header,

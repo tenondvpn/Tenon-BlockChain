@@ -5,7 +5,6 @@
 #include "common/parse_args.h"
 #include "common/tick.h"
 #include "transport/transport.h"
-#include "election/elect_manager.h"
 #include "init/command.h"
 
 namespace tenon {
@@ -56,7 +55,6 @@ protected:
     bool inited_{ false };
     std::mutex init_mutex_;
     Command cmd_;
-    elect::ElectManager elect_mgr_;
     common::Tick test_new_account_tick_;
     common::Tick test_new_elect_tick_;
     common::Tick test_start_bft_tick_;

@@ -37,11 +37,21 @@ private:
     void LeaderCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& bft_msg);
-    void RootLeaderCreateNewAccountTxBlock(
+    void RootLeaderCreateTxBlock(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& bft_msg);
+    void RootLeaderCreateAccountAddressBlock(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& bft_msg);
+    void RootLeaderCreateElectConsensusShardBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& bft_msg);
     int RootBackupCheckPrepare(std::string& bft_str);
+    int RootBackupCheckCreateAccountAddressPrepare(const bft::protobuf::Block& block);
+    int RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block& block);
     int GetTempAccountBalance(
         const std::string& id,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
