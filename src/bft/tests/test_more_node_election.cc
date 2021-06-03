@@ -1476,7 +1476,6 @@ public:
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
             SetGloableInfo(from_data, network::kRootCongressNetworkId);
             bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
-//             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
             backup_msgs.push_back(bft::BftManager::Instance()->backup_prepare_msg_);
             {
                 protobuf::BftMessage bft_msg;
@@ -1499,7 +1498,6 @@ public:
             SetGloableInfo(from_data, network::kRootCongressNetworkId);
             ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
             bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
-//             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
             backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);
             {
                 protobuf::BftMessage bft_msg;
@@ -1514,14 +1512,13 @@ public:
             common::GlobalInfo::Instance()->id());
         auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
-
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
+
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
-
         for (uint32_t i = 1; i < kRootNodeCount; ++i) {
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
@@ -1584,14 +1581,22 @@ TEST_F(TestMoreNodeElection, CreateElectionBlock) {
     UpdateWaitingNodesConsensusCount(kMemberCount);
     transport::protobuf::Header brd_msg;
     RootConsensus(0, 0, &brd_msg);
-    //     bft::protobuf::BftMessage bft_msg;
-    //     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
-    //         network::kConsensusShardBeginNetworkId,
-    //         bft_msg), kElectSuccess);
-    //     bft::protobuf::TxBft tx_bft;
-    //     ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-    //     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.BackupCheckElectionBlockTx(
-    //         tx_bft.new_tx()), kElectSuccess)
+    bft::protobuf::BftMessage bft_msg;
+    ASSERT_TRUE(bft_msg.ParseFromString(brd_msg.data()));
+    bft::protobuf::TxBft tx_bft;
+    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+    bool ec_block_success = false;
+    for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list_size(); ++i) {
+        for (int32_t j = 0; j < tx_bft.to_tx().block().tx_list(i).attr_size(); ++j) {
+            if (tx_bft.to_tx().block().tx_list(i).attr(j).key() == kElectNodeAttrElectBlock) {
+                elect::protobuf::ElectBlock ec_block;
+                ASSERT_TRUE(ec_block.ParseFromString(tx_bft.to_tx().block().tx_list(i).attr(j).value()));
+                ec_block_success = true;
+            }
+        }
+    }
+
+    ASSERT_TRUE(ec_block_success);
 }
 
 }  // namespace test

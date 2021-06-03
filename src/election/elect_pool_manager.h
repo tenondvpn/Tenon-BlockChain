@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
@@ -55,6 +57,7 @@ private:
         std::vector<NodeDetailPtr>& res_nodes);
     void SmoothFtsValue(
         int32_t count,
+        std::mt19937_64& g2,
         std::vector<NodeDetailPtr>& src_nodes);
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;

@@ -383,9 +383,9 @@ void ElectPoolManager::FtsGetNodes(
         const std::vector<NodeDetailPtr>& src_nodes,
         std::vector<NodeDetailPtr>& res_nodes) {
     auto sort_vec = src_nodes;
-    SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), sort_vec);
-    std::set<void*> tmp_res_nodes;
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+    SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
+    std::set<void*> tmp_res_nodes;
     std::cout << "FtsGetNodes: " << std::endl;
     while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
@@ -422,6 +422,7 @@ void ElectPoolManager::FtsGetNodes(
 
 void ElectPoolManager::SmoothFtsValue(
         int32_t count,
+        std::mt19937_64& g2,
         std::vector<NodeDetailPtr>& sort_vec) {
     assert(sort_vec.size() > (uint32_t)count);
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
@@ -436,11 +437,13 @@ void ElectPoolManager::SmoothFtsValue(
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
         if (fts_val_diff < diff_2b3) {
-            auto rand_val = fts_val_diff + common::Random::RandomUint64() % (diff_2b3 - fts_val_diff);
-            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / (diff_2b3 - fts_val_diff);
+            auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
+            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / diff_2b3;
+            std::cout << "0: " << i << ":" << sort_vec[i]->fts_value << ":" << rand_val << ":" << diff_2b3 << ":" << fts_val_diff << std::endl;
         } else {
-            auto rand_val = diff_2b3 + common::Random::RandomUint64() % (fts_val_diff + 1 - diff_2b3);
-            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / (fts_val_diff + 1 - diff_2b3);
+            auto rand_val = diff_2b3 + g2() % (fts_val_diff + 1 - diff_2b3);
+            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / fts_val_diff;
+            std::cout << "1: " << i << ":" << sort_vec[i]->fts_value << ":" << rand_val << ":" << diff_2b3 << ":" << fts_val_diff << std::endl;
         }
     }
 }
