@@ -23,7 +23,7 @@ public:
     static ElectManager* Instance();
     int Join(uint32_t network_id);
     int Quit(uint32_t network_id);
-    int BackupCheckElectConsensusShard(uint32_t shrard_id, const bft::protobuf::TxInfo& tx_info);
+    int BackupCheckElectConsensusShard(const bft::protobuf::TxInfo& tx_info);
 
 private:
     ElectManager();

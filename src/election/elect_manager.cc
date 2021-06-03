@@ -75,10 +75,8 @@ int ElectManager::Quit(uint32_t network_id) {
     return kElectSuccess;
 }
 
-int ElectManager::BackupCheckElectConsensusShard(
-        uint32_t shrard_id,
-        const bft::protobuf::TxInfo& tx_info) {
-    return pool_manager_.BackupCheckElectionBlockTx(shrard_id, tx_info);
+int ElectManager::BackupCheckElectConsensusShard(const bft::protobuf::TxInfo& tx_info) {
+    return pool_manager_.BackupCheckElectionBlockTx(tx_info);
 }
 
 void ElectManager::HandleMessage(transport::protobuf::Header& header) {

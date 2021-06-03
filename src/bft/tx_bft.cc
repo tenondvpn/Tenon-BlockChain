@@ -248,7 +248,7 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
     }
 
     if (elect::ElectManager::Instance()->BackupCheckElectConsensusShard(
-            block.network_id(),
+            tx_info.network_id(),
             tx_info) != elect::kElectSuccess) {
         return kBftError;
     }

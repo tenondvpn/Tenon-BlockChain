@@ -119,9 +119,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     return kElectSuccess;
 }
 
-int ElectPoolManager::BackupCheckElectionBlockTx(
-        uint32_t network_id,
-        const bft::protobuf::TxInfo& tx_info) {
+int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx_info) {
     common::BloomFilter leader_cons_all;
     common::BloomFilter leader_cons_weed_out;
     common::BloomFilter leader_pick_all;
@@ -146,7 +144,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(
     std::vector<NodeDetailPtr> weed_out_vec;
     std::vector<NodeDetailPtr> pick_in_vec;
     if (GetAllBloomFilerAndNodes(
-            network_id,
+            tx_info.network_id(),
             &cons_all,
             &cons_weed_out,
             &pick_all,
