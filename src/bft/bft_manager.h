@@ -98,8 +98,8 @@ private:
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
-    void HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info);
-    void ProcessNewElectBlock(
+    int HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info);
+    int ProcessNewElectBlock(
         bft::protobuf::TxInfo& tx_info,
         bool load_from_db);
 

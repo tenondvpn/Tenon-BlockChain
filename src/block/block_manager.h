@@ -59,6 +59,9 @@ public:
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch);
     std::string GetCurrentShardBlockHashWithHeight(uint64_t height, const std::string& from);
+    int AddRootSingleTxBlock(
+        const bft::protobuf::Block& block_item,
+        db::DbWriteBach& db_batch);
 
 private:
     BlockManager();

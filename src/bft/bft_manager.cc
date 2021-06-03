@@ -241,7 +241,21 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
-        HanldeRootSingleBlockTx(tx_list[0]);
+        if (HanldeRootSingleBlockTx(tx_list[0]) == kBftSuccess) {
+            db::DbWriteBach db_batch;
+            if (block::BlockManager::Instance()->AddRootSingleTxBlock(
+                    tx_bft.to_tx().block(),
+                    db_batch) != block::kBlockSuccess) {
+                BFT_ERROR("leader add block to db failed!");
+                return;
+            }
+
+            auto st = db::Db::Instance()->Put(db_batch);
+            if (!st.ok()) {
+                exit(0);
+            }
+        }
+
         return;
     }
 
@@ -274,12 +288,12 @@ void BftManager::HandleRootTxBlock(
     }
 }
 
-void BftManager::HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info) {
+int BftManager::HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info) {
     switch (tx_info.type()) {
     case common::kConsensusRootElectRoot:
         break;
     case common::kConsensusRootElectShard:
-        ProcessNewElectBlock(tx_info, false);
+        return ProcessNewElectBlock(tx_info, false);
         break;
     case common::kConsensusRootTimeBlock:
         break;
@@ -288,13 +302,15 @@ void BftManager::HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info) {
     default:
         break;
     }
+
+    return kBftError;
 }
 
-void BftManager::ProcessNewElectBlock(
+int BftManager::ProcessNewElectBlock(
         bft::protobuf::TxInfo& tx_info,
         bool load_from_db) {
-    if (!tx_info.type() != common::kConsensusRootElectShard) {
-        return;
+    if (tx_info.type() != common::kConsensusRootElectShard) {
+        return kBftError;
     }
 
     elect::protobuf::ElectMessage elect_msg;
@@ -305,7 +321,7 @@ void BftManager::ProcessNewElectBlock(
     }
 
     if (!elect_msg.has_elect_block()) {
-        return;
+        return kBftError;
     }
 
     std::map<uint32_t, elect::MembersPtr> in_members;
@@ -343,6 +359,8 @@ void BftManager::ProcessNewElectBlock(
             iter->second,
             index_map_iter->second);
     }
+
+    return kBftSuccess;
 }
 
 void BftManager::RootCommitAddNewAccount(
