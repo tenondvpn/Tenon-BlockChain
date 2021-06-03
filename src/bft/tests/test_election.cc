@@ -25,6 +25,7 @@
 #include "tvm/tenon_host.h"
 #include "election/elect_pool_manager.h"
 #include "election/member_manager.h"
+#include "election/elect_manager.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
 #include "network/network_utils.h"
@@ -1261,7 +1262,7 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             assert(index_map_iter != in_index_members.end());
-            elect_pool_manager_.NetworkMemberChange(iter->first, iter->second);
+            elect::ElectManager::Instance()->pool_manager_.NetworkMemberChange(iter->first, iter->second);
         }
 
         CreateElectionBlockMemeber(network_id, pri_vec);
@@ -1287,7 +1288,7 @@ public:
             tx_info->set_balance(common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000));
         }
 
-        elect_pool_manager_.UpdateNodeInfoWithBlock(block_info);
+        elect::ElectManager::Instance()->pool_manager_.UpdateNodeInfoWithBlock(block_info);
     }
 
     void AddWaitingPoolNetworkNodes(int32_t member_count, uint32_t network_id) {
@@ -1303,14 +1304,14 @@ public:
             new_node->public_port = 0;
             new_node->join_tm = std::chrono::steady_clock::now() - std::chrono::microseconds(kElectAvailableJoinTime + 1000);
             new_node->choosed_balance = common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000);
-            elect_pool_manager_.AddWaitingPoolNode(network_id, new_node);
+            elect::ElectManager::Instance()->pool_manager_.AddWaitingPoolNode(network_id, new_node);
         }
     }
 
     void UpdateWaitingNodesConsensusCount(int32_t member_count) {
         common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
         std::vector<NodeDetailPtr> pick_all_vec;
-        elect_pool_manager_.waiting_pool_map_[
+        elect::ElectManager::Instance()->pool_manager_.waiting_pool_map_[
             network::kConsensusShardBeginNetworkId +
             network::kConsensusWaitingShardOffset]->GetAllValidHeartbeatNodes(
             0, pick_all, pick_all_vec);
@@ -1318,7 +1319,7 @@ public:
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             std::string prikey = common::Encode::HexDecode(from_data);
-            elect_pool_manager_.waiting_pool_map_[
+            elect::ElectManager::Instance()->pool_manager_.waiting_pool_map_[
                 network::kConsensusShardBeginNetworkId +
                 network::kConsensusWaitingShardOffset]->UpdateWaitingNodes(
                 GetIdByPrikey(prikey), pick_all);
@@ -1327,7 +1328,6 @@ public:
 private:
     static std::map<uint32_t, std::string> pool_index_map_;
     std::unordered_set<std::string> created_gids_;
-    ElectPoolManager elect_pool_manager_;
 };
 
 std::map<uint32_t, std::string> TestElection::pool_index_map_;
@@ -1411,6 +1411,26 @@ TEST_F(TestElection, CreateElectionBlock) {
         ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
         ASSERT_EQ(to_balance, init_to_balance + all_amount);
     }
+
+    const uint32_t kMemberCount = 31;
+    const uint32_t kWaitingCount = 11;
+    CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
+    for (uint32_t i = 0; i < 20; ++i) {
+        UpdateNodeInfoWithBlock(kMemberCount, i);
+    }
+
+    AddWaitingPoolNetworkNodes(
+        kWaitingCount,
+        network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+    UpdateWaitingNodesConsensusCount(kMemberCount);
+    bft::protobuf::BftMessage bft_msg;
+    ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
+        network::kConsensusShardBeginNetworkId,
+        bft_msg), kElectSuccess);
+    bft::protobuf::TxBft tx_bft;
+    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+    ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.BackupCheckElectionBlockTx(
+        tx_bft.new_tx()), kElectSuccess);
 }
 
 }  // namespace test

@@ -260,7 +260,7 @@ TEST_F(TestElectPoolManager, All) {
     bft::protobuf::TxBft tx_bft;
     ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
     ASSERT_EQ(elect_pool_manager_.BackupCheckElectionBlockTx(
-        bft_msg.net_id(), tx_bft.new_tx()), kElectSuccess);
+        tx_bft.new_tx()), kElectSuccess);
 }
 
 }  // namespace test
