@@ -9,6 +9,7 @@
 #include "transport/proto/transport.pb.h"
 #include "bft/bft_interface.h"
 #include "election/member_manager.h"
+#include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
 
 namespace tenon {
@@ -97,6 +98,10 @@ private:
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
+    void HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info);
+    void ProcessNewElectBlock(
+        bft::protobuf::TxInfo& tx_info,
+        bool load_from_db);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;

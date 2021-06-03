@@ -160,7 +160,7 @@ void ElectManager::ProcessNewElectBlock(
     assert(elect_msg.has_elect_block());
     std::map<uint32_t, MembersPtr> in_members;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
-    std::map<uint32_t, uint32_t> begin_index_map_;
+    std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_msg.elect_block().in();
     for (int32_t i = 0; i < in.size(); ++i) {
         auto net_id = in[i].net_id();
@@ -169,7 +169,7 @@ void ElectManager::ProcessNewElectBlock(
             in_members[net_id] = std::make_shared<Members>();
             in_index_members[net_id] = std::make_shared<
                     std::unordered_map<std::string, uint32_t>>();
-            begin_index_map_[net_id] = 0;
+            begin_index_map[net_id] = 0;
         }
         security::PublicKey pubkey(in[i].pubkey());
         security::CommitSecret secret;
@@ -177,11 +177,11 @@ void ElectManager::ProcessNewElectBlock(
             net_id,
             in[i].id(),
             in[i].pubkey(),
-            begin_index_map_[net_id],
+            begin_index_map[net_id],
             in[i].public_ip(),
             in[i].public_port(),
             in[i].dht_key()));
-        in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map_[net_id]));
+        in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map[net_id]));
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
                 in[i].id(),
@@ -199,7 +199,7 @@ void ElectManager::ProcessNewElectBlock(
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }
 
-        ++begin_index_map_[net_id];
+        ++begin_index_map[net_id];
     }
 
     for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {

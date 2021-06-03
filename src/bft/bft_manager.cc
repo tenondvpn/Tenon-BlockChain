@@ -93,7 +93,8 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         bft_ptr->set_randm_num(bft_msg.rand());
         bft_ptr->set_pool_index(bft_msg.pool_index());
         bft_ptr->set_status(kBftPrepare);
-        bft_ptr->set_member_count(elect::MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
+        bft_ptr->set_member_count(
+            elect::MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
         if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
             BFT_ERROR("BackupPrepare leader invalid", bft_ptr, header);
             return;
@@ -157,7 +158,9 @@ int BftManager::CreateGenisisBlock(
 }
 
 bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
-    if (!block.has_agg_sign_challenge() || !block.has_agg_sign_response() || block.bitmap_size() <= 0) {
+    if (!block.has_agg_sign_challenge() ||
+            !block.has_agg_sign_response() ||
+            block.bitmap_size() <= 0) {
         BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
             "block.has_agg_sign_response(): %d, block.bitmap_size(): %u",
             block.has_agg_sign_challenge(), block.has_agg_sign_response(), block.bitmap_size());
@@ -237,6 +240,11 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
+    if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
+        HanldeRootSingleBlockTx(tx_list[0]);
+        return;
+    }
+
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (tx_list[i].status() != 0) {
             continue;
@@ -266,7 +274,80 @@ void BftManager::HandleRootTxBlock(
     }
 }
 
-void BftManager::RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch) {
+void BftManager::HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info) {
+    switch (tx_info.type()) {
+    case common::kConsensusRootElectRoot:
+        break;
+    case common::kConsensusRootElectShard:
+        ProcessNewElectBlock(tx_info, false);
+        break;
+    case common::kConsensusRootTimeBlock:
+        break;
+    case common::kConsensusRootVssBlock:
+        break;
+    default:
+        break;
+    }
+}
+
+void BftManager::ProcessNewElectBlock(
+        bft::protobuf::TxInfo& tx_info,
+        bool load_from_db) {
+    if (!tx_info.type() != common::kConsensusRootElectShard) {
+        return;
+    }
+
+    elect::protobuf::ElectMessage elect_msg;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
+            elect_msg.ParseFromString(tx_info.attr(i).value());
+        }
+    }
+
+    if (!elect_msg.has_elect_block()) {
+        return;
+    }
+
+    std::map<uint32_t, elect::MembersPtr> in_members;
+    std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
+    std::map<uint32_t, uint32_t> begin_index_map;
+    auto in = elect_msg.elect_block().in();
+    for (int32_t i = 0; i < in.size(); ++i) {
+        auto net_id = in[i].net_id();
+        auto iter = in_members.find(net_id);
+        if (iter == in_members.end()) {
+            in_members[net_id] = std::make_shared<elect::Members>();
+            in_index_members[net_id] = std::make_shared<
+                    std::unordered_map<std::string, uint32_t>>();
+            begin_index_map[net_id] = 0;
+        }
+        security::PublicKey pubkey(in[i].pubkey());
+        security::CommitSecret secret;
+        in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
+            net_id,
+            in[i].id(),
+            in[i].pubkey(),
+            begin_index_map[net_id],
+            in[i].public_ip(),
+            in[i].public_port(),
+            in[i].dht_key()));
+        in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map[net_id]));
+        ++begin_index_map[net_id];
+    }
+
+    for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
+        auto index_map_iter = in_index_members.find(iter->first);
+        assert(index_map_iter != in_index_members.end());
+        bft::BftManager::Instance()->NetworkMemberChange(
+            iter->first,
+            iter->second,
+            index_map_iter->second);
+    }
+}
+
+void BftManager::RootCommitAddNewAccount(
+        const bft::protobuf::Block& block,
+        db::DbWriteBach& db_batch) {
     auto& tx_list = block.tx_list();
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");
@@ -364,7 +445,8 @@ void BftManager::HandleToAccountTxBlock(
                 continue;
             }
 
-            if (tx_list[i].amount() <= 0 && tx_list[i].type() != common::kConsensusCreateContract) {
+            if (tx_list[i].amount() <= 0 &&
+                    tx_list[i].type() != common::kConsensusCreateContract) {
                 BFT_ERROR("transfer amount error!");
                 continue;
             }

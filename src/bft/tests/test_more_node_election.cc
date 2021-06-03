@@ -1594,6 +1594,9 @@ TEST_F(TestMoreNodeElection, CreateElectionBlock) {
                 ec_block_success = true;
             }
         }
+
+        auto tx_info = tx_bft.to_tx().block().tx_list(i);
+        bft::BftManager::Instance()->ProcessNewElectBlock(tx_info, false);
     }
 
     ASSERT_TRUE(ec_block_success);
