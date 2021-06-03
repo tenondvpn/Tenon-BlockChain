@@ -36,7 +36,7 @@ private:
             bool load_from_db);
     void SaveElectBlock(transport::protobuf::Header& header);
     void LoadElectBlock();
-    void CreateNewElectTx(uint32_t shard_network_id);
+    void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;

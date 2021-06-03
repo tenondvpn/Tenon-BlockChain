@@ -50,6 +50,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     tx_info->set_type(common::kConsensusRootElectShard);
     tx_info->set_from(common::GlobalInfo::Instance()->id());
     tx_info->set_gas_limit(0llu);
+    tx_info->set_network_id(shard_netid);
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kElectNodeAttrKeyAllBloomfilter);
     all_exits_attr->set_value(cons_all.Serialize());

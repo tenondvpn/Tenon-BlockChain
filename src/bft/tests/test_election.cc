@@ -240,95 +240,96 @@ public:
             bool just_to_id,
             std::map<std::string, std::string>& attrs,
             transport::protobuf::Header& msg) {
-        msg.set_src_dht_key("");
-        uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-        dht::DhtKeyManager dht_key(des_net_id, 0);
-        msg.set_des_dht_key(dht_key.StrKey());
-        msg.set_priority(transport::kTransportPriorityHighest);
-        msg.set_id(common::GlobalInfo::Instance()->MessageId());
-        msg.set_type(common::kBftMessage);
-        msg.set_client(false);
-        msg.set_hop_count(0);
-        auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
-        bft::protobuf::BftMessage bft_msg;
-        bft_msg.set_gid(common::CreateGID(""));
-        bft_msg.set_rand(0);
-        bft_msg.set_bft_step(bft::kBftInit);
-        bft_msg.set_leader(false);
-        bft_msg.set_net_id(des_net_id);
-        security::PrivateKey from_private_key(from_prikey);
-        security::PublicKey from_pubkey(from_private_key);
-        std::string from_pubkey_str;
-        ASSERT_EQ(from_pubkey.Serialize(from_pubkey_str, false), security::kPublicKeyUncompressSize);
-        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pubkey_str);
-        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            uint32_t from_net_id = 0;
-            ASSERT_EQ(block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                id,
-                &from_net_id), block::kBlockSuccess);
-            ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
-        }
-        
-        bft_msg.set_node_id(id);
-        bft_msg.set_pubkey(from_pubkey_str);
-        bft::protobuf::TxBft tx_bft;
-        auto new_tx = tx_bft.mutable_new_tx();
-        auto iter = attrs.find("contract_orignal_gid");
-        if (iter == attrs.end()) {
-            new_tx->set_gid(common::CreateGID(from_pubkey_str));
-        } else {
-            new_tx->set_gid(iter->second);
-        }
-
-        new_tx->set_from(id);
-        new_tx->set_from_pubkey(from_pubkey_str);
-        if (!to_prikey.empty() && !just_to_id) {
-            security::PrivateKey to_private_key(to_prikey);
-            security::PublicKey to_pubkey(to_private_key);
-            std::string to_pubkey_str;
-            ASSERT_EQ(to_pubkey.Serialize(to_pubkey_str, false), security::kPublicKeyUncompressSize);
-            std::string to_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_str);
-            new_tx->set_to(to_id);
-        }
-
-        if (just_to_id) {
-            new_tx->set_to(to_prikey);
-        }
-
-        if (tx_type == common::kConsensusCreateContract) {
-            ASSERT_TRUE(attrs.find(bft::kContractBytesCode) != attrs.end());
-            std::string contract_addres = security::Secp256k1::Instance()->GetContractAddress(
-                id,
-                new_tx->gid(),
-                attrs[bft::kContractBytesCode]);
-            new_tx->set_to(contract_addres);
-        }
-
-        new_tx->set_amount(amount);
-        new_tx->set_gas_limit(gas_limit);
-        new_tx->set_type(tx_type);
-        for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
-            auto attr = new_tx->add_attr();
-            attr->set_key(iter->first);
-            attr->set_value(iter->second);
-        }
-
-        auto hash128 = GetTxMessageHash(*new_tx);
-        auto tx_data = tx_bft.SerializeAsString();
-        bft_msg.set_data(tx_data);
-        security::Signature sign;
-        ASSERT_TRUE(security::Schnorr::Instance()->Sign(
-            hash128,
-            from_private_key,
-            from_pubkey,
-            sign));
-        std::string sign_challenge_str;
-        std::string sign_response_str;
-        sign.Serialize(sign_challenge_str, sign_response_str);
-        bft_msg.set_sign_challenge(sign_challenge_str);
-        bft_msg.set_sign_response(sign_response_str);
-        msg.set_data(bft_msg.SerializeAsString());
+        elect::ElectManager::Instance()->CreateNewElectTx(network::kConsensusShardBeginNetworkId, &msg);
+//         msg.set_src_dht_key("");
+//         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+//         dht::DhtKeyManager dht_key(des_net_id, 0);
+//         msg.set_des_dht_key(dht_key.StrKey());
+//         msg.set_priority(transport::kTransportPriorityHighest);
+//         msg.set_id(common::GlobalInfo::Instance()->MessageId());
+//         msg.set_type(common::kBftMessage);
+//         msg.set_client(false);
+//         msg.set_hop_count(0);
+//         auto broad_param = msg.mutable_broadcast();
+//         SetDefaultBroadcastParam(broad_param);
+//         bft::protobuf::BftMessage bft_msg;
+//         bft_msg.set_gid(common::CreateGID(""));
+//         bft_msg.set_rand(0);
+//         bft_msg.set_bft_step(bft::kBftInit);
+//         bft_msg.set_leader(false);
+//         bft_msg.set_net_id(des_net_id);
+//         security::PrivateKey from_private_key(from_prikey);
+//         security::PublicKey from_pubkey(from_private_key);
+//         std::string from_pubkey_str;
+//         ASSERT_EQ(from_pubkey.Serialize(from_pubkey_str, false), security::kPublicKeyUncompressSize);
+//         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pubkey_str);
+//         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+//             uint32_t from_net_id = 0;
+//             ASSERT_EQ(block::AccountManager::Instance()->GetAddressConsensusNetworkId(
+//                 id,
+//                 &from_net_id), block::kBlockSuccess);
+//             ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
+//         }
+//         
+//         bft_msg.set_node_id(id);
+//         bft_msg.set_pubkey(from_pubkey_str);
+//         bft::protobuf::TxBft tx_bft;
+//         auto new_tx = tx_bft.mutable_new_tx();
+//         auto iter = attrs.find("contract_orignal_gid");
+//         if (iter == attrs.end()) {
+//             new_tx->set_gid(common::CreateGID(from_pubkey_str));
+//         } else {
+//             new_tx->set_gid(iter->second);
+//         }
+// 
+//         new_tx->set_from(id);
+//         new_tx->set_from_pubkey(from_pubkey_str);
+//         if (!to_prikey.empty() && !just_to_id) {
+//             security::PrivateKey to_private_key(to_prikey);
+//             security::PublicKey to_pubkey(to_private_key);
+//             std::string to_pubkey_str;
+//             ASSERT_EQ(to_pubkey.Serialize(to_pubkey_str, false), security::kPublicKeyUncompressSize);
+//             std::string to_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_str);
+//             new_tx->set_to(to_id);
+//         }
+// 
+//         if (just_to_id) {
+//             new_tx->set_to(to_prikey);
+//         }
+// 
+//         if (tx_type == common::kConsensusCreateContract) {
+//             ASSERT_TRUE(attrs.find(bft::kContractBytesCode) != attrs.end());
+//             std::string contract_addres = security::Secp256k1::Instance()->GetContractAddress(
+//                 id,
+//                 new_tx->gid(),
+//                 attrs[bft::kContractBytesCode]);
+//             new_tx->set_to(contract_addres);
+//         }
+// 
+//         new_tx->set_amount(amount);
+//         new_tx->set_gas_limit(gas_limit);
+//         new_tx->set_type(tx_type);
+//         for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
+//             auto attr = new_tx->add_attr();
+//             attr->set_key(iter->first);
+//             attr->set_value(iter->second);
+//         }
+// 
+//         auto hash128 = GetTxMessageHash(*new_tx);
+//         auto tx_data = tx_bft.SerializeAsString();
+//         bft_msg.set_data(tx_data);
+//         security::Signature sign;
+//         ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+//             hash128,
+//             from_private_key,
+//             from_pubkey,
+//             sign));
+//         std::string sign_challenge_str;
+//         std::string sign_response_str;
+//         sign.Serialize(sign_challenge_str, sign_response_str);
+//         bft_msg.set_sign_challenge(sign_challenge_str);
+//         bft_msg.set_sign_response(sign_response_str);
+//         msg.set_data(bft_msg.SerializeAsString());
     }
 
     void CreateTransaction(
@@ -1382,36 +1383,6 @@ TEST_F(TestElection, CreateElectionBlock) {
         ASSERT_EQ(to_balance, all_amount);
     }
 
-    for (int32_t i = 0; i < 1000; ++i) {
-        uint32_t rand_from = rand() % 100;
-        uint32_t rand_to = rand() % 100;
-        if (rand_from == rand_to) {
-            continue;
-        }
-
-        char from_data[128];
-        snprintf(from_data, sizeof(from_data), "%03d22f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_from);
-        char to_data[128];
-        snprintf(to_data, sizeof(to_data), "%03d22f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", rand_to);
-        std::string from_prikey = common::Encode::HexDecode(from_data);
-        std::string to_prikey = common::Encode::HexDecode(to_data);
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_to_balance = GetBalanceByPrikey(to_prikey);
-        uint64_t all_amount = 0;
-        uint64_t amount = (rand() % 10000) * common::kTenonMiniTransportUnit + 1;
-        uint64_t all_gas = 0;
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        Transaction(
-            from_prikey, to_prikey, amount, 1000000,
-            common::kConsensusTransaction, true, false, attrs);
-        auto from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
-        ASSERT_EQ(to_balance, init_to_balance + all_amount);
-    }
-
     const uint32_t kMemberCount = 31;
     const uint32_t kWaitingCount = 11;
     CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
@@ -1423,15 +1394,14 @@ TEST_F(TestElection, CreateElectionBlock) {
         kWaitingCount,
         network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
     UpdateWaitingNodesConsensusCount(kMemberCount);
-    bft::protobuf::BftMessage bft_msg;
-    ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
-        network::kConsensusShardBeginNetworkId,
-        bft_msg), kElectSuccess);
-    bft::protobuf::TxBft tx_bft;
-    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-    ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.BackupCheckElectionBlockTx(
-        tx_bft.new_tx()), kElectSuccess);
-}
+//     bft::protobuf::BftMessage bft_msg;
+//     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
+//         network::kConsensusShardBeginNetworkId,
+//         bft_msg), kElectSuccess);
+//     bft::protobuf::TxBft tx_bft;
+//     ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+//     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.BackupCheckElectionBlockTx(
+//         tx_bft.new_tx()), kElectSuccess}
 
 }  // namespace test
 
