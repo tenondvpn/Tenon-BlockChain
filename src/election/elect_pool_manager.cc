@@ -45,6 +45,12 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
         return kElectError;
     }
 
+    std::cout << "leader get all nodes" << std::endl;
+    for (uint32_t i = 0; i < pick_in_vec.size(); ++i) {
+        std::cout << common::Encode::HexEncode(pick_in_vec[i]->id) << std::endl;
+    }
+    std::cout << std::endl;
+
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootElectShard);
@@ -156,6 +162,12 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx
         ELECT_ERROR("local GetAllBloomFilerAndNodes failed!");
         return kElectError;
     }
+
+    std::cout << "bakcup get all nodes" << std::endl;
+    for (uint32_t i = 0; i < pick_in_vec.size(); ++i) {
+        std::cout << common::Encode::HexEncode(pick_in_vec[i]->id) << std::endl;
+    }
+    std::cout << std::endl;
 
     // exists shard nodes must equal
     if (cons_all != leader_cons_all) {
@@ -348,6 +360,12 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         return kElectSuccess;
     }
 
+    std::cout << "all waiting nodes: " << std::endl;
+    for (uint32_t i = 0; i < pick_all_vec.size(); ++i) {
+        std::cout << common::Encode::HexEncode(pick_all_vec[i]->id) << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+
     FtsGetNodes(
         false,
         weed_out_count,
@@ -368,6 +386,7 @@ void ElectPoolManager::FtsGetNodes(
     SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), sort_vec);
     std::set<void*> tmp_res_nodes;
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+    std::cout << "FtsGetNodes: " << std::endl;
     while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
         for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
@@ -385,7 +404,9 @@ void ElectPoolManager::FtsGetNodes(
         }
 
         fts_tree.CreateFtsTree();
+        std::cout << "choose rand value: ";
         void* data = fts_tree.GetOneNode(g2);
+        std::cout << std::endl;
         if (data == nullptr) {
             continue;
         }
@@ -395,6 +416,8 @@ void ElectPoolManager::FtsGetNodes(
         res_nodes.push_back(node_ptr);
         nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
     }
+
+    std::cout << std::endl;
 }
 
 void ElectPoolManager::SmoothFtsValue(
