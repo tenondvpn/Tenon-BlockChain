@@ -48,11 +48,10 @@ static const std::string simple_payment_channel = common::Encode::HexDecode(std:
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 static const char* kWaitingNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
-static const uint32_t kRootNodeCount = 31u;
-std::set<uint32_t> invalid_root_node_vec;
-static const uint32_t kConsensusNodeCount = 31u;
-std::set<uint32_t> invalid_consensus_node_vec;
-static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
+static const uint32_t kRootNodeCount = 5u;
+static std::set<uint32_t> invalid_root_node_vec;
+static const uint32_t kConsensusNodeCount = 5u;
+static std::set<uint32_t> invalid_consensus_node_vec;
 static const char* kConsensusNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
 class TestMoreNodeElection : public testing::Test {
@@ -1304,7 +1303,6 @@ public:
         }
     }
 
-    \
     void CreateElectionBlockMemeber(uint32_t network_id, std::vector<std::string>& pri_vec) {
         std::map<uint32_t, elect::MembersPtr> in_members;
         std::map<uint32_t, elect::MembersPtr> out_members;
@@ -1450,6 +1448,90 @@ public:
         }
     }
 
+    void RootConsensus(
+            uint32_t network_id,
+            uint32_t type,
+            transport::protobuf::Header* broadcast_msg) {
+        transport::protobuf::Header msg;
+        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        elect::ElectManager::Instance()->CreateNewElectTx(network::kConsensusShardBeginNetworkId, &msg);
+        bft::protobuf::BftMessage bft_msg;
+        bft_msg.ParseFromString(msg.data());
+        bft::protobuf::TxBft tx_bft;
+        EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+
+        // prepare
+        bft::BftManager::Instance()->HandleMessage(msg);
+        usleep(bft::kBftStartDeltaTime);
+        EXPECT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
+
+        auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
+            std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
+        auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
+        ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
+        std::vector<transport::protobuf::Header> backup_msgs;
+        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
+            SetGloableInfo(from_data, network::kRootCongressNetworkId);
+            bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
+//             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
+            backup_msgs.push_back(bft::BftManager::Instance()->backup_prepare_msg_);
+            {
+                protobuf::BftMessage bft_msg;
+                ASSERT_TRUE(bft_msg.ParseFromString(bft::BftManager::Instance()->backup_prepare_msg_.data()));
+                ASSERT_TRUE(bft_msg.agree());
+            }
+        }
+
+        // precommit
+        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
+            bft::BftManager::Instance()->HandleMessage(*iter);
+        }
+        backup_msgs.clear();
+
+        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
+            SetGloableInfo(from_data, network::kRootCongressNetworkId);
+            ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+            bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
+//             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
+            backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);
+            {
+                protobuf::BftMessage bft_msg;
+                ASSERT_TRUE(bft_msg.ParseFromString(bft::BftManager::Instance()->backup_precommit_msg_.data()));
+                ASSERT_TRUE(bft_msg.agree());
+            }
+        }
+
+        // commit
+        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
+            network::kRootCongressNetworkId,
+            common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
+
+        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
+            bft::BftManager::Instance()->HandleMessage(*iter);
+        }
+        backup_msgs.clear();
+        *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
+
+        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
+            SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kRootCongressNetworkId);
+            bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
+            bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
+        }
+    }
+
 private:
     static std::map<uint32_t, std::string> pool_index_map_;
     std::unordered_set<std::string> created_gids_;
@@ -1459,52 +1541,34 @@ std::map<uint32_t, std::string> TestMoreNodeElection::pool_index_map_;
 TEST_F(TestMoreNodeElection, CreateElectionBlock) {
     std::string from_prikey = common::Encode::HexDecode(
         "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
-    // create root shard address
-    for (int32_t i = 0; i < 100; ++i)
     {
-        char data[128];
-        snprintf(data, sizeof(data), "%03d22f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", i);
-        std::string to_prikey = common::Encode::HexDecode(data);
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(to_balance, common::kInvalidUint64);
-        uint64_t all_amount = 0;
-        uint64_t amount = (rand() % 1000000llu + 1000000llu) * common::kTenonMiniTransportUnit;
-        uint64_t all_gas = 0;
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        Transaction(
-            from_prikey, to_prikey, amount, 1000000,
-            common::kConsensusTransaction, true, false, attrs);
-        auto from_balance = GetBalanceByPrikey(from_prikey);
-        to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
-        ASSERT_EQ(to_balance, all_amount);
-    }
+        // root shard
+        std::vector<std::string> pri_vec;
+        pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"));
+        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            pri_vec.push_back(common::Encode::HexDecode(from_data));
+        }
 
-    // create waiting shard address
-    for (int32_t i = 0; i < 100; ++i)
-    {
-        char data[128];
-        snprintf(data, sizeof(data), "%03d12f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851", i);
-        std::string to_prikey = common::Encode::HexDecode(data);
-        uint64_t init_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(to_balance, common::kInvalidUint64);
-        uint64_t all_amount = 0;
-        uint64_t amount = (rand() % 1000000llu + 1000000llu) * common::kTenonMiniTransportUnit;
-        uint64_t all_gas = 0;
-        all_amount += amount;
-        all_gas += bft::kTransferGas;
-        std::map<std::string, std::string> attrs;
-        Transaction(
-            from_prikey, to_prikey, amount, 1000000,
-            common::kConsensusTransaction, true, false, attrs);
-        auto from_balance = GetBalanceByPrikey(from_prikey);
-        to_balance = GetBalanceByPrikey(to_prikey);
-        ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
-        ASSERT_EQ(to_balance, all_amount);
+        for (auto iter = pri_vec.begin(); iter != pri_vec.end(); ++iter) {
+            uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+            uint64_t to_balance = GetBalanceByPrikey(*iter);
+            ASSERT_EQ(to_balance, common::kInvalidUint64);
+            uint64_t all_amount = 0;
+            uint64_t amount = (rand() % 1000000llu + 1000000llu) * common::kTenonMiniTransportUnit;
+            uint64_t all_gas = 0;
+            all_amount += amount;
+            all_gas += bft::kTransferGas;
+            std::map<std::string, std::string> attrs;
+            Transaction(
+                from_prikey, *iter, amount, 1000000,
+                common::kConsensusTransaction, true, false, attrs);
+            auto from_balance = GetBalanceByPrikey(from_prikey);
+            to_balance = GetBalanceByPrikey(*iter);
+            ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
+            ASSERT_EQ(to_balance, all_amount);
+        }
     }
 
     const uint32_t kMemberCount = 31;
@@ -1518,6 +1582,8 @@ TEST_F(TestMoreNodeElection, CreateElectionBlock) {
         kWaitingCount,
         network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
     UpdateWaitingNodesConsensusCount(kMemberCount);
+    transport::protobuf::Header brd_msg;
+    RootConsensus(0, 0, &brd_msg);
     //     bft::protobuf::BftMessage bft_msg;
     //     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
     //         network::kConsensusShardBeginNetworkId,

@@ -199,11 +199,6 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
     std::unordered_map<std::string, int64_t> acc_balance_map;
     int32_t i = 0;
     const auto& tx_info = block.tx_list(i);
-    if (!tx_info.to_add()) {
-        BFT_ERROR("must transfer to new account.");
-        return kBftError;
-    }
-
     auto local_tx_info = DispatchPool::Instance()->GetTx(
         pool_index(),
         tx_info.to_add(),
@@ -300,21 +295,21 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
         case common::kConsensusRootElectRoot:
             break;
         case common::kConsensusRootElectShard:
-            RootBackupCheckElectConsensusShardPrepare(block);
+            return RootBackupCheckElectConsensusShardPrepare(block);
             break;
         case common::kConsensusRootTimeBlock:
             break;
         case common::kConsensusRootVssBlock:
             break;
         default:
-            RootBackupCheckCreateAccountAddressPrepare(block);
+            return RootBackupCheckCreateAccountAddressPrepare(block);
             break;
         }
     } else {
-        RootBackupCheckCreateAccountAddressPrepare(block);
+        return RootBackupCheckCreateAccountAddressPrepare(block);
     }
     
-    return kBftSuccess;
+    return kBftInvalidPackage;
 }
 
 int TxBft::BackupCheckPrepare(std::string& bft_str) {

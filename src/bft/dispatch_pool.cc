@@ -88,15 +88,19 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     auto tx_ptr = std::make_shared<TxItem>(tx_bft.new_tx());
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
     if (account_info == nullptr) {
+        BFT_ERROR("from account address not exit[%s]!",
+            common::Encode::HexEncode(tx_ptr->tx.from()));
         return kBftError;
     }
 
     uint64_t balance = 0;
     if (account_info->GetBalance(&balance) != block::kBlockSuccess) {
+        BFT_ERROR("from balance get error!");
         return kBftError;
     }
 
     if (balance < 0 || balance >= common::kTenonMaxAmount) {
+        BFT_ERROR("from balance is error!");
         return kBftError;
     }
 

@@ -354,6 +354,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         pick_in,
         pick_all_vec,
         pick_in_vec);
+    std::cout << "get pick_in_vec size: " << pick_in_vec.size() << std::endl;
     return kElectSuccess;
 }
 
