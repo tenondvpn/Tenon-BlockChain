@@ -48,9 +48,9 @@ static const std::string simple_payment_channel = common::Encode::HexDecode(std:
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 static const char* kWaitingNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
-static const uint32_t kRootNodeCount = 5u;
+static const uint32_t kRootNodeCount = 31u;
 static std::set<uint32_t> invalid_root_node_vec;
-static const uint32_t kConsensusNodeCount = 5u;
+static const uint32_t kConsensusNodeCount = 31u;
 static std::set<uint32_t> invalid_consensus_node_vec;
 static const char* kConsensusNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 

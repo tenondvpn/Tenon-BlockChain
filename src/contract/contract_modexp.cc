@@ -39,7 +39,6 @@ uint64_t Modexp::GetGasPrice(const std::string& data) {
 
     bigint const maxLength((std::max)(modLength, baseLength));
     bigint const adjustedExpLength(ExpLengthAdjust(baseLength + 96, expLength, data));
-    std::cout << "modLength: " << modLength << ", baseLength: " << baseLength << ",maxLength: " << maxLength << ", adjustedExpLength: " << adjustedExpLength << std::endl;
     return static_cast<uint64_t>(MultComplexity(maxLength) * (adjustedExpLength > 1 ? adjustedExpLength : 1)) / 20;
 }
 
@@ -49,13 +48,11 @@ int Modexp::call(
         const std::string& origin_address,
         evmc_result* res) {
     if (param.data.empty()) {
-        std::cout << "param.data.empty()" << std::endl;
         return kContractError;
     }
 
     int64_t gas_used = GetGasPrice(param.data);
     if (res->gas_left < gas_used) {
-        std::cout << "res->gas_left < gas_used" << res->gas_left << ", " << gas_used << std::endl;
         return kContractError;
     }
 
@@ -65,7 +62,6 @@ int Modexp::call(
     assert(modLength <= std::numeric_limits<size_t>::max() / 8);
     assert(baseLength <= std::numeric_limits<size_t>::max() / 8);
     if (modLength == 0 && baseLength == 0) {
-        std::cout << "modLength == 0 && baseLength == 0" << std::endl;
         return kContractError;
     }
 

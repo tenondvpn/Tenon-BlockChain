@@ -52,8 +52,6 @@ void FtsTree::CreateFtsTree() {
             i + 1,
             nullptr });
     }
-
-    PrintFtsTree();
 }
 
 void FtsTree::PrintFtsTree() {
@@ -90,7 +88,6 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
             rand_value = g2() % fts_nodes_[choose_idx].fts_value;
         }
 
-        std::cout << rand_value << " ";
         if (fts_nodes_[fts_nodes_[choose_idx].right].fts_value == 0) {
             choose_idx = fts_nodes_[choose_idx].right;
         } else if (fts_nodes_[fts_nodes_[choose_idx].left].fts_value == 0) {

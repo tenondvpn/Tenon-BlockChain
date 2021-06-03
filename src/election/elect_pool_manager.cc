@@ -45,12 +45,6 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
         return kElectError;
     }
 
-    std::cout << "leader get all nodes" << std::endl;
-    for (uint32_t i = 0; i < pick_in_vec.size(); ++i) {
-        std::cout << common::Encode::HexEncode(pick_in_vec[i]->id) << std::endl;
-    }
-    std::cout << std::endl;
-
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootElectShard);
@@ -162,12 +156,6 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx
         ELECT_ERROR("local GetAllBloomFilerAndNodes failed!");
         return kElectError;
     }
-
-    std::cout << "bakcup get all nodes" << std::endl;
-    for (uint32_t i = 0; i < pick_in_vec.size(); ++i) {
-        std::cout << common::Encode::HexEncode(pick_in_vec[i]->id) << std::endl;
-    }
-    std::cout << std::endl;
 
     // exists shard nodes must equal
     if (cons_all != leader_cons_all) {
@@ -360,19 +348,12 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         return kElectSuccess;
     }
 
-    std::cout << "all waiting nodes: " << std::endl;
-    for (uint32_t i = 0; i < pick_all_vec.size(); ++i) {
-        std::cout << common::Encode::HexEncode(pick_all_vec[i]->id) << std::endl;
-    }
-    std::cout << std::endl << std::endl;
-
     FtsGetNodes(
         false,
         weed_out_count,
         pick_in,
         pick_all_vec,
         pick_in_vec);
-    std::cout << "get pick_in_vec size: " << pick_in_vec.size() << std::endl;
     return kElectSuccess;
 }
 
@@ -386,7 +367,6 @@ void ElectPoolManager::FtsGetNodes(
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
     SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
     std::set<void*> tmp_res_nodes;
-    std::cout << "FtsGetNodes: " << std::endl;
     while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
         for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
@@ -404,9 +384,7 @@ void ElectPoolManager::FtsGetNodes(
         }
 
         fts_tree.CreateFtsTree();
-        std::cout << "choose rand value: ";
         void* data = fts_tree.GetOneNode(g2);
-        std::cout << std::endl;
         if (data == nullptr) {
             continue;
         }
@@ -416,8 +394,6 @@ void ElectPoolManager::FtsGetNodes(
         res_nodes.push_back(node_ptr);
         nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
     }
-
-    std::cout << std::endl;
 }
 
 void ElectPoolManager::SmoothFtsValue(
@@ -439,11 +415,9 @@ void ElectPoolManager::SmoothFtsValue(
         if (fts_val_diff < diff_2b3) {
             auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
             sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / diff_2b3;
-            std::cout << "0: " << i << ":" << sort_vec[i]->fts_value << ":" << rand_val << ":" << diff_2b3 << ":" << fts_val_diff << std::endl;
         } else {
             auto rand_val = diff_2b3 + g2() % (fts_val_diff + 1 - diff_2b3);
             sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / fts_val_diff;
-            std::cout << "1: " << i << ":" << sort_vec[i]->fts_value << ":" << rand_val << ":" << diff_2b3 << ":" << fts_val_diff << std::endl;
         }
     }
 }
