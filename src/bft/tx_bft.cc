@@ -1480,6 +1480,10 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     protobuf::TxInfo tx = tx_vec[0]->tx;
     tx.set_version(common::kTransactionVersion);
+    tx.set_amount(0);
+    tx.set_gas_limit(0);
+    tx.set_gas_used(0);
+    tx.set_balance(0);
     tx.set_status(kBftSuccess);
     // create address must to and have transfer amount
     if (tx.type() != common::kConsensusRootElectShard) {
