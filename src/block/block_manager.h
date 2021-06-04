@@ -58,9 +58,6 @@ public:
     int AddNewBlock(
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch);
-    int AddRootSingleTxBlock(
-        const bft::protobuf::Block& block_item,
-        db::DbWriteBach& db_batch);
 
 private:
     BlockManager();
