@@ -123,7 +123,7 @@ uint64_t TimeStampUsec() {
 
 uint32_t GetPoolIndex(const std::string& acc_addr) {
     if (acc_addr == root::kRootChainSingleBlockTxAddress) {
-        return kRootChainPoolINdex;
+        return kRootChainPoolIndex;
     }
 
     uint32_t pool_index = common::Hash::Hash32(acc_addr);

@@ -23,6 +23,7 @@ public:
         const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);
+    TxItemPtr GetRootTx();
 
 private:
     DispatchPool();

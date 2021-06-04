@@ -249,7 +249,7 @@ TxItemPtr TxPoolManager::GetRootTx() {
             BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                 "tx_pool_.empty(): %u, res: %d",
                 common::kRootChainPoolIndex,
-                root_tx_pool_valid_,
+                root_tx_pool_valid_ == true ? 1 : 0,
                 tx_pool_[common::kRootChainPoolIndex].TxPoolEmpty(),
                 res);
             return nullptr;
@@ -257,7 +257,7 @@ TxItemPtr TxPoolManager::GetRootTx() {
 
 
         if (pool_height < waiting_pools_height_[common::kRootChainPoolIndex]) {
-            return;
+            return nullptr;
         }
 
         root_tx_pool_valid_ = false;

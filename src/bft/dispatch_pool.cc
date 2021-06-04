@@ -148,6 +148,10 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     return tx_pool_.AddTx(tx_ptr);
 }
 
+TxItemPtr DispatchPool::GetRootTx() {
+    return tx_pool_.GetRootTx();
+}
+
  void DispatchPool::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec) {
     tx_pool_.GetTx(pool_index, res_vec);
     BFT_ERROR("DispatchPool::GetTx size: %u", res_vec.size());

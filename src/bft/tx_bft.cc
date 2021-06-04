@@ -77,10 +77,19 @@ int TxBft::Commit(bool leader, std::string& commit) {
 int TxBft::LeaderCreatePrepare(std::string& bft_str) {
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
-    DispatchPool::Instance()->GetTx(pool_index, tx_vec);
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        auto tx_ptr = DispatchPool::Instance()->GetRootTx();
+        if (tx_ptr != nullptr) {
+            tx_vec.push_back(tx_ptr);
+        }
+    }
+
     if (tx_vec.empty()) {
-        BFT_ERROR("get tx error, empty.");
-        return kBftNoNewTxs;
+        DispatchPool::Instance()->GetTx(pool_index, tx_vec);
+        if (tx_vec.empty()) {
+            BFT_ERROR("get tx error, empty.");
+            return kBftNoNewTxs;
+        }
     }
 
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
@@ -1323,10 +1332,7 @@ int TxBft::CheckTxInfo(
     } else {
         // check amount is 0
         // new account address
-        if (common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_info.type()),
-                tx_info.from()) != pool_index()) {
+        if (common::GetPoolIndex(tx_info.from()) != pool_index()) {
             return kBftPoolIndexError;
         }
 
