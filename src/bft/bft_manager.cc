@@ -243,7 +243,7 @@ void BftManager::HandleRootTxBlock(
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         if (HanldeRootSingleBlockTx(tx_list[0]) == kBftSuccess) {
             db::DbWriteBach db_batch;
-            if (block::BlockManager::Instance()->AddRootSingleTxBlock(
+            if (block::BlockManager::Instance()->AddNewBlock(
                     tx_bft.to_tx().block(),
                     db_batch) != block::kBlockSuccess) {
                 BFT_ERROR("leader add block to db failed!");

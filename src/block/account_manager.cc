@@ -350,7 +350,7 @@ int AccountManager::UpdateAccountInfo(
     if (iter == acc_map_.end()) {
         account_info = new block::DbAccountInfo(account_id);
         if (!block::DbAccountInfo::AccountExists(account_id)) {
-            if (tx_info.type() == common::kConsensusCreateGenesisAcount) {
+            if (tx_info.type() == common::kConsensusCreateGenesisAcount || bft::IsRootSingleBlockTx(tx_info.type())) {
                 if (GenesisAddAccountInfo(account_id, db_batch, account_info) != kBlockSuccess) {
                     delete account_info;
                     return kBlockError;
