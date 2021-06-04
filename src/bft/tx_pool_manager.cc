@@ -59,7 +59,10 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
         }
     }
 
-    uint32_t pool_index = common::GetPoolIndex(tx_bft.new_tx().from());
+    uint32_t pool_index = common::GetPoolIndex(
+        common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+        IsRootSingleBlockTx(tx_bft.new_tx().type()),
+        tx_bft.new_tx().from());
     if (!tx_pool_[pool_index].GidValid(tx_bft.new_tx().gid())) {
         BFT_ERROR("GID exists[%s] type[%d] from[%s] to[%s] failed!",
             common::Encode::HexEncode(tx_bft.new_tx().gid()).c_str(),
@@ -115,16 +118,25 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_ptr->tx.type()),
+                tx_ptr->tx.from());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            pool_index = common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_ptr->tx.type()),
+                tx_ptr->tx.to());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
             // just contract's network handle this message and unlock it
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_ptr->tx.type()),
+                tx_ptr->tx.from());
         } else {
             return kBftError;
         }
@@ -134,9 +146,23 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
 
         if (!tx_ptr->tx.to_add()) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_ptr->tx.type()),
+                tx_ptr->tx.from());
         } else {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            pool_index = common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_ptr->tx.type()),
+                tx_ptr->tx.to());
+        }
+    }
+
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        if (IsRootSingleBlockTx(tx_ptr->tx.type())) {
+            pool_index = 0;
+        } else {
+            pool_index = pool_index % (common::kImmutablePoolSize - 1) + 1;
         }
     }
 

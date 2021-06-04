@@ -58,7 +58,6 @@ public:
     int AddNewBlock(
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch);
-    std::string GetCurrentShardBlockHashWithHeight(uint64_t height, const std::string& from);
     int AddRootSingleTxBlock(
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch);
@@ -71,9 +70,6 @@ private:
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void HandleGetHeightRequest(
-        transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg);
-    void HandleAttrGetRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void HandleGetAccountInitRequest(

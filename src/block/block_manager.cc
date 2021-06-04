@@ -162,11 +162,6 @@ void BlockManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    if (block_msg.has_acc_attr_req()) {
-        HandleAttrGetRequest(header, block_msg);
-        return;
-    }
-
     if (block_msg.has_account_init_res()) {
         init::UpdateVpnInit::Instance()->UpdateAccountBlockInfo(header.data());
         return;
@@ -367,106 +362,6 @@ void BlockManager::HandleGetAccountInitRequest(
     }
 }
 
-void BlockManager::HandleAttrGetRequest(
-        transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg) {
-    BLOCK_ERROR("get account addr request coming: %s: %d, %s",
-        header.from_ip().c_str(), header.from_port(),
-        common::Encode::HexEncode(block_msg.acc_attr_req().account()).c_str());
-    if (!block_msg.has_acc_attr_req()) {
-        return;
-    }
-
-    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
-            block_msg.acc_attr_req().account());
-    if (account_ptr == nullptr) {
-        return;
-    }
-
-    uint64_t height = 0;
-    if (account_ptr->GetAttrWithHeight(
-            block_msg.acc_attr_req().attr_key(),
-            &height) != block::kBlockSuccess) {
-        return;
-    }
-
-    if (height > block_msg.acc_attr_req().height()) {
-        uint32_t netid = 0;
-        if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                block_msg.acc_attr_req().account(),
-                &netid) != block::kBlockSuccess) {
-            return;
-        }
-
-        uint32_t pool_idx = common::GetPoolIndex(block_msg.acc_attr_req().account());
-        std::string height_db_key = common::GetHeightDbKey(
-                netid,
-                pool_idx,
-                height);
-        std::string block_hash;
-        auto st = db::Db::Instance()->Get(height_db_key, &block_hash);
-        if (!st.ok()) {
-            return;
-        }
-
-        if (block_hash.empty()) {
-            return;
-        }
-
-        std::string block_data;
-        st = db::Db::Instance()->Get(block_hash, &block_data);
-        if (!st.ok()) {
-            return;
-        }
-
-        protobuf::BlockMessage block_msg_res;
-        auto attr_res = block_msg_res.mutable_acc_attr_res();
-        attr_res->set_block(block_data);
-        attr_res->set_height(height);
-        attr_res->set_attr_key(block_msg.acc_attr_req().attr_key());
-        attr_res->set_account(block_msg.acc_attr_req().account());
-        transport::protobuf::Header msg;
-        auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-                network::kUniversalNetworkId);
-        assert(dht_ptr != nullptr);
-        BlockProto::CreateGetBlockResponse(
-                dht_ptr->local_node(),
-                header,
-                block_msg_res.SerializeAsString(),
-                msg);
-        if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
-            transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                    header.from_ip(), header.from_port(), 0, msg);
-        } else {
-            transport::MultiThreadHandler::Instance()->transport()->Send(
-                    header.from_ip(), header.from_port(), 0, msg);
-        }
-    } else {
-        protobuf::BlockMessage block_msg_res;
-        auto attr_res = block_msg_res.mutable_acc_attr_res();
-        attr_res->set_block("");
-        attr_res->set_height(height);
-        attr_res->set_attr_key(block_msg.acc_attr_req().attr_key());
-        attr_res->set_account(block_msg.acc_attr_req().account());
-        transport::protobuf::Header msg;
-        auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-                network::kUniversalNetworkId);
-        assert(dht_ptr != nullptr);
-        BlockProto::CreateGetBlockResponse(
-                dht_ptr->local_node(),
-                header,
-                block_msg_res.SerializeAsString(),
-                msg);
-        if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
-            transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                    header.from_ip(), header.from_port(), 0, msg);
-        } else {
-            transport::MultiThreadHandler::Instance()->transport()->Send(
-                    header.from_ip(), header.from_port(), 0, msg);
-        }
-    }
-}
-
 void BlockManager::HandleGetHeightRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
@@ -649,23 +544,6 @@ std::string* BlockManager::GetHeightBlockWithCache(uint64_t height) {
     ++height_cache_heap_.data_[iter->second.second].cache_count;
     iter->second.second = height_cache_heap_.AdjustDown(iter->second.second);
     return iter->second.first;
-}
-
-std::string BlockManager::GetCurrentShardBlockHashWithHeight(
-        uint64_t height,
-        const std::string& from) {
-    uint32_t pool_idx = common::GetPoolIndex(from);
-    std::string height_db_key = common::GetHeightDbKey(
-        common::GlobalInfo::Instance()->network_id(),
-        pool_idx,
-        height);
-    std::string block_hash;
-    auto st = db::Db::Instance()->Get(height_db_key, &block_hash);
-    if (st.ok()) {
-        return block_hash;
-    }
-
-    return "";
 }
 
 int BlockManager::AddNewBlock(

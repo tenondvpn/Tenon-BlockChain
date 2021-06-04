@@ -104,10 +104,14 @@ int DispatchPool::CheckFromAddressValid(
 
             uint64_t balance = 0;
             if (from_account->GetBalance(&balance) != block::kBlockSuccess) {
+                BFT_ERROR("from_account balance error[%s].",
+                    common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }
 
             if (balance >= common::kTenonMaxAmount) {
+                BFT_ERROR("from_account balance error[%s].",
+                    common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }
         }
@@ -130,7 +134,7 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
     }
 
     assert(tx_bft.has_new_tx());
-    if (!CheckFromAddressValid(bft_msg, tx_bft.new_tx())) {
+    if (CheckFromAddressValid(bft_msg, tx_bft.new_tx()) != kBftSuccess) {
         BFT_ERROR("CheckFromAddressValid failed!");
         return kBftError;
     }

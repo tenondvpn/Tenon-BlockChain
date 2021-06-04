@@ -1323,7 +1323,10 @@ int TxBft::CheckTxInfo(
     } else {
         // check amount is 0
         // new account address
-        if (common::GetPoolIndex(tx_info.from()) != pool_index()) {
+        if (common::GetPoolIndex(
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+                IsRootSingleBlockTx(tx_info.type()),
+                tx_info.from()) != pool_index()) {
             return kBftPoolIndexError;
         }
 
