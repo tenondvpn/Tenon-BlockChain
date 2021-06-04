@@ -3,6 +3,7 @@
 
 #include "common/encode.h"
 #include "db/db.h"
+#include "root/root_utils.h"
 #include "network/network_utils.h"
 
 namespace tenon {
@@ -68,7 +69,10 @@ DbAccountInfo::DbAccountInfo(const std::string& account_id)
         : account_id_(account_id),
           tx_height_queue_(db::kGlobalDbAcountHeightPriQueue + "_tx_" + account_id) {
     dict_key_ = db::kGlobalDickKeyAccountInfo + "_" + account_id_;
-    pool_index_ = common::GetPoolIndex(account_id_);
+    pool_index_ = common::GetPoolIndex(
+        common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
+        account_id == root::kRootChainSingleBlockTxAddress,
+        account_id_);
     uint64_t* height_data = tx_height_queue_.mem_data();
     for (uint32_t hight_idx = 0; hight_idx < tx_height_queue_.size(); ++hight_idx) {
         std::string block_str;
