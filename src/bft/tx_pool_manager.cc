@@ -164,6 +164,10 @@ bool TxPoolManager::CheckCallContractAddressValid(const std::string& contract_ad
 }
 
 bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_address) {
+    if (caller_address == root::kRootChainSingleBlockTxAddress) {
+        return true;
+    }
+
     auto acc_info = block::AccountManager::Instance()->GetAcountInfo(caller_address);
     if (acc_info == nullptr) {
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -311,7 +315,7 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
                 std::string pool_hash;
                 uint64_t pool_height = 0;
                 uint64_t tm;
-                uint32_t last_pool_index = common::kImmutablePoolSize;
+                uint32_t last_pool_index = common::kInvalidPoolIndex;
                 int res = block::AccountManager::Instance()->GetBlockInfo(
                     i,
                     &pool_height,
@@ -349,7 +353,7 @@ void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec)
 
     waiting_pools_height_[valid_pool] = height;
     pool_index = valid_pool;
-    prev_pool_index_ = (valid_pool + 1) % common::kImmutablePoolSize;
+    prev_pool_index_ = (valid_pool + 1) % common::kInvalidPoolIndex;
 }
 
 TxItemPtr TxPoolManager::GetTx(
@@ -358,12 +362,12 @@ TxItemPtr TxPoolManager::GetTx(
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid) {
-    assert(pool_index < common::kImmutablePoolSize);
+    assert(pool_index < common::kInvalidPoolIndex);
     return tx_pool_[pool_index].GetTx(add_to, tx_type, call_contract_step, gid);
 }
 
 void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
-    assert(bft_ptr->pool_index() < common::kImmutablePoolSize);
+    assert(bft_ptr->pool_index() < common::kInvalidPoolIndex);
     tx_pool_[bft_ptr->pool_index()].BftOver(bft_ptr);
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     if (bft_ptr->prpare_block()) {

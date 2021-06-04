@@ -201,7 +201,7 @@ public:
             std::string pool_hash;
             uint64_t pool_height = 0;
             uint64_t tm;
-            uint32_t last_pool_idx = common::kImmutablePoolSize;
+            uint32_t last_pool_idx = common::kInvalidPoolIndex;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 iter->first,
                 &pool_height,
@@ -383,7 +383,7 @@ public:
         uint64_t pool_height = 0;
         uint32_t pool_index = common::GetPoolIndex(id);
         uint64_t tm;
-        uint32_t last_pool_idx = common::kImmutablePoolSize;
+        uint32_t last_pool_idx = common::kInvalidPoolIndex;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             pool_index,
             &pool_height,

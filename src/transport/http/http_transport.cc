@@ -541,7 +541,7 @@ void HttpTransport::HandleListTransactions(const httplib::Request &req, httplib:
         }
 
         PriQueue pri_queue;
-        for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        for (uint32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
             std::string key = block::GetLastBlockHash(
                 common::GlobalInfo::Instance()->network_id(),
                 i);

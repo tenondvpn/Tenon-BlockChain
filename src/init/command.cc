@@ -694,7 +694,7 @@ void Command::FixDb(const std::string& db_path) {
     }
 
     std::unordered_set<std::string> added_user_set;
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+    for (uint32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
         std::string key = block::GetLastBlockHash(common::kTestForNetworkId, i);
         std::string last_block_hash;
         auto st = db::Db::Instance()->Get(key, &last_block_hash);

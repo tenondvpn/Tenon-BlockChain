@@ -41,7 +41,7 @@ struct TxItem {
     std::chrono::steady_clock::time_point timeout;
     std::chrono::steady_clock::time_point delta_time;
     uint64_t time_valid{ 0 };
-    uint32_t index{ common::kImmutablePoolSize };
+    uint32_t index{ common::kInvalidPoolIndex };
 
 };
 

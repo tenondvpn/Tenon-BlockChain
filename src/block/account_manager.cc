@@ -110,7 +110,7 @@ int AccountManager::AddBlockItem(
     }
     
     // one block must be one consensus pool
-    uint32_t consistent_pool_index = common::kImmutablePoolSize;
+    uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         std::string account_id;
         if (tx_list[i].to_add()) {
@@ -151,7 +151,7 @@ int AccountManager::AddBlockItem(
         }
 
         uint32_t pool_idx = common::GetPoolIndex(account_id);
-        if (consistent_pool_index == common::kImmutablePoolSize) {
+        if (consistent_pool_index == common::kInvalidPoolIndex) {
             consistent_pool_index = pool_idx;
         }
 
@@ -187,7 +187,7 @@ int AccountManager::AddBlockItem(
     }
 
     if (block_item.network_id() == common::GlobalInfo::Instance()->network_id()) {
-        assert(consistent_pool_index < common::kImmutablePoolSize);
+        assert(consistent_pool_index < common::kInvalidPoolIndex);
         SetPool(
             consistent_pool_index,
             block_item.height(),

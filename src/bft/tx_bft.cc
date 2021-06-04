@@ -80,6 +80,7 @@ int TxBft::LeaderCreatePrepare(std::string& bft_str) {
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         auto tx_ptr = DispatchPool::Instance()->GetRootTx();
         if (tx_ptr != nullptr) {
+            pool_index = common::kRootChainPoolIndex;
             tx_vec.push_back(tx_ptr);
         }
     }
@@ -1171,7 +1172,7 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
@@ -1361,7 +1362,7 @@ int TxBft::CheckTxInfo(
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
@@ -1447,7 +1448,7 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
@@ -1499,7 +1500,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
@@ -1611,7 +1612,7 @@ void TxBft::LeaderCreateTxBlock(
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
@@ -1819,7 +1820,7 @@ int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
     uint64_t last_height = 0;
     std::string pool_hash;
     uint64_t tm = 0;
-    uint32_t last_pool_index = common::kImmutablePoolSize;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &last_height,

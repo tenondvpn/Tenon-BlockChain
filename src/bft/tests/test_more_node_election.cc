@@ -30,6 +30,7 @@
 #include "security/crypto_utils.h"
 #include "network/network_utils.h"
 #include "common/random.h"
+#include "root/root_utils.h"
 
 namespace tenon {
 
@@ -48,9 +49,9 @@ static const std::string simple_payment_channel = common::Encode::HexDecode(std:
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 static const char* kWaitingNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
-static const uint32_t kRootNodeCount = 31u;
+static const uint32_t kRootNodeCount = 3u;
 static std::set<uint32_t> invalid_root_node_vec;
-static const uint32_t kConsensusNodeCount = 31u;
+static const uint32_t kConsensusNodeCount = 3u;
 static std::set<uint32_t> invalid_consensus_node_vec;
 static const char* kConsensusNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
@@ -92,7 +93,7 @@ public:
         WriteDefaultLogConf(log_conf_path, log_path);
         log4cpp::PropertyConfigurator::configure(log_conf_path);
 
-//         while (pool_index_map_.size() < common::kImmutablePoolSize) {
+//         while (pool_index_map_.size() < common::kInvalidPoolIndex) {
 //             security::PrivateKey prikey;
 //             security::PublicKey pubkey(prikey);
 //             std::string pubkey_str;
@@ -218,7 +219,7 @@ public:
             std::string pool_hash;
             uint64_t pool_height = 0;
             uint64_t tm;
-            uint32_t last_pool_idx = common::kImmutablePoolSize;
+            uint32_t last_pool_idx = common::kInvalidPoolIndex;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 iter->first,
                 &pool_height,
@@ -232,6 +233,52 @@ public:
             uint64_t balance = 0;
             ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
             ASSERT_EQ(balance, genesis_account_balance);
+            all_balance += balance;
+        }
+
+        {
+            bft::protobuf::Block tenon_block;
+            auto tx_list = tenon_block.mutable_tx_list();
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(0);
+            tx_info->set_balance(0);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            tenon_block.set_prehash("");
+            tenon_block.set_version(common::kTransactionVersion);
+            tenon_block.set_elect_ver(0);
+            tenon_block.set_agg_pubkey("");
+            tenon_block.set_agg_sign_challenge("");
+            tenon_block.set_agg_sign_response("");
+            tenon_block.set_pool_index(common::kRootChainPoolIndex);
+            tenon_block.set_height(0);
+            tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block.set_hash(GetBlockHash(tenon_block));
+            ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
+            std::string pool_hash;
+            uint64_t pool_height = 0;
+            uint64_t tm;
+            uint32_t last_pool_idx = common::kInvalidPoolIndex;
+            int res = block::AccountManager::Instance()->GetBlockInfo(
+                common::kRootChainPoolIndex,
+                &pool_height,
+                &pool_hash,
+                &tm);
+            ASSERT_EQ(res, block::kBlockSuccess);
+            ASSERT_EQ(pool_height, 0);
+            ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
+            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
+            ASSERT_FALSE(account_ptr == nullptr);
+            uint64_t balance = 0;
+            ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
+            ASSERT_EQ(balance, 0);
             all_balance += balance;
         }
 
@@ -400,7 +447,7 @@ public:
         uint64_t pool_height = 0;
         uint32_t pool_index = common::GetPoolIndex(id);
         uint64_t tm;
-        uint32_t last_pool_idx = common::kImmutablePoolSize;
+        uint32_t last_pool_idx = common::kInvalidPoolIndex;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             pool_index,
             &pool_height,
