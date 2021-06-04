@@ -26,6 +26,7 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    TxItemPtr GetRootTx();
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);
@@ -34,9 +35,10 @@ private:
 
     TxPool* tx_pool_{ nullptr };
     common::Bitmap waiting_pools_{ common::kImmutablePoolSize };
-    uint64_t waiting_pools_height_[common::kImmutablePoolSize];
+    uint64_t waiting_pools_height_[common::kImmutablePoolSize + 1];
     std::mutex waiting_pools_mutex_;
     uint32_t prev_pool_index_{ 0 };
+    std::atomic<bool> root_tx_pool_valid_{ true };
 
     DISALLOW_COPY_AND_ASSIGN(TxPoolManager);
 };

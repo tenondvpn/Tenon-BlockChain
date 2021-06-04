@@ -81,7 +81,7 @@ public:
 //             std::string pubkey_str;
 //             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
 //             std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-//             auto pool_index = common::GetPoolIndex(false, false, address);
+//             auto pool_index = common::GetPoolIndex(address);
 //             auto iter = pool_index_map_.find(pool_index);
 //             if (iter != pool_index_map_.end()) {
 //                 continue;
@@ -381,7 +381,7 @@ public:
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint32_t pool_index = common::GetPoolIndex(false, false, id);
+        uint32_t pool_index = common::GetPoolIndex(id);
         uint64_t tm;
         uint32_t last_pool_idx = common::kImmutablePoolSize;
         int res = block::AccountManager::Instance()->GetBlockInfo(
@@ -2084,6 +2084,7 @@ TEST_F(TestBftManager, TestCallContractBallotSuccess) {
                 attrs);
             auto from_balance = GetBalanceByPrikey(from_prikey);
             to_balance = GetBalanceByPrikey(to_prikey);
+            std::cout << "to account address: " << common::Encode::HexEncode(GetIdByPrikey(to_prikey)) << std::endl;
             ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
             ASSERT_EQ(to_balance, all_amount);
 

@@ -31,6 +31,7 @@
 #include "common/split.h"
 #include "common/string_utils.h"
 #include "common/user_property_key_define.h"
+#include "root/root_utils.h"
 
 namespace tenon {
 
@@ -120,19 +121,13 @@ uint64_t TimeStampUsec() {
 #endif
 }
 
-uint32_t GetPoolIndex(bool is_root, bool is_root_single_tx, const std::string& acc_addr) {
-    if (!is_root) {
-        uint32_t pool_index = common::Hash::Hash32(acc_addr);
-        pool_index %= kImmutablePoolSize;
-        return pool_index;
-    }
-
-    if (is_root_single_tx) {
-        return 0;
+uint32_t GetPoolIndex(const std::string& acc_addr) {
+    if (acc_addr == root::kRootChainSingleBlockTxAddress) {
+        return kRootChainPoolINdex;
     }
 
     uint32_t pool_index = common::Hash::Hash32(acc_addr);
-    pool_index = pool_index % (kImmutablePoolSize - 1) + 1;
+    pool_index %= kImmutablePoolSize;
     return pool_index;
 }
 

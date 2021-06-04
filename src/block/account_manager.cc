@@ -16,11 +16,11 @@ AccountManager* AccountManager::Instance() {
 }
 
 AccountManager::AccountManager() {
-    memset(network_block_,0, common::kImmutablePoolSize * sizeof(network_block_[0]));
+    memset(network_block_,0, (common::kImmutablePoolSize + 1) * sizeof(network_block_[0]));
 }
 
 AccountManager::~AccountManager() {
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
         if (network_block_[i] != nullptr) {
             delete network_block_[i];
         }
@@ -150,10 +150,7 @@ int AccountManager::AddBlockItem(
             continue;
         }
 
-        uint32_t pool_idx = common::GetPoolIndex(
-            common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-            bft::IsRootSingleBlockTx(tx_list[i].type()),
-            account_id);
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (consistent_pool_index == common::kImmutablePoolSize) {
             consistent_pool_index = pool_idx;
         }
@@ -399,15 +396,9 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
-    uint32_t pool_idx = common::GetPoolIndex(
-        common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-        bft::IsRootSingleBlockTx(tx_info.type()),
-        account_id);
+    uint32_t pool_idx = common::GetPoolIndex(account_id);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-        uint32_t pool_idx = common::GetPoolIndex(
-            common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-            bft::IsRootSingleBlockTx(tx_info.type()),
-            account_id);
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (exist_height <= tmp_now_height) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }

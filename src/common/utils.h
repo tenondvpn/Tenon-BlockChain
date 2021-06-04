@@ -84,6 +84,7 @@ enum GetHeightBlockType {
 };
 
 static const uint32_t kImmutablePoolSize = 64u;
+static const uint32_t kRootChainPoolIndex = kImmutablePoolSize;
 static const uint32_t kInvalidPoolIndex = kImmutablePoolSize + 1;
 static const uint32_t kTestForNetworkId = 4u;
 extern volatile bool global_stop;
@@ -106,7 +107,7 @@ static const uint64_t kInvalidUint64 = (std::numeric_limits<uint64_t>::max)();
 static const uint32_t kInvalidUint32 = (std::numeric_limits<uint32_t>::max)();
 static const uint32_t kInvalidFloat = (std::numeric_limits<float>::max)();
 
-uint32_t GetPoolIndex(bool is_root, bool is_root_single_tx, const std::string& acc_addr);
+uint32_t GetPoolIndex(const std::string& acc_addr);
 std::string CreateGID(const std::string& pubkey);
 std::string FixedCreateGID(const std::string& str);
 inline static std::string GetTxDbKey(bool from, const std::string& gid) {

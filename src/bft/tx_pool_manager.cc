@@ -13,8 +13,8 @@ namespace tenon {
 namespace bft {
 
 TxPoolManager::TxPoolManager() {
-    tx_pool_ = new TxPool[common::kImmutablePoolSize];
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+    tx_pool_ = new TxPool[common::kImmutablePoolSize + 1];
+    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
         tx_pool_[i].set_pool_index(i);
         waiting_pools_height_[i] = 0;
     }
@@ -59,10 +59,7 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
         }
     }
 
-    uint32_t pool_index = common::GetPoolIndex(
-        common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-        IsRootSingleBlockTx(tx_bft.new_tx().type()),
-        tx_bft.new_tx().from());
+    uint32_t pool_index = common::GetPoolIndex(tx_bft.new_tx().from());
     if (!tx_pool_[pool_index].GidValid(tx_bft.new_tx().gid())) {
         BFT_ERROR("GID exists[%s] type[%d] from[%s] to[%s] failed!",
             common::Encode::HexEncode(tx_bft.new_tx().gid()).c_str(),
@@ -118,25 +115,16 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_ptr->tx.type()),
-                tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
-            pool_index = common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_ptr->tx.type()),
-                tx_ptr->tx.to());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
             // just contract's network handle this message and unlock it
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_ptr->tx.type()),
-                tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else {
             return kBftError;
         }
@@ -146,23 +134,9 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
 
         if (!tx_ptr->tx.to_add()) {
-            pool_index = common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_ptr->tx.type()),
-                tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
         } else {
-            pool_index = common::GetPoolIndex(
-                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId,
-                IsRootSingleBlockTx(tx_ptr->tx.type()),
-                tx_ptr->tx.to());
-        }
-    }
-
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        if (IsRootSingleBlockTx(tx_ptr->tx.type())) {
-            pool_index = 0;
-        } else {
-            pool_index = pool_index % (common::kImmutablePoolSize - 1) + 1;
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
         }
     }
 
@@ -254,6 +228,52 @@ bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr& tx_ptr) {
     }
 
     return true;
+}
+
+TxItemPtr TxPoolManager::GetRootTx() {
+    std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
+    if (tx_pool_[common::kRootChainPoolIndex].TxPoolEmpty()) {
+        return nullptr;
+    }
+
+    if (root_tx_pool_valid_) {
+        std::string pool_hash;
+        uint64_t pool_height = 0;
+        uint64_t tm;
+        int res = block::AccountManager::Instance()->GetBlockInfo(
+            common::kRootChainPoolIndex,
+            &pool_height,
+            &pool_hash,
+            &tm);
+        if (res != block::kBlockSuccess) {
+            BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
+                "tx_pool_.empty(): %u, res: %d",
+                common::kRootChainPoolIndex,
+                root_tx_pool_valid_,
+                tx_pool_[common::kRootChainPoolIndex].TxPoolEmpty(),
+                res);
+            return nullptr;
+        }
+
+
+        if (pool_height < waiting_pools_height_[common::kRootChainPoolIndex]) {
+            return;
+        }
+
+        root_tx_pool_valid_ = false;
+        waiting_pools_height_[common::kRootChainPoolIndex] = pool_height;
+        std::vector<TxItemPtr> res_vec;
+        tx_pool_[common::kRootChainPoolIndex].GetTx(res_vec);
+        assert(res_vec.size() <= 1);
+        if (res_vec.empty()) {
+            root_tx_pool_valid_ = true;
+            return nullptr;
+        }
+
+        return res_vec[0];
+    }
+
+    return nullptr;
 }
 
 void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec) {
@@ -349,7 +369,12 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     if (bft_ptr->prpare_block()) {
         if (bft_ptr->prpare_block()->height() ==
                 (waiting_pools_height_[bft_ptr->pool_index()] + 1)) {
-            waiting_pools_.UnSet(bft_ptr->pool_index());
+            if (bft_ptr->pool_index() == common::kRootChainPoolIndex) {
+                root_tx_pool_valid_ = true;
+            } else {
+                waiting_pools_.UnSet(bft_ptr->pool_index());
+            }
+
             BFT_ERROR("bft over pool index: %d", bft_ptr->pool_index());
         }
     }

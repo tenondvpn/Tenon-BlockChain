@@ -65,7 +65,7 @@ private:
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
     std::mutex acc_map_mutex_;
-    DbPoolInfo* network_block_[common::kImmutablePoolSize];
+    DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
     std::mutex network_block_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);

@@ -68,7 +68,6 @@ public:
     }
 
 private:
-    std::string GetUniqueId(const std::string& gid, bool to_add);
     bool IsTxContractLocked(TxItemPtr& tx_ptr);
 
     static const uint32_t kKeepCoverLoadCount = 1024u;
