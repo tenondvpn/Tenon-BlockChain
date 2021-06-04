@@ -28,7 +28,9 @@ private:
     DispatchPool();
     ~DispatchPool();
     int AddTx(const bft::protobuf::BftMessage& bft_msg, const std::string& tx_hash);
-    int CheckNetworkValid(const TxItemPtr& tx_ptr);
+    int CheckFromAddressValid(
+        const bft::protobuf::BftMessage& bft_msg,
+        const bft::protobuf::TxInfo& new_tx);
     bool TxTypeValid(const bft::protobuf::TxInfo& new_tx);
 
     TxPoolManager tx_pool_;

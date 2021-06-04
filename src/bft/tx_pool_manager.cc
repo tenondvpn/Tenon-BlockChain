@@ -6,6 +6,7 @@
 #include "common/global_info.h"
 #include "block/account_manager.h"
 #include "network/network_utils.h"
+#include "root/root_utils.h"
 
 namespace tenon {
 
@@ -102,23 +103,6 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
             common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
             common::Encode::HexEncode(tx_ptr->tx.to()).c_str());
         return kBftError;
-    }
-
-    // from must valid
-    if (!tx_ptr->tx.to_add()) {
-        auto from_account = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
-        if (from_account == nullptr) {
-            return kBftError;
-        }
-
-        uint64_t balance = 0;
-        if (from_account->GetBalance(&balance) != block::kBlockSuccess) {
-            return kBftError;
-        }
-
-        if (balance <= 0 || balance >= common::kTenonMaxAmount) {
-            return kBftError;
-        }
     }
 
     // call contract and init

@@ -7,6 +7,9 @@
 #include "bft/gid_manager.h"
 #include "block/account_manager.h"
 #include "contract/contract_utils.h"
+#include "security/secp256k1.h"
+#include "election/member_manager.h"
+#include "root/root_utils.h"
 
 namespace tenon {
 
@@ -39,11 +42,10 @@ int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
         common::Encode::HexEncode(tx_info.from()).c_str(),
         common::Encode::HexEncode(tx_info.to()).c_str(),
         common::Encode::HexEncode(tx_info.gid()).c_str());
-
     auto tx_ptr = std::make_shared<TxItem>(tx_info);
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
-
-        BFT_ERROR("global check gid exists: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
+        BFT_ERROR("global check gid exists: %s",
+            common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return kBftError;
     }
 
@@ -70,6 +72,44 @@ bool DispatchPool::TxTypeValid(const bft::protobuf::TxInfo& new_tx) {
     return true;
 }
 
+int DispatchPool::CheckFromAddressValid(
+        const bft::protobuf::BftMessage& bft_msg,
+        const bft::protobuf::TxInfo& new_tx) {
+    // from must valid
+    if (!new_tx.to_add()) {
+        if (IsRootSingleBlockTx(new_tx.type())) {
+            // must leader can transaction
+            if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
+                return kBftError;
+            }
+
+            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
+            if (id.empty() || !elect::MemberManager::Instance()->IsLeader(
+                    network::kRootCongressNetworkId,
+                    id,
+                    vss::VssManager::Instance()->EpochRandom())) {
+                return kBftError;
+            }
+        } else {
+            auto from_account = block::AccountManager::Instance()->GetAcountInfo(new_tx.from());
+            if (from_account == nullptr) {
+                return kBftError;
+            }
+
+            uint64_t balance = 0;
+            if (from_account->GetBalance(&balance) != block::kBlockSuccess) {
+                return kBftError;
+            }
+
+            if (balance >= common::kTenonMaxAmount) {
+                return kBftError;
+            }
+        }
+    }
+
+    return kBftSuccess;
+}
+
 int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::string& tx_hash) {
     protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
@@ -77,33 +117,18 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
         return kBftError;
     }
 
-    // (TODO): check all type and need infomation valid
+    // (TODO): check all type and need information valid
     if (!TxTypeValid(tx_bft.new_tx())) {
         BFT_ERROR("invalid tx type!");
         return kBftError;
     }
 
-    // (TODO): check sign for gid
     assert(tx_bft.has_new_tx());
+    if (!CheckFromAddressValid(bft_msg, tx_bft.new_tx())) {
+        return kBftError;
+    }
+
     auto tx_ptr = std::make_shared<TxItem>(tx_bft.new_tx());
-    auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.from());
-    if (account_info == nullptr) {
-        BFT_ERROR("from account address not exit[%s]!",
-            common::Encode::HexEncode(tx_ptr->tx.from()));
-        return kBftError;
-    }
-
-    uint64_t balance = 0;
-    if (account_info->GetBalance(&balance) != block::kBlockSuccess) {
-        BFT_ERROR("from balance get error!");
-        return kBftError;
-    }
-
-    if (balance < 0 || balance >= common::kTenonMaxAmount) {
-        BFT_ERROR("from balance is error!");
-        return kBftError;
-    }
-
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
         BFT_ERROR("gid invalid.[%s]", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return kBftError;

@@ -13,6 +13,7 @@
 #include "security/private_key.h"
 #include "security/public_key.h"
 #include "network/network_utils.h"
+#include "root/root_utils.h"
 
 namespace tenon {
 
@@ -48,7 +49,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootElectShard);
-    tx_info->set_from(common::GlobalInfo::Instance()->id());
+    tx_info->set_from(root::kRootChainSingleBlockTxAddress);
     tx_info->set_gas_limit(0llu);
     tx_info->set_network_id(shard_netid);
     auto all_exits_attr = tx_info->add_attr();

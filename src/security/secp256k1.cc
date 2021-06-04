@@ -103,6 +103,10 @@ std::string Secp256k1::ToPublicFromCompressed(const std::string& in_pubkey) {
 }
 
 std::string Secp256k1::ToAddressWithPublicKey(const std::string& pub_key) {
+    if (!IsValidPublicKey(pub_key)) {
+        return "";
+    }
+
     if (pub_key.size() == kPublicKeySize) {
         return block::UnicastAddress(common::Hash::keccak256(
             ToPublicFromCompressed(pub_key).substr(1, 64)));

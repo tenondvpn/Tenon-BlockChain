@@ -28,6 +28,7 @@ public:
     elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
+    std::set<uint32_t> GetAddressNetworkId(const std::string& address);
 
 private:
     MemberManager();
