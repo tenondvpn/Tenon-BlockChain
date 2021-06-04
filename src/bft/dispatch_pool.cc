@@ -80,6 +80,9 @@ int DispatchPool::CheckFromAddressValid(
         if (IsRootSingleBlockTx(new_tx.type())) {
             // must leader can transaction
             if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
+                BFT_ERROR("from is not valid root address[%s][%s]",
+                    common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str(),
+                    common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }
 
@@ -88,11 +91,14 @@ int DispatchPool::CheckFromAddressValid(
                     network::kRootCongressNetworkId,
                     id,
                     vss::VssManager::Instance()->EpochRandom())) {
+                BFT_ERROR("id is valid elected member error.");
                 return kBftError;
             }
         } else {
             auto from_account = block::AccountManager::Instance()->GetAcountInfo(new_tx.from());
             if (from_account == nullptr) {
+                BFT_ERROR("from_account is is not exists[%s].",
+                    common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }
 
@@ -125,6 +131,7 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
 
     assert(tx_bft.has_new_tx());
     if (!CheckFromAddressValid(bft_msg, tx_bft.new_tx())) {
+        BFT_ERROR("CheckFromAddressValid failed!");
         return kBftError;
     }
 
