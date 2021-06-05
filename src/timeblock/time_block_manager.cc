@@ -8,6 +8,7 @@
 #include "root/root_utils.h"
 #include "timeblock/time_block_utils.h"
 #include "bft/bft_utils.h"
+#include "bft/proto/bft.pb.h"
 #include "security/schnorr.h"
 #include "election/proto/elect_proto.h"
 #include "dht/dht_key.h"
