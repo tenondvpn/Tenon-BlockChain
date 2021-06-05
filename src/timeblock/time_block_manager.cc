@@ -9,6 +9,9 @@
 #include "timeblock/time_block_utils.h"
 #include "bft/bft_utils.h"
 #include "security/schnorr.h"
+#include "election/proto/elect_proto.h"
+#include "dht/dht_key.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
@@ -23,7 +26,19 @@ uint64_t TimeBlockManager::LatestTimestamp() {
     return latest_time_block_tm_;
 }
 
-int TimeBlockManager::LeaderCreateTimeBlockTx(bft::protobuf::BftMessage& bft_msg) {
+int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) {
+    msg->set_src_dht_key("");
+    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+    dht::DhtKeyManager dht_key(des_net_id, 0);
+    msg->set_des_dht_key(dht_key.StrKey());
+    msg->set_priority(transport::kTransportPriorityHighest);
+    msg->set_id(common::GlobalInfo::Instance()->MessageId());
+    msg->set_type(common::kBftMessage);
+    msg->set_client(false);
+    msg->set_hop_count(0);
+    auto broad_param = msg->mutable_broadcast();
+    elect::ElectProto::SetDefaultBroadcastParam(broad_param);
+    bft::protobuf::BftMessage bft_msg;
     uint64_t new_time_block_tm = 0;
     if (!LeaderNewTimeBlockValid(&new_time_block_tm)) {
         return kTimeBlockError;
@@ -65,6 +80,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(bft::protobuf::BftMessage& bft_msg
     sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
+    msg->set_data(bft_msg.SerializeAsString());
     return kTimeBlockSuccess;
 }
 

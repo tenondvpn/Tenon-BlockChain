@@ -6,7 +6,7 @@
 
 #include "common/utils.h"
 #include "common/time_utils.h"
-#include "bft/proto/bft.pb.h"
+#include "transport/proto/transport.pb.h"
 
 namespace tenon {
 
@@ -19,7 +19,7 @@ public:
     void UpdateTimeBlock(uint64_t latest_time_block_height, uint64_t lastest_time_block_tm);
     bool LeaderNewTimeBlockValid(uint64_t* new_time_block_tm);
     bool BackupheckNewTimeBlockValid(uint64_t new_time_block_tm);
-    int LeaderCreateTimeBlockTx(bft::protobuf::BftMessage& bft_msg);
+    int LeaderCreateTimeBlockTx(transport::protobuf::Header* msg);
     int BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_info);
 
 private:
