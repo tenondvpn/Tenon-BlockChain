@@ -1586,14 +1586,6 @@ TEST_F(TestElection, CreateElectionBlock) {
         kWaitingCount,
         network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
     UpdateWaitingNodesConsensusCount(kMemberCount);
-//     bft::protobuf::BftMessage bft_msg;
-//     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.LeaderCreateElectionBlockTx(
-//         network::kConsensusShardBeginNetworkId,
-//         bft_msg), kElectSuccess);
-//     bft::protobuf::TxBft tx_bft;
-//     ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-//     ASSERT_EQ(elect::ElectManager::Instance()->pool_manager_.BackupCheckElectionBlockTx(
-//         tx_bft.new_tx()), kElectSuccess)
 }
 
 }  // namespace test
