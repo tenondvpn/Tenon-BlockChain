@@ -42,11 +42,11 @@ static const uint32_t kBloomfilterWaitingHashCount = 9u;
 
 static const uint64_t kWaitingNodesGetTimeoffsetMilli = 30000llu;
 
-static const std::string kElectNodeAttrKeyAllBloomfilter = "__allbloomfilter";
-static const std::string kElectNodeAttrKeyWeedoutBloomfilter = "__weedoutbloomfilter";
-static const std::string kElectNodeAttrKeyAllPickBloomfilter = "__allpickbloomfilter";
-static const std::string kElectNodeAttrKeyPickInBloomfilter = "__pickinbloomfilter";
-static const std::string kElectNodeAttrElectBlock = "__electblock";
+static const std::string kElectNodeAttrKeyAllBloomfilter = "__elect_allbloomfilter";
+static const std::string kElectNodeAttrKeyWeedoutBloomfilter = "__elect_weedoutbloomfilter";
+static const std::string kElectNodeAttrKeyAllPickBloomfilter = "__elect_allpickbloomfilter";
+static const std::string kElectNodeAttrKeyPickInBloomfilter = "__elect_pickinbloomfilter";
+static const std::string kElectNodeAttrElectBlock = "__elect_block";
 
 // Nodes can participate in the election for more than 30 minutes after joining
 // Set aside 5 minutes as the tolerance range, that is, each consensus node judges

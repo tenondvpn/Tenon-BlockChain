@@ -49,9 +49,14 @@ private:
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& bft_msg);
+    void RootLeaderCreateTimerBlock(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& bft_msg);
     int RootBackupCheckPrepare(std::string& bft_str);
     int RootBackupCheckCreateAccountAddressPrepare(const bft::protobuf::Block& block);
     int RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block& block);
+    int RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block);
     int GetTempAccountBalance(
         const std::string& id,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
