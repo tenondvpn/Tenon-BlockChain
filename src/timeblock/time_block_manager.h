@@ -11,7 +11,7 @@ class TimeBlockManager {
 public:
     static TimeBlockManager* Instance();
     uint64_t LatestTimestamp() {
-        return common::TimeUtils::TimestampSeconds();
+        return common::TimeUtils::TimestampSeconds() / 600;
     }
 
 private:

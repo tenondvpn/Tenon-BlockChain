@@ -1021,6 +1021,7 @@ int BftManager::AddGenisisBlock(const bft::protobuf::Block& genesis_block) {
 
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
+        std::cout << "write db faled!" << std::endl;
         exit(0);
     }
 
