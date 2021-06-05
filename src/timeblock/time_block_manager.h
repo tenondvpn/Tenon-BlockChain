@@ -7,6 +7,7 @@
 #include "common/utils.h"
 #include "common/time_utils.h"
 #include "transport/proto/transport.pb.h"
+#include "bft/proto/bft.pb.h"
 
 namespace tenon {
 
