@@ -57,22 +57,9 @@ std::string GetBlockHash(const protobuf::Block& block) {
         std::to_string(block.consistency_random()) + "-" +
         std::to_string(block.elect_ver()) + "-";
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
-        message += block.tx_list(i).tx_hash();
+        message += GetTxMessageHash(block.tx_list(i));
     }
 
-    return common::Hash::Sha256(message);
-}
-
-// prehash + network_id + height + random + elect version + txes's hash
-std::string GetBlockHash(
-        const protobuf::Block& block,
-        const std::string& txes_hash) {
-    std::string message = block.prehash() + "-" +
-        std::to_string(block.network_id()) + "-" +
-        std::to_string(block.height()) + "-" +
-        std::to_string(block.consistency_random()) + "-" +
-        std::to_string(block.elect_ver()) + "-" +
-        txes_hash;
     return common::Hash::Sha256(message);
 }
 
