@@ -373,7 +373,7 @@ public:
         pool_index_map_.insert(std::make_pair(254, common::Encode::HexDecode("9dde2eaab26334ff348959a02bcebedee37de577792b82992e90f0a8136347ae")));
         pool_index_map_.insert(std::make_pair(255, common::Encode::HexDecode("593bee91f956047f7dfa1df3603dfdb701b5e5fb601e4836a00ebd7a65f48d4d")));
         test_from_key = pool_index_map_[0];
-//         pool_index_map_.insert(std::make_pair(0, common::Encode::HexDecode("b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6")));
+//         pool_index_map_.insert(std::make_pair(0, common::Encode::HexDecode(common::Encode::HexEncode(test_from_key))));
 //         pool_index_map_.insert(std::make_pair(1, common::Encode::HexDecode("294ad6b66799796d822107b4dcb7a6a9c0c2fd743fddf93512ac921a0731d2de")));
 //         pool_index_map_.insert(std::make_pair(2, common::Encode::HexDecode("a834ef78741f8bc3f6263612c31c50a05ccdaf7add038849e709aee76c0e1151")));
 //         pool_index_map_.insert(std::make_pair(3, common::Encode::HexDecode("323b875d52948910330d81de19fc3d894232a333368819c2c12b6433151067ca")));

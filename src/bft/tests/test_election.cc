@@ -106,7 +106,7 @@ public:
 //             std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(iter->second) << "\")));" << std::endl;
 //         }
 
-        pool_index_map_.insert(std::make_pair(0, common::Encode::HexDecode("b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6")));
+        pool_index_map_.insert(std::make_pair(0, common::Encode::HexDecode(common::Encode::HexEncode(test_from_key))));
         pool_index_map_.insert(std::make_pair(1, common::Encode::HexDecode("294ad6b66799796d822107b4dcb7a6a9c0c2fd743fddf93512ac921a0731d2de")));
         pool_index_map_.insert(std::make_pair(2, common::Encode::HexDecode("a834ef78741f8bc3f6263612c31c50a05ccdaf7add038849e709aee76c0e1151")));
         pool_index_map_.insert(std::make_pair(3, common::Encode::HexDecode("323b875d52948910330d81de19fc3d894232a333368819c2c12b6433151067ca")));
@@ -1068,7 +1068,7 @@ public:
             uint64_t constructor_amount) {
         {
             std::string from_prikey = common::Encode::HexDecode(
-                "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+                common::Encode::HexEncode(test_from_key));
             std::string to_prikey = common::Encode::HexDecode(
                 "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
             uint64_t init_balance = GetBalanceByPrikey(from_prikey);
@@ -1130,7 +1130,7 @@ public:
         // transfer to contract address
         {
             std::string from_prikey = common::Encode::HexDecode(
-                "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+                common::Encode::HexEncode(test_from_key));
             std::string to_prikey = *contract_address;
             uint64_t init_balance = GetBalanceByPrikey(from_prikey);
             uint64_t all_amount = 0;
@@ -1152,7 +1152,7 @@ public:
         // create contract caller
         {
             std::string from_prikey = common::Encode::HexDecode(
-                "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+                common::Encode::HexEncode(test_from_key));
             std::string to_prikey = common::Encode::HexDecode(
                 "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8700");
             uint64_t init_balance = GetBalanceByPrikey(from_prikey);
@@ -1333,7 +1333,7 @@ private:
 std::map<uint32_t, std::string> TestElection::pool_index_map_;
 TEST_F(TestElection, CreateElectionBlock) {
     std::string from_prikey = common::Encode::HexDecode(
-        "b6aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+        common::Encode::HexEncode(test_from_key));
     // create root shard address
     for (int32_t i = 0; i < 100; ++i)
     {
