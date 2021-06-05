@@ -115,7 +115,7 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     auto now_tm = common::TimeUtils::TimestampSeconds();
-    if (abs(new_time_block_tm - latest_time_block_tm_) < kTimeBlockTolerateSeconds) {
+    if (abs((int64_t)new_time_block_tm - (int64_t)latest_time_block_tm_) < kTimeBlockTolerateSeconds) {
         return true;
     }
 
