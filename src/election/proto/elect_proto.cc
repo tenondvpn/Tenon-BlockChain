@@ -127,7 +127,7 @@ void ElectProto::CreateElectWaitingNodes(
     sign.Serialize(sign_challenge_str, sign_response_str);
     ec_msg.set_sign_ch(sign_challenge_str);
     ec_msg.set_sign_res(sign_response_str);
-    ec_msg.set_pubkey("acc_pubkey");
+    ec_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());

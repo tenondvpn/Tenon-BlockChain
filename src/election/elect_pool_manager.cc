@@ -252,30 +252,6 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
     waiting_pool_ptr->AddNewNode(node_ptr);
 }
 
-void ElectPoolManager::GetAllWaitingNodes(
-        uint64_t time_offset_milli,
-        uint32_t waiting_shard_id,
-        common::BloomFilter* pick_all,
-        std::vector<NodeDetailPtr>& nodes) {
-    if (waiting_shard_id < network::kConsensusWaitingShardBeginNetworkId ||
-            waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
-        return;
-    }
-
-    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
-    {
-        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
-        auto iter = waiting_pool_map_.find(waiting_shard_id);
-        if (iter == waiting_pool_map_.end()) {
-            return;
-        }
-      
-        waiting_pool_ptr = iter->second;
-    }
-
-    waiting_pool_ptr->GetAllValidHeartbeatNodes(time_offset_milli, *pick_all, nodes);
-}
-
 void ElectPoolManager::UpdateWaitingNodes(
         uint32_t waiting_shard_id,
         const std::string& root_node_id,
@@ -485,6 +461,7 @@ int ElectPoolManager::GetAllLeaderBloomFiler(
 
     return kElectSuccess;
 }
+
 // elect block coming
 void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& members_ptr) {
     ElectPoolPtr pool_ptr = nullptr;

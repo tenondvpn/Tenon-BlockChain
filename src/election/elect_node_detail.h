@@ -43,6 +43,14 @@ struct ElectNodeDetail {
 
 typedef std::shared_ptr<ElectNodeDetail> NodeDetailPtr;
 
+struct WaitingList {
+    std::vector<NodeDetailPtr> nodes_vec;
+    uint64_t nodes_hash;
+    uint32_t same_root_count;
+};
+
+typedef std::shared_ptr<WaitingList> WaitingListPtr;
+
 struct BftMember {
     BftMember(
             uint32_t nid,
@@ -95,6 +103,13 @@ inline static bool ElectNodeBalanceDiffCompare(
         const NodeDetailPtr& right) {
     return left->balance_diff < right->balance_diff;
 }
+
+inline static bool WaitingNodeCountCompare(
+        const WaitingListPtr& left,
+        const WaitingListPtr& right) {
+    return left->same_root_count < right->same_root_count;
+}
+
 
 };  // namespace elect
 

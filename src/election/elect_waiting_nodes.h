@@ -21,7 +21,6 @@ public:
     void UpdateWaitingNodes(
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter);
-    void NewElectBlockClear();
     void AddNewNode(NodeDetailPtr& node_ptr);
     void RemoveNodes(const std::vector<NodeDetailPtr>& nodes);
     void GetAllValidNodes(
@@ -31,10 +30,12 @@ public:
         uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
+    void OnTimeBlock(uint64_t tm_block_tm);
 
 private:
-    void UpdateNodeHeartbeat();
-    void SendConsensusNodes();
+    void HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr);
+    void SendConsensusNodes(uint64_t time_block_tm);
+    void GetThisTimeBlockLocallNodes(uint64_t tm_block_tm);
 
     std::unordered_map<std::string, NodeDetailPtr> consensus_waiting_count_;
     std::mutex consensus_waiting_count_mutex_;
@@ -44,6 +45,13 @@ private:
     std::mutex node_map_mutex_;
     common::Tick heartbeat_tick_;
     common::Tick waiting_nodes_tick_;
+    uint64_t last_send_tm_{ 0 };
+    std::unordered_map<uint64_t, WaitingListPtr> all_nodes_waiting_map_;
+    std::mutex all_nodes_waiting_map_mutex_;
+    std::unordered_set<std::string> coming_root_nodes_;
+    std::vector<NodeDetailPtr> local_all_waiting_nodes_;
+    common::BloomFilter local_all_waiting_bloom_filter_;
+    uint64_t got_valid_nodes_tm_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectWaitingNodes);
 };

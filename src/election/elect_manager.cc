@@ -227,8 +227,6 @@ void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protob
     bft::protobuf::BftMessage bft_msg;
     pool_manager_.LeaderCreateElectionBlockTx(shard_network_id, bft_msg);
     msg->set_data(bft_msg.SerializeAsString());
-//     network::Route::Instance()->Send(msg);
-//     network::Route::Instance()->SendToLocal(msg);
 }
 
 }  // namespace elect
