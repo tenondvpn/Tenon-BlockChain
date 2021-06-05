@@ -256,6 +256,7 @@ int TxBft::RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block) {
 
     if (tmblock::TimeBlockManager::Instance()->BackupCheckTimeBlockTx(
             tx_info) != tmblock::kTimeBlockSuccess) {
+        BFT_ERROR("BackupCheckTimeBlockTx error.");
         return kBftError;
     }
 

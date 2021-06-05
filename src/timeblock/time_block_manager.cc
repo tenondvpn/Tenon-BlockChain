@@ -86,15 +86,18 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
 
 int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_info) {
     if (tx_info.attr_size() != 1) {
+        TMBLOCK_ERROR("tx_info.attr_size() error: %d", tx_info.attr_size());
         return kTimeBlockError;
     }
 
     if (tx_info.attr(0).key() != kAttrTimerBlock) {
+        TMBLOCK_ERROR("tx_info.attr(0).key() error: %s", tx_info.attr(0).key().c_str());
         return kTimeBlockError;
     }
 
     uint64_t leader_tm = common::StringUtil::ToUint64(tx_info.attr(0).value());
     if (!BackupheckNewTimeBlockValid(leader_tm)) {
+        TMBLOCK_ERROR("BackupheckNewTimeBlockValid error: %llu", leader_tm);
         return kTimeBlockError;
     }
 
@@ -136,6 +139,8 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
         return true;
     }
 
+    BFT_ERROR("BackupheckNewTimeBlockValid error[%llu][%llu]",
+        new_time_block_tm, (uint64_t)latest_time_block_tm_);
     return false;
 }
 
