@@ -586,7 +586,6 @@ void AccountManager::SetPool(
 
     db_pool_info->SetHash(hash, db_batch);
     db_pool_info->SetHeight(now_height, db_batch);
-    std::cout << "SetPool pool_index: " << pool_index << std::endl;
 }
 
 }  // namespace block

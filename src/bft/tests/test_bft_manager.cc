@@ -1376,7 +1376,7 @@ TEST_F(TestBftManager, RootCreateNewAccount) {
         "11115f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e");
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
     uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     ASSERT_EQ(to_balance, common::kInvalidUint64);
     uint64_t all_amount = 0;
@@ -1409,7 +1409,7 @@ TEST_F(TestBftManager, TransferGasLimitError) {
         "11115f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e");
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
     uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     ASSERT_EQ(to_balance, common::kInvalidUint64);
     uint64_t all_amount = 0;
@@ -1434,7 +1434,7 @@ TEST_F(TestBftManager, TransferGasLimitJustOk) {
         "11115f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e");
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
     uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     ASSERT_EQ(to_balance, common::kInvalidUint64);
     uint64_t all_amount = 0;
@@ -1459,7 +1459,7 @@ TEST_F(TestBftManager, TransferGasLimitCover) {
         "11115f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e");
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
     uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     ASSERT_EQ(to_balance, common::kInvalidUint64);
     uint64_t all_amount = 0;
@@ -1487,7 +1487,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsOk) {
     std::string from_prikey = common::Encode::HexDecode(
         common::Encode::HexEncode(test_from_key));
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     uint64_t all_amount = 0;
     uint64_t all_gas = 0;
@@ -1516,7 +1516,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasError) {
     std::string from_prikey = common::Encode::HexDecode(
         common::Encode::HexEncode(test_from_key));
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     uint64_t all_amount = 0;
     uint64_t all_gas = 0;
@@ -1545,7 +1545,7 @@ TEST_F(TestBftManager, TransferTestSetFromAttrsGasCover) {
     std::string from_prikey = common::Encode::HexDecode(
         common::Encode::HexEncode(test_from_key));
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     uint64_t all_amount = 0;
     uint64_t all_gas = 0;
@@ -1575,7 +1575,7 @@ TEST_F(TestBftManager, CreateContractOk) {
     std::string from_prikey = common::Encode::HexDecode(
         common::Encode::HexEncode(test_from_key));
     uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+    uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
     ASSERT_EQ(from_balance, init_balance);
     uint64_t all_amount = 0;
     uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
@@ -1695,7 +1695,7 @@ TEST_F(TestBftManager, TestExecution) {
             "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
         uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         ASSERT_EQ(to_balance, common::kInvalidUint64);
         uint64_t all_amount = 0;
@@ -2141,7 +2141,7 @@ TEST_F(TestBftManager, TestContractCreateExcution) {
             "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
         uint64_t to_balance = GetBalanceByPrikey(to_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         ASSERT_EQ(to_balance, common::kInvalidUint64);
         uint64_t all_amount = 0;
@@ -2215,7 +2215,7 @@ TEST_F(TestBftManager, TestCallContractBallotSuccess) {
         std::string from_prikey = common::Encode::HexDecode(
             common::Encode::HexEncode(test_from_key));
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         for (int32_t i = 0; i < 10; ++i) {
             std::string to_prikey = common::Encode::HexDecode(
@@ -2561,7 +2561,7 @@ TEST_F(TestBftManager, TestCallContractSimpleActionSuccess) {
         std::string from_prikey = common::Encode::HexDecode(
             common::Encode::HexEncode(test_from_key));
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         for (int32_t i = 0; i < 10; ++i) {
             std::string to_prikey = common::Encode::HexDecode(
@@ -2775,7 +2775,7 @@ TEST_F(TestBftManager, TestCallContractBlindAuctionSuccess) {
         std::string from_prikey = common::Encode::HexDecode(
             common::Encode::HexEncode(test_from_key));
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         for (int32_t i = 0; i < 10; ++i) {
             std::string to_prikey = common::Encode::HexDecode(
@@ -3110,7 +3110,7 @@ TEST_F(TestBftManager, TestCallContractPurchaseSuccess) {
         std::string from_prikey = common::Encode::HexDecode(
             common::Encode::HexEncode(test_from_key));
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         for (int32_t i = 0; i < 2; ++i) {
             std::string to_prikey = common::Encode::HexDecode(
@@ -3283,7 +3283,7 @@ TEST_F(TestBftManager, TestCallSimplePaymentChannelSuccess) {
         std::string from_prikey = common::Encode::HexDecode(
             common::Encode::HexEncode(test_from_key));
         uint64_t from_balance = GetBalanceByPrikey(from_prikey);
-        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / 64llu;
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
         ASSERT_EQ(from_balance, init_balance);
         for (int32_t i = 0; i < 2; ++i) {
             std::string to_prikey = common::Encode::HexDecode(
