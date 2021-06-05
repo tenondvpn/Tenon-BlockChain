@@ -369,12 +369,12 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
         switch (block.tx_list(0).type())
         {
         case common::kConsensusRootElectRoot:
-            return RootBackupCheckTimerBlockPrepare(block);
             break;
         case common::kConsensusRootElectShard:
             return RootBackupCheckElectConsensusShardPrepare(block);
             break;
         case common::kConsensusRootTimeBlock:
+            return RootBackupCheckTimerBlockPrepare(block);
             break;
         case common::kConsensusRootVssBlock:
             break;
@@ -1612,12 +1612,12 @@ void TxBft::RootLeaderCreateTxBlock(
         switch (tx_vec[0]->tx.type())
         {
         case common::kConsensusRootElectRoot:
-            RootLeaderCreateTimerBlock(pool_idx, tx_vec, ltx_msg);
             break;
         case common::kConsensusRootElectShard:
             RootLeaderCreateElectConsensusShardBlock(pool_idx, tx_vec, ltx_msg);
             break;
         case common::kConsensusRootTimeBlock:
+            RootLeaderCreateTimerBlock(pool_idx, tx_vec, ltx_msg);
             break;
         case common::kConsensusRootVssBlock:
             break;

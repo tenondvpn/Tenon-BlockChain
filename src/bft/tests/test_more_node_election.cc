@@ -32,6 +32,7 @@
 #include "common/random.h"
 #include "root/root_utils.h"
 #include "timeblock/time_block_manager.h"
+#include "timeblock/time_block_utils.h"
 
 namespace tenon {
 
@@ -1835,7 +1836,7 @@ public:
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
-        tmblock::TimeBlockManager::Instance()->LeaderCreateTimeBlockTx(&msg);
+        ASSERT_EQ(tmblock::TimeBlockManager::Instance()->LeaderCreateTimeBlockTx(&msg), tmblock::kTimeBlockSuccess);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
