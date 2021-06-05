@@ -1381,7 +1381,7 @@ TEST_F(TestRandomTransaction, RootCreateNewAccount) {
         uint64_t to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(to_balance, common::kInvalidUint64);
         uint64_t all_amount = 0;
-        uint64_t amount = 1000000llu * common::kTenonMiniTransportUnit;
+        uint64_t amount = 10000llu * common::kTenonMiniTransportUnit;
         uint64_t all_gas = 0;
         all_amount += amount;
         all_gas += bft::kTransferGas;
@@ -1411,7 +1411,7 @@ TEST_F(TestRandomTransaction, RootCreateNewAccount) {
         uint64_t init_balance = GetBalanceByPrikey(from_prikey);
         uint64_t init_to_balance = GetBalanceByPrikey(to_prikey);
         uint64_t all_amount = 0;
-        uint64_t amount = (rand() % 10000) * common::kTenonMiniTransportUnit + 1;
+        uint64_t amount = (rand() % 100) * common::kTenonMiniTransportUnit + 1;
         uint64_t all_gas = 0;
         all_amount += amount;
         all_gas += bft::kTransferGas;

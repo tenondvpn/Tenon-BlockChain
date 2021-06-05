@@ -68,9 +68,6 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
     }
 
 	// TODO: check account address's network id valid. and this node is valid bft node
-    BFT_ERROR("HandleMessage bft message coming: %d, is leader: %d",
-        bft_msg.bft_step(),
-        bft_msg.leader());
     switch (bft_msg.bft_step()) {
     case kBftInit:
         InitBft(header, bft_msg);
@@ -482,8 +479,6 @@ void BftManager::HandleToAccountTxBlock(
     if (ThisNodeIsLeader()) {
         StartBft("");
     }
-
-    BFT_ERROR("dispatch pool ok!");
 }
 
 int BftManager::InitBft(
@@ -777,7 +772,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
-    BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
     leader_precommit_msg_ = msg;
     return kBftSuccess;
 }
@@ -1004,7 +998,6 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
-    BFT_ERROR("LeaderPrecommit agree", bft_ptr, msg);
     leader_precommit_msg_ = msg;
     return kBftSuccess;
 }

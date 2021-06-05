@@ -1127,6 +1127,16 @@ int TxBft::BackupNormalCheck(
             from_balance -= real_transfer_amount;
         } else {
             if (from_balance >= gas_used * tx_info.gas_price()) {
+                if (tx_info.status() == kBftAccountBalanceError) {
+                    uint64_t real_transfer_amount = local_tx_ptr->tx.amount() + gas_used * tx_info.gas_price();
+                    if (from_balance >= real_transfer_amount) {
+                        BFT_ERROR("transfer kBftAccountBalanceError invalid!");
+                        return kBftLeaderInfoInvalid;
+                    }
+
+                    backup_status = tx_info.status();
+                }
+
                 from_balance -= gas_used * tx_info.gas_price();
             } else {
                 if (backup_status == kBftSuccess && tx_info.status() != kBftAccountBalanceError) {
@@ -1152,10 +1162,12 @@ int TxBft::BackupNormalCheck(
 
         if (backup_status != (int)tx_info.status()) {
             BFT_ERROR("backup_status[%d] != tx_info.status()[%d]!", backup_status, tx_info.status());
+            return kBftLeaderInfoInvalid;
         }
 
         acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     }
+    
 
     push_bft_item_vec(local_tx_ptr->tx.gid());
     return kBftSuccess;
@@ -1705,10 +1717,12 @@ int TxBft::LeaderAddNormalTransaction(
                 } else {
                     from_balance -= gas_used * tx.gas_price();
                     tx.set_status(kBftAccountBalanceError);
+                    BFT_ERROR("leader balance error: %llu, %llu", from_balance, dec_amount);
                 }
             } else {
                 from_balance = 0;
                 tx.set_status(kBftAccountBalanceError);
+                BFT_ERROR("leader balance error: %llu, %llu", from_balance, gas_used * tx.gas_price());
             }
         } else {
             if (from_balance >= gas_used * tx.gas_price()) {
