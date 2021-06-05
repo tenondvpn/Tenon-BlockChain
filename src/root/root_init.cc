@@ -15,7 +15,7 @@ int RootInit::Init() {
 	congress_node_ = std::make_shared<RootNode>(network::kRootCongressNetworkId);
 	if (congress_node_->Init() != network::kNetworkSuccess) {
 		congress_node_ = nullptr;
-		CONGRESS_ERROR("node join network [%u] failed!", network::kRootCongressNetworkId);
+		ROOT_ERROR("node join network [%u] failed!", network::kRootCongressNetworkId);
 		return kRootError;
 	}
 
