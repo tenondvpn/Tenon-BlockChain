@@ -193,6 +193,7 @@ TxItemPtr TxPool::GetTx(
     if (item_iter != tx_pool_.end()) {
         return item_iter->second;
     }
+
     return nullptr;
 }
 

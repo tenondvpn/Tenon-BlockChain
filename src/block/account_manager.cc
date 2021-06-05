@@ -120,7 +120,7 @@ int AccountManager::AddBlockItem(
         }
 
         if (tx_list[i].type() == common::kConsensusCallContract ||
-            tx_list[i].type() == common::kConsensusCreateContract) {
+                tx_list[i].type() == common::kConsensusCreateContract) {
             switch (tx_list[i].call_contract_step()) {
             case contract::kCallStepCallerInited:
                 account_id = tx_list[i].from();
@@ -586,8 +586,7 @@ void AccountManager::SetPool(
 
     db_pool_info->SetHash(hash, db_batch);
     db_pool_info->SetHeight(now_height, db_batch);
-    std::string key = GetLastBlockHash(common::kTestForNetworkId, pool_index);
-    db_batch.Put(key, hash);
+    std::cout << "SetPool pool_index: " << pool_index << std::endl;
 }
 
 }  // namespace block
