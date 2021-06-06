@@ -109,7 +109,6 @@ void TimeBlockManager::UpdateTimeBlock(
         uint64_t latest_time_block_tm) {
     latest_time_block_height_ = latest_time_block_height;
     latest_time_block_tm_ = latest_time_block_tm;
-    latest_time_block_local_tm_ = common::TimeUtils::TimestampSeconds();
     std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
     latest_time_blocks_.push_back(latest_time_block_tm_);
     if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
@@ -119,13 +118,19 @@ void TimeBlockManager::UpdateTimeBlock(
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
     auto now_tm = common::TimeUtils::TimestampSeconds();
-    if (now_tm - latest_time_block_local_tm_ >= kTimeBlockCreatePeriodSeconds) {
+    if (now_tm >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
-        // Correction time
-        *new_time_block_tm = latest_time_block_tm_ +
-            (now_tm - latest_time_block_local_tm_) +
-            (latest_time_block_tm_ - latest_time_blocks_.front()) /
-            (kTimeBlockCreatePeriodSeconds * kTimeBlockAvgCount);
+        *new_time_block_tm = latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds;
+        if (!latest_time_blocks_.empty()) {
+            // Correction time
+            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) / latest_time_blocks_.size();
+            if (kTimeBlockCreatePeriodSeconds > offset_tm) {
+                *new_time_block_tm += (kTimeBlockCreatePeriodSeconds - offset_tm) * latest_time_blocks_.size();
+            } else {
+                *new_time_block_tm += (offset_tm - kTimeBlockCreatePeriodSeconds) * latest_time_blocks_.size();
+            }
+        }
+
         return true;
     }
 
@@ -133,9 +138,18 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 }
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
-    auto now_tm = common::TimeUtils::TimestampSeconds();
-    if (abs((int64_t)new_time_block_tm - (int64_t)latest_time_block_tm_) <
-            (int64_t)kTimeBlockTolerateSeconds) {
+    int64_t corection_time = 0;
+    if (!latest_time_blocks_.empty()) {
+        // Correction time
+        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) / latest_time_blocks_.size();
+        if (kTimeBlockCreatePeriodSeconds > offset_tm) {
+            corection_time = (kTimeBlockCreatePeriodSeconds - offset_tm) * latest_time_blocks_.size();
+        } else {
+            corection_time = (offset_tm - kTimeBlockCreatePeriodSeconds) * latest_time_blocks_.size();
+        }
+    }
+
+    if (new_time_block_tm < latest_time_block_tm_ + kTimeBlockTolerateSeconds) {
         return true;
     }
 

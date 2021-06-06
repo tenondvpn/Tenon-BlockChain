@@ -29,7 +29,6 @@ private:
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
-    std::atomic<uint64_t> latest_time_block_local_tm_{ 0 };
     std::deque<uint64_t> latest_time_blocks_;
     std::mutex latest_time_blocks_mutex_;
 
