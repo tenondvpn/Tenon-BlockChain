@@ -586,7 +586,7 @@ public:
                 &pool_hash,
                 &tm);
             ASSERT_EQ(res, block::kBlockSuccess);
-            ASSERT_EQ(pool_height, 0);
+            ASSERT_EQ(pool_height, 1);
             ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
             ASSERT_FALSE(account_ptr == nullptr);
