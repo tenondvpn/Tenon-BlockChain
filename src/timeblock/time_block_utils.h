@@ -18,8 +18,8 @@ enum RootErrorCode {
     kTimeBlockError = 1,
 };
 
-static const int64_t kTimeBlockCreatePeriodSeconds = 600ll;
-static const int64_t kTimeBlockTolerateSeconds = 60ll;
+static const uint64_t kTimeBlockCreatePeriodSeconds = 600ll;
+static const uint64_t kTimeBlockTolerateSeconds = 30ll;
 static const uint32_t kTimeBlockAvgCount = 6u;
 static const std::string kAttrTimerBlock = "__tmblock_tmblock";
 

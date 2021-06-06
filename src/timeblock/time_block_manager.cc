@@ -123,11 +123,14 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
         *new_time_block_tm = latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds;
         if (!latest_time_blocks_.empty()) {
             // Correction time
-            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) / latest_time_blocks_.size();
+            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) /
+                latest_time_blocks_.size();
             if (kTimeBlockCreatePeriodSeconds > offset_tm) {
-                *new_time_block_tm += (kTimeBlockCreatePeriodSeconds - offset_tm) * latest_time_blocks_.size();
+                *new_time_block_tm += (kTimeBlockCreatePeriodSeconds - offset_tm) *
+                    latest_time_blocks_.size();
             } else {
-                *new_time_block_tm += (offset_tm - kTimeBlockCreatePeriodSeconds) * latest_time_blocks_.size();
+                *new_time_block_tm -= (offset_tm - kTimeBlockCreatePeriodSeconds) *
+                    latest_time_blocks_.size();
             }
         }
 
@@ -138,18 +141,22 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 }
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
-    int64_t corection_time = 0;
     if (!latest_time_blocks_.empty()) {
         // Correction time
-        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) / latest_time_blocks_.size();
+        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) /
+            latest_time_blocks_.size();
         if (kTimeBlockCreatePeriodSeconds > offset_tm) {
-            corection_time = (kTimeBlockCreatePeriodSeconds - offset_tm) * latest_time_blocks_.size();
+            latest_time_block_tm_ += (kTimeBlockCreatePeriodSeconds - offset_tm) *
+                latest_time_blocks_.size();
         } else {
-            corection_time = (offset_tm - kTimeBlockCreatePeriodSeconds) * latest_time_blocks_.size();
+            latest_time_block_tm_ -= (offset_tm - kTimeBlockCreatePeriodSeconds) *
+                latest_time_blocks_.size();
         }
     }
 
-    if (new_time_block_tm < latest_time_block_tm_ + kTimeBlockTolerateSeconds) {
+    latest_time_block_tm_ += kTimeBlockCreatePeriodSeconds;
+    if (new_time_block_tm < (latest_time_block_tm_ + kTimeBlockTolerateSeconds) &&
+            new_time_block_tm > (latest_time_block_tm_ - kTimeBlockTolerateSeconds)) {
         return true;
     }
 
@@ -161,3 +168,4 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 }  // namespace tmblock
 
 }  // namespace tenon
+ 
