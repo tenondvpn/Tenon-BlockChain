@@ -94,10 +94,6 @@ private:
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
-    int HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info);
-    int ProcessNewElectBlock(
-        bft::protobuf::TxInfo& tx_info,
-        bool load_from_db);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;

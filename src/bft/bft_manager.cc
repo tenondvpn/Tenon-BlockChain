@@ -231,19 +231,17 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
-        if (HanldeRootSingleBlockTx(tx_list[0]) == kBftSuccess) {
-            db::DbWriteBach db_batch;
-            if (block::BlockManager::Instance()->AddNewBlock(
-                    tx_bft.to_tx().block(),
-                    db_batch) != block::kBlockSuccess) {
-                BFT_ERROR("leader add block to db failed!");
-                return;
-            }
+        db::DbWriteBach db_batch;
+        if (block::BlockManager::Instance()->AddNewBlock(
+                tx_bft.to_tx().block(),
+                db_batch) != block::kBlockSuccess) {
+            BFT_ERROR("leader add block to db failed!");
+            return;
+        }
 
-            auto st = db::Db::Instance()->Put(db_batch);
-            if (!st.ok()) {
-                exit(0);
-            }
+        auto st = db::Db::Instance()->Put(db_batch);
+        if (!st.ok()) {
+            exit(0);
         }
 
         return;
@@ -276,81 +274,6 @@ void BftManager::HandleRootTxBlock(
     if (ThisNodeIsLeader()) {
         StartBft("");
     }
-}
-
-int BftManager::HanldeRootSingleBlockTx(bft::protobuf::TxInfo& tx_info) {
-    switch (tx_info.type()) {
-    case common::kConsensusRootElectRoot:
-        break;
-    case common::kConsensusRootElectShard:
-        return ProcessNewElectBlock(tx_info, false);
-        break;
-    case common::kConsensusRootTimeBlock:
-        break;
-    case common::kConsensusRootVssBlock:
-        break;
-    default:
-        break;
-    }
-
-    return kBftError;
-}
-
-int BftManager::ProcessNewElectBlock(
-        bft::protobuf::TxInfo& tx_info,
-        bool load_from_db) {
-    if (tx_info.type() != common::kConsensusRootElectShard) {
-        return kBftError;
-    }
-
-    elect::protobuf::ElectMessage elect_msg;
-    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-        if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
-            elect_msg.ParseFromString(tx_info.attr(i).value());
-        }
-    }
-
-    if (!elect_msg.has_elect_block()) {
-        return kBftError;
-    }
-
-    std::map<uint32_t, elect::MembersPtr> in_members;
-    std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
-    std::map<uint32_t, uint32_t> begin_index_map;
-    auto in = elect_msg.elect_block().in();
-    for (int32_t i = 0; i < in.size(); ++i) {
-        auto net_id = in[i].net_id();
-        auto iter = in_members.find(net_id);
-        if (iter == in_members.end()) {
-            in_members[net_id] = std::make_shared<elect::Members>();
-            in_index_members[net_id] = std::make_shared<
-                    std::unordered_map<std::string, uint32_t>>();
-            begin_index_map[net_id] = 0;
-        }
-        security::PublicKey pubkey(in[i].pubkey());
-        security::CommitSecret secret;
-        in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
-            net_id,
-            in[i].id(),
-            in[i].pubkey(),
-            begin_index_map[net_id],
-            in[i].public_ip(),
-            in[i].public_port(),
-            in[i].dht_key()));
-        in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map[net_id]));
-        ++begin_index_map[net_id];
-    }
-
-    for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
-        auto index_map_iter = in_index_members.find(iter->first);
-        assert(index_map_iter != in_index_members.end());
-        bft::BftManager::Instance()->NetworkMemberChange(
-            iter->first,
-            iter->second,
-            index_map_iter->second);
-    }
-
-    return kBftSuccess;
 }
 
 void BftManager::RootCommitAddNewAccount(
