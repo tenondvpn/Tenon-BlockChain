@@ -5,6 +5,7 @@
 #include "common/utils.h"
 #include "common/log.h"
 #include "common/encode.h"
+#include "common/string_utils.h"
 #include "common/user_property_key_define.h"
 
 #define ROOT_DEBUG(fmt, ...) TENON_DEBUG("[root]" fmt, ## __VA_ARGS__)
