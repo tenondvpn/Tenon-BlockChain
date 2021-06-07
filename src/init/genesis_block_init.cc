@@ -34,6 +34,11 @@ int GenesisBlockInit::CreateGenesisBlocks(uint32_t net_id) {
 }
 
 int GenesisBlockInit::GenerateRootSingleBlock() {
+    FILE* root_gens_init_block_file = fopen("./root_blocks", "w");
+    if (root_gens_init_block_file == nullptr) {
+        return kInitError;
+    }
+
     GenerateRootAccounts();
     // for root single block chain
     std::string root_pre_hash;
@@ -62,7 +67,7 @@ int GenesisBlockInit::GenerateRootSingleBlock() {
         tenon_block.set_height(0);
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        std::cout << "root height 0: " << common::Encode::HexEncode(tenon_block.SerializeAsString()) << std::endl;
+        fputs(common::Encode::HexEncode(tenon_block.SerializeAsString()).c_str(), root_gens_init_block_file);
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
             return kInitError;
@@ -134,7 +139,7 @@ int GenesisBlockInit::GenerateRootSingleBlock() {
         tenon_block.set_height(1);
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        std::cout << "root height 1: " << common::Encode::HexEncode(tenon_block.SerializeAsString()) << std::endl;
+        fputs(common::Encode::HexEncode(tenon_block.SerializeAsString()).c_str(), root_gens_init_block_file);
         tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm);
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error");
@@ -171,6 +176,63 @@ int GenesisBlockInit::GenerateRootSingleBlock() {
             return kInitError;
         }
     }
+
+    fclose(root_gens_init_block_file);
+    return kInitSuccess;
+}
+
+int GenesisBlockInit::GenerateShardSingleBlock() {
+    FILE* root_gens_init_block_file = fopen("./root_blocks", "r");
+    if (root_gens_init_block_file == nullptr) {
+        return kInitError;
+    }
+
+    char data[2048];
+    while (fgets(data, 2048, root_gens_init_block_file) != nullptr)
+    {
+        bft::protobuf::Block tenon_block;
+        if (!tenon_block.ParseFromString(common::Encode::HexDecode(data))) {
+            return kInitError;
+        }
+
+        if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
+            INIT_ERROR("add genesis block failed!");
+            return kInitError;
+        }
+
+        std::string pool_hash;
+        uint64_t pool_height = 0;
+        uint64_t tm;
+        int res = block::AccountManager::Instance()->GetBlockInfo(
+            common::kRootChainPoolIndex,
+            &pool_height,
+            &pool_hash,
+            &tm);
+        if (res != block::kBlockSuccess) {
+            INIT_ERROR("get pool block info failed! [%u]", common::kRootChainPoolIndex);
+            return kInitError;
+        }
+
+        auto address = root::kRootChainSingleBlockTxAddress;
+        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(address);
+        if (account_ptr == nullptr) {
+            INIT_ERROR("get address info failed! [%s]", common::Encode::HexEncode(address).c_str());
+            return kInitError;
+        }
+
+        uint64_t balance = 0;
+        if (account_ptr->GetBalance(&balance) != block::kBlockSuccess) {
+            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            return kInitError;
+        }
+
+        if (balance != 0) {
+            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            return kInitError;
+        }
+    }
+
+    return kInitSuccess;
 }
 
 int GenesisBlockInit::CreateRootGenesisBlocks() {
@@ -329,7 +391,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         return kInitError;
     }
 
-    return GenerateRootSingleBlock();
+    return GenerateShardSingleBlock();
 }
 
 void GenesisBlockInit::InitGenesisAccount() {

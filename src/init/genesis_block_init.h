@@ -22,6 +22,7 @@ private:
     void InitGenesisAccount();
     void GenerateRootAccounts();
     int GenerateRootSingleBlock();
+    int GenerateShardSingleBlock();
 
     std::map<uint32_t, std::string> pool_index_map_;
     std::map<uint32_t, std::string> root_account_with_pool_index_map_;

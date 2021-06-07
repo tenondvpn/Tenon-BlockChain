@@ -30,6 +30,7 @@
 #include "sync/key_value_sync.h"
 #include "root/root_init.h"
 #include "init/init_utils.h"
+#include "init/genesis_block_init.h"
 #include "client/vpn_client.h"
 #include "security/secp256k1.h"
 
@@ -86,6 +87,38 @@ int NetworkInit::Init(int argc, char** argv) {
     if (security::EcdhCreateKey::Instance()->Init() != security::kSecuritySuccess) {
         INIT_ERROR("init ecdh create secret key failed!");
         return kInitError;
+    }
+
+    if (argc >= 2 && std::string(argv[1]) == "gen_root") {
+        conf_.Set("db", "path", "root_db");
+        if (InitBlock(conf_) != kInitSuccess) {
+            INIT_ERROR("init block failed!");
+            return kInitError;
+        }
+
+        init::GenesisBlockInit genesis_block;
+        if (genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId) != 0) {
+            std::cout << "genesis root blocks failed!" << std::endl;
+            return kInitError;
+        }
+
+        return kInitSuccess;
+    }
+
+    if (argc >= 2 && std::string(argv[1]) == "gen_shard") {
+        conf_.Set("db", "path", "shard_db");
+        if (InitBlock(conf_) != kInitSuccess) {
+            INIT_ERROR("init block failed!");
+            return kInitError;
+        }
+
+        init::GenesisBlockInit genesis_block;
+        if (genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId) != 0) {
+            std::cout << "genesis shard blocks failed!" << std::endl;
+            return kInitError;
+        }
+
+        return kInitSuccess;
     }
 
     if (InitBlock(conf_) != kInitSuccess) {
@@ -330,6 +363,7 @@ int NetworkInit::InitConfigWithArgs(int argc, char** argv) {
         INIT_ERROR("reset config with arg parser failed!");
         return kInitError;
     }
+
     return kInitSuccess;
 }
 
