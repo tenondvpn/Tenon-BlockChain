@@ -559,7 +559,8 @@ int AccountManager::SetAccountAttrs(
                         if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
                             account_info->AddNewTimeBlock(
                                 tmp_now_height,
-                                common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()));
+                                common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()),
+                                db_batch);
                         }
                     }
 

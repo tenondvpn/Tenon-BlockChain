@@ -811,7 +811,7 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
 
     latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
     tmp_key = dict_key_ + "_" + kFieldTimeBlock;
-    auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    st = db::Db::Instance()->Get(tmp_key, &tmp_str);
     if (!st.ok()) {
         return kBlockError;
     }
