@@ -105,7 +105,49 @@ int NetworkInit::Init(int argc, char** argv) {
 
         init::GenesisBlockInit genesis_block;
         std::vector<dht::NodePtr> root_genesis_nodes;
+        if (parser_arg.Has("1")) {
+            std::string value;
+            if (parser_arg.Get("1", value) != common::kParseSuccess) {
+                return kInitError;
+            }
+
+            common::Split<2048> nodes_split(value.c_str(), ',', value.size());
+            for (uint32_t i = 0; i < nodes_split.Count(); ++i) {
+                common::Split<> node_info(nodes_split[i], ':', nodes_split.SubLen(i));
+                if (node_info.Count() != 3) {
+                    continue;
+                }
+
+                auto node_ptr = std::make_shared<dht::Node>();
+                node_ptr->set_pubkey(node_info[0]);
+                node_ptr->set_public_ip(node_info[1]);
+                node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
+                root_genesis_nodes.push_back(node_ptr);
+            }
+        }
+
         std::vector<dht::NodePtr> cons_genesis_nodes;
+        if (parser_arg.Has("2")) {
+            std::string value;
+            if (parser_arg.Get("2", value) != common::kParseSuccess) {
+                return kInitError;
+            }
+
+            common::Split<2048> nodes_split(value.c_str(), ',', value.size());
+            for (uint32_t i = 0; i < nodes_split.Count(); ++i) {
+                common::Split<> node_info(nodes_split[i], ':', nodes_split.SubLen(i));
+                if (node_info.Count() != 3) {
+                    continue;
+                }
+
+                auto node_ptr = std::make_shared<dht::Node>();
+                node_ptr->set_pubkey(node_info[0]);
+                node_ptr->set_public_ip(node_info[1]);
+                node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
+                cons_genesis_nodes.push_back(node_ptr);
+            }
+        }
+
         if (genesis_block.CreateGenesisBlocks(
                 network::kRootCongressNetworkId,
                 root_genesis_nodes,
@@ -528,6 +570,8 @@ int NetworkInit::ParseParams(int argc, char** argv, common::ParserArgs& parser_a
     parser_arg.AddArgType('V', "vpn_vip_level", common::kNoValue);
     parser_arg.AddArgType('U', "gen_root", common::kNoValue);
     parser_arg.AddArgType('S', "gen_shard", common::kNoValue);
+    parser_arg.AddArgType('1', "root_nodes", common::kMaybeValue);
+    parser_arg.AddArgType('2', "shard_nodes", common::kMaybeValue);
 
     std::string tmp_params = "";
     for (int i = 1; i < argc; i++) {

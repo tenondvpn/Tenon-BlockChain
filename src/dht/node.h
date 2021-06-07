@@ -146,6 +146,10 @@ struct Node {
         return pubkey_str_;
     }
 
+    void set_pubkey(const std::string& pubkey) {
+        pubkey_str_ = pubkey;
+    }
+
     const std::string& local_ip() {
         return local_ip_;
     }

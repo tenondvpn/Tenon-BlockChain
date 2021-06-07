@@ -78,7 +78,6 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
 
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_dht_key((*iter)->dht_key);
         in->set_public_ip((*iter)->public_ip);
         in->set_public_port((*iter)->public_port);
     }
@@ -86,7 +85,6 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_dht_key((*iter)->dht_key);
         in->set_public_ip((*iter)->public_ip);
         in->set_public_port((*iter)->public_port);
     }
