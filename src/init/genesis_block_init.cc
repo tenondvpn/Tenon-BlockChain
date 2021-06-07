@@ -32,24 +32,18 @@ int GenesisBlockInit::CreateGenesisBlocks(uint32_t net_id) {
 }
 
 int GenesisBlockInit::CreateRootGenesisBlocks() {
-    uint64_t genesis_account_balance = common::kGenesisFoundationMaxTenon / pool_index_map_.size();
+    uint64_t genesis_account_balance = 0llu;
     uint64_t all_balance = 0llu;
-    for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         bft::protobuf::Block tenon_block;
         auto tx_list = tenon_block.mutable_tx_list();
-        security::PrivateKey prikey(iter->second);
-        security::PublicKey pubkey(prikey);
-        std::string pubkey_str;
-        if (pubkey.Serialize(pubkey_str, false) != security::kPublicKeyUncompressSize) {
-            return kInitError;
-        }
-
-        std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        auto iter = root::kRootInitAccountAddressWithPoolIndexMap.find(i);
+        std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(iter->second);
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
         tx_info->set_gid(common::CreateGID(""));
         tx_info->set_from(address);
-        tx_info->set_from_pubkey(pubkey_str);
+        tx_info->set_from_pubkey("");
         tx_info->set_from_sign("");
         tx_info->set_to("");
         tx_info->set_amount(genesis_account_balance);
@@ -228,6 +222,8 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
             return kInitError;
         }
     }
+
+    return kInitSuccess;
 }
 
 int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
@@ -302,6 +298,8 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
     if (all_balance != common::kGenesisFoundationMaxTenon) {
         return kInitError;
     }
+
+    return kInitSuccess;
 }
 
 void GenesisBlockInit::InitGenesisAccount() {
@@ -561,6 +559,10 @@ void GenesisBlockInit::InitGenesisAccount() {
     pool_index_map_.insert(std::make_pair(253, common::Encode::HexDecode("3db21474a70303482c8c8c4395ff4c97120b69832bef162b21675ea5422627fc")));
     pool_index_map_.insert(std::make_pair(254, common::Encode::HexDecode("9dde2eaab26334ff348959a02bcebedee37de577792b82992e90f0a8136347ae")));
     pool_index_map_.insert(std::make_pair(255, common::Encode::HexDecode("593bee91f956047f7dfa1df3603dfdb701b5e5fb601e4836a00ebd7a65f48d4d")));
+
+    for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
+        std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(iter->second)) << "\")));" << std::endl;
+    }
 }
 
 };  // namespace init
