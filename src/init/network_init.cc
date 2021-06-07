@@ -89,8 +89,15 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    if (argc >= 2 && std::string(argv[1]) == "gen_root") {
-        conf_.Set("db", "path", "root_db");
+    common::ParserArgs parser_arg;
+    if (ParseParams(argc, argv, parser_arg) != kInitSuccess) {
+        INIT_ERROR("parse params failed!");
+        return kInitError;
+    }
+
+    std::cout << "has u: " << parser_arg.Has("U") << std::endl;
+    if (parser_arg.Has("U")) {
+        conf_.Set("db", "path", std::string("./root_db"));
         if (InitBlock(conf_) != kInitSuccess) {
             INIT_ERROR("init block failed!");
             return kInitError;
@@ -102,11 +109,12 @@ int NetworkInit::Init(int argc, char** argv) {
             return kInitError;
         }
 
+        std::cout << "genesis root blocks success!" << std::endl;
         return kInitSuccess;
     }
 
-    if (argc >= 2 && std::string(argv[1]) == "gen_shard") {
-        conf_.Set("db", "path", "shard_db");
+    if (parser_arg.Has("S")) {
+        conf_.Set("db", "path", std::string("./shard_db"));
         if (InitBlock(conf_) != kInitSuccess) {
             INIT_ERROR("init block failed!");
             return kInitError;
@@ -118,6 +126,7 @@ int NetworkInit::Init(int argc, char** argv) {
             return kInitError;
         }
 
+        std::cout << "genesis shard blocks success!" << std::endl;
         return kInitSuccess;
     }
 
@@ -506,7 +515,9 @@ int NetworkInit::ParseParams(int argc, char** argv, common::ParserArgs& parser_a
     parser_arg.AddArgType('v', "version", common::kNoValue);
     parser_arg.AddArgType('L', "log_path", common::kMaybeValue);
     parser_arg.AddArgType('i', "id", common::kMaybeValue);
-    parser_arg.AddArgType('V', "vpn_vip_level", common::kMaybeValue);
+    parser_arg.AddArgType('V', "vpn_vip_level", common::kNoValue);
+    parser_arg.AddArgType('U', "gen_root", common::kNoValue);
+    parser_arg.AddArgType('S', "gen_shard", common::kNoValue);
 
     std::string tmp_params = "";
     for (int i = 1; i < argc; i++) {
