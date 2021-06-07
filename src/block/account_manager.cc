@@ -186,7 +186,6 @@ int AccountManager::AddBlockItem(
         }
     }
 
-    std::cout << "set pool: " << block_item.network_id() << ", consistent_pool_index: " << consistent_pool_index << std::endl;
     if (block_item.network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);

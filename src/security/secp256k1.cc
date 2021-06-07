@@ -9,6 +9,8 @@
 #include "common/hash.h"
 #include "block/block_utils.h"
 #include "security/crypto_utils.h"
+#include "security/private_key.h"
+#include "security/public_key.h"
 
 namespace tenon {
 
@@ -62,18 +64,10 @@ std::string Secp256k1::sha3(const std::string& input) {
     return std::string((char*)h.bytes, 32);
 }
 
-bool Secp256k1::ToPublic(const std::string& prikey, uint32_t flags, std::string* pub_key) {
-    auto* ctx = getCtx();
-    secp256k1_pubkey raw_pubkey;
-    // Creation will fail if the secret key is invalid.
-    if (!secp256k1_ec_pubkey_create(ctx, &raw_pubkey, (const uint8_t*)prikey.c_str())) {
-        return false;
-    }
-
-    size_t serialized_pubkey_size = kPublicKeyUncompressSize;
-    uint8_t data[kPublicKeyUncompressSize];
-    secp256k1_ec_pubkey_serialize(ctx, data, &serialized_pubkey_size, &raw_pubkey, flags);
-    *pub_key = std::string((char*)data, sizeof(data));
+bool Secp256k1::ToPublic(const std::string& str_prikey, uint32_t flags, std::string* str_pub_key) {
+    security::PrivateKey prikey(str_prikey);
+    security::PublicKey pubkey(prikey);
+    pubkey.Serialize(*str_pub_key, false);
     return true;
 }
 

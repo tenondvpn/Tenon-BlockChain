@@ -132,13 +132,15 @@ void Command::AddBaseCommands() {
     AddCommand("help", [this](const std::vector<std::string>& args) {
         Help();
     });
-    AddCommand("gen_all", [this](const std::vector<std::string>& args) {
+    AddCommand("gen_root", [this](const std::vector<std::string>& args) {
         GenesisBlockInit genesis_block;
         if (genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId) != 0) {
             std::cout << "genesis root blocks failed!" << std::endl;
             return;
         }
-
+    });
+    AddCommand("gen_shard", [this](const std::vector<std::string>& args) {
+        GenesisBlockInit genesis_block;
         if (genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId) != 0) {
             std::cout << "genesis shard blocks failed!" << std::endl;
             return;
