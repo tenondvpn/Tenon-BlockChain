@@ -34,7 +34,6 @@ private:
     ~ElectManager();
 
     void HandleMessage(transport::protobuf::Header& header);
-    void SaveElectBlock(transport::protobuf::Header& header);
     void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
 
     // visit not frequently, just mutex lock

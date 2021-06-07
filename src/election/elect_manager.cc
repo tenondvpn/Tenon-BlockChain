@@ -95,11 +95,6 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    if (ec_msg.has_elect_block()) {
-        ProcessNewElectBlock(header, ec_msg, false);
-        SaveElectBlock(header);
-    }
-
     if (ec_msg.has_waiting_nodes()) {
         std::vector<uint64_t> filter_vec;
         for (int32_t i = 0; i < ec_msg.waiting_nodes().nodes_filter_size(); ++i) {
@@ -122,11 +117,6 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             id,
             fiter);
     }
-}
-
-void ElectManager::SaveElectBlock(transport::protobuf::Header& header) {
-    std::string parse_str = header.SerializeAsString();
-    db::Db::Instance()->Put(db::kGlobalDbElectBlock, parse_str);
 }
 
 void ElectManager::ProcessNewElectBlock(
