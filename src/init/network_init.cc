@@ -104,7 +104,12 @@ int NetworkInit::Init(int argc, char** argv) {
         }
 
         init::GenesisBlockInit genesis_block;
-        if (genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId) != 0) {
+        std::vector<dht::NodePtr> root_genesis_nodes;
+        std::vector<dht::NodePtr> cons_genesis_nodes;
+        if (genesis_block.CreateGenesisBlocks(
+                network::kRootCongressNetworkId,
+                root_genesis_nodes,
+                cons_genesis_nodes) != 0) {
             std::cout << "genesis root blocks failed!" << std::endl;
             return kInitError;
         }
@@ -121,7 +126,12 @@ int NetworkInit::Init(int argc, char** argv) {
         }
 
         init::GenesisBlockInit genesis_block;
-        if (genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId) != 0) {
+        std::vector<dht::NodePtr> root_genesis_nodes;
+        std::vector<dht::NodePtr> cons_genesis_nodes;
+        if (genesis_block.CreateGenesisBlocks(
+                network::kConsensusShardBeginNetworkId,
+                root_genesis_nodes,
+                cons_genesis_nodes) != 0) {
             std::cout << "genesis shard blocks failed!" << std::endl;
             return kInitError;
         }
