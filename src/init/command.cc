@@ -18,6 +18,7 @@
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
 #include "network/route.h"
+#include "network/network_utils.h"
 #include "bft/bft_manager.h"
 #include "init/init_utils.h"
 #include "contract/contract_utils.h"
@@ -29,6 +30,7 @@
 #include "statistics/statistics.h"
 #include "tvm/execution.h"
 #include "tvm/tenon_host.h"
+#include "init/genesis_block_init.h"
 // #include "services/vpn_server/server.h"
 // #include "services/vpn_server/vpn_server.h"
 
@@ -129,6 +131,11 @@ void Command::AddCommand(const std::string& cmd_name, CommandFunction cmd_func) 
 void Command::AddBaseCommands() {
     AddCommand("help", [this](const std::vector<std::string>& args) {
         Help();
+    });
+    AddCommand("gen_all", [this](const std::vector<std::string>& args) {
+        GenesisBlockInit genesis_block;
+        genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId);
+        genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId);
     });
     AddCommand("prt", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {
