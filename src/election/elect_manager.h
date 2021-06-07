@@ -24,18 +24,17 @@ public:
     int Join(uint32_t network_id);
     int Quit(uint32_t network_id);
     int BackupCheckElectConsensusShard(const bft::protobuf::TxInfo& tx_info);
+    void ProcessNewElectBlock(
+        uint64_t height,
+        protobuf::ElectBlock& elect_block,
+        bool load_from_db);
 
 private:
     ElectManager();
     ~ElectManager();
 
     void HandleMessage(transport::protobuf::Header& header);
-    void ProcessNewElectBlock(
-            transport::protobuf::Header& header,
-            protobuf::ElectMessage& elect_msg,
-            bool load_from_db);
     void SaveElectBlock(transport::protobuf::Header& header);
-    void LoadElectBlock();
     void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
 
     // visit not frequently, just mutex lock
@@ -43,6 +42,7 @@ private:
     std::mutex elect_network_map_mutex_;
     std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
     ElectPoolManager pool_manager_;
+    std::atomic<uint64_t> latest_height_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

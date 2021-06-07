@@ -51,6 +51,17 @@ public:
     int GetBytesCode(std::string* bytes_code);
     int SetAddressType(uint32_t address_type, db::DbWriteBach& db_batch);
     int GetAddressType(uint32_t* address_type);
+    int AddNewElectBlock(
+        uint32_t network_id,
+        uint64_t height,
+        const std::string& elect_block_str,
+        db::DbWriteBach& db_batch);
+    int GetLatestElectBlock(
+        uint32_t network_id,
+        uint64_t* height,
+        std::string* elect_block_str);
+    int AddNewTimeBlock(uint64_t height, uint64_t block_tm, db::DbWriteBach& db_batch);
+    int GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm);
     size_t VmCodeSize();
     std::string VmCodeHash();
     std::string GetCode();
@@ -96,13 +107,17 @@ private:
     std::mutex tx_height_queue_mutex_;
     common::MinHeap<common::BlockItemPtr, kTopTxHeightBlocksCount> top_height_blocks_{ false };
     std::mutex top_height_blocks_mutex_;
-    std::mutex bytes_code_mutex_;
     std::string bytes_code_;
+    std::mutex bytes_code_mutex_;
     std::mutex owner_mutex_;
     std::string owner_;
     std::string full_account_id_;
     std::mutex full_account_id_mutex_;
     std::atomic<bool> locked_{ false };
+    std::unordered_map<uint32_t, std::pair<uint64_t, std::string>> elect_blocks_map_;
+    std::mutex elect_blocks_map_mutex_;
+    std::atomic<uint64_t> latest_time_block_heigth_{ common::kInvalidUint64 };
+    std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

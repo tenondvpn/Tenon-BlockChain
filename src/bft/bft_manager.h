@@ -24,10 +24,6 @@ public:
     int AddBft(BftInterfacePtr& bft_ptr);
     BftInterfacePtr GetBft(const std::string& gid);
     void RemoveBft(const std::string& gid);
-    void NetworkMemberChange(
-        uint32_t network_id,
-        elect::MembersPtr& members_ptr,
-        elect::NodeIndexMapPtr& node_index_map);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id) {
         return elect::MemberManager::Instance()->GetNetworkMembers(network_id);

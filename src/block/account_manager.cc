@@ -5,6 +5,11 @@
 #include "statistics/statistics.h"
 #include "contract/contract_manager.h"
 #include "db/db.h"
+#include "election/member_manager.h"
+#include "election/proto/elect.pb.h"
+#include "election/elect_manager.h"
+#include "timeblock/time_block_utils.h"
+#include "timeblock/time_block_manager.h"
 
 namespace tenon {
 
@@ -100,6 +105,58 @@ int AccountManager::GetAddressConsensusNetworkId(
     return kBlockSuccess;
 }
 
+int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
+    if (tx_info.network_id() == common::GlobalInfo::Instance()->network_id() ||
+            tx_info.network_id() + network::kConsensusWaitingShardOffset ==
+            common::GlobalInfo::Instance()->network_id()) {
+        elect::protobuf::ElectBlock elect_block;
+        for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+            if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
+                elect_block.ParseFromString(tx_info.attr(i).value());
+            }
+        }
+
+        if (!elect_block.IsInitialized()) {
+            return kBlockError;
+        }
+
+        elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, false);
+    }
+
+    return kBlockSuccess;
+}
+
+int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
+            tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
+                height,
+                common::StringUtil::ToUint64(tx_info.attr(i).value()));
+        }
+    }
+
+    return kBlockSuccess;
+}
+
+int AccountManager::HandleRootSingleBlockTx(
+        uint64_t height,
+        const bft::protobuf::TxInfo& tx_info) {
+    switch (tx_info.type()) {
+    case common::kConsensusRootElectRoot:
+    case common::kConsensusRootElectShard:
+        return HandleElectBlock(height, tx_info);
+    case common::kConsensusRootTimeBlock:
+        return HandleTimeBlock(height, tx_info);
+        break;
+    case common::kConsensusRootVssBlock:
+        break;
+    default:
+        break;
+    }
+
+    return kBlockSuccess;
+}
+
 int AccountManager::AddBlockItem(
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch) {
@@ -112,6 +169,12 @@ int AccountManager::AddBlockItem(
     // one block must be one consensus pool
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
+            if (HandleRootSingleBlockTx(block_item.height(), tx_list[i]) != kBlockSuccess) {
+                return kBlockError;
+            }
+        }
+
         std::string account_id;
         if (tx_list[i].to_add()) {
             account_id = tx_list[i].to();
@@ -186,10 +249,6 @@ int AccountManager::AddBlockItem(
         }
     }
 
-    std::cout << "set network pool: " << block_item.network_id()
-        << ":" << common::GlobalInfo::Instance()->network_id()
-        << ", consistent_pool_index: " << consistent_pool_index
-        << std::endl;
     if (block_item.network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
@@ -355,7 +414,8 @@ int AccountManager::UpdateAccountInfo(
     if (iter == acc_map_.end()) {
         account_info = new block::DbAccountInfo(account_id);
         if (!block::DbAccountInfo::AccountExists(account_id)) {
-            if (tx_info.type() == common::kConsensusCreateGenesisAcount || bft::IsRootSingleBlockTx(tx_info.type())) {
+            if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
+                    bft::IsRootSingleBlockTx(tx_info.type())) {
                 if (GenesisAddAccountInfo(account_id, db_batch, account_info) != kBlockSuccess) {
                     delete account_info;
                     return kBlockError;
@@ -485,6 +545,24 @@ int AccountManager::SetAccountAttrs(
                 (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add())) {
             if (exist_height <= tmp_now_height) {
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
+                    if (tx_info.type() == common::kConsensusRootElectShard) {
+                        if (tx_info.attr(attr_idx).key() == elect::kElectNodeAttrElectBlock) {
+                            account_info->AddNewElectBlock(
+                                tx_info.network_id(),
+                                tmp_now_height,
+                                tx_info.attr(attr_idx).value(),
+                                db_batch);
+                        }
+                    }
+
+                    if (tx_info.type() == common::kConsensusRootTimeBlock) {
+                        if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
+                            account_info->AddNewTimeBlock(
+                                tmp_now_height,
+                                common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()));
+                        }
+                    }
+
                     if (IsInvalidKey(tx_info.attr(attr_idx).key())) {
                         continue;
                     }

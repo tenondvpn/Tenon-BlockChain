@@ -80,6 +80,9 @@ private:
     void SaveHeightBlockWithCache(uint64_t height, std::string* block_data);
     void SendBlockResponse(transport::protobuf::Header& header, const std::string& block_str);
     int64_t FixRewardWithHistory(const std::string& id, int64_t new_amount);
+    int InitRootSingleBlocks();
+    int InitRootElectBlocks();
+    int InitRootTimeBlocks();
 
     static const uint32_t kCacheBlockSize = 1024;
     std::unordered_map<uint64_t, std::pair<std::string*, int32_t>> height_chain_map_;

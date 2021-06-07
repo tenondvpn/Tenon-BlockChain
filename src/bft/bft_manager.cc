@@ -43,13 +43,6 @@ BftManager* BftManager::Instance() {
     return &ins;
 }
 
-void BftManager::NetworkMemberChange(
-        uint32_t network_id,
-        elect::MembersPtr& members_ptr,
-        elect::NodeIndexMapPtr& node_index_map) {
-    elect::MemberManager::Instance()->SetNetworkMember(network_id, members_ptr, node_index_map);
-}
-
 uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
     return elect::MemberManager::Instance()->GetMemberIndex(network_id, node_id);
 }

@@ -23,6 +23,10 @@ static const std::string kFieldMaxHeight("max_height");
 static const std::string kFieldMaxHash("max_hash");
 static const std::string kFieldBytesCode("bytes_code");
 static const std::string kFieldAddressType("addr_type");
+static const std::string kFieldElectBlock("elect_block");
+static const std::string kFieldElectHeight("elect_height");
+static const std::string kFieldTimeBlock("time_block");
+static const std::string kFieldTimeHeight("time_height");
 
 std::unordered_set<std::string> DbAccountInfo::account_id_set_;
 std::mutex DbAccountInfo::account_id_set_mutex_;
@@ -513,7 +517,10 @@ int DbAccountInfo::GetMaxHash(std::string* max_hash) {
     return kBlockSuccess;
 }
 
-int DbAccountInfo::SetAttrWithHeight(const std::string& attr_key, uint64_t height, db::DbWriteBach& db_batch) {
+int DbAccountInfo::SetAttrWithHeight(
+        const std::string& attr_key,
+        uint64_t height,
+        db::DbWriteBach& db_batch) {
     std::string tmp_key = dict_key_ + "_" + kFieldAttrsWithHeight;
     if (!db::Dict::Instance()->Hset(
             tmp_key,
@@ -682,6 +689,135 @@ std::string DbAccountInfo::GetCode() {
     }
 
     return bytes_code;
+}
+
+int DbAccountInfo::AddNewElectBlock(
+        uint32_t network_id,
+        uint64_t height,
+        const std::string& elect_block_str,
+        db::DbWriteBach& db_batch) {
+    std::lock_guard<std::mutex> guard(elect_blocks_map_mutex_);
+    auto iter = elect_blocks_map_.find(network_id);
+    if (iter == elect_blocks_map_.end()) {
+        std::string tmp_key = dict_key_ + "_" + kFieldElectHeight;
+        std::string tmp_str;
+        auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+        if (st.ok()) {
+            auto db_height = common::StringUtil::ToUint64(tmp_str);
+            if (db_height > height) {
+                tmp_key = dict_key_ + "_" + kFieldElectBlock;
+                st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+                if (!st.ok()) {
+                    return kBlockError;
+                }
+
+                elect_blocks_map_[network_id] = std::make_pair(db_height, tmp_str);
+                return kBlockSuccess;
+            }
+        }
+    } else {
+        if (iter->second.first > height) {
+            return kBlockSuccess;
+        }
+    }
+
+    std::string tmp_key = dict_key_ + "_" + kFieldElectBlock;
+    db_batch.Put(tmp_key, elect_block_str);
+    tmp_key = dict_key_ + "_" + kFieldElectHeight;
+    db_batch.Put(tmp_key, std::to_string(height));
+    elect_blocks_map_[network_id] = std::make_pair(height, elect_block_str);
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::GetLatestElectBlock(
+        uint32_t network_id,
+        uint64_t* height,
+        std::string* elect_block_str) {
+    {
+        std::lock_guard<std::mutex> guard(elect_blocks_map_mutex_);
+        auto iter = elect_blocks_map_.find(network_id);
+        if (iter != elect_blocks_map_.end()) {
+            *height = iter->second.first;
+            *elect_block_str = iter->second.second;
+            return kBlockError;
+        }
+    }
+
+    std::string tmp_key = dict_key_ + "_" + kFieldElectHeight;
+    std::string tmp_str;
+    auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+        
+    *height = common::StringUtil::ToUint64(tmp_str);
+    tmp_key = dict_key_ + "_" + kFieldElectBlock;
+    st = db::Db::Instance()->Get(tmp_key, elect_block_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    elect_blocks_map_[network_id] = std::make_pair(*height, *elect_block_str);
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::AddNewTimeBlock(
+        uint64_t height,
+        uint64_t block_tm,
+        db::DbWriteBach& db_batch) {
+    if (latest_time_block_heigth_ == common::kInvalidUint64) {
+        std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
+        std::string tmp_str;
+        auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+        if (st.ok()) {
+            latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
+            tmp_key = dict_key_ + "_" + kFieldTimeBlock;
+            auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+            if (!st.ok()) {
+                return kBlockError;
+            }
+
+            latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+        }
+    }
+
+    if (latest_time_block_heigth_ > height) {
+        return kBlockSuccess;
+    }
+
+    std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
+    db_batch.Put(tmp_key, std::to_string(height));
+    tmp_key = dict_key_ + "_" + kFieldTimeBlock;
+    db_batch.Put(tmp_key, std::to_string(block_tm));
+    latest_time_block_heigth_ = height;
+    latest_time_block_tm_ = block_tm;
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
+    if (latest_time_block_heigth_ != common::kInvalidUint64 &&
+            latest_time_block_tm_ != common::kInvalidUint64) {
+        *height = latest_time_block_heigth_;
+        *block_tm = latest_time_block_tm_;
+        return kBlockSuccess;
+    }
+
+    std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
+    std::string tmp_str;
+    auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
+    tmp_key = dict_key_ + "_" + kFieldTimeBlock;
+    auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+    return kBlockSuccess;
 }
 
 }  // namespace block

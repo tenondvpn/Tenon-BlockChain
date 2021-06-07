@@ -62,6 +62,9 @@ private:
         block::DbAccountInfo* account_info,
         db::DbWriteBach& db_batch);
     bool IsInvalidKey(const std::string& key);
+    int HandleRootSingleBlockTx(uint64_t height, const bft::protobuf::TxInfo& tx_info);
+    int HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
+    int HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
     std::mutex acc_map_mutex_;

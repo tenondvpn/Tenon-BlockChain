@@ -53,7 +53,6 @@ int ElectManager::Join(uint32_t network_id) {
         elect_network_map_[network_id] = elect_node_ptr_;
     }
 
-    // LoadElectBlock();
     return kElectSuccess;
 }
 
@@ -130,38 +129,19 @@ void ElectManager::SaveElectBlock(transport::protobuf::Header& header) {
     db::Db::Instance()->Put(db::kGlobalDbElectBlock, parse_str);
 }
 
-void ElectManager::LoadElectBlock() {
-    std::string parse_str;
-    auto st = db::Db::Instance()->Get(db::kGlobalDbElectBlock, &parse_str);
-    if (!st.ok()) {
-        return;
-    }
-        
-    transport::protobuf::Header header;
-    if (!header.ParseFromString(parse_str)) {
-        return;
-    }
-
-    protobuf::ElectMessage ec_msg;
-    if (!ec_msg.ParseFromString(header.data())) {
-        ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
-        return;
-    }
-
-    if (ec_msg.has_elect_block()) {
-        ProcessNewElectBlock(header, ec_msg, true);
-    }
-}
-
 void ElectManager::ProcessNewElectBlock(
-        transport::protobuf::Header& header,
-        protobuf::ElectMessage& elect_msg,
+        uint64_t height,
+        protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    assert(elect_msg.has_elect_block());
+    if (height < latest_height_) {
+        return;
+    }
+
+    latest_height_ = height;
     std::map<uint32_t, MembersPtr> in_members;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
-    auto in = elect_msg.elect_block().in();
+    auto in = elect_block.in();
     for (int32_t i = 0; i < in.size(); ++i) {
         auto net_id = in[i].net_id();
         auto iter = in_members.find(net_id);
@@ -199,13 +179,23 @@ void ElectManager::ProcessNewElectBlock(
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }
 
+        if (in[i].id() == common::GlobalInfo::Instance()->id()) {
+            if (common::GlobalInfo::Instance()->network_id() != net_id) {
+                if (Join(net_id) != kElectSuccess) {
+                    BFT_ERROR("join elected network failed![%u]", net_id);
+                }
+
+                common::GlobalInfo::Instance()->set_network_id(net_id);
+            }
+        }
+
         ++begin_index_map[net_id];
     }
 
     for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
         auto index_map_iter = in_index_members.find(iter->first);
         assert(index_map_iter != in_index_members.end());
-        bft::BftManager::Instance()->NetworkMemberChange(
+        MemberManager::Instance()->SetNetworkMember(
             iter->first,
             iter->second,
             index_map_iter->second);

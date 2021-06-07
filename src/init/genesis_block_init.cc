@@ -68,7 +68,6 @@ int GenesisBlockInit::CreateElectBlock(
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(elect::kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
-
     tenon_block.set_prehash(root_pre_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_elect_ver(0);
@@ -175,20 +174,24 @@ int GenesisBlockInit::GenerateRootSingleBlock(
             return kInitError;
         }
 
-        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
+        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+            root::kRootChainSingleBlockTxAddress);
         if (account_ptr == nullptr) {
-            INIT_ERROR("get address failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
 
         uint64_t balance = 0;
         if (account_ptr->GetBalance(&balance), block::kBlockSuccess) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
 
         if (balance != 0) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
 
@@ -252,20 +255,24 @@ int GenesisBlockInit::GenerateRootSingleBlock(
             return kInitError;
         }
 
-        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
+        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+            root::kRootChainSingleBlockTxAddress);
         if (account_ptr == nullptr) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
 
         uint64_t balance = 0;
         if (account_ptr->GetBalance(&balance) != block::kBlockSuccess) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
 
         if (balance != 0) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
             return kInitError;
         }
     }

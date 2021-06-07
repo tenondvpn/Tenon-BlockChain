@@ -19,7 +19,11 @@
 #include "block/proto/block.pb.h"
 #include "block/proto/block_proto.h"
 #include "bft/proto/bft_proto.h"
+#include "election/proto/elect.pb.h"
+#include "election/elect_manager.h"
 #include "init/update_vpn_init.h"
+#include "root/root_utils.h"
+#include "timeblock/time_block_manager.h"
 
 namespace tenon {
 
@@ -134,11 +138,76 @@ BlockManager::BlockManager() {
 BlockManager::~BlockManager() {}
 
 int BlockManager::Init(common::Config& conf) {
+    if (InitRootSingleBlocks() != kBlockSuccess) {
+        return kBlockError;
+    }
+
     network::Route::Instance()->RegisterMessage(
         common::kBlockMessage,
         std::bind(&BlockManager::HandleMessage, this, std::placeholders::_1));
 
     bool genesis = false;
+    return kBlockSuccess;
+}
+
+int BlockManager::InitRootSingleBlocks() {
+    if (InitRootElectBlocks() != kBlockSuccess) {
+        return kBlockError;
+    }
+    
+    if (InitRootTimeBlocks() != kBlockSuccess) {
+        return kBlockError;
+    }
+
+    return kBlockSuccess;
+}
+
+int BlockManager::InitRootTimeBlocks() {
+    auto account_info = AccountManager::Instance()->GetAcountInfo(
+        root::kRootChainSingleBlockTxAddress);
+    if (account_info == nullptr) {
+        return kBlockSuccess;
+    }
+
+    uint64_t latest_time_block_height = 0;
+    uint64_t latest_time_block_tm = 0;
+    if (account_info->GetLatestTimeBlock(
+            &latest_time_block_height,
+            &latest_time_block_tm) != kBlockSuccess) {
+        return kBlockSuccess;
+    }
+
+    tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
+        latest_time_block_height,
+        latest_time_block_tm);
+    return kBlockSuccess;
+}
+
+int BlockManager::InitRootElectBlocks() {
+    auto account_info = AccountManager::Instance()->GetAcountInfo(
+        root::kRootChainSingleBlockTxAddress);
+    if (account_info == nullptr) {
+        return kBlockSuccess;
+    }
+
+    uint64_t latest_elect_block_height = 0;
+    std::string latest_elect_block_str;
+    if (account_info->GetLatestElectBlock(
+            network::kRootCongressNetworkId,
+            &latest_elect_block_height,
+            &latest_elect_block_str) != kBlockSuccess) {
+        return kBlockSuccess;
+    }
+
+    elect::protobuf::ElectBlock elect_block;
+    if (!elect_block.ParseFromString(latest_elect_block_str)) {
+        return kBlockError;
+    }
+
+    elect::ElectManager::Instance()->ProcessNewElectBlock(
+        latest_elect_block_height,
+        elect_block,
+        false);
     return kBlockSuccess;
 }
 
