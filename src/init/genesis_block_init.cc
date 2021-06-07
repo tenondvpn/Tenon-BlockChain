@@ -63,6 +63,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
+            INIT_ERROR("add genesis block failed!");
             return kInitError;
         }
 
@@ -75,20 +76,24 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
             &pool_hash,
             &tm);
         if (res != block::kBlockSuccess) {
+            INIT_ERROR("get pool block info failed! [%u]", iter->first);
             return kInitError;
         }
 
         auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(address);
         if (account_ptr == nullptr) {
+            INIT_ERROR("get address info failed! [%s]", common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         uint64_t balance = 0;
         if (account_ptr->GetBalance(&balance) != block::kBlockSuccess) {
+            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         if (balance != genesis_account_balance) {
+            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
@@ -96,6 +101,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
     }
 
     if (all_balance != common::kGenesisFoundationMaxTenon) {
+        INIT_ERROR("balance all error[%llu][%llu]", all_balance, common::kGenesisFoundationMaxTenon);
         return kInitError;
     }
 
@@ -557,11 +563,39 @@ void GenesisBlockInit::InitGenesisAccount() {
 }
 
 void GenesisBlockInit::GenerateRootAccounts() {
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        root_account_with_pool_index_map_.insert(std::make_pair(
-            i,
-            common::Encode::HexDecode(common::StringUtil::Format(
-                "1000000000000000000000000000000000000%3d", i))));
+    while (root_account_with_pool_index_map_.size() < common::kImmutablePoolSize) {
+        security::PrivateKey prikey;
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        if (pubkey.Serialize(pubkey_str, false) != security::kPublicKeyUncompressSize) {
+            assert(false);
+            return;
+        }
+
+        std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        auto pool_index = common::GetPoolIndex(address);
+        auto iter = root_account_with_pool_index_map_.find(pool_index);
+        if (iter != root_account_with_pool_index_map_.end()) {
+            continue;
+        }
+
+        std::string prikey_str;
+        if (prikey.Serialize(prikey_str) != security::kPrivateKeySize) {
+            assert(false);
+            return;
+        }
+
+        root_account_with_pool_index_map_.insert(std::make_pair(pool_index, prikey_str));
+    }
+
+    std::cout << std::endl << "private key is: " << std::endl;
+    for (auto iter = root_account_with_pool_index_map_.begin(); iter != root_account_with_pool_index_map_.end(); ++iter) {
+        std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(iter->second) << "\")));" << std::endl;
+    }
+
+    std::cout << std::endl << "address is: " << std::endl;
+    for (auto iter = root_account_with_pool_index_map_.begin(); iter != root_account_with_pool_index_map_.end(); ++iter) {
+        std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(iter->second)) << "\")));" << std::endl;
     }
 }
 

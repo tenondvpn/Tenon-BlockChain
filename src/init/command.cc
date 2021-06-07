@@ -134,8 +134,15 @@ void Command::AddBaseCommands() {
     });
     AddCommand("gen_all", [this](const std::vector<std::string>& args) {
         GenesisBlockInit genesis_block;
-        genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId);
-        genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId);
+        if (genesis_block.CreateGenesisBlocks(network::kRootCongressNetworkId) != 0) {
+            std::cout << "genesis root blocks failed!" << std::endl;
+            return;
+        }
+
+        if (genesis_block.CreateGenesisBlocks(network::kConsensusShardBeginNetworkId) != 0) {
+            std::cout << "genesis shard blocks failed!" << std::endl;
+            return;
+        }
     });
     AddCommand("prt", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {
