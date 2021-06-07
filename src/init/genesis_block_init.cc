@@ -32,12 +32,13 @@ int GenesisBlockInit::CreateGenesisBlocks(uint32_t net_id) {
 }
 
 int GenesisBlockInit::CreateRootGenesisBlocks() {
+    GenerateRootAccounts();
     uint64_t genesis_account_balance = 0llu;
     uint64_t all_balance = 0llu;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         bft::protobuf::Block tenon_block;
         auto tx_list = tenon_block.mutable_tx_list();
-        auto iter = root::kRootInitAccountAddressWithPoolIndexMap.find(i);
+        auto iter = root_account_with_pool_index_map_.find(i);
         std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(iter->second);
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
@@ -227,6 +228,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
 }
 
 int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
+    InitGenesisAccount();
     uint64_t genesis_account_balance = common::kGenesisFoundationMaxTenon / pool_index_map_.size();
     uint64_t all_balance = 0llu;
     for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
@@ -562,6 +564,15 @@ void GenesisBlockInit::InitGenesisAccount() {
 
     for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
         std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(iter->second)) << "\")));" << std::endl;
+    }
+}
+
+void GenesisBlockInit::GenerateRootAccounts() {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        root_account_with_pool_index_map_.insert(std::make_pair(
+            i,
+            common::Encode::HexDecode(common::StringUtil::Format(
+                "1000000000000000000000000000000000000%3d", i))));
     }
 }
 
