@@ -39,7 +39,11 @@ int GenesisBlockInit::CreateRootGenesisBlocks() {
         bft::protobuf::Block tenon_block;
         auto tx_list = tenon_block.mutable_tx_list();
         auto iter = root_account_with_pool_index_map_.find(i);
-        std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(iter->second);
+        std::cout << "create address: " << common::Encode::HexEncode(iter->second)
+            << ", pool index: " << iter->first
+            << ", real pool index: " << common::GetPoolIndex(iter->second)
+            << std::endl;
+        std::string address = iter->second;
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
         tx_info->set_gid(common::CreateGID(""));
@@ -567,35 +571,28 @@ void GenesisBlockInit::GenerateRootAccounts() {
         security::PrivateKey prikey;
         security::PublicKey pubkey(prikey);
         std::string pubkey_str;
-        if (pubkey.Serialize(pubkey_str, false) != security::kPublicKeyUncompressSize) {
-            assert(false);
-            return;
-        }
+        pubkey.Serialize(pubkey_str, false);
+        std::string prikey_str;
+        prikey.Serialize(prikey_str);
 
         std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        std::string address1 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(pubkey_str);
+        assert(address == address1);
         auto pool_index = common::GetPoolIndex(address);
         auto iter = root_account_with_pool_index_map_.find(pool_index);
         if (iter != root_account_with_pool_index_map_.end()) {
             continue;
         }
 
-        std::string prikey_str;
-        if (prikey.Serialize(prikey_str) != security::kPrivateKeySize) {
-            assert(false);
-            return;
-        }
-
         root_account_with_pool_index_map_.insert(std::make_pair(pool_index, prikey_str));
     }
 
-    std::cout << std::endl << "private key is: " << std::endl;
     for (auto iter = root_account_with_pool_index_map_.begin(); iter != root_account_with_pool_index_map_.end(); ++iter) {
-        std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(iter->second) << "\")));" << std::endl;
+        std::cout << "root_account_with_pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(iter->second) << "\")));" << std::endl;
     }
 
-    std::cout << std::endl << "address is: " << std::endl;
     for (auto iter = root_account_with_pool_index_map_.begin(); iter != root_account_with_pool_index_map_.end(); ++iter) {
-        std::cout << "pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(iter->second)) << "\")));" << std::endl;
+        std::cout << "root_account_with_pool_index_map_.insert(std::make_pair(" << iter->first << ", common::Encode::HexDecode(\"" << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(iter->second)) << "\")));" << std::endl;
     }
 }
 

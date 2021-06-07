@@ -126,7 +126,7 @@ std::string Secp256k1::ToAddressWithPrivateKey(const std::string& pri_key) {
         return "";
     }
 
-    return block::UnicastAddress(common::Hash::keccak256(pub_key));
+    return block::UnicastAddress(common::Hash::keccak256(pub_key.substr(1, 64)));
 }
 
 std::string Secp256k1::GetContractAddress(

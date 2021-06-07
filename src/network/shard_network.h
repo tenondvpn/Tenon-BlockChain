@@ -94,6 +94,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         NETWORK_ERROR("init universal role dht failed!");
         return kNetworkError;
     }
+
     network::UniversalManager::Instance()->RegisterUniversal(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
