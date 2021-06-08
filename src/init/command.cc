@@ -28,11 +28,16 @@
 #include "block/account_manager.h"
 #include "ip/ip_with_country.h"
 #include "statistics/statistics.h"
+// #include "services/vpn_server/server.h"
+// #include "services/vpn_server/vpn_server.h"
+
+#ifndef _WIN321
+#include "security/private_key.h"
+#include "security/public_key.h"
 #include "tvm/execution.h"
 #include "tvm/tenon_host.h"
 #include "init/genesis_block_init.h"
-// #include "services/vpn_server/server.h"
-// #include "services/vpn_server/vpn_server.h"
+#endif
 
 namespace tenon {
 
@@ -44,7 +49,7 @@ Command::~Command() {
     destroy_ = true;
 }
 
-#ifdef _WIN32
+#ifdef _WIN321
 bool Command::Init(bool first_node, bool show_cmd, bool period_tick) {
     return true;
 }
@@ -52,6 +57,7 @@ void Command::Run() {}
 void Command::Help() {}
 
 #else
+
 bool Command::Init(bool first_node, bool show_cmd, bool period_tick) {
     first_node_ = first_node;
     show_cmd_ = show_cmd;
@@ -145,6 +151,11 @@ void Command::AddBaseCommands() {
         }
         uint32_t network_id = common::StringUtil::ToUint32(args[0]);
         PrintMembers(network_id);
+    });
+    AddCommand("p2p", [this](const std::vector<std::string>& args) {
+        if (args.size() > 0) {
+            PrivateKeyToPublicKey(args[0]);
+        }
     });
     AddCommand("b", [this](const std::vector<std::string>& args) {
         std::cout << "balance: " << client::VpnClient::Instance()->GetBalance() << std::endl;
@@ -816,6 +827,24 @@ int Command::CheckAllNodePortValid() {
     return 0;
 }
 
+int Command::PrivateKeyToPublicKey(const std::string& file) {
+    FILE* fp = fopen(file.c_str(), "r");
+    if (fp == nullptr) {
+        return kInitError;
+    }
+
+    char data[1024] = { 0 };
+    while (fgets(data, 1024, fp) != nullptr) {
+        data[64] = '\0';
+        security::PrivateKey prikey(common::Encode::HexDecode(data));
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        pubkey.Serialize(pubkey_str, true);
+        std::cout << data << "\t\t" << common::Encode::HexEncode(pubkey_str) << std::endl;
+    }
+
+    fclose(fp);
+}
 
 #endif
 

@@ -78,7 +78,8 @@ int GenesisBlockInit::CreateElectBlock(
     tenon_block.set_height(0);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-    fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(), root_gens_init_block_file);
+    fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(),
+        root_gens_init_block_file);
     if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
         INIT_ERROR("AddGenisisBlock error.");
         return kInitError;
@@ -97,20 +98,24 @@ int GenesisBlockInit::CreateElectBlock(
         return kInitError;
     }
 
-    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
+    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+        root::kRootChainSingleBlockTxAddress);
     if (account_ptr == nullptr) {
-        INIT_ERROR("get address failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+        INIT_ERROR("get address failed! [%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kInitError;
     }
 
     uint64_t balance = 0;
     if (account_ptr->GetBalance(&balance), block::kBlockSuccess) {
-        INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+        INIT_ERROR("get address balance failed! [%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kInitError;
     }
 
     if (balance != 0) {
-        INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+        INIT_ERROR("get address balance failed! [%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kInitError;
     }
 
@@ -155,7 +160,8 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tenon_block.set_height(root_single_block_height++);
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(), root_gens_init_block_file);
+        fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(),
+            root_gens_init_block_file);
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
             return kInitError;
@@ -314,7 +320,6 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
             return kInitError;
         }
 
-        std::cout << "get data from file: " << tmp_data << ", tx size: " << tenon_block.tx_list_size() << std::endl;
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("add genesis block failed!");
             return kInitError;
@@ -336,18 +341,21 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
         auto address = root::kRootChainSingleBlockTxAddress;
         auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(address);
         if (account_ptr == nullptr) {
-            INIT_ERROR("get address info failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address info failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         uint64_t balance = 0;
         if (account_ptr->GetBalance(&balance) != block::kBlockSuccess) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         if (balance != 0) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
     }
@@ -408,18 +416,21 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
 
         auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(address);
         if (account_ptr == nullptr) {
-            INIT_ERROR("get address info failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address info failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         uint64_t balance = 0;
         if (account_ptr->GetBalance(&balance) != block::kBlockSuccess) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
         if (balance != genesis_account_balance) {
-            INIT_ERROR("get address balance failed! [%s]", common::Encode::HexEncode(address).c_str());
+            INIT_ERROR("get address balance failed! [%s]",
+                common::Encode::HexEncode(address).c_str());
             return kInitError;
         }
 
@@ -427,7 +438,8 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
     }
 
     if (all_balance != 0) {
-        INIT_ERROR("balance all error[%llu][%llu]", all_balance, common::kGenesisFoundationMaxTenon);
+        INIT_ERROR("balance all error[%llu][%llu]",
+            all_balance, common::kGenesisFoundationMaxTenon);
         return kInitError;
     }
 

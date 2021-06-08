@@ -54,6 +54,7 @@ private:
             std::unordered_set<std::string>& added_user_set);
     int LoadAllNodesAndCheckPort();
     int CheckAllNodePortValid();
+    int PrivateKeyToPublicKey(const std::string& file);
 
     static const uint32_t kTransportTestPeriod = 1000 * 1000;
     std::map<std::string, CommandFunction> cmd_map_;
