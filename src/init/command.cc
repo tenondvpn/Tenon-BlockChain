@@ -834,16 +834,22 @@ int Command::PrivateKeyToPublicKey(const std::string& file) {
     }
 
     char data[1024] = { 0 };
+    FILE* out = fopen("./out", "w");
+    if (out == nullptr) {
+        return kInitError;
+    }
+
     while (fgets(data, 1024, fp) != nullptr) {
         data[64] = '\0';
         security::PrivateKey prikey(common::Encode::HexDecode(data));
         security::PublicKey pubkey(prikey);
         std::string pubkey_str;
         pubkey.Serialize(pubkey_str, true);
-        std::cout << data << "\t\t" << common::Encode::HexEncode(pubkey_str) << std::endl;
+        fputs((std::string(data) + "\t" + common::Encode::HexEncode(pubkey_str) + "\n").c_str(), out);
     }
 
     fclose(fp);
+    return kInitSuccess;
 }
 
 #endif
