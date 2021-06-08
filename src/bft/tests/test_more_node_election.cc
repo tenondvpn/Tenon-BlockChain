@@ -2028,11 +2028,11 @@ TEST_F(TestMoreNodeElection, TestCreateElection) {
                 elect::protobuf::ElectBlock ec_block;
                 ASSERT_TRUE(ec_block.ParseFromString(tx_bft.to_tx().block().tx_list(i).attr(j).value()));
                 ec_block_success = true;
+                auto tx_info = tx_bft.to_tx().block().tx_list(i);
+                elect::ElectManager::Instance()->ProcessNewElectBlock(tx_bft.to_tx().block().height(), ec_block, false);
             }
         }
 
-        auto tx_info = tx_bft.to_tx().block().tx_list(i);
-        bft::BftManager::Instance()->ProcessNewElectBlock(tx_info, false);
     }
 
     ASSERT_TRUE(ec_block_success);
