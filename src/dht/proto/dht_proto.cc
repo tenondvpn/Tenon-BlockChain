@@ -356,10 +356,15 @@ int32_t DhtProto::CreateConnectRequest(
 
     if (sign_cb != nullptr) {
         std::string enc_data;
-        std::string sign;
-        if (sign_cb(peer_pubkey, "", &enc_data, &sign) != kDhtSuccess) {
+        std::string sign_ch;
+        std::string sign_re;
+        if (sign_cb(peer_pubkey, "", &enc_data, &sign_ch, &sign_re) != kDhtSuccess) {
             return kDhtError;
         }
+
+        dht_msg.set_enc_data(enc_data);
+        dht_msg.set_sign_ch(sign_ch);
+        dht_msg.set_sign_re(sign_re);
     }
 
     msg.set_data(dht_msg.SerializeAsString());

@@ -19,13 +19,13 @@ message DetectionRequest {
     optional uint32 min_udp_port = 14;
     optional uint32 max_udp_port = 15;
     optional bytes node_tag = 16;
+    optional bytes public_key = 17;
 }
 
 message NatMessage {
 	optional DetectionRequest detection_req = 1;
     optional bytes enc_data = 2;
-    optional bytes pubkey = 3;
-    optional bytes sign_ch = 4;
-    optional bytes sign_re = 5;
+    optional bytes sign_ch = 3;
+    optional bytes sign_re = 4;
 
 }

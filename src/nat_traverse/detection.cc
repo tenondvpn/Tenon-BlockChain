@@ -158,7 +158,7 @@ void Detection::HandleDetectionRequest(
             from_port,
             nat_msg.detection_req().local_ip(),
             nat_msg.detection_req().local_port(),
-            header.pubkey(),
+            nat_msg.detection_req().public_key(),
             nat_msg.detection_req().node_tag());
     node->min_svr_port = nat_msg.detection_req().min_svr_port();
     node->max_svr_port = nat_msg.detection_req().max_svr_port();

@@ -26,7 +26,6 @@ public:
         msg.set_id(common::GlobalInfo::Instance()->MessageId());
         msg.set_type(common::kNatMessage);
         msg.set_client(local_node->client_mode);
-        msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         // TODO(tt): add sign
         nat::protobuf::NatMessage nat_msg;
         auto detection_req = nat_msg.mutable_detection_req();
@@ -35,6 +34,7 @@ public:
         detection_req->set_local_ip(local_node->local_ip());
         detection_req->set_local_port(local_node->local_port);
         detection_req->set_id(local_node->id());
+        detection_req->set_public_key(security::Schnorr::Instance()->str_pubkey());
         detection_req->set_nat_type(local_node->nat_type);
         detection_req->set_dht_key(local_node->dht_key());
         detection_req->set_client(local_node->client_mode);
