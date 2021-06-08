@@ -146,7 +146,7 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
 
         // check ecdh encrypt and decrypt valid, if not, can't join
         std::string sec_key;
-        if (!security::IsValidPublicKey()) {
+        if (!security::IsValidPublicKey(node->pubkey_str())) {
             return dht::kDhtError;
         }
 
@@ -162,7 +162,8 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
             return dht::kDhtError;
         }
 
-        uint32_t data_size = (enc_data.size() / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
+        uint32_t data_size = 
+            (node->enc_data.size() / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
         char* tmp_out_enc = (char*)malloc(data_size);
         memset(tmp_out_enc, 0, data_size);
         if (security::Aes::Decrypt(
