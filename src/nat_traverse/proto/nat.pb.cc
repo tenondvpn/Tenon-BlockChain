@@ -97,14 +97,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::DetectionRequest, min_udp_port_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::DetectionRequest, max_udp_port_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::DetectionRequest, node_tag_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::DetectionRequest, public_key_),
   0,
-  5,
-  1,
   6,
-  2,
+  1,
   7,
-  3,
+  2,
   8,
+  3,
   9,
   10,
   11,
@@ -112,7 +112,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   13,
   14,
   15,
+  16,
   4,
+  5,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -120,18 +122,16 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, detection_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, enc_data_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, sign_ch_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, sign_re_),
-  4,
+  3,
   0,
   1,
   2,
-  3,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 21, sizeof(::tenon::nat::protobuf::DetectionRequest)},
-  { 37, 47, sizeof(::tenon::nat::protobuf::NatMessage)},
+  { 0, 22, sizeof(::tenon::nat::protobuf::DetectionRequest)},
+  { 39, 48, sizeof(::tenon::nat::protobuf::NatMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -160,7 +160,7 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\tnat.proto\022\022tenon.nat.protobuf\"\316\002\n\020Dete"
+      "\n\tnat.proto\022\022tenon.nat.protobuf\"\342\002\n\020Dete"
       "ctionRequest\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013publi"
       "c_port\030\002 \001(\005\022\020\n\010local_ip\030\003 \001(\014\022\022\n\nlocal_"
       "port\030\004 \001(\005\022\n\n\002id\030\005 \001(\014\022\020\n\010nat_type\030\006 \001(\005"
@@ -169,13 +169,13 @@ void AddDescriptorsImpl() {
       "\016min_route_port\030\013 \001(\r\022\026\n\016max_route_port\030"
       "\014 \001(\r\022\023\n\013node_weight\030\r \001(\r\022\024\n\014min_udp_po"
       "rt\030\016 \001(\r\022\024\n\014max_udp_port\030\017 \001(\r\022\020\n\010node_t"
-      "ag\030\020 \001(\014\"\215\001\n\nNatMessage\022;\n\rdetection_req"
-      "\030\001 \001(\0132$.tenon.nat.protobuf.DetectionReq"
-      "uest\022\020\n\010enc_data\030\002 \001(\014\022\016\n\006pubkey\030\003 \001(\014\022\017"
-      "\n\007sign_ch\030\004 \001(\014\022\017\n\007sign_re\030\005 \001(\014"
+      "ag\030\020 \001(\014\022\022\n\npublic_key\030\021 \001(\014\"}\n\nNatMessa"
+      "ge\022;\n\rdetection_req\030\001 \001(\0132$.tenon.nat.pr"
+      "otobuf.DetectionRequest\022\020\n\010enc_data\030\002 \001("
+      "\014\022\017\n\007sign_ch\030\003 \001(\014\022\017\n\007sign_re\030\004 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 512);
+      descriptor, 515);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "nat.proto", &protobuf_RegisterTypes);
 }
@@ -216,6 +216,7 @@ const int DetectionRequest::kNodeWeightFieldNumber;
 const int DetectionRequest::kMinUdpPortFieldNumber;
 const int DetectionRequest::kMaxUdpPortFieldNumber;
 const int DetectionRequest::kNodeTagFieldNumber;
+const int DetectionRequest::kPublicKeyFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DetectionRequest::DetectionRequest()
@@ -250,6 +251,10 @@ DetectionRequest::DetectionRequest(const DetectionRequest& from)
   if (from.has_node_tag()) {
     node_tag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.node_tag_);
   }
+  public_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_public_key()) {
+    public_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_key_);
+  }
   ::memcpy(&public_port_, &from.public_port_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_udp_port_) -
     reinterpret_cast<char*>(&public_port_)) + sizeof(max_udp_port_));
@@ -262,6 +267,7 @@ void DetectionRequest::SharedCtor() {
   id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   node_tag_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  public_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&public_port_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&max_udp_port_) -
       reinterpret_cast<char*>(&public_port_)) + sizeof(max_udp_port_));
@@ -278,6 +284,7 @@ void DetectionRequest::SharedDtor() {
   id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dht_key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   node_tag_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  public_key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void DetectionRequest::SetCachedSize(int size) const {
@@ -301,7 +308,7 @@ void DetectionRequest::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 31u) {
+  if (cached_has_bits & 63u) {
     if (cached_has_bits & 0x00000001u) {
       public_ip_.ClearNonDefaultToEmptyNoArena();
     }
@@ -317,17 +324,21 @@ void DetectionRequest::Clear() {
     if (cached_has_bits & 0x00000010u) {
       node_tag_.ClearNonDefaultToEmptyNoArena();
     }
+    if (cached_has_bits & 0x00000020u) {
+      public_key_.ClearNonDefaultToEmptyNoArena();
+    }
   }
-  if (cached_has_bits & 224u) {
+  if (cached_has_bits & 192u) {
     ::memset(&public_port_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&nat_type_) -
-        reinterpret_cast<char*>(&public_port_)) + sizeof(nat_type_));
+        reinterpret_cast<char*>(&local_port_) -
+        reinterpret_cast<char*>(&public_port_)) + sizeof(local_port_));
   }
   if (cached_has_bits & 65280u) {
-    ::memset(&client_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&max_udp_port_) -
-        reinterpret_cast<char*>(&client_)) + sizeof(max_udp_port_));
+    ::memset(&nat_type_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&min_udp_port_) -
+        reinterpret_cast<char*>(&nat_type_)) + sizeof(min_udp_port_));
   }
+  max_udp_port_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -556,6 +567,18 @@ bool DetectionRequest::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes public_key = 17;
+      case 17: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(138u /* 138 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_public_key()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -590,7 +613,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 public_port = 2;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->public_port(), output);
   }
 
@@ -601,7 +624,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 local_port = 4;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->local_port(), output);
   }
 
@@ -612,7 +635,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 nat_type = 6;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->nat_type(), output);
   }
 
@@ -623,42 +646,42 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional bool client = 8;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->client(), output);
   }
 
   // optional uint32 min_svr_port = 9;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(9, this->min_svr_port(), output);
   }
 
   // optional uint32 max_svr_port = 10;
-  if (cached_has_bits & 0x00000400u) {
+  if (cached_has_bits & 0x00000800u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->max_svr_port(), output);
   }
 
   // optional uint32 min_route_port = 11;
-  if (cached_has_bits & 0x00000800u) {
+  if (cached_has_bits & 0x00001000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(11, this->min_route_port(), output);
   }
 
   // optional uint32 max_route_port = 12;
-  if (cached_has_bits & 0x00001000u) {
+  if (cached_has_bits & 0x00002000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(12, this->max_route_port(), output);
   }
 
   // optional uint32 node_weight = 13;
-  if (cached_has_bits & 0x00002000u) {
+  if (cached_has_bits & 0x00004000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(13, this->node_weight(), output);
   }
 
   // optional uint32 min_udp_port = 14;
-  if (cached_has_bits & 0x00004000u) {
+  if (cached_has_bits & 0x00008000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(14, this->min_udp_port(), output);
   }
 
   // optional uint32 max_udp_port = 15;
-  if (cached_has_bits & 0x00008000u) {
+  if (cached_has_bits & 0x00010000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(15, this->max_udp_port(), output);
   }
 
@@ -666,6 +689,12 @@ void DetectionRequest::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       16, this->node_tag(), output);
+  }
+
+  // optional bytes public_key = 17;
+  if (cached_has_bits & 0x00000020u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      17, this->public_key(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -691,7 +720,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 public_port = 2;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->public_port(), target);
   }
 
@@ -703,7 +732,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 local_port = 4;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->local_port(), target);
   }
 
@@ -715,7 +744,7 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional int32 nat_type = 6;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->nat_type(), target);
   }
 
@@ -727,42 +756,42 @@ void DetectionRequest::SerializeWithCachedSizes(
   }
 
   // optional bool client = 8;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->client(), target);
   }
 
   // optional uint32 min_svr_port = 9;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(9, this->min_svr_port(), target);
   }
 
   // optional uint32 max_svr_port = 10;
-  if (cached_has_bits & 0x00000400u) {
+  if (cached_has_bits & 0x00000800u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->max_svr_port(), target);
   }
 
   // optional uint32 min_route_port = 11;
-  if (cached_has_bits & 0x00000800u) {
+  if (cached_has_bits & 0x00001000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(11, this->min_route_port(), target);
   }
 
   // optional uint32 max_route_port = 12;
-  if (cached_has_bits & 0x00001000u) {
+  if (cached_has_bits & 0x00002000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(12, this->max_route_port(), target);
   }
 
   // optional uint32 node_weight = 13;
-  if (cached_has_bits & 0x00002000u) {
+  if (cached_has_bits & 0x00004000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(13, this->node_weight(), target);
   }
 
   // optional uint32 min_udp_port = 14;
-  if (cached_has_bits & 0x00004000u) {
+  if (cached_has_bits & 0x00008000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(14, this->min_udp_port(), target);
   }
 
   // optional uint32 max_udp_port = 15;
-  if (cached_has_bits & 0x00008000u) {
+  if (cached_has_bits & 0x00010000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(15, this->max_udp_port(), target);
   }
 
@@ -771,6 +800,13 @@ void DetectionRequest::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         16, this->node_tag(), target);
+  }
+
+  // optional bytes public_key = 17;
+  if (cached_has_bits & 0x00000020u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        17, this->public_key(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -826,6 +862,13 @@ size_t DetectionRequest::ByteSizeLong() const {
           this->node_tag());
     }
 
+    // optional bytes public_key = 17;
+    if (has_public_key()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->public_key());
+    }
+
     // optional int32 public_port = 2;
     if (has_public_port()) {
       total_size += 1 +
@@ -840,6 +883,8 @@ size_t DetectionRequest::ByteSizeLong() const {
           this->local_port());
     }
 
+  }
+  if (_has_bits_[8 / 32] & 65280u) {
     // optional int32 nat_type = 6;
     if (has_nat_type()) {
       total_size += 1 +
@@ -847,8 +892,6 @@ size_t DetectionRequest::ByteSizeLong() const {
           this->nat_type());
     }
 
-  }
-  if (_has_bits_[8 / 32] & 65280u) {
     // optional bool client = 8;
     if (has_client()) {
       total_size += 1 + 1;
@@ -896,14 +939,14 @@ size_t DetectionRequest::ByteSizeLong() const {
           this->min_udp_port());
     }
 
-    // optional uint32 max_udp_port = 15;
-    if (has_max_udp_port()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->max_udp_port());
-    }
-
   }
+  // optional uint32 max_udp_port = 15;
+  if (has_max_udp_port()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->max_udp_port());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -954,42 +997,46 @@ void DetectionRequest::MergeFrom(const DetectionRequest& from) {
       node_tag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.node_tag_);
     }
     if (cached_has_bits & 0x00000020u) {
-      public_port_ = from.public_port_;
+      set_has_public_key();
+      public_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_key_);
     }
     if (cached_has_bits & 0x00000040u) {
-      local_port_ = from.local_port_;
+      public_port_ = from.public_port_;
     }
     if (cached_has_bits & 0x00000080u) {
-      nat_type_ = from.nat_type_;
+      local_port_ = from.local_port_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
   if (cached_has_bits & 65280u) {
     if (cached_has_bits & 0x00000100u) {
-      client_ = from.client_;
+      nat_type_ = from.nat_type_;
     }
     if (cached_has_bits & 0x00000200u) {
-      min_svr_port_ = from.min_svr_port_;
+      client_ = from.client_;
     }
     if (cached_has_bits & 0x00000400u) {
-      max_svr_port_ = from.max_svr_port_;
+      min_svr_port_ = from.min_svr_port_;
     }
     if (cached_has_bits & 0x00000800u) {
-      min_route_port_ = from.min_route_port_;
+      max_svr_port_ = from.max_svr_port_;
     }
     if (cached_has_bits & 0x00001000u) {
-      max_route_port_ = from.max_route_port_;
+      min_route_port_ = from.min_route_port_;
     }
     if (cached_has_bits & 0x00002000u) {
-      node_weight_ = from.node_weight_;
+      max_route_port_ = from.max_route_port_;
     }
     if (cached_has_bits & 0x00004000u) {
-      min_udp_port_ = from.min_udp_port_;
+      node_weight_ = from.node_weight_;
     }
     if (cached_has_bits & 0x00008000u) {
-      max_udp_port_ = from.max_udp_port_;
+      min_udp_port_ = from.min_udp_port_;
     }
     _has_bits_[0] |= cached_has_bits;
+  }
+  if (cached_has_bits & 0x00010000u) {
+    set_max_udp_port(from.max_udp_port());
   }
 }
 
@@ -1027,6 +1074,8 @@ void DetectionRequest::InternalSwap(DetectionRequest* other) {
     GetArenaNoVirtual());
   node_tag_.Swap(&other->node_tag_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  public_key_.Swap(&other->public_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(public_port_, other->public_port_);
   swap(local_port_, other->local_port_);
   swap(nat_type_, other->nat_type_);
@@ -1057,7 +1106,6 @@ void NatMessage::InitAsDefaultInstance() {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int NatMessage::kDetectionReqFieldNumber;
 const int NatMessage::kEncDataFieldNumber;
-const int NatMessage::kPubkeyFieldNumber;
 const int NatMessage::kSignChFieldNumber;
 const int NatMessage::kSignReFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -1078,10 +1126,6 @@ NatMessage::NatMessage(const NatMessage& from)
   if (from.has_enc_data()) {
     enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
   }
-  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_pubkey()) {
-    pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
-  }
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_sign_ch()) {
     sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
@@ -1100,7 +1144,6 @@ NatMessage::NatMessage(const NatMessage& from)
 
 void NatMessage::SharedCtor() {
   enc_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_re_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   detection_req_ = NULL;
@@ -1113,7 +1156,6 @@ NatMessage::~NatMessage() {
 
 void NatMessage::SharedDtor() {
   enc_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_ch_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_re_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete detection_req_;
@@ -1140,20 +1182,17 @@ void NatMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 31u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       enc_data_.ClearNonDefaultToEmptyNoArena();
     }
     if (cached_has_bits & 0x00000002u) {
-      pubkey_.ClearNonDefaultToEmptyNoArena();
-    }
-    if (cached_has_bits & 0x00000004u) {
       sign_ch_.ClearNonDefaultToEmptyNoArena();
     }
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000004u) {
       sign_re_.ClearNonDefaultToEmptyNoArena();
     }
-    if (cached_has_bits & 0x00000010u) {
+    if (cached_has_bits & 0x00000008u) {
       GOOGLE_DCHECK(detection_req_ != NULL);
       detection_req_->Clear();
     }
@@ -1196,22 +1235,10 @@ bool NatMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes pubkey = 3;
+      // optional bytes sign_ch = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_pubkey()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional bytes sign_ch = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_sign_ch()));
         } else {
@@ -1220,10 +1247,10 @@ bool NatMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes sign_re = 5;
-      case 5: {
+      // optional bytes sign_re = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_sign_re()));
         } else {
@@ -1260,7 +1287,7 @@ void NatMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_detection_req(), output);
   }
@@ -1271,22 +1298,16 @@ void NatMessage::SerializeWithCachedSizes(
       2, this->enc_data(), output);
   }
 
-  // optional bytes pubkey = 3;
+  // optional bytes sign_ch = 3;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->pubkey(), output);
+      3, this->sign_ch(), output);
   }
 
-  // optional bytes sign_ch = 4;
+  // optional bytes sign_re = 4;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      4, this->sign_ch(), output);
-  }
-
-  // optional bytes sign_re = 5;
-  if (cached_has_bits & 0x00000008u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      5, this->sign_re(), output);
+      4, this->sign_re(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1305,7 +1326,7 @@ void NatMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_detection_req(), deterministic, target);
@@ -1318,25 +1339,18 @@ void NatMessage::SerializeWithCachedSizes(
         2, this->enc_data(), target);
   }
 
-  // optional bytes pubkey = 3;
+  // optional bytes sign_ch = 3;
   if (cached_has_bits & 0x00000002u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->pubkey(), target);
+        3, this->sign_ch(), target);
   }
 
-  // optional bytes sign_ch = 4;
+  // optional bytes sign_re = 4;
   if (cached_has_bits & 0x00000004u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        4, this->sign_ch(), target);
-  }
-
-  // optional bytes sign_re = 5;
-  if (cached_has_bits & 0x00000008u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        5, this->sign_re(), target);
+        4, this->sign_re(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1356,7 +1370,7 @@ size_t NatMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 31u) {
+  if (_has_bits_[0 / 32] & 15u) {
     // optional bytes enc_data = 2;
     if (has_enc_data()) {
       total_size += 1 +
@@ -1364,21 +1378,14 @@ size_t NatMessage::ByteSizeLong() const {
           this->enc_data());
     }
 
-    // optional bytes pubkey = 3;
-    if (has_pubkey()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->pubkey());
-    }
-
-    // optional bytes sign_ch = 4;
+    // optional bytes sign_ch = 3;
     if (has_sign_ch()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->sign_ch());
     }
 
-    // optional bytes sign_re = 5;
+    // optional bytes sign_re = 4;
     if (has_sign_re()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -1421,24 +1428,20 @@ void NatMessage::MergeFrom(const NatMessage& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 31u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_enc_data();
       enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
     }
     if (cached_has_bits & 0x00000002u) {
-      set_has_pubkey();
-      pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
-    }
-    if (cached_has_bits & 0x00000004u) {
       set_has_sign_ch();
       sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
     }
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000004u) {
       set_has_sign_re();
       sign_re_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_re_);
     }
-    if (cached_has_bits & 0x00000010u) {
+    if (cached_has_bits & 0x00000008u) {
       mutable_detection_req()->::tenon::nat::protobuf::DetectionRequest::MergeFrom(from.detection_req());
     }
   }
@@ -1469,8 +1472,6 @@ void NatMessage::Swap(NatMessage* other) {
 void NatMessage::InternalSwap(NatMessage* other) {
   using std::swap;
   enc_data_.Swap(&other->enc_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  pubkey_.Swap(&other->pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());

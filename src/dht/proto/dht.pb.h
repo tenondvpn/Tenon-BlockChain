@@ -2735,25 +2735,10 @@ class DhtMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_enc_data();
   void set_allocated_enc_data(::std::string* enc_data);
 
-  // optional bytes pubkey = 10;
-  bool has_pubkey() const;
-  void clear_pubkey();
-  static const int kPubkeyFieldNumber = 10;
-  const ::std::string& pubkey() const;
-  void set_pubkey(const ::std::string& value);
-  #if LANG_CXX11
-  void set_pubkey(::std::string&& value);
-  #endif
-  void set_pubkey(const char* value);
-  void set_pubkey(const void* value, size_t size);
-  ::std::string* mutable_pubkey();
-  ::std::string* release_pubkey();
-  void set_allocated_pubkey(::std::string* pubkey);
-
-  // optional bytes sign_ch = 11;
+  // optional bytes sign_ch = 10;
   bool has_sign_ch() const;
   void clear_sign_ch();
-  static const int kSignChFieldNumber = 11;
+  static const int kSignChFieldNumber = 10;
   const ::std::string& sign_ch() const;
   void set_sign_ch(const ::std::string& value);
   #if LANG_CXX11
@@ -2765,10 +2750,10 @@ class DhtMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_sign_ch();
   void set_allocated_sign_ch(::std::string* sign_ch);
 
-  // optional bytes sign_re = 12;
+  // optional bytes sign_re = 11;
   bool has_sign_re() const;
   void clear_sign_re();
-  static const int kSignReFieldNumber = 12;
+  static const int kSignReFieldNumber = 11;
   const ::std::string& sign_re() const;
   void set_sign_re(const ::std::string& value);
   #if LANG_CXX11
@@ -2882,8 +2867,6 @@ class DhtMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_heartbeat_res();
   void set_has_enc_data();
   void clear_has_enc_data();
-  void set_has_pubkey();
-  void clear_has_pubkey();
   void set_has_sign_ch();
   void clear_has_sign_ch();
   void set_has_sign_re();
@@ -2894,7 +2877,6 @@ class DhtMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > networks_;
   ::google::protobuf::internal::ArenaStringPtr enc_data_;
-  ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_ch_;
   ::google::protobuf::internal::ArenaStringPtr sign_re_;
   ::tenon::dht::protobuf::BootstrapRequest* bootstrap_req_;
@@ -7017,13 +6999,13 @@ inline void ConnectReqeust::set_allocated_node_tag(::std::string* node_tag) {
 
 // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
 inline bool DhtMessage::has_bootstrap_req() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void DhtMessage::set_has_bootstrap_req() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void DhtMessage::clear_has_bootstrap_req() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void DhtMessage::clear_bootstrap_req() {
   if (bootstrap_req_ != NULL) bootstrap_req_->Clear();
@@ -7075,13 +7057,13 @@ inline void DhtMessage::set_allocated_bootstrap_req(::tenon::dht::protobuf::Boot
 
 // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
 inline bool DhtMessage::has_bootstrap_res() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void DhtMessage::set_has_bootstrap_res() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void DhtMessage::clear_has_bootstrap_res() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void DhtMessage::clear_bootstrap_res() {
   if (bootstrap_res_ != NULL) bootstrap_res_->Clear();
@@ -7133,13 +7115,13 @@ inline void DhtMessage::set_allocated_bootstrap_res(::tenon::dht::protobuf::Boot
 
 // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
 inline bool DhtMessage::has_refresh_neighbors_req() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void DhtMessage::set_has_refresh_neighbors_req() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void DhtMessage::clear_has_refresh_neighbors_req() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void DhtMessage::clear_refresh_neighbors_req() {
   if (refresh_neighbors_req_ != NULL) refresh_neighbors_req_->Clear();
@@ -7191,13 +7173,13 @@ inline void DhtMessage::set_allocated_refresh_neighbors_req(::tenon::dht::protob
 
 // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
 inline bool DhtMessage::has_refresh_neighbors_res() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void DhtMessage::set_has_refresh_neighbors_res() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void DhtMessage::clear_has_refresh_neighbors_res() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void DhtMessage::clear_refresh_neighbors_res() {
   if (refresh_neighbors_res_ != NULL) refresh_neighbors_res_->Clear();
@@ -7249,13 +7231,13 @@ inline void DhtMessage::set_allocated_refresh_neighbors_res(::tenon::dht::protob
 
 // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
 inline bool DhtMessage::has_connect_req() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void DhtMessage::set_has_connect_req() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void DhtMessage::clear_has_connect_req() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void DhtMessage::clear_connect_req() {
   if (connect_req_ != NULL) connect_req_->Clear();
@@ -7307,13 +7289,13 @@ inline void DhtMessage::set_allocated_connect_req(::tenon::dht::protobuf::Connec
 
 // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
 inline bool DhtMessage::has_heartbeat_req() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void DhtMessage::set_has_heartbeat_req() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void DhtMessage::clear_has_heartbeat_req() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void DhtMessage::clear_heartbeat_req() {
   if (heartbeat_req_ != NULL) heartbeat_req_->Clear();
@@ -7365,13 +7347,13 @@ inline void DhtMessage::set_allocated_heartbeat_req(::tenon::dht::protobuf::Hear
 
 // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
 inline bool DhtMessage::has_heartbeat_res() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void DhtMessage::set_has_heartbeat_res() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void DhtMessage::clear_has_heartbeat_res() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void DhtMessage::clear_heartbeat_res() {
   if (heartbeat_res_ != NULL) heartbeat_res_->Clear();
@@ -7517,81 +7499,15 @@ inline void DhtMessage::set_allocated_enc_data(::std::string* enc_data) {
   // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.DhtMessage.enc_data)
 }
 
-// optional bytes pubkey = 10;
-inline bool DhtMessage::has_pubkey() const {
+// optional bytes sign_ch = 10;
+inline bool DhtMessage::has_sign_ch() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void DhtMessage::set_has_pubkey() {
+inline void DhtMessage::set_has_sign_ch() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void DhtMessage::clear_has_pubkey() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DhtMessage::clear_pubkey() {
-  pubkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_pubkey();
-}
-inline const ::std::string& DhtMessage::pubkey() const {
-  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.DhtMessage.pubkey)
-  return pubkey_.GetNoArena();
-}
-inline void DhtMessage::set_pubkey(const ::std::string& value) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.DhtMessage.pubkey)
-}
-#if LANG_CXX11
-inline void DhtMessage::set_pubkey(::std::string&& value) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.dht.protobuf.DhtMessage.pubkey)
-}
-#endif
-inline void DhtMessage::set_pubkey(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.dht.protobuf.DhtMessage.pubkey)
-}
-inline void DhtMessage::set_pubkey(const void* value, size_t size) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.dht.protobuf.DhtMessage.pubkey)
-}
-inline ::std::string* DhtMessage::mutable_pubkey() {
-  set_has_pubkey();
-  // @@protoc_insertion_point(field_mutable:tenon.dht.protobuf.DhtMessage.pubkey)
-  return pubkey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* DhtMessage::release_pubkey() {
-  // @@protoc_insertion_point(field_release:tenon.dht.protobuf.DhtMessage.pubkey)
-  if (!has_pubkey()) {
-    return NULL;
-  }
-  clear_has_pubkey();
-  return pubkey_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void DhtMessage::set_allocated_pubkey(::std::string* pubkey) {
-  if (pubkey != NULL) {
-    set_has_pubkey();
-  } else {
-    clear_has_pubkey();
-  }
-  pubkey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pubkey);
-  // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.DhtMessage.pubkey)
-}
-
-// optional bytes sign_ch = 11;
-inline bool DhtMessage::has_sign_ch() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void DhtMessage::set_has_sign_ch() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void DhtMessage::clear_has_sign_ch() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void DhtMessage::clear_sign_ch() {
   sign_ch_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -7649,15 +7565,15 @@ inline void DhtMessage::set_allocated_sign_ch(::std::string* sign_ch) {
   // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.DhtMessage.sign_ch)
 }
 
-// optional bytes sign_re = 12;
+// optional bytes sign_re = 11;
 inline bool DhtMessage::has_sign_re() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void DhtMessage::set_has_sign_re() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void DhtMessage::clear_has_sign_re() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void DhtMessage::clear_sign_re() {
   sign_re_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());

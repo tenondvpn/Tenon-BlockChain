@@ -238,6 +238,21 @@ class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertio
   ::std::string* release_node_tag();
   void set_allocated_node_tag(::std::string* node_tag);
 
+  // optional bytes public_key = 17;
+  bool has_public_key() const;
+  void clear_public_key();
+  static const int kPublicKeyFieldNumber = 17;
+  const ::std::string& public_key() const;
+  void set_public_key(const ::std::string& value);
+  #if LANG_CXX11
+  void set_public_key(::std::string&& value);
+  #endif
+  void set_public_key(const char* value);
+  void set_public_key(const void* value, size_t size);
+  ::std::string* mutable_public_key();
+  ::std::string* release_public_key();
+  void set_allocated_public_key(::std::string* public_key);
+
   // optional int32 public_port = 2;
   bool has_public_port() const;
   void clear_public_port();
@@ -349,6 +364,8 @@ class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertio
   void clear_has_max_udp_port();
   void set_has_node_tag();
   void clear_has_node_tag();
+  void set_has_public_key();
+  void clear_has_public_key();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -358,6 +375,7 @@ class DetectionRequest : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::internal::ArenaStringPtr dht_key_;
   ::google::protobuf::internal::ArenaStringPtr node_tag_;
+  ::google::protobuf::internal::ArenaStringPtr public_key_;
   ::google::protobuf::int32 public_port_;
   ::google::protobuf::int32 local_port_;
   ::google::protobuf::int32 nat_type_;
@@ -482,25 +500,10 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_enc_data();
   void set_allocated_enc_data(::std::string* enc_data);
 
-  // optional bytes pubkey = 3;
-  bool has_pubkey() const;
-  void clear_pubkey();
-  static const int kPubkeyFieldNumber = 3;
-  const ::std::string& pubkey() const;
-  void set_pubkey(const ::std::string& value);
-  #if LANG_CXX11
-  void set_pubkey(::std::string&& value);
-  #endif
-  void set_pubkey(const char* value);
-  void set_pubkey(const void* value, size_t size);
-  ::std::string* mutable_pubkey();
-  ::std::string* release_pubkey();
-  void set_allocated_pubkey(::std::string* pubkey);
-
-  // optional bytes sign_ch = 4;
+  // optional bytes sign_ch = 3;
   bool has_sign_ch() const;
   void clear_sign_ch();
-  static const int kSignChFieldNumber = 4;
+  static const int kSignChFieldNumber = 3;
   const ::std::string& sign_ch() const;
   void set_sign_ch(const ::std::string& value);
   #if LANG_CXX11
@@ -512,10 +515,10 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_sign_ch();
   void set_allocated_sign_ch(::std::string* sign_ch);
 
-  // optional bytes sign_re = 5;
+  // optional bytes sign_re = 4;
   bool has_sign_re() const;
   void clear_sign_re();
-  static const int kSignReFieldNumber = 5;
+  static const int kSignReFieldNumber = 4;
   const ::std::string& sign_re() const;
   void set_sign_re(const ::std::string& value);
   #if LANG_CXX11
@@ -545,8 +548,6 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_detection_req();
   void set_has_enc_data();
   void clear_has_enc_data();
-  void set_has_pubkey();
-  void clear_has_pubkey();
   void set_has_sign_ch();
   void clear_has_sign_ch();
   void set_has_sign_re();
@@ -556,7 +557,6 @@ class NatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr enc_data_;
-  ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_ch_;
   ::google::protobuf::internal::ArenaStringPtr sign_re_;
   ::tenon::nat::protobuf::DetectionRequest* detection_req_;
@@ -641,13 +641,13 @@ inline void DetectionRequest::set_allocated_public_ip(::std::string* public_ip) 
 
 // optional int32 public_port = 2;
 inline bool DetectionRequest::has_public_port() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void DetectionRequest::set_has_public_port() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void DetectionRequest::clear_has_public_port() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void DetectionRequest::clear_public_port() {
   public_port_ = 0;
@@ -731,13 +731,13 @@ inline void DetectionRequest::set_allocated_local_ip(::std::string* local_ip) {
 
 // optional int32 local_port = 4;
 inline bool DetectionRequest::has_local_port() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void DetectionRequest::set_has_local_port() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void DetectionRequest::clear_has_local_port() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void DetectionRequest::clear_local_port() {
   local_port_ = 0;
@@ -821,13 +821,13 @@ inline void DetectionRequest::set_allocated_id(::std::string* id) {
 
 // optional int32 nat_type = 6;
 inline bool DetectionRequest::has_nat_type() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void DetectionRequest::set_has_nat_type() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void DetectionRequest::clear_has_nat_type() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void DetectionRequest::clear_nat_type() {
   nat_type_ = 0;
@@ -911,13 +911,13 @@ inline void DetectionRequest::set_allocated_dht_key(::std::string* dht_key) {
 
 // optional bool client = 8;
 inline bool DetectionRequest::has_client() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void DetectionRequest::set_has_client() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void DetectionRequest::clear_has_client() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void DetectionRequest::clear_client() {
   client_ = false;
@@ -935,13 +935,13 @@ inline void DetectionRequest::set_client(bool value) {
 
 // optional uint32 min_svr_port = 9;
 inline bool DetectionRequest::has_min_svr_port() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void DetectionRequest::set_has_min_svr_port() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void DetectionRequest::clear_has_min_svr_port() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void DetectionRequest::clear_min_svr_port() {
   min_svr_port_ = 0u;
@@ -959,13 +959,13 @@ inline void DetectionRequest::set_min_svr_port(::google::protobuf::uint32 value)
 
 // optional uint32 max_svr_port = 10;
 inline bool DetectionRequest::has_max_svr_port() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void DetectionRequest::set_has_max_svr_port() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void DetectionRequest::clear_has_max_svr_port() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void DetectionRequest::clear_max_svr_port() {
   max_svr_port_ = 0u;
@@ -983,13 +983,13 @@ inline void DetectionRequest::set_max_svr_port(::google::protobuf::uint32 value)
 
 // optional uint32 min_route_port = 11;
 inline bool DetectionRequest::has_min_route_port() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void DetectionRequest::set_has_min_route_port() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void DetectionRequest::clear_has_min_route_port() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void DetectionRequest::clear_min_route_port() {
   min_route_port_ = 0u;
@@ -1007,13 +1007,13 @@ inline void DetectionRequest::set_min_route_port(::google::protobuf::uint32 valu
 
 // optional uint32 max_route_port = 12;
 inline bool DetectionRequest::has_max_route_port() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void DetectionRequest::set_has_max_route_port() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void DetectionRequest::clear_has_max_route_port() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void DetectionRequest::clear_max_route_port() {
   max_route_port_ = 0u;
@@ -1031,13 +1031,13 @@ inline void DetectionRequest::set_max_route_port(::google::protobuf::uint32 valu
 
 // optional uint32 node_weight = 13;
 inline bool DetectionRequest::has_node_weight() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
+  return (_has_bits_[0] & 0x00004000u) != 0;
 }
 inline void DetectionRequest::set_has_node_weight() {
-  _has_bits_[0] |= 0x00002000u;
+  _has_bits_[0] |= 0x00004000u;
 }
 inline void DetectionRequest::clear_has_node_weight() {
-  _has_bits_[0] &= ~0x00002000u;
+  _has_bits_[0] &= ~0x00004000u;
 }
 inline void DetectionRequest::clear_node_weight() {
   node_weight_ = 0u;
@@ -1055,13 +1055,13 @@ inline void DetectionRequest::set_node_weight(::google::protobuf::uint32 value) 
 
 // optional uint32 min_udp_port = 14;
 inline bool DetectionRequest::has_min_udp_port() const {
-  return (_has_bits_[0] & 0x00004000u) != 0;
+  return (_has_bits_[0] & 0x00008000u) != 0;
 }
 inline void DetectionRequest::set_has_min_udp_port() {
-  _has_bits_[0] |= 0x00004000u;
+  _has_bits_[0] |= 0x00008000u;
 }
 inline void DetectionRequest::clear_has_min_udp_port() {
-  _has_bits_[0] &= ~0x00004000u;
+  _has_bits_[0] &= ~0x00008000u;
 }
 inline void DetectionRequest::clear_min_udp_port() {
   min_udp_port_ = 0u;
@@ -1079,13 +1079,13 @@ inline void DetectionRequest::set_min_udp_port(::google::protobuf::uint32 value)
 
 // optional uint32 max_udp_port = 15;
 inline bool DetectionRequest::has_max_udp_port() const {
-  return (_has_bits_[0] & 0x00008000u) != 0;
+  return (_has_bits_[0] & 0x00010000u) != 0;
 }
 inline void DetectionRequest::set_has_max_udp_port() {
-  _has_bits_[0] |= 0x00008000u;
+  _has_bits_[0] |= 0x00010000u;
 }
 inline void DetectionRequest::clear_has_max_udp_port() {
-  _has_bits_[0] &= ~0x00008000u;
+  _has_bits_[0] &= ~0x00010000u;
 }
 inline void DetectionRequest::clear_max_udp_port() {
   max_udp_port_ = 0u;
@@ -1167,19 +1167,85 @@ inline void DetectionRequest::set_allocated_node_tag(::std::string* node_tag) {
   // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.node_tag)
 }
 
+// optional bytes public_key = 17;
+inline bool DetectionRequest::has_public_key() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void DetectionRequest::set_has_public_key() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void DetectionRequest::clear_has_public_key() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void DetectionRequest::clear_public_key() {
+  public_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_public_key();
+}
+inline const ::std::string& DetectionRequest::public_key() const {
+  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.DetectionRequest.public_key)
+  return public_key_.GetNoArena();
+}
+inline void DetectionRequest::set_public_key(const ::std::string& value) {
+  set_has_public_key();
+  public_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.DetectionRequest.public_key)
+}
+#if LANG_CXX11
+inline void DetectionRequest::set_public_key(::std::string&& value) {
+  set_has_public_key();
+  public_key_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.DetectionRequest.public_key)
+}
+#endif
+inline void DetectionRequest::set_public_key(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_public_key();
+  public_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.DetectionRequest.public_key)
+}
+inline void DetectionRequest::set_public_key(const void* value, size_t size) {
+  set_has_public_key();
+  public_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.DetectionRequest.public_key)
+}
+inline ::std::string* DetectionRequest::mutable_public_key() {
+  set_has_public_key();
+  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.DetectionRequest.public_key)
+  return public_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* DetectionRequest::release_public_key() {
+  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.DetectionRequest.public_key)
+  if (!has_public_key()) {
+    return NULL;
+  }
+  clear_has_public_key();
+  return public_key_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void DetectionRequest::set_allocated_public_key(::std::string* public_key) {
+  if (public_key != NULL) {
+    set_has_public_key();
+  } else {
+    clear_has_public_key();
+  }
+  public_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), public_key);
+  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.DetectionRequest.public_key)
+}
+
 // -------------------------------------------------------------------
 
 // NatMessage
 
 // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
 inline bool NatMessage::has_detection_req() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void NatMessage::set_has_detection_req() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void NatMessage::clear_has_detection_req() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void NatMessage::clear_detection_req() {
   if (detection_req_ != NULL) detection_req_->Clear();
@@ -1295,81 +1361,15 @@ inline void NatMessage::set_allocated_enc_data(::std::string* enc_data) {
   // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.NatMessage.enc_data)
 }
 
-// optional bytes pubkey = 3;
-inline bool NatMessage::has_pubkey() const {
+// optional bytes sign_ch = 3;
+inline bool NatMessage::has_sign_ch() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void NatMessage::set_has_pubkey() {
+inline void NatMessage::set_has_sign_ch() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void NatMessage::clear_has_pubkey() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void NatMessage::clear_pubkey() {
-  pubkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_pubkey();
-}
-inline const ::std::string& NatMessage::pubkey() const {
-  // @@protoc_insertion_point(field_get:tenon.nat.protobuf.NatMessage.pubkey)
-  return pubkey_.GetNoArena();
-}
-inline void NatMessage::set_pubkey(const ::std::string& value) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.nat.protobuf.NatMessage.pubkey)
-}
-#if LANG_CXX11
-inline void NatMessage::set_pubkey(::std::string&& value) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.nat.protobuf.NatMessage.pubkey)
-}
-#endif
-inline void NatMessage::set_pubkey(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.nat.protobuf.NatMessage.pubkey)
-}
-inline void NatMessage::set_pubkey(const void* value, size_t size) {
-  set_has_pubkey();
-  pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.nat.protobuf.NatMessage.pubkey)
-}
-inline ::std::string* NatMessage::mutable_pubkey() {
-  set_has_pubkey();
-  // @@protoc_insertion_point(field_mutable:tenon.nat.protobuf.NatMessage.pubkey)
-  return pubkey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* NatMessage::release_pubkey() {
-  // @@protoc_insertion_point(field_release:tenon.nat.protobuf.NatMessage.pubkey)
-  if (!has_pubkey()) {
-    return NULL;
-  }
-  clear_has_pubkey();
-  return pubkey_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void NatMessage::set_allocated_pubkey(::std::string* pubkey) {
-  if (pubkey != NULL) {
-    set_has_pubkey();
-  } else {
-    clear_has_pubkey();
-  }
-  pubkey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pubkey);
-  // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.NatMessage.pubkey)
-}
-
-// optional bytes sign_ch = 4;
-inline bool NatMessage::has_sign_ch() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void NatMessage::set_has_sign_ch() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void NatMessage::clear_has_sign_ch() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void NatMessage::clear_sign_ch() {
   sign_ch_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -1427,15 +1427,15 @@ inline void NatMessage::set_allocated_sign_ch(::std::string* sign_ch) {
   // @@protoc_insertion_point(field_set_allocated:tenon.nat.protobuf.NatMessage.sign_ch)
 }
 
-// optional bytes sign_re = 5;
+// optional bytes sign_re = 4;
 inline bool NatMessage::has_sign_re() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void NatMessage::set_has_sign_re() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void NatMessage::clear_has_sign_re() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void NatMessage::clear_sign_re() {
   sign_re_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
