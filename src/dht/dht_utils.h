@@ -212,7 +212,7 @@ private:
 
 typedef std::shared_ptr<Node> NodePtr;
 typedef std::function<void(BaseDht* dht, const protobuf::DhtMessage& dht_msg)> BootstrapResponseCallback;
-typedef std::function<void(NodePtr& node)> NewNodeJoinCallback;
+typedef std::function<int(NodePtr& node)> NewNodeJoinCallback;
 
 }  // namespace dht
 

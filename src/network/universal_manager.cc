@@ -92,10 +92,6 @@ void UniversalManager::DhtBootstrapResponseCallback(
     }
 }
 
-void UniversalManager::NodeJoinCallback(dht::NodePtr& node) {
-    network::UniversalManager::Instance()->AddNodeToUniversal(node);
-}
-
 int UniversalManager::CreateNetwork(
         uint32_t network_id,
         const common::Config& config,
@@ -126,7 +122,7 @@ int UniversalManager::CreateNetwork(
             std::placeholders::_1,
             std::placeholders::_2),
         std::bind(
-            &UniversalManager::NodeJoinCallback,
+            &UniversalManager::AddNodeToUniversal,
             this,
             std::placeholders::_1));
     RegisterUniversal(network_id, dht_ptr);
@@ -184,7 +180,7 @@ std::vector<dht::NodePtr> UniversalManager::GetSameNetworkNodes(
     return Bootstrap::Instance()->GetNetworkBootstrap(network_id, count);
 }
 
-void UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
+int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
     auto universal_dht = GetUniversal(kUniversalNetworkId);
     if (universal_dht == nullptr) {
         return;
@@ -192,6 +188,7 @@ void UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
 
     node->join_com = "AddNodeToUniversal";
     int res = universal_dht->Join(node);
+    return dht::kDhtSuccess;
 }
 
 UniversalManager::UniversalManager() {

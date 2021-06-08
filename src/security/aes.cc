@@ -12,16 +12,6 @@ namespace tenon {
 
 namespace security {
 
-int Aes::Encrypt(const std::string& src, const std::string& key, std::string& out) {
-    assert(false);
-    return kSecuritySuccess;
-}
-
-int Aes::Decrypt(const std::string& src, const std::string& key, std::string& out) {
-    assert(false);
-    return kSecuritySuccess;
-}
-
 int Aes::Encrypt(char* str_in, int len, char* key, int key_len, char* out) {
     assert(key_len == 16 || key_len == 24 || key_len == 32);
     if (!str_in || !key || !out || len <= 0 || key_len <= 0) {

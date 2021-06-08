@@ -5,7 +5,6 @@
 #include "common/country_code.h"
 #include "security/ecdh_create_key.h"
 #include "security/schnorr.h"
-#include "security/aes.h"
 #include "security/public_key.h"
 #include "network/route.h"
 #include "client/trans_client.h"

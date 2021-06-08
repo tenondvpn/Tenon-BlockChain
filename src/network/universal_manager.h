@@ -39,7 +39,7 @@ public:
     std::vector<dht::NodePtr> GetSameNetworkNodes(uint32_t network_id, uint32_t count);
     void Init();
     void Destroy();
-    void AddNodeToUniversal(dht::NodePtr& node);
+    int AddNodeToUniversal(dht::NodePtr& node);
 
 private:
     UniversalManager();
@@ -51,7 +51,6 @@ private:
     void DhtBootstrapResponseCallback(
         dht::BaseDht* dht_ptr,
         const dht::protobuf::DhtMessage& dht_msg);
-    void NodeJoinCallback(dht::NodePtr& node);
 
     dht::BaseDhtPtr* dhts_{ nullptr };
 

@@ -71,6 +71,12 @@ int BaseDht::Destroy() {
 }
 
 int BaseDht::Join(NodePtr& node) {
+    if (node_join_cb_ != nullptr) {
+        if (node_join_cb_(node) != kDhtSuccess) {
+            return kDhtError;
+        }
+    }
+
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
         return res;
@@ -420,9 +426,6 @@ void BaseDht::ProcessBootstrapRequest(
     node->node_weight = dht_msg.bootstrap_req().node_weight();
     node->join_com = "ProcessBootstrapRequest";
     Join(node);
-    if (node_join_cb_ != nullptr) {
-        node_join_cb_(node);
-    }
 }
 
 void BaseDht::ProcessBootstrapResponse(
@@ -494,9 +497,6 @@ void BaseDht::ProcessBootstrapResponse(
 
     node->join_com = "ProcessBootstrapResponse";
     Join(node);
-    if (node_join_cb_ != nullptr) {
-        node_join_cb_(node);
-    }
 
     std::unique_lock<std::mutex> lock(join_res_mutex_);
     if (joined_) {
@@ -760,9 +760,6 @@ void BaseDht::ProcessConnectRequest(
     node->node_weight = dht_msg.connect_req().node_weight();
     node->join_com = "ProcessConnectRequest";
     Join(node);
-    if (node_join_cb_ != nullptr) {
-        node_join_cb_(node);
-    }
 }
 
 bool BaseDht::NodeValid(NodePtr& node) {

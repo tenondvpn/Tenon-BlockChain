@@ -64,7 +64,7 @@ int ElectNode::JoinUniversal() {
     universal_role_ = std::make_shared<network::Universal>(
             tansport_ptr,
             local_node);
-    if (universal_role_->Init() != network::kNetworkSuccess) {
+    if (universal_role_->Init(nullptr, nullptr) != network::kNetworkSuccess) {
         ELECT_ERROR("init universal role dht failed!");
         return kElectError;
     }
@@ -94,7 +94,7 @@ int ElectNode::JoinShard() {
     elect_dht_ = std::make_shared<ElectDht>(
             tansport_ptr,
             local_node);
-    if (elect_dht_->Init() != network::kNetworkSuccess) {
+    if (elect_dht_->Init(nullptr, nullptr) != network::kNetworkSuccess) {
         ELECT_ERROR("init shard role dht failed!");
         return kElectError;
     }

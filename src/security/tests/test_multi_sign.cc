@@ -253,7 +253,6 @@ TEST_F(TestMultiSign, TestEcdhCreateKey) {
     PrivateKey prikey;
     PublicKey pubkey(prikey);
     Schnorr::Instance()->set_prikey(std::make_shared<PrivateKey>(prikey));
-    Schnorr::Instance()->set_pubkey(std::make_shared<PublicKey>(pubkey));
     ASSERT_TRUE(EcdhCreateKey::Instance()->Init() == kSecuritySuccess);
     std::string sec_key;
 
@@ -265,7 +264,6 @@ TEST_F(TestMultiSign, TestEcdhCreateKey) {
             sec_key1) == kSecuritySuccess);
 
     Schnorr::Instance()->set_prikey(std::make_shared<PrivateKey>(peer_prikey));
-    Schnorr::Instance()->set_pubkey(std::make_shared<PublicKey>(peer_pubkey));
     std::string sec_key2;
     ASSERT_TRUE(EcdhCreateKey::Instance()->Init() == kSecuritySuccess);
     EcdhCreateKey::Instance()->CreateKey(pubkey, sec_key2);
@@ -273,15 +271,6 @@ TEST_F(TestMultiSign, TestEcdhCreateKey) {
     ASSERT_EQ(sec_key1, sec_key2);
 
     for (int i = 1; i < 100; ++i) {
-//         {
-//             std::string test_aes = common::Random::RandomString(i);
-//             std::string enc_out;
-//             ASSERT_EQ(Aes::Encrypt(test_aes, sec_key1, enc_out), kSecuritySuccess);
-//             std::string dec_out;
-//             ASSERT_EQ(Aes::Decrypt(enc_out, sec_key1, dec_out), kSecuritySuccess);
-//             ASSERT_EQ(test_aes, dec_out);
-//         }
-
         {
             std::string test_aes = common::Random::RandomString(i);
             uint32_t data_size = (i / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
@@ -416,7 +405,7 @@ TEST_F(TestMultiSign, TestSerialization) {
         secrets.at(i).Serialize(tmp1);
         secrets1.emplace_back(tmp1);
         points.emplace_back(secrets.at(i));
-        points.back().Serialize(tmp2);
+        points.back().Serialize(tmp2, true);
         points1.emplace_back(tmp2);
     }
 

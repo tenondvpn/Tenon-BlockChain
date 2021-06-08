@@ -93,7 +93,6 @@ extern "C" {
 #include "client/trans_client.h"
 #include "client/proto/client_proto.h"
 #include "security/crypto_utils.h"
-#include "security/aes.h"
 #include "services/account_with_secret.h"
 #include "sync/key_value_sync.h"
 #include "network/universal_manager.h"

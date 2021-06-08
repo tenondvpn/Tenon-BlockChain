@@ -27,6 +27,7 @@ public:
 private:
     int JoinUniversal();
     int JoinShard();
+    int JoinNewNodeValid(dht::NodePtr& node);
 
     dht::BaseDhtPtr universal_role_{ nullptr };
     dht::BaseDhtPtr elect_dht_{ nullptr };
@@ -90,7 +91,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
     universal_role_ = std::make_shared<network::Universal>(
         tansport_ptr,
         local_node);
-    if (universal_role_->Init() != network::kNetworkSuccess) {
+    if (universal_role_->Init(nullptr, nullptr) != network::kNetworkSuccess) {
         NETWORK_ERROR("init universal role dht failed!");
         return kNetworkError;
     }
@@ -103,6 +104,13 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         return kNetworkError;
     }
     return kNetworkSuccess;
+}
+
+template<class DhtType>
+int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
+    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+
+    return kDhtSuccess;
 }
 
 template<class DhtType>
@@ -121,7 +129,9 @@ int ShardNetwork<DhtType>::JoinShard() {
     elect_dht_ = std::make_shared<DhtType>(
         tansport_ptr,
         local_node);
-    if (elect_dht_->Init() != network::kNetworkSuccess) {
+    if (elect_dht_->Init(
+            nullptr,
+            std::bind(&ShardNetwork<DhtType>::JoinNewNodeValid, this)) != network::kNetworkSuccess) {
         NETWORK_ERROR("init shard role dht failed!");
         return kNetworkError;
     }
