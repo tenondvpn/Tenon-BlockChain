@@ -130,59 +130,6 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
 }
 
 template<class DhtType>
-int ShardNetwork<DhtType>::SignDhtMessage(
-        const std::string& peer_pubkey,
-        const std::string& append_data,
-        std::string* enc_data,
-        std::string* sign_ch,
-        std::string* sign_re) {
-    std::string sec_key;
-    security::PublicKey pubkey(peer_pubkey);
-    if (security::EcdhCreateKey::Instance()->CreateKey(
-            pubkey,
-            sec_key) != security::kSecuritySuccess) {
-        return dht::kDhtError;
-    }
-
-    auto now_tm_sec = std::chrono::steady_clock::now().time_since_epoch().count() /
-        1000000000llu;
-    std::string enc_src_data = std::to_string(now_tm_sec);
-
-    uint32_t data_size = (enc_src_data.size() / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
-    char* tmp_out_enc = (char*)malloc(data_size);
-    memset(tmp_out_enc, 0, data_size);
-    if (security::Aes::Encrypt(
-            enc_src_data.c_str(),
-            enc_src_data.size(),
-            sec_key.c_str(),
-            sec_key.size(),
-            tmp_out_enc) != security::kSecuritySuccess) {
-        free(tmp_out_enc);
-        return dht::kDhtError;
-    }
-
-    *enc_data = std::string(tmp_out_enc, data_size);
-    free(tmp_out_enc);
-    security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
-        *enc_data,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
-        sign);
-    if (!sign_res) {
-        BFT_ERROR("signature error.");
-        return;
-    }
-
-    std::string sign_challenge_str;
-    std::string sign_response_str;
-    sign.Serialize(sign_challenge_str, sign_response_str);
-    *sign_ch = sign_challenge_str;
-    *sign_res = sign_response_str;
-    return dht::kDhtSuccess;
-}
-
-template<class DhtType>
 int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
     auto netwok_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key);
@@ -264,8 +211,7 @@ int ShardNetwork<DhtType>::JoinShard() {
     }
 
     elect_dht_->SetSignMessageCallback(std::bind(
-        &ShardNetwork::SignDhtMessage,
-        this,
+        &dht::DefaultDhtSignCallback,
         std::placeholders::_1,
         std::placeholders::_2,
         std::placeholders::_3,

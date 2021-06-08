@@ -59,6 +59,7 @@ enum NodeJoinWay : int32_t {
     kJoinFromBootstrapRes,
     kJoinFromRefreshNeigber,
     kJoinFromElectBlock,
+    kJoinFromNetworkDetection,
     // if root and consensus shard must check valid
     kJoinFromBootstrapReq,
     kJoinFromConnect,
@@ -235,6 +236,13 @@ typedef std::function<int(
     std::string* enc_data,
     std::string* sign_ch,
     std::string* sign_re)> VerifySignCallback;
+
+int DefaultDhtSignCallback(
+    const std::string& peer_pubkey,
+    const std::string& append_data,
+    std::string* enc_data,
+    std::string* sign_ch,
+    std::string* sign_re);
 
 }  // namespace dht
 

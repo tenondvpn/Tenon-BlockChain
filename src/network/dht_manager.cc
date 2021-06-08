@@ -116,7 +116,7 @@ void DhtManager::NetworkDetection() {
             continue;
         }
 
-        node->join_com = "NetworkDetection";
+        node->join_way = dht::kJoinFromNetworkDetection;
         if ((*iter)->Join(node) != dht::kDhtSuccess) {
             continue;
         }
@@ -125,12 +125,18 @@ void DhtManager::NetworkDetection() {
         transport::protobuf::Header msg;
         (*iter)->SetFrequently(msg);
         // just connect
-        dht::DhtProto::CreateConnectRequest((*iter)->local_node(), node, true, msg);
+        dht::DhtProto::CreateConnectRequest(
+            (*iter)->local_node(),
+            node,
+            true,
+            node->pubkey_str(),
+            dht::DefaultDhtSignCallback,
+            msg);
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                node->public_ip(),
-                node->local_port + 1,
-                0,
-                msg);
+            node->public_ip(),
+            node->local_port + 1,
+            0,
+            msg);
     }
 
     tick_.CutOff(kNetworkDetectPeriod, std::bind(&DhtManager::NetworkDetection, this));

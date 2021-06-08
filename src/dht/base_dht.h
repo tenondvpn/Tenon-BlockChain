@@ -67,7 +67,7 @@ public:
     }
 
     BootstrapResponseCallback bootstrap_response_cb() {
-        return bootstrap_response_cb_
+        return bootstrap_response_cb_;
     }
 
     NewNodeJoinCallback node_join_cb() {
