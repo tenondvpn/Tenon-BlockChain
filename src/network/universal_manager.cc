@@ -183,7 +183,7 @@ std::vector<dht::NodePtr> UniversalManager::GetSameNetworkNodes(
 int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
     auto universal_dht = GetUniversal(kUniversalNetworkId);
     if (universal_dht == nullptr) {
-        return;
+        return dht::kDhtSuccess;
     }
 
     node->join_com = "AddNodeToUniversal";

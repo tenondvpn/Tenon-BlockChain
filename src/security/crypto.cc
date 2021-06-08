@@ -45,7 +45,7 @@ std::string Crypto::AesDecrypt(
         CryptoPP::AES::Decryption aes_desc(target, 16);
         auto ci = cipher.substr(16, cipher.size() - 16);
         auto iv = cipher.substr(0, 16);
-        CryptoPP::CBC_Mode_ExternalCipher::Decryption cbc_decryption(aes_desc, iv.data());
+        CryptoPP::CBC_Mode_ExternalCipher::Decryption cbc_decryption(aes_desc, (uint8_t*)iv.c_str());
         std::string decrypted;
         CryptoPP::StreamTransformationFilter stf_decryptor(cbc_decryption, new CryptoPP::StringSink(decrypted));
         stf_decryptor.Put((uint8_t*)ci.c_str(), ci.size());
@@ -54,7 +54,6 @@ std::string Crypto::AesDecrypt(
     }
     catch (std::exception const& e)
     {
-        // FIXME: Handle this error better.
         std::cerr << e.what() << '\n';
         return "";
     }

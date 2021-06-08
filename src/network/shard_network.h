@@ -109,8 +109,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
 template<class DhtType>
 int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
-
-    return kDhtSuccess;
+    return dht::kDhtSuccess;
 }
 
 template<class DhtType>
@@ -131,7 +130,10 @@ int ShardNetwork<DhtType>::JoinShard() {
         local_node);
     if (elect_dht_->Init(
             nullptr,
-            std::bind(&ShardNetwork<DhtType>::JoinNewNodeValid, this)) != network::kNetworkSuccess) {
+            std::bind(
+                &ShardNetwork::JoinNewNodeValid,
+                this,
+                std::placeholders::_1)) != network::kNetworkSuccess) {
         NETWORK_ERROR("init shard role dht failed!");
         return kNetworkError;
     }
