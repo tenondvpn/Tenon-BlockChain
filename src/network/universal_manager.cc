@@ -64,6 +64,38 @@ dht::BaseDhtPtr UniversalManager::GetUniversal(uint32_t network_id) {
     return dhts_[network_id];
 }
 
+void UniversalManager::DhtBootstrapResponseCallback(
+        dht::BaseDht* dht_ptr,
+        const dht::protobuf::DhtMessage& dht_msg) {
+    init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
+    auto local_node = dht_ptr->local_node();
+    NETWORK_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
+        local_node->public_ip().c_str(),
+        local_node->public_port,
+        dht_msg.bootstrap_res().public_port());
+    auto net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node->dht_key());
+    auto local_dht_key = dht::DhtKeyManager(local_node->dht_key());
+    if (net_id == network::kUniversalNetworkId) {
+        auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(
+            local_node->public_ip());
+        if (node_country != ip::kInvalidCountryCode) {
+            local_dht_key.SetCountryId(node_country);
+        } else {
+            auto server_country_code = dht_msg.bootstrap_res().country_code();
+            if (server_country_code != ip::kInvalidCountryCode) {
+                node_country = server_country_code;
+                local_dht_key.SetCountryId(server_country_code);
+            }
+        }
+
+        common::GlobalInfo::Instance()->set_country(node_country);
+    }
+}
+
+void UniversalManager::NodeJoinCallback(dht::NodePtr& node) {
+    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+}
+
 int UniversalManager::CreateNetwork(
         uint32_t network_id,
         const common::Config& config,
@@ -87,7 +119,16 @@ int UniversalManager::CreateNetwork(
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);
-    dht_ptr->Init();
+    dht_ptr->Init(
+        std::bind(
+            &UniversalManager::DhtBootstrapResponseCallback,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2),
+        std::bind(
+            &UniversalManager::NodeJoinCallback,
+            this,
+            std::placeholders::_1));
     RegisterUniversal(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;

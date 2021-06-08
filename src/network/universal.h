@@ -16,7 +16,7 @@ class Universal : public dht::BaseDht {
 public:
     Universal(transport::TransportPtr& transport_ptr, dht::NodePtr& local_node);
     virtual ~Universal();
-    virtual int Init();
+    virtual int Init(dht::BootstrapResponseCallback boot_cb, dht::NewNodeJoinCallback node_join_cb);
     virtual int Destroy();
     virtual bool CheckDestination(const std::string& des_dht_key, bool closest);
     virtual void HandleMessage(transport::protobuf::Header& msg);

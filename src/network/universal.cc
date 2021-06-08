@@ -27,8 +27,10 @@ Universal::~Universal() {
     Destroy();
 }
 
-int Universal::Init() {
-    if (BaseDht::Init() != dht::kDhtSuccess) {
+int Universal::Init(
+        dht::BootstrapResponseCallback boot_cb,
+        dht::NewNodeJoinCallback node_join_cb) {
+    if (BaseDht::Init(boot_cb, node_join_cb) != dht::kDhtSuccess) {
         NETWORK_ERROR("init base dht failed!");
         return kNetworkError;
     }

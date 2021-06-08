@@ -31,11 +31,11 @@ public:
     void UnRegisterUniversal(uint32_t network_id);
     dht::BaseDhtPtr GetUniversal(uint32_t network_id);
     int CreateUniversalNetwork(
-            const common::Config& config,
-            transport::TransportPtr& transport);
+        const common::Config& config,
+        transport::TransportPtr& transport);
     int CreateNodeNetwork(
-            const common::Config& config,
-            transport::TransportPtr& transport);
+        const common::Config& config,
+        transport::TransportPtr& transport);
     std::vector<dht::NodePtr> GetSameNetworkNodes(uint32_t network_id, uint32_t count);
     void Init();
     void Destroy();
@@ -45,9 +45,13 @@ private:
     UniversalManager();
     ~UniversalManager();
     int CreateNetwork(
-            uint32_t network_id,
-            const common::Config& config,
-            transport::TransportPtr& transport);
+        uint32_t network_id,
+        const common::Config& config,
+        transport::TransportPtr& transport);
+    void DhtBootstrapResponseCallback(
+        dht::BaseDht* dht_ptr,
+        const dht::protobuf::DhtMessage& dht_msg);
+    void NodeJoinCallback(dht::NodePtr& node);
 
     dht::BaseDhtPtr* dhts_{ nullptr };
 

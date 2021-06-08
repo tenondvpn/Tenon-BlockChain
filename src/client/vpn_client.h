@@ -237,10 +237,6 @@ private:
     void SendGetBlockWithGid(const std::string& str, bool is_gid);
     void SendGetAccountAttrUsedBandwidth();
     void GetTxBlocksFromBftNetwork();
-    void DhtBootstrapResponseCallback(
-        dht::BaseDht* dht_ptr,
-        const dht::protobuf::DhtMessage& dht_msg);
-    void NodeJoinCallback(dht::NodePtr& node);
 
     static const uint32_t kDefaultUdpSendBufferSize = 2u * 1024u * 1024u;
     static const uint32_t kDefaultUdpRecvBufferSize = 2u * 1024u * 1024u;
