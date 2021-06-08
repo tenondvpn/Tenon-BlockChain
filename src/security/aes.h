@@ -1,5 +1,6 @@
 #pragma once
 
+#include "openssl/aes.h"
 #include "security/crypto_utils.h"
 
 namespace tenon {
