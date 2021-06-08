@@ -517,25 +517,6 @@ void BaseDht::ProcessBootstrapResponse(
         local_node_->public_port = common::GlobalInfo::Instance()->config_public_port();
     }
 
-//     DHT_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
-//             local_node_->public_ip().c_str(), local_node_->public_port, dht_msg.bootstrap_res().public_port());
-//     auto net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key());
-//     auto local_dht_key = DhtKeyManager(local_node_->dht_key());
-//     if (net_id == network::kUniversalNetworkId) {
-//         auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(
-//                 local_node_->public_ip());
-//         if (node_country != ip::kInvalidCountryCode) {
-//             local_dht_key.SetCountryId(node_country);
-//         } else {
-//             auto server_country_code = dht_msg.bootstrap_res().country_code();
-//             if (server_country_code != ip::kInvalidCountryCode) {
-//                 node_country = server_country_code;
-//                 local_dht_key.SetCountryId(server_country_code);
-//             }
-//         }
-//         common::GlobalInfo::Instance()->set_country(node_country);
-//     } else {
-//     }
     if (bootstrap_response_cb_ != nullptr) {
         // set global country
         bootstrap_response_cb_(this, dht_msg);

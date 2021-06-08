@@ -115,7 +115,7 @@ protected:
     common::Tick refresh_neighbors_tick_;
     common::Tick heartbeat_tick_;
     BootstrapResponseCallback bootstrap_response_cb_{ nullptr };
-    NewNodeJoinCallback node_join_cb_{ nullptr] };
+    NewNodeJoinCallback node_join_cb_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BaseDht);
 };

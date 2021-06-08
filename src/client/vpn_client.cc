@@ -960,6 +960,38 @@ int VpnClient::InitNetworkSingleton(uint32_t init_type) {
     return CreateClientUniversalNetwork();
 }
 
+void VpnClient::DhtBootstrapResponseCallback(
+        dht::BaseDht* dht_ptr,
+        const dht::protobuf::DhtMessage& dht_msg) {
+    init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
+    auto local_node = dht_ptr->local_node();
+    CLIENT_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
+        local_node->public_ip().c_str(),
+        local_node->public_port,
+        dht_msg.bootstrap_res().public_port());
+    auto net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node->dht_key());
+    auto local_dht_key = dht::DhtKeyManager(local_node->dht_key());
+    if (net_id == network::kUniversalNetworkId) {
+        auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(
+            local_node->public_ip());
+        if (node_country != ip::kInvalidCountryCode) {
+            local_dht_key.SetCountryId(node_country);
+        } else {
+            auto server_country_code = dht_msg.bootstrap_res().country_code();
+            if (server_country_code != ip::kInvalidCountryCode) {
+                node_country = server_country_code;
+                local_dht_key.SetCountryId(server_country_code);
+            }
+        }
+
+        common::GlobalInfo::Instance()->set_country(node_country);
+    }
+}
+
+void VpnClient::NodeJoinCallback(dht::NodePtr& node) {
+    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+}
+
 int VpnClient::CreateClientUniversalNetwork() {
     dht::DhtKeyManager dht_key(
         network::kVpnNetworkId,
@@ -978,7 +1010,16 @@ int VpnClient::CreateClientUniversalNetwork() {
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     root_dht_ = std::make_shared<ClientUniversalDht>(udp_transport_, local_node);
-    root_dht_->Init();
+    root_dht_->Init(
+        std::bind(
+            &VpnClient::DhtBootstrapResponseCallback,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2),
+        std::bind(
+            &VpnClient::NodeJoinCallback,
+            this,
+            std::placeholders::_1));
     auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(root_dht_);
     network::DhtManager::Instance()->RegisterDht(network::kVpnNetworkId, base_dht);
     return kClientSuccess;

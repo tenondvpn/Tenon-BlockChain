@@ -188,9 +188,9 @@ public:
     std::string GetIpCountry(const std::string& ip);
     uint16_t UpdateVpnPort(const std::string& dht_key);
     std::string UpdateUseVpnNode(
-            const std::string& old_ip,
-            const std::string& ip,
-            const std::string& uid);
+        const std::string& old_ip,
+        const std::string& ip,
+        const std::string& uid);
     std::string VpnConnected();
     void AdReward(const std::string& gid);
     void UpdateCountryCode(const std::string& country);
@@ -203,8 +203,8 @@ private:
     void HandleBlockMessage(transport::protobuf::Header& header);
     void HandleContractMessage(transport::protobuf::Header& header);
     void HandleUpdateVpnCountResponse(
-            transport::protobuf::Header& header,
-            block::protobuf::BlockMessage& block_msg);
+        transport::protobuf::Header& header,
+        block::protobuf::BlockMessage& block_msg);
     int InitUdpTransport();
     int InitTcpTransport();
     int SetPriAndPubKey(const std::string& prikey);
@@ -212,8 +212,8 @@ private:
     int CreateClientUniversalNetwork();
     void CheckTxExists();
     void WriteDefaultLogConf(
-            const std::string& log_conf_path,
-            const std::string& log_path);
+        const std::string& log_conf_path,
+        const std::string& log_path);
     void GetAccountHeight();
     void GetAccountBlockWithHeight();
     void HandleHeightResponse(const block::protobuf::AccountHeightResponse& height_res);
@@ -228,15 +228,19 @@ private:
     int SetDefaultRouting();
     std::string GetDefaultRouting();
     void SendGetAccountAttrLastBlock(
-            const std::string& attr,
-            const std::string& account,
-            uint64_t height);
+        const std::string& attr,
+        const std::string& account,
+        uint64_t height);
     void HandleGetAttrResponse(
-            transport::protobuf::Header& header,
-            block::protobuf::BlockMessage& block_msg);
+        transport::protobuf::Header& header,
+        block::protobuf::BlockMessage& block_msg);
     void SendGetBlockWithGid(const std::string& str, bool is_gid);
     void SendGetAccountAttrUsedBandwidth();
     void GetTxBlocksFromBftNetwork();
+    void DhtBootstrapResponseCallback(
+        dht::BaseDht* dht_ptr,
+        const dht::protobuf::DhtMessage& dht_msg);
+    void NodeJoinCallback(dht::NodePtr& node);
 
     static const uint32_t kDefaultUdpSendBufferSize = 2u * 1024u * 1024u;
     static const uint32_t kDefaultUdpRecvBufferSize = 2u * 1024u * 1024u;

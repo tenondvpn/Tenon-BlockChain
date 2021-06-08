@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <atomic>
+#include <functional>
 
 #include "common/hash.h"
 #include "common/encode.h"
@@ -211,7 +212,7 @@ private:
 
 typedef std::shared_ptr<Node> NodePtr;
 typedef std::function<void(BaseDht* dht, const protobuf::DhtMessage& dht_msg)> BootstrapResponseCallback;
-typedef std::function<void(const NodePtr& node)> NewNodeJoinCallback;
+typedef std::function<void(NodePtr& node)> NewNodeJoinCallback;
 
 }  // namespace dht
 
