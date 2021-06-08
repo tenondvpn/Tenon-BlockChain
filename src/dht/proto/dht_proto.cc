@@ -68,7 +68,6 @@ void DhtProto::CreateBootstrapRequest(
         }
 
         dht_msg.set_enc_data(enc_data);
-        dht_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         dht_msg.set_sign_ch(sign_ch);
         dht_msg.set_sign_re(sign_re);
     }
