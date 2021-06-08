@@ -9,7 +9,10 @@
 #include "network/dht_manager.h"
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
+#include "election/member_manager.h"
 #include "security/aes.h"
+#include "security/ecdh_create_key.h"
+#include "openssl/aes.h"
 
 namespace tenon {
 
@@ -117,10 +120,10 @@ int ShardNetwork<DhtType>::JoinUniversal() {
 
 template<class DhtType>
 bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::string& id) {
-    if (netwok_id == common::GlobalInfo::Instance()->network_id() &&
-        ((netwok_id >= network::kConsensusShardBeginNetworkId &&
-            netwok_id < network::kConsensusShardEndNetworkId) ||
-            netwok_id == network::kRootCongressNetworkId)) {
+    if (network_id == common::GlobalInfo::Instance()->network_id() &&
+        ((network_id >= network::kConsensusShardBeginNetworkId &&
+            network_id < network::kConsensusShardEndNetworkId) ||
+            network_id == network::kRootCongressNetworkId)) {
         if (elect::MemberManager::Instance()->GetMember(network_id, id) != nullptr) {
             return true;
         }
@@ -132,8 +135,8 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
 template<class DhtType>
 int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
-    auto netwok_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key);
-    if (IsThisNetworkNode(netwok_id, node->id()) &&
+    auto network_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key());
+    if (IsThisNetworkNode(network_id, node->id()) &&
             (node->join_way == dht::kJoinFromBootstrapReq ||
             node->join_way == dht::kJoinFromDetection ||
             node->join_way == dht::kJoinFromConnect)) {
@@ -163,9 +166,9 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
         char* tmp_out_enc = (char*)malloc(data_size);
         memset(tmp_out_enc, 0, data_size);
         if (security::Aes::Decrypt(
-                node->enc_data.c_str(),
+                (char*)node->enc_data.c_str(),
                 node->enc_data.size(),
-                sec_key.c_str(),
+                (char*)sec_key.c_str(),
                 sec_key.size(),
                 tmp_out_enc) != security::kSecuritySuccess) {
             free(tmp_out_enc);
