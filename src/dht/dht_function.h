@@ -4,7 +4,7 @@
 #include <bitset>
 
 #include "common/utils.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "dht/dht_utils.h"
 #include "dht/base_dht.h"
 

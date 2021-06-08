@@ -5,7 +5,7 @@
 #include "security/schnorr.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "nat_traverse/proto/nat.pb.h"
 
 namespace tenon {

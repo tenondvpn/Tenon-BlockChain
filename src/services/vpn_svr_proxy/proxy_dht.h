@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "dht/base_dht.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "services/proto/service.pb.h"
 
 namespace tenon {

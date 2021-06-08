@@ -13,6 +13,7 @@
 #include "common/bloom_filter.h"
 #include "common/country_code.h"
 #include "common/time_utils.h"
+#include "common/user_property_key_define.h"
 #include "ip/ip_with_country.h"
 #include "transport/processor.h"
 #include "transport/transport_utils.h"
@@ -23,9 +24,6 @@
 #include "dht/proto/dht_proto.h"
 #include "dht/dht_function.h"
 #include "dht/dht_key.h"
-#include "init/update_vpn_init.h"
-#include "network/network_utils.h"
-#include "network/universal_manager.h"
 #include "security/secp256k1.h"
 
 namespace tenon {
@@ -46,7 +44,9 @@ void BaseDht::RegisterDhtMessage() {
     nat_detection_->RegisterNatMessage();
 }
 
-int BaseDht::Init() {
+int BaseDht::Init(BootstrapResponseCallback boot_cb, NewNodeJoinCallback node_join_cb) {
+    bootstrap_response_cb_ = boot_cb;
+    node_join_cb_ = node_join_cb;
     nat_detection_ = std::make_shared<nat::Detection>(shared_from_this());
     refresh_neighbors_tick_.CutOff(
             kRefreshNeighborPeriod,
@@ -168,23 +168,6 @@ int BaseDht::Drop(NodePtr& node) {
         {
             std::lock_guard<std::mutex> hash_dht_guard(readonly_hash_sort_dht_mutex_);
             readonly_hash_sort_dht_ = dht_;
-        }
-    }
-
-    {
-        uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key());
-        uint8_t country_code = dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key());
-        std::string country = common::global_code_to_country_map[country_code];
-        uint32_t local_net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key());
-        if (net_id == network::kVpnRouteNetworkId && country == "CN") {
-            DHT_ERROR("drop from: %s, join new node %s, net_id: %d, min_r: %d, max_r: %d, min_v: %d, max_v: %d, tag: %s, local node net: %d",
-                node->join_com.c_str(),
-                node->public_ip().c_str(),
-                net_id,
-                node->min_route_port, node->max_route_port,
-                node->min_svr_port, node->max_svr_port,
-                node->node_tag().c_str(),
-                local_net_id);
         }
     }
 
@@ -417,18 +400,17 @@ void BaseDht::ProcessBootstrapRequest(
         src_dht_key.SetCountryId(node_country);
     }
 
-//     auto pubkey_ptr = std::make_shared<security::PublicKey>(header.pubkey());
     NodePtr node = std::make_shared<Node>(
-            dht_msg.bootstrap_req().node_id(),
-            src_dht_key.StrKey(),
-            dht_msg.bootstrap_req().nat_type(),
-            header.client(),
-            header.from_ip(),
-            from_port,
-            dht_msg.bootstrap_req().local_ip(),
-            dht_msg.bootstrap_req().local_port(),
-            header.pubkey(),
-            dht_msg.bootstrap_req().node_tag());
+        dht_msg.bootstrap_req().node_id(),
+        src_dht_key.StrKey(),
+        dht_msg.bootstrap_req().nat_type(),
+        header.client(),
+        header.from_ip(),
+        from_port,
+        dht_msg.bootstrap_req().local_ip(),
+        dht_msg.bootstrap_req().local_port(),
+        header.pubkey(),
+        dht_msg.bootstrap_req().node_tag());
     node->min_svr_port = dht_msg.bootstrap_req().min_svr_port();
     node->max_svr_port = dht_msg.bootstrap_req().max_svr_port();
     node->min_route_port = dht_msg.bootstrap_req().min_route_port();
@@ -438,7 +420,9 @@ void BaseDht::ProcessBootstrapRequest(
     node->node_weight = dht_msg.bootstrap_req().node_weight();
     node->join_com = "ProcessBootstrapRequest";
     Join(node);
-    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+    if (node_join_cb_ != nullptr) {
+        node_join_cb_(node);
+    }
 }
 
 void BaseDht::ProcessBootstrapResponse(
@@ -471,7 +455,6 @@ void BaseDht::ProcessBootstrapResponse(
         }
     }
 
-//     auto pubkey_ptr = std::make_shared<security::PublicKey>(header.pubkey());
     NodePtr node = std::make_shared<Node>(
             dht_msg.bootstrap_res().node_id(),
             header.src_dht_key(),
@@ -503,12 +486,18 @@ void BaseDht::ProcessBootstrapResponse(
                 header.from_port(),
                 dht_msg.bootstrap_res().init_message().vpn_nodes_size(),
                 dht_msg.bootstrap_res().init_message().route_nodes_size());
-        init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
+        if (bootstrap_response_cb_ != nullptr) {
+            bootstrap_response_cb_(this, dht_msg);
+        }
+//         init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
     }
 
     node->join_com = "ProcessBootstrapResponse";
     Join(node);
-    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+    if (node_join_cb_ != nullptr) {
+        node_join_cb_(node);
+    }
+
     std::unique_lock<std::mutex> lock(join_res_mutex_);
     if (joined_) {
         return;
@@ -528,27 +517,32 @@ void BaseDht::ProcessBootstrapResponse(
         local_node_->public_port = common::GlobalInfo::Instance()->config_public_port();
     }
 
-    DHT_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
-            local_node_->public_ip().c_str(), local_node_->public_port, dht_msg.bootstrap_res().public_port());
-    auto net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key());
-    auto local_dht_key = DhtKeyManager(local_node_->dht_key());
-    if (net_id == network::kUniversalNetworkId) {
-        auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(
-                local_node_->public_ip());
-        if (node_country != ip::kInvalidCountryCode) {
-            local_dht_key.SetCountryId(node_country);
-        } else {
-            auto server_country_code = dht_msg.bootstrap_res().country_code();
-            if (server_country_code != ip::kInvalidCountryCode) {
-                node_country = server_country_code;
-                local_dht_key.SetCountryId(server_country_code);
-            }
-        }
-        common::GlobalInfo::Instance()->set_country(node_country);
-    } else {
-        local_dht_key.SetCountryId(common::GlobalInfo::Instance()->country());
+//     DHT_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
+//             local_node_->public_ip().c_str(), local_node_->public_port, dht_msg.bootstrap_res().public_port());
+//     auto net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key());
+//     auto local_dht_key = DhtKeyManager(local_node_->dht_key());
+//     if (net_id == network::kUniversalNetworkId) {
+//         auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(
+//                 local_node_->public_ip());
+//         if (node_country != ip::kInvalidCountryCode) {
+//             local_dht_key.SetCountryId(node_country);
+//         } else {
+//             auto server_country_code = dht_msg.bootstrap_res().country_code();
+//             if (server_country_code != ip::kInvalidCountryCode) {
+//                 node_country = server_country_code;
+//                 local_dht_key.SetCountryId(server_country_code);
+//             }
+//         }
+//         common::GlobalInfo::Instance()->set_country(node_country);
+//     } else {
+//     }
+    if (bootstrap_response_cb_ != nullptr) {
+        // set global country
+        bootstrap_response_cb_(this, dht_msg);
     }
 
+    auto local_dht_key = DhtKeyManager(local_node_->dht_key());
+    local_dht_key.SetCountryId(common::GlobalInfo::Instance()->country());
     local_node_->set_dht_key(local_dht_key.StrKey());
     local_node_->dht_key_hash = common::Hash::Hash64(local_node_->dht_key());
 }
@@ -765,7 +759,6 @@ void BaseDht::ProcessConnectRequest(
     }
 
     // check sign
-//     auto pubkey_ptr = std::make_shared<security::PublicKey>(header.pubkey());
     NodePtr node = std::make_shared<Node>(
             dht_msg.connect_req().id(),
             dht_msg.connect_req().dht_key(),
@@ -786,7 +779,9 @@ void BaseDht::ProcessConnectRequest(
     node->node_weight = dht_msg.connect_req().node_weight();
     node->join_com = "ProcessConnectRequest";
     Join(node);
-    network::UniversalManager::Instance()->AddNodeToUniversal(node);
+    if (node_join_cb_ != nullptr) {
+        node_join_cb_(node);
+    }
 }
 
 bool BaseDht::NodeValid(NodePtr& node) {
@@ -826,27 +821,6 @@ bool BaseDht::NodeJoined(NodePtr& node) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     auto iter = node_map_.find(node->dht_key_hash);
     if (iter != node_map_.end()) {
-        if (node->min_route_port != 0 ||
-                node->max_route_port != 0 ||
-                node->min_svr_port != 0 ||
-                node->max_svr_port != 0) {
-            if (iter->second->min_route_port != node->min_route_port ||
-                    iter->second->max_route_port != node->max_route_port ||
-                    iter->second->min_svr_port != node->min_svr_port ||
-                    iter->second->max_svr_port != node->max_svr_port) {
-                iter->second->min_route_port = node->min_route_port;
-                iter->second->max_route_port = node->max_route_port;
-                iter->second->min_svr_port = node->min_svr_port;
-                iter->second->max_svr_port = node->max_svr_port;
-                init::UpdateVpnInit::Instance()->UpdateNodePorts(
-                        node->dht_key(),
-                        node->min_route_port,
-                        node->max_route_port,
-                        node->min_svr_port,
-                        node->max_svr_port);
-            }
-        }
-
         if (!node->node_tag().empty() && node->node_tag() != iter->second->node_tag()) {
             iter->second->set_node_tag(node->node_tag());
         }

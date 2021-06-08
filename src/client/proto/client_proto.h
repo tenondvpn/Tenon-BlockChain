@@ -6,7 +6,7 @@
 #include "security/secp256k1.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "dht/dht_key.h"
 #include "services/proto/service.pb.h"
 #include "block/proto/block.pb.h"

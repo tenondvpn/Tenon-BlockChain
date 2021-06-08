@@ -119,7 +119,7 @@ int NetworkInit::Init(int argc, char** argv) {
                 }
 
                 auto node_ptr = std::make_shared<dht::Node>();
-                node_ptr->set_pubkey(node_info[0]);
+                node_ptr->set_pubkey(common::Encode::HexDecode(node_info[0]));
                 node_ptr->set_public_ip(node_info[1]);
                 node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
                 root_genesis_nodes.push_back(node_ptr);
@@ -141,7 +141,7 @@ int NetworkInit::Init(int argc, char** argv) {
                 }
 
                 auto node_ptr = std::make_shared<dht::Node>();
-                node_ptr->set_pubkey(node_info[0]);
+                node_ptr->set_pubkey(common::Encode::HexDecode(node_info[0]));
                 node_ptr->set_public_ip(node_info[1]);
                 node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
                 cons_genesis_nodes.push_back(node_ptr);

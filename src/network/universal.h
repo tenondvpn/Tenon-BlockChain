@@ -5,7 +5,7 @@
 
 #include "transport/transport.h"
 #include "dht/base_dht.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "network/proto/network.pb.h"
 
 namespace tenon {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "transport/proto/transport.pb.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "common/bloom_filter.h"
 
 namespace tenon {

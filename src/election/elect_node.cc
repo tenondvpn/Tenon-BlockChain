@@ -3,7 +3,7 @@
 
 #include "common/global_info.h"
 #include "dht/dht_key.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "transport/udp/udp_transport.h"
 #include "network/universal_manager.h"
 #include "network/universal.h"

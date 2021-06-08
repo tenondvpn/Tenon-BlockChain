@@ -5,7 +5,7 @@
 
 #include "common/utils.h"
 #include "common/config.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "network/universal.h"
 
 namespace tenon {

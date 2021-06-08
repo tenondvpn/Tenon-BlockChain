@@ -10,7 +10,7 @@
 #include "transport/proto/transport.pb.h"
 #include "transport/transport.h"
 #include "transport/multi_thread.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "dht/proto/dht.pb.h"
 
 namespace tenon {
@@ -28,7 +28,7 @@ class BaseDht : public std::enable_shared_from_this<BaseDht> {
 public:
     BaseDht(transport::TransportPtr& transport, NodePtr& local_node);
     virtual ~BaseDht();
-    virtual int Init();
+    virtual int Init(BootstrapResponseCallback boot_cb, NewNodeJoinCallback node_join_cb);
     virtual int Destroy();
     virtual int Join(NodePtr& node);
     virtual int Drop(NodePtr& node);
@@ -114,6 +114,8 @@ protected:
     std::shared_ptr<nat::Detection> nat_detection_{ nullptr };
     common::Tick refresh_neighbors_tick_;
     common::Tick heartbeat_tick_;
+    BootstrapResponseCallback bootstrap_response_cb_{ nullptr };
+    NewNodeJoinCallback node_join_cb_{ nullptr] };
 
     DISALLOW_COPY_AND_ASSIGN(BaseDht);
 };

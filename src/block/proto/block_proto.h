@@ -3,7 +3,7 @@
 #include "common/utils.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "dht/dht_key.h"
 #include "block/proto/block.pb.h"
 

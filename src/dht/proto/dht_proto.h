@@ -6,7 +6,7 @@
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
 #include "dht/proto/dht.pb.h"
-#include "dht/node.h"
+#include "dht/dht_utils.h"
 #include "dht/base_dht.h"
 
 namespace tenon {
