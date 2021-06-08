@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/utils.h"
+#include "common/string_utils.h"
 #include "dht/dht_key.h"
 #include "network/universal.h"
 #include "network/network_utils.h"
@@ -8,6 +9,7 @@
 #include "network/dht_manager.h"
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
+#include "security/aes.h"
 
 namespace tenon {
 
@@ -28,6 +30,13 @@ private:
     int JoinUniversal();
     int JoinShard();
     int JoinNewNodeValid(dht::NodePtr& node);
+    bool IsThisNetworkNode(uint32_t network_id, const std::string& id);
+    int SignDhtMessage(
+        const std::string& peer_pubkey,
+        const std::string& append_data,
+        std::string* enc_data,
+        std::string* sign_ch,
+        std::string* sign_re);
 
     dht::BaseDhtPtr universal_role_{ nullptr };
     dht::BaseDhtPtr elect_dht_{ nullptr };
@@ -107,8 +116,124 @@ int ShardNetwork<DhtType>::JoinUniversal() {
 }
 
 template<class DhtType>
+bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::string& id) {
+    if (netwok_id == common::GlobalInfo::Instance()->network_id() &&
+        ((netwok_id >= network::kConsensusShardBeginNetworkId &&
+            netwok_id < network::kConsensusShardEndNetworkId) ||
+            netwok_id == network::kRootCongressNetworkId)) {
+        if (elect::MemberManager::Instance()->GetMember(network_id, id) != nullptr) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template<class DhtType>
+int ShardNetwork<DhtType>::SignDhtMessage(
+        const std::string& peer_pubkey,
+        const std::string& append_data,
+        std::string* enc_data,
+        std::string* sign_ch,
+        std::string* sign_re) {
+    std::string sec_key;
+    security::PublicKey pubkey(peer_pubkey);
+    if (security::EcdhCreateKey::Instance()->CreateKey(
+            pubkey,
+            sec_key) != security::kSecuritySuccess) {
+        return dht::kDhtError;
+    }
+
+    auto now_tm_sec = std::chrono::steady_clock::now().time_since_epoch().count() /
+        1000000000llu;
+    std::string enc_src_data = std::to_string(now_tm_sec);
+
+    uint32_t data_size = (enc_src_data.size() / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
+    char* tmp_out_enc = (char*)malloc(data_size);
+    memset(tmp_out_enc, 0, data_size);
+    if (security::Aes::Encrypt(
+            enc_src_data.c_str(),
+            enc_src_data.size(),
+            sec_key.c_str(),
+            sec_key.size(),
+            tmp_out_enc) != security::kSecuritySuccess) {
+        free(tmp_out_enc);
+        return dht::kDhtError;
+    }
+
+    *enc_data = std::string(tmp_out_enc, data_size);
+    free(tmp_out_enc);
+    security::Signature sign;
+    bool sign_res = security::Schnorr::Instance()->Sign(
+        *enc_data,
+        *(security::Schnorr::Instance()->prikey()),
+        *(security::Schnorr::Instance()->pubkey()),
+        sign);
+    if (!sign_res) {
+        BFT_ERROR("signature error.");
+        return;
+    }
+
+    std::string sign_challenge_str;
+    std::string sign_response_str;
+    sign.Serialize(sign_challenge_str, sign_response_str);
+    *sign_ch = sign_challenge_str;
+    *sign_res = sign_response_str;
+    return dht::kDhtSuccess;
+}
+
+template<class DhtType>
 int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
+    auto netwok_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key);
+    if (IsThisNetworkNode(netwok_id, node->id()) &&
+            (node->join_way == dht::kJoinFromBootstrapReq ||
+            node->join_way == dht::kJoinFromDetection ||
+            node->join_way == dht::kJoinFromConnect)) {
+        if (node->enc_data.empty() || node->enc_data.size() > 128) {
+            return dht::kDhtError;
+        }
+
+        // check ecdh encrypt and decrypt valid, if not, can't join
+        std::string sec_key;
+        if (!security::IsValidPublicKey()) {
+            return dht::kDhtError;
+        }
+
+        security::PublicKey pubkey(node->pubkey_str());
+        auto sign = security::Signature(node->sign_ch, node->sign_re);
+        if (!security::Schnorr::Instance()->Verify(node->enc_data, sign, pubkey)) {
+            return dht::kDhtError;
+        }
+
+        if (security::EcdhCreateKey::Instance()->CreateKey(
+                pubkey,
+                sec_key) != security::kSecuritySuccess) {
+            return dht::kDhtError;
+        }
+
+        uint32_t data_size = (enc_data.size() / AES_BLOCK_SIZE) * AES_BLOCK_SIZE + AES_BLOCK_SIZE;
+        char* tmp_out_enc = (char*)malloc(data_size);
+        memset(tmp_out_enc, 0, data_size);
+        if (security::Aes::Decrypt(
+                node->enc_data.c_str(),
+                node->enc_data.size(),
+                sec_key.c_str(),
+                sec_key.size(),
+                tmp_out_enc) != security::kSecuritySuccess) {
+            free(tmp_out_enc);
+            return dht::kDhtError;
+        }
+
+        auto now_tm_sec = std::chrono::steady_clock::now().time_since_epoch().count() /
+            1000000000llu;
+        auto peer_tm_sec = common::StringUtil::ToUint64(tmp_out_enc);
+        free(tmp_out_enc);
+        if (now_tm_sec <= peer_tm_sec - 15 && now_tm_sec >= peer_tm_sec + 15) {
+            return dht::kDhtError;
+        }
+    }
+
     return dht::kDhtSuccess;
 }
 
@@ -137,6 +262,15 @@ int ShardNetwork<DhtType>::JoinShard() {
         NETWORK_ERROR("init shard role dht failed!");
         return kNetworkError;
     }
+
+    elect_dht_->SetSignMessageCallback(std::bind(
+        &ShardNetwork::SignDhtMessage,
+        this,
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3,
+        std::placeholders::_4,
+        std::placeholders::_5));
     network::DhtManager::Instance()->RegisterDht(network_id_, elect_dht_);
     auto boot_nodes = network::Bootstrap::Instance()->GetNetworkBootstrap(network_id_, 3);
     if (boot_nodes.empty()) {
@@ -146,6 +280,7 @@ int ShardNetwork<DhtType>::JoinShard() {
     if (elect_dht_->Bootstrap(boot_nodes) != dht::kDhtSuccess) {
         NETWORK_ERROR("join shard network [%u] failed!", network_id_);
     }
+
     return kNetworkSuccess;
 }
 

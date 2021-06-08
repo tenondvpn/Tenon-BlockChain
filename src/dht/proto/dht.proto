@@ -150,4 +150,8 @@ message DhtMessage {
     optional HeartbeatRequest heartbeat_req = 6;
     optional HeartbeatResponse heartbeat_res = 7;
     repeated uint32 networks = 8;
+    optional bytes enc_data = 9;
+    optional bytes pubkey = 10;
+    optional bytes sign_ch = 11;
+    optional bytes sign_re = 12;
 }

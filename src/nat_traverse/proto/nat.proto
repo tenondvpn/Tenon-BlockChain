@@ -23,4 +23,9 @@ message DetectionRequest {
 
 message NatMessage {
 	optional DetectionRequest detection_req = 1;
+    optional bytes enc_data = 2;
+    optional bytes pubkey = 3;
+    optional bytes sign_ch = 4;
+    optional bytes sign_re = 5;
+
 }

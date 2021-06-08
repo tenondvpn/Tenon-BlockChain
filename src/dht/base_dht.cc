@@ -212,7 +212,13 @@ int BaseDht::Bootstrap(
     for (uint32_t i = 0; i < boot_nodes.size(); ++i) {
         transport::protobuf::Header msg;
         SetFrequently(msg);
-        DhtProto::CreateBootstrapRequest(local_node_, boot_nodes[i], get_init_msg, init_uid, msg);
+        DhtProto::CreateBootstrapRequest(
+            local_node_,
+            boot_nodes[i],
+            get_init_msg,
+            init_uid,
+            boot_nodes[i]->pubkey_str(),
+            sign_msg_cb_, msg);
         // TODO(): fix local_port to public_port
         if (transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                     boot_nodes[i]->public_ip(),
@@ -424,7 +430,10 @@ void BaseDht::ProcessBootstrapRequest(
     node->min_udp_port = dht_msg.bootstrap_req().min_udp_port();
     node->max_udp_port = dht_msg.bootstrap_req().max_udp_port();
     node->node_weight = dht_msg.bootstrap_req().node_weight();
-    node->join_com = "ProcessBootstrapRequest";
+    node->enc_data = dht_msg.enc_data();
+    node->sign_ch = dht_msg.sign_ch();
+    node->sign_re = dht_msg.sign_re();
+    node->join_way = kJoinFromBootstrapReq;
     Join(node);
 }
 
@@ -476,26 +485,8 @@ void BaseDht::ProcessBootstrapResponse(
     node->min_udp_port = dht_msg.bootstrap_res().min_udp_port();
     node->max_udp_port = dht_msg.bootstrap_res().max_udp_port();
     node->node_weight = dht_msg.bootstrap_res().node_weight();
-
-	if (dht_msg.bootstrap_res().has_init_message() &&
-            !dht_msg.bootstrap_res().init_message().version_info().empty()) {
-        DHT_ERROR("receive bootstrap res, [%s:%d] vpn nodes: %d, route nodes: %d",
-                header.from_ip().c_str(),
-                header.from_port(),
-                dht_msg.bootstrap_res().init_message().vpn_nodes_size(),
-                dht_msg.bootstrap_res().init_message().route_nodes_size());
-        printf("receive bootstrap res, [%s:%d] vpn nodes: %d, route nodes: %d\n",
-                header.from_ip().c_str(),
-                header.from_port(),
-                dht_msg.bootstrap_res().init_message().vpn_nodes_size(),
-                dht_msg.bootstrap_res().init_message().route_nodes_size());
-        if (bootstrap_response_cb_ != nullptr) {
-            bootstrap_response_cb_(this, dht_msg);
-        }
-//         init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
-    }
-
-    node->join_com = "ProcessBootstrapResponse";
+    bootstrap_response_cb_(this, dht_msg);
+    node->join_way = kJoinFromBootstrapRes;
     Join(node);
 
     std::unique_lock<std::mutex> lock(join_res_mutex_);
@@ -645,7 +636,13 @@ void BaseDht::ProcessRefreshNeighborsResponse(
             continue;
         }
 
-        if (DhtProto::CreateConnectRequest(local_node_, node, false, msg) == kDhtSuccess) {
+        if (DhtProto::CreateConnectRequest(
+                local_node_,
+                node,
+                false,
+                res_nodes[i].public_key(),
+                sign_msg_cb_,
+                msg) == kDhtSuccess) {
             // TODO(): fix local_port to public_port
             transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                     node->public_ip(), node->local_port + 1, 0, msg);
@@ -758,7 +755,10 @@ void BaseDht::ProcessConnectRequest(
     node->min_udp_port = dht_msg.connect_req().min_udp_port();
     node->max_udp_port = dht_msg.connect_req().max_udp_port();
     node->node_weight = dht_msg.connect_req().node_weight();
-    node->join_com = "ProcessConnectRequest";
+    node->enc_data = dht_msg.enc_data();
+    node->sign_ch = dht_msg.sign_ch();
+    node->sign_re = dht_msg.sign_re();
+    node->join_way = kJoinFromConnect;
     Join(node);
 }
 

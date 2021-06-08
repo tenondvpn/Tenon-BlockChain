@@ -20,6 +20,8 @@ void DhtProto::CreateBootstrapRequest(
         const NodePtr& des_node,
         int32_t get_init_msg,
         const std::string& init_uid,
+        const std::string& peer_pubkey,
+        VerifySignCallback sign_cb,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(des_node->dht_key());
@@ -51,9 +53,24 @@ void DhtProto::CreateBootstrapRequest(
     if (common::GlobalInfo::Instance()->config_public_port() != 0) {
         bootstrap_req->set_public_port(common::GlobalInfo::Instance()->config_public_port());
     }
+
     auto& networks = common::GlobalInfo::Instance()->networks();
     for (auto iter = networks.begin(); iter != networks.end(); ++iter) {
         dht_msg.add_networks(*iter);
+    }
+
+    if (sign_cb != nullptr) {
+        std::string enc_data;
+        std::string sign_ch;
+        std::string sign_re;
+        if (sign_cb(peer_pubkey, "", &enc_data, &sign_ch, &sign_re) != kDhtSuccess) {
+            return;
+        }
+
+        dht_msg.set_enc_data(enc_data);
+        dht_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        dht_msg.set_sign_ch(sign_ch);
+        dht_msg.set_sign_re(sign_re);
     }
 
     msg.set_data(dht_msg.SerializeAsString());
@@ -296,6 +313,8 @@ int32_t DhtProto::CreateConnectRequest(
         const NodePtr& local_node,
         const NodePtr& des_node,
         bool direct,
+        const std::string& peer_pubkey,
+        VerifySignCallback sign_cb,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(des_node->dht_key());
@@ -333,6 +352,14 @@ int32_t DhtProto::CreateConnectRequest(
     auto& networks = common::GlobalInfo::Instance()->networks();
     for (auto iter = networks.begin(); iter != networks.end(); ++iter) {
         dht_msg.add_networks(*iter);
+    }
+
+    if (sign_cb != nullptr) {
+        std::string enc_data;
+        std::string sign;
+        if (sign_cb(peer_pubkey, "", &enc_data, &sign) != kDhtSuccess) {
+            return kDhtError;
+        }
     }
 
     msg.set_data(dht_msg.SerializeAsString());

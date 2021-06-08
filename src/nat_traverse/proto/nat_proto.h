@@ -17,6 +17,8 @@ public:
     static void CreateDetectionRequest(
             const dht::NodePtr& local_node,
             const dht::NodePtr& des_node,
+            const std::string& peer_pubkey,
+            dht::VerifySignCallback sign_cb,
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
         msg.set_des_dht_key(des_node->dht_key());
@@ -44,6 +46,20 @@ public:
         detection_req->set_max_udp_port(common::GlobalInfo::Instance()->max_udp_port());
         detection_req->set_node_weight(common::GlobalInfo::Instance()->node_weight());
         detection_req->set_node_tag(common::GlobalInfo::Instance()->node_tag());
+
+        if (sign_cb != nullptr) {
+            std::string enc_data;
+            std::string sign_ch;
+            std::string sign_re;
+            if (sign_cb(peer_pubkey, "", &enc_data, &sign_ch, &sign_re) != dht::kDhtSuccess) {
+                return;
+            }
+
+            nat_msg.set_enc_data(enc_data);
+            nat_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+            nat_msg.set_sign_ch(sign_ch);
+            nat_msg.set_sign_re(sign_re);
+        }
 
         msg.set_data(nat_msg.SerializeAsString());
     }

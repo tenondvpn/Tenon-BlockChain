@@ -67,7 +67,10 @@ dht::BaseDhtPtr UniversalManager::GetUniversal(uint32_t network_id) {
 void UniversalManager::DhtBootstrapResponseCallback(
         dht::BaseDht* dht_ptr,
         const dht::protobuf::DhtMessage& dht_msg) {
-    init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
+    if (dht_msg.bootstrap_res().has_init_message()) {
+        init::UpdateVpnInit::Instance()->BootstrapInit(dht_msg.bootstrap_res().init_message());
+    }
+
     auto local_node = dht_ptr->local_node();
     NETWORK_ERROR("get local public ip: %s, publc_port: %d, res public port: %d",
         local_node->public_ip().c_str(),
@@ -186,7 +189,7 @@ int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
         return dht::kDhtSuccess;
     }
 
-    node->join_com = "AddNodeToUniversal";
+    node->join_way = dht::kJoinFromUnknown;
     int res = universal_dht->Join(node);
     return dht::kDhtSuccess;
 }

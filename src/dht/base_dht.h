@@ -62,6 +62,22 @@ public:
         return transport::MultiThreadHandler::Instance()->transport();
     }
 
+    void SetSignMessageCallback(VerifySignCallback sign_cb) {
+        sign_msg_cb_ = sign_cb;
+    }
+
+    BootstrapResponseCallback bootstrap_response_cb() {
+        return bootstrap_response_cb_
+    }
+
+    NewNodeJoinCallback node_join_cb() {
+        return node_join_cb_;
+    }
+
+    VerifySignCallback sign_msg_cb() {
+        return sign_msg_cb_;
+    }
+
 protected:
     bool NodeValid(NodePtr& node);
     bool NodeJoined(NodePtr& node);
@@ -116,6 +132,7 @@ protected:
     common::Tick heartbeat_tick_;
     BootstrapResponseCallback bootstrap_response_cb_{ nullptr };
     NewNodeJoinCallback node_join_cb_{ nullptr };
+    VerifySignCallback sign_msg_cb_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BaseDht);
 };

@@ -6,7 +6,6 @@
 #include "transport/transport.h"
 #include "transport/processor.h"
 #include "transport/multi_thread.h"
-#include "network/universal_manager.h"
 #include "dht/base_dht.h"
 #include "dht/dht_key.h"
 #include "ip/ip_with_country.h"
@@ -80,7 +79,12 @@ void Detection::Run() {
 void Detection::SendTtlPacket(DetectionItemPtr& item) {
     transport::protobuf::Header header;
     base_dht_->SetFrequently(header);
-    NatProto::CreateDetectionRequest(base_dht_->local_node(), item->node, header);
+    NatProto::CreateDetectionRequest(
+        base_dht_->local_node(),
+        item->node,
+        item->node->pubkey_str(),
+        base_dht_->sign_msg_cb(),
+        header);
 //     uint32_t ttl = kDetecitonTtl;
 //     if (item->detected_times > ttl) {
 //         ttl = item->detected_times;
@@ -90,7 +94,10 @@ void Detection::SendTtlPacket(DetectionItemPtr& item) {
 //         ttl = 0;
 //     }
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            item->node->public_ip(), item->node->local_port + 1, 0, header);
+        item->node->public_ip(),
+        item->node->local_port + 1,
+        0,
+        header);
 
 }
 
@@ -160,16 +167,11 @@ void Detection::HandleDetectionRequest(
     node->min_udp_port = nat_msg.detection_req().min_udp_port();
     node->max_udp_port = nat_msg.detection_req().max_udp_port();
     node->node_weight = nat_msg.detection_req().node_weight();
-//     std::cout << "HandleDetectionRequest new node join: public ip: " << node->public_ip
-//         << ", public port: " << node->public_port
-//         << ", node->min_route_port: " << node->min_route_port
-//         << ", node->min_route_port: " << node->max_route_port
-//         << ", node->min_svr_port: " << node->min_svr_port
-//         << ", node->max_svr_port: " << node->max_svr_port
-//         << std::endl;
-    node->join_com = "HandleDetectionRequest";
+    node->enc_data = nat_msg.enc_data();
+    node->sign_ch = nat_msg.sign_ch();
+    node->sign_re = nat_msg.sign_re();
+    node->join_way = dht::kJoinFromDetection;
     base_dht_->Join(node);
-    network::UniversalManager::Instance()->AddNodeToUniversal(node);
 }
 
 }  // namespace nat

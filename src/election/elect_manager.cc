@@ -164,7 +164,7 @@ void ElectManager::ProcessNewElectBlock(
                 in[i].local_port(),
                 in[i].pubkey(),
                 "bft");
-            node->join_com = "ProcessNewElectBlock";
+            node->join_way = dht::kJoinFromElectBlock;
             elect_node_ptr_->GetDht()->Join(node);
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }

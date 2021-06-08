@@ -54,6 +54,17 @@ enum NatType {
     kNatTypePortLimit = 3,
 };
 
+enum NodeJoinWay : int32_t {
+    kJoinFromUnknown = 0,
+    kJoinFromBootstrapRes,
+    kJoinFromRefreshNeigber,
+    kJoinFromElectBlock,
+    // if root and consensus shard must check valid
+    kJoinFromBootstrapReq,
+    kJoinFromConnect,
+    kJoinFromDetection,
+};
+
 static const uint32_t kDhtNearestNodesCount = 16u;
 static const uint32_t kDhtMinReserveNodes = 4u;
 static const uint32_t kDhtKeySize = 32u;
@@ -85,7 +96,10 @@ struct Node {
     uint16_t min_udp_port;
     uint16_t max_udp_port;
     uint32_t node_weight;
-    std::string join_com;
+    uint32_t join_way{ kJoinFromUnknown };
+    std::string enc_data;
+    std::string sign_ch;
+    std::string sign_re;
 
     Node() {};
     Node(const Node& other) {
@@ -211,8 +225,16 @@ private:
 };
 
 typedef std::shared_ptr<Node> NodePtr;
-typedef std::function<void(BaseDht* dht, const protobuf::DhtMessage& dht_msg)> BootstrapResponseCallback;
+typedef std::function<void(
+    BaseDht* dht,
+    const protobuf::DhtMessage& dht_msg)> BootstrapResponseCallback;
 typedef std::function<int(NodePtr& node)> NewNodeJoinCallback;
+typedef std::function<int(
+    const std::string& peer_pubkey,
+    const std::string& append_data,
+    std::string* enc_data,
+    std::string* sign_ch,
+    std::string* sign_re)> VerifySignCallback;
 
 }  // namespace dht
 
