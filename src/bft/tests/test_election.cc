@@ -651,7 +651,7 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            bft::BftManager::Instance()->NetworkMemberChange(
+            elect::MemberManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
                 index_map_iter->second);
