@@ -56,7 +56,6 @@ public:
             }
 
             nat_msg.set_enc_data(enc_data);
-            nat_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
             nat_msg.set_sign_ch(sign_ch);
             nat_msg.set_sign_re(sign_re);
         }
