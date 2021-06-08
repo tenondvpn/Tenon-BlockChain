@@ -576,14 +576,22 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, heartbeat_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, heartbeat_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, networks_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, enc_data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, sign_ch_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::DhtMessage, sign_re_),
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  ~0u,
   0,
   1,
   2,
   3,
-  4,
-  5,
-  6,
-  ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 21, sizeof(::tenon::dht::protobuf::BootstrapRequest)},
@@ -597,7 +605,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 216, 222, sizeof(::tenon::dht::protobuf::HeartbeatRequest)},
   { 223, 229, sizeof(::tenon::dht::protobuf::HeartbeatResponse)},
   { 230, 251, sizeof(::tenon::dht::protobuf::ConnectReqeust)},
-  { 267, 280, sizeof(::tenon::dht::protobuf::DhtMessage)},
+  { 267, 284, sizeof(::tenon::dht::protobuf::DhtMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -702,7 +710,7 @@ void AddDescriptorsImpl() {
       "n_route_port\030\013 \001(\r\022\026\n\016max_route_port\030\014 \001"
       "(\r\022\023\n\013node_weight\030\r \001(\r\022\024\n\014min_udp_port\030"
       "\016 \001(\r\022\024\n\014max_udp_port\030\017 \001(\r\022\020\n\010node_tag\030"
-      "\020 \001(\014\"\346\003\n\nDhtMessage\022;\n\rbootstrap_req\030\001 "
+      "\020 \001(\014\"\252\004\n\nDhtMessage\022;\n\rbootstrap_req\030\001 "
       "\001(\0132$.tenon.dht.protobuf.BootstrapReques"
       "t\022<\n\rbootstrap_res\030\002 \001(\0132%.tenon.dht.pro"
       "tobuf.BootstrapResponse\022J\n\025refresh_neigh"
@@ -714,10 +722,12 @@ void AddDescriptorsImpl() {
       "rtbeat_req\030\006 \001(\0132$.tenon.dht.protobuf.He"
       "artbeatRequest\022<\n\rheartbeat_res\030\007 \001(\0132%."
       "tenon.dht.protobuf.HeartbeatResponse\022\020\n\010"
-      "networks\030\010 \003(\r"
+      "networks\030\010 \003(\r\022\020\n\010enc_data\030\t \001(\014\022\016\n\006pubk"
+      "ey\030\n \001(\014\022\017\n\007sign_ch\030\013 \001(\014\022\017\n\007sign_re\030\014 \001"
+      "(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 3134);
+      descriptor, 3202);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "dht.proto", &protobuf_RegisterTypes);
 }
@@ -7387,6 +7397,10 @@ const int DhtMessage::kConnectReqFieldNumber;
 const int DhtMessage::kHeartbeatReqFieldNumber;
 const int DhtMessage::kHeartbeatResFieldNumber;
 const int DhtMessage::kNetworksFieldNumber;
+const int DhtMessage::kEncDataFieldNumber;
+const int DhtMessage::kPubkeyFieldNumber;
+const int DhtMessage::kSignChFieldNumber;
+const int DhtMessage::kSignReFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DhtMessage::DhtMessage()
@@ -7402,6 +7416,22 @@ DhtMessage::DhtMessage(const DhtMessage& from)
       _has_bits_(from._has_bits_),
       networks_(from.networks_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  enc_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_enc_data()) {
+    enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
+  }
+  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_pubkey()) {
+    pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
+  }
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_ch()) {
+    sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
+  }
+  sign_re_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_re()) {
+    sign_re_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_re_);
+  }
   if (from.has_bootstrap_req()) {
     bootstrap_req_ = new ::tenon::dht::protobuf::BootstrapRequest(*from.bootstrap_req_);
   } else {
@@ -7441,6 +7471,10 @@ DhtMessage::DhtMessage(const DhtMessage& from)
 }
 
 void DhtMessage::SharedCtor() {
+  enc_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_re_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&bootstrap_req_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&heartbeat_res_) -
       reinterpret_cast<char*>(&bootstrap_req_)) + sizeof(heartbeat_res_));
@@ -7452,6 +7486,10 @@ DhtMessage::~DhtMessage() {
 }
 
 void DhtMessage::SharedDtor() {
+  enc_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_ch_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_re_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete bootstrap_req_;
   if (this != internal_default_instance()) delete bootstrap_res_;
   if (this != internal_default_instance()) delete refresh_neighbors_req_;
@@ -7483,32 +7521,46 @@ void DhtMessage::Clear() {
 
   networks_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 127u) {
+  if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
+      enc_data_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      pubkey_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      sign_ch_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000008u) {
+      sign_re_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000010u) {
       GOOGLE_DCHECK(bootstrap_req_ != NULL);
       bootstrap_req_->Clear();
     }
-    if (cached_has_bits & 0x00000002u) {
+    if (cached_has_bits & 0x00000020u) {
       GOOGLE_DCHECK(bootstrap_res_ != NULL);
       bootstrap_res_->Clear();
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000040u) {
       GOOGLE_DCHECK(refresh_neighbors_req_ != NULL);
       refresh_neighbors_req_->Clear();
     }
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000080u) {
       GOOGLE_DCHECK(refresh_neighbors_res_ != NULL);
       refresh_neighbors_res_->Clear();
     }
-    if (cached_has_bits & 0x00000010u) {
+  }
+  if (cached_has_bits & 1792u) {
+    if (cached_has_bits & 0x00000100u) {
       GOOGLE_DCHECK(connect_req_ != NULL);
       connect_req_->Clear();
     }
-    if (cached_has_bits & 0x00000020u) {
+    if (cached_has_bits & 0x00000200u) {
       GOOGLE_DCHECK(heartbeat_req_ != NULL);
       heartbeat_req_->Clear();
     }
-    if (cached_has_bits & 0x00000040u) {
+    if (cached_has_bits & 0x00000400u) {
       GOOGLE_DCHECK(heartbeat_res_ != NULL);
       heartbeat_res_->Clear();
     }
@@ -7630,6 +7682,54 @@ bool DhtMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes enc_data = 9;
+      case 9: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(74u /* 74 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_enc_data()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes pubkey = 10;
+      case 10: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(82u /* 82 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_pubkey()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_ch = 11;
+      case 11: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(90u /* 90 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_ch()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_re = 12;
+      case 12: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(98u /* 98 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_re()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -7658,43 +7758,43 @@ void DhtMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_bootstrap_req(), output);
   }
 
   // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_bootstrap_res(), output);
   }
 
   // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->_internal_refresh_neighbors_req(), output);
   }
 
   // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000080u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->_internal_refresh_neighbors_res(), output);
   }
 
   // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000100u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->_internal_connect_req(), output);
   }
 
   // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000200u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->_internal_heartbeat_req(), output);
   }
 
   // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000400u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->_internal_heartbeat_res(), output);
   }
@@ -7703,6 +7803,30 @@ void DhtMessage::SerializeWithCachedSizes(
   for (int i = 0, n = this->networks_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(
       8, this->networks(i), output);
+  }
+
+  // optional bytes enc_data = 9;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      9, this->enc_data(), output);
+  }
+
+  // optional bytes pubkey = 10;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      10, this->pubkey(), output);
+  }
+
+  // optional bytes sign_ch = 11;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      11, this->sign_ch(), output);
+  }
+
+  // optional bytes sign_re = 12;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      12, this->sign_re(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -7721,49 +7845,49 @@ void DhtMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_bootstrap_req(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.BootstrapResponse bootstrap_res = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, this->_internal_bootstrap_res(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.RefreshNeighborsRequest refresh_neighbors_req = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, this->_internal_refresh_neighbors_req(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.RefreshNeighborsResponse refresh_neighbors_res = 4;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000080u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         4, this->_internal_refresh_neighbors_res(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000100u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         5, this->_internal_connect_req(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.HeartbeatRequest heartbeat_req = 6;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000200u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         6, this->_internal_heartbeat_req(), deterministic, target);
   }
 
   // optional .tenon.dht.protobuf.HeartbeatResponse heartbeat_res = 7;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000400u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         7, this->_internal_heartbeat_res(), deterministic, target);
@@ -7772,6 +7896,34 @@ void DhtMessage::SerializeWithCachedSizes(
   // repeated uint32 networks = 8;
   target = ::google::protobuf::internal::WireFormatLite::
     WriteUInt32ToArray(8, this->networks_, target);
+
+  // optional bytes enc_data = 9;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        9, this->enc_data(), target);
+  }
+
+  // optional bytes pubkey = 10;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        10, this->pubkey(), target);
+  }
+
+  // optional bytes sign_ch = 11;
+  if (cached_has_bits & 0x00000004u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        11, this->sign_ch(), target);
+  }
+
+  // optional bytes sign_re = 12;
+  if (cached_has_bits & 0x00000008u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        12, this->sign_re(), target);
+  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
@@ -7799,7 +7951,35 @@ size_t DhtMessage::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  if (_has_bits_[0 / 32] & 127u) {
+  if (_has_bits_[0 / 32] & 255u) {
+    // optional bytes enc_data = 9;
+    if (has_enc_data()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->enc_data());
+    }
+
+    // optional bytes pubkey = 10;
+    if (has_pubkey()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->pubkey());
+    }
+
+    // optional bytes sign_ch = 11;
+    if (has_sign_ch()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_ch());
+    }
+
+    // optional bytes sign_re = 12;
+    if (has_sign_re()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_re());
+    }
+
     // optional .tenon.dht.protobuf.BootstrapRequest bootstrap_req = 1;
     if (has_bootstrap_req()) {
       total_size += 1 +
@@ -7828,6 +8008,8 @@ size_t DhtMessage::ByteSizeLong() const {
           *refresh_neighbors_res_);
     }
 
+  }
+  if (_has_bits_[8 / 32] & 1792u) {
     // optional .tenon.dht.protobuf.ConnectReqeust connect_req = 5;
     if (has_connect_req()) {
       total_size += 1 +
@@ -7879,26 +8061,44 @@ void DhtMessage::MergeFrom(const DhtMessage& from) {
 
   networks_.MergeFrom(from.networks_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 127u) {
+  if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_bootstrap_req()->::tenon::dht::protobuf::BootstrapRequest::MergeFrom(from.bootstrap_req());
+      set_has_enc_data();
+      enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_bootstrap_res()->::tenon::dht::protobuf::BootstrapResponse::MergeFrom(from.bootstrap_res());
+      set_has_pubkey();
+      pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
     }
     if (cached_has_bits & 0x00000004u) {
-      mutable_refresh_neighbors_req()->::tenon::dht::protobuf::RefreshNeighborsRequest::MergeFrom(from.refresh_neighbors_req());
+      set_has_sign_ch();
+      sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
     }
     if (cached_has_bits & 0x00000008u) {
-      mutable_refresh_neighbors_res()->::tenon::dht::protobuf::RefreshNeighborsResponse::MergeFrom(from.refresh_neighbors_res());
+      set_has_sign_re();
+      sign_re_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_re_);
     }
     if (cached_has_bits & 0x00000010u) {
-      mutable_connect_req()->::tenon::dht::protobuf::ConnectReqeust::MergeFrom(from.connect_req());
+      mutable_bootstrap_req()->::tenon::dht::protobuf::BootstrapRequest::MergeFrom(from.bootstrap_req());
     }
     if (cached_has_bits & 0x00000020u) {
-      mutable_heartbeat_req()->::tenon::dht::protobuf::HeartbeatRequest::MergeFrom(from.heartbeat_req());
+      mutable_bootstrap_res()->::tenon::dht::protobuf::BootstrapResponse::MergeFrom(from.bootstrap_res());
     }
     if (cached_has_bits & 0x00000040u) {
+      mutable_refresh_neighbors_req()->::tenon::dht::protobuf::RefreshNeighborsRequest::MergeFrom(from.refresh_neighbors_req());
+    }
+    if (cached_has_bits & 0x00000080u) {
+      mutable_refresh_neighbors_res()->::tenon::dht::protobuf::RefreshNeighborsResponse::MergeFrom(from.refresh_neighbors_res());
+    }
+  }
+  if (cached_has_bits & 1792u) {
+    if (cached_has_bits & 0x00000100u) {
+      mutable_connect_req()->::tenon::dht::protobuf::ConnectReqeust::MergeFrom(from.connect_req());
+    }
+    if (cached_has_bits & 0x00000200u) {
+      mutable_heartbeat_req()->::tenon::dht::protobuf::HeartbeatRequest::MergeFrom(from.heartbeat_req());
+    }
+    if (cached_has_bits & 0x00000400u) {
       mutable_heartbeat_res()->::tenon::dht::protobuf::HeartbeatResponse::MergeFrom(from.heartbeat_res());
     }
   }
@@ -7929,6 +8129,14 @@ void DhtMessage::Swap(DhtMessage* other) {
 void DhtMessage::InternalSwap(DhtMessage* other) {
   using std::swap;
   networks_.InternalSwap(&other->networks_);
+  enc_data_.Swap(&other->enc_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  pubkey_.Swap(&other->pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sign_re_.Swap(&other->sign_re_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(bootstrap_req_, other->bootstrap_req_);
   swap(bootstrap_res_, other->bootstrap_res_);
   swap(refresh_neighbors_req_, other->refresh_neighbors_req_);

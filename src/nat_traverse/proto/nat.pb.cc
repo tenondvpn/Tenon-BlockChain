@@ -119,11 +119,19 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, detection_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, enc_data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, pubkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, sign_ch_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::nat::protobuf::NatMessage, sign_re_),
+  4,
   0,
+  1,
+  2,
+  3,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 21, sizeof(::tenon::nat::protobuf::DetectionRequest)},
-  { 37, 43, sizeof(::tenon::nat::protobuf::NatMessage)},
+  { 37, 47, sizeof(::tenon::nat::protobuf::NatMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -161,12 +169,13 @@ void AddDescriptorsImpl() {
       "\016min_route_port\030\013 \001(\r\022\026\n\016max_route_port\030"
       "\014 \001(\r\022\023\n\013node_weight\030\r \001(\r\022\024\n\014min_udp_po"
       "rt\030\016 \001(\r\022\024\n\014max_udp_port\030\017 \001(\r\022\020\n\010node_t"
-      "ag\030\020 \001(\014\"I\n\nNatMessage\022;\n\rdetection_req\030"
-      "\001 \001(\0132$.tenon.nat.protobuf.DetectionRequ"
-      "est"
+      "ag\030\020 \001(\014\"\215\001\n\nNatMessage\022;\n\rdetection_req"
+      "\030\001 \001(\0132$.tenon.nat.protobuf.DetectionReq"
+      "uest\022\020\n\010enc_data\030\002 \001(\014\022\016\n\006pubkey\030\003 \001(\014\022\017"
+      "\n\007sign_ch\030\004 \001(\014\022\017\n\007sign_re\030\005 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 443);
+      descriptor, 512);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "nat.proto", &protobuf_RegisterTypes);
 }
@@ -1047,6 +1056,10 @@ void NatMessage::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int NatMessage::kDetectionReqFieldNumber;
+const int NatMessage::kEncDataFieldNumber;
+const int NatMessage::kPubkeyFieldNumber;
+const int NatMessage::kSignChFieldNumber;
+const int NatMessage::kSignReFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 NatMessage::NatMessage()
@@ -1061,6 +1074,22 @@ NatMessage::NatMessage(const NatMessage& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  enc_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_enc_data()) {
+    enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
+  }
+  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_pubkey()) {
+    pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
+  }
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_ch()) {
+    sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
+  }
+  sign_re_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_re()) {
+    sign_re_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_re_);
+  }
   if (from.has_detection_req()) {
     detection_req_ = new ::tenon::nat::protobuf::DetectionRequest(*from.detection_req_);
   } else {
@@ -1070,6 +1099,10 @@ NatMessage::NatMessage(const NatMessage& from)
 }
 
 void NatMessage::SharedCtor() {
+  enc_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_re_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   detection_req_ = NULL;
 }
 
@@ -1079,6 +1112,10 @@ NatMessage::~NatMessage() {
 }
 
 void NatMessage::SharedDtor() {
+  enc_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_ch_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_re_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete detection_req_;
 }
 
@@ -1103,9 +1140,23 @@ void NatMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    GOOGLE_DCHECK(detection_req_ != NULL);
-    detection_req_->Clear();
+  if (cached_has_bits & 31u) {
+    if (cached_has_bits & 0x00000001u) {
+      enc_data_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      pubkey_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      sign_ch_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000008u) {
+      sign_re_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000010u) {
+      GOOGLE_DCHECK(detection_req_ != NULL);
+      detection_req_->Clear();
+    }
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -1127,6 +1178,54 @@ bool NatMessage::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_detection_req()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes enc_data = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_enc_data()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes pubkey = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_pubkey()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_ch = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_ch()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_re = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_re()));
         } else {
           goto handle_unusual;
         }
@@ -1161,9 +1260,33 @@ void NatMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_detection_req(), output);
+  }
+
+  // optional bytes enc_data = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->enc_data(), output);
+  }
+
+  // optional bytes pubkey = 3;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      3, this->pubkey(), output);
+  }
+
+  // optional bytes sign_ch = 4;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      4, this->sign_ch(), output);
+  }
+
+  // optional bytes sign_re = 5;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      5, this->sign_re(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1182,10 +1305,38 @@ void NatMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_detection_req(), deterministic, target);
+  }
+
+  // optional bytes enc_data = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->enc_data(), target);
+  }
+
+  // optional bytes pubkey = 3;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        3, this->pubkey(), target);
+  }
+
+  // optional bytes sign_ch = 4;
+  if (cached_has_bits & 0x00000004u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        4, this->sign_ch(), target);
+  }
+
+  // optional bytes sign_re = 5;
+  if (cached_has_bits & 0x00000008u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        5, this->sign_re(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1205,13 +1356,43 @@ size_t NatMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
-  if (has_detection_req()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *detection_req_);
-  }
+  if (_has_bits_[0 / 32] & 31u) {
+    // optional bytes enc_data = 2;
+    if (has_enc_data()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->enc_data());
+    }
 
+    // optional bytes pubkey = 3;
+    if (has_pubkey()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->pubkey());
+    }
+
+    // optional bytes sign_ch = 4;
+    if (has_sign_ch()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_ch());
+    }
+
+    // optional bytes sign_re = 5;
+    if (has_sign_re()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_re());
+    }
+
+    // optional .tenon.nat.protobuf.DetectionRequest detection_req = 1;
+    if (has_detection_req()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *detection_req_);
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -1239,8 +1420,27 @@ void NatMessage::MergeFrom(const NatMessage& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_detection_req()) {
-    mutable_detection_req()->::tenon::nat::protobuf::DetectionRequest::MergeFrom(from.detection_req());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 31u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_enc_data();
+      enc_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.enc_data_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      set_has_pubkey();
+      pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
+    }
+    if (cached_has_bits & 0x00000004u) {
+      set_has_sign_ch();
+      sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
+    }
+    if (cached_has_bits & 0x00000008u) {
+      set_has_sign_re();
+      sign_re_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_re_);
+    }
+    if (cached_has_bits & 0x00000010u) {
+      mutable_detection_req()->::tenon::nat::protobuf::DetectionRequest::MergeFrom(from.detection_req());
+    }
   }
 }
 
@@ -1268,6 +1468,14 @@ void NatMessage::Swap(NatMessage* other) {
 }
 void NatMessage::InternalSwap(NatMessage* other) {
   using std::swap;
+  enc_data_.Swap(&other->enc_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  pubkey_.Swap(&other->pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sign_re_.Swap(&other->sign_re_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(detection_req_, other->detection_req_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
