@@ -31,7 +31,7 @@
 // #include "services/vpn_server/server.h"
 // #include "services/vpn_server/vpn_server.h"
 
-#ifndef _WIN321
+#ifndef _WIN32
 #include "security/private_key.h"
 #include "security/public_key.h"
 #include "tvm/execution.h"
@@ -49,7 +49,7 @@ Command::~Command() {
     destroy_ = true;
 }
 
-#ifdef _WIN321
+#ifdef _WIN32
 bool Command::Init(bool first_node, bool show_cmd, bool period_tick) {
     return true;
 }
