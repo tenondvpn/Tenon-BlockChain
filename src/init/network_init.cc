@@ -69,13 +69,13 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    if (common::GlobalInfo::Instance()->Init(conf_) != common::kCommonSuccess) {
-        INIT_ERROR("init global info failed!");
+    if (SetPriAndPubKey("") != kInitSuccess) {
+        INIT_ERROR("set node private and public key failed!");
         return kInitError;
     }
 
-    if (SetPriAndPubKey("") != kInitSuccess) {
-        INIT_ERROR("set node private and public key failed!");
+    if (common::GlobalInfo::Instance()->Init(conf_) != common::kCommonSuccess) {
+        INIT_ERROR("init global info failed!");
         return kInitError;
     }
 
@@ -676,9 +676,6 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     std::string prikey("");
     conf_.Get("tenon", "prikey", prikey);
     prikey = common::Encode::HexDecode(prikey);
-    std::cout << "network init SetPriAndPubKey get from conf: " << common::Encode::HexEncode(prikey)
-        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey))
-        << std::endl;
     std::shared_ptr<security::PrivateKey> prikey_ptr{ nullptr };
     if (!prikey.empty()) {
         security::PrivateKey tmp_prikey(prikey);
@@ -688,12 +685,15 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
         prikey_ptr = std::make_shared<security::PrivateKey>(tmp_prikey);
     }
 
-    security::PublicKey pubkey(*(prikey_ptr.get()));
-    auto pubkey_ptr = std::make_shared<security::PublicKey>(pubkey);
     security::Schnorr::Instance()->set_prikey(prikey_ptr);
-    std::string pubkey_str;
-    pubkey.Serialize(pubkey_str, false);
-    std::string account_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+    std::string account_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey);
+    std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey());
+    std::cout << "network init SetPriAndPubKey get from conf: " << common::Encode::HexEncode(prikey)
+        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey))
+        << ", account_id: " << common::Encode::HexEncode(account_id)
+        << ", account_id_with_pubkey: " << common::Encode::HexEncode(account_id_with_pubkey)
+        << std::endl;
+
     common::GlobalInfo::Instance()->set_id(account_id);
     if (prikey.empty()) {
         conf_.Set("tenon", "prikey", common::Encode::HexEncode(
