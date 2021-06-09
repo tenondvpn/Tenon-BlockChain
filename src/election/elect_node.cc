@@ -35,12 +35,6 @@ int ElectNode::Init() {
 }
 
 void ElectNode::Destroy() {
-    if (universal_role_) {
-        network::UniversalManager::Instance()->UnRegisterUniversal(network_id_);
-        universal_role_->Destroy();
-        universal_role_.reset();
-    }
-
     if (elect_dht_) {
         network::DhtManager::Instance()->UnRegisterDht(network_id_);
         elect_dht_->Destroy();

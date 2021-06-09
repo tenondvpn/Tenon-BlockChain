@@ -24,10 +24,22 @@ UniversalManager* UniversalManager::Instance() {
     return &ins;
 }
 
-void UniversalManager::Init() {
+int UniversalManager::Init(
+        const common::Config& config,
+        transport::TransportPtr& transport) {
     if (universal_dht_ != nullptr) {
-        return;
+        return kNetworkError;
     }
+
+    if (CreateUniversalNetwork(config, transport) != kNetworkSuccess) {
+        return kNetworkError;
+    }
+
+    if (CreateNodeNetwork(config, transport) != kNetworkSuccess) {
+        return kNetworkError;
+    }
+
+    return kNetworkSuccess;
 }
 
 void UniversalManager::Destroy() {
@@ -139,7 +151,7 @@ int UniversalManager::CreateUniversalNetwork(
         return res;
     }
 
-    auto universal_dht = GetUniversal(kUniversalNetworkId);
+    auto universal_dht = GetUniversal();
     if (universal_dht == nullptr) {
         return kNetworkError;
     }

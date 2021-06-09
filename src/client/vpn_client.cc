@@ -94,7 +94,6 @@ std::string VpnClient::UpdateUseVpnNode(
     auto uni_dht = tenon::network::DhtManager::Instance()->GetDht(
             tenon::network::kVpnNetworkId);
     if (uni_dht == nullptr) {
-        CLIENT_ERROR("not found vpn server dht.");
         return "";
     }
 
@@ -946,7 +945,7 @@ int VpnClient::InitNetworkSingleton(uint32_t init_type) {
     }
 
     config.Set("tenon", "get_init_msg", init_type);
-    if (network::UniversalManager::Instance()->CreateUniversalNetwork(
+    if (network::UniversalManager::Instance()->Init(
             config,
             udp_transport_) != network::kNetworkSuccess) {
         CLIENT_ERROR("create universal network failed!");

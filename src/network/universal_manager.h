@@ -28,14 +28,10 @@ class UniversalManager {
 public:
     static UniversalManager* Instance();
     dht::BaseDhtPtr GetUniversal();
-    int CreateUniversalNetwork(
-        const common::Config& config,
-        transport::TransportPtr& transport);
-    int CreateNodeNetwork(
-        const common::Config& config,
-        transport::TransportPtr& transport);
     std::vector<dht::NodePtr> GetSameNetworkNodes(uint32_t network_id, uint32_t count);
-    void Init();
+    int Init(
+        const common::Config& config,
+        transport::TransportPtr& transport);
     void Destroy();
     int AddNodeToUniversal(dht::NodePtr& node);
 
@@ -49,6 +45,12 @@ private:
     void DhtBootstrapResponseCallback(
         dht::BaseDht* dht_ptr,
         const dht::protobuf::DhtMessage& dht_msg);
+    int CreateUniversalNetwork(
+        const common::Config& config,
+        transport::TransportPtr& transport);
+    int CreateNodeNetwork(
+        const common::Config& config,
+        transport::TransportPtr& transport);
 
     dht::BaseDhtPtr universal_dht_{ nullptr };
 
