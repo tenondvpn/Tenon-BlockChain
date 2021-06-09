@@ -696,7 +696,6 @@ int DbAccountInfo::AddNewElectBlock(
         uint64_t height,
         const std::string& elect_block_str,
         db::DbWriteBach& db_batch) {
-    std::cout << "AddNewElectBlock network_id: " << network_id << std::endl;
     std::lock_guard<std::mutex> guard(elect_blocks_map_mutex_);
     auto iter = elect_blocks_map_.find(network_id);
     if (iter == elect_blocks_map_.end()) {
@@ -724,11 +723,9 @@ int DbAccountInfo::AddNewElectBlock(
 
     std::string tmp_key = dict_key_ + "_" + std::to_string(network_id) + "_" + kFieldElectBlock;
     db_batch.Put(tmp_key, elect_block_str);
-    std::cout << "add elect to db: key: " << common::Encode::HexEncode(tmp_key) << ", value: " << elect_block_str.size() << std::endl;
     tmp_key = dict_key_ + "_" + std::to_string(network_id) + "_" + kFieldElectHeight;
     db_batch.Put(tmp_key, std::to_string(height));
     elect_blocks_map_[network_id] = std::make_pair(height, elect_block_str);
-    std::cout << "add elect to db: key: " << common::Encode::HexEncode(tmp_key) << std::endl;
     return kBlockSuccess;
 }
 
@@ -742,7 +739,6 @@ int DbAccountInfo::GetLatestElectBlock(
         if (iter != elect_blocks_map_.end()) {
             *height = iter->second.first;
             *elect_block_str = iter->second.second;
-            std::cout << "GetLatestElectBlock network_id: " << network_id << ", " << *height << std::endl;
             return kBlockSuccess;
         }
     }
@@ -762,7 +758,6 @@ int DbAccountInfo::GetLatestElectBlock(
     }
 
     elect_blocks_map_[network_id] = std::make_pair(*height, *elect_block_str);
-    std::cout << "1 GetLatestElectBlock network_id: " << network_id << ", " << *height << ":" << (*elect_block_str).size() << std::endl;
     return kBlockSuccess;
 }
 
