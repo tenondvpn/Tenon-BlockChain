@@ -375,7 +375,7 @@ int NetworkInit::InitNetworkSingleton() {
     }
 
     conf_.Set("tenon", "get_init_msg", dht::kBootstrapInit);
-    if (network::UniversalManager::Instance()->Init(
+    if (network::UniversalManager::Instance()->CreateUniversalNetwork(
             conf_,
             transport_) != network::kNetworkSuccess) {
         INIT_ERROR("create universal network failed!");
@@ -383,6 +383,13 @@ int NetworkInit::InitNetworkSingleton() {
     }
 
     conf_.Set("tenon", "get_init_msg", dht::kBootstrapNoInit);
+    if (network::UniversalManager::Instance()->CreateNodeNetwork(
+            conf_,
+            transport_) != network::kNetworkSuccess) {
+        INIT_ERROR("create node network failed!");
+        return kInitError;
+    }
+
     return kInitSuccess;
 }
 

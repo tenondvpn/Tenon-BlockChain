@@ -42,7 +42,7 @@ int Universal::Init(
     if (net_id == kUniversalNetworkId) {
         AddNetworkId(net_id);
     } else {
-        dht::BaseDhtPtr dht = UniversalManager::Instance()->GetUniversal();
+        dht::BaseDhtPtr dht = UniversalManager::Instance()->GetUniversal(kUniversalNetworkId);
         if (dht) {
             auto universal_dht = std::dynamic_pointer_cast<Universal>(dht);
             if (universal_dht) {
@@ -63,7 +63,7 @@ bool Universal::CheckDestination(const std::string& des_dht_key, bool closest) {
         return false;
     }
 
-    const auto& node = UniversalManager::Instance()->GetUniversal()->local_node();
+    const auto& node = UniversalManager::Instance()->GetUniversal(net_id)->local_node();
     if (node->dht_key() != des_dht_key) {
         return false;
     }
@@ -98,7 +98,7 @@ std::vector<dht::NodePtr> Universal::LocalGetNetworkNodes(
         uint8_t country,
         uint32_t count) {
     std::vector<dht::NodePtr> tmp_nodes;
-    auto dht = network::UniversalManager::Instance()->GetUniversal();
+    auto dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
     if (dht == nullptr) {
         return tmp_nodes;
     }
@@ -285,7 +285,7 @@ int Universal::Destroy() {
         delete []universal_ids_;
     }
 
-    dht::BaseDhtPtr dht = UniversalManager::Instance()->GetUniversal();
+    dht::BaseDhtPtr dht = UniversalManager::Instance()->GetUniversal(kUniversalNetworkId);
     if (dht == nullptr) {
         return kNetworkSuccess;
     }

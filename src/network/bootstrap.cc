@@ -95,7 +95,7 @@ int Bootstrap::Init(common::Config& config) {
 std::vector<dht::NodePtr> Bootstrap::GetNetworkBootstrap(
         uint32_t network_id,
         uint32_t count) {
-    auto tmp_dht = UniversalManager::Instance()->GetUniversal();
+    auto tmp_dht = UniversalManager::Instance()->GetUniversal(kUniversalNetworkId);
     std::shared_ptr<Universal> universal_dht = std::dynamic_pointer_cast<Universal>(tmp_dht);
     if (!universal_dht) {
         return std::vector<dht::NodePtr>();

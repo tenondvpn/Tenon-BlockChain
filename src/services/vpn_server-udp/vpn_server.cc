@@ -2198,10 +2198,10 @@ void VpnServer::HandleMessage(transport::protobuf::Header& header) {
             dht::BaseDhtPtr dht_ptr = nullptr;
             uint32_t netid = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
             if (netid == network::kUniversalNetworkId || netid == network::kNodeNetworkId) {
-                dht_ptr = network::UniversalManager::Instance()->GetUniversal();
+                dht_ptr = network::UniversalManager::Instance()->GetUniversal(netid);
             } else {
                 if (header.universal()) {
-                    dht_ptr = network::UniversalManager::Instance()->GetUniversal();
+                    dht_ptr = network::UniversalManager::Instance()->GetUniversal(netid);
                 } else {
                     dht_ptr = network::DhtManager::Instance()->GetDht(netid);
                 }
@@ -2232,10 +2232,10 @@ void VpnServer::HandleMessage(transport::protobuf::Header& header) {
             dht::BaseDhtPtr dht_ptr = nullptr;
             uint32_t netid = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
             if (netid == network::kUniversalNetworkId || netid == network::kNodeNetworkId) {
-                dht_ptr = network::UniversalManager::Instance()->GetUniversal();
+                dht_ptr = network::UniversalManager::Instance()->GetUniversal(netid);
             } else {
                 if (header.universal() == 0) {
-                    dht_ptr = network::UniversalManager::Instance()->GetUniversal();
+                    dht_ptr = network::UniversalManager::Instance()->GetUniversal(netid);
                 } else {
                     dht_ptr = network::DhtManager::Instance()->GetDht(netid);
                 }

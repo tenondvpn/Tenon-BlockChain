@@ -293,13 +293,13 @@ int MultiThreadHandler::HandleClientMessage(
         dht::BaseDhtPtr dht = nullptr;
         uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(message_ptr->des_dht_key());
         if (message_ptr->universal()) {
-            dht = network::UniversalManager::Instance()->GetUniversal();
+            dht = network::UniversalManager::Instance()->GetUniversal(net_id);
         } else {
             dht = network::DhtManager::Instance()->GetDht(net_id);
         }
 
         if (dht == nullptr) {
-            dht = network::UniversalManager::Instance()->GetUniversal();
+            dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
         }
 
         if (dht == nullptr) {

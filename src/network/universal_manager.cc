@@ -13,7 +13,6 @@
 #include "init/update_vpn_init.h"
 #include "network/network_utils.h"
 #include "network/bootstrap.h"
-#include "network/dht_manager.h"
 
 namespace tenon {
 
@@ -24,32 +23,45 @@ UniversalManager* UniversalManager::Instance() {
     return &ins;
 }
 
-int UniversalManager::Init(
-        const common::Config& config,
-        transport::TransportPtr& transport) {
-    if (universal_dht_ != nullptr) {
-        return kNetworkError;
+void UniversalManager::Init() {
+    if (dhts_ != nullptr) {
+        return;
     }
 
-    if (CreateUniversalNetwork(config, transport) != kNetworkSuccess) {
-        return kNetworkError;
-    }
-
-//     if (CreateNodeNetwork(config, transport) != kNetworkSuccess) {
-//         return kNetworkError;
-//     }
-
-    return kNetworkSuccess;
+    dhts_ = new dht::BaseDhtPtr[kNetworkMaxDhtCount];
+    std::fill(dhts_, dhts_ + kNetworkMaxDhtCount, nullptr);
 }
 
 void UniversalManager::Destroy() {
-    if (universal_dht_ != nullptr) {
-        universal_dht_->Destroy();
+    if (dhts_ != nullptr) {
+        for (uint32_t i = 0; i < kNetworkMaxDhtCount; ++i) {
+            if (dhts_[i] != nullptr) {
+                dhts_[i]->Destroy();
+                dhts_[i] = nullptr;
+            }
+        }
+        delete []dhts_;
+        dhts_ = nullptr;
     }
 }
 
-dht::BaseDhtPtr UniversalManager::GetUniversal() {
-    return DhtManager::Instance()->GetDht(network::kUniversalNetworkId);
+void UniversalManager::RegisterUniversal(uint32_t network_id, dht::BaseDhtPtr& dht) {
+    assert(network_id < kNetworkMaxDhtCount);
+    assert(dhts_[network_id] == nullptr);
+    dhts_[network_id] = dht;
+}
+
+void UniversalManager::UnRegisterUniversal(uint32_t network_id) {
+    assert(network_id < kNetworkMaxDhtCount);
+    if (dhts_[network_id] != nullptr) {
+        dhts_[network_id]->Destroy();
+        dhts_[network_id] = nullptr;
+    }
+}
+
+dht::BaseDhtPtr UniversalManager::GetUniversal(uint32_t network_id) {
+    assert(network_id < kNetworkMaxDhtCount);
+    return dhts_[network_id];
 }
 
 void UniversalManager::DhtBootstrapResponseCallback(
@@ -116,8 +128,7 @@ int UniversalManager::CreateNetwork(
             &UniversalManager::AddNodeToUniversal,
             this,
             std::placeholders::_1));
-    std::cout << __FILE__ << ":" << __LINE__ << ", register dht network id: " << network_id << std::endl;
-    DhtManager::Instance()->RegisterDht(network_id, dht_ptr);
+    RegisterUniversal(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;
     }
@@ -135,6 +146,7 @@ int UniversalManager::CreateNetwork(
     config.Get("tenon", "init_uid", init_uid);
     config.Get("tenon", "get_init_msg", get_init_msg);
     if (dht_ptr->Bootstrap(boot_nodes, get_init_msg, init_uid) != dht::kDhtSuccess) {
+//         UnRegisterUniversal(network_id);
         NETWORK_ERROR("bootstrap universal network failed!");
         return kNetworkError;
     }
@@ -151,7 +163,7 @@ int UniversalManager::CreateUniversalNetwork(
         return res;
     }
 
-    auto universal_dht = GetUniversal();
+    auto universal_dht = GetUniversal(kUniversalNetworkId);
     if (universal_dht == nullptr) {
         return kNetworkError;
     }
@@ -172,7 +184,7 @@ std::vector<dht::NodePtr> UniversalManager::GetSameNetworkNodes(
 }
 
 int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
-    auto universal_dht = GetUniversal();
+    auto universal_dht = GetUniversal(kUniversalNetworkId);
     if (universal_dht == nullptr) {
         return dht::kDhtSuccess;
     }
@@ -182,7 +194,9 @@ int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
     return dht::kDhtSuccess;
 }
 
-UniversalManager::UniversalManager() {}
+UniversalManager::UniversalManager() {
+    Init();
+}
 
 UniversalManager::~UniversalManager() {
     Destroy();

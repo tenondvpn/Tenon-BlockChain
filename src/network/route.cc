@@ -45,7 +45,7 @@ int Route::SendToLocal(transport::protobuf::Header& message) {
     uint32_t des_net_id = dht::DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
     dht::BaseDhtPtr dht_ptr{ nullptr };
     if (message.universal()) {
-        dht_ptr = UniversalManager::Instance()->GetUniversal();
+        dht_ptr = UniversalManager::Instance()->GetUniversal(des_net_id);
     } else {
         dht_ptr = DhtManager::Instance()->GetDht(des_net_id);
     }
@@ -65,7 +65,7 @@ int Route::Send(transport::protobuf::Header& message) {
     if (message.universal() ||
             des_net_id == network::kUniversalNetworkId ||
             des_net_id == network::kNodeNetworkId) {
-        dht_ptr = UniversalManager::Instance()->GetUniversal();
+        dht_ptr = UniversalManager::Instance()->GetUniversal(des_net_id);
     } else {
         dht_ptr = DhtManager::Instance()->GetDht(des_net_id);
     }
@@ -102,7 +102,8 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+            kUniversalNetworkId);
     if (!uni_dht) {
         NETWORK_ERROR("get uni dht failed!");
         return;
@@ -205,7 +206,7 @@ dht::BaseDhtPtr Route::GetDht(const std::string& dht_key, bool universal) {
     uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(dht_key);
     dht::BaseDhtPtr dht = nullptr;
     if (universal) {
-        dht = UniversalManager::Instance()->GetUniversal();
+        dht = UniversalManager::Instance()->GetUniversal(net_id);
     } else {
         dht = DhtManager::Instance()->GetDht(net_id);
     }
@@ -213,7 +214,7 @@ dht::BaseDhtPtr Route::GetDht(const std::string& dht_key, bool universal) {
 }
 
 void Route::RouteByUniversal(transport::protobuf::Header& header) {
-    auto universal_dht = UniversalManager::Instance()->GetUniversal();
+    auto universal_dht = UniversalManager::Instance()->GetUniversal(kUniversalNetworkId);
     if (!universal_dht) {
         return;
     }

@@ -27,11 +27,17 @@ namespace network {
 class UniversalManager {
 public:
     static UniversalManager* Instance();
-    dht::BaseDhtPtr GetUniversal();
-    std::vector<dht::NodePtr> GetSameNetworkNodes(uint32_t network_id, uint32_t count);
-    int Init(
+    void RegisterUniversal(uint32_t network_id, dht::BaseDhtPtr& dht);
+    void UnRegisterUniversal(uint32_t network_id);
+    dht::BaseDhtPtr GetUniversal(uint32_t network_id);
+    int CreateUniversalNetwork(
         const common::Config& config,
         transport::TransportPtr& transport);
+    int CreateNodeNetwork(
+        const common::Config& config,
+        transport::TransportPtr& transport);
+    std::vector<dht::NodePtr> GetSameNetworkNodes(uint32_t network_id, uint32_t count);
+    void Init();
     void Destroy();
     int AddNodeToUniversal(dht::NodePtr& node);
 
@@ -45,14 +51,8 @@ private:
     void DhtBootstrapResponseCallback(
         dht::BaseDht* dht_ptr,
         const dht::protobuf::DhtMessage& dht_msg);
-    int CreateUniversalNetwork(
-        const common::Config& config,
-        transport::TransportPtr& transport);
-    int CreateNodeNetwork(
-        const common::Config& config,
-        transport::TransportPtr& transport);
 
-    dht::BaseDhtPtr universal_dht_{ nullptr };
+    dht::BaseDhtPtr* dhts_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(UniversalManager);
 };

@@ -1545,7 +1545,8 @@ void VpnRoute::StartMoreServer() {
 
 void VpnRoute::SendNewClientLogin(const std::string& val) {
     std::string now_day_timestamp = std::to_string(common::TimeUtils::TimestampDays());
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+        network::kUniversalNetworkId);
     if (uni_dht == nullptr) {
         return;
     }

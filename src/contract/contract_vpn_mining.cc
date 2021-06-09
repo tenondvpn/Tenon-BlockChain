@@ -126,7 +126,8 @@ void VpnMining::CreateVpnMiningBft(
         const std::string& attr_key) {
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+        network::kUniversalNetworkId);
     if (uni_dht == nullptr) {
         return;
     }
