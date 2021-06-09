@@ -43,8 +43,12 @@
 
 #ifdef NDEBUG
 #define DEBUG(fmt, ...)
+#define TENON_DEBUG(fmt, ...)
 #else
 #define DEBUG(fmt, ...)  do {\
+    LOG_INS.debug("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
+} while (0)
+#define TENON_DEBUG(fmt, ...)  do {\
     LOG_INS.debug("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
 #endif

@@ -120,6 +120,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         network::UniversalManager::Instance()->UnRegisterUniversal(network_id_);
         return kNetworkError;
     }
+
     return kNetworkSuccess;
 }
 

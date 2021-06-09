@@ -187,6 +187,7 @@ int BlockManager::InitRootElectBlocks() {
     auto account_info = AccountManager::Instance()->GetAcountInfo(
         root::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
+        BLOCK_INFO("this node not load elect blocks, no root address info.");
         return kBlockSuccess;
     }
 
@@ -196,11 +197,13 @@ int BlockManager::InitRootElectBlocks() {
             network::kRootCongressNetworkId,
             &latest_elect_block_height,
             &latest_elect_block_str) != kBlockSuccess) {
+        BLOCK_INFO("this node not load elect blocks, no latest elect block.");
         return kBlockSuccess;
     }
 
     elect::protobuf::ElectBlock elect_block;
     if (!elect_block.ParseFromString(latest_elect_block_str)) {
+        BLOCK_ERROR("this node not load elect blocks, parse failed");
         return kBlockError;
     }
 
@@ -208,6 +211,7 @@ int BlockManager::InitRootElectBlocks() {
         latest_elect_block_height,
         elect_block,
         false);
+    BLOCK_INFO("load elect block success.");
     return kBlockSuccess;
 }
 

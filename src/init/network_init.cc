@@ -95,6 +95,11 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
+    if (!conf_.DumpConfig(kDefaultConfigPath)) {
+        INIT_ERROR("DumpConfig failed!");
+        return kInitError;
+    }
+
     std::cout << "has u: " << parser_arg.Has("U") << std::endl;
     if (parser_arg.Has("U")) {
         conf_.Set("db", "path", std::string("./root_db"));
@@ -216,10 +221,10 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    if (CreateConfigNetwork() != kInitSuccess) {
-        INIT_ERROR("CreateConfigNetwork failed!");
-        return kInitError;
-    }
+//     if (CreateConfigNetwork() != kInitSuccess) {
+//         INIT_ERROR("CreateConfigNetwork failed!");
+//         return kInitError;
+//     }
 
     if (InitBft() != kInitSuccess) {
         INIT_ERROR("int bft failed!");
@@ -470,25 +475,49 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
         }
     }
 
+    std::string tcp_spec;
+    conf_.Get("tenon", "tcp_spec", tcp_spec);
+    common::Split<> tcp_spec_split(tcp_spec.c_str(), ':', tcp_spec.size());
+    std::string tcp_spec_ip = "0.0.0.0";
+    std::string tcp_spec_port = "0";
+    if (tcp_spec_split.Count() > 1) {
+        tcp_spec_ip = tcp_spec_split[0];
+        tcp_spec_port = tcp_spec_split[1];
+    }
+
     std::string local_ip;
     parser_arg.Get("a", local_ip);
     if (!local_ip.empty()) {
+        std::cout << "set tenon local_ip: " << local_ip << std::endl;
         if (!conf_.Set("tenon", "local_ip", local_ip)) {
             INIT_ERROR("set config failed [node][local_ip][%s]", local_ip.c_str());
             return kInitError;
         }
+
+        tcp_spec = local_ip + ":" + tcp_spec_port;
+        tcp_spec_ip = local_ip;
     }
+
     uint16_t local_port = 0;
     if (parser_arg.Get("l", local_port) == common::kParseSuccess) {
+        std::cout << "set tenon local_port: " << local_port << std::endl;
         if (!conf_.Set("tenon", "local_port", local_port)) {
             INIT_ERROR("set config failed [node][local_port][%d]", local_port);
             return kInitError;
         }
+
+        tcp_spec = tcp_spec_ip + ":" + std::to_string(local_port + 1);
+    }
+
+    if (!conf_.Set("tenon", "tcp_spec", tcp_spec)) {
+        INIT_ERROR("set config failed [node][id][%s]", tcp_spec.c_str());
+        return kInitError;
     }
 
     std::string prikey;
     parser_arg.Get("k", prikey);
     if (!prikey.empty()) {
+        std::cout << "set tenon prikey: " << prikey << std::endl;
         if (!conf_.Set("tenon", "prikey", prikey)) {
             INIT_ERROR("set config failed [node][id][%s]", prikey.c_str());
             return kInitError;
@@ -694,6 +723,7 @@ int NetworkInit::InitBlock(const common::Config& conf) {
         INIT_ERROR("init block manager failed!");
         return kInitError;
     }
+
     return kInitSuccess;
 }
 

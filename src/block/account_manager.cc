@@ -391,6 +391,7 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
+    BLOCK_DEBUG("genesis add new block account[%s].", common::Encode::HexEncode(account_id).c_str());
     return kBlockSuccess;
 }
 
