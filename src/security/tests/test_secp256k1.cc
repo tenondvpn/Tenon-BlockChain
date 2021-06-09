@@ -47,9 +47,13 @@ TEST_F(TestSecp256k1, TestPrikeyPubkeyId) {
         std::string to_pubkey_uncompress;
         security::Secp256k1::Instance()->ToPublic(pri_key, false, &to_pubkey_uncompress);
         std::cout << "to_pubkey_uncompress: " << common::Encode::HexEncode(to_pubkey_uncompress) << std::endl;
-        std::string recover_from_compress_pubkey;
-        security::Secp256k1::Instance()->ToPublicFromCompressed(to_pubkey_compress);
+        std::string recover_from_compress_pubkey = security::Secp256k1::Instance()->ToPublicFromCompressed(to_pubkey_compress);
         ASSERT_EQ(recover_from_compress_pubkey, to_pubkey_uncompress);
+        std::string addr_from_compress_pubkey = Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_compress);
+        std::string addr_from_uncompress_pubkey = Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_uncompress);
+        std::string addr_from_prikey = Secp256k1::Instance()->ToAddressWithPrivateKey(pri_key);
+        ASSERT_EQ(addr_from_compress_pubkey, addr_from_compress_pubkey);
+        ASSERT_EQ(addr_from_prikey, addr_from_compress_pubkey);
     }
 }
 
