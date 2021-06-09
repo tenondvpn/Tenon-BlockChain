@@ -625,7 +625,7 @@ void NetworkInit::TestStartBft() {
     }
 
     if (ec_block_ok_) {
-        bft::BftManager::Instance()->StartBft("");
+        bft::BftManager::Instance()->StartBft("", -1);
     }
 
     test_start_bft_tick_.CutOff(100 * 1000, std::bind(&NetworkInit::TestStartBft, this));

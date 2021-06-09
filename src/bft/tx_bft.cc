@@ -55,7 +55,11 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) {
         return kBftInvalidPackage;
     }
 
-    // TODO: check leader valid
+    if (elect::MemberManager::Instance()->IsLeader(
+            common::GlobalInfo::Instance()->network_id(),
+            bft_msg.node_id()) < 0) {
+        return kBftInvalidPackage;
+    }
 
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (RootBackupCheckPrepare(bft_msg) != kBftSuccess) {
