@@ -29,12 +29,13 @@ TxBft::TxBft() {}
 TxBft::~TxBft() {}
 
 int TxBft::Init(bool leader) {
-    std::vector<TxItemPtr> tx_vec;
-    uint32_t pool_index = 0;
-    DispatchPool::Instance()->GetTx(pool_index, tx_vec);
-    if (tx_vec.empty()) {
-        return kBftNoNewTxs;
-    }
+//     std::vector<TxItemPtr> tx_vec;
+//     uint32_t pool_index = 0;
+//     DispatchPool::Instance()->GetTx(pool_index, tx_vec);
+//     if (tx_vec.empty()) {
+//         return kBftNoNewTxs;
+//     }
+
     return kBftSuccess;
 }
 
@@ -43,12 +44,25 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) {
         return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
+    bft::protobuf::BftMessage bft_msg;
+    if (!bft_msg.ParseFromString(prepare)) {
+        BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
+        return kBftInvalidPackage;
+    }
+
+    if (!bft_msg.has_data()) {
+        BFT_ERROR("bft::protobuf::BftMessage has no data!");
+        return kBftInvalidPackage;
+    }
+
+    // TODO: check leader valid
+
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        if (RootBackupCheckPrepare(prepare) != kBftSuccess) {
+        if (RootBackupCheckPrepare(bft_msg) != kBftSuccess) {
             return kBftError;
         }
     } else {
-        if (BackupCheckPrepare(prepare) != kBftSuccess) {
+        if (BackupCheckPrepare(bft_msg) != kBftSuccess) {
             return kBftError;
         }
     }
@@ -336,18 +350,7 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
     return kBftSuccess;
 }
 
-int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
-    bft::protobuf::BftMessage bft_msg;
-    if (!bft_msg.ParseFromString(bft_str)) {
-        BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
-        return kBftInvalidPackage;
-    }
-
-    if (!bft_msg.has_data()) {
-        BFT_ERROR("bft::protobuf::BftMessage has no data!");
-        return kBftInvalidPackage;
-    }
-
+int TxBft::RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
@@ -390,18 +393,7 @@ int TxBft::RootBackupCheckPrepare(std::string& bft_str) {
     return kBftInvalidPackage;
 }
 
-int TxBft::BackupCheckPrepare(std::string& bft_str) {
-    bft::protobuf::BftMessage bft_msg;
-    if (!bft_msg.ParseFromString(bft_str)) {
-        BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
-        return kBftInvalidPackage;
-    }
-
-    if (!bft_msg.has_data()) {
-        BFT_ERROR("bft::protobuf::BftMessage has no data!");
-        return kBftInvalidPackage;
-    }
-
+int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
