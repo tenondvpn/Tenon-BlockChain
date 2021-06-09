@@ -103,7 +103,12 @@ int ShardNetwork<DhtType>::JoinUniversal() {
     universal_role_ = std::make_shared<network::Universal>(
         tansport_ptr,
         local_node);
-    if (universal_role_->Init(nullptr, nullptr) != network::kNetworkSuccess) {
+    if (universal_role_->Init(
+            nullptr,
+            std::bind(
+                &network::UniversalManager::AddNodeToUniversal,
+                network::UniversalManager::Instance(),
+                std::placeholders::_1)) != network::kNetworkSuccess) {
         NETWORK_ERROR("init universal role dht failed!");
         return kNetworkError;
     }

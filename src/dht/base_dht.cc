@@ -485,7 +485,6 @@ void BaseDht::ProcessBootstrapResponse(
     node->min_udp_port = dht_msg.bootstrap_res().min_udp_port();
     node->max_udp_port = dht_msg.bootstrap_res().max_udp_port();
     node->node_weight = dht_msg.bootstrap_res().node_weight();
-    bootstrap_response_cb_(this, dht_msg);
     node->join_way = kJoinFromBootstrapRes;
     Join(node);
 

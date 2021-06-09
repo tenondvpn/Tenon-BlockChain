@@ -124,10 +124,7 @@ int UniversalManager::CreateNetwork(
             this,
             std::placeholders::_1,
             std::placeholders::_2),
-        std::bind(
-            &UniversalManager::AddNodeToUniversal,
-            this,
-            std::placeholders::_1));
+        nullptr);
     RegisterUniversal(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;

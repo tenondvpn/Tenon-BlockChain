@@ -64,8 +64,13 @@ int ElectNode::JoinUniversal() {
     universal_role_ = std::make_shared<network::Universal>(
             tansport_ptr,
             local_node);
-    if (universal_role_->Init(nullptr, nullptr) != network::kNetworkSuccess) {
-        ELECT_ERROR("init universal role dht failed!");
+    if (universal_role_->Init(
+        nullptr,
+        std::bind(
+            &network::UniversalManager::AddNodeToUniversal,
+            network::UniversalManager::Instance(),
+            std::placeholders::_1)) != network::kNetworkSuccess) {
+            ELECT_ERROR("init universal role dht failed!");
         return kElectError;
     }
 

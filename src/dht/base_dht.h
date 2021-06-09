@@ -66,6 +66,14 @@ public:
         sign_msg_cb_ = sign_cb;
     }
 
+    void SetBootstrapResponseCallback(BootstrapResponseCallback bootstrap_response_cb) {
+        bootstrap_response_cb_ = bootstrap_response_cb;
+    }
+
+    void SetNewNodeJoinCallback(NewNodeJoinCallback node_join_cb) {
+        node_join_cb_ = node_join_cb;
+    }
+
     BootstrapResponseCallback bootstrap_response_cb() {
         return bootstrap_response_cb_;
     }
