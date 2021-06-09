@@ -24,6 +24,7 @@ public:
     }
 
     void set_id(const std::string& id) {
+        std::cout << "global set id called: " << common::Encode::HexEncode(id) << std::endl;
         id_ = id;
         id_string_hash_ = Hash::Hash192(id_);
         id_hash_ = Hash::Hash64(id_);

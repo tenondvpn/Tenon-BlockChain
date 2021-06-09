@@ -199,6 +199,9 @@ int AccountManager::AddBlockItem(
             }
         }
 
+        if (tx_list[i].type() == common::kConsensusRootElectShard || tx_list[i].type() == common::kConsensusRootElectRoot) {
+            std::cout << "elect root or shard coming." << std::endl;
+        }
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
@@ -409,6 +412,9 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
+    if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
+        std::cout << "1 elect root or shard coming." << std::endl;
+    }
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
     block::DbAccountInfo* account_info = nullptr;
     auto iter = acc_map_.find(account_id);
@@ -522,8 +528,12 @@ int AccountManager::SetAccountAttrs(
         uint64_t tmp_now_height,
         block::DbAccountInfo* account_info,
         db::DbWriteBach& db_batch) {
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        return kBlockSuccess;
+//     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+//         return kBlockSuccess;
+//     }
+// 
+    if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
+        std::cout << "2 elect root or shard coming." << std::endl;
     }
 
     if (tx_info.status() == bft::kBftSuccess) {
@@ -539,7 +549,10 @@ int AccountManager::SetAccountAttrs(
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
         }
 
-        std::cout << "SetAccountAttrs called: " << tx_info.type() << ", tx_info.to_add(): " << tx_info.to_add() << std::endl;
+        if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
+            std::cout << "3 elect root or shard coming." << exist_height << ":" << tmp_now_height << std::endl;
+        }
+
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
                 (tx_info.type() == common::kConsensusCallContract &&
                 (tx_info.call_contract_step() == contract::kCallStepContractCalled ||
@@ -555,7 +568,9 @@ int AccountManager::SetAccountAttrs(
                                 tmp_now_height,
                                 tx_info.attr(attr_idx).value(),
                                 db_batch);
-                            std::cout << "called AddNewElectBlock: " << common::Encode::HexEncode(account_id) << std::endl;
+                            if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
+                                std::cout << "4 elect root or shard coming." << std::endl;
+                            }
                         }
                     }
 

@@ -676,6 +676,9 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     std::string prikey("");
     conf_.Get("tenon", "prikey", prikey);
     prikey = common::Encode::HexDecode(prikey);
+    std::cout << "network init SetPriAndPubKey get from conf: " << common::Encode::HexEncode(prikey)
+        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey))
+        << std::endl;
     std::shared_ptr<security::PrivateKey> prikey_ptr{ nullptr };
     if (!prikey.empty()) {
         security::PrivateKey tmp_prikey(prikey);

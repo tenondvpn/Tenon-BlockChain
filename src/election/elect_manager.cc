@@ -143,9 +143,10 @@ void ElectManager::ProcessNewElectBlock(
         }
         security::PublicKey pubkey(in[i].pubkey());
         security::CommitSecret secret;
+        auto id = security::Secp256k1::ToAddressWithPublicKey(in[i].pubkey());
         in_members[net_id]->push_back(std::make_shared<BftMember>(
             net_id,
-            in[i].id(),
+            id,
             in[i].pubkey(),
             begin_index_map[net_id],
             in[i].public_ip(),
@@ -154,7 +155,7 @@ void ElectManager::ProcessNewElectBlock(
         in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map[net_id]));
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
-                in[i].id(),
+                id,
                 in[i].dht_key(),
                 in[i].nat_type(),
                 false,
@@ -169,6 +170,7 @@ void ElectManager::ProcessNewElectBlock(
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }
 
+        std::cout << "ProcessNewElectBlock id: " << common::Encode::HexEncode(id) << ", " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id()) << std::endl;
         if (in[i].id() == common::GlobalInfo::Instance()->id()) {
             if (common::GlobalInfo::Instance()->network_id() != net_id) {
                 if (Join(net_id) != kElectSuccess) {

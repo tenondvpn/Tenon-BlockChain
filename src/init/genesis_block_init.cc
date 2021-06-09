@@ -79,7 +79,7 @@ int GenesisBlockInit::CreateElectBlock(
     tenon_block.set_agg_sign_challenge("");
     tenon_block.set_agg_sign_response("");
     tenon_block.set_pool_index(common::kRootChainPoolIndex);
-    tenon_block.set_height(0);
+    tenon_block.set_height(height);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_hash(bft::GetBlockHash(tenon_block));
     fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(),
@@ -119,6 +119,17 @@ int GenesisBlockInit::CreateElectBlock(
 
     if (balance != 0) {
         INIT_ERROR("get address balance failed! [%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+        return kInitError;
+    }
+
+    uint64_t elect_height = 0;
+    std::string elect_block_str;
+    if (account_ptr->GetLatestElectBlock(
+            shard_netid,
+            &elect_height,
+            &elect_block_str) != block::kBlockSuccess) {
+        INIT_ERROR("get address elect block failed! [%s]",
             common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kInitError;
     }
