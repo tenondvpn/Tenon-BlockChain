@@ -35,9 +35,9 @@ int UniversalManager::Init(
         return kNetworkError;
     }
 
-    if (CreateNodeNetwork(config, transport) != kNetworkSuccess) {
-        return kNetworkError;
-    }
+//     if (CreateNodeNetwork(config, transport) != kNetworkSuccess) {
+//         return kNetworkError;
+//     }
 
     return kNetworkSuccess;
 }
@@ -182,9 +182,7 @@ int UniversalManager::AddNodeToUniversal(dht::NodePtr& node) {
     return dht::kDhtSuccess;
 }
 
-UniversalManager::UniversalManager() {
-    Init();
-}
+UniversalManager::UniversalManager() {}
 
 UniversalManager::~UniversalManager() {
     Destroy();
