@@ -182,12 +182,8 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitSuccess;
     }
 
-    if (InitBlock(conf_) != kInitSuccess) {
-        INIT_ERROR("init block failed!");
-        return kInitError;
-    }
-
     network::DhtManager::Instance();
+    network::Route::Instance();
     if (InitUdpTransport() != kInitSuccess) {
         INIT_ERROR("init udp transport failed!");
         return kInitError;
@@ -208,6 +204,11 @@ int NetworkInit::Init(int argc, char** argv) {
 
     if (InitNetworkSingleton() != kInitSuccess) {
         INIT_ERROR("InitNetworkSingleton failed!");
+        return kInitError;
+    }
+
+    if (InitBlock(conf_) != kInitSuccess) {
+        INIT_ERROR("init block failed!");
         return kInitError;
     }
 

@@ -54,7 +54,6 @@ public:
         return readonly_hash_sort_dht_;
     }
 
-    void RegisterDhtMessage();
     const NodePtr& local_node() {
         return local_node_;
     }

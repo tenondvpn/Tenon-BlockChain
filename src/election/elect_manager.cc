@@ -177,7 +177,7 @@ void ElectManager::ProcessNewElectBlock(
             << ", now net id: " << common::GlobalInfo::Instance()->network_id()
             << ", elect net id: " << net_id
             << std::endl;
-        if (in[i].id() == common::GlobalInfo::Instance()->id()) {
+        if (id == common::GlobalInfo::Instance()->id()) {
             if (common::GlobalInfo::Instance()->network_id() != net_id) {
                 if (Join(net_id) != kElectSuccess) {
                     BFT_ERROR("join elected network failed![%u]", net_id);

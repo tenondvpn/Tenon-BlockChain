@@ -26,12 +26,6 @@ Detection::~Detection() {
     Destroy();
 }
 
-void Detection::RegisterNatMessage() {
-    transport::Processor::Instance()->RegisterProcessor(
-            common::kNatMessage,
-            std::bind(&Detection::HandleMessage, this, std::placeholders::_1));
-}
-
 void Detection::Destroy() {
     destroy_ = true;
     tick_.Destroy();

@@ -39,7 +39,6 @@ public:
     void Destroy();
     void AddTarget(dht::NodePtr& node);
     void Remove(uint64_t dht_key_hash);
-    void RegisterNatMessage();
     void HandleMessage(transport::protobuf::Header& msg);
 
 private:

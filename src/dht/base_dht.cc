@@ -37,13 +37,6 @@ BaseDht::BaseDht(
 
 BaseDht::~BaseDht() {}
 
-void BaseDht::RegisterDhtMessage() {
-    transport::Processor::Instance()->RegisterProcessor(
-            common::kDhtMessage,
-            std::bind(&BaseDht::HandleMessage, this, std::placeholders::_1));
-    nat_detection_->RegisterNatMessage();
-}
-
 int BaseDht::Init(BootstrapResponseCallback boot_cb, NewNodeJoinCallback node_join_cb) {
     bootstrap_response_cb_ = boot_cb;
     node_join_cb_ = node_join_cb;
