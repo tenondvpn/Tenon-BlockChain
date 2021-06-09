@@ -87,10 +87,9 @@ int DispatchPool::CheckFromAddressValid(
             }
 
             auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
-            if (id.empty() || !elect::MemberManager::Instance()->IsLeader(
+            if (id.empty() || elect::MemberManager::Instance()->IsLeader(
                     network::kRootCongressNetworkId,
-                    id,
-                    vss::VssManager::Instance()->EpochRandom())) {
+                    id) < 0) {
                 BFT_ERROR("id is valid elected member error.");
                 return kBftError;
             }

@@ -22,7 +22,7 @@ public:
             uint32_t network_id,
             elect::MembersPtr& members_ptr,
             elect::NodeIndexMapPtr& node_index_map);
-    bool IsLeader(uint32_t network_id, const std::string& node_id);
+    int32_t IsLeader(uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);

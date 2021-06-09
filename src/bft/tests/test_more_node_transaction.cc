@@ -697,10 +697,9 @@ public:
             }
 
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_TRUE(elect::MemberManager::Instance()->IsLeader(
+            ASSERT_EQ(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
-                common::GlobalInfo::Instance()->id(),
-                vss::VssManager::Instance()->EpochRandom()));
+                common::GlobalInfo::Instance()->id()), 1);
         }
 
         {
