@@ -26,13 +26,24 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if (elect::MemberManager::Instance()->IsLeader(
-            common::GlobalInfo::Instance()->network_id(),
-            bft_msg.node_id()) < 0) {
+    int32_t pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
+        common::GlobalInfo::Instance()->network_id(),
+        bft_msg.node_id());
+    if (pool_mod_idx < 0) {
         BFT_ERROR("prepare message not leader.[%u][%s][%u]",
                 common::GlobalInfo::Instance()->network_id(),
                 common::Encode::HexEncode(bft_msg.node_id()).c_str(),
                 vss::VssManager::Instance()->EpochRandom());
+        return false;
+    }
+
+    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        common::GlobalInfo::Instance()->network_id());
+    if (leader_count <= 0) {
+        return false;
+    }
+
+    if (pool_index() % leader_count != pool_mod_idx) {
         return false;
     }
 

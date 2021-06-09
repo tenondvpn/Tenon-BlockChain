@@ -675,7 +675,8 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
 
     security::Schnorr::Instance()->set_prikey(prikey_ptr);
     std::string account_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey);
-    std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey());
+    std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(
+        security::Schnorr::Instance()->str_pubkey());
     common::GlobalInfo::Instance()->set_id(account_id);
     conf_.Set("tenon", "prikey", common::Encode::HexEncode(
         security::Schnorr::Instance()->str_prikey()));
