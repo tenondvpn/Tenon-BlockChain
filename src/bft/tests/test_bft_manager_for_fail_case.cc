@@ -685,7 +685,7 @@ public:
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e"));
             pri_vec.push_back(common::Encode::HexDecode("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e"));
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_TRUE(elect::MemberManager::Instance()->IsLeader(
+            ASSERT_EQ(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id()), 1);
         }
