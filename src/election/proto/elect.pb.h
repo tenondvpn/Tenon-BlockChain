@@ -296,6 +296,13 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 local_port() const;
   void set_local_port(::google::protobuf::uint32 value);
 
+  // optional int32 pool_idx_mod_num = 12;
+  bool has_pool_idx_mod_num() const;
+  void clear_pool_idx_mod_num();
+  static const int kPoolIdxModNumFieldNumber = 12;
+  ::google::protobuf::int32 pool_idx_mod_num() const;
+  void set_pool_idx_mod_num(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.member)
  private:
   void set_has_id();
@@ -320,6 +327,8 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_local_ip();
   void set_has_local_port();
   void clear_has_local_port();
+  void set_has_pool_idx_mod_num();
+  void clear_has_pool_idx_mod_num();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -335,6 +344,7 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 nat_type_;
   ::google::protobuf::uint32 public_port_;
   ::google::protobuf::uint32 local_port_;
+  ::google::protobuf::int32 pool_idx_mod_num_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -487,12 +497,21 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_acc_sign();
   void set_allocated_acc_sign(::std::string* acc_sign);
 
+  // optional int32 leader_count = 5;
+  bool has_leader_count() const;
+  void clear_leader_count();
+  static const int kLeaderCountFieldNumber = 5;
+  ::google::protobuf::int32 leader_count() const;
+  void set_leader_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectBlock)
  private:
   void set_has_acc_pubkey();
   void clear_has_acc_pubkey();
   void set_has_acc_sign();
   void clear_has_acc_sign();
+  void set_has_leader_count();
+  void clear_has_leader_count();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -501,6 +520,7 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::member > out_;
   ::google::protobuf::internal::ArenaStringPtr acc_pubkey_;
   ::google::protobuf::internal::ArenaStringPtr acc_sign_;
+  ::google::protobuf::int32 leader_count_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1345,6 +1365,30 @@ inline void member::set_local_port(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.local_port)
 }
 
+// optional int32 pool_idx_mod_num = 12;
+inline bool member::has_pool_idx_mod_num() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void member::set_has_pool_idx_mod_num() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void member::clear_has_pool_idx_mod_num() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void member::clear_pool_idx_mod_num() {
+  pool_idx_mod_num_ = 0;
+  clear_has_pool_idx_mod_num();
+}
+inline ::google::protobuf::int32 member::pool_idx_mod_num() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.member.pool_idx_mod_num)
+  return pool_idx_mod_num_;
+}
+inline void member::set_pool_idx_mod_num(::google::protobuf::int32 value) {
+  set_has_pool_idx_mod_num();
+  pool_idx_mod_num_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.pool_idx_mod_num)
+}
+
 // -------------------------------------------------------------------
 
 // ElectBlock
@@ -1539,6 +1583,30 @@ inline void ElectBlock::set_allocated_acc_sign(::std::string* acc_sign) {
   }
   acc_sign_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), acc_sign);
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectBlock.acc_sign)
+}
+
+// optional int32 leader_count = 5;
+inline bool ElectBlock::has_leader_count() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ElectBlock::set_has_leader_count() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ElectBlock::clear_has_leader_count() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ElectBlock::clear_leader_count() {
+  leader_count_ = 0;
+  clear_has_leader_count();
+}
+inline ::google::protobuf::int32 ElectBlock::leader_count() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.leader_count)
+  return leader_count_;
+}
+inline void ElectBlock::set_leader_count(::google::protobuf::int32 value) {
+  set_has_leader_count();
+  leader_count_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.leader_count)
 }
 
 // -------------------------------------------------------------------
