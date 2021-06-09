@@ -148,7 +148,6 @@ void Detection::HandleDetectionRequest(
     }
 
     // check sign
-//     auto pubkey_ptr = std::make_shared<security::PublicKey>(header.pubkey());
     dht::NodePtr node = std::make_shared<dht::Node>(
             nat_msg.detection_req().id(),
             nat_msg.detection_req().dht_key(),

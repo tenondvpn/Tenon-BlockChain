@@ -486,6 +486,15 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
         }
     }
 
+    std::string prikey;
+    parser_arg.Get("k", prikey);
+    if (!prikey.empty()) {
+        if (!conf_.Set("tenon", "prikey", prikey)) {
+            INIT_ERROR("set config failed [node][id][%s]", prikey.c_str());
+            return kInitError;
+        }
+    }
+
     int first = 0;
     if (parser_arg.Get("f", first) == common::kParseSuccess) {
         bool first_node = false;
@@ -561,6 +570,7 @@ int NetworkInit::ParseParams(int argc, char** argv, common::ParserArgs& parser_a
     parser_arg.AddArgType('l', "local_port", common::kMaybeValue);
     parser_arg.AddArgType('a', "local_ip", common::kMaybeValue);
     parser_arg.AddArgType('o', "country_code", common::kMaybeValue);
+    parser_arg.AddArgType('k', "private_key", common::kMaybeValue);
     parser_arg.AddArgType('n', "network", common::kMaybeValue);
     parser_arg.AddArgType('c', "config_path", common::kMaybeValue);
     parser_arg.AddArgType('d', "db_path", common::kMaybeValue);
@@ -645,15 +655,14 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
         security::PrivateKey tmp_prikey;
         prikey_ptr = std::make_shared<security::PrivateKey>(tmp_prikey);
     }
+
     security::PublicKey pubkey(*(prikey_ptr.get()));
     auto pubkey_ptr = std::make_shared<security::PublicKey>(pubkey);
     security::Schnorr::Instance()->set_prikey(prikey_ptr);
-
     std::string pubkey_str;
     pubkey.Serialize(pubkey_str, false);
     std::string account_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
     common::GlobalInfo::Instance()->set_id(account_id);
-
     if (prikey.empty()) {
         conf_.Set("tenon", "prikey", common::Encode::HexEncode(
                 security::Schnorr::Instance()->str_prikey()));
@@ -667,6 +676,7 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
         conf_.DumpConfig(config_path_);
         std::string gid;
     }
+
     return kInitSuccess;
 }
 
