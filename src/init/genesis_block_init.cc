@@ -47,6 +47,10 @@ int GenesisBlockInit::CreateElectBlock(
     auto tx_list = tenon_block.mutable_tx_list();
     auto tx_info = tx_list->Add();
     tx_info->set_type(common::kConsensusRootElectShard);
+    if (shard_netid == network::kRootCongressNetworkId) {
+        tx_info->set_type(common::kConsensusRootElectRoot);
+    }
+
     tx_info->set_from(root::kRootChainSingleBlockTxAddress);
     tx_info->set_version(common::kTransactionVersion);
     tx_info->set_amount(0);
@@ -284,7 +288,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
     }
 
     if (CreateElectBlock(
-            network::kConsensusShardBeginNetworkId,
+            network::kRootCongressNetworkId,
             root_pre_hash,
             root_single_block_height++,
             root_gens_init_block_file,

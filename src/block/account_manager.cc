@@ -539,6 +539,7 @@ int AccountManager::SetAccountAttrs(
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
         }
 
+        std::cout << "SetAccountAttrs called: " << tx_info.type() << ", tx_info.to_add(): " << tx_info.to_add() << std::endl;
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
                 (tx_info.type() == common::kConsensusCallContract &&
                 (tx_info.call_contract_step() == contract::kCallStepContractCalled ||
@@ -546,13 +547,15 @@ int AccountManager::SetAccountAttrs(
                 (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add())) {
             if (exist_height <= tmp_now_height) {
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
-                    if (tx_info.type() == common::kConsensusRootElectShard) {
+                    if (tx_info.type() == common::kConsensusRootElectShard ||
+                            tx_info.type() == common::kConsensusRootElectRoot) {
                         if (tx_info.attr(attr_idx).key() == elect::kElectNodeAttrElectBlock) {
                             account_info->AddNewElectBlock(
                                 tx_info.network_id(),
                                 tmp_now_height,
                                 tx_info.attr(attr_idx).value(),
                                 db_batch);
+                            std::cout << "called AddNewElectBlock: " << common::Encode::HexEncode(account_id) << std::endl;
                         }
                     }
 
