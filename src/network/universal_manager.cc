@@ -116,7 +116,7 @@ int UniversalManager::CreateNetwork(
             &UniversalManager::AddNodeToUniversal,
             this,
             std::placeholders::_1));
-    std::cout << "register dht network id: " << network_id_ << std::endl;
+    std::cout << __FILE__ << ":" << __LINE__ << ", register dht network id: " << network_id << std::endl;
     DhtManager::Instance()->RegisterDht(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;

@@ -62,7 +62,7 @@ int ElectNode::JoinUniversal() {
         return kElectError;
     }
 
-    std::cout << "clent register dht network id: " << network_id_ << std::endl;
+    std::cout << __FILE__ << ":" << __LINE__ << ", register dht network id: " << network_id_ << std::endl;
     network::DhtManager::Instance()->RegisterDht(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
@@ -92,7 +92,7 @@ int ElectNode::JoinShard() {
         return kElectError;
     }
 
-    std::cout << "register dht network id: " << network_id_ << std::endl;
+    std::cout << __FILE__ << ":" << __LINE__ << ", register dht network id: " << network_id_ << std::endl;
     network::DhtManager::Instance()->RegisterDht(network_id_, elect_dht_);
     auto boot_nodes = network::Bootstrap::Instance()->GetNetworkBootstrap(network_id_, 3);
     if (boot_nodes.empty()) {
