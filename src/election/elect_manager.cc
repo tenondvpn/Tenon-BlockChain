@@ -186,10 +186,12 @@ void ElectManager::ProcessNewElectBlock(
     for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
         auto index_map_iter = in_index_members.find(iter->first);
         assert(index_map_iter != in_index_members.end());
+        pool_manager_.NetworkMemberChange(iter->first, iter->second);
         MemberManager::Instance()->SetNetworkMember(
             iter->first,
             iter->second,
-            index_map_iter->second);
+            index_map_iter->second,
+            elect_block.leader_count());
     }
 }
 

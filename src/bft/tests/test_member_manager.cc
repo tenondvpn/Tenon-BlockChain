@@ -79,7 +79,8 @@ TEST_F(TestMemberManager, SetNetworkMember) {
         mem_manager.SetNetworkMember(
             iter->first,
             iter->second,
-            index_map_iter->second);
+            index_map_iter->second,
+            1);
         auto members_ptr = mem_manager.GetNetworkMembers(iter->first);
         EXPECT_EQ(members_ptr->size(), iter->second->size());
         EXPECT_EQ(mem_manager.IsLeader(iter->first, iter->second->at(0)->id), 0);

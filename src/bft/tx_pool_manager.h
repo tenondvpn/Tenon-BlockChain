@@ -18,7 +18,7 @@ public:
     ~TxPoolManager();
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);
     int AddTx(TxItemPtr& tx_ptr);
-    void GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec);
+    void GetTx(uint32_t& pool_index, int32_t pool_mod_idx, std::vector<TxItemPtr>& res_vec);
     void BftOver(BftInterfacePtr& bft_ptr);
     TxItemPtr GetTx(
         uint32_t pool_index,

@@ -32,7 +32,7 @@ typedef std::shared_ptr<BackupResponse> BackupResponsePtr;
 class BftInterface {
 public:
     virtual int Init(bool leader) = 0;
-    virtual int Prepare(bool leader, std::string& prepare) = 0;
+    virtual int Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) = 0;
     virtual int PreCommit(bool leader, std::string& pre_commit) = 0;
     virtual int Commit(bool leader, std::string& commit) = 0;
 

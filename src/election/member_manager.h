@@ -19,9 +19,10 @@ class MemberManager {
 public:
     static MemberManager* Instance();
     void SetNetworkMember(
-            uint32_t network_id,
-            elect::MembersPtr& members_ptr,
-            elect::NodeIndexMapPtr& node_index_map);
+        uint32_t network_id,
+        elect::MembersPtr& members_ptr,
+        elect::NodeIndexMapPtr& node_index_map,
+        int32_t leader_count);
     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
@@ -29,6 +30,7 @@ public:
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     std::set<uint32_t> GetAddressNetworkId(const std::string& address);
+    int32_t GetNetworkLeaderCount(uint32_t network_id);
 
 private:
     MemberManager();
@@ -36,6 +38,7 @@ private:
 
     elect::MembersPtr* network_members_;
     elect::NodeIndexMapPtr* node_index_map_;
+    std::unordered_map<uint32_t, int32_t> leader_count_map_;
     std::mutex all_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(MemberManager);

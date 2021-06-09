@@ -280,7 +280,10 @@ TxItemPtr TxPoolManager::GetRootTx() {
     return nullptr;
 }
 
-void TxPoolManager::GetTx(uint32_t& pool_index, std::vector<TxItemPtr>& res_vec) {
+void TxPoolManager::GetTx(
+        uint32_t& pool_index,
+        int32_t pool_mod_idx,
+        std::vector<TxItemPtr>& res_vec) {
     int valid_pool = -1;
     uint64_t height = 0;
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);

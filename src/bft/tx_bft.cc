@@ -38,9 +38,9 @@ int TxBft::Init(bool leader) {
     return kBftSuccess;
 }
 
-int TxBft::Prepare(bool leader, std::string& prepare) {
+int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) {
     if (leader) {
-        return LeaderCreatePrepare(prepare);
+        return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -76,7 +76,7 @@ int TxBft::Commit(bool leader, std::string& commit) {
     return kBftSuccess;
 }
 
-int TxBft::LeaderCreatePrepare(std::string& bft_str) {
+int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -88,7 +88,7 @@ int TxBft::LeaderCreatePrepare(std::string& bft_str) {
     }
 
     if (tx_vec.empty()) {
-        DispatchPool::Instance()->GetTx(pool_index, tx_vec);
+        DispatchPool::Instance()->GetTx(pool_index, pool_mod_idx, tx_vec);
         if (tx_vec.empty()) {
             BFT_ERROR("get tx error, empty.");
             return kBftNoNewTxs;

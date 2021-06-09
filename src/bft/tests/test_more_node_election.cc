@@ -828,7 +828,8 @@ public:
             elect::MemberManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
-                index_map_iter->second);
+                index_map_iter->second,
+                1);
             ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
             ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
@@ -1691,7 +1692,8 @@ public:
             elect::MemberManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
-                index_map_iter->second);
+                index_map_iter->second,
+                1);
             ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
             ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }

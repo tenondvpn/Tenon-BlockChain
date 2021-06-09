@@ -643,7 +643,8 @@ public:
             elect::MemberManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
-                index_map_iter->second);
+                index_map_iter->second,
+                1);
             ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
             ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
@@ -1616,7 +1617,7 @@ TEST_F(TestBftManager, TestWithTvm) {
     std::string public_key;
     EXPECT_TRUE(security::Secp256k1::Instance()->ToPublic(
         private_key,
-        SECP256K1_EC_UNCOMPRESSED,
+        false,
         &public_key));
     EXPECT_EQ(public_key.size(), 65);
     ASSERT_EQ(pubkey_str, public_key);
@@ -1677,7 +1678,7 @@ TEST_F(TestBftManager, InitBft) {
     EXPECT_EQ(bft_manager.InitBft(msg, bft_msg), kBftError);
     EXPECT_EQ(elect::MemberManager::Instance()->IsLeader(
         network::kConsensusShardBeginNetworkId,
-        common::GlobalInfo::Instance()->id()), 0);
+        common::GlobalInfo::Instance()->id()), -1);
 }
 
 TEST_F(TestBftManager, TestExecution) {

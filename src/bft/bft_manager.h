@@ -20,7 +20,7 @@ class BftManager {
 public:
     static BftManager* Instance();
     // load bft code by bft addr
-    int StartBft(const std::string& gid);
+    int StartBft(const std::string& gid, int32_t pool_mod_index);
     int AddBft(BftInterfacePtr& bft_ptr);
     BftInterfacePtr GetBft(const std::string& gid);
     void RemoveBft(const std::string& gid);
@@ -38,7 +38,7 @@ private:
     int InitBft(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
-    int LeaderPrepare(BftInterfacePtr& bft_ptr);
+    int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx);
     int BackupPrepare(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,

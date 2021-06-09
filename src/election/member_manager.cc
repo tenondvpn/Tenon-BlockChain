@@ -37,15 +37,27 @@ MemberManager::~MemberManager() {
     }
 }
 
+int32_t MemberManager::GetNetworkLeaderCount(uint32_t network_id) {
+    std::lock_guard<std::mutex> guard(all_mutex_);
+    auto iter = leader_count_map_.find(network_id);
+    if (iter != leader_count_map_.end()) {
+        return iter->second;
+    }
+
+    return 0;
+}
+
 void MemberManager::SetNetworkMember(
         uint32_t network_id,
         elect::MembersPtr& members_ptr,
-        elect::NodeIndexMapPtr& node_index_map) {
+        elect::NodeIndexMapPtr& node_index_map,
+        int32_t leader_count) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
     assert(!members_ptr->empty());
     network_members_[network_id] = members_ptr;
     node_index_map_[network_id] = node_index_map;
+    leader_count_map_[network_id] = leader_count;
 }
 
 elect::MembersPtr MemberManager::GetNetworkMembers(uint32_t network_id) {

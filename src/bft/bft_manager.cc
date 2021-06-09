@@ -271,8 +271,9 @@ void BftManager::HandleRootTxBlock(
         }
     }
 
-    if (ThisNodeIsLeader()) {
-        StartBft("");
+    int32_t pool_mod_index = GetLeaderPoolIndex();
+    if (pool_mod_index >= 0) {
+        StartBft("", pool_mod_index);
     }
 }
 
@@ -392,8 +393,9 @@ void BftManager::HandleToAccountTxBlock(
         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
     }
 
-    if (ThisNodeIsLeader()) {
-        StartBft("");
+    int32_t pool_mod_index = GetLeaderPoolIndex();
+    if (pool_mod_index >= 0) {
+        StartBft("", pool_mod_index);
     }
 }
 
@@ -418,11 +420,12 @@ int BftManager::InitBft(
         BFT_ERROR("dispatch pool failed res[%d]!", res);
     }
 
-    if (!ThisNodeIsLeader()) {
+    int32_t pool_mod_index = GetLeaderPoolIndex();
+    if (pool_mod_index < 0) {
         return kBftSuccess;
     }
 
-    res = StartBft(bft_msg.gid());
+    res = StartBft(bft_msg.gid(), pool_mod_index);
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
             BFT_WARN("start [%s][%u][%llu] failed![%d]",
@@ -438,14 +441,14 @@ int BftManager::InitBft(
     return kBftSuccess;
 }
 
-int BftManager::StartBft(const std::string& gid) {
+int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
     bft_ptr->set_member_count(elect::MemberManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
-    int leader_pre = LeaderPrepare(bft_ptr);
+    int leader_pre = LeaderPrepare(bft_ptr, pool_mod_index);
     if (leader_pre != kBftSuccess) {
         return leader_pre;
     }
@@ -495,13 +498,9 @@ void BftManager::RemoveBft(const std::string& gid) {
     }
 }
 
-int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr) {
-    if (!ThisNodeIsLeader()) {
-        return kBftError;
-    }
-
+int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     std::string prepare_data;
-    int res = bft_ptr->Prepare(true, prepare_data);
+    int res = bft_ptr->Prepare(true, pool_mod_idx, prepare_data);
     if (res != kBftSuccess) {
         BFT_ERROR("bft_ptr->Prepare failed![%d]", res);
         return res;
