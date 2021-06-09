@@ -30,6 +30,7 @@ public:
         int32_t get_init_msg,
         const NodePtr& local_node,
         const transport::protobuf::Header& header,
+        BootstrapRespnseCallback res_cb,
         transport::protobuf::Header& msg);
     static void CreateRefreshNeighborsRequest(
         const Dht& dht,

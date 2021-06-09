@@ -125,6 +125,13 @@ int UniversalManager::CreateNetwork(
             std::placeholders::_1,
             std::placeholders::_2),
         nullptr);
+    dht_ptr->SetBootstrapResponseCreateCallback(std::bind(
+        &init::UpdateVpnInit::GetInitMessage,
+        init::UpdateVpnInit::Instance(),
+        std::placeholders::_1,
+        std::placeholders::_2,
+        std::placeholders::_3,
+        std::placeholders::_4));
     RegisterUniversal(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;

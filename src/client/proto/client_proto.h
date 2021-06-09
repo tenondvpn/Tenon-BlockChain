@@ -276,7 +276,6 @@ public:
         auto data = tx_bft.SerializeAsString();
         bft_msg.set_data(data);
         auto hash128 = common::Hash::Hash128(data);
-
         security::Signature sign;
         auto& prikey = *security::Schnorr::Instance()->prikey();
         auto& pubkey = *security::Schnorr::Instance()->pubkey();
@@ -288,6 +287,7 @@ public:
             CLIENT_ERROR("leader pre commit signature failed!");
             return;
         }
+
         std::string sign_challenge_str;
         std::string sign_response_str;
         sign.Serialize(sign_challenge_str, sign_response_str);

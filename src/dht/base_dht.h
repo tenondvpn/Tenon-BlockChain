@@ -73,6 +73,10 @@ public:
         node_join_cb_ = node_join_cb;
     }
 
+    void SetBootstrapResponseCreateCallback(BootstrapRespnseCallback bootstrap_create_res_cb) {
+        bootstrap_create_res_cb_ = bootstrap_create_res_cb;
+    }
+
     BootstrapResponseCallback bootstrap_response_cb() {
         return bootstrap_response_cb_;
     }
@@ -83,6 +87,10 @@ public:
 
     VerifySignCallback sign_msg_cb() {
         return sign_msg_cb_;
+    }
+
+    BootstrapRespnseCallback bootstrap_create_res_cb() {
+        return bootstrap_create_res_cb_;
     }
 
 protected:
@@ -140,6 +148,7 @@ protected:
     BootstrapResponseCallback bootstrap_response_cb_{ nullptr };
     NewNodeJoinCallback node_join_cb_{ nullptr };
     VerifySignCallback sign_msg_cb_{ nullptr };
+    BootstrapRespnseCallback bootstrap_create_res_cb_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BaseDht);
 };

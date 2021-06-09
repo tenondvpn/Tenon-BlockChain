@@ -3,7 +3,6 @@
 
 #include "security/schnorr.h"
 #include "ip/ip_with_country.h"
-#include "init/update_vpn_init.h"
 #include "dht/dht_key.h"
 
 namespace tenon {
@@ -81,6 +80,7 @@ void DhtProto::CreateBootstrapResponse(
         int32_t get_init_msg,
         const NodePtr& local_node,
         const transport::protobuf::Header& header,
+        BootstrapRespnseCallback res_cb,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(header.src_dht_key());
@@ -129,13 +129,13 @@ void DhtProto::CreateBootstrapResponse(
         res_dht_msg.add_networks(*iter);
     }
 
-    if (get_init_msg > 0) {
+    if (get_init_msg > 0 && res_cb != nullptr) {
         auto& boot_init_msg = *(bootstrap_res->mutable_init_message());
         if (get_init_msg == dht::kBootstrapInitWithConfNodes) {
             boot_init_msg.set_use_conf_nodes(true);
         }
 
-        init::UpdateVpnInit::Instance()->GetInitMessage(id, boot_init_msg, uid, header.version());
+        res_cb(id, boot_init_msg, uid, header.version());
         DHT_ERROR("get boot init message called!");
     }
 

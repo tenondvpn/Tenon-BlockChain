@@ -366,12 +366,13 @@ void BaseDht::ProcessBootstrapRequest(
 
     DHT_ERROR("receive bootstarp request: %s: %d", header.from_ip().c_str(), header.from_port());
     DhtProto::CreateBootstrapResponse(
-            dht_msg.bootstrap_req().node_id(),
-            uid,
-            dht_msg.bootstrap_req().get_init_msg(),
-            local_node_,
-            header,
-            msg);
+        dht_msg.bootstrap_req().node_id(),
+        uid,
+        dht_msg.bootstrap_req().get_init_msg(),
+        local_node_,
+        header,
+        bootstrap_create_res_cb_,
+        msg);
     uint16_t from_port = header.from_port();
     if (dht_msg.bootstrap_req().has_public_port() &&
             dht_msg.bootstrap_req().public_port() != 0) {

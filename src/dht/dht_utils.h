@@ -236,6 +236,11 @@ typedef std::function<int(
     std::string* enc_data,
     std::string* sign_ch,
     std::string* sign_re)> VerifySignCallback;
+typedef std::function<void(
+    const std::string& account_id,
+    dht::protobuf::InitMessage& init_msg,
+    const std::string& uid,
+    uint32_t trans_version)> BootstrapRespnseCallback;
 
 int DefaultDhtSignCallback(
     const std::string& peer_pubkey,
@@ -243,6 +248,7 @@ int DefaultDhtSignCallback(
     std::string* enc_data,
     std::string* sign_ch,
     std::string* sign_re);
+
 
 }  // namespace dht
 
