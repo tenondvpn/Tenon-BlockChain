@@ -80,7 +80,6 @@ std::string Secp256k1::ToPublicFromCompressed(const std::string& in_pubkey) {
             &raw_pubkey,
             (uint8_t*)in_pubkey.c_str(),
             in_pubkey.size())) {
-        std::cout << "secp256k1_ec_pubkey_parse failed!" << std::endl;
         return "";
     }
 
@@ -94,7 +93,6 @@ std::string Secp256k1::ToPublicFromCompressed(const std::string& in_pubkey) {
         SECP256K1_EC_UNCOMPRESSED);
     assert(serialized_pubkey_size == serialized_pubkey.size());
     assert(serialized_pubkey[0] == 0x04);
-    std::cout << "secp256k1_ec_pubkey_parse success: " << serialized_pubkey.size() << std::endl;
     return std::string((char*)serialized_pubkey.data(), serialized_pubkey.size());
 }
 

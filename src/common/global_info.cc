@@ -86,11 +86,9 @@ int GlobalInfo::Init(const common::Config& config) {
         TENON_ERROR("get tenon id from config failed.");
         return kCommonError;
     }
-    std::cout << "get id from conf: " << account_id << std::endl;
+    
     set_id(common::Encode::HexDecode(account_id));
-
     config.Get("tenon", "stream_limit", stream_default_limit_);
-
     min_route_port_ = common::kVpnRoutePortRangeMin;
     max_route_port_ = common::kVpnRoutePortRangeMax;
     config.Get("tenon", "route_min_port", min_route_port_);

@@ -95,7 +95,6 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    std::cout << "has u: " << parser_arg.Has("U") << std::endl;
     if (parser_arg.Has("U")) {
         conf_.Set("db", "path", std::string("./root_db"));
         if (InitBlock(conf_) != kInitSuccess) {
@@ -152,11 +151,9 @@ int NetworkInit::Init(int argc, char** argv) {
                 network::kRootCongressNetworkId,
                 root_genesis_nodes,
                 cons_genesis_nodes) != 0) {
-            std::cout << "genesis root blocks failed!" << std::endl;
             return kInitError;
         }
 
-        std::cout << "genesis root blocks success!" << std::endl;
         return kInitSuccess;
     }
 
@@ -174,11 +171,9 @@ int NetworkInit::Init(int argc, char** argv) {
                 network::kConsensusShardBeginNetworkId,
                 root_genesis_nodes,
                 cons_genesis_nodes) != 0) {
-            std::cout << "genesis shard blocks failed!" << std::endl;
             return kInitError;
         }
 
-        std::cout << "genesis shard blocks success!" << std::endl;
         return kInitSuccess;
     }
 
@@ -484,7 +479,6 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string local_ip;
     parser_arg.Get("a", local_ip);
     if (!local_ip.empty()) {
-        std::cout << "set tenon local_ip: " << local_ip << std::endl;
         if (!conf_.Set("tenon", "local_ip", local_ip)) {
             INIT_ERROR("set config failed [node][local_ip][%s]", local_ip.c_str());
             return kInitError;
@@ -496,7 +490,6 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
 
     uint16_t local_port = 0;
     if (parser_arg.Get("l", local_port) == common::kParseSuccess) {
-        std::cout << "set tenon local_port: " << local_port << std::endl;
         if (!conf_.Set("tenon", "local_port", local_port)) {
             INIT_ERROR("set config failed [node][local_port][%d]", local_port);
             return kInitError;
@@ -513,7 +506,6 @@ int NetworkInit::ResetConfig(common::ParserArgs& parser_arg) {
     std::string prikey;
     parser_arg.Get("k", prikey);
     if (!prikey.empty()) {
-        std::cout << "set tenon prikey: " << prikey << std::endl;
         if (!conf_.Set("tenon", "prikey", prikey)) {
             INIT_ERROR("set config failed [node][id][%s]", prikey.c_str());
             return kInitError;
@@ -684,13 +676,6 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     security::Schnorr::Instance()->set_prikey(prikey_ptr);
     std::string account_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey);
     std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey());
-    std::cout << "network init SetPriAndPubKey get from conf: " << common::Encode::HexEncode(prikey)
-        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey))
-        << ", public key: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
-        << ", account_id: " << common::Encode::HexEncode(account_id)
-        << ", account_id_with_pubkey: " << common::Encode::HexEncode(account_id_with_pubkey)
-        << std::endl;
-
     common::GlobalInfo::Instance()->set_id(account_id);
     conf_.Set("tenon", "prikey", common::Encode::HexEncode(
         security::Schnorr::Instance()->str_prikey()));

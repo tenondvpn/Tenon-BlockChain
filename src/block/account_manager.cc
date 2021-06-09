@@ -199,9 +199,6 @@ int AccountManager::AddBlockItem(
             }
         }
 
-        if (tx_list[i].type() == common::kConsensusRootElectShard || tx_list[i].type() == common::kConsensusRootElectRoot) {
-            std::cout << "elect root or shard coming." << std::endl;
-        }
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
@@ -298,7 +295,6 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
-    std::cout << "0 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
     account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
     account_info->NewHeight(tmp_now_height, db_batch);
     int res = account_info->SetBalance(0, db_batch);
@@ -354,7 +350,6 @@ int AccountManager::AddNewAccount(
     }
 
     if (exist_height <= tmp_now_height) {
-        std::cout << "1 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
         res += account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
     } else {
         if (create_height > tmp_now_height) {
@@ -380,7 +375,6 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
-    std::cout << "2 add max height: " << common::Encode::HexEncode(account_id) << ": " << 0 << std::endl;
     account_info->SetMaxHeightHash(0, "", db_batch);
     account_info->NewHeight(0, db_batch);
     int res = account_info->SetBalance(0, db_batch);
@@ -415,9 +409,6 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
-    if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
-        std::cout << "1 elect root or shard coming." << std::endl;
-    }
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
     block::DbAccountInfo* account_info = nullptr;
     auto iter = acc_map_.find(account_id);
@@ -452,14 +443,12 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
-    std::cout << "get account exists height: " << common::Encode::HexEncode(account_id) << ":" << exist_height << ", tmp_now_height: " << tmp_now_height << std::endl;
     account_info->NewHeight(tmp_now_height, db_batch);
     if (!tx_info.to().empty() && tx_info.amount() > 0) {
         account_info->NewTxHeight(tmp_now_height, timestamp, hash, tx_info, db_batch);
     }
 
     if (exist_height <= tmp_now_height) {
-        std::cout << "3 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
         account_info->SetMaxHeightHash(tmp_now_height, hash, db_batch);
     } else {
         uint64_t create_height = 0;
@@ -537,9 +526,6 @@ int AccountManager::SetAccountAttrs(
 //         return kBlockSuccess;
 //     }
 // 
-    if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
-        std::cout << "2 elect root or shard coming." << std::endl;
-    }
 
     if (tx_info.status() == bft::kBftSuccess) {
         int res = 0;
@@ -552,10 +538,6 @@ int AccountManager::SetAccountAttrs(
             }
 
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
-        }
-
-        if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
-            std::cout << "3 elect root or shard coming." << exist_height << ":" << tmp_now_height << std::endl;
         }
 
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
@@ -573,9 +555,6 @@ int AccountManager::SetAccountAttrs(
                                 tmp_now_height,
                                 tx_info.attr(attr_idx).value(),
                                 db_batch);
-                            if (tx_info.type() == common::kConsensusRootElectShard || tx_info.type() == common::kConsensusRootElectRoot) {
-                                std::cout << "4 elect root or shard coming." << std::endl;
-                            }
                         }
                     }
 

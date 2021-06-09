@@ -448,10 +448,6 @@ int DbAccountInfo::SetMaxHeightHash(
         uint64_t tmp_height,
         const std::string& hash,
         db::DbWriteBach& db_batch) {
-
-    std::cout << "4 finale SetMaxHeightHash: " << common::Encode::HexEncode(account_id_) << ": " << tmp_height << std::endl;
-
-
     if (!db::Dict::Instance()->Hset(
             dict_key_,
             kFieldMaxHeight,
