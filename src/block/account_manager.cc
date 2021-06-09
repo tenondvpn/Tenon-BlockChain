@@ -298,6 +298,7 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
+    std::cout << "0 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
     account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
     account_info->NewHeight(tmp_now_height, db_batch);
     int res = account_info->SetBalance(0, db_batch);
@@ -353,6 +354,7 @@ int AccountManager::AddNewAccount(
     }
 
     if (exist_height <= tmp_now_height) {
+        std::cout << "1 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
         res += account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
     } else {
         if (create_height > tmp_now_height) {
@@ -378,6 +380,7 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
+    std::cout << "2 add max height: " << common::Encode::HexEncode(account_id) << ": " << 0 << std::endl;
     account_info->SetMaxHeightHash(0, "", db_batch);
     account_info->NewHeight(0, db_batch);
     int res = account_info->SetBalance(0, db_batch);
@@ -449,12 +452,14 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
+    std::cout << "get account exists height: " << common::Encode::HexEncode(account_id) << ":" << exist_height << ", tmp_now_height: " << tmp_now_height << std::endl;
     account_info->NewHeight(tmp_now_height, db_batch);
     if (!tx_info.to().empty() && tx_info.amount() > 0) {
         account_info->NewTxHeight(tmp_now_height, timestamp, hash, tx_info, db_batch);
     }
 
     if (exist_height <= tmp_now_height) {
+        std::cout << "3 add max height: " << common::Encode::HexEncode(account_id) << ": " << tmp_now_height << std::endl;
         account_info->SetMaxHeightHash(tmp_now_height, hash, db_batch);
     } else {
         uint64_t create_height = 0;

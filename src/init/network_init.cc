@@ -95,11 +95,6 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    if (!conf_.DumpConfig(kDefaultConfigPath)) {
-        INIT_ERROR("DumpConfig failed!");
-        return kInitError;
-    }
-
     std::cout << "has u: " << parser_arg.Has("U") << std::endl;
     if (parser_arg.Has("U")) {
         conf_.Set("db", "path", std::string("./root_db"));
@@ -690,25 +685,22 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey());
     std::cout << "network init SetPriAndPubKey get from conf: " << common::Encode::HexEncode(prikey)
         << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey))
+        << ", public key: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
         << ", account_id: " << common::Encode::HexEncode(account_id)
         << ", account_id_with_pubkey: " << common::Encode::HexEncode(account_id_with_pubkey)
         << std::endl;
 
     common::GlobalInfo::Instance()->set_id(account_id);
-    if (prikey.empty()) {
-        conf_.Set("tenon", "prikey", common::Encode::HexEncode(
-                security::Schnorr::Instance()->str_prikey()));
-        conf_.Set("tenon", "pubkey", common::Encode::HexEncode(
-                security::Schnorr::Instance()->str_pubkey()));
-        std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-                security::Schnorr::Instance()->str_pubkey_uncompress());
-        common::GlobalInfo::Instance()->set_id(account_address);
-        conf_.Set("tenon", "id", common::Encode::HexEncode(
-                common::GlobalInfo::Instance()->id()));
-        conf_.DumpConfig(config_path_);
-        std::string gid;
-    }
-
+    conf_.Set("tenon", "prikey", common::Encode::HexEncode(
+        security::Schnorr::Instance()->str_prikey()));
+    conf_.Set("tenon", "pubkey", common::Encode::HexEncode(
+        security::Schnorr::Instance()->str_pubkey()));
+    std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
+        security::Schnorr::Instance()->str_pubkey_uncompress());
+    common::GlobalInfo::Instance()->set_id(account_address);
+    conf_.Set("tenon", "id", common::Encode::HexEncode(
+        common::GlobalInfo::Instance()->id()));
+    conf_.DumpConfig(config_path_);
     return kInitSuccess;
 }
 

@@ -63,6 +63,7 @@ int GenesisBlockInit::CreateElectBlock(
     elect::protobuf::ElectBlock ec_block;
     for (auto iter = genesis_nodes.begin(); iter != genesis_nodes.end(); ++iter) {
         auto in = ec_block.add_in();
+        in->set_net_id(shard_netid);
         in->set_pubkey((*iter)->pubkey_str());
         in->set_dht_key((*iter)->dht_key());
         in->set_public_ip((*iter)->public_ip());
@@ -400,7 +401,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         tx_info->set_balance(genesis_account_balance);
         tx_info->set_gas_limit(0);
         tx_info->set_type(common::kConsensusCreateGenesisAcount);
-        tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+        tx_info->set_network_id(network::kRootCongressNetworkId);
         tenon_block.set_prehash("");
         tenon_block.set_version(common::kTransactionVersion);
         tenon_block.set_elect_ver(0);

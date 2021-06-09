@@ -141,9 +141,11 @@ void ElectManager::ProcessNewElectBlock(
                     std::unordered_map<std::string, uint32_t>>();
             begin_index_map[net_id] = 0;
         }
-        security::PublicKey pubkey(in[i].pubkey());
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
+        std::cout << "elect init pubkey: " << common::Encode::HexEncode(in[i].pubkey())
+            << ", id: " << common::Encode::HexEncode(id)
+            << std::endl;
         in_members[net_id]->push_back(std::make_shared<BftMember>(
             net_id,
             id,
@@ -170,7 +172,11 @@ void ElectManager::ProcessNewElectBlock(
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }
 
-        std::cout << "ProcessNewElectBlock id: " << common::Encode::HexEncode(id) << ", " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id()) << std::endl;
+        std::cout << "ProcessNewElectBlock id: " << common::Encode::HexEncode(id) << ", "
+            << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+            << ", now net id: " << common::GlobalInfo::Instance()->network_id()
+            << ", elect net id: " << net_id
+            << std::endl;
         if (in[i].id() == common::GlobalInfo::Instance()->id()) {
             if (common::GlobalInfo::Instance()->network_id() != net_id) {
                 if (Join(net_id) != kElectSuccess) {
