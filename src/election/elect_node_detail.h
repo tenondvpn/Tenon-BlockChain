@@ -35,6 +35,7 @@ struct ElectNodeDetail {
     uint64_t fts_value;
     std::unordered_set<std::string> valid_node_set;
     std::mutex valid_node_set_mutex;
+    int32_t pool_index_mod_num{ -1 };
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;

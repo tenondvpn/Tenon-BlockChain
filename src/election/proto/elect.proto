@@ -14,7 +14,7 @@ message member {
 	optional uint32 public_port = 9;
     optional bytes local_ip = 10;
 	optional uint32 local_port = 11;
-
+	optional int32 pool_idx_mod_num = 12;
 }
 
 message ElectBlock {
@@ -22,6 +22,7 @@ message ElectBlock {
 	repeated member out = 2;
 	optional bytes acc_pubkey = 3;
 	optional bytes acc_sign = 4;
+	optional int32 leader_count = 5;
 }
 
 message WaitingNodesMessage {

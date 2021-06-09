@@ -33,6 +33,7 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
     std::vector<NodeDetailPtr> exists_shard_nodes;
     std::vector<NodeDetailPtr> weed_out_vec;
     std::vector<NodeDetailPtr> pick_in_vec;
+    int32_t leader_count = 0;
     if (GetAllBloomFilerAndNodes(
             shard_netid,
             &cons_all,
@@ -41,7 +42,8 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
             &pick_in,
             exists_shard_nodes,
             weed_out_vec,
-            pick_in_vec) != kElectSuccess) {
+            pick_in_vec,
+            &leader_count) != kElectSuccess) {
         ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
         return kElectError;
     }
@@ -78,17 +80,16 @@ int ElectPoolManager::LeaderCreateElectionBlockTx(
 
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_public_ip((*iter)->public_ip);
-        in->set_public_port((*iter)->public_port);
+        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
     }
 
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_public_ip((*iter)->public_ip);
-        in->set_public_port((*iter)->public_port);
+        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
     }
 
+    ec_block.set_leader_count(leader_count);
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
@@ -144,6 +145,7 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx
     std::vector<NodeDetailPtr> exists_shard_nodes;
     std::vector<NodeDetailPtr> weed_out_vec;
     std::vector<NodeDetailPtr> pick_in_vec;
+    int32_t leader_count = 0;
     if (GetAllBloomFilerAndNodes(
             tx_info.network_id(),
             &cons_all,
@@ -152,8 +154,15 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx
             &pick_in,
             exists_shard_nodes,
             weed_out_vec,
-            pick_in_vec) != kElectSuccess) {
+            pick_in_vec,
+            &leader_count) != kElectSuccess) {
         ELECT_ERROR("local GetAllBloomFilerAndNodes failed!");
+        return kElectError;
+    }
+
+    if (leader_ec_block.leader_count() != leader_count) {
+        ELECT_ERROR("leader_ec_block.leader_count()[%d] != leader_count[%d]!",
+            leader_ec_block.leader_count(), leader_count);
         return kElectError;
     }
 
@@ -199,18 +208,8 @@ int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx
             return kElectError;
         }
 
-        if (leader_ec_block.in(leader_idx).dht_key() != (*iter)->dht_key) {
-            ELECT_ERROR("leader_ec_block dht key not equal local dht key error!");
-            return kElectError;
-        }
-
-        if (leader_ec_block.in(leader_idx).public_ip() != (*iter)->public_ip) {
-            ELECT_ERROR("leader_ec_block public_ip not equal local public_ip error!");
-            return kElectError;
-        }
-
-        if (leader_ec_block.in(leader_idx).public_port() != (*iter)->public_port) {
-            ELECT_ERROR("leader_ec_block public_port not equal local public_port error!");
+        if (leader_ec_block.in(leader_idx).pool_idx_mod_num() != (*iter)->pool_index_mod_num) {
+            ELECT_ERROR("leader_ec_block pool_idx_mod_num not equal local error!");
             return kElectError;
         }
 
@@ -281,7 +280,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         common::BloomFilter* pick_in,
         std::vector<NodeDetailPtr>& exists_shard_nodes,
         std::vector<NodeDetailPtr>& weed_out_vec,
-        std::vector<NodeDetailPtr>& pick_in_vec) {
+        std::vector<NodeDetailPtr>& pick_in_vec,
+        int32_t* leader_count) {
     ElectPoolPtr consensus_pool_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
@@ -299,12 +299,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     uint64_t max_balance = 0;
     consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() / kFtsWeedoutDividRate;
-    FtsGetNodes(
-        true,
-        weed_out_count,
-        cons_weed_out,
-        exists_shard_nodes,
-        weed_out_vec);
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
@@ -330,6 +324,49 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         pick_in,
         pick_all_vec,
         pick_in_vec);
+    FtsGetNodes(
+        true,
+        pick_in_vec.size(),
+        cons_weed_out,
+        exists_shard_nodes,
+        weed_out_vec);
+    std::set<std::string> weed_out_id_set;
+    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
+        weed_out_id_set.insert((*iter)->id);
+    }
+
+    std::vector<NodeDetailPtr> elected_nodes;
+    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
+        if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
+            continue;
+        }
+
+        elected_nodes.push_back(*iter);
+    }
+
+    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
+        elected_nodes.push_back(*iter);
+    }
+
+    uint32_t expect_leader_count = static_cast<uint32_t>(log2(double(elected_nodes.size() / 3)));
+    common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
+    std::vector<NodeDetailPtr> leader_nodes;
+    FtsGetNodes(
+        false,
+        expect_leader_count,
+        &tmp_filter,
+        elected_nodes,
+        leader_nodes);
+    if (leader_nodes.empty()) {
+        return kElectError;
+    }
+
+    *leader_count = leader_nodes.size();
+    int32_t mode_idx = 0;
+    for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
+        (*iter)->pool_index_mod_num = mode_idx++;
+    }
+
     return kElectSuccess;
 }
 
