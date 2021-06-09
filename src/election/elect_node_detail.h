@@ -60,15 +60,16 @@ struct BftMember {
             uint32_t idx,
             const std::string& pubip,
             uint16_t pubport,
-            const std::string& dhtkey)
+            const std::string& dhtkey,
+            int32_t pool_mode_num)
             : net_id(nid),
             id(in_id),
             pubkey(pkey),
             index(idx),
             public_ip(pubip),
             public_port(pubport),
-            dht_key(dhtkey) {
-    }
+            dht_key(dhtkey),
+            pool_index_mod_num(pool_mode_num) {}
 
     uint32_t net_id;
     std::string id;
@@ -79,6 +80,7 @@ struct BftMember {
     std::string dht_key;
     security::CommitSecret secret;
     security::CommitPoint commit_point;
+    int32_t pool_index_mod_num{ -1 };
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;

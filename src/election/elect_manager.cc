@@ -150,7 +150,8 @@ void ElectManager::ProcessNewElectBlock(
             begin_index_map[net_id],
             in[i].public_ip(),
             in[i].public_port(),
-            in[i].dht_key()));
+            in[i].dht_key(),
+            in[i].pool_idx_mod_num()));
         in_index_members[net_id]->insert(std::make_pair(in[i].id(), begin_index_map[net_id]));
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(

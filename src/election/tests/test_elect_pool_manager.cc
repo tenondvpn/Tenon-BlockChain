@@ -109,7 +109,7 @@ public:
             std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
             security::CommitSecret secret;
             in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
-                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, ""));
+                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, "", -1));
             in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
             ++begin_index_map_[net_id];
         }
@@ -164,7 +164,8 @@ public:
                 begin_index_map_[net_id],
                 "",
                 0,
-                ""));
+                "",
+                -1));
             in_index_members[net_id]->insert(std::make_pair(GetIdByPrikey(prikey), begin_index_map_[net_id]));
             ++begin_index_map_[net_id];
         }
