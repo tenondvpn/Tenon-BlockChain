@@ -9,6 +9,7 @@
 #include "common/utils.h"
 #include "common/hash.h"
 #include "common/config.h"
+#include "common/encode.h"
 
 namespace tenon {
 

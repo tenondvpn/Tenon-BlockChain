@@ -143,7 +143,7 @@ void ElectManager::ProcessNewElectBlock(
         }
         security::PublicKey pubkey(in[i].pubkey());
         security::CommitSecret secret;
-        auto id = security::Secp256k1::ToAddressWithPublicKey(in[i].pubkey());
+        auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
         in_members[net_id]->push_back(std::make_shared<BftMember>(
             net_id,
             id,

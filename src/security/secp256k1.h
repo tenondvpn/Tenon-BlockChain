@@ -25,7 +25,7 @@ public:
 
     std::string recover(const std::string& sign, const std::string& hash);
     std::string sha3(const std::string& input);
-    bool ToPublic(const std::string& prikey, uint32_t flags, std::string* pub_key);
+    bool ToPublic(const std::string& prikey, bool compress, std::string* pub_key);
     std::string ToPublicFromCompressed(const std::string& in_pubkey);
     std::string ToAddressWithPublicKey(const std::string& pub_key);
     std::string ToAddressWithPrivateKey(const std::string& pri_key);

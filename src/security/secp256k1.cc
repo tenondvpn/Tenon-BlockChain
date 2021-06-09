@@ -64,10 +64,10 @@ std::string Secp256k1::sha3(const std::string& input) {
     return std::string((char*)h.bytes, 32);
 }
 
-bool Secp256k1::ToPublic(const std::string& str_prikey, uint32_t flags, std::string* str_pub_key) {
+bool Secp256k1::ToPublic(const std::string& str_prikey, bool compress, std::string* str_pub_key) {
     security::PrivateKey prikey(str_prikey);
     security::PublicKey pubkey(prikey);
-    pubkey.Serialize(*str_pub_key, false);
+    pubkey.Serialize(*str_pub_key, compress);
     return true;
 }
 
