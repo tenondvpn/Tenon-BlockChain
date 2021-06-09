@@ -976,6 +976,7 @@ int VpnClient::CreateClientUniversalNetwork() {
     root_dht_ = std::make_shared<ClientUniversalDht>(udp_transport_, local_node);
     root_dht_->Init(nullptr, nullptr);
     auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(root_dht_);
+    std::cout << "clent register dht network id: " << network::kVpnNetworkId << std::endl;
     network::DhtManager::Instance()->RegisterDht(network::kVpnNetworkId, base_dht);
     return kClientSuccess;
 }

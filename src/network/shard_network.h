@@ -101,6 +101,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         return kNetworkError;
     }
 
+    std::cout << "register dht network id: " << network_id_ << std::endl;
     network::DhtManager::Instance()->RegisterDht(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
@@ -213,6 +214,7 @@ int ShardNetwork<DhtType>::JoinShard() {
         std::placeholders::_3,
         std::placeholders::_4,
         std::placeholders::_5));
+    std::cout << "register dht network id: " << network_id_ << std::endl;
     network::DhtManager::Instance()->RegisterDht(network_id_, elect_dht_);
     auto boot_nodes = network::Bootstrap::Instance()->GetNetworkBootstrap(network_id_, 3);
     if (boot_nodes.empty()) {

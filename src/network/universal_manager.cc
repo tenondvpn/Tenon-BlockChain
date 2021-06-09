@@ -116,6 +116,7 @@ int UniversalManager::CreateNetwork(
             &UniversalManager::AddNodeToUniversal,
             this,
             std::placeholders::_1));
+    std::cout << "register dht network id: " << network_id_ << std::endl;
     DhtManager::Instance()->RegisterDht(network_id, dht_ptr);
     if (local_node->first_node) {
         return kNetworkSuccess;
@@ -134,7 +135,6 @@ int UniversalManager::CreateNetwork(
     config.Get("tenon", "init_uid", init_uid);
     config.Get("tenon", "get_init_msg", get_init_msg);
     if (dht_ptr->Bootstrap(boot_nodes, get_init_msg, init_uid) != dht::kDhtSuccess) {
-//         UnRegisterUniversal(network_id);
         NETWORK_ERROR("bootstrap universal network failed!");
         return kNetworkError;
     }
