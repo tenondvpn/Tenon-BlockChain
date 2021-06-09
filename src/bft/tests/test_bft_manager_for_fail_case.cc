@@ -687,7 +687,7 @@ public:
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
             ASSERT_EQ(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
-                common::GlobalInfo::Instance()->id()), 1);
+                common::GlobalInfo::Instance()->id()), 0);
         }
 
         {

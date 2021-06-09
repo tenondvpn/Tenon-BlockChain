@@ -687,7 +687,7 @@ public:
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
             ASSERT_EQ(elect::MemberManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
-                common::GlobalInfo::Instance()->id()), 1);
+                common::GlobalInfo::Instance()->id()), 0);
         }
 
         {
@@ -1677,7 +1677,7 @@ TEST_F(TestBftManager, InitBft) {
     EXPECT_EQ(bft_manager.InitBft(msg, bft_msg), kBftError);
     EXPECT_EQ(elect::MemberManager::Instance()->IsLeader(
         network::kConsensusShardBeginNetworkId,
-        common::GlobalInfo::Instance()->id()), 1);
+        common::GlobalInfo::Instance()->id()), 0);
 }
 
 TEST_F(TestBftManager, TestExecution) {
