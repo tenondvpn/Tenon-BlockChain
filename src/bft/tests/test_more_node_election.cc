@@ -855,7 +855,7 @@ public:
         local_node->first_node = true;
         transport::TransportPtr transport;
         auto dht = std::make_shared<elect::ElectDht>(transport, local_node);
-        dht->Init();
+        dht->Init(nullptr, nullptr);
         auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(dht);
         network::DhtManager::Instance()->RegisterDht(network_id, base_dht);
         network::UniversalManager::Instance()->RegisterUniversal(network_id, base_dht);
