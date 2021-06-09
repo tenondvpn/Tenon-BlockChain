@@ -27,9 +27,7 @@ namespace network {
 class UniversalManager {
 public:
     static UniversalManager* Instance();
-    void RegisterUniversal(uint32_t network_id, dht::BaseDhtPtr& dht);
-    void UnRegisterUniversal(uint32_t network_id);
-    dht::BaseDhtPtr GetUniversal(uint32_t network_id);
+    dht::BaseDhtPtr GetUniversal();
     int CreateUniversalNetwork(
         const common::Config& config,
         transport::TransportPtr& transport);
@@ -52,7 +50,7 @@ private:
         dht::BaseDht* dht_ptr,
         const dht::protobuf::DhtMessage& dht_msg);
 
-    dht::BaseDhtPtr* dhts_{ nullptr };
+    dht::BaseDhtPtr universal_dht_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(UniversalManager);
 };

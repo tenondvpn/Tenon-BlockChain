@@ -50,8 +50,7 @@ void ElectNode::Destroy() {
 
 // every one should join universal
 int ElectNode::JoinUniversal() {
-    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal();
     assert(unversal_dht);
 //     assert(unversal_dht->transport());
     assert(unversal_dht->local_node());
@@ -69,19 +68,18 @@ int ElectNode::JoinUniversal() {
         return kElectError;
     }
 
-    network::UniversalManager::Instance()->RegisterUniversal(network_id_, universal_role_);
+    network::DhtManager::Instance()->RegisterDht(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
         ELECT_ERROR("join universal network failed!");
-        network::UniversalManager::Instance()->UnRegisterUniversal(network_id_);
+        network::DhtManager::Instance()->UnRegisterDht(network_id_);
         return kElectError;
     }
     return kElectSuccess;
 }
 
 int ElectNode::JoinShard() {
-    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal();
     assert(unversal_dht);
 //     assert(unversal_dht->transport());
     assert(unversal_dht->local_node());

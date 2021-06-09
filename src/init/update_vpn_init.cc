@@ -222,7 +222,7 @@ void UpdateVpnInit::GetAccountInitBlocks(const std::string& account_id, std::str
     }
 
     LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(message, common::Encode::HexEncode(account_id));
-    auto dht = network::UniversalManager::Instance()->GetUniversal(tenon::network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     if (dht == nullptr) {
         return;
     }
@@ -274,7 +274,7 @@ void UpdateVpnInit::GetAccountInitBlocks(const std::string& account_id, std::str
 
 std::string UpdateVpnInit::GetBftNodes() {
     std::string res;
-    auto dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     if (dht) {
         auto dht_nodes = *(dht->readonly_dht());
         for (auto iter = dht_nodes.begin(); iter != dht_nodes.end(); ++iter) {
@@ -665,8 +665,7 @@ void UpdateVpnInit::GetNetworkNodes(
     for (uint32_t i = 0; i < country_vec.size(); ++i) {
         auto country = country_vec[i];
         auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
-                network::UniversalManager::Instance()->GetUniversal(
-                network::kUniversalNetworkId));
+                network::UniversalManager::Instance()->GetUniversal());
         if (!uni_dht) {
             continue;
         }
@@ -911,8 +910,7 @@ void UpdateVpnInit::BootstrapInit(const dht::protobuf::InitMessage& init_info) {
         UpdateAccountBlockInfo(init_info.init_blocks());
     }
 
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (!uni_dht) {
         NETWORK_ERROR("get uni dht failed!");
         return;

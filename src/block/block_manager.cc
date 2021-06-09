@@ -72,8 +72,7 @@ static std::string CreateAdRewardRequest(
         uint64_t amount,
         transport::protobuf::Header& msg) {
     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
-            network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId));
+            network::UniversalManager::Instance()->GetUniversal());
     if (!uni_dht) {
         return "";
     }
@@ -412,8 +411,7 @@ void BlockManager::HandleGetAccountInitRequest(
     }
 
     transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal();
     assert(dht_ptr != nullptr);
     BlockProto::CreateGetBlockResponse(
             dht_ptr->local_node(),
@@ -450,8 +448,7 @@ void BlockManager::HandleGetHeightRequest(
     }
 
     transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal();
     assert(dht_ptr != nullptr);
     BlockProto::CreateGetBlockResponse(
             dht_ptr->local_node(),
@@ -472,8 +469,7 @@ void BlockManager::SendBlockNotExists(transport::protobuf::Header& header) {
     auto block_res = block_msg_res.mutable_block_res();
     block_res->set_block("");
     transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal();
     assert(dht_ptr != nullptr);
     BlockProto::CreateGetBlockResponse(
             dht_ptr->local_node(),
@@ -570,8 +566,7 @@ void BlockManager::SendBlockResponse(
     auto block_res = block_msg_res.mutable_block_res();
     block_res->set_block(block_data);
     transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal();
     assert(dht_ptr != nullptr);
     BlockProto::CreateGetBlockResponse(
             dht_ptr->local_node(),

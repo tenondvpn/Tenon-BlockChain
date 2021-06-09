@@ -1014,8 +1014,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         return;
     }
 
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal();
     if (!dht_ptr) {
         assert(false);
         return;

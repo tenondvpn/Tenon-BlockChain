@@ -89,8 +89,7 @@ void ShardNetwork<DhtType>::Destroy() {
 // every one should join universal
 template<class DhtType>
 int ShardNetwork<DhtType>::JoinUniversal() {
-    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal();
     assert(unversal_dht);
 //     assert(unversal_dht->transport());
     assert(unversal_dht->local_node());
@@ -108,11 +107,11 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         return kNetworkError;
     }
 
-    network::UniversalManager::Instance()->RegisterUniversal(network_id_, universal_role_);
+    network::DhtManager::Instance()->RegisterDht(network_id_, universal_role_);
     if (universal_role_->Bootstrap(
             network::Bootstrap::Instance()->root_bootstrap()) != dht::kDhtSuccess) {
         NETWORK_ERROR("join universal network failed!");
-        network::UniversalManager::Instance()->UnRegisterUniversal(network_id_);
+        network::DhtManager::Instance()->UnRegisterDht(network_id_);
         return kNetworkError;
     }
     return kNetworkSuccess;
@@ -190,8 +189,7 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
 
 template<class DhtType>
 int ShardNetwork<DhtType>::JoinShard() {
-    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto unversal_dht = network::UniversalManager::Instance()->GetUniversal();
     assert(unversal_dht);
 //     assert(unversal_dht->transport());
     assert(unversal_dht->local_node());

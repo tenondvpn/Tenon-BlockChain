@@ -468,16 +468,16 @@ void BaseDht::ProcessBootstrapResponse(
     }
 
     NodePtr node = std::make_shared<Node>(
-            dht_msg.bootstrap_res().node_id(),
-            header.src_dht_key(),
-            dht_msg.bootstrap_res().nat_type(),
-            false,
-            header.from_ip(),
-            from_port,
-            dht_msg.bootstrap_res().local_ip(),
-            static_cast<uint16_t>(dht_msg.bootstrap_res().local_port()),
-            header.pubkey(),
-            dht_msg.bootstrap_res().node_tag());
+        dht_msg.bootstrap_res().node_id(),
+        header.src_dht_key(),
+        dht_msg.bootstrap_res().nat_type(),
+        false,
+        header.from_ip(),
+        from_port,
+        dht_msg.bootstrap_res().local_ip(),
+        static_cast<uint16_t>(dht_msg.bootstrap_res().local_port()),
+        header.pubkey(),
+        dht_msg.bootstrap_res().node_tag());
     node->min_svr_port = dht_msg.bootstrap_res().min_svr_port();
     node->max_svr_port = dht_msg.bootstrap_res().max_svr_port();
     node->min_route_port = dht_msg.bootstrap_res().min_route_port();
@@ -485,10 +485,8 @@ void BaseDht::ProcessBootstrapResponse(
     node->min_udp_port = dht_msg.bootstrap_res().min_udp_port();
     node->max_udp_port = dht_msg.bootstrap_res().max_udp_port();
     node->node_weight = dht_msg.bootstrap_res().node_weight();
-    bootstrap_response_cb_(this, dht_msg);
     node->join_way = kJoinFromBootstrapRes;
     Join(node);
-
     std::unique_lock<std::mutex> lock(join_res_mutex_);
     if (joined_) {
         return;
@@ -524,13 +522,13 @@ void BaseDht::ProcessRefreshNeighborsRequest(
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("refresh neighbors request destnation error[%s][%s]"
-                "from[%s][%d]to[%s][%d]",
-                common::Encode::HexEncode(header.des_dht_key()).c_str(),
-                common::Encode::HexEncode(local_node_->dht_key()).c_str(),
-                header.from_ip().c_str(),
-                header.from_port(),
-                local_node_->public_ip().c_str(),
-                local_node_->public_port);
+            "from[%s][%d]to[%s][%d]",
+            common::Encode::HexEncode(header.des_dht_key()).c_str(),
+            common::Encode::HexEncode(local_node_->dht_key()).c_str(),
+            header.from_ip().c_str(),
+            header.from_port(),
+            local_node_->public_ip().c_str(),
+            local_node_->public_port);
         return;
     }
 
@@ -538,15 +536,17 @@ void BaseDht::ProcessRefreshNeighborsRequest(
         DHT_WARN("not refresh neighbor request.");
         return;
     }
+
     std::vector<uint64_t> bloomfilter_vec;
     for (auto i = 0; i < dht_msg.refresh_neighbors_req().bloomfilter_size(); ++i) {
         bloomfilter_vec.push_back(dht_msg.refresh_neighbors_req().bloomfilter(i));
     }
+
     std::shared_ptr<common::BloomFilter> bloomfilter{ nullptr };
     if (!bloomfilter_vec.empty()) {
         bloomfilter = std::make_shared<common::BloomFilter>(
-                bloomfilter_vec,
-                kRefreshNeighborsBloomfilterHashCount);
+            bloomfilter_vec,
+            kRefreshNeighborsBloomfilterHashCount);
     }
 
     Dht tmp_dht;
@@ -561,6 +561,7 @@ void BaseDht::ProcessRefreshNeighborsRequest(
             if (bloomfilter->Contain((*iter)->dht_key_hash)) {
                 continue;
             }
+
             tmp_dht.push_back((*iter));
         }
 
@@ -568,22 +569,24 @@ void BaseDht::ProcessRefreshNeighborsRequest(
             tmp_dht.push_back(local_node_);
         }
     }
+
     auto close_nodes = DhtFunction::GetClosestNodes(
-            tmp_dht,
-            dht_msg.refresh_neighbors_req().des_dht_key(),
-            kRefreshNeighborsDefaultCount + 1);
+        tmp_dht,
+        dht_msg.refresh_neighbors_req().des_dht_key(),
+        kRefreshNeighborsDefaultCount + 1);
     if (close_nodes.empty()) {
         return;
     }
+
     transport::protobuf::Header res;
     SetFrequently(res);
     DhtProto::CreateRefreshNeighborsResponse(local_node_, header, close_nodes, res);
     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                header.from_ip(), header.from_port(), 0, res);
+            header.from_ip(), header.from_port(), 0, res);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
-                header.from_ip(), header.from_port(), 0, res);
+            header.from_ip(), header.from_port(), 0, res);
     }
 }
 
@@ -592,8 +595,8 @@ void BaseDht::ProcessRefreshNeighborsResponse(
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("refresh neighbors request destnation error[%s][%s]",
-                common::Encode::HexEncode(header.des_dht_key()).c_str(),
-                common::Encode::HexEncode(local_node_->dht_key()).c_str());
+            common::Encode::HexEncode(header.des_dht_key()).c_str(),
+            common::Encode::HexEncode(local_node_->dht_key()).c_str());
         return;
     }
 

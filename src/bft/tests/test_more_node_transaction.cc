@@ -659,7 +659,6 @@ public:
 
     static void JoinNetwork(uint32_t network_id) {
         network::DhtManager::Instance()->UnRegisterDht(network_id);
-        network::UniversalManager::Instance()->UnRegisterUniversal(network_id);
         dht::DhtKeyManager dht_key(
             network_id,
             common::GlobalInfo::Instance()->country(),
@@ -681,7 +680,6 @@ public:
         dht->Init();
         auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(dht);
         network::DhtManager::Instance()->RegisterDht(network_id, base_dht);
-        network::UniversalManager::Instance()->RegisterUniversal(network_id, base_dht);
     }
 
     static void InitEnv() {

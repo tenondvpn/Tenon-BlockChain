@@ -28,8 +28,7 @@ int TransactionClient::Transaction(
         std::string& tx_gid) {
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         return kClientError;
     }

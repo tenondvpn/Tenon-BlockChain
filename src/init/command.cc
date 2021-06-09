@@ -528,8 +528,7 @@ void Command::AddBaseCommands() {
 void Command::CreateNewVpnVersion(const std::string& download_url) {
 	transport::protobuf::Header msg;
 	uint64_t rand_num = 0;
-	auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-		network::kUniversalNetworkId);
+	auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
 	if (uni_dht == nullptr) {
 		return;
 	}
@@ -615,8 +614,8 @@ void Command::PrintMembers(uint32_t network_id) {
 
 void Command::PrintDht(uint32_t network_id) {
     auto base_dht = network::DhtManager::Instance()->GetDht(network_id);
-    if (!base_dht) {
-        base_dht = network::UniversalManager::Instance()->GetUniversal(network_id);
+    if (!base_dht && network_id == network::kUniversalNetworkId) {
+        base_dht = network::UniversalManager::Instance()->GetUniversal();
     }
 
     if (!base_dht) {

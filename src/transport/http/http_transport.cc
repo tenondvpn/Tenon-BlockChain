@@ -77,8 +77,7 @@ static std::string CreateWxAliPayRequest(
     }
 
     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
-            network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId));
+            network::UniversalManager::Instance()->GetUniversal());
     if (!uni_dht) {
         return "";
     }
@@ -141,8 +140,7 @@ static void UseLocalCreateTxRequest(
     auto gid = common::Encode::HexDecode(data["gid"].get<std::string>());
     auto to = common::Encode::HexDecode(data["to"].get<std::string>());
     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
-            network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId));
+            network::UniversalManager::Instance()->GetUniversal());
     if (!uni_dht) {
         return;
     }

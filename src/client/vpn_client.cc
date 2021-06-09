@@ -151,8 +151,7 @@ std::string VpnClient::GetClientProperty() {
 }
 
 std::string VpnClient::GetNewBoot() {
-    auto dht = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     auto dht_nodes = dht->readonly_dht();
     std::unordered_set<std::string> bootstrap_set;
     for (auto iter = dht_nodes->begin(); iter != dht_nodes->end(); ++iter) {
@@ -226,8 +225,7 @@ void VpnClient::AdReward(const std::string& str) {
     }
 
     transport::protobuf::Header message;
-    auto dht = network::UniversalManager::Instance()->GetUniversal(
-            tenon::network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     if (dht == nullptr) {
         return;
     }
@@ -437,8 +435,7 @@ std::string VpnClient::CheckFreeBandwidth() {
 void VpnClient::VpnHeartbeat(const std::string& dht_key) {
     CLIENT_ERROR("VpnHeartbeat start");
     transport::protobuf::Header msg;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     ClientProto::CreateVpnHeartbeat(
             root_dht_->local_node(),
             common::Encode::HexDecode(dht_key),
@@ -999,8 +996,7 @@ std::string VpnClient::PayForVPN(const std::string& to, const std::string& gid, 
 
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         return "ERROR";
     }
@@ -1053,8 +1049,7 @@ void VpnClient::SendGetAccountAttrLastBlock(
 std::string VpnClient::Transaction(const std::string& to, uint64_t amount, std::string& tx_gid) {
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         CLIENT_ERROR("Transaction end error");
         return "ERROR";
@@ -1115,7 +1110,7 @@ void VpnClient::CheckTxExists() {
 
 void VpnClient::GetTxBlocksFromBftNetwork() {
     transport::protobuf::Header message;
-    auto dht = network::UniversalManager::Instance()->GetUniversal(tenon::network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     if (dht == nullptr) {
         return;
     }
@@ -1148,8 +1143,7 @@ int VpnClient::VpnLogin(
     CLIENT_ERROR("VpnLogin start");
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-			network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         CLIENT_ERROR("VpnLogin error");
         return kClientError;
@@ -1219,8 +1213,7 @@ bft::protobuf::BlockPtr VpnClient::GetBlockWithHash(const std::string& block_has
 }
 
 void VpnClient::SendGetBlockWithGid(const std::string& str, bool is_gid) {
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         return;
     }
@@ -1230,8 +1223,7 @@ void VpnClient::SendGetBlockWithGid(const std::string& str, bool is_gid) {
 }
 
 void VpnClient::GetAccountHeight() {
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         return;
     }
@@ -1244,8 +1236,7 @@ void VpnClient::GetAccountHeight() {
 }
 
 void VpnClient::GetAccountBlockWithHeight() {
-    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal();
     if (uni_dht == nullptr) {
         return;
     }
@@ -1385,8 +1376,7 @@ void VpnClient::VipDumpRouteNodes() {
 }
 
 void VpnClient::DumpBootstrapNodes() {
-    auto dht = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
+    auto dht = network::UniversalManager::Instance()->GetUniversal();
     auto dht_nodes = dht->readonly_dht();
     std::unordered_set<std::string> bootstrap_set;
     for (auto iter = dht_nodes->begin(); iter != dht_nodes->end(); ++iter) {
