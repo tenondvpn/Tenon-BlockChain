@@ -1491,6 +1491,8 @@ private:
     std::unordered_set<std::string> created_gids_;
 };
 
+std::map<uint32_t, std::string> TestMoreLeaderTransaction::pool_index_map_;
+
 TEST_F(TestMoreLeaderTransaction, LeaderCountTest) {
     for (uint32_t i = 3; i < 1024; ++i) {
         int32_t expect_leader_count = (int32_t)pow(2.0, log2(double(i / 3)));
