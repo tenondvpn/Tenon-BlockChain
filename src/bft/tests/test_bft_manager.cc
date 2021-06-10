@@ -799,7 +799,7 @@ public:
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-        ASSERT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
+        ASSERT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
@@ -912,7 +912,7 @@ public:
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-        EXPECT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
+        EXPECT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
@@ -1059,7 +1059,7 @@ public:
         }
 
         usleep(bft::kBftStartDeltaTime);
-        ASSERT_EQ(bft::BftManager::Instance()->StartBft(""), kBftSuccess);
+        ASSERT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
