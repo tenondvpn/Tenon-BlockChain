@@ -831,6 +831,12 @@ public:
         SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
+
+        if (bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num) != kBftSuccess) {
+            std::cout << "start bft failed!" << std::endl;
+            return;
+        }
+
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
