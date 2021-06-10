@@ -48,7 +48,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if ((int32_t)pool_index() % leader_count != pool_mod_idx) {
+    if ((int32_t)pool_index() % leader_count != leader_pool_mod_idx) {
         BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d].",
             pool_index(), leader_count, pool_mod_idx);
         return false;

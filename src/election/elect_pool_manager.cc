@@ -351,8 +351,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     int32_t expect_leader_count = (int32_t)pow(
         2.0,
         (double)((int32_t)log2(double(elected_nodes.size() / 3))));
-    if (expect_leader_count > common::kImmutablePoolSize) {
-        expect_leader_count = common::kImmutablePoolSize;
+    if (expect_leader_count > (int32_t)common::kImmutablePoolSize) {
+        expect_leader_count = (int32_t)common::kImmutablePoolSize;
     }
 
     common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
