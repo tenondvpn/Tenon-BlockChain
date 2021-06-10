@@ -107,7 +107,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
         if (!bft_msg.leader()) {
-            int res = BackupPrepare(bft_ptr, header, bft_msg);
+            BackupPrepare(bft_ptr, header, bft_msg);
         } else {
             LeaderPrecommit(bft_ptr, header, bft_msg);
         }
@@ -553,8 +553,9 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (ThisNodeIsLeader()) {
-        return kBftSuccess;
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        BFT_ERROR("leader check failed!");
+        return kBftError;
     }
 
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
@@ -607,8 +608,8 @@ int BftManager::LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (!ThisNodeIsLeader()) {
-        return kBftSuccess;
+    if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
+        return kBftError;
     }
 
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
@@ -695,8 +696,8 @@ int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (ThisNodeIsLeader()) {
-        return kBftSuccess;
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        return kBftError;
     }
 
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
@@ -767,8 +768,8 @@ int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (!ThisNodeIsLeader()) {
-        return kBftSuccess;
+    if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
+        return kBftError;
     }
 
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
@@ -940,8 +941,8 @@ int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (ThisNodeIsLeader()) {
-        return kBftSuccess;
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        return kBftError;
     }
 
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
@@ -1009,10 +1010,6 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    if (!ThisNodeIsLeader()) {
-        return;
-    }
-
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
     if (!dht_ptr) {

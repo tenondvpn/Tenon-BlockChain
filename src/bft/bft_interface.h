@@ -50,6 +50,8 @@ public:
             const std::string& id);
     int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
     int CheckTimeout();
+    bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
+    bool LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
 
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;

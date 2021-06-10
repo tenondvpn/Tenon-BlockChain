@@ -76,13 +76,6 @@ std::string GetUniversalGid(bool to, const std::string& gid) {
         gid;
 }
 
-bool ThisNodeIsLeader() {
-    int32_t pool_mod_num = elect::MemberManager::Instance()->IsLeader(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    return pool_mod_num >= 0;
-}
-
 int32_t GetLeaderPoolIndex() {
     return elect::MemberManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
