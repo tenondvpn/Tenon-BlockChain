@@ -1007,7 +1007,7 @@ int BftManager::BackupCommit(
     }
 
     bft_ptr->set_status(kBftCommited);
-    LeaderBroadcastToAcc(bft_ptr->prpare_block());
+//     LeaderBroadcastToAcc(bft_ptr->prpare_block());
     BFT_ERROR("BackupCommit");
     RemoveBft(bft_ptr->gid());
     // start new bft

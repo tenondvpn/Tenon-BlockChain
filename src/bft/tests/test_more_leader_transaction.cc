@@ -812,8 +812,6 @@ public:
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
         CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
-
-
         int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
         int32_t leader_index = pool_index_from % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
         auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, leader_index);
@@ -849,7 +847,7 @@ public:
 
         std::vector<transport::protobuf::Header> backup_msgs;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -889,7 +887,7 @@ public:
         backup_msgs.clear();
 
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -921,7 +919,7 @@ public:
 
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1045,9 +1043,20 @@ public:
             const std::string& from_prikey,
             const std::string& to_prikey,
             std::map<std::string, std::string>& attrs,
+            bool unlock_caller,
             transport::protobuf::Header* leader_broadcast_msg) {
-        int32_t pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
-        int32_t leader_index = pool_index_to % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
+        int32_t use_pool_index = -1;
+        if (just_to_id) {
+            use_pool_index = common::GetPoolIndex(to_prikey);
+        } else {
+            use_pool_index = common::GetPoolIndex(GetIdByPrikey(to_prikey));
+        }
+
+        if (unlock_caller) {
+            use_pool_index = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        }
+        
+        int32_t leader_index = use_pool_index % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
         auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, leader_index);
         ASSERT_TRUE(leader_mem_ptr);
         auto leader_id = leader_mem_ptr->id;
@@ -1102,7 +1111,7 @@ public:
 
         std::vector<transport::protobuf::Header> backup_msgs;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1134,7 +1143,7 @@ public:
 
         backup_msgs.clear();
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1189,7 +1198,7 @@ public:
 
         *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1233,7 +1242,6 @@ public:
             uint32_t tx_type,
             bool call_to,
             bool just_to_id,
-            std::map<std::string, std::string>& attrs) {
         transport::protobuf::Header broadcast_msg;
         Transfer(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, &broadcast_msg);
         if (call_to) {
@@ -1243,13 +1251,17 @@ public:
             uint32_t des_network_id = dht::DhtKeyManager::DhtKeyGetNetId(broadcast_msg.des_dht_key());
             if (des_network_id == network::kRootCongressNetworkId) {
                 transport::protobuf::Header to_root_broadcast_msg;
-                CreateNewAccountWithInvalidNode(from_prikey, to_prikey, broadcast_msg, &to_root_broadcast_msg);
+                CreateNewAccountWithInvalidNode(from_prikey, to_prikey, just_to_id, broadcast_msg, &to_root_broadcast_msg);
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
                 transport::protobuf::Header tmp_broadcast_msg;
-                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
+                NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, false, &tmp_broadcast_msg);
+                if (tx_type == common::kConsensusCreateContract) {
+                    transport::protobuf::Header tmp_broadcast_msg2;
+                    NewAccountDestNetworkTransfer(true, tx_type, just_to_id, tmp_broadcast_msg, from_prikey, to_prikey, attrs, true, &tmp_broadcast_msg2);
+                }
             } else {
                 transport::protobuf::Header tmp_broadcast_msg;
-                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, &tmp_broadcast_msg);
+                NewAccountDestNetworkTransfer(false, tx_type, just_to_id, broadcast_msg, from_prikey, to_prikey, attrs, false, &tmp_broadcast_msg);
             }
         }
     }
@@ -1317,18 +1329,24 @@ public:
             all_gas += (kContractBytesCode.size() + attrs[kContractBytesCode].size()) *
                 bft::kKeyValueStorageEachBytes;
             all_gas += 2024;
+
+            std::string tmp_contract_address = security::Secp256k1::Instance()->GetContractAddress(
+                GetIdByPrikey(from_prikey),
+                *contract_address,
+                bytes_code);
             Transaction(
                 from_prikey,
-                "",
+                tmp_contract_address,
                 amount,
                 all_gas + 10000000llu,
                 common::kConsensusCreateContract,
                 true,
-                false,
+                true,
                 attrs);
             uint64_t from_balance = GetBalanceByPrikey(from_prikey);
 //             EXPECT_EQ(from_balance, init_balance - (all_gas - bft::kCallContractDefaultUseGas)  * common::GlobalInfo::Instance()->gas_price() - all_amount);
             *contract_address = attrs["res_contract_addr"];
+            ASSERT_EQ(tmp_contract_address, *contract_address);
         }
 
         // transfer to contract address
@@ -1350,7 +1368,7 @@ public:
             uint64_t to_balance;
             ASSERT_EQ(contract_info->GetBalance(&to_balance), block::kBlockSuccess);
             ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
-            ASSERT_EQ(to_balance, all_amount);
+            ASSERT_EQ(to_balance, all_amount + constructor_amount);
         }
 
         // create contract caller
@@ -1387,15 +1405,20 @@ public:
     void CreateNewAccountWithInvalidNode(
             const std::string& from_prikey,
             const std::string& to_prikey,
+            bool just_to_id,
             transport::protobuf::Header& msg,
             transport::protobuf::Header* broadcast_msg) {
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+        int32_t pool_index_to = -1;
+        if (just_to_id) {
+            pool_index_to = common::GetPoolIndex(to_prikey);
+        } else {
+            pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
+        }
 
-        int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
-        int32_t pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
         int32_t leader_index = pool_index_to % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
         auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, leader_index);
         ASSERT_TRUE(leader_mem_ptr);
@@ -1407,7 +1430,8 @@ public:
         SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-        EXPECT_EQ(bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num), kBftSuccess);
+        int res = bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num);
+        ASSERT_EQ(res, kBftSuccess);
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
@@ -1422,7 +1446,7 @@ public:
         }
 
         for (uint32_t i = 0; i < kRootNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1468,7 +1492,7 @@ public:
         int round_count = 0;
     backup_reprecommit_goto_tag:
         for (uint32_t i = 0; i < kRootNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1530,7 +1554,7 @@ public:
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
         for (uint32_t i = 0; i < kRootNodeCount; ++i) {
-            if (i == leader_index) {
+            if ((int32_t)i == leader_index) {
                 continue;
             }
 
@@ -1833,6 +1857,269 @@ TEST_F(TestMoreLeaderTransaction, SomeNodeInvalid3) {
         uint64_t to_balance = GetBalanceByPrikey(to_prikey);
         ASSERT_EQ(from_balance, init_balance - all_amount - all_gas * common::GlobalInfo::Instance()->gas_price());
         ASSERT_EQ(to_balance, init_to_balance + all_amount);
+    }
+}
+
+TEST_F(TestMoreLeaderTransaction, TestCallSimplePaymentChannelSuccess) {
+    // create receivers
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            common::Encode::HexEncode(test_from_key));
+        uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
+        ASSERT_EQ(from_balance, init_balance);
+        for (int32_t i = 0; i < 2; ++i) {
+            std::string to_prikey = common::Encode::HexDecode(
+                std::to_string(i) + "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
+            uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+            uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+            ASSERT_EQ(to_balance, common::kInvalidUint64);
+            uint64_t all_amount = 0;
+            uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
+            uint64_t all_gas = 0;
+            all_amount += amount;
+            all_gas += bft::kTransferGas;
+            std::map<std::string, std::string> attrs;
+            Transaction(
+                from_prikey,
+                to_prikey,
+                amount,
+                all_gas + 1,
+                common::kConsensusTransaction,
+                true,
+                false,
+                attrs);
+            from_balance = GetBalanceByPrikey(from_prikey);
+            to_balance = GetBalanceByPrikey(to_prikey);
+            ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
+            ASSERT_EQ(to_balance, all_amount);
+        }
+    }
+
+    std::string contract_addr = common::Encode::HexDecode("b0aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+    // call contract construct
+    uint64_t item_value = 0;
+    InitOfflineTransferContract(
+        &contract_addr,
+        simple_payment_channel,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        100llu * common::kTenonMiniTransportUnit,
+        item_value * 2);
+
+    // call close
+    {
+        transport::protobuf::Header broadcast_msg;
+        std::string from_prikey = common::Encode::HexDecode("0348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
+        std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("415ffba70000000000000000000000000000000000000000000000000000000000989680000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000410c065f8fc87a39056cc59481e99f9d7f5a6714c92330b98babb05264bdac6ab968b5f83525c8f644e3c30421919c900aa6022bebb09764513e3819994f8d4eb81b00000000000000000000000000000000000000000000000000000000000000");
+        uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
+
+        // Default caller init and lock caller
+        auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_FALSE(caller_info->locked());
+        uint64_t bid_amount = 0;
+        Transfer(from_prikey, contract_addr, bid_amount, 30000000,
+            common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        auto new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_TRUE(caller_info->locked());
+
+        // CallContract
+        transport::protobuf::Header leader_init_msg;
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        ASSERT_TRUE(contract_info != nullptr);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, broadcast_msg, from_prikey, contract_addr, attrs, false, &leader_init_msg);
+        uint64_t new_contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+        ASSERT_EQ(contract_balance - 10000000, new_contract_balance);
+
+        // UnlockCaller
+        ASSERT_TRUE(caller_info->locked());
+        from_balance = GetBalanceByPrikey(from_prikey);
+        transport::protobuf::Header leader_lock_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
+        new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - 42790 * common::GlobalInfo::Instance()->gas_price() + 10000000);
+        ASSERT_FALSE(caller_info->locked());
+    }
+}
+
+TEST_F(TestMoreLeaderTransaction, TestCallContractPurchaseSuccess) {
+    // create seller and buyer
+    {
+        std::string from_prikey = common::Encode::HexDecode(
+            common::Encode::HexEncode(test_from_key));
+        uint64_t from_balance = GetBalanceByPrikey(from_prikey);
+        uint64_t init_balance = 21000000000llu * common::kTenonMiniTransportUnit / common::kImmutablePoolSize;
+        ASSERT_EQ(from_balance, init_balance);
+        for (int32_t i = 0; i < 2; ++i) {
+            std::string to_prikey = common::Encode::HexDecode(
+                std::to_string(i) + "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
+            uint64_t init_balance = GetBalanceByPrikey(from_prikey);
+            uint64_t to_balance = GetBalanceByPrikey(to_prikey);
+            ASSERT_EQ(to_balance, common::kInvalidUint64);
+            uint64_t all_amount = 0;
+            uint64_t amount = 10llu * common::kTenonMiniTransportUnit;
+            uint64_t all_gas = 0;
+            all_amount += amount;
+            all_gas += bft::kTransferGas;
+            std::map<std::string, std::string> attrs;
+            Transaction(
+                from_prikey,
+                to_prikey,
+                amount,
+                all_gas + 1,
+                common::kConsensusTransaction,
+                true,
+                false,
+                attrs);
+            from_balance = GetBalanceByPrikey(from_prikey);
+            to_balance = GetBalanceByPrikey(to_prikey);
+            ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
+            ASSERT_EQ(to_balance, all_amount);
+        }
+    }
+
+    // call contract construct
+    uint64_t item_value = 100000llu;
+    std::string contract_addr = common::Encode::HexDecode("b0aaadbe30d002d7c532b95901949540f9213e740467461d540d9f3cc3efb4b6");
+    InitOfflineTransferContract(
+        &contract_addr,
+        purchase,
+        100llu * common::kTenonMiniTransportUnit,
+        90llu * common::kTenonMiniTransportUnit,
+        100llu * common::kTenonMiniTransportUnit,
+        item_value * 2);
+    // buyer confirm purchase
+    {
+        transport::protobuf::Header broadcast_msg;
+        std::string from_prikey = common::Encode::HexDecode("0348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
+        std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("d696069700000000000000000000000000000000000000000000000000000000");
+        uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
+
+        // Default caller init and lock caller
+        auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_FALSE(caller_info->locked());
+        uint64_t bid_amount = item_value * 2;
+        Transfer(from_prikey, contract_addr, bid_amount, 20000000,
+            common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        auto new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_TRUE(caller_info->locked());
+
+        // CallContract
+        transport::protobuf::Header leader_init_msg;
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        ASSERT_TRUE(contract_info != nullptr);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, broadcast_msg, from_prikey, contract_addr, attrs, false, &leader_init_msg);
+        uint64_t new_contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+        ASSERT_EQ(contract_balance + bid_amount, new_contract_balance);
+
+        // UnlockCaller
+        ASSERT_TRUE(caller_info->locked());
+        from_balance = GetBalanceByPrikey(from_prikey);
+        transport::protobuf::Header leader_lock_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
+        new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - 25592 * common::GlobalInfo::Instance()->gas_price() - bid_amount);
+        ASSERT_FALSE(caller_info->locked());
+    }
+
+    // buyer confirm receive
+    {
+        transport::protobuf::Header broadcast_msg;
+        std::string from_prikey = common::Encode::HexDecode("0348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe879");
+        std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("73fac6f000000000000000000000000000000000000000000000000000000000");
+        uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
+
+        // Default caller init and lock caller
+        auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_FALSE(caller_info->locked());
+        uint64_t bid_amount = 0;
+        Transfer(from_prikey, contract_addr, bid_amount, 20000000,
+            common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        auto new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_TRUE(caller_info->locked());
+
+        // CallContract
+        transport::protobuf::Header leader_init_msg;
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        ASSERT_TRUE(contract_info != nullptr);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, broadcast_msg, from_prikey, contract_addr, attrs, false, &leader_init_msg);
+        uint64_t new_contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+        ASSERT_EQ(contract_balance - item_value, new_contract_balance);
+
+        // UnlockCaller
+        ASSERT_TRUE(caller_info->locked());
+        from_balance = GetBalanceByPrikey(from_prikey);
+        transport::protobuf::Header leader_lock_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
+        new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - 32854 * common::GlobalInfo::Instance()->gas_price() + item_value);
+        ASSERT_FALSE(caller_info->locked());
+    }
+
+    // seller refundSeller
+    {
+        transport::protobuf::Header broadcast_msg;
+        std::string from_prikey = common::Encode::HexDecode("348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
+        std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("c7981b1b00000000000000000000000000000000000000000000000000000000");
+        uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * kKeyValueStorageEachBytes;
+
+        // Default caller init and lock caller
+        auto caller_info = block::AccountManager::Instance()->GetAcountInfo(GetIdByPrikey(from_prikey));
+        auto from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_FALSE(caller_info->locked());
+        uint64_t bid_amount = 0;
+        Transfer(from_prikey, contract_addr, bid_amount, 20000000,
+            common::kConsensusCallContract, true, attrs, &broadcast_msg);
+        auto new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - (kCallContractDefaultUseGas + gas_usd) * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_TRUE(caller_info->locked());
+
+        // CallContract
+        transport::protobuf::Header leader_init_msg;
+        auto contract_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        uint64_t contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&contract_balance), block::kBlockSuccess);
+        ASSERT_TRUE(contract_info != nullptr);
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, broadcast_msg, from_prikey, contract_addr, attrs, false, &leader_init_msg);
+        uint64_t new_contract_balance = 0;
+        ASSERT_EQ(contract_info->GetBalance(&new_contract_balance), block::kBlockSuccess);
+        ASSERT_EQ(contract_balance - item_value * 3, new_contract_balance);
+
+        // UnlockCaller
+        ASSERT_TRUE(caller_info->locked());
+        from_balance = GetBalanceByPrikey(from_prikey);
+        transport::protobuf::Header leader_lock_msg;
+        NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
+            true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
+        new_from_balance = GetBalanceByPrikey(from_prikey);
+        ASSERT_EQ(new_from_balance, from_balance - 33111 * common::GlobalInfo::Instance()->gas_price() + item_value * 3);
+        ASSERT_FALSE(caller_info->locked());
     }
 }
 
