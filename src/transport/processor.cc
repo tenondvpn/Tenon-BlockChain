@@ -14,7 +14,6 @@ void Processor::RegisterProcessor(uint32_t type, MessageProcessor processor) {
     assert(type < common::kLegoMaxMessageTypeCount);
 //    assert(message_processor_[type] == nullptr);
     message_processor_[type] = processor;
-    std::cout << "register message type: " << type << std::endl;
 }
 
 void Processor::UnRegisterProcessor(uint32_t type) {

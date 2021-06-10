@@ -348,7 +348,13 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
-    uint32_t expect_leader_count = static_cast<uint32_t>(log2(double(elected_nodes.size() / 3)));
+    int32_t expect_leader_count = (int32_t)pow(
+        2.0,
+        (double)((int32_t)log2(double(elected_nodes.size() / 3))));
+    if (expect_leader_count > common::kImmutablePoolSize) {
+        expect_leader_count = common::kImmutablePoolSize;
+    }
+
     common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> leader_nodes;
     FtsGetNodes(

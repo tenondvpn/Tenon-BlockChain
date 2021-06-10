@@ -623,7 +623,7 @@ public:
         std::map<uint32_t, elect::MembersPtr> out_members;
         std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
         std::map<uint32_t, uint32_t> begin_index_map_;
-
+        int32_t expect_leader_count = (int32_t)pow(2.0, (double)((int32_t)log2(double(pri_vec.size() / 3))));
         for (uint32_t i = 0; i < pri_vec.size(); ++i) {
             auto net_id = network_id;
             auto iter = in_members.find(net_id);
@@ -641,7 +641,7 @@ public:
             std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
             security::CommitSecret secret;
             in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
-                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, "", i == 0 ? 0 : -1));
+                net_id, id, pubkey_str, begin_index_map_[net_id], "", 0, "", (int32_t)i < expect_leader_count ? i : -1));
             in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
             ++begin_index_map_[net_id];
         }
@@ -653,7 +653,7 @@ public:
                 iter->first,
                 iter->second,
                 index_map_iter->second,
-                1);
+                expect_leader_count);
             ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
             ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
@@ -1495,10 +1495,12 @@ std::map<uint32_t, std::string> TestMoreLeaderTransaction::pool_index_map_;
 
 TEST_F(TestMoreLeaderTransaction, LeaderCountTest) {
     for (uint32_t i = 3; i < 1024; ++i) {
-        int32_t expect_leader_count = (int32_t)pow(2.0, log2(double(i / 3)));
-        std::cout << i << ":" << expect_leader_count << std::endl;
+        int32_t expect_leader_count = (int32_t)pow(2.0, (double)((int32_t)log2(double(i / 3))));
+        std::cout << i << ":" << expect_leader_count
+            << ", i / 3: " << (i / 3)
+            << ", log2(double(i / 3)): " << log2(double(i / 3))
+            << std::endl;
     }
-
 }
 
 TEST_F(TestMoreLeaderTransaction, SomeNodeInvalid) {
