@@ -810,6 +810,8 @@ public:
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
         CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
+        int32_t from_pool_index = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        ASSERT_EQ(from_pool_index, 0);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
@@ -818,7 +820,12 @@ public:
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
+        std::cout << "from_pool_index: " << from_pool_index
+            << ", from addr: " << common::Encode::HexEncode(GetIdByPrikey(from_prikey))
+            << std::endl;
+
         if (bft::BftManager::Instance()->StartBft("", 0) != kBftSuccess) {
+            std::cout << "start bft failed!" << std::endl;
             return;
         }
 

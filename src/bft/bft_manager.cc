@@ -426,6 +426,7 @@ int BftManager::InitBft(
     }
 
     res = StartBft(bft_msg.gid(), pool_mod_index);
+    std::cout << "GetLeaderPoolIndex: " << pool_mod_index << ", start bft: " << res << std::endl;
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
             BFT_WARN("start [%s][%u][%llu] failed![%d]",
@@ -609,6 +610,7 @@ int BftManager::LeaderPrecommit(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
+        BFT_ERROR("check leader vaild failed!");
         return kBftError;
     }
 
@@ -689,6 +691,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
     leader_precommit_msg_ = msg;
+    std::cout << "leader precommit called success." << std::endl;
     return kBftSuccess;
 }
 

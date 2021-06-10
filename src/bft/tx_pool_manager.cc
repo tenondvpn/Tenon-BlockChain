@@ -5,6 +5,7 @@
 #include "common/string_utils.h"
 #include "common/global_info.h"
 #include "block/account_manager.h"
+#include "election/member_manager.h"
 #include "network/network_utils.h"
 #include "root/root_utils.h"
 
@@ -286,8 +287,14 @@ void TxPoolManager::GetTx(
         std::vector<TxItemPtr>& res_vec) {
     int valid_pool = -1;
     uint64_t height = 0;
+    int32_t leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
-    for (uint32_t i = prev_pool_index_; i < common::kImmutablePoolSize; ++i) {
+    for (int32_t i = prev_pool_index_; i < (int32_t)common::kImmutablePoolSize; ++i) {
+        if (i % leader_count != pool_mod_idx) {
+            continue;
+        }
+
         if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
             std::string pool_hash;
             uint64_t pool_height = 0;
@@ -313,7 +320,11 @@ void TxPoolManager::GetTx(
     }
 
     if (valid_pool < 0) {
-        for (uint32_t i = 0; i < prev_pool_index_; ++i) {
+        for (int32_t i = 0; i < (int32_t)prev_pool_index_; ++i) {
+            if (i % leader_count != pool_mod_idx) {
+                continue;
+            }
+
             if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
                 std::string pool_hash;
                 uint64_t pool_height = 0;
