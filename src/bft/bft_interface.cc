@@ -107,12 +107,14 @@ bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     int32_t local_pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
-    if ((int32_t)pool_index() != local_pool_mod_idx) {
+    int32_t leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        common::GlobalInfo::Instance()->network_id());
+    if ((int32_t)pool_index() % leader_count != local_pool_mod_idx) {
         BFT_ERROR("prepare message pool index invalid.[%u][%s][%d][%u]",
             common::GlobalInfo::Instance()->network_id(),
             common::Encode::HexEncode(bft_msg.node_id()).c_str(),
             local_pool_mod_idx,
-            pool_index());
+            (int32_t)pool_index() % leader_count);
         return false;
     }
 

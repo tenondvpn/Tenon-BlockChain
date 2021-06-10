@@ -657,6 +657,8 @@ public:
             ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
             ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
+
+        network_with_private_keys_[network_id] = pri_vec;
     }
 
     static void JoinNetwork(uint32_t network_id) {
@@ -810,31 +812,45 @@ public:
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
         CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
-        int32_t from_pool_index = common::GetPoolIndex(GetIdByPrikey(from_prikey));
-        ASSERT_EQ(from_pool_index, 0);
+
+
+        int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        int32_t leader_index = pool_index_from % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
+        auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, leader_index);
+        ASSERT_TRUE(leader_mem_ptr);
+        auto leader_id = leader_mem_ptr->id;
+        auto leader_private_key = network_with_private_keys_[network::kConsensusShardBeginNetworkId][leader_index];
+        leader_private_key = common::Encode::HexEncode(leader_private_key);
+        // leader_private_key = "12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
+
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
         
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-        std::cout << "from_pool_index: " << from_pool_index
-            << ", from addr: " << common::Encode::HexEncode(GetIdByPrikey(from_prikey))
-            << std::endl;
-
-        if (bft::BftManager::Instance()->StartBft("", 0) != kBftSuccess) {
-            std::cout << "start bft failed!" << std::endl;
-            return;
-        }
-
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
+
+        {
+            auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid)->second;
+            bft_ptr->leader_index_ = leader_index;
+        }
+
         std::vector<transport::protobuf::Header> backup_msgs;
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
+
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
             {
                 protobuf::BftMessage bft_msg;
@@ -842,9 +858,6 @@ public:
                 ASSERT_EQ(bft_msg.gid(), bft_gid);
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
             bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
             backup_msgs.push_back(bft::BftManager::Instance()->backup_prepare_msg_);
             {
@@ -856,7 +869,7 @@ public:
         }
         
         // precommit
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             auto back_msg = backup_msgs[i];
             bft::BftManager::Instance()->HandleMessage(back_msg);
@@ -869,10 +882,15 @@ public:
         }
         backup_msgs.clear();
 
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
+
             ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
             bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
@@ -890,16 +908,20 @@ public:
         auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             bft::BftManager::Instance()->HandleMessage(backup_msgs[i]);
         }
 
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
@@ -1018,8 +1040,16 @@ public:
             const std::string& to_prikey,
             std::map<std::string, std::string>& attrs,
             transport::protobuf::Header* leader_broadcast_msg) {
+        int32_t pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
+        int32_t leader_index = pool_index_to % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
+        auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, leader_index);
+        ASSERT_TRUE(leader_mem_ptr);
+        auto leader_id = leader_mem_ptr->id;
+        auto leader_private_key = network_with_private_keys_[network::kConsensusShardBeginNetworkId][leader_index];
+        leader_private_key = common::Encode::HexEncode(leader_private_key);
+        // leader_private_key = "12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
         // root create new account and add to consensus network
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(root_leader_msg);
         if (tx_type == common::kConsensusCreateContract) {
             protobuf::BftMessage bft_msg;
@@ -1052,15 +1082,24 @@ public:
         }
 
         usleep(bft::kBftStartDeltaTime);
-        ASSERT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
+        ASSERT_EQ(bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num), kBftSuccess);
 
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
 
+        {
+            auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid)->second;
+            bft_ptr->leader_index_ = leader_index;
+        }
+
         std::vector<transport::protobuf::Header> backup_msgs;
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
             {
                 protobuf::BftMessage bft_msg;
@@ -1068,9 +1107,9 @@ public:
                 ASSERT_EQ(bft_msg.gid(), bft_gid);
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
             bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
             backup_msgs.push_back(bft::BftManager::Instance()->backup_prepare_msg_);
             {
@@ -1082,13 +1121,17 @@ public:
         }
         
         // precommit
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             bft::BftManager::Instance()->HandleMessage(backup_msgs[i]);
         }
 
         backup_msgs.clear();
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
             ASSERT_TRUE(leader_precommit_msg.has_data());
 
@@ -1098,9 +1141,9 @@ public:
                 ASSERT_EQ(bft_msg.gid(), bft_gid);
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
             ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
             bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
             backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);
@@ -1133,13 +1176,17 @@ public:
         auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
-        SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             bft::BftManager::Instance()->HandleMessage(backup_msgs[i]);
         }
 
         *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
-        for (uint32_t i = 1; i < kConsensusNodeCount; ++i) {
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
             ASSERT_TRUE(leader_commit_msg.has_data());
             {
@@ -1155,9 +1202,9 @@ public:
                 db::Db::Instance()->Put(db_batch);
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kConsensusNodeIdEndFix);
-            SetGloableInfo(from_data, network::kConsensusShardBeginNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
+                network::kConsensusShardBeginNetworkId);
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
         }
@@ -1341,29 +1388,50 @@ public:
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
 
+        int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        int32_t pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
+        int32_t leader_index = pool_index_to % elect::MemberManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
+        auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, leader_index);
+        ASSERT_TRUE(leader_mem_ptr);
+        auto leader_id = leader_mem_ptr->id;
+        auto leader_private_key = network_with_private_keys_[network::kRootCongressNetworkId][leader_index];
+        leader_private_key = common::Encode::HexEncode(leader_private_key);
+        // leader_private_key = "22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
         // prepare
-        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-        EXPECT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
+        EXPECT_EQ(bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num), kBftSuccess);
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
+        ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         auto leader_sec = iter->second->secret_;
-        iter->second->backup_prepare_response_[0]->secret = leader_sec;
+        iter->second->backup_prepare_response_[leader_index]->secret = iter->second->secret_;
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         std::vector<transport::protobuf::Header> backup_msgs;
-        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+        {
+            auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid)->second;
+            bft_ptr->leader_index_ = leader_index;
+        }
+
+        for (uint32_t i = 0; i < kRootNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 if (rand() % 3 < 2) {
                     continue;
                 }
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+//             char from_data[128];
+//             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
-            SetGloableInfo(from_data, network::kRootCongressNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
             ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
             bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
             AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
@@ -1377,9 +1445,9 @@ public:
         }
 
         // precommit
-        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = leader_sec;
-        bft::BftManager::Instance()->bft_hash_map_[bft_gid]->backup_prepare_response_[0]->secret = leader_sec;
+        bft::BftManager::Instance()->bft_hash_map_[bft_gid]->backup_prepare_response_[leader_index]->secret = leader_sec;
         uint32_t prepare_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++prepare_count;
@@ -1389,17 +1457,23 @@ public:
             }
             bft::BftManager::Instance()->HandleMessage(*iter);
         }
+
         backup_msgs.clear();
+        int round_count = 0;
     backup_reprecommit_goto_tag:
-        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+        for (uint32_t i = 0; i < kRootNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 continue;
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
-            SetGloableInfo(from_data, network::kRootCongressNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
             if (i != 7) {
                 ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
             }
@@ -1420,9 +1494,9 @@ public:
             common::GlobalInfo::Instance()->id());
         auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
-        SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = leader_sec;
-        bft_ptr->backup_prepare_response_[0]->secret = leader_sec;
+        bft_ptr->backup_prepare_response_[leader_index]->secret = leader_sec;
         uint32_t handled_count = 0;
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
             ++handled_count;
@@ -1439,21 +1513,29 @@ public:
                     bft::BftManager::Instance()->LeaderReChallenge(bft_ptr);
                 }
                 backup_msgs.clear();
+                ++round_count;
+                if (round_count >= 2) {
+                    ASSERT_FALSE(true);
+                }
                 goto backup_reprecommit_goto_tag;
             }
         }
 
         backup_msgs.clear();
         *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
-        for (uint32_t i = 1; i < kRootNodeCount; ++i) {
+        for (uint32_t i = 0; i < kRootNodeCount; ++i) {
+            if (i == leader_index) {
+                continue;
+            }
+
             if (invalid_root_node_vec.find(i) != invalid_root_node_vec.end()) {
                 continue;
             }
 
-            char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
-            SetGloableInfo(from_data, network::kRootCongressNetworkId);
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
         }
@@ -1496,9 +1578,11 @@ public:
 private:
     static std::map<uint32_t, std::string> pool_index_map_;
     std::unordered_set<std::string> created_gids_;
+    static std::map<uint32_t, std::vector<std::string>> network_with_private_keys_;
 };
 
 std::map<uint32_t, std::string> TestMoreLeaderTransaction::pool_index_map_;
+std::map<uint32_t, std::vector<std::string>> TestMoreLeaderTransaction::network_with_private_keys_;
 
 TEST_F(TestMoreLeaderTransaction, LeaderCountTest) {
     for (uint32_t i = 3; i < 1024; ++i) {

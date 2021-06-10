@@ -426,7 +426,6 @@ int BftManager::InitBft(
     }
 
     res = StartBft(bft_msg.gid(), pool_mod_index);
-    std::cout << "GetLeaderPoolIndex: " << pool_mod_index << ", start bft: " << res << std::endl;
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
             BFT_WARN("start [%s][%u][%llu] failed![%d]",
@@ -511,6 +510,10 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         bft_ptr->network_id(),
         common::GlobalInfo::Instance()->id());
     if (member_idx == elect::kInvalidMemberIndex) {
+        BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
+            member_idx,
+            bft_ptr->network_id(),
+            common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str());
         return kBftError;
     }
 
@@ -691,7 +694,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
     leader_precommit_msg_ = msg;
-    std::cout << "leader precommit called success." << std::endl;
     return kBftSuccess;
 }
 
@@ -1241,11 +1243,15 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), bft_ptr->leader_index());
+    auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+        bft_msg.net_id(),
+        bft_ptr->leader_index());
     if (!mem_ptr) {
         return kBftError;
     }
 
+    std::string pubkey_str;
+    mem_ptr->pubkey.Serialize(pubkey_str);
     if (!security::Schnorr::Instance()->Verify(
             bft_ptr->prepare_hash(),
             sign,

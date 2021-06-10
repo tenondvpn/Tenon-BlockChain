@@ -141,6 +141,7 @@ void ElectManager::ProcessNewElectBlock(
                     std::unordered_map<std::string, uint32_t>>();
             begin_index_map[net_id] = 0;
         }
+
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
         in_members[net_id]->push_back(std::make_shared<BftMember>(
