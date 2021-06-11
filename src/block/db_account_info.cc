@@ -765,6 +765,10 @@ int DbAccountInfo::AddNewTimeBlock(
         uint64_t height,
         uint64_t block_tm,
         db::DbWriteBach& db_batch) {
+    std::cout << "0 success add time block height: " << height
+        << ", block_tm: " << block_tm
+        << ", latest_time_block_heigth_: " << latest_time_block_heigth_
+        << std::endl;
     if (latest_time_block_heigth_ == common::kInvalidUint64) {
         std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
         std::string tmp_str;
@@ -781,7 +785,7 @@ int DbAccountInfo::AddNewTimeBlock(
         }
     }
 
-    if (latest_time_block_heigth_ > height) {
+    if (latest_time_block_heigth_ != common::kInvalidUint64 && latest_time_block_heigth_ > height) {
         return kBlockSuccess;
     }
 
@@ -791,6 +795,7 @@ int DbAccountInfo::AddNewTimeBlock(
     db_batch.Put(tmp_key, std::to_string(block_tm));
     latest_time_block_heigth_ = height;
     latest_time_block_tm_ = block_tm;
+    std::cout << "success add time block height: " << height << ", block_tm: " << block_tm << std::endl;
     return kBlockSuccess;
 }
 

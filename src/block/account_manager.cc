@@ -560,6 +560,7 @@ int AccountManager::SetAccountAttrs(
 
                     if (tx_info.type() == common::kConsensusRootTimeBlock) {
                         if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
+                            std::cout << "common::kConsensusRootTimeBlock coming called." << std::endl;
                             account_info->AddNewTimeBlock(
                                 tmp_now_height,
                                 common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()),

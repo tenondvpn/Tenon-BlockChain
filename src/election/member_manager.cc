@@ -90,7 +90,10 @@ int32_t MemberManager::IsLeader(
 uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
-    assert(node_index_map_[network_id] != nullptr);
+    if (node_index_map_[network_id] != nullptr) {
+        return kInvalidMemberIndex;
+    }
+
     elect::NodeIndexMapPtr node_index_map = node_index_map_[network_id];
     if (node_index_map == nullptr) {
         return kInvalidMemberIndex;

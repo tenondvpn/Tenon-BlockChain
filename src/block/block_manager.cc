@@ -163,9 +163,12 @@ int BlockManager::InitRootSingleBlocks() {
 }
 
 int BlockManager::InitRootTimeBlocks() {
+    std::cout << "call InitRootTimeBlocks." << std::endl;
     auto account_info = AccountManager::Instance()->GetAcountInfo(
         root::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
+        BLOCK_INFO("get root single block tx address failed![%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kBlockSuccess;
     }
 
@@ -174,16 +177,20 @@ int BlockManager::InitRootTimeBlocks() {
     if (account_info->GetLatestTimeBlock(
             &latest_time_block_height,
             &latest_time_block_tm) != kBlockSuccess) {
+        BLOCK_INFO("get root single block GetLatestTimeBlock failed![%s]",
+            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kBlockSuccess;
     }
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
         latest_time_block_height,
         latest_time_block_tm);
+    std::cout << "call InitRootTimeBlocks success." << std::endl;
     return kBlockSuccess;
 }
 
 int BlockManager::InitRootElectBlocks() {
+    std::cout << "call InitRootElectBlocks." << std::endl;
     auto account_info = AccountManager::Instance()->GetAcountInfo(
         root::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
@@ -212,6 +219,7 @@ int BlockManager::InitRootElectBlocks() {
         elect_block,
         false);
     BLOCK_INFO("load elect block success.");
+    std::cout << "call InitRootElectBlocks success." << std::endl;
     return kBlockSuccess;
 }
 

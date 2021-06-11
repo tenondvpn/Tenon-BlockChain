@@ -61,13 +61,14 @@ int GenesisBlockInit::CreateElectBlock(
     tx_info->set_network_id(shard_netid);
     auto all_exits_attr = tx_info->add_attr();
     elect::protobuf::ElectBlock ec_block;
+    int32_t expect_leader_count = (int32_t)pow(2.0, (double)((int32_t)log2(double(genesis_nodes.size() / 3))));
+    int32_t node_idx = 0;
     for (auto iter = genesis_nodes.begin(); iter != genesis_nodes.end(); ++iter) {
         auto in = ec_block.add_in();
         in->set_net_id(shard_netid);
         in->set_pubkey((*iter)->pubkey_str());
-        in->set_dht_key((*iter)->dht_key());
-        in->set_public_ip((*iter)->public_ip());
-        in->set_public_port((*iter)->public_port);
+        in->set_pool_idx_mod_num(node_idx < expect_leader_count ? node_idx : -1);
+        ++node_idx;
     }
 
     auto ec_block_attr = tx_info->add_attr();
