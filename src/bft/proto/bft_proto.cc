@@ -47,6 +47,7 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_pool_index(bft_ptr->pool_index());
+    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     std::string sign_challenge_str;
     std::string sign_response_str;
     sign.Serialize(sign_challenge_str, sign_response_str);

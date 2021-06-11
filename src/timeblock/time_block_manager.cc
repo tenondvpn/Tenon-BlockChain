@@ -135,6 +135,8 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
             // Correction time
             auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
             auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu]",
+                offset_tm, real_offset);
             if (real_offset > offset_tm) {
                 *new_time_block_tm += real_offset - offset_tm;
             } else {
@@ -153,6 +155,8 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
         // Correction time
         auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
         auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+        BFT_ERROR("BackupheckNewTimeBlockValid offset_tm[%llu]real_offset[%llu]",
+            offset_tm, real_offset);
         if (real_offset > offset_tm) {
             latest_time_block_tm_ += real_offset - offset_tm;
         } else {
