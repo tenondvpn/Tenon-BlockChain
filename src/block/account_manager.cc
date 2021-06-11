@@ -132,7 +132,6 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
             tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
                 height,
                 common::StringUtil::ToUint64(tx_info.attr(i).value()));
-            std::cout << "handle time block: " << tx_info.attr(i).value() << std::endl;
         }
     }
 
@@ -561,7 +560,6 @@ int AccountManager::SetAccountAttrs(
 
                     if (tx_info.type() == common::kConsensusRootTimeBlock) {
                         if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
-                            std::cout << "common::kConsensusRootTimeBlock coming called." << tx_info.attr(attr_idx).value() << std::endl;
                             account_info->AddNewTimeBlock(
                                 tmp_now_height,
                                 common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()),

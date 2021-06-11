@@ -765,10 +765,6 @@ int DbAccountInfo::AddNewTimeBlock(
         uint64_t height,
         uint64_t block_tm,
         db::DbWriteBach& db_batch) {
-    std::cout << "0 success add time block height: " << height
-        << ", block_tm: " << block_tm
-        << ", latest_time_block_heigth_: " << latest_time_block_heigth_
-        << std::endl;
     if (latest_time_block_heigth_ == common::kInvalidUint64) {
         std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
         std::string tmp_str;
@@ -795,11 +791,6 @@ int DbAccountInfo::AddNewTimeBlock(
     db_batch.Put(tmp_b_key, std::to_string(block_tm));
     latest_time_block_heigth_ = height;
     latest_time_block_tm_ = block_tm;
-    std::cout << "success add time block height: " << height
-        << ", key: " << common::Encode::HexEncode(tmp_h_key)
-        << ", block_tm: " << block_tm
-        << ", key: " << common::Encode::HexEncode(tmp_b_key)
-        << std::endl;
     return kBlockSuccess;
 }
 
@@ -826,11 +817,6 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
     }
 
     latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
-    std::cout << "success get time block height: " << latest_time_block_heigth_
-        << ", key: " << common::Encode::HexEncode(tmp_h_key)
-        << ", block_tm: " << latest_time_block_tm_
-        << ", key: " << common::Encode::HexEncode(tmp_b_key)
-        << std::endl;
     *height = latest_time_block_heigth_;
     *block_tm = latest_time_block_tm_;
     return kBlockSuccess;

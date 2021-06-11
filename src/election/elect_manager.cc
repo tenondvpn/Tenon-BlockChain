@@ -144,10 +144,6 @@ void ElectManager::ProcessNewElectBlock(
 
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
-        std::cout << "elect block node coming pub key: " << common::Encode::HexEncode(in[i].pubkey())
-            << ", id: " << common::Encode::HexEncode(id)
-            << ", net_id: " << net_id
-            << std::endl;
         in_members[net_id]->push_back(std::make_shared<BftMember>(
             net_id,
             id,

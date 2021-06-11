@@ -92,7 +92,6 @@ uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& n
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
     elect::NodeIndexMapPtr node_index_map = node_index_map_[network_id];
     if (node_index_map == nullptr) {
-        std::cout << "GetMemberIndex network_id error: " << network_id << std::endl;
         return kInvalidMemberIndex;
     }
 
@@ -100,7 +99,6 @@ uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& n
     assert(!node_index_map->empty());
     auto iter = node_index_map->find(node_id);
     if (iter == node_index_map->end()) {
-        std::cout << "GetMemberIndex node id error: " << common::Encode::HexEncode(node_id) << std::endl;
         return elect::kInvalidMemberIndex;
     }
 
@@ -113,7 +111,6 @@ elect::BftMemberPtr MemberManager::GetMember(
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
     uint32_t mem_index = GetMemberIndex(network_id, node_id);
     if (mem_index == elect::kInvalidMemberIndex) {
-        std::cout << "GetMember mem_index invalid." << std::endl;
         return nullptr;
     }
     std::lock_guard<std::mutex> guard(all_mutex_);

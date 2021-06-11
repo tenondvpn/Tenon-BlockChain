@@ -188,10 +188,6 @@ void Route::Broadcast(transport::protobuf::Header& header) {
 
     uint32_t src_net_id = kNetworkMaxDhtCount;
     if (header.has_src_dht_key()) {
-        if (header.src_dht_key().size() != dht::kDhtKeySize) {
-            std::cout << "invalid dht key: " << header.type() << std::endl;
-        }
-
         src_net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.src_dht_key());
     }
 

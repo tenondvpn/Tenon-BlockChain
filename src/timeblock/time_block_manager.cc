@@ -54,7 +54,6 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
         return kTimeBlockError;
     }
 
-    std::cout << "new_time_block_tm: " << new_time_block_tm << std::endl;
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootTimeBlock);
@@ -134,14 +133,12 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
         *new_time_block_tm = latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds;
         if (!latest_time_blocks_.empty()) {
             // Correction time
-            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) /
-                latest_time_blocks_.size();
-            if (kTimeBlockCreatePeriodSeconds > offset_tm) {
-                *new_time_block_tm += (kTimeBlockCreatePeriodSeconds - offset_tm) *
-                    latest_time_blocks_.size();
+            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
+            auto real_offset = kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+            if (real_offset > offset_tm) {
+                *new_time_block_tm += real_offset - offset_tm;
             } else {
-                *new_time_block_tm -= (offset_tm - kTimeBlockCreatePeriodSeconds) *
-                    latest_time_blocks_.size();
+                *new_time_block_tm += offset_tm - real_offset;
             }
         }
 
@@ -154,21 +151,16 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     if (!latest_time_blocks_.empty()) {
         // Correction time
-        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front()) /
-            latest_time_blocks_.size();
-        if (kTimeBlockCreatePeriodSeconds > offset_tm) {
-            latest_time_block_tm_ += (kTimeBlockCreatePeriodSeconds - offset_tm) *
-                latest_time_blocks_.size();
+        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
+        auto real_offset = kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+        if (real_offset > offset_tm) {
+            latest_time_block_tm_ += real_offset - offset_tm;
         } else {
-            latest_time_block_tm_ -= (offset_tm - kTimeBlockCreatePeriodSeconds) *
-                latest_time_blocks_.size();
+            latest_time_block_tm_ += offset_tm - real_offset;
         }
     }
 
     latest_time_block_tm_ += kTimeBlockCreatePeriodSeconds;
-    std::cout << "backup new_time_block_tm: " << new_time_block_tm
-        << ", latest_time_block_tm_: " << latest_time_block_tm_
-        << std::endl;
     if (new_time_block_tm < (latest_time_block_tm_ + kTimeBlockTolerateSeconds) &&
             new_time_block_tm > (latest_time_block_tm_ - kTimeBlockTolerateSeconds)) {
         return true;
