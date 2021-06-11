@@ -18,7 +18,6 @@ enum RootErrorCode {
     kTimeBlockError = 1,
 };
 
-static const uint64_t kTimeBlockCreatePeriodSeconds = 600ll;
 static const uint64_t kTimeBlockTolerateSeconds = 30ll;
 static const uint32_t kTimeBlockAvgCount = 6u;
 static const uint64_t kCheckTimeBlockPeriodUs = 1000000llu;

@@ -128,13 +128,13 @@ void TimeBlockManager::UpdateTimeBlock(
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
     auto now_tm = common::TimeUtils::TimestampSeconds();
-    if (now_tm >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
+    if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
-        *new_time_block_tm = latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds;
+        *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
         if (!latest_time_blocks_.empty()) {
             // Correction time
             auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
-            auto real_offset = kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+            auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
             if (real_offset > offset_tm) {
                 *new_time_block_tm += real_offset - offset_tm;
             } else {
@@ -152,7 +152,7 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     if (!latest_time_blocks_.empty()) {
         // Correction time
         auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
-        auto real_offset = kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
+        auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
         if (real_offset > offset_tm) {
             latest_time_block_tm_ += real_offset - offset_tm;
         } else {
@@ -160,7 +160,7 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
         }
     }
 
-    latest_time_block_tm_ += kTimeBlockCreatePeriodSeconds;
+    latest_time_block_tm_ += common::kTimeBlockCreatePeriodSeconds;
     if (new_time_block_tm < (latest_time_block_tm_ + kTimeBlockTolerateSeconds) &&
             new_time_block_tm > (latest_time_block_tm_ - kTimeBlockTolerateSeconds)) {
         return true;
@@ -190,7 +190,7 @@ bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
 
 void TimeBlockManager::CreateTimeBlockTx() {
     auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-    if (now_tm_sec >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
+    if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             int32_t pool_mod_num = -1;
             if (ThisNodeIsLeader(&pool_mod_num)) {
@@ -208,7 +208,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
                         << ", network id: " << common::GlobalInfo::Instance()->network_id()
                         << ", now_tm_sec: " << now_tm_sec
                         << ", latest_time_block_tm_: " << latest_time_block_tm_
-                        << ", kTimeBlockCreatePeriodSeconds: " << kTimeBlockCreatePeriodSeconds
+                        << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
                         << std::endl;
                 }
             }

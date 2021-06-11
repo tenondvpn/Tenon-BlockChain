@@ -68,7 +68,7 @@ private:
 TEST_F(TestTimeBlockManager, LeaderNewTimeBlockValid) {
     TimeBlockManager tmblock_manager;
     tmblock_manager.latest_time_block_height_ = 0;
-    tmblock_manager.latest_time_block_tm_ = common::TimeUtils::TimestampSeconds() - kTimeBlockCreatePeriodSeconds;
+    tmblock_manager.latest_time_block_tm_ = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
     std::cout << "tmblock_manager.latest_time_block_tm_: " << tmblock_manager.latest_time_block_tm_ << std::endl;
     tmblock_manager.latest_time_blocks_.push_back(tmblock_manager.latest_time_block_tm_);
     uint64_t new_tm;

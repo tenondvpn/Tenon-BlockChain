@@ -102,6 +102,8 @@ static const uint16_t kRouteUdpPortRangeMin = 65000u;
 static const uint16_t kRouteUdpPortRangeMax = 65100u;
 static const uint16_t kVpnUdpPortRangeMin = 65100u;
 static const uint16_t kVpnUdpPortRangeMax = 65200u;
+static const uint64_t kTimeBlockCreatePeriodSeconds = 600ll;
+
 static const int64_t kInvalidInt64 = (std::numeric_limits<int64_t>::max)();
 static const uint64_t kInvalidUint64 = (std::numeric_limits<uint64_t>::max)();
 static const uint32_t kInvalidUint32 = (std::numeric_limits<uint32_t>::max)();

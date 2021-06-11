@@ -563,7 +563,7 @@ public:
             tx_info->set_network_id(network::kRootCongressNetworkId);
             auto all_exits_attr = tx_info->add_attr();
             all_exits_attr->set_key(tmblock::kAttrTimerBlock);
-            auto now_tm = common::TimeUtils::TimestampSeconds() - tmblock::kTimeBlockCreatePeriodSeconds;
+            auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
             all_exits_attr->set_value(std::to_string(now_tm));
             tenon_block.set_prehash(root_pre_hash);
             tenon_block.set_version(common::kTransactionVersion);

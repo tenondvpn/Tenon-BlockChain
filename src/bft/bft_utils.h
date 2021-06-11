@@ -9,7 +9,6 @@
 #include "vss/vss_manager.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
-#include "timeblock/time_block_utils.h"
 
 #define BFT_DEBUG(fmt, ...) TENON_DEBUG("[bft]" fmt, ## __VA_ARGS__)
 #define BFT_INFO(fmt, ...) TENON_INFO("[bft]" fmt, ## __VA_ARGS__)
@@ -93,7 +92,7 @@ static const uint32_t kBftNeighborCount = 7u;
 static const uint32_t kBftLeaderBitmapSize = 640u;
 static const uint32_t kBftTimeout = 6u * 1000u * 1000u;  // bft timeout 6s
 // tx pool timeout 3 * kTimeBlockCreatePeriodSeconds seconds
-static const uint32_t kTxPoolTimeoutSeconds = 3 * tmblock::kTimeBlockCreatePeriodSeconds;
+static const uint32_t kTxPoolTimeoutSeconds = 3 * common::kTimeBlockCreatePeriodSeconds;
 static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
 static const uint32_t kBftLeaderPrepareWaitPeriod = 3u * 1000u * 1000u;
 static const uint32_t kPrevTransportVersion = 0;
