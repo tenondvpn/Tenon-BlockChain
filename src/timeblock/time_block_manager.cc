@@ -11,6 +11,7 @@
 #include "bft/bft_utils.h"
 #include "security/schnorr.h"
 #include "election/proto/elect_proto.h"
+#include "election/elect_manager.h"
 #include "dht/dht_key.h"
 #include "transport/transport_utils.h"
 
@@ -175,13 +176,26 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 void TimeBlockManager::CreateTimeBlockTx() {
     auto now_tm_sec = common::TimeUtils::TimestampSeconds();
     if (now_tm_sec >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
-        transport::protobuf::Header msg;
-        if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
-            network::Route::Instance()->Send(msg);
-            network::Route::Instance()->SendToLocal(msg);
+        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+                network::kRootCongressNetworkId);
+            auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+                common::GlobalInfo::Instance()->network_id(),
+                common::GlobalInfo::Instance()->id());
+            auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+                common::GlobalInfo::Instance()->network_id(),
+                common::GlobalInfo::Instance()->id());
+            if (mem_ptr != nullptr && mem_index % leader_count == mem_ptr->pool_index_mod_num) {
+                transport::protobuf::Header msg;
+                if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
+                    network::Route::Instance()->Send(msg);
+                    network::Route::Instance()->SendToLocal(msg);
+                }
+            }
         }
     }
 
+    std::cout << "CreateTimeBlockTx called!" << std::endl;
     create_tm_block_tick_.CutOff(
         kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));

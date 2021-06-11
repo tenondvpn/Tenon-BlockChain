@@ -318,6 +318,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
     }
 
     fclose(root_gens_init_block_file);
+    std::cout << "create root genesis blocks success." << std::endl;
     return kInitSuccess;
 }
 
@@ -376,6 +377,7 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
         }
     }
 
+    std::cout << "create shard genesis blocks success." << std::endl;
     return kInitSuccess;
 }
 
