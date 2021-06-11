@@ -93,6 +93,14 @@ bool IsRootSingleBlockTx(uint32_t tx_type) {
     return false;
 }
 
+bool IsShardSingleBlockTx(uint32_t tx_type) {
+    if (tx_type == common::kConsensusStatistic) {
+        return true;
+    }
+
+    return false;
+}
+
 }  // namespace bft
 
 }  //namespace tenon

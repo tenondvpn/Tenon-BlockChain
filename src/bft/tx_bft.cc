@@ -439,6 +439,42 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                 BFT_ERROR("BackupNormalCheck failed!");
                 return check_res;
             }
+        } else if(local_tx_info->tx.type() == common::kConsensusStatistic) {
+            if (tx_info.gas_limit() != 0) {
+                return kBftInvalidPackage;
+            }
+
+            if (tx_info.balance() != 0) {
+                return kBftInvalidPackage;
+            }
+
+            if (tx_info.gas_used() != 0) {
+                return kBftInvalidPackage;
+            }
+
+            for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+                if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+                    auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
+                    if (iter == local_tx_info->attr_map.end()) {
+                        return kBftInvalidPackage;
+                    }
+
+                    if (iter->second != tx_info.attr(i).value()) {
+                        return kBftInvalidPackage;
+                    }
+                }
+
+                if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+                    auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
+                    if (iter == local_tx_info->attr_map.end()) {
+                        return kBftInvalidPackage;
+                    }
+
+                    if (iter->second != tx_info.attr(i).value()) {
+                        return kBftInvalidPackage;
+                    }
+                }
+            }
         } else {
             switch (local_tx_info->tx.call_contract_step()) {
             case contract::kCallStepDefault: {
@@ -1725,14 +1761,17 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_gas_price(common::GlobalInfo::Instance()->gas_price());
         tx.set_status(kBftSuccess);
         if (tx.type() == common::kConsensusCallContract ||
-                tx.type() == common::kConsensusCreateContract) {
+            tx.type() == common::kConsensusCreateContract) {
             if (LeaderAddCallContract(
-                    tx_vec[i],
-                    acc_balance_map,
-                    locked_account_map,
-                    tx) != kBftSuccess) {
+                tx_vec[i],
+                acc_balance_map,
+                locked_account_map,
+                tx) != kBftSuccess) {
                 continue;
             }
+        } else if (tx.type() == common::kConsensusStatistic) {
+            tx.set_gas_used(0);
+            tx.set_balance(0);
         } else {
             if (LeaderAddNormalTransaction(
                     tx_vec[i],

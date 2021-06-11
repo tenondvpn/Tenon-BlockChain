@@ -123,6 +123,7 @@ std::string GetBlockHash(const protobuf::Block& block);
 uint32_t NewAccountGetNetworkId(const std::string& addr);
 int32_t GetLeaderPoolIndex();
 bool IsRootSingleBlockTx(uint32_t tx_type);
+bool IsShardSingleBlockTx(uint32_t tx_type);
 
 }  // namespace bft
 

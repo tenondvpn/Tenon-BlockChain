@@ -12,6 +12,7 @@
 #include "block/account_manager.h"
 #include "common/hash.h"
 #include "common/global_info.h"
+#include "common/random.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
 #include "election/member_manager.h"
@@ -22,6 +23,7 @@
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
 #include "statistics/statistics.h"
+#include "timeblock/time_block_utils.h"
 
 namespace tenon {
 
@@ -244,6 +246,10 @@ void BftManager::HandleRootTxBlock(
             exit(0);
         }
 
+        if (tx_list[0].type() == common::kConsensusRootTimeBlock) {
+            ShardAddTimeBlockStatisticTransaction(tx_bft.to_tx().block().height(), tx_list[0]);
+        }
+
         return;
     }
 
@@ -275,6 +281,45 @@ void BftManager::HandleRootTxBlock(
     if (pool_mod_index >= 0) {
         StartBft("", pool_mod_index);
     }
+}
+
+int BftManager::ShardAddTimeBlockStatisticTransaction(
+        uint64_t tmblock_height,
+        bft::protobuf::TxInfo& tm_tx_info) {
+    uint64_t tmblock_tm = 0;
+    for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
+        if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
+            tmblock_tm = common::StringUtil::ToUint64(tm_tx_info.attr(i).value());
+            break;
+        }
+    }
+
+    if (tmblock_tm == 0) {
+        return kBftError;
+    }
+
+    protobuf::TxInfo tx_info;
+    tx_info.set_type(common::kConsensusRootTimeBlock);
+    tx_info.set_from(common::StringUtil::Format(
+        "%s%4d",
+        common::kStatisticFromAddressPrefix.c_str(),
+        common::Random::RandomInt32() % 10000));
+    tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm)));
+    tx_info.set_gas_limit(0llu);
+    tx_info.set_amount(0);
+    tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
+    auto height_attr = tx_info.add_attr();
+    height_attr->set_key(tmblock::kAttrTimerBlockHeight);
+    height_attr->set_value(std::to_string(tmblock_height));
+    auto tm_attr = tx_info.add_attr();
+    tm_attr->set_key(tmblock::kAttrTimerBlockTm);
+    tm_attr->set_value(std::to_string(tmblock_tm));
+    if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
+        BFT_ERROR("dispatch pool failed!");
+        return kBftError;
+    }
+
+    return kBftSuccess;
 }
 
 void BftManager::RootCommitAddNewAccount(
@@ -656,9 +701,9 @@ int BftManager::LeaderPrecommit(
         return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
-        BFT_ERROR("LeaderPrecommit oppose", bft_ptr);
+        BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
     } else {
-        BFT_ERROR("LeaderPrecommit waiting", bft_ptr);
+        BFT_DEBUG("LeaderPrecommit waiting", bft_ptr);
         // continue waiting, do nothing.
     }
 
@@ -752,10 +797,10 @@ int BftManager::BackupPrecommit(
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
+            header.from_ip(), header.from_port(), 0, msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
+            header.from_ip(), header.from_port(), 0, msg);
     }
 
     backup_precommit_msg_ = msg;
@@ -821,10 +866,10 @@ int BftManager::LeaderCommit(
         return LeaderReChallenge(bft_ptr);
     } else if (res == kBftOppose) {
         RemoveBft(bft_ptr->gid());
-        BFT_ERROR("LeaderCommit oppose", bft_ptr);
+        BFT_DEBUG("LeaderCommit oppose", bft_ptr);
     } else {
         // continue waiting, do nothing.
-        BFT_ERROR("LeaderCommit waiting", bft_ptr);
+        BFT_DEBUG("LeaderCommit waiting", bft_ptr);
     }
 
     return kBftSuccess;
@@ -881,7 +926,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     LeaderBroadcastToAcc(bft_ptr->prpare_block());
     RemoveBft(bft_ptr->gid());
     leader_commit_msg_ = msg;
-    BFT_ERROR("LeaderCommit");
+    BFT_DEBUG("LeaderCommit");
     return kBftSuccess;
 }
 
@@ -1012,7 +1057,7 @@ int BftManager::BackupCommit(
 
     bft_ptr->set_status(kBftCommited);
 //     LeaderBroadcastToAcc(bft_ptr->prpare_block());
-    BFT_ERROR("BackupCommit");
+    BFT_DEBUG("BackupCommit");
     RemoveBft(bft_ptr->gid());
     // start new bft
     return kBftSuccess;
