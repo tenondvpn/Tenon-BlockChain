@@ -247,6 +247,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         all_exits_attr->set_key(tmblock::kAttrTimerBlock);
         auto now_tm = common::TimeUtils::TimestampSeconds() - tmblock::kTimeBlockCreatePeriodSeconds;
         all_exits_attr->set_value(std::to_string(now_tm));
+        std::cout << "set init timestamp: " << now_tm << std::endl;
         tenon_block.set_prehash(root_pre_hash);
         tenon_block.set_version(common::kTransactionVersion);
         tenon_block.set_elect_ver(0);
