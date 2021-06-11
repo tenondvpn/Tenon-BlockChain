@@ -831,7 +831,8 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
         << ", block_tm: " << latest_time_block_tm_
         << ", key: " << common::Encode::HexEncode(tmp_b_key)
         << std::endl;
-
+    *height = latest_time_block_heigth_;
+    *block_tm = latest_time_block_tm_;
     return kBlockSuccess;
 }
 
