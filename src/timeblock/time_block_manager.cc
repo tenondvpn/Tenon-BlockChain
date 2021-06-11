@@ -54,6 +54,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
         return kTimeBlockError;
     }
 
+    std::cout << "new_time_block_tm: " << new_time_block_tm << std::endl;
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootTimeBlock);
@@ -165,6 +166,9 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     }
 
     latest_time_block_tm_ += kTimeBlockCreatePeriodSeconds;
+    std::cout << "backup new_time_block_tm: " << new_time_block_tm
+        << ", latest_time_block_tm_: " << latest_time_block_tm_
+        << std::endl;
     if (new_time_block_tm < (latest_time_block_tm_ + kTimeBlockTolerateSeconds) &&
             new_time_block_tm > (latest_time_block_tm_ - kTimeBlockTolerateSeconds)) {
         return true;

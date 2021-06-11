@@ -69,9 +69,16 @@ TEST_F(TestTimeBlockManager, LeaderNewTimeBlockValid) {
     TimeBlockManager tmblock_manager;
     tmblock_manager.latest_time_block_height_ = 0;
     tmblock_manager.latest_time_block_tm_ = common::TimeUtils::TimestampSeconds() - kTimeBlockCreatePeriodSeconds;
+    tmblock_manager.latest_time_blocks_.push_back(tmblock_manager.latest_time_block_tm_);
     uint64_t new_tm;
     tmblock_manager.LeaderNewTimeBlockValid(&new_tm);
     std::cout << "new_tm: " << new_tm << std::endl;
+    for (uint32_t i = 0; i < 10; ++i) {
+        tmblock_manager.latest_time_block_tm_ = new_tm;
+        tmblock_manager.latest_time_blocks_.push_back(new_tm);
+        tmblock_manager.LeaderNewTimeBlockValid(&new_tm);
+        std::cout << i <<" new_tm: " << new_tm << std::endl;
+    }
 }
 
 }  // namespace test

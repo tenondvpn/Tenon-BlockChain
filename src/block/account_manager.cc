@@ -132,6 +132,7 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
             tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
                 height,
                 common::StringUtil::ToUint64(tx_info.attr(i).value()));
+            std::cout << "handle time block: " << tx_info.attr(i).value() << std::endl;
         }
     }
 

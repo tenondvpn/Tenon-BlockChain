@@ -185,7 +185,7 @@ int BlockManager::InitRootTimeBlocks() {
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
         latest_time_block_height,
         latest_time_block_tm);
-    std::cout << "call InitRootTimeBlocks success." << std::endl;
+    std::cout << "call InitRootTimeBlocks success." << latest_time_block_height << ":" << latest_time_block_tm << std::endl;
     return kBlockSuccess;
 }
 
