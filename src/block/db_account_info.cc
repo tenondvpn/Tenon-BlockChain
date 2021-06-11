@@ -789,13 +789,17 @@ int DbAccountInfo::AddNewTimeBlock(
         return kBlockSuccess;
     }
 
-    std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
-    db_batch.Put(tmp_key, std::to_string(height));
-    tmp_key = dict_key_ + "_" + kFieldTimeBlock;
-    db_batch.Put(tmp_key, std::to_string(block_tm));
+    std::string tmp_h_key = dict_key_ + "_" + kFieldTimeHeight;
+    db_batch.Put(tmp_h_key, std::to_string(height));
+    std::string tmp_b_key = dict_key_ + "_" + kFieldTimeBlock;
+    db_batch.Put(tmp_b_key, std::to_string(block_tm));
     latest_time_block_heigth_ = height;
     latest_time_block_tm_ = block_tm;
-    std::cout << "success add time block height: " << height << ", block_tm: " << block_tm << std::endl;
+    std::cout << "success add time block height: " << height
+        << ", key: " << common::Encode::HexEncode(tmp_h_key)
+        << ", block_tm: " << block_tm
+        << ", key: " << common::Encode::HexEncode(tmp_b_key)
+        << std::endl;
     return kBlockSuccess;
 }
 
@@ -807,21 +811,27 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
         return kBlockSuccess;
     }
 
-    std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
+    std::string tmp_h_key = dict_key_ + "_" + kFieldTimeHeight;
     std::string tmp_str;
-    auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    auto st = db::Db::Instance()->Get(tmp_h_key, &tmp_str);
     if (!st.ok()) {
         return kBlockError;
     }
 
     latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
-    tmp_key = dict_key_ + "_" + kFieldTimeBlock;
-    st = db::Db::Instance()->Get(tmp_key, &tmp_str);
+    std::string tmp_b_key = dict_key_ + "_" + kFieldTimeBlock;
+    st = db::Db::Instance()->Get(tmp_b_key, &tmp_str);
     if (!st.ok()) {
         return kBlockError;
     }
 
     latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+    std::cout << "success get time block height: " << latest_time_block_heigth_
+        << ", key: " << common::Encode::HexEncode(tmp_h_key)
+        << ", block_tm: " << latest_time_block_tm_
+        << ", key: " << common::Encode::HexEncode(tmp_b_key)
+        << std::endl;
+
     return kBlockSuccess;
 }
 
