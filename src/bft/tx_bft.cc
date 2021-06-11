@@ -92,10 +92,17 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        auto tx_ptr = DispatchPool::Instance()->GetRootTx();
-        if (tx_ptr != nullptr) {
-            pool_index = common::kRootChainPoolIndex;
-            tx_vec.push_back(tx_ptr);
+        auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+            network::kRootCongressNetworkId);
+        auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+            common::GlobalInfo::Instance()->network_id(),
+            common::GlobalInfo::Instance()->id());
+        if (mem_index % leader_count == pool_mod_idx) {
+            auto tx_ptr = DispatchPool::Instance()->GetRootTx();
+            if (tx_ptr != nullptr) {
+                pool_index = common::kRootChainPoolIndex;
+                tx_vec.push_back(tx_ptr);
+            }
         }
     }
 
