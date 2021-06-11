@@ -30,7 +30,7 @@ struct TxItem {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
         time_valid += common::TimeStampUsec() + kBftStartDeltaTime;
-        timeout = std::chrono::steady_clock::now() + std::chrono::microseconds(kTxPoolTimeout);
+        timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();
         }
