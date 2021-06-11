@@ -1,5 +1,7 @@
 #include "init/genesis_block_init.h"
 
+#include <cmath>
+
 #include "common/encode.h"
 #include "block/account_manager.h"
 #include "init/init_utils.h"
@@ -71,6 +73,7 @@ int GenesisBlockInit::CreateElectBlock(
         ++node_idx;
     }
 
+    ec_block.set_leader_count(expect_leader_count);
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(elect::kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());

@@ -10,6 +10,7 @@
 #include "timeblock/time_block_utils.h"
 #include "bft/bft_utils.h"
 #include "security/schnorr.h"
+#include "security/secp256k1.h"
 #include "election/proto/elect_proto.h"
 #include "election/elect_manager.h"
 #include "dht/dht_key.h"
@@ -185,7 +186,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
             auto mem_ptr = elect::MemberManager::Instance()->GetMember(
                 common::GlobalInfo::Instance()->network_id(),
                 common::GlobalInfo::Instance()->id());
-            if (mem_ptr != nullptr && mem_index % leader_count == mem_ptr->pool_index_mod_num) {
+            if (mem_ptr != nullptr && (mem_index % leader_count) == mem_ptr->pool_index_mod_num) {
                 transport::protobuf::Header msg;
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
@@ -195,7 +196,35 @@ void TimeBlockManager::CreateTimeBlockTx() {
         }
     }
 
-    std::cout << "CreateTimeBlockTx called!" << std::endl;
+    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        network::kRootCongressNetworkId);
+    if (leader_count > 0) {
+        auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+            common::GlobalInfo::Instance()->network_id(),
+            common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+            common::GlobalInfo::Instance()->network_id(),
+            common::GlobalInfo::Instance()->id());
+        if (mem_ptr == nullptr) {
+            std::cout << "get member ptr failed prikey: "
+                << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
+                << ", id: "
+                << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+                << ", id from prikey: "
+                << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
+                    security::Schnorr::Instance()->str_prikey()))
+                << ", network id: " << common::GlobalInfo::Instance()->network_id()
+                << std::endl;
+        } else {
+            std::cout << "check is leader: " << (mem_ptr != nullptr)
+                << ", mem_index: " << mem_index
+                << ", leader_count: " << leader_count
+                << ", mem_index % leader_count: " << (mem_index % leader_count)
+                << ", mem_ptr->pool_index_mod_num: " << mem_ptr->pool_index_mod_num
+                << std::endl;
+        }
+    }
+
     create_tm_block_tick_.CutOff(
         kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
