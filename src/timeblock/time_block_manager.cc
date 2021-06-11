@@ -210,6 +210,9 @@ void TimeBlockManager::CreateTimeBlockTx() {
                         << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
                             security::Schnorr::Instance()->str_prikey()))
                         << ", network id: " << common::GlobalInfo::Instance()->network_id()
+                        << ", now_tm_sec: " << now_tm_sec
+                        << ", latest_time_block_tm_: " << latest_time_block_tm_
+                        << ", kTimeBlockCreatePeriodSeconds: " << kTimeBlockCreatePeriodSeconds
                         << std::endl;
                 }
             }
