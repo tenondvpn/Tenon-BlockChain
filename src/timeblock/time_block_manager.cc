@@ -58,6 +58,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+    tx_info->set_gid(common::Hash::Hash256(std::to_string(latest_time_block_tm_)));
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
@@ -67,7 +68,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
 
     bft_msg.set_net_id(network::kRootCongressNetworkId);
     bft_msg.set_data(tx_bft.SerializeAsString());
-    bft_msg.set_gid(common::CreateGID(""));
+    bft_msg.set_gid("");
     bft_msg.set_rand(0);
     bft_msg.set_bft_step(bft::kBftInit);
     bft_msg.set_leader(false);
@@ -124,6 +125,8 @@ void TimeBlockManager::UpdateTimeBlock(
     if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
         latest_time_blocks_.pop_front();
     }
+
+    std::cout << "UpdateTimeBlock latest_time_block_tm_: " << latest_time_block_tm_ << ", latest_time_block_height_: " << latest_time_block_height_ << std::endl;
 }
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
@@ -135,13 +138,14 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
             // Correction time
             auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
             auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
-            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu]",
-                offset_tm, real_offset);
             if (real_offset > offset_tm) {
                 *new_time_block_tm += real_offset - offset_tm;
             } else {
                 *new_time_block_tm += offset_tm - real_offset;
             }
+
+            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu] final[%lu]",
+                offset_tm, real_offset, *new_time_block_tm);
         }
 
         return true;
@@ -151,27 +155,29 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 }
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
+    uint64_t backup_latest_time_block_tm = latest_time_block_tm_;
     if (!latest_time_blocks_.empty()) {
         // Correction time
-        auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
+        auto offset_tm = (backup_latest_time_block_tm - latest_time_blocks_.front());
         auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
-        BFT_ERROR("BackupheckNewTimeBlockValid offset_tm[%llu]real_offset[%llu]",
-            offset_tm, real_offset);
         if (real_offset > offset_tm) {
-            latest_time_block_tm_ += real_offset - offset_tm;
+            backup_latest_time_block_tm += real_offset - offset_tm;
         } else {
-            latest_time_block_tm_ += offset_tm - real_offset;
+            backup_latest_time_block_tm += offset_tm - real_offset;
         }
+
+        BFT_ERROR("BackupheckNewTimeBlockValid offset_tm[%llu]real_offset[%llu]final[%llu]",
+            offset_tm, real_offset, (backup_latest_time_block_tm + common::kTimeBlockCreatePeriodSeconds));
     }
 
-    latest_time_block_tm_ += common::kTimeBlockCreatePeriodSeconds;
-    if (new_time_block_tm < (latest_time_block_tm_ + kTimeBlockTolerateSeconds) &&
-            new_time_block_tm > (latest_time_block_tm_ - kTimeBlockTolerateSeconds)) {
+    backup_latest_time_block_tm += common::kTimeBlockCreatePeriodSeconds;
+    if (new_time_block_tm < (backup_latest_time_block_tm + kTimeBlockTolerateSeconds) &&
+            new_time_block_tm > (backup_latest_time_block_tm - kTimeBlockTolerateSeconds)) {
         return true;
     }
 
     BFT_ERROR("BackupheckNewTimeBlockValid error[%llu][%llu]",
-        new_time_block_tm, (uint64_t)latest_time_block_tm_);
+        new_time_block_tm, (uint64_t)backup_latest_time_block_tm);
     return false;
 }
 
@@ -202,18 +208,18 @@ void TimeBlockManager::CreateTimeBlockTx() {
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
                     network::Route::Instance()->SendToLocal(msg);
-                    std::cout << "send time transaction: "
-                        << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
-                        << ", id: "
-                        << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-                        << ", id from prikey: "
-                        << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
-                            security::Schnorr::Instance()->str_prikey()))
-                        << ", network id: " << common::GlobalInfo::Instance()->network_id()
-                        << ", now_tm_sec: " << now_tm_sec
-                        << ", latest_time_block_tm_: " << latest_time_block_tm_
-                        << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
-                        << std::endl;
+//                     std::cout << "send time transaction: "
+//                         << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
+//                         << ", id: "
+//                         << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+//                         << ", id from prikey: "
+//                         << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
+//                             security::Schnorr::Instance()->str_prikey()))
+//                         << ", network id: " << common::GlobalInfo::Instance()->network_id()
+//                         << ", now_tm_sec: " << now_tm_sec
+//                         << ", latest_time_block_tm_: " << latest_time_block_tm_
+//                         << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
+//                         << std::end 
                 }
             }
         }

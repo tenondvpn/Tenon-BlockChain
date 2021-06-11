@@ -599,12 +599,14 @@ int BftManager::BackupPrepare(
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
+        BFT_DEBUG("kBftPreCommit send to [%s:%d]", header.from_ip().c_str(), header.from_port());
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
     }
 
     backup_prepare_msg_ = msg;
+    BFT_DEBUG("BackupPrepare success.");
     return kBftSuccess;
 }
 
@@ -694,6 +696,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
     leader_precommit_msg_ = msg;
+    BFT_DEBUG("LeaderCallPrecommit success.");
     return kBftSuccess;
 }
 
@@ -766,6 +769,7 @@ int BftManager::BackupPrecommit(
     bft_ptr->secret().Serialize(sec_key_str);
     std::string pub_key_str;
     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+    BFT_DEBUG("BackupPrecommit success.");
     return kBftSuccess;
 }
 
