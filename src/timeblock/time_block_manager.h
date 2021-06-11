@@ -6,6 +6,7 @@
 
 #include "common/utils.h"
 #include "common/time_utils.h"
+#include "common/tick.h"
 #include "transport/proto/transport.pb.h"
 #include "bft/proto/bft.pb.h"
 
@@ -24,13 +25,16 @@ public:
     int BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_info);
 
 private:
-    TimeBlockManager() {}
-    ~TimeBlockManager() {}
+    TimeBlockManager();
+    ~TimeBlockManager();
+
+    void CreateTimeBlockTx();
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
     std::deque<uint64_t> latest_time_blocks_;
     std::mutex latest_time_blocks_mutex_;
+    common::Tick create_tm_block_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(TimeBlockManager);
 };

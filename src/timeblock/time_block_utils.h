@@ -21,6 +21,7 @@ enum RootErrorCode {
 static const uint64_t kTimeBlockCreatePeriodSeconds = 600ll;
 static const uint64_t kTimeBlockTolerateSeconds = 30ll;
 static const uint32_t kTimeBlockAvgCount = 6u;
+static const uint64_t kCheckTimeBlockPeriodUs = 1000000llu;
 static const std::string kAttrTimerBlock = "__tmblock_tmblock";
 
 }  // namespace tmblock

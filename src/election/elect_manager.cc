@@ -196,6 +196,10 @@ void ElectManager::ProcessNewElectBlock(
     }
 }
 
+void ElectManager::CreateAllElectTx() {
+
+}
+
 void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg) {
     msg->set_src_dht_key("");
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();

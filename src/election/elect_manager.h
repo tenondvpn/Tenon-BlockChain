@@ -5,6 +5,7 @@
 #include <map>
 
 #include "common/utils.h"
+#include "common/tick.h"
 #include "transport/proto/transport.pb.h"
 #include "network/shard_network.h"
 #include "election/elect_utils.h"
@@ -35,6 +36,7 @@ private:
 
     void HandleMessage(transport::protobuf::Header& header);
     void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
+    void CreateAllElectTx();
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
@@ -42,6 +44,7 @@ private:
     std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
     ElectPoolManager pool_manager_;
     std::atomic<uint64_t> latest_height_{ 0 };
+    common::Tick create_elect_block_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

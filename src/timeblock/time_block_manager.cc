@@ -5,6 +5,7 @@
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
 #include "network/network_utils.h"
+#include "network/route.h"
 #include "root/root_utils.h"
 #include "timeblock/time_block_utils.h"
 #include "bft/bft_utils.h"
@@ -25,6 +26,12 @@ TimeBlockManager* TimeBlockManager::Instance() {
 uint64_t TimeBlockManager::LatestTimestamp() {
     return latest_time_block_tm_;
 }
+
+TimeBlockManager::TimeBlockManager() {
+    CreateTimeBlockTx();
+}
+
+TimeBlockManager::~TimeBlockManager() {}
 
 int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) {
     msg->set_src_dht_key("");
@@ -163,6 +170,21 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     BFT_ERROR("BackupheckNewTimeBlockValid error[%llu][%llu]",
         new_time_block_tm, (uint64_t)latest_time_block_tm_);
     return false;
+}
+
+void TimeBlockManager::CreateTimeBlockTx() {
+    auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+    if (now_tm_sec >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
+        transport::protobuf::Header msg;
+        if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
+            network::Route::Instance()->Send(msg);
+            network::Route::Instance()->SendToLocal(msg);
+        }
+    }
+
+    create_tm_block_tick_.CutOff(
+        kCheckTimeBlockPeriodUs,
+        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
 }
 
 }  // namespace tmblock
