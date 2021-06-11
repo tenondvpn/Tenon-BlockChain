@@ -29,6 +29,7 @@ private:
     ~TimeBlockManager();
 
     void CreateTimeBlockTx();
+    bool ThisNodeIsLeader(int32_t* pool_mod_num);
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };

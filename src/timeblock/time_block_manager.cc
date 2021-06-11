@@ -9,6 +9,7 @@
 #include "root/root_utils.h"
 #include "timeblock/time_block_utils.h"
 #include "bft/bft_utils.h"
+#include "bft/bft_manager.h"
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
 #include "election/proto/elect_proto.h"
@@ -36,9 +37,9 @@ TimeBlockManager::TimeBlockManager() {
 TimeBlockManager::~TimeBlockManager() {}
 
 int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) {
-    msg->set_src_dht_key("");
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
     dht::DhtKeyManager dht_key(des_net_id, 0);
+    msg->set_src_dht_key(dht_key.StrKey());
     msg->set_des_dht_key(dht_key.StrKey());
     msg->set_priority(transport::kTransportPriorityHighest);
     msg->set_id(common::GlobalInfo::Instance()->MessageId());
@@ -174,55 +175,50 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     return false;
 }
 
+bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
+    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        network::kRootCongressNetworkId);
+    auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+        common::GlobalInfo::Instance()->network_id(),
+        common::GlobalInfo::Instance()->id());
+    auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+        common::GlobalInfo::Instance()->network_id(),
+        common::GlobalInfo::Instance()->id());
+    if (mem_ptr != nullptr && (mem_index % leader_count) == mem_ptr->pool_index_mod_num) {
+        *pool_mod_num = mem_ptr->pool_index_mod_num;
+        return true;
+    }
+    
+    return false;
+}
+
 void TimeBlockManager::CreateTimeBlockTx() {
     auto now_tm_sec = common::TimeUtils::TimestampSeconds();
     if (now_tm_sec >= latest_time_block_tm_ + kTimeBlockCreatePeriodSeconds) {
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-            auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
-                network::kRootCongressNetworkId);
-            auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
-                common::GlobalInfo::Instance()->network_id(),
-                common::GlobalInfo::Instance()->id());
-            auto mem_ptr = elect::MemberManager::Instance()->GetMember(
-                common::GlobalInfo::Instance()->network_id(),
-                common::GlobalInfo::Instance()->id());
-            if (mem_ptr != nullptr && (mem_index % leader_count) == mem_ptr->pool_index_mod_num) {
+            int32_t pool_mod_num = -1;
+            if (ThisNodeIsLeader(&pool_mod_num)) {
                 transport::protobuf::Header msg;
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
                     network::Route::Instance()->SendToLocal(msg);
+                    std::cout << "send time transaction: "
+                        << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
+                        << ", id: "
+                        << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+                        << ", id from prikey: "
+                        << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
+                            security::Schnorr::Instance()->str_prikey()))
+                        << ", network id: " << common::GlobalInfo::Instance()->network_id()
+                        << std::endl;
                 }
             }
         }
     }
 
-    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
-        network::kRootCongressNetworkId);
-    if (leader_count > 0) {
-        auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
-            common::GlobalInfo::Instance()->network_id(),
-            common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(
-            common::GlobalInfo::Instance()->network_id(),
-            common::GlobalInfo::Instance()->id());
-        if (mem_ptr == nullptr) {
-            std::cout << "get member ptr failed prikey: "
-                << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
-                << ", id: "
-                << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-                << ", id from prikey: "
-                << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
-                    security::Schnorr::Instance()->str_prikey()))
-                << ", network id: " << common::GlobalInfo::Instance()->network_id()
-                << std::endl;
-        } else {
-            std::cout << "check is leader: " << (mem_ptr != nullptr)
-                << ", mem_index: " << mem_index
-                << ", leader_count: " << leader_count
-                << ", mem_index % leader_count: " << (mem_index % leader_count)
-                << ", mem_ptr->pool_index_mod_num: " << mem_ptr->pool_index_mod_num
-                << std::endl;
-        }
+    int32_t pool_mod_num = -1;
+    if (ThisNodeIsLeader(&pool_mod_num)) {
+        bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 
     create_tm_block_tick_.CutOff(
