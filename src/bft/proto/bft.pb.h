@@ -1147,12 +1147,12 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint32 version() const;
   void set_version(::google::protobuf::uint32 value);
 
-  // optional uint32 elect_ver = 8;
-  bool has_elect_ver() const;
-  void clear_elect_ver();
-  static const int kElectVerFieldNumber = 8;
-  ::google::protobuf::uint32 elect_ver() const;
-  void set_elect_ver(::google::protobuf::uint32 value);
+  // optional uint32 electblock_height = 8;
+  bool has_electblock_height() const;
+  void clear_electblock_height();
+  static const int kElectblockHeightFieldNumber = 8;
+  ::google::protobuf::uint32 electblock_height() const;
+  void set_electblock_height(::google::protobuf::uint32 value);
 
   // optional uint64 consistency_random = 7;
   bool has_consistency_random() const;
@@ -1167,6 +1167,13 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   static const int kTimestampFieldNumber = 14;
   ::google::protobuf::uint64 timestamp() const;
   void set_timestamp(::google::protobuf::uint64 value);
+
+  // optional uint64 timeblock_height = 15;
+  bool has_timeblock_height() const;
+  void clear_timeblock_height();
+  static const int kTimeblockHeightFieldNumber = 15;
+  ::google::protobuf::uint64 timeblock_height() const;
+  void set_timeblock_height(::google::protobuf::uint64 value);
 
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.Block)
  private:
@@ -1184,8 +1191,8 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_height();
   void set_has_consistency_random();
   void clear_has_consistency_random();
-  void set_has_elect_ver();
-  void clear_has_elect_ver();
+  void set_has_electblock_height();
+  void clear_has_electblock_height();
   void set_has_agg_pubkey();
   void clear_has_agg_pubkey();
   void set_has_agg_sign_challenge();
@@ -1194,6 +1201,8 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_agg_sign_response();
   void set_has_timestamp();
   void clear_has_timestamp();
+  void set_has_timeblock_height();
+  void clear_has_timeblock_height();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1209,9 +1218,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint32 pool_index_;
   ::google::protobuf::uint64 height_;
   ::google::protobuf::uint32 version_;
-  ::google::protobuf::uint32 elect_ver_;
+  ::google::protobuf::uint32 electblock_height_;
   ::google::protobuf::uint64 consistency_random_;
   ::google::protobuf::uint64 timestamp_;
+  ::google::protobuf::uint64 timeblock_height_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -4160,28 +4170,28 @@ inline void Block::set_consistency_random(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.consistency_random)
 }
 
-// optional uint32 elect_ver = 8;
-inline bool Block::has_elect_ver() const {
+// optional uint32 electblock_height = 8;
+inline bool Block::has_electblock_height() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
-inline void Block::set_has_elect_ver() {
+inline void Block::set_has_electblock_height() {
   _has_bits_[0] |= 0x00000200u;
 }
-inline void Block::clear_has_elect_ver() {
+inline void Block::clear_has_electblock_height() {
   _has_bits_[0] &= ~0x00000200u;
 }
-inline void Block::clear_elect_ver() {
-  elect_ver_ = 0u;
-  clear_has_elect_ver();
+inline void Block::clear_electblock_height() {
+  electblock_height_ = 0u;
+  clear_has_electblock_height();
 }
-inline ::google::protobuf::uint32 Block::elect_ver() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.elect_ver)
-  return elect_ver_;
+inline ::google::protobuf::uint32 Block::electblock_height() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.electblock_height)
+  return electblock_height_;
 }
-inline void Block::set_elect_ver(::google::protobuf::uint32 value) {
-  set_has_elect_ver();
-  elect_ver_ = value;
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.elect_ver)
+inline void Block::set_electblock_height(::google::protobuf::uint32 value) {
+  set_has_electblock_height();
+  electblock_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.electblock_height)
 }
 
 // repeated uint64 bitmap = 9;
@@ -4464,6 +4474,30 @@ inline void Block::set_timestamp(::google::protobuf::uint64 value) {
   set_has_timestamp();
   timestamp_ = value;
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.timestamp)
+}
+
+// optional uint64 timeblock_height = 15;
+inline bool Block::has_timeblock_height() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void Block::set_has_timeblock_height() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void Block::clear_has_timeblock_height() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void Block::clear_timeblock_height() {
+  timeblock_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_timeblock_height();
+}
+inline ::google::protobuf::uint64 Block::timeblock_height() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.timeblock_height)
+  return timeblock_height_;
+}
+inline void Block::set_timeblock_height(::google::protobuf::uint64 value) {
+  set_has_timeblock_height();
+  timeblock_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.timeblock_height)
 }
 
 // -------------------------------------------------------------------
