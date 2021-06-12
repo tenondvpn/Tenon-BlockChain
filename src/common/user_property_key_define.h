@@ -108,7 +108,7 @@ static const std::string kVpnAdminAccount = "e8a1ceb6b807a98a20e3aa10aa2199e47cb
 static const std::string kVpnLoginManageAccount = "008817d7557fc65cec2c212a6a8bde3e3b8672331c6e206a60dceb60391d71b8";
 static const std::string kCreateGenesisNetwrokAccount = common::Encode::HexDecode(
     "b5be6f0090e4f5d40458258ed9adf843324c0327145c48b55091f33673d2d5a4");
-static const std::string kStatisticFromAddressPrefix = "900000000000000000000000000000000000";
+static const std::string kStatisticFromAddressMidllefix = "00000000000000000000000000000000";
 
 static const uint32_t kVpnShareStakingPrice = 1u;
 

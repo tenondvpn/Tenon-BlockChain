@@ -2,7 +2,10 @@
 #include "block/db_pool_info.h"
 
 #include "common/encode.h"
+#include "common/global_info.h"
+#include "common/user_property_key_define.h"
 #include "db/db_utils.h"
+#include "block/block_manager.h"
 
 namespace tenon {
 
@@ -18,6 +21,48 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
 }
 
 DbPoolInfo::~DbPoolInfo() {}
+
+int DbPoolInfo::InitWithGenesisBlock() {
+    {
+        std::lock_guard<std::mutex> guard(base_addr_mutex_);
+        if (!base_addr_.empty()) {
+            return kBlockSuccess;
+        }
+    }
+
+    bft::protobuf::Block genesis_block;
+    if (BlockManager::Instance()->GetBlockWithHeight(
+            common::GlobalInfo::Instance()->network_id(),
+            pool_index_,
+            0,
+            genesis_block) != kBlockSuccess) {
+        return kBlockError;
+    }
+
+    for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
+        if (genesis_block.tx_list(i).from().substr(4, 32) ==
+                common::kStatisticFromAddressMidllefix) {
+            std::lock_guard<std::mutex> guard(base_addr_mutex_);
+            base_addr_ = genesis_block.tx_list(i).from();
+            return kBlockSuccess;
+        }
+    }
+
+    return kBlockError;
+}
+
+std::string DbPoolInfo::GetBaseAddr() {
+    {
+        std::lock_guard<std::mutex> guard(base_addr_mutex_);
+        if (!base_addr_.empty()) {
+            return base_addr_;
+        }
+    }
+
+    // TODO: add to sync
+    InitWithGenesisBlock();
+    return "";
+}
 
 int DbPoolInfo::SetHash(const std::string& hash, db::DbWriteBach& db_batch) {
     if (!db::Dict::Instance()->Hset(

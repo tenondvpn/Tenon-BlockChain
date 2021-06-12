@@ -50,13 +50,14 @@ message Block {
     optional uint32 version = 5;
 	optional uint64 height = 6;
     optional uint64 consistency_random = 7;
-    optional uint32 elect_ver = 8;
+    optional uint32 electblock_height = 8;
 	repeated uint64 bitmap = 9;
 	optional bytes agg_pubkey = 10;
 	optional bytes agg_sign_challenge = 11;
 	optional bytes agg_sign_response = 12;
     repeated TxInfo tx_list = 13;
 	optional uint64 timestamp = 14;
+	optional uint64 timeblock_height = 15;
 }
 
 message TxPrepareItem {

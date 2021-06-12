@@ -55,7 +55,8 @@ std::string GetBlockHash(const protobuf::Block& block) {
         std::to_string(block.network_id()) + "-" +
         std::to_string(block.height()) + "-" +
         std::to_string(block.consistency_random()) + "-" +
-        std::to_string(block.elect_ver()) + "-";
+        std::to_string(block.electblock_height()) + "-" +
+        std::to_string(block.timeblock_height()) + "-";
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         message += GetTxMessageHash(block.tx_list(i));
     }

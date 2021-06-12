@@ -58,6 +58,11 @@ public:
     int AddNewBlock(
         const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch);
+    int GetBlockWithHeight(
+        uint32_t network_id,
+        uint32_t pool_index,
+        uint64_t height,
+        bft::protobuf::Block& block_item);
 
 private:
     BlockManager();

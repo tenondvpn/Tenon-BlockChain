@@ -298,25 +298,28 @@ int BftManager::ShardAddTimeBlockStatisticTransaction(
         return kBftError;
     }
 
-    protobuf::TxInfo tx_info;
-    tx_info.set_type(common::kConsensusRootTimeBlock);
-    tx_info.set_from(common::StringUtil::Format(
-        "%s%4d",
-        common::kStatisticFromAddressPrefix.c_str(),
-        common::Random::RandomInt32() % 10000));
-    tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm)));
-    tx_info.set_gas_limit(0llu);
-    tx_info.set_amount(0);
-    tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
-    auto height_attr = tx_info.add_attr();
-    height_attr->set_key(tmblock::kAttrTimerBlockHeight);
-    height_attr->set_value(std::to_string(tmblock_height));
-    auto tm_attr = tx_info.add_attr();
-    tm_attr->set_key(tmblock::kAttrTimerBlockTm);
-    tm_attr->set_value(std::to_string(tmblock_tm));
-    if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
-        BFT_ERROR("dispatch pool failed!");
-        return kBftError;
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        protobuf::TxInfo tx_info;
+        tx_info.set_type(common::kConsensusRootTimeBlock);
+        tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
+        if (tx_info.from().empty()) {
+            continue;
+        }
+
+        tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm) + std::to_string(i)));
+        tx_info.set_gas_limit(0llu);
+        tx_info.set_amount(0);
+        tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
+        auto height_attr = tx_info.add_attr();
+        height_attr->set_key(tmblock::kAttrTimerBlockHeight);
+        height_attr->set_value(std::to_string(tmblock_height));
+        auto tm_attr = tx_info.add_attr();
+        tm_attr->set_key(tmblock::kAttrTimerBlockTm);
+        tm_attr->set_value(std::to_string(tmblock_tm));
+        if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
+            BFT_ERROR("dispatch pool failed!");
+            return kBftError;
+        }
     }
 
     return kBftSuccess;

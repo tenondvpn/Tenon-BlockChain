@@ -34,6 +34,7 @@ public:
         db::DbWriteBach& db_batch);
     int GetAddressConsensusNetworkId(const std::string& address, uint32_t* network_id);
     DbAccountInfo* GetContractInfoByAddress(const std::string& address);
+    std::string GetPoolBaseAddr(uint32_t pool_index);
 
 private:
     AccountManager();
@@ -41,9 +42,7 @@ private:
     int UpdateAccountInfo(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
-        uint64_t now_height,
-        uint64_t timestamp,
-        const std::string& hash,
+        const bft::protobuf::Block& block,
         db::DbWriteBach& db_batch);
     void SetPool(
         uint32_t pool_index,

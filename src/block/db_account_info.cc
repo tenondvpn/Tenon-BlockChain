@@ -2,6 +2,7 @@
 #include "block/db_account_info.h"
 
 #include "common/encode.h"
+#include "common/bitmap.h"
 #include "db/db.h"
 #include "root/root_utils.h"
 #include "network/network_utils.h"
@@ -116,6 +117,8 @@ DbAccountInfo::DbAccountInfo(const std::string& account_id)
             }
         }
     }
+
+    LoadBlocksUtilLatestStatisticBlock();
 }
 
 DbAccountInfo::~DbAccountInfo() {}
@@ -819,6 +822,80 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
     latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
     *height = latest_time_block_heigth_;
     *block_tm = latest_time_block_tm_;
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::LoadBlocksUtilLatestStatisticBlock() {
+    std::string prev_hash;
+    if (GetMaxHash(&prev_hash) != kBlockSuccess) {
+        // TODO: add to sync
+        return kBlockError;
+    }
+
+    while (true) {
+        std::string block_str;
+        auto st = db::Db::Instance()->Get(prev_hash, &block_str);
+        if (!st.ok()) {
+            // TODO: add to sync
+            return kBlockError;
+        }
+
+
+        bft::protobuf::Block block_item;
+        if (!block_item.ParseFromString(block_str)) {
+            return kBlockError;
+        }
+
+        if (block_item.tx_list_size() == 1 &&
+                block_item.tx_list(0).type() == common::kConsensusStatistic) {
+            break;
+        }
+
+        AddStatistic(block_item);
+        prev_hash = block_item.prehash();
+        if (prev_hash.empty()) {
+            break;
+        }
+    }
+
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::AddStatistic(const bft::protobuf::Block& block_item) {
+    std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
+    auto iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+    if (iter == statistic_for_tmblock_.end()) {
+        statistic_for_tmblock_[block_item.timeblock_height()] = StatisticItem();
+        iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+    }
+
+    auto ext_iter = iter->second.added_height.find(block_item.height());
+    if (ext_iter != iter->second.added_height.end()) {
+        return kBlockSuccess;
+    }
+
+    iter->second.added_height.insert(block_item.height());
+    iter->second.all_tx_count += block_item.tx_list_size();
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < block_item.bitmap_size(); ++i) {
+        bitmap_data.push_back(block_item.bitmap(i));
+    }
+
+    common::Bitmap final_bitmap(bitmap_data);
+    uint32_t bit_size = final_bitmap.data().size() * 64;
+    for (uint32_t i = 0; i < bit_size; ++i) {
+        if (!final_bitmap.Valid(i)) {
+            continue;
+        }
+
+        auto succ_iter = iter->second.succ_tx_count.find(i);
+        if (succ_iter != iter->second.succ_tx_count.end()) {
+            ++succ_iter->second;
+        } else {
+            iter->second.succ_tx_count[i] = 1;
+        }
+    }
+
     return kBlockSuccess;
 }
 

@@ -202,9 +202,7 @@ int AccountManager::AddBlockItem(
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
-                block_item.height(),
-                block_item.timestamp(),
-                block_item.hash(),
+                block_item,
                 db_batch) != kBlockSuccess) {
             BLOCK_ERROR("to add account failed: %s, %llu",
                 common::Encode::HexEncode(block_item.hash()).c_str(),
@@ -398,9 +396,7 @@ int AccountManager::GenesisAddAccountInfo(
 int AccountManager::UpdateAccountInfo(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
-        uint64_t tmp_now_height,
-        uint64_t timestamp,
-        const std::string& hash,
+        const bft::protobuf::Block& block_item,
         db::DbWriteBach& db_batch) {
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
@@ -421,7 +417,8 @@ int AccountManager::UpdateAccountInfo(
                     delete account_info;
                     return kBlockError;
                 }
-            } else if (tx_info.type() == common::kConsensusCreateAcount && tx_info.network_id() != 0) {
+            } else if (tx_info.type() == common::kConsensusCreateAcount &&
+                    tx_info.network_id() != 0) {
             } else {
                 BLOCK_ERROR("account id not exists[%s]!",
                     common::Encode::HexEncode(account_id).c_str());
@@ -443,13 +440,18 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
-    account_info->NewHeight(tmp_now_height, db_batch);
+    account_info->NewHeight(block_item.height(), db_batch);
     if (!tx_info.to().empty() && tx_info.amount() > 0) {
-        account_info->NewTxHeight(tmp_now_height, timestamp, hash, tx_info, db_batch);
+        account_info->NewTxHeight(
+            block_item.height(),
+            block_item.timestamp(),
+            block_item.hash(),
+            tx_info,
+            db_batch);
     }
 
-    if (exist_height <= tmp_now_height) {
-        account_info->SetMaxHeightHash(tmp_now_height, hash, db_batch);
+    if (exist_height <= block_item.height()) {
+        account_info->SetMaxHeightHash(block_item.height(), block_item.hash(), db_batch);
     } else {
         uint64_t create_height = 0;
         if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
@@ -457,15 +459,15 @@ int AccountManager::UpdateAccountInfo(
             return kBlockError;
         }
 
-        if (create_height > tmp_now_height) {
-            account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
+        if (create_height > block_item.height()) {
+            account_info->SetCreateAccountHeight(block_item.height(), db_batch);
         }
     }
 
     uint32_t pool_idx = common::GetPoolIndex(account_id);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t pool_idx = common::GetPoolIndex(account_id);
-        if (exist_height <= tmp_now_height) {
+        if (exist_height <= block_item.height()) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }
     }
@@ -474,10 +476,16 @@ int AccountManager::UpdateAccountInfo(
             account_id,
             tx_info,
             exist_height,
-            tmp_now_height,
+            block_item.height(),
             account_info,
             db_batch) != kBlockSuccess) {
         return kBlockError;
+    }
+
+    if (IsPoolBaseAddress(account_id)) {
+        if (account_info->AddStatistic(block_item) != kBlockSuccess) {
+            return kBlockError;
+        }
     }
 
     if (tx_info.status() == bft::kBftSuccess &&
@@ -673,6 +681,15 @@ void AccountManager::SetPool(
 
     db_pool_info->SetHash(hash, db_batch);
     db_pool_info->SetHeight(now_height, db_batch);
+}
+
+std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
+    std::lock_guard<std::mutex> guard(network_block_mutex_);
+    if (network_block_[pool_index] != nullptr) {
+        return network_block_[pool_index]->GetBaseAddr();
+    }
+
+    return "";
 }
 
 }  // namespace block

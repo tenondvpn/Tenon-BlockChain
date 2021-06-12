@@ -636,6 +636,34 @@ int BlockManager::AddNewBlock(
     return kBlockSuccess;
 }
 
+int BlockManager::GetBlockWithHeight(
+        uint32_t network_id,
+        uint32_t pool_index,
+        uint64_t height,
+        bft::protobuf::Block& block_item) {
+    std::string height_db_key = common::GetHeightDbKey(
+        network_id,
+        pool_index,
+        height);
+    std::string block_hash;
+    auto st = db::Db::Instance()->Get(height_db_key, &block_hash);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    std::string block_str;
+    st = db::Db::Instance()->Get(block_hash, &block_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    if (!block_item.ParseFromString(block_str)) {
+        return kBlockError;
+    }
+
+    return kBlockSuccess;
+}
+
 }  // namespace block
 
 }  // namespace tenon

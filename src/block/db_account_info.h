@@ -65,6 +65,7 @@ public:
     size_t VmCodeSize();
     std::string VmCodeHash();
     std::string GetCode();
+    int AddStatistic(const bft::protobuf::Block& block_item);
 
     std::string& account_id() {
         return account_id_;
@@ -83,6 +84,8 @@ public:
     }
 
 private:
+    int LoadBlocksUtilLatestStatisticBlock();
+
     static const uint32_t kTopTxHeightBlocksCount = 128;
 
     std::string account_id_;
@@ -118,6 +121,8 @@ private:
     std::mutex elect_blocks_map_mutex_;
     std::atomic<uint64_t> latest_time_block_heigth_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
+    std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
+    std::mutex statistic_for_tmblock_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

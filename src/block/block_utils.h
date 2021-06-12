@@ -5,6 +5,7 @@
 #include <mutex>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <functional>
 
@@ -39,6 +40,12 @@ struct HeightItem {
     std::string hash;
 };
 
+struct StatisticItem {
+    std::unordered_map<uint32_t, uint32_t> succ_tx_count;
+    uint32_t all_tx_count;
+    std::unordered_set<uint64_t> added_height;
+};
+
 static const uint32_t kUnicastAddressLength = 20u;
 static const std::string kLastBlockHashPrefix("last_block_hash_pre_");
 static const std::string kFieldContractOwner = common::Encode::HexDecode(
@@ -59,6 +66,14 @@ static inline std::string UnicastAddress(const std::string& src_address) {
 
 inline static std::string StorageDbKey(const std::string& account_id,  const std::string& key) {
     return account_id + "_vms_" + key;
+}
+
+inline static bool IsPoolBaseAddress(const std::string& address) {
+    if (address.substr(4, 32) == common::kStatisticFromAddressMidllefix) {
+        return true;
+    }
+
+    return false;
 }
 
 }  // namespace block
