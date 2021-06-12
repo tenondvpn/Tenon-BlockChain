@@ -1710,7 +1710,6 @@ void TxBft::RootLeaderCreateTimerBlock(
 
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_elect_ver(common::GlobalInfo::Instance()->now_elect_version());
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
