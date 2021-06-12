@@ -79,7 +79,6 @@ int GenesisBlockInit::CreateElectBlock(
     ec_block_attr->set_value(ec_block.SerializeAsString());
     tenon_block.set_prehash(root_pre_hash);
     tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_elect_ver(0);
     tenon_block.set_agg_pubkey("");
     tenon_block.set_agg_sign_challenge("");
     tenon_block.set_agg_sign_response("");
@@ -172,7 +171,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         tenon_block.set_prehash("");
         tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_elect_ver(0);
         tenon_block.set_agg_pubkey("");
         tenon_block.set_agg_sign_challenge("");
         tenon_block.set_agg_sign_response("");
@@ -250,7 +248,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         std::cout << "set init timestamp: " << now_tm << std::endl;
         tenon_block.set_prehash(root_pre_hash);
         tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_elect_ver(0);
         tenon_block.set_agg_pubkey("");
         tenon_block.set_agg_sign_challenge("");
         tenon_block.set_agg_sign_response("");
@@ -411,7 +408,6 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         tx_info->set_network_id(network::kRootCongressNetworkId);
         tenon_block.set_prehash("");
         tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_elect_ver(0);
         tenon_block.set_agg_pubkey("");
         tenon_block.set_agg_sign_challenge("");
         tenon_block.set_agg_sign_response("");
@@ -496,7 +492,6 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         tenon_block.set_prehash("");
         tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_elect_ver(0);
         tenon_block.set_agg_pubkey("");
         tenon_block.set_agg_sign_challenge("");
         tenon_block.set_agg_sign_response("");

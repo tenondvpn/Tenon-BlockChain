@@ -12,6 +12,7 @@
 #include "common/utils.h"
 #include "common/log.h"
 #include "common/encode.h"
+#include "common/user_property_key_define.h"
 
 #define BLOCK_DEBUG(fmt, ...) TENON_DEBUG("[block]" fmt, ## __VA_ARGS__)
 #define BLOCK_INFO(fmt, ...) TENON_INFO("[block]" fmt, ## __VA_ARGS__)

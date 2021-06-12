@@ -202,10 +202,6 @@ public:
         return now_gas_price_;
     }
 
-    uint64_t now_elect_version() {
-        return now_elect_version_;
-    }
-
     uint64_t gas_price() {
         return gas_price_;
     }
@@ -252,7 +248,6 @@ private:
     std::string node_tag_;
     volatile uint32_t network_id_{ 0 };
     volatile uint64_t now_gas_price_{ 100llu };
-    volatile uint64_t now_elect_version_{ 0 };
     volatile uint32_t consensus_shard_count_{ 1 };
     volatile uint64_t gas_price_{ 10 };
 

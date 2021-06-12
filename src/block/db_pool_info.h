@@ -28,7 +28,6 @@ private:
     std::string dict_key_;
     std::string hash_;
     std::string last_block_str_;
-    std::string base_addr_;
     std::mutex hash_mutex_;
     std::string base_addr_;
     std::mutex base_addr_mutex_;

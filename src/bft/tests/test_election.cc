@@ -392,7 +392,6 @@ public:
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
             tenon_block.set_prehash("");
             tenon_block.set_version(common::kTransactionVersion);
-            tenon_block.set_elect_ver(0);
             tenon_block.set_agg_pubkey("");
             tenon_block.set_agg_sign_challenge("");
             tenon_block.set_agg_sign_response("");
@@ -598,7 +597,6 @@ public:
 
         block->set_prehash(pool_hash);
         block->set_version(common::kTransactionVersion);
-        block->set_elect_ver(common::GlobalInfo::Instance()->now_elect_version());
         block->set_network_id(common::GlobalInfo::Instance()->network_id());
         block->set_consistency_random(vss::VssManager::Instance()->EpochRandom());
         block->set_height(pool_height + 1);
