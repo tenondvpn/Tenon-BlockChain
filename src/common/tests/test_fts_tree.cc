@@ -54,7 +54,10 @@ TEST_F(TestFtsTree, all) {
 
         fts_tree.CreateFtsTree();
         std::set<void*> node_set;
-        fts_tree.GetNodes(1000, i / 3, node_set);
+        for (uint32_t j = 0; j < i / 3; ++j) {
+            node_set.insert(fts_tree.GetOneNode(g2));
+        }
+
         ASSERT_EQ(node_set.size(), i / 3);
         for (auto iter = test_vec.begin(); iter != test_vec.end(); ++iter) {
             delete *iter;
