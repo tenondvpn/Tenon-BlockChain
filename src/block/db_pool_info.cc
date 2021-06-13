@@ -7,7 +7,7 @@
 #include "common/bitmap.h"
 #include "db/db_utils.h"
 #include "block/block_manager.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 
 namespace tenon {
 
