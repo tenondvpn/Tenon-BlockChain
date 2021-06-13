@@ -15,6 +15,7 @@ static const std::string kPoolHeight = "pool_height";
 static const std::string kPoolHash = "pool_hash";
 static const std::string kPoolLastBlockStr = "pool_last_block_str";
 static const std::string kPoolTimeBlockHeight = "pool_tm_block_height";
+static const std::string kPoolTimeBlockWithChainHeight = "pool_tm_with_block_height";
 
 DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
@@ -190,41 +191,68 @@ int DbPoolInfo::GetHeight(uint64_t* height) {
     return kBlockSuccess;
 }
 
-int DbPoolInfo::SetTimeBlockHeight(uint64_t height, db::DbWriteBach& db_batch) {
-    if (height <= prev_tmblock_with_height_) {
+int DbPoolInfo::SetTimeBlockHeight(
+        uint64_t tmblock_height,
+        uint64_t block_height,
+        db::DbWriteBach& db_batch) {
+    if (prev_tmblock_height_ != common::kInvalidUint64 &&
+            tmblock_height <= prev_tmblock_height_) {
         return kBlockSuccess;
     }
 
     if (!db::Dict::Instance()->Hset(
             dict_key_,
             kPoolTimeBlockHeight,
-            std::to_string(height),
+            std::to_string(tmblock_height),
             db_batch)) {
         return kBlockError;
     }
 
-    prev_tmblock_with_height_ = height;
+    if (!db::Dict::Instance()->Hset(
+            dict_key_,
+            kPoolTimeBlockWithChainHeight,
+            std::to_string(block_height),
+            db_batch)) {
+        return kBlockError;
+    }
+
+    prev_tmblock_with_pool_height_ = block_height;
+    prev_tmblock_height_ = tmblock_height;
     return kBlockSuccess;
 }
 
-int DbPoolInfo::GetTimeBlockHeight(uint64_t* height) {
-    if (prev_tmblock_with_height_ != common::kInvalidUint64) {
-        *height = prev_tmblock_with_height_;
+int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_height) {
+    if (prev_tmblock_height_ != common::kInvalidUint64 &&
+            prev_tmblock_with_pool_height_ != common::kInvalidUint64) {
+        *tmblock_height = prev_tmblock_height_;
+        *block_height = prev_tmblock_with_pool_height_;
         return kBlockSuccess;
     }
 
-    std::string str_height;
+    std::string str_tm_height;
     if (!db::Dict::Instance()->Hget(
             dict_key_,
             kPoolTimeBlockHeight,
-            &str_height)) {
+            &str_tm_height)) {
         BLOCK_ERROR("get height from db failed[%s][%s]",
             dict_key_.c_str(), kPoolTimeBlockHeight.c_str());
         return kBlockError;
     }
 
-    *height = common::StringUtil::ToUint64(str_height);
-    prev_tmblock_with_height_ = *height;
+    *tmblock_height = common::StringUtil::ToUint64(str_tm_height);
+    std::string str_block_height;
+    if (!db::Dict::Instance()->Hget(
+            dict_key_,
+            kPoolTimeBlockWithChainHeight,
+            &str_block_height)) {
+        BLOCK_ERROR("get height from db failed[%s][%s]",
+            dict_key_.c_str(), kPoolTimeBlockWithChainHeight.c_str());
+        return kBlockError;
+    }
+
+    *block_height = common::StringUtil::ToUint64(str_block_height);
+    prev_tmblock_with_pool_height_ = *tmblock_height;
+    prev_tmblock_height_ = *block_height;
     return kBlockSuccess;
 }
 

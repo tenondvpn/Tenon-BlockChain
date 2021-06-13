@@ -26,7 +26,8 @@ public:
         uint32_t pool_idx,
         uint64_t* height,
         std::string* hash,
-        uint64_t* tm);
+        uint64_t* tm_height,
+        uint64_t* tm_with_block_height);
     int AddNewAccount(
         const bft::protobuf::TxInfo& tx_info,
         uint64_t tmp_now_height,

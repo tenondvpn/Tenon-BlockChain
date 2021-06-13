@@ -95,12 +95,14 @@ int GenesisBlockInit::CreateElectBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         common::kRootChainPoolIndex,
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         INIT_ERROR("GetBlockInfo error.");
         return kInitError;
@@ -187,12 +189,14 @@ int GenesisBlockInit::GenerateRootSingleBlock(
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             common::kRootChainPoolIndex,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("GetBlockInfo error.");
             return kInitError;
@@ -268,12 +272,14 @@ int GenesisBlockInit::GenerateRootSingleBlock(
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             common::kRootChainPoolIndex,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("GetBlockInfo error");
             return kInitError;
@@ -346,12 +352,14 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             common::kRootChainPoolIndex,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("get pool block info failed! [%u]", common::kRootChainPoolIndex);
             return kInitError;
@@ -422,12 +430,14 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             iter->first,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("get pool block info failed! [%u]", iter->first);
             return kInitError;
@@ -506,12 +516,14 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
 
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             iter->first,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("GetBlockInfo error.");
             return kInitError;

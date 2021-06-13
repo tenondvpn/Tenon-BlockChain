@@ -244,12 +244,14 @@ TxItemPtr TxPoolManager::GetRootTx() {
     if (root_tx_pool_valid_) {
         std::string pool_hash;
         uint64_t pool_height = 0;
-        uint64_t tm;
+        uint64_t tm_height;
+        uint64_t tm_with_block_height;
         int res = block::AccountManager::Instance()->GetBlockInfo(
             common::kRootChainPoolIndex,
             &pool_height,
             &pool_hash,
-            &tm);
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                 "tx_pool_.empty(): %u, res: %d",
@@ -298,13 +300,15 @@ void TxPoolManager::GetTx(
         if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
             std::string pool_hash;
             uint64_t pool_height = 0;
-            uint64_t tm;
+            uint64_t tm_height;
+            uint64_t tm_with_block_height;
             uint32_t last_pool_index = common::kImmutablePoolSize;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 i,
                 &pool_height,
                 &pool_hash,
-                &tm);
+                &tm_height,
+                &tm_with_block_height);
             if (res != block::kBlockSuccess) {
                 BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                     "tx_pool_.empty(): %u, res: %d",
@@ -328,13 +332,15 @@ void TxPoolManager::GetTx(
             if (!waiting_pools_.Valid(i) && !tx_pool_[i].TxPoolEmpty()) {
                 std::string pool_hash;
                 uint64_t pool_height = 0;
-                uint64_t tm;
+                uint64_t tm_height;
+                uint64_t tm_with_block_height;
                 uint32_t last_pool_index = common::kInvalidPoolIndex;
                 int res = block::AccountManager::Instance()->GetBlockInfo(
                     i,
                     &pool_height,
                     &pool_hash,
-                    &tm);
+                    &tm_height,
+                    &tm_with_block_height);
                 if (res != block::kBlockSuccess) {
                     BFT_ERROR("TxPoolEmpty tx add i: %d, waiting_pools_.Valid(i): %u,"
                         "tx_pool_.empty(): %u, res: %d",

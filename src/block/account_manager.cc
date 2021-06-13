@@ -624,19 +624,29 @@ int AccountManager::GetBlockInfo(
         uint32_t pool_idx,
         uint64_t* height,
         std::string* hash,
-        uint64_t* tm) {
+        uint64_t* tm_height,
+        uint64_t* tm_with_block_height) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_idx] == nullptr) {
         auto db_pool_info = new block::DbPoolInfo(pool_idx);
-        if (db_pool_info->GetHeight(height) != block::kBlockSuccess) {
+        if (db_pool_info->GetHeight(height) != kBlockSuccess) {
             BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
             delete db_pool_info;
             return kBlockError;
         }
 
         network_block_[pool_idx] = db_pool_info;
-        int res = network_block_[pool_idx]->GetHash(hash);
-        return res;
+        if (network_block_[pool_idx]->GetHash(hash) != kBlockSuccess) {
+            return kBlockError;
+        }
+
+        if (network_block_[pool_idx]->GetTimeBlockHeight(
+                tm_height,
+                tm_with_block_height) != kBlockSuccess) {
+            return kBlockError;
+        }
+
+        return kBlockSuccess;
     }
 
     int res = network_block_[pool_idx]->GetHeight(height);
@@ -645,8 +655,17 @@ int AccountManager::GetBlockInfo(
         return res;
     }
 
-    res = network_block_[pool_idx]->GetHash(hash);
-    return res;
+    if (network_block_[pool_idx]->GetHash(hash) != kBlockSuccess) {
+        return kBlockError;
+    }
+
+    if (network_block_[pool_idx]->GetTimeBlockHeight(
+            tm_height,
+            tm_with_block_height) != kBlockSuccess) {
+        return kBlockError;
+    }
+
+    return kBlockSuccess;
 }
 
 void AccountManager::SetPool(
@@ -682,7 +701,7 @@ void AccountManager::SetPool(
 
     db_pool_info->SetHash(hash, db_batch);
     db_pool_info->SetHeight(now_height, db_batch);
-    db_pool_info->SetTimeBlockHeight(now_tmblock_height, db_batch);
+    db_pool_info->SetTimeBlockHeight(now_tmblock_height, now_height, db_batch);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

@@ -1284,13 +1284,15 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         BFT_ERROR("GetBlockInfo failed!");
         return kBftBlockHashError;
@@ -1306,10 +1308,11 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
         }
 
         res = block::AccountManager::Instance()->GetBlockInfo(
-                pool_index(),
-                &pool_height,
-                &pool_hash,
-                &tm);
+            pool_index(),
+            &pool_height,
+            &pool_hash,
+            &tm_height,
+            &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             BFT_ERROR("GetBlockInfo failed!");
             return kBftBlockHashError;
@@ -1474,13 +1477,15 @@ int TxBft::CheckTxInfo(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         BFT_ERROR("get account block info failed!");
         return kBftBlockHeightError;
@@ -1560,13 +1565,15 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1615,13 +1622,15 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1696,13 +1705,15 @@ void TxBft::RootLeaderCreateTimerBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_idx,
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1785,13 +1796,15 @@ void TxBft::LeaderCreateTxBlock(
 
     std::string pool_hash;
     uint64_t pool_height = 0;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &pool_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         assert(false);
         return;
@@ -1994,13 +2007,15 @@ int TxBft::LeaderCallContractDefault(
 int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
     uint64_t last_height = 0;
     std::string pool_hash;
-    uint64_t tm = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
     uint32_t last_pool_index = common::kInvalidPoolIndex;
     int res = block::AccountManager::Instance()->GetBlockInfo(
         pool_index(),
         &last_height,
         &pool_hash,
-        &tm);
+        &tm_height,
+        &tm_with_block_height);
     if (res != block::kBlockSuccess) {
         assert(false);
         return kBftError;

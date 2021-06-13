@@ -20,8 +20,11 @@ public:
     int GetHash(std::string* hash);
     int SetHeight(uint64_t height, db::DbWriteBach& db_batch);
     int GetHeight(uint64_t* height);
-    int SetTimeBlockHeight(uint64_t height, db::DbWriteBach& db_batch);
-    int GetTimeBlockHeight(uint64_t* height);
+    int SetTimeBlockHeight(
+        uint64_t tmblock_height,
+        uint64_t block_height,
+        db::DbWriteBach& db_batch);
+    int GetTimeBlockHeight(uint64_t* height, uint64_t* block_height);
     int SetLastBlock(const bft::protobuf::Block& block_item, db::DbWriteBach& db_batch);
     int GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index);
     std::string GetBaseAddr();
@@ -36,7 +39,8 @@ private:
     std::atomic<uint64_t> height_{ common::kInvalidUint64 };
     std::atomic<uint32_t> pool_index_{ common::kInvalidUint32 };
     bft::protobuf::Block last_block_;
-    std::atomic<uint64_t> prev_tmblock_with_height_{ 0 };
+    std::atomic<uint64_t> prev_tmblock_height_{ common::kInvalidUint64 };
+    std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

@@ -411,12 +411,14 @@ void Command::AddBaseCommands() {
         } else {
             std::string pool_hash;
             uint64_t pool_height = 0;
-            uint64_t tm;
+            uint64_t tm_height;
+            uint64_t tm_with_block_height;
             int res = block::AccountManager::Instance()->GetBlockInfo(
                 common::StringUtil::ToUint32(args[0]),
                 &pool_height,
                 &pool_hash,
-                &tm);
+                &tm_height,
+                &tm_with_block_height);
             if (res != block::kBlockSuccess) {
                 return;
             }
