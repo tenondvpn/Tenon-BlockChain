@@ -1330,6 +1330,17 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
     if (pool_height + 1 != block_info.height()) {
         return kBftBlockHeightError;
     }
+
+    if (block_info.timeblock_height() !=
+            tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
+        return kBftBlockHeightError;
+    }
+
+    if (block_info.electblock_height() !=
+            elect::ElectManager::Instance()->latest_height()) {
+        return kBftBlockHeightError;
+    }
+
     return kBftSuccess;
 }
 

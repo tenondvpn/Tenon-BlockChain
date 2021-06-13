@@ -31,7 +31,9 @@ uint64_t TimeBlockManager::LatestTimestamp() {
 }
 
 TimeBlockManager::TimeBlockManager() {
-    CreateTimeBlockTx();
+    create_tm_block_tick_.CutOff(
+        kCheckTimeBlockPeriodUs,
+        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
 }
 
 TimeBlockManager::~TimeBlockManager() {}
