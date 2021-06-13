@@ -61,6 +61,8 @@ std::string GetBlockHash(const protobuf::Block& block) {
         message += GetTxMessageHash(block.tx_list(i));
     }
 
+    std::cout << block.network_id() << ", " << block.height() << ", " << block.consistency_random() << ", " << block.electblock_height() << ", " << block.timeblock_height() << std::endl;
+    std::cout << "GetBlockHash: " << common::Encode::HexEncode(message) << std::endl;
     return common::Hash::Sha256(message);
 }
 

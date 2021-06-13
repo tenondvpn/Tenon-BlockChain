@@ -1655,9 +1655,9 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
-    tenon_block.set_hash(GetBlockHash(tenon_block));
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 void TxBft::RootLeaderCreateTxBlock(
@@ -1740,9 +1740,9 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
-    tenon_block.set_hash(GetBlockHash(tenon_block));
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 int TxBft::GetTempAccountBalance(
@@ -1837,9 +1837,9 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
-    tenon_block.set_hash(GetBlockHash(tenon_block));
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
