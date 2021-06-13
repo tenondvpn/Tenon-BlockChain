@@ -11,6 +11,7 @@
 #include "network/dht_manager.h"
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
+#include "election/elect_node_detail.h"
 #include "security/aes.h"
 #include "security/ecdh_create_key.h"
 #include "security/schnorr.h"

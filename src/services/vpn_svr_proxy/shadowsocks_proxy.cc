@@ -11,6 +11,7 @@
 #include "common/encode.h"
 #include "common/user_property_key_define.h"
 #include "db/db.h"
+#include "election/elect_manager.h"
 #include "ip/ip_with_country.h"
 #include "security/ecdh_create_key.h"
 #include "network/route.h"
@@ -215,7 +216,13 @@ int ShadowsocksProxy::InitTcpRelay(uint32_t vip_level) {
             break;
     }
 
-    vpn_route_ = std::make_shared<VpnProxyNode>(route_network_id);
+    vpn_route_ = std::make_shared<VpnProxyNode>(
+        route_network_id,
+        std::bind(
+            &elect::ElectManager::GetMemberWithId,
+            elect::ElectManager::Instance(),
+            std::placeholders::_1,
+            std::placeholders::_2));
     int res = vpn_route_->Init();
     if (res != dht::kDhtSuccess) {
         vpn_route_ = nullptr;
