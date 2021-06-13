@@ -1047,7 +1047,7 @@ int BftManager::BackupCommit(
 
     db::DbWriteBach db_batch;
     if (block::BlockManager::Instance()->AddNewBlock(
-            *(bft_ptr->prpare_block()),
+            bft_ptr->prpare_block(),
             db_batch) != block::kBlockSuccess) {
         BFT_ERROR("backup add block to db failed!");
         return kBftError;
