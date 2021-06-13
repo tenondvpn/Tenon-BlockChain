@@ -640,11 +640,12 @@ public:
             ++begin_index_map_[net_id];
         }
 
+        uint32_t elect_height = 0;
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
             elect::ElectManager::Instance()->SetNetworkMember(
-                0,
+                elect_height++,
                 iter->first,
                 iter->second,
                 index_map_iter->second,

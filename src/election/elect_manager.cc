@@ -372,6 +372,7 @@ int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t netw
         mem_ptr = iter->second;
     }
 
+    std::cout << "GetNetworkLeaderCount elect_height: " << elect_height << ", network_id: " << network_id << std::endl;
     return mem_ptr->GetNetworkLeaderCount(network_id);
 }
 
@@ -402,6 +403,7 @@ void ElectManager::SetNetworkMember(
         elect_members_[elect_height] = mem_ptr;
     }
 
+    std::cout << "latest_height_: " << latest_height_ << ", net_id: " << network_id << ", leader_count: " << leader_count << std::endl;
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
 }
 
