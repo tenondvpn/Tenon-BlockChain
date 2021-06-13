@@ -32,13 +32,9 @@ protected:
     int ResetConfig(common::ParserArgs& parser_arg);
     int InitNetworkSingleton();
     int InitCommand();
-    int CreateConfigNetwork();
     int InitBft();
-    void CreateNewTx();
-    void CreateNewElectBlock();
     int SetPriAndPubKey(const std::string& prikey);
     int InitBlock(const common::Config& conf);
-    void TestStartBft();
     void StartMoreServer();
 
     static const uint32_t kDefaultUdpSendBufferSize = 10u * 1024u * 1024u;
@@ -55,9 +51,6 @@ protected:
     bool inited_{ false };
     std::mutex init_mutex_;
     Command cmd_;
-    common::Tick test_new_account_tick_;
-    common::Tick test_new_elect_tick_;
-    common::Tick test_start_bft_tick_;
     bool ec_block_ok_{ false };
 	root::RootInitPtr root_{ nullptr };
     std::string config_path_;

@@ -44,8 +44,6 @@ static const uint32_t kDefaultBufferSize = 1024u * 1024u;
 NetworkInit::NetworkInit() {}
 
 NetworkInit::~NetworkInit() {
-    test_new_account_tick_.Destroy();
-    test_new_elect_tick_.Destroy();
     Destroy();
 }
 
@@ -212,11 +210,6 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-//     if (CreateConfigNetwork() != kInitSuccess) {
-//         INIT_ERROR("CreateConfigNetwork failed!");
-//         return kInitError;
-//     }
-
     if (InitBft() != kInitSuccess) {
         INIT_ERROR("int bft failed!");
         return kInitError;
@@ -225,10 +218,6 @@ int NetworkInit::Init(int argc, char** argv) {
     sync::KeyValueSync::Instance();
     std::string tx_gid;
     client::VpnClient::Instance()->Transaction("", 0, tx_gid);
-    test_new_elect_tick_.CutOff(
-            7ull * 1000ull * 1000ull,
-            std::bind(&NetworkInit::CreateNewElectBlock, this));
-    test_start_bft_tick_.CutOff(1000 * 1000, std::bind(&NetworkInit::TestStartBft, this));
     inited_ = true;
     cmd_.Run();
     return kInitSuccess;
@@ -252,33 +241,6 @@ void NetworkInit::Destroy() {
 
 int NetworkInit::InitBft() {
     bft::BftManager::Instance();
-    return kInitSuccess;
-}
-
-int NetworkInit::CreateConfigNetwork() {
-    uint32_t net_id;
-    if (!conf_.Get("tenon", "net_id", net_id)) {
-        return kInitSuccess;
-    }
-
-	if (net_id >= network::kConsensusShardEndNetworkId) {
-		// for bussiness network
-		return kInitSuccess;
-	}
-
-	if (net_id == network::kRootCongressNetworkId) {
-        root_ = std::make_shared<root::RootInit>();
-		if (root_->Init() != root::kRootSuccess) {
-			INIT_ERROR("init congress failed!");
-			return kInitError;
-		}
-		return kInitSuccess;
-	}
-
-	if (elect::ElectManager::Instance()->Join(net_id) != elect::kElectSuccess) {
-		INIT_ERROR("join network [%u] failed!", net_id);
-		return kInitError;
-	}
     return kInitSuccess;
 }
 
@@ -617,47 +579,6 @@ int NetworkInit::ParseParams(int argc, char** argv, common::ParserArgs& parser_a
         return kInitError;
     }
     return kInitSuccess;
-}
-
-void NetworkInit::TestStartBft() {
-    if (!common::GlobalInfo::Instance()->is_lego_leader()) {
-        return;
-    }
-
-    if (ec_block_ok_) {
-        bft::BftManager::Instance()->StartBft("", -1);
-    }
-
-    test_start_bft_tick_.CutOff(100 * 1000, std::bind(&NetworkInit::TestStartBft, this));
-}
-
-void NetworkInit::CreateNewElectBlock() {
-    if (!common::GlobalInfo::Instance()->is_lego_leader()) {
-        return;
-    }
-
-    transport::protobuf::Header msg;
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        assert(false);
-		return;
-    }
-
-    elect::ElectProto::CreateElectBlock(dht->local_node(), msg);
-    if (!msg.has_data()) {
-        test_new_elect_tick_.CutOff(
-                1000 * 1000,
-                std::bind(&NetworkInit::CreateNewElectBlock, this));
-        return;
-    }
-
-    network::Route::Instance()->Send(msg);
-    network::Route::Instance()->SendToLocal(msg);
-    ec_block_ok_ = true;
-    test_new_elect_tick_.CutOff(
-            kTestNewElectPeriod,
-            std::bind(&NetworkInit::CreateNewElectBlock, this));
 }
 
 int NetworkInit::SetPriAndPubKey(const std::string&) {
