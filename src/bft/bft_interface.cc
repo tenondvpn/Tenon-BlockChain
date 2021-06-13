@@ -64,7 +64,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
     std::string str_pubkey;
     leader_mem_ptr->pubkey.Serialize(str_pubkey);
-    std::cout << "backup check sign, prepare_hash: " << common::Encode::HexEncode(prepare_hash()) << ", pubkey: " << common::Encode::HexEncode(str_pubkey) << std::endl;
     if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr->pubkey)) {
         BFT_ERROR("leader signature verify failed!");
         return false;

@@ -6,6 +6,7 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
+#include "common/min_heap.h"
 #include "transport/proto/transport.pb.h"
 #include "network/shard_network.h"
 #include "election/elect_utils.h"
@@ -19,6 +20,7 @@ namespace elect {
 
 typedef network::ShardNetwork<ElectDht> ElectNode;
 typedef std::shared_ptr<ElectNode> ElectNodePtr;
+typedef std::shared_ptr<common::LimitHeap<uint64_t, 256, true>> HeightLimitHeapPtr;
 
 class ElectManager {
 public:
@@ -70,7 +72,7 @@ private:
     ElectPoolManager pool_manager_;
     common::Tick create_elect_block_tick_;
     std::unordered_map<uint64_t, std::shared_ptr<MemberManager>> elect_members_;
-    std::unordered_map<uint32_t, common::LimitHeap<uint64_t, 256, true>> elect_net_heights_map_;
+    std::unordered_map<uint32_t, HeightLimitHeapPtr> elect_net_heights_map_;
     std::mutex elect_members_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);

@@ -31,7 +31,7 @@ uint64_t MinHeapUniqueVal(const int32_t& val);
 template <class Type, uint32_t kMaxSize, bool kIsMaxHep=false>
 class LimitHeap {
 public:
-    LimitHeap(bool unique) : unique_(unique) {
+    explicit LimitHeap(bool unique) : unique_(unique) {
         data_ = new Type[kMaxSize];
     }
 
@@ -183,7 +183,7 @@ public:
         data_[r] = tmp_val;
     }
 
-    inline bool OperaterMinOrMax(Type& left, Type& right) {
+    inline bool OperaterMinOrMax(Type left, Type right) {
         if (kIsMaxHep) {
             return !(left < right);
         }

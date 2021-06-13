@@ -291,7 +291,6 @@ void TxPoolManager::GetTx(
     uint64_t height = 0;
     int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
-    std::cout << "get network leader count: " << common::GlobalInfo::Instance()->network_id() << ":" << leader_count << std::endl;
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     for (int32_t i = prev_pool_index_; i < (int32_t)common::kImmutablePoolSize; ++i) {
         if (i % leader_count != pool_mod_idx) {
