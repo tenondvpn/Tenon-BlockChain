@@ -9,7 +9,7 @@
 #include "network/dht_manager.h"
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 #include "security/aes.h"
 #include "security/ecdh_create_key.h"
 #include "security/schnorr.h"
