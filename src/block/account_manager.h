@@ -47,6 +47,7 @@ private:
     void SetPool(
         uint32_t pool_index,
         uint64_t now_height,
+        uint64_t now_tmblock_height,
         const std::string& hash,
         db::DbWriteBach& db_batch);
     int GenesisAddAccountInfo(

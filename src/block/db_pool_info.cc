@@ -14,6 +14,7 @@ namespace block {
 static const std::string kPoolHeight = "pool_height";
 static const std::string kPoolHash = "pool_hash";
 static const std::string kPoolLastBlockStr = "pool_last_block_str";
+static const std::string kPoolTimeBlockHeight = "pool_tm_block_height";
 
 DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
@@ -103,7 +104,9 @@ int DbPoolInfo::GetHash(std::string* hash) {
     return kBlockSuccess;
 }
 
-int DbPoolInfo::SetLastBlock(const bft::protobuf::Block& block_item, db::DbWriteBach& db_batch) {
+int DbPoolInfo::SetLastBlock(
+        const bft::protobuf::Block& block_item,
+        db::DbWriteBach& db_batch) {
     std::string block_str = block_item.SerializeAsString();
     if (!db::Dict::Instance()->Hset(
             dict_key_,
@@ -119,7 +122,10 @@ int DbPoolInfo::SetLastBlock(const bft::protobuf::Block& block_item, db::DbWrite
     return kBlockSuccess;
 }
 
-int DbPoolInfo::GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index) {
+int DbPoolInfo::GetLastBlockInfo(
+        uint64_t* block_height,
+        uint64_t* block_tm,
+        uint32_t* pool_index) {
     {
         std::lock_guard<std::mutex> guard(hash_mutex_);
         if (!last_block_str_.empty()) {
@@ -181,6 +187,44 @@ int DbPoolInfo::GetHeight(uint64_t* height) {
 
     *height = common::StringUtil::ToUint64(str_height);
     height_ = *height;
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::SetTimeBlockHeight(uint64_t height, db::DbWriteBach& db_batch) {
+    if (height <= prev_tmblock_with_height_) {
+        return kBlockSuccess;
+    }
+
+    if (!db::Dict::Instance()->Hset(
+            dict_key_,
+            kPoolTimeBlockHeight,
+            std::to_string(height),
+            db_batch)) {
+        return kBlockError;
+    }
+
+    prev_tmblock_with_height_ = height;
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::GetTimeBlockHeight(uint64_t* height) {
+    if (prev_tmblock_with_height_ != common::kInvalidUint64) {
+        *height = prev_tmblock_with_height_;
+        return kBlockSuccess;
+    }
+
+    std::string str_height;
+    if (!db::Dict::Instance()->Hget(
+            dict_key_,
+            kPoolTimeBlockHeight,
+            &str_height)) {
+        BLOCK_ERROR("get height from db failed[%s][%s]",
+            dict_key_.c_str(), kPoolTimeBlockHeight.c_str());
+        return kBlockError;
+    }
+
+    *height = common::StringUtil::ToUint64(str_height);
+    prev_tmblock_with_height_ = *height;
     return kBlockSuccess;
 }
 

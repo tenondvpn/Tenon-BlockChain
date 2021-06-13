@@ -117,8 +117,6 @@ DbAccountInfo::DbAccountInfo(const std::string& account_id)
             }
         }
     }
-
-    LoadBlocksUtilLatestStatisticBlock();
 }
 
 DbAccountInfo::~DbAccountInfo() {}
@@ -840,7 +838,6 @@ int DbAccountInfo::LoadBlocksUtilLatestStatisticBlock() {
             return kBlockError;
         }
 
-
         bft::protobuf::Block block_item;
         if (!block_item.ParseFromString(block_str)) {
             return kBlockError;
@@ -862,7 +859,18 @@ int DbAccountInfo::LoadBlocksUtilLatestStatisticBlock() {
 }
 
 int DbAccountInfo::AddStatistic(const bft::protobuf::Block& block_item) {
+    // TODO: sync thread to load block
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
+    if (max_time_block_height_ > 2) {
+        if (block_item.timeblock_height() <= max_time_block_height_ - 2) {
+            return kBlockSuccess;
+        }
+    }
+
+    if (block_item.timeblock_height() > max_time_block_height_) {
+        max_time_block_height_ = block_item.timeblock_height();
+    }
+
     auto iter = statistic_for_tmblock_.find(block_item.timeblock_height());
     if (iter == statistic_for_tmblock_.end()) {
         statistic_for_tmblock_[block_item.timeblock_height()] = StatisticItem();
@@ -893,6 +901,19 @@ int DbAccountInfo::AddStatistic(const bft::protobuf::Block& block_item) {
             ++succ_iter->second;
         } else {
             iter->second.succ_tx_count[i] = 1;
+        }
+    }
+
+    if (max_time_block_height_ > 2) {
+        if (statistic_for_tmblock_.size() > 2) {
+            for (int64_t i = (int64_t)max_time_block_height_ - 2; i > 0; --i) {
+                auto iter = statistic_for_tmblock_.find(i);
+                if (iter == statistic_for_tmblock_.end()) {
+                    break;
+                }
+
+                statistic_for_tmblock_.erase(iter);
+            }
         }
     }
 

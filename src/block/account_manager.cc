@@ -253,6 +253,7 @@ int AccountManager::AddBlockItem(
         SetPool(
             consistent_pool_index,
             block_item.height(),
+            block_item.timeblock_height(),
             block_item.hash(),
             db_batch);
     }
@@ -482,12 +483,11 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
-    if (IsPoolBaseAddress(account_id)) {
-        if (account_info->AddStatistic(block_item) != kBlockSuccess) {
-            return kBlockError;
-        }
-    }
-
+//     if (IsPoolBaseAddress(account_id)) {
+//         if (account_info->AddStatistic(block_item) != kBlockSuccess) {
+//             return kBlockError;
+//         }
+//     }
     if (tx_info.status() == bft::kBftSuccess &&
             (tx_info.type() == common::kConsensusCallContract ||
             tx_info.type() == common::kConsensusCreateContract)) {
@@ -652,6 +652,7 @@ int AccountManager::GetBlockInfo(
 void AccountManager::SetPool(
         uint32_t pool_index,
         uint64_t now_height,
+        uint64_t now_tmblock_height,
         const std::string& hash,
         db::DbWriteBach& db_batch) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
@@ -681,6 +682,7 @@ void AccountManager::SetPool(
 
     db_pool_info->SetHash(hash, db_batch);
     db_pool_info->SetHeight(now_height, db_batch);
+    db_pool_info->SetTimeBlockHeight(now_tmblock_height, db_batch);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

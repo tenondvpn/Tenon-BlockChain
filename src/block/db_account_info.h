@@ -27,11 +27,11 @@ public:
     void NewHeight(uint64_t height, db::DbWriteBach& db_batch);
     void GetHeights(std::vector<uint64_t>* res);
     void NewTxHeight(
-            uint64_t height,
-            uint64_t timestamp,
-            const std::string& hash,
-            const bft::protobuf::TxInfo& tx_info,
-            db::DbWriteBach& db_batch);
+        uint64_t height,
+        uint64_t timestamp,
+        const std::string& hash,
+        const bft::protobuf::TxInfo& tx_info,
+        db::DbWriteBach& db_batch);
     void GetTxHeights(std::vector<uint64_t>* res);
     int SetCreateAccountHeight(uint64_t create_account_height, db::DbWriteBach& db_batch);
     int GetCreateAccountHeight(uint64_t* create_account_height);
@@ -66,6 +66,7 @@ public:
     std::string VmCodeHash();
     std::string GetCode();
     int AddStatistic(const bft::protobuf::Block& block_item);
+    int LoadBlocksUtilLatestStatisticBlock();
 
     std::string& account_id() {
         return account_id_;
@@ -84,8 +85,6 @@ public:
     }
 
 private:
-    int LoadBlocksUtilLatestStatisticBlock();
-
     static const uint32_t kTopTxHeightBlocksCount = 128;
 
     std::string account_id_;
@@ -122,6 +121,7 @@ private:
     std::atomic<uint64_t> latest_time_block_heigth_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
     std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
+    uint64_t max_time_block_height_{ 0 };
     std::mutex statistic_for_tmblock_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
