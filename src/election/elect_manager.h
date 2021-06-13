@@ -65,15 +65,16 @@ private:
     void HandleMessage(transport::protobuf::Header& header);
     void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
     void CreateAllElectTx();
+    uint64_t GetNetworkLatestElectHeight(uint32_t network_id);
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
     std::mutex elect_network_map_mutex_;
     std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
     ElectPoolManager pool_manager_;
-    std::atomic<uint64_t> latest_height_{ 0 };
     common::Tick create_elect_block_tick_;
     std::unordered_map<uint64_t, std::shared_ptr<MemberManager>> elect_members_;
+    std::unordered_map<uint32_t, common::LimitHeap<uint64_t, 256, true>> elect_net_heights_map_;
     std::mutex elect_members_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);

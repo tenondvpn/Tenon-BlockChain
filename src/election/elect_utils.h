@@ -2,6 +2,7 @@
 
 #include "common/utils.h"
 #include "common/log.h"
+#include "common/min_heap.h"
 
 #define ELECT_DEBUG(fmt, ...) TENON_DEBUG("[elect]" fmt, ## __VA_ARGS__)
 #define ELECT_INFO(fmt, ...) TENON_INFO("[elect]" fmt, ## __VA_ARGS__)

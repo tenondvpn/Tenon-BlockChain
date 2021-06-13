@@ -29,17 +29,17 @@ template<>
 uint64_t MinHeapUniqueVal(const int32_t& val);
 
 template <class Type, uint32_t kMaxSize, bool kIsMaxHep=false>
-class MinHeap {
+class LimitHeap {
 public:
-    MinHeap(bool unique) : unique_(unique) {
+    LimitHeap(bool unique) : unique_(unique) {
         data_ = new Type[kMaxSize];
     }
 
-    ~MinHeap() {
+    ~LimitHeap() {
         delete[] data_;
     }
 
-    MinHeap(const MinHeap &other) {
+    LimitHeap(const LimitHeap &other) {
         data_ = new Type[kMaxSize];
 //         memcpy(data_, other.data_, kMaxSize * sizeof(other.data_[0]));
         for (uint32_t i = 0; i < other.size_; ++i) {
@@ -49,7 +49,7 @@ public:
         size_ = other.size_;
     }
 
-    MinHeap& operator=(const MinHeap &other) {
+    LimitHeap& operator=(const LimitHeap &other) {
         if (this == &other) {
             return *this;
         }
@@ -183,7 +183,7 @@ public:
         data_[r] = tmp_val;
     }
 
-    inline bool OperaterMinOrMax(const Type& left, const Type& right) {
+    inline bool OperaterMinOrMax(Type& left, Type& right) {
         if (kIsMaxHep) {
             return !(left < right);
         }

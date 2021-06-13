@@ -105,7 +105,7 @@ private:
     uint32_t pool_index_{ common::kInvalidUint32 };
     db::DbPriQueue<uint64_t, kTopTxHeightBlocksCount> tx_height_queue_;
     std::mutex tx_height_queue_mutex_;
-    common::MinHeap<common::BlockItemPtr, kTopTxHeightBlocksCount> top_height_blocks_{ false };
+    common::LimitHeap<common::BlockItemPtr, kTopTxHeightBlocksCount> top_height_blocks_{ false };
     std::mutex top_height_blocks_mutex_;
     std::string bytes_code_;
     std::mutex bytes_code_mutex_;

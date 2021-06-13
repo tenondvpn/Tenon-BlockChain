@@ -500,7 +500,7 @@ void Statistics::StatisUpdate() {
 
 void Statistics::GetBestAddr(nlohmann::json& res_json) {
     std::deque<std::string> tmp_queue;
-    common::MinHeap<AccountBalance, 128> best_addrs(false);
+    common::LimitHeap<AccountBalance, 128> best_addrs(false);
     auto datas = best_addr_queue_.mem_data();
     for (uint32_t i = 0; i < best_addr_queue_.size(); ++i) {
         best_addrs.push(datas[i]);
@@ -519,7 +519,7 @@ void Statistics::GetBestAddr(nlohmann::json& res_json) {
 
 std::deque<std::string> Statistics::best_addrs() {
     std::deque<std::string> tmp_queue;
-    common::MinHeap<AccountBalance, 128> best_addrs(false);
+    common::LimitHeap<AccountBalance, 128> best_addrs(false);
     auto datas = best_addr_queue_.mem_data();
     for (uint32_t i = 0; i < best_addr_queue_.size(); ++i) {
         best_addrs.push(datas[i]);

@@ -132,18 +132,12 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    if (height < latest_height_) {
-        return;
-    }
-
-    latest_height_ = height;
     std::map<uint32_t, MembersPtr> in_members;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
     for (int32_t i = 0; i < in.size(); ++i) {
         auto net_id = in[i].net_id();
-        std::cout << "latest_height_: " << latest_height_ << ", net_id: " << std::endl;
         auto iter = in_members.find(net_id);
         if (iter == in_members.end()) {
             in_members[net_id] = std::make_shared<Members>();
@@ -205,7 +199,19 @@ void ElectManager::ProcessNewElectBlock(
             index_map_iter->second,
             elect_block.leader_count());
         std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        if (elect_members_.find(height) != elect_members_.end()) {
+            return;
+        }
+
         elect_members_[height] = member_ptr;
+        auto net_heights_iter = elect_net_heights_map_.find(iter->first);
+        if (net_heights_iter == elect_net_heights_map_.end()) {
+            elect_net_heights_map_[iter->first] = common::LimitHeap<uint64_t, 256, true>(true);
+            elect_net_heights_map_[iter->first].push(height);
+        } else {
+            net_heights_iter->second.push(height);
+        }
+
     }
 }
 
@@ -230,12 +236,25 @@ void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protob
     msg->set_data(bft_msg.SerializeAsString());
 }
 
+uint64_t ElectManager::GetNetworkLatestElectHeight(uint32_t network_id) {
+    std::lock_guard<std::mutex> guard(elect_members_mutex_);
+    auto net_heights_iter = elect_net_heights_map_.find(network_id);
+    if (net_heights_iter == elect_net_heights_map_.end()) {
+        return common::kInvalidUint64;
+    }
+    
+    return net_heights_iter->second.top();
+}
+
 int32_t ElectManager::IsLeader(
         uint64_t elect_height,
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return -1;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -257,7 +276,10 @@ uint32_t ElectManager::GetMemberIndex(
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return kInvalidMemberIndex;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -276,7 +298,10 @@ uint32_t ElectManager::GetMemberIndex(
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return nullptr;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -298,7 +323,10 @@ elect::BftMemberPtr ElectManager::GetMember(
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return nullptr;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -320,7 +348,10 @@ elect::BftMemberPtr ElectManager::GetMember(
         uint32_t network_id,
         uint32_t index) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return nullptr;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -339,7 +370,10 @@ elect::BftMemberPtr ElectManager::GetMember(
 
 uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return 0;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -358,7 +392,10 @@ uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id
 
 int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = latest_height_;
+        elect_height = GetNetworkLatestElectHeight(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return 0;
+        }
     }
 
     std::shared_ptr<MemberManager> mem_ptr = nullptr;
@@ -372,7 +409,6 @@ int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t netw
         mem_ptr = iter->second;
     }
 
-    std::cout << "GetNetworkLeaderCount elect_height: " << elect_height << ", network_id: " << network_id << std::endl;
     return mem_ptr->GetNetworkLeaderCount(network_id);
 }
 
@@ -382,13 +418,6 @@ void ElectManager::SetNetworkMember(
         elect::MembersPtr& members_ptr,
         elect::NodeIndexMapPtr& node_index_map,
         int32_t leader_count) {
-    std::cout << "0000 latest_height_: " << latest_height_ << ", net_id: " << network_id << ", leader_count: " << leader_count << std::endl;
-    if (elect_height < latest_height_) {
-        delete& elect_height;
-        return;
-    }
-
-    latest_height_ = elect_height;
     if (elect_height == common::kInvalidUint64) {
         return;
     }
@@ -403,9 +432,15 @@ void ElectManager::SetNetworkMember(
 
         mem_ptr = std::make_shared<elect::MemberManager>();
         elect_members_[elect_height] = mem_ptr;
+        auto net_heights_iter = elect_net_heights_map_.find(network_id);
+        if (net_heights_iter == elect_net_heights_map_.end()) {
+            elect_net_heights_map_[network_id] = common::LimitHeap<uint64_t, 256, true>(true);
+            elect_net_heights_map_[network_id].push(elect_height);
+        } else {
+            net_heights_iter->second.push(elect_height);
+        }
     }
 
-    std::cout << "latest_height_: " << latest_height_ << ", net_id: " << network_id << ", leader_count: " << leader_count << std::endl;
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
 }
 

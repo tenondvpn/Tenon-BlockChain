@@ -31,8 +31,8 @@ private:
 
 };
 
-TEST_F(TestMinHeap, ALL) {
-    MinHeap<uint64_t, 1024, true> test_min_heap(true);
+TEST_F(TestMinHeap, TestMax) {
+    LimitHeap<uint64_t, 1024, true> test_min_heap(true);
     uint64_t max_data = 0;
     for (uint64_t i = 0; i < 1000; ++i) {
         auto data = common::Random::RandomUint16();
@@ -44,9 +44,32 @@ TEST_F(TestMinHeap, ALL) {
 
     ASSERT_EQ(max_data, test_min_heap.top());
     while (!test_min_heap.empty()) {
-        std::cout << test_min_heap.top() << " " << std::endl;
+        std::cout << test_min_heap.top() << " ";
         test_min_heap.pop();
     }
+
+    std::cout << std::endl;
+}
+
+TEST_F(TestMinHeap, TestMin) {
+    LimitHeap<uint64_t, 1024, false> test_min_heap(true);
+    uint64_t max_data = 999999999;
+    for (uint64_t i = 0; i < 1000; ++i) {
+        auto data = common::Random::RandomUint16();
+        test_min_heap.push(data);
+        if (max_data > data) {
+            max_data = data;
+        }
+    }
+
+
+    ASSERT_EQ(max_data, test_min_heap.top());
+    while (!test_min_heap.empty()) {
+        std::cout << test_min_heap.top() << " ";
+        test_min_heap.pop();
+    }
+
+    std::cout << std::endl;
 }
 
 }  // namespace test
