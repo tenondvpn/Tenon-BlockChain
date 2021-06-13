@@ -15,13 +15,10 @@
 
 namespace tenon {
 
-namespace network {
-    class ElectNode;
-}
-
 namespace elect {
 
-typedef std::shared_ptr<network::ElectNode> ElectNodePtr;
+typedef network::ShardNetwork<ElectDht> ElectNode;
+typedef std::shared_ptr<ElectNode> ElectNodePtr;
 
 class ElectManager {
 public:
@@ -50,6 +47,7 @@ public:
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
+    elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
@@ -65,7 +63,7 @@ private:
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
     std::mutex elect_network_map_mutex_;
-    std::shared_ptr<network::ElectNode> elect_node_ptr_{ nullptr };
+    std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
     ElectPoolManager pool_manager_;
     std::atomic<uint64_t> latest_height_{ 0 };
     common::Tick create_elect_block_tick_;

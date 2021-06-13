@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "common/utils.h"
 #include "common/string_utils.h"
 #include "dht/dht_key.h"
@@ -17,10 +19,14 @@ namespace tenon {
 
 namespace network {
 
+typedef std::function<elect::BftMemberPtr(
+    uint32_t network_id,
+    const std::string& node_id)> NetworkMemberCallback;
+
 template<class DhtType>
 class ShardNetwork {
 public:
-    explicit ShardNetwork(uint32_t network_id);
+    ShardNetwork(uint32_t network_id, NetworkMemberCallback member_callback);
     ~ShardNetwork();
     int Init();
     void Destroy();
@@ -44,12 +50,17 @@ private:
     dht::BaseDhtPtr elect_dht_{ nullptr };
     uint32_t network_id_{ network::kNetworkMaxDhtCount };
     transport::TransportPtr transport_{ nullptr };
+    NetworkMemberCallback member_callback_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(ShardNetwork);
 };
 
 template<class DhtType>
-ShardNetwork<DhtType>::ShardNetwork(uint32_t network_id) : network_id_(network_id) {
+ShardNetwork<DhtType>::ShardNetwork(
+        uint32_t network_id,
+        NetworkMemberCallback member_callback)
+        : network_id_(network_id),
+          member_callback_(member_callback) {
     common::GlobalInfo::Instance()->networks().push_back(network_id_);
 }
 
@@ -129,8 +140,10 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
         ((network_id >= network::kConsensusShardBeginNetworkId &&
             network_id < network::kConsensusShardEndNetworkId) ||
             network_id == network::kRootCongressNetworkId)) {
-        if (elect::ElectManager::Instance()->GetMember(network_id, id) != nullptr) {
-            return true;
+        if (member_callback_ != nullptr) {
+            if (member_callback_(network_id, id) != nullptr) {
+                return true;
+            }
         }
     }
 
@@ -238,8 +251,6 @@ int ShardNetwork<DhtType>::JoinShard() {
 
     return kNetworkSuccess;
 }
-
-typedef ShardNetwork<elect::ElectDht> ElectNode;
 
 }  // namespace network
 

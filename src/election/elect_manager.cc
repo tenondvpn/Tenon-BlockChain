@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "election/elect_manager.h"
 
+#include <functional>
+
 #include "common/utils.h"
 #include "db/db_utils.h"
 #include "dht/dht_utils.h"
@@ -37,7 +39,13 @@ int ElectManager::Join(uint32_t network_id) {
         }
     }
 
-    elect_node_ptr_ = std::make_shared<network::ElectNode>(network_id);
+    elect_node_ptr_ = std::make_shared<ElectNode>(
+        network_id,
+        std::bind(
+            &ElectManager::GetMemberWithId,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2));
     if (elect_node_ptr_->Init() != network::kNetworkSuccess) {
         ELECT_ERROR("node join network [%u] failed!", network_id);
         return kElectError;
@@ -376,6 +384,10 @@ uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& no
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
     return GetNetworkMembers(common::kInvalidUint64, network_id);
+}
+
+elect::BftMemberPtr ElectManager::GetMemberWithId(uint32_t network_id, const std::string& node_id) {
+    return GetMember(common::kInvalidUint64, network_id, node_id);
 }
 
 elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, const std::string& node_id) {
