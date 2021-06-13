@@ -94,7 +94,7 @@ int Execution::execute(
 
         host.create_bytes_code_ = std::string((char*)out_res->output_data, out_res->output_size);
         const auto gas_used = create_msg.gas - out_res->gas_left;
-        std::cout << "gas_used: " << gas_used << std::endl;
+        TVM_DEBUG("gas_used: %lu", gas_used);
         if (call_mode == kJustCreate) {
             return 0;
         }
@@ -110,7 +110,7 @@ int Execution::execute(
 
     *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
-    std::cout << "gas_used: " << gas_used << std::endl;
+    TVM_DEBUG("gas_used: %lu", gas_used);
     return 0;
 }
 
