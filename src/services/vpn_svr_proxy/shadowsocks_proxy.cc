@@ -253,7 +253,13 @@ int ShadowsocksProxy::StartShadowsocks() {
         return kProxySuccess;
     }
 
-    vpn_proxy_ = std::make_shared<VpnProxyNode>(network::kVpnNetworkId);
+    vpn_proxy_ = std::make_shared<VpnProxyNode>(
+        network::kVpnNetworkId,
+        std::bind(
+            &elect::ElectManager::GetMemberWithId,
+            elect::ElectManager::Instance(),
+            std::placeholders::_1,
+            std::placeholders::_2));
     if (vpn_proxy_->Init() != network::kNetworkSuccess) {
         vpn_proxy_ = nullptr;
         PROXY_ERROR("node join network [%u] failed!", network::kVpnNetworkId);
