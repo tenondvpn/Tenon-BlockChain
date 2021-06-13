@@ -7,7 +7,7 @@
 #include "dht/base_dht.h"
 #include "transport/proto/transport.pb.h"
 #include "election/elect_pool_manager.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 #include "election/proto/elect.pb.h"
 #include "election/proto/elect_proto.h"
 #include "timeblock/time_block_manager.h"
