@@ -573,6 +573,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     }
 
     security::Signature leader_sig;
+    std::cout << "leader sign, prepare_hash: " << common::Encode::HexEncode(bft_ptr->prepare_hash()) << ", pubkey: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey()) << std::endl;
     if (!security::Schnorr::Instance()->Sign(
             bft_ptr->prepare_hash(),
             *(security::Schnorr::Instance()->prikey()),
