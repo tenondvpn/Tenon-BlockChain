@@ -272,10 +272,10 @@ int KeyValueSync::HandleExistsBlock(const std::string& key) {
         return kSyncError;
     }
 
-    bft::protobuf::Block block_item;
-    if (block_item.ParseFromString(val) && block_item.hash() == key) {
+    auto tenon_block = std::make_shared<bft::protobuf::Block>();
+    if (tenon_block->ParseFromString(val) && tenon_block->hash() == key) {
         db::DbWriteBach db_batch;
-        block::BlockManager::Instance()->AddNewBlock(block_item, db_batch);
+        block::BlockManager::Instance()->AddNewBlock(tenon_block, db_batch);
         auto st = db::Db::Instance()->Put(db_batch);
         if (!st.ok()) {
             assert(false);
@@ -295,8 +295,8 @@ void KeyValueSync::ProcessSyncValueResponse(
     auto& res_arr = sync_msg.sync_value_res().res();
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
-        bft::protobuf::Block block_item;
-        if (block_item.ParseFromString(iter->value()) && block_item.hash() == iter->key()) {
+        auto block_item = std::make_shared<bft::protobuf::Block>();
+        if (block_item->ParseFromString(iter->value()) && block_item->hash() == iter->key()) {
             db::DbWriteBach db_batch;
             block::BlockManager::Instance()->AddNewBlock(block_item, db_batch);
             auto st = db::Db::Instance()->Put(db_batch);
