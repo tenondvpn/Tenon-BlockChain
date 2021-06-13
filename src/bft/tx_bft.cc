@@ -2027,7 +2027,7 @@ int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
     tenon_host.tx_context_.tx_origin = evmc::address{};
     tenon_host.tx_context_.block_coinbase = evmc::address{};
     tenon_host.tx_context_.block_number = last_height;
-    tenon_host.tx_context_.block_timestamp = tm;
+    tenon_host.tx_context_.block_timestamp = common::TimeUtils::TimestampSeconds();
     tenon_host.tx_context_.block_gas_limit = 0;
     tenon_host.tx_context_.block_difficulty = evmc_uint256be{};
     uint64_t chanin_id = (((uint64_t)common::GlobalInfo::Instance()->network_id()) << 32 |

@@ -500,20 +500,6 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tx_info->set_gas_limit(0);
         tx_info->set_type(common::kConsensusCreateGenesisAcount);
         tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-        tenon_block.set_prehash("");
-        tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_agg_pubkey("");
-        tenon_block.set_agg_sign_challenge("");
-        tenon_block.set_agg_sign_response("");
-        tenon_block.set_pool_index(iter->first);
-        tenon_block.set_height(0);
-        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
-            INIT_ERROR("AddGenisisBlock error.");
-            return kInitError;
-        }
-
         std::string pool_hash;
         uint64_t pool_height = 0;
         uint64_t tm_height;
@@ -526,6 +512,20 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             &tm_with_block_height);
         if (res != block::kBlockSuccess) {
             INIT_ERROR("GetBlockInfo error.");
+            return kInitError;
+        }
+
+        tenon_block.set_prehash("");
+        tenon_block.set_version(common::kTransactionVersion);
+        tenon_block.set_agg_pubkey("");
+        tenon_block.set_agg_sign_challenge("");
+        tenon_block.set_agg_sign_response("");
+        tenon_block.set_pool_index(iter->first);
+        tenon_block.set_height(0);
+        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
+        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
+        if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
+            INIT_ERROR("AddGenisisBlock error.");
             return kInitError;
         }
 
