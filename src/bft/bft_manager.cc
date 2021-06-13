@@ -15,7 +15,7 @@
 #include "common/random.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 #include "election/elect_dht.h"
 #include "network/dht_manager.h"
 #include "network/route.h"
@@ -326,6 +326,10 @@ int BftManager::ShardAddTimeBlockStatisticTransaction(
     }
 
     return kBftSuccess;
+}
+
+elect::MembersPtr BftManager::GetNetworkMembers(uint32_t network_id) {
+    return elect::ElectManager::Instance()->GetNetworkMembers(network_id);
 }
 
 void BftManager::RootCommitAddNewAccount(

@@ -7,8 +7,8 @@
 #include "common/tick.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
-#include "bft/bft_interface.h"
 #include "election/member_manager.h"
+#include "bft/bft_interface.h"
 #include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
 
@@ -25,10 +25,7 @@ public:
     BftInterfacePtr GetBft(const std::string& gid);
     void RemoveBft(const std::string& gid);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
-    elect::MembersPtr GetNetworkMembers(uint32_t network_id) {
-        return elect::ElectManager::Instance()->GetNetworkMembers(network_id);
-    }
-
+    elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
 
 private:
