@@ -421,6 +421,8 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         tenon_block.set_agg_sign_response("");
         tenon_block.set_pool_index(iter->first);
         tenon_block.set_height(0);
+        tenon_block.set_timeblock_height(1);
+        tenon_block.set_electblock_height(3);
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
@@ -522,6 +524,8 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tenon_block.set_agg_sign_response("");
         tenon_block.set_pool_index(iter->first);
         tenon_block.set_height(0);
+        tenon_block.set_timeblock_height(1);
+        tenon_block.set_electblock_height(3);
         tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block.set_hash(bft::GetBlockHash(tenon_block));
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
