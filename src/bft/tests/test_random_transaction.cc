@@ -391,7 +391,8 @@ public:
             tenon_block->set_height(0);
             tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
             tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-            tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height());
+            tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
+                common::GlobalInfo::Instance()->network_id()));
             tenon_block->set_hash(GetBlockHash(*tenon_block));
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
@@ -599,7 +600,8 @@ public:
         block->set_height(pool_height + 1);
         block->set_timestamp(common::TimeStampMsec());
         block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-        block->set_electblock_height(elect::ElectManager::Instance()->latest_height());
+        block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id()));
         block->set_hash(GetBlockHash(*block));
 
         auto tx_data = tx_bft.SerializeAsString();

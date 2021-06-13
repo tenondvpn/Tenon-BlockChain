@@ -1337,7 +1337,7 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
     }
 
     if (block_info.electblock_height() !=
-            elect::ElectManager::Instance()->latest_height()) {
+            elect::ElectManager::Instance()->latest_height(block_info.network_id())) {
         return kBftBlockHeightError;
     }
 
@@ -1597,7 +1597,8 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -1656,7 +1657,8 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -1741,7 +1743,8 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -1838,7 +1841,8 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeStampMsec());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
