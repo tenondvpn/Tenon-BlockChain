@@ -652,6 +652,7 @@ public:
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
             elect::ElectManager::Instance()->SetNetworkMember(
+                0,
                 iter->first,
                 iter->second,
                 index_map_iter->second,

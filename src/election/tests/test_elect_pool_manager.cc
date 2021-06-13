@@ -118,7 +118,8 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            MemberManager::Instance()->SetNetworkMember(
+            ElectManager::Instance()->SetNetworkMember(
+                0,
                 iter->first,
                 iter->second,
                 index_map_iter->second,
