@@ -38,7 +38,7 @@ namespace protobuf_block_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[15];
+  static const ::google::protobuf::internal::ParseTable schema[16];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -78,6 +78,9 @@ extern GetTxBlockRequestDefaultTypeInternal _GetTxBlockRequest_default_instance_
 class GetTxBlockResponse;
 class GetTxBlockResponseDefaultTypeInternal;
 extern GetTxBlockResponseDefaultTypeInternal _GetTxBlockResponse_default_instance_;
+class StatisticInfo;
+class StatisticInfoDefaultTypeInternal;
+extern StatisticInfoDefaultTypeInternal _StatisticInfo_default_instance_;
 class TxItem;
 class TxItemDefaultTypeInternal;
 extern TxItemDefaultTypeInternal _TxItem_default_instance_;
@@ -108,6 +111,7 @@ template<> ::tenon::block::protobuf::GetAccountInitInfoRequest* Arena::CreateMay
 template<> ::tenon::block::protobuf::GetAccountInitInfoResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoResponse>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockRequest>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockResponse>(Arena*);
+template<> ::tenon::block::protobuf::StatisticInfo* Arena::CreateMaybeMessage<::tenon::block::protobuf::StatisticInfo>(Arena*);
 template<> ::tenon::block::protobuf::TxItem* Arena::CreateMaybeMessage<::tenon::block::protobuf::TxItem>(Arena*);
 template<> ::tenon::block::protobuf::UpdateVpnActiveRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnActiveRequest>(Arena*);
 template<> ::tenon::block::protobuf::UpdateVpnCountRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnCountRequest>(Arena*);
@@ -2254,6 +2258,153 @@ class AdRewardRequest : public ::google::protobuf::Message /* @@protoc_insertion
 };
 // -------------------------------------------------------------------
 
+class StatisticInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.StatisticInfo) */ {
+ public:
+  StatisticInfo();
+  virtual ~StatisticInfo();
+
+  StatisticInfo(const StatisticInfo& from);
+
+  inline StatisticInfo& operator=(const StatisticInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  StatisticInfo(StatisticInfo&& from) noexcept
+    : StatisticInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline StatisticInfo& operator=(StatisticInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StatisticInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const StatisticInfo* internal_default_instance() {
+    return reinterpret_cast<const StatisticInfo*>(
+               &_StatisticInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    14;
+
+  void Swap(StatisticInfo* other);
+  friend void swap(StatisticInfo& a, StatisticInfo& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline StatisticInfo* New() const final {
+    return CreateMaybeMessage<StatisticInfo>(NULL);
+  }
+
+  StatisticInfo* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<StatisticInfo>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const StatisticInfo& from);
+  void MergeFrom(const StatisticInfo& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(StatisticInfo* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint32 succ_tx_count = 4;
+  int succ_tx_count_size() const;
+  void clear_succ_tx_count();
+  static const int kSuccTxCountFieldNumber = 4;
+  ::google::protobuf::uint32 succ_tx_count(int index) const;
+  void set_succ_tx_count(int index, ::google::protobuf::uint32 value);
+  void add_succ_tx_count(::google::protobuf::uint32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      succ_tx_count() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_succ_tx_count();
+
+  // optional uint64 timeblock_height = 1;
+  bool has_timeblock_height() const;
+  void clear_timeblock_height();
+  static const int kTimeblockHeightFieldNumber = 1;
+  ::google::protobuf::uint64 timeblock_height() const;
+  void set_timeblock_height(::google::protobuf::uint64 value);
+
+  // optional uint64 elect_height = 2;
+  bool has_elect_height() const;
+  void clear_elect_height();
+  static const int kElectHeightFieldNumber = 2;
+  ::google::protobuf::uint64 elect_height() const;
+  void set_elect_height(::google::protobuf::uint64 value);
+
+  // optional uint32 all_tx_count = 3;
+  bool has_all_tx_count() const;
+  void clear_all_tx_count();
+  static const int kAllTxCountFieldNumber = 3;
+  ::google::protobuf::uint32 all_tx_count() const;
+  void set_all_tx_count(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.StatisticInfo)
+ private:
+  void set_has_timeblock_height();
+  void clear_has_timeblock_height();
+  void set_has_elect_height();
+  void clear_has_elect_height();
+  void set_has_all_tx_count();
+  void clear_has_all_tx_count();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > succ_tx_count_;
+  ::google::protobuf::uint64 timeblock_height_;
+  ::google::protobuf::uint64 elect_height_;
+  ::google::protobuf::uint32 all_tx_count_;
+  friend struct ::protobuf_block_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.BlockMessage) */ {
  public:
   BlockMessage();
@@ -2296,7 +2447,7 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_BlockMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   void Swap(BlockMessage* other);
   friend void swap(BlockMessage& a, BlockMessage& b) {
@@ -4815,6 +4966,112 @@ inline void AdRewardRequest::set_allocated_gid(::std::string* gid) {
 
 // -------------------------------------------------------------------
 
+// StatisticInfo
+
+// optional uint64 timeblock_height = 1;
+inline bool StatisticInfo::has_timeblock_height() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void StatisticInfo::set_has_timeblock_height() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void StatisticInfo::clear_has_timeblock_height() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void StatisticInfo::clear_timeblock_height() {
+  timeblock_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_timeblock_height();
+}
+inline ::google::protobuf::uint64 StatisticInfo::timeblock_height() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.StatisticInfo.timeblock_height)
+  return timeblock_height_;
+}
+inline void StatisticInfo::set_timeblock_height(::google::protobuf::uint64 value) {
+  set_has_timeblock_height();
+  timeblock_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.StatisticInfo.timeblock_height)
+}
+
+// optional uint64 elect_height = 2;
+inline bool StatisticInfo::has_elect_height() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void StatisticInfo::set_has_elect_height() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void StatisticInfo::clear_has_elect_height() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void StatisticInfo::clear_elect_height() {
+  elect_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_elect_height();
+}
+inline ::google::protobuf::uint64 StatisticInfo::elect_height() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.StatisticInfo.elect_height)
+  return elect_height_;
+}
+inline void StatisticInfo::set_elect_height(::google::protobuf::uint64 value) {
+  set_has_elect_height();
+  elect_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.StatisticInfo.elect_height)
+}
+
+// optional uint32 all_tx_count = 3;
+inline bool StatisticInfo::has_all_tx_count() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void StatisticInfo::set_has_all_tx_count() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void StatisticInfo::clear_has_all_tx_count() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void StatisticInfo::clear_all_tx_count() {
+  all_tx_count_ = 0u;
+  clear_has_all_tx_count();
+}
+inline ::google::protobuf::uint32 StatisticInfo::all_tx_count() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.StatisticInfo.all_tx_count)
+  return all_tx_count_;
+}
+inline void StatisticInfo::set_all_tx_count(::google::protobuf::uint32 value) {
+  set_has_all_tx_count();
+  all_tx_count_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.StatisticInfo.all_tx_count)
+}
+
+// repeated uint32 succ_tx_count = 4;
+inline int StatisticInfo::succ_tx_count_size() const {
+  return succ_tx_count_.size();
+}
+inline void StatisticInfo::clear_succ_tx_count() {
+  succ_tx_count_.Clear();
+}
+inline ::google::protobuf::uint32 StatisticInfo::succ_tx_count(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.StatisticInfo.succ_tx_count)
+  return succ_tx_count_.Get(index);
+}
+inline void StatisticInfo::set_succ_tx_count(int index, ::google::protobuf::uint32 value) {
+  succ_tx_count_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.StatisticInfo.succ_tx_count)
+}
+inline void StatisticInfo::add_succ_tx_count(::google::protobuf::uint32 value) {
+  succ_tx_count_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.StatisticInfo.succ_tx_count)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+StatisticInfo::succ_tx_count() const {
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.StatisticInfo.succ_tx_count)
+  return succ_tx_count_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+StatisticInfo::mutable_succ_tx_count() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.StatisticInfo.succ_tx_count)
+  return &succ_tx_count_;
+}
+
+// -------------------------------------------------------------------
+
 // BlockMessage
 
 // optional .tenon.block.protobuf.GetTxBlockRequest block_req = 1;
@@ -5516,6 +5773,8 @@ inline void BlockMessage::set_allocated_ad_reward_req(::tenon::block::protobuf::
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
