@@ -382,7 +382,9 @@ void ElectManager::SetNetworkMember(
         elect::MembersPtr& members_ptr,
         elect::NodeIndexMapPtr& node_index_map,
         int32_t leader_count) {
+    std::cout << "0000 latest_height_: " << latest_height_ << ", net_id: " << network_id << ", leader_count: " << leader_count << std::endl;
     if (elect_height < latest_height_) {
+        delete& elect_height;
         return;
     }
 
