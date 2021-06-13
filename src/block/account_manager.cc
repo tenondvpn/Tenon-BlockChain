@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "block/account_manager.h"
 
+#include <algorithm>
+
 #include "common/encode.h"
 #include "statistics/statistics.h"
 #include "contract/contract_manager.h"
@@ -22,6 +24,9 @@ AccountManager* AccountManager::Instance() {
 
 AccountManager::AccountManager() {
     memset(network_block_,0, (common::kImmutablePoolSize + 1) * sizeof(network_block_[0]));
+    pool_statistci_tick_.CutOff(
+        kStatisticPeriod,
+        std::bind(&AccountManager::StatisticDpPool, this));
 }
 
 AccountManager::~AccountManager() {
@@ -701,6 +706,7 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
+    db_pool_info->AddNewBlock(block_item);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
@@ -710,6 +716,18 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
     }
 
     return "";
+}
+
+void AccountManager::StatisticDpPool() {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        if (network_block_[i] != nullptr) {
+            network_block_[i]->SatisticBlock();
+        }
+    }
+
+    pool_statistci_tick_.CutOff(
+        kStatisticPeriod,
+        std::bind(&AccountManager::StatisticDpPool, this));
 }
 
 }  // namespace block

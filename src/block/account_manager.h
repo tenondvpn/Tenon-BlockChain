@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "common/config.h"
+#include "common/tick.h"
 #include "db/db.h"
 #include "block/block_utils.h"
 #include "block/db_account_info.h"
@@ -65,11 +66,15 @@ private:
     int HandleRootSingleBlockTx(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
+    void StatisticDpPool();
+
+    static const uint64_t kStatisticPeriod = 3000000llu;
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
     std::mutex network_block_mutex_;
+    common::Tick pool_statistci_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };
