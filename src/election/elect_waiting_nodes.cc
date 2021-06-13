@@ -32,7 +32,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     }
 
     coming_root_nodes_.insert(coming_id);
-    auto member_index = MemberManager::Instance()->GetMemberIndex(
+    auto member_index = ElectManager::Instance()->GetMemberIndex(
         waiting_shard_id_ - network::kConsensusWaitingShardOffset,
         root_node_id);
     if (member_index == elect::kInvalidMemberIndex) {
