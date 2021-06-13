@@ -4,7 +4,7 @@
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 
 namespace tenon {
 

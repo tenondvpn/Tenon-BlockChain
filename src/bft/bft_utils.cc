@@ -1,6 +1,6 @@
 #include "bft/bft_utils.h"
 
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
 #include "network/network_utils.h"
 
 namespace tenon {
