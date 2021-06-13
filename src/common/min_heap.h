@@ -185,7 +185,7 @@ public:
 
     inline bool OperaterMinOrMax(const Type& left, const Type& right) {
         if (kIsMaxHep) {
-            return left > right;
+            return !(left < right);
         }
 
         return left < right;
