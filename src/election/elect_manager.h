@@ -29,6 +29,9 @@ public:
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db);
+    uint64_t latest_height() {
+        return latest_height_;
+    }
 
 private:
     ElectManager();
