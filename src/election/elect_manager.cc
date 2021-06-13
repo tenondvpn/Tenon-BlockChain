@@ -143,6 +143,7 @@ void ElectManager::ProcessNewElectBlock(
     auto in = elect_block.in();
     for (int32_t i = 0; i < in.size(); ++i) {
         auto net_id = in[i].net_id();
+        std::cout << "latest_height_: " << latest_height_ << ", net_id: " << std::endl;
         auto iter = in_members.find(net_id);
         if (iter == in_members.end()) {
             in_members[net_id] = std::make_shared<Members>();
@@ -380,6 +381,11 @@ void ElectManager::SetNetworkMember(
         elect::MembersPtr& members_ptr,
         elect::NodeIndexMapPtr& node_index_map,
         int32_t leader_count) {
+    if (elect_height < latest_height_) {
+        return;
+    }
+
+    latest_height_ = elect_height;
     if (elect_height == common::kInvalidUint64) {
         return;
     }
