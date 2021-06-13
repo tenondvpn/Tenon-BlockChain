@@ -446,8 +446,8 @@ public:
         uint64_t genesis_account_balance = 21000000000llu * common::kTenonMiniTransportUnit / pool_index_map_.size();
         uint64_t all_balance = 0llu;
         for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
-            bft::protobuf::Block tenon_block;
-            auto tx_list = tenon_block.mutable_tx_list();
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
             security::PrivateKey prikey(iter->second);
             security::PublicKey pubkey(prikey);
             std::string pubkey_str;
@@ -465,15 +465,15 @@ public:
             tx_info->set_gas_limit(0);
             tx_info->set_type(type);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-            tenon_block.set_prehash("");
-            tenon_block.set_version(common::kTransactionVersion);
-            tenon_block.set_agg_pubkey("");
-            tenon_block.set_agg_sign_challenge("");
-            tenon_block.set_agg_sign_response("");
-            tenon_block.set_pool_index(iter->first);
-            tenon_block.set_height(0);
-            tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block.set_hash(GetBlockHash(tenon_block));
+            tenon_block->set_prehash("");
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(iter->first);
+            tenon_block->set_height(0);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_hash(GetBlockHash(*tenon_block));
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
             uint64_t pool_height = 0;
@@ -487,7 +487,7 @@ public:
                 &tm_with_block_height);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 0);
-            ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
+            ASSERT_EQ(pool_hash, GetBlockHash(*tenon_block));
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(address);
             ASSERT_FALSE(account_ptr == nullptr);
             uint64_t balance = 0;
@@ -498,8 +498,8 @@ public:
 
         std::string root_pre_hash;
         {
-            bft::protobuf::Block tenon_block;
-            auto tx_list = tenon_block.mutable_tx_list();
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
             auto tx_info = tx_list->Add();
             tx_info->set_version(common::kTransactionVersion);
             tx_info->set_gid(common::CreateGID(""));
@@ -512,15 +512,15 @@ public:
             tx_info->set_gas_limit(0);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-            tenon_block.set_prehash("");
-            tenon_block.set_version(common::kTransactionVersion);
-            tenon_block.set_agg_pubkey("");
-            tenon_block.set_agg_sign_challenge("");
-            tenon_block.set_agg_sign_response("");
-            tenon_block.set_pool_index(common::kRootChainPoolIndex);
-            tenon_block.set_height(0);
-            tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block.set_hash(GetBlockHash(tenon_block));
+            tenon_block->set_prehash("");
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(common::kRootChainPoolIndex);
+            tenon_block->set_height(0);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_hash(GetBlockHash(*tenon_block));
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
             uint64_t pool_height = 0;
@@ -534,19 +534,19 @@ public:
                 &tm_with_block_height);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 0);
-            ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
+            ASSERT_EQ(pool_hash, GetBlockHash(*tenon_block));
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
             ASSERT_FALSE(account_ptr == nullptr);
             uint64_t balance = 0;
             ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
             ASSERT_EQ(balance, 0);
             all_balance += balance;
-            root_pre_hash = GetBlockHash(tenon_block);
+            root_pre_hash = GetBlockHash(*tenon_block);
         }
 
         {
-            bft::protobuf::Block tenon_block;
-            auto tx_list = tenon_block.mutable_tx_list();
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
             auto tx_info = tx_list->Add();
             tx_info->set_version(common::kTransactionVersion);
             tx_info->set_gid(common::CreateGID(""));
@@ -567,15 +567,15 @@ public:
             all_exits_attr->set_key(tmblock::kAttrTimerBlock);
             auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
             all_exits_attr->set_value(std::to_string(now_tm));
-            tenon_block.set_prehash(root_pre_hash);
-            tenon_block.set_version(common::kTransactionVersion);
-            tenon_block.set_agg_pubkey("");
-            tenon_block.set_agg_sign_challenge("");
-            tenon_block.set_agg_sign_response("");
-            tenon_block.set_pool_index(common::kRootChainPoolIndex);
-            tenon_block.set_height(1);
-            tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block.set_hash(GetBlockHash(tenon_block));
+            tenon_block->set_prehash(root_pre_hash);
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(common::kRootChainPoolIndex);
+            tenon_block->set_height(1);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_hash(GetBlockHash(*tenon_block));
             tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm);
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
@@ -590,7 +590,7 @@ public:
                 &tm_with_block_height);
             ASSERT_EQ(res, block::kBlockSuccess);
             ASSERT_EQ(pool_height, 1);
-            ASSERT_EQ(pool_hash, GetBlockHash(tenon_block));
+            ASSERT_EQ(pool_hash, GetBlockHash(*tenon_block));
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(root::kRootChainSingleBlockTxAddress);
             ASSERT_FALSE(account_ptr == nullptr);
             uint64_t balance = 0;

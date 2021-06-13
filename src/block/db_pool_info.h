@@ -2,6 +2,7 @@
 
 #include "common/utils.h"
 #include "common/string_utils.h"
+#include "common/thread_safe_queue.h"
 #include "db/dict.h"
 #include "db/db.h"
 #include "block/block_utils.h"
@@ -30,6 +31,9 @@ public:
     std::string GetBaseAddr();
 
 private:
+    int AddStatistic(const bft::protobuf::Block& block_item);
+    int LoadBlocksUtilLatestStatisticBlock();
+
     std::string dict_key_;
     std::string hash_;
     std::string last_block_str_;
@@ -41,6 +45,10 @@ private:
     bft::protobuf::Block last_block_;
     std::atomic<uint64_t> prev_tmblock_height_{ common::kInvalidUint64 };
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
+    uint64_t max_time_block_height_{ 0 };
+    std::mutex statistic_for_tmblock_mutex_;
+    std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
+    common::ThreadSafeQueue<int32_t> server_bandwidth_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

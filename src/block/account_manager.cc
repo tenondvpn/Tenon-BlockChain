@@ -158,9 +158,9 @@ int AccountManager::HandleRootSingleBlockTx(
 }
 
 int AccountManager::AddBlockItem(
-        const bft::protobuf::Block& block_item,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    const auto& tx_list = block_item.tx_list();
+    const auto& tx_list = block_item->tx_list();
     if (tx_list.empty()) {
         BLOCK_ERROR("tx block tx list is empty.");
         return kBlockError;
@@ -170,7 +170,7 @@ int AccountManager::AddBlockItem(
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
-            if (HandleRootSingleBlockTx(block_item.height(), tx_list[i]) != kBlockSuccess) {
+            if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
                 return kBlockError;
             }
         }
@@ -205,8 +205,8 @@ int AccountManager::AddBlockItem(
                 block_item,
                 db_batch) != kBlockSuccess) {
             BLOCK_ERROR("to add account failed: %s, %llu",
-                common::Encode::HexEncode(block_item.hash()).c_str(),
-                block_item.height());
+                common::Encode::HexEncode(block_item->hash()).c_str(),
+                block_item->height());
             assert(false);
             continue;
         }
@@ -242,19 +242,19 @@ int AccountManager::AddBlockItem(
             }
             
             if (!account_gid.empty()) {
-                db_batch.Put(account_gid, block_item.hash());
+                db_batch.Put(account_gid, block_item->hash());
             }
         }
     }
 
-    if (block_item.network_id() == common::GlobalInfo::Instance()->network_id() ||
+    if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
         SetPool(
             consistent_pool_index,
-            block_item.height(),
-            block_item.timeblock_height(),
-            block_item.hash(),
+            block_item->height(),
+            block_item->timeblock_height(),
+            block_item->hash(),
             db_batch);
     }
 
@@ -397,7 +397,7 @@ int AccountManager::GenesisAddAccountInfo(
 int AccountManager::UpdateAccountInfo(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
-        const bft::protobuf::Block& block_item,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
@@ -441,18 +441,18 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
-    account_info->NewHeight(block_item.height(), db_batch);
+    account_info->NewHeight(block_item->height(), db_batch);
     if (!tx_info.to().empty() && tx_info.amount() > 0) {
         account_info->NewTxHeight(
-            block_item.height(),
-            block_item.timestamp(),
-            block_item.hash(),
+            block_item->height(),
+            block_item->timestamp(),
+            block_item->hash(),
             tx_info,
             db_batch);
     }
 
-    if (exist_height <= block_item.height()) {
-        account_info->SetMaxHeightHash(block_item.height(), block_item.hash(), db_batch);
+    if (exist_height <= block_item->height()) {
+        account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
     } else {
         uint64_t create_height = 0;
         if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
@@ -460,15 +460,15 @@ int AccountManager::UpdateAccountInfo(
             return kBlockError;
         }
 
-        if (create_height > block_item.height()) {
-            account_info->SetCreateAccountHeight(block_item.height(), db_batch);
+        if (create_height > block_item->height()) {
+            account_info->SetCreateAccountHeight(block_item->height(), db_batch);
         }
     }
 
     uint32_t pool_idx = common::GetPoolIndex(account_id);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t pool_idx = common::GetPoolIndex(account_id);
-        if (exist_height <= block_item.height()) {
+        if (exist_height <= block_item->height()) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }
     }
@@ -477,7 +477,7 @@ int AccountManager::UpdateAccountInfo(
             account_id,
             tx_info,
             exist_height,
-            block_item.height(),
+            block_item->height(),
             account_info,
             db_batch) != kBlockSuccess) {
         return kBlockError;

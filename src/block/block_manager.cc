@@ -624,14 +624,14 @@ std::string* BlockManager::GetHeightBlockWithCache(uint64_t height) {
 }
 
 int BlockManager::AddNewBlock(
-        const bft::protobuf::Block& block_item,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     std::string height_db_key = common::GetHeightDbKey(
-        block_item.network_id(),
-        block_item.pool_index(),
-        block_item.height());
-    db_batch.Put(height_db_key, block_item.hash());
-    db_batch.Put(block_item.hash(), block_item.SerializeAsString());
+        block_item->network_id(),
+        block_item->pool_index(),
+        block_item->height());
+    db_batch.Put(height_db_key, block_item->hash());
+    db_batch.Put(block_item->hash(), block_item->SerializeAsString());
     AccountManager::Instance()->AddBlockItem(block_item, db_batch);
     return kBlockSuccess;
 }

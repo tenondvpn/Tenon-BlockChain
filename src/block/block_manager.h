@@ -56,7 +56,7 @@ public:
     static BlockManager* Instance();
     int Init(common::Config& conf);
     int AddNewBlock(
-        const bft::protobuf::Block& block_item,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
     int GetBlockWithHeight(
         uint32_t network_id,

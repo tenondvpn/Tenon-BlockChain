@@ -45,8 +45,8 @@ int GenesisBlockInit::CreateElectBlock(
         uint64_t height,
         FILE* root_gens_init_block_file,
         const std::vector<dht::NodePtr>& genesis_nodes) {
-    bft::protobuf::Block tenon_block;
-    auto tx_list = tenon_block.mutable_tx_list();
+    auto tenon_block = std::make_shared<bft::protobuf::Block>();
+    auto tx_list = tenon_block->mutable_tx_list();
     auto tx_info = tx_list->Add();
     tx_info->set_type(common::kConsensusRootElectShard);
     if (shard_netid == network::kRootCongressNetworkId) {
@@ -77,16 +77,16 @@ int GenesisBlockInit::CreateElectBlock(
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(elect::kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
-    tenon_block.set_prehash(root_pre_hash);
-    tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_agg_pubkey("");
-    tenon_block.set_agg_sign_challenge("");
-    tenon_block.set_agg_sign_response("");
-    tenon_block.set_pool_index(common::kRootChainPoolIndex);
-    tenon_block.set_height(height);
-    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-    fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(),
+    tenon_block->set_prehash(root_pre_hash);
+    tenon_block->set_version(common::kTransactionVersion);
+    tenon_block->set_agg_pubkey("");
+    tenon_block->set_agg_sign_challenge("");
+    tenon_block->set_agg_sign_response("");
+    tenon_block->set_pool_index(common::kRootChainPoolIndex);
+    tenon_block->set_height(height);
+    tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+    tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+    fputs((common::Encode::HexEncode(tenon_block->SerializeAsString()) + "\n").c_str(),
         root_gens_init_block_file);
     if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
         INIT_ERROR("AddGenisisBlock error.");
@@ -140,7 +140,7 @@ int GenesisBlockInit::CreateElectBlock(
         return kInitError;
     }
 
-    root_pre_hash = bft::GetBlockHash(tenon_block);
+    root_pre_hash = bft::GetBlockHash(*tenon_block);
     return kInitSuccess;
 }
 
@@ -157,8 +157,8 @@ int GenesisBlockInit::GenerateRootSingleBlock(
     // for root single block chain
     std::string root_pre_hash;
     {
-        bft::protobuf::Block tenon_block;
-        auto tx_list = tenon_block.mutable_tx_list();
+        auto tenon_block = std::make_shared<bft::protobuf::Block>();
+        auto tx_list = tenon_block->mutable_tx_list();
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
         tx_info->set_gid(common::CreateGID(""));
@@ -171,16 +171,16 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tx_info->set_gas_limit(0);
         tx_info->set_type(common::kConsensusCreateGenesisAcount);
         tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-        tenon_block.set_prehash("");
-        tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_agg_pubkey("");
-        tenon_block.set_agg_sign_challenge("");
-        tenon_block.set_agg_sign_response("");
-        tenon_block.set_pool_index(common::kRootChainPoolIndex);
-        tenon_block.set_height(root_single_block_height++);
-        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        fputs((common::Encode::HexEncode(tenon_block.SerializeAsString()) + "\n").c_str(),
+        tenon_block->set_prehash("");
+        tenon_block->set_version(common::kTransactionVersion);
+        tenon_block->set_agg_pubkey("");
+        tenon_block->set_agg_sign_challenge("");
+        tenon_block->set_agg_sign_response("");
+        tenon_block->set_pool_index(common::kRootChainPoolIndex);
+        tenon_block->set_height(root_single_block_height++);
+        tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+        tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+        fputs((common::Encode::HexEncode(tenon_block->SerializeAsString()) + "\n").c_str(),
             root_gens_init_block_file);
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
@@ -223,12 +223,12 @@ int GenesisBlockInit::GenerateRootSingleBlock(
             return kInitError;
         }
 
-        root_pre_hash = bft::GetBlockHash(tenon_block);
+        root_pre_hash = bft::GetBlockHash(*tenon_block);
     }
 
     {
-        bft::protobuf::Block tenon_block;
-        auto tx_list = tenon_block.mutable_tx_list();
+        auto tenon_block = std::make_shared<bft::protobuf::Block>();
+        auto tx_list = tenon_block->mutable_tx_list();
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
         tx_info->set_gid(common::CreateGID(""));
@@ -250,16 +250,16 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
         all_exits_attr->set_value(std::to_string(now_tm));
         std::cout << "set init timestamp: " << now_tm << std::endl;
-        tenon_block.set_prehash(root_pre_hash);
-        tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_agg_pubkey("");
-        tenon_block.set_agg_sign_challenge("");
-        tenon_block.set_agg_sign_response("");
-        tenon_block.set_pool_index(common::kRootChainPoolIndex);
-        tenon_block.set_height(root_single_block_height++);
-        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
-        auto tmp_str = tenon_block.SerializeAsString();
+        tenon_block->set_prehash(root_pre_hash);
+        tenon_block->set_version(common::kTransactionVersion);
+        tenon_block->set_agg_pubkey("");
+        tenon_block->set_agg_sign_challenge("");
+        tenon_block->set_agg_sign_response("");
+        tenon_block->set_pool_index(common::kRootChainPoolIndex);
+        tenon_block->set_height(root_single_block_height++);
+        tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+        tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+        auto tmp_str = tenon_block->SerializeAsString();
         bft::protobuf::Block tenon_block2;
         tenon_block2.ParseFromString(tmp_str);
         assert(tenon_block2.tx_list_size() > 0);
@@ -339,9 +339,9 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
     char data[2048];
     while (fgets(data, 2048, root_gens_init_block_file) != nullptr)
     {
-        bft::protobuf::Block tenon_block;
+        auto tenon_block = std::make_shared<bft::protobuf::Block>();
         std::string tmp_data(data, strlen(data) - 1);
-        if (!tenon_block.ParseFromString(common::Encode::HexDecode(tmp_data))) {
+        if (!tenon_block->ParseFromString(common::Encode::HexDecode(tmp_data))) {
             return kInitError;
         }
 
@@ -398,8 +398,8 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
     uint64_t genesis_account_balance = 0llu;
     uint64_t all_balance = 0llu;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        bft::protobuf::Block tenon_block;
-        auto tx_list = tenon_block.mutable_tx_list();
+        auto tenon_block = std::make_shared<bft::protobuf::Block>();
+        auto tx_list = tenon_block->mutable_tx_list();
         auto iter = root_account_with_pool_index_map_.find(i);
         std::string address = iter->second;
         auto tx_info = tx_list->Add();
@@ -414,17 +414,17 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         tx_info->set_gas_limit(0);
         tx_info->set_type(common::kConsensusCreateGenesisAcount);
         tx_info->set_network_id(network::kRootCongressNetworkId);
-        tenon_block.set_prehash("");
-        tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_agg_pubkey("");
-        tenon_block.set_agg_sign_challenge("");
-        tenon_block.set_agg_sign_response("");
-        tenon_block.set_pool_index(iter->first);
-        tenon_block.set_height(0);
-        tenon_block.set_timeblock_height(1);
-        tenon_block.set_electblock_height(3);
-        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
+        tenon_block->set_prehash("");
+        tenon_block->set_version(common::kTransactionVersion);
+        tenon_block->set_agg_pubkey("");
+        tenon_block->set_agg_sign_challenge("");
+        tenon_block->set_agg_sign_response("");
+        tenon_block->set_pool_index(iter->first);
+        tenon_block->set_height(0);
+        tenon_block->set_timeblock_height(1);
+        tenon_block->set_electblock_height(3);
+        tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+        tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("add genesis block failed!");
             return kInitError;
@@ -482,8 +482,8 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
     uint64_t genesis_account_balance = common::kGenesisFoundationMaxTenon / pool_index_map_.size();
     uint64_t all_balance = 0llu;
     for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
-        bft::protobuf::Block tenon_block;
-        auto tx_list = tenon_block.mutable_tx_list();
+        auto tenon_block = std::make_shared<bft::protobuf::Block>();
+        auto tx_list = tenon_block->mutable_tx_list();
         std::string address = iter->second;
         auto tx_info = tx_list->Add();
         tx_info->set_version(common::kTransactionVersion);
@@ -517,17 +517,17 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             return kInitError;
         }
 
-        tenon_block.set_prehash("");
-        tenon_block.set_version(common::kTransactionVersion);
-        tenon_block.set_agg_pubkey("");
-        tenon_block.set_agg_sign_challenge("");
-        tenon_block.set_agg_sign_response("");
-        tenon_block.set_pool_index(iter->first);
-        tenon_block.set_height(0);
-        tenon_block.set_timeblock_height(1);
-        tenon_block.set_electblock_height(3);
-        tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-        tenon_block.set_hash(bft::GetBlockHash(tenon_block));
+        tenon_block->set_prehash("");
+        tenon_block->set_version(common::kTransactionVersion);
+        tenon_block->set_agg_pubkey("");
+        tenon_block->set_agg_sign_challenge("");
+        tenon_block->set_agg_sign_response("");
+        tenon_block->set_pool_index(iter->first);
+        tenon_block->set_height(0);
+        tenon_block->set_timeblock_height(1);
+        tenon_block->set_electblock_height(3);
+        tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+        tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
             return kInitError;

@@ -29,7 +29,7 @@ public:
         return elect::MemberManager::Instance()->GetNetworkMembers(network_id);
     }
 
-    int AddGenisisBlock(const bft::protobuf::Block& genesis_block);
+    int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
 
 private:
     BftManager();

@@ -4,6 +4,7 @@
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
+#include "common/bitmap.h"
 #include "db/db_utils.h"
 #include "block/block_manager.h"
 
@@ -253,6 +254,103 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
     *block_height = common::StringUtil::ToUint64(str_block_height);
     prev_tmblock_with_pool_height_ = *tmblock_height;
     prev_tmblock_height_ = *block_height;
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
+    std::string prev_hash;
+    {
+        std::lock_guard<std::mutex> guard(hash_mutex_);
+        prev_hash = hash_;
+    }
+
+    while (true) {
+        std::string block_str;
+        auto st = db::Db::Instance()->Get(prev_hash, &block_str);
+        if (!st.ok()) {
+            // TODO: add to sync
+            return kBlockError;
+        }
+
+        bft::protobuf::Block block_item;
+        if (!block_item.ParseFromString(block_str)) {
+            return kBlockError;
+        }
+
+        if (block_item.tx_list_size() == 1 &&
+                block_item.tx_list(0).type() == common::kConsensusStatistic) {
+            break;
+        }
+
+        AddStatistic(block_item);
+        prev_hash = block_item.prehash();
+        if (prev_hash.empty()) {
+            break;
+        }
+    }
+
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::AddStatistic(const bft::protobuf::Block& block_item) {
+    // TODO: sync thread to load block
+    std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
+    if (max_time_block_height_ > 2) {
+        if (block_item.timeblock_height() <= max_time_block_height_ - 2) {
+            return kBlockSuccess;
+        }
+    }
+
+    if (block_item.timeblock_height() > max_time_block_height_) {
+        max_time_block_height_ = block_item.timeblock_height();
+    }
+
+    auto iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+    if (iter == statistic_for_tmblock_.end()) {
+        statistic_for_tmblock_[block_item.timeblock_height()] = StatisticItem();
+        iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+    }
+
+    auto ext_iter = iter->second.added_height.find(block_item.height());
+    if (ext_iter != iter->second.added_height.end()) {
+        return kBlockSuccess;
+    }
+
+    iter->second.added_height.insert(block_item.height());
+    iter->second.all_tx_count += block_item.tx_list_size();
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < block_item.bitmap_size(); ++i) {
+        bitmap_data.push_back(block_item.bitmap(i));
+    }
+
+    common::Bitmap final_bitmap(bitmap_data);
+    uint32_t bit_size = final_bitmap.data().size() * 64;
+    for (uint32_t i = 0; i < bit_size; ++i) {
+        if (!final_bitmap.Valid(i)) {
+            continue;
+        }
+
+        auto succ_iter = iter->second.succ_tx_count.find(i);
+        if (succ_iter != iter->second.succ_tx_count.end()) {
+            ++succ_iter->second;
+        } else {
+            iter->second.succ_tx_count[i] = 1;
+        }
+    }
+
+    if (max_time_block_height_ > 2) {
+        if (statistic_for_tmblock_.size() > 2) {
+            for (int64_t i = (int64_t)max_time_block_height_ - 2; i > 0; --i) {
+                auto iter = statistic_for_tmblock_.find(i);
+                if (iter == statistic_for_tmblock_.end()) {
+                    break;
+                }
+
+                statistic_for_tmblock_.erase(iter);
+            }
+        }
+    }
+
     return kBlockSuccess;
 }
 

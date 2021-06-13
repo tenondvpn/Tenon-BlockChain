@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <queue>
+#include <memory>
 
 #include "common/config.h"
 #include "db/db.h"
@@ -18,7 +19,7 @@ class AccountManager {
 public:
     static AccountManager* Instance();
     int AddBlockItem(
-        const bft::protobuf::Block& block_item,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
     DbAccountInfo* GetAcountInfo(const std::string& acc_id);
     bool AccountExists(const std::string& acc_id);
@@ -43,7 +44,7 @@ private:
     int UpdateAccountInfo(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
-        const bft::protobuf::Block& block,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
     void SetPool(
         uint32_t pool_index,

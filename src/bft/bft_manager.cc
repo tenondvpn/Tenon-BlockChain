@@ -234,8 +234,9 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         db::DbWriteBach db_batch;
+        auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
         if (block::BlockManager::Instance()->AddNewBlock(
-                tx_bft.to_tx().block(),
+                block_ptr,
                 db_batch) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
             return;
@@ -913,7 +914,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 
     db::DbWriteBach db_batch;
     if (block::BlockManager::Instance()->AddNewBlock(
-            *tenon_block,
+            tenon_block,
             db_batch) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
@@ -976,7 +977,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
 }
 
 // only genesis call once
-int BftManager::AddGenisisBlock(const bft::protobuf::Block& genesis_block) {
+int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block) {
     db::DbWriteBach db_batch;
     if (block::BlockManager::Instance()->AddNewBlock(
             genesis_block,
