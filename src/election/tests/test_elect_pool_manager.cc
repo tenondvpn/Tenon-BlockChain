@@ -9,7 +9,8 @@
 
 #define private public
 #include "election/elect_pool_manager.h"
-#include "election/member_manager.h"
+#include "election/elect_manager.h"
+#include "election/elect_manager.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
 #include "security/schnorr.h"
@@ -122,8 +123,6 @@ public:
                 iter->second,
                 index_map_iter->second,
                 1);
-            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 

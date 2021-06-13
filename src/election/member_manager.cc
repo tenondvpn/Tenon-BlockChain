@@ -9,11 +9,6 @@ namespace tenon {
 
 namespace elect {
 
-MemberManager* MemberManager::Instance() {
-    static MemberManager ins;
-    return &ins;
-}
-
 MemberManager::MemberManager() {
     network_members_ = new elect::MembersPtr[network::kConsensusShardEndNetworkId];
     std::fill(

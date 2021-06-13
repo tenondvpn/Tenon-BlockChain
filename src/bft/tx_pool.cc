@@ -109,7 +109,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
 
                 // root single block tx must just one tx
-                if (!res_vec.empty() && IsRootSingleBlockTx(iter->second->tx.type())) {
+                if (!res_vec.empty() && IsShardSingleBlockTx(iter->second->tx.type())) {
                     break;
                 }
 
@@ -124,7 +124,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                     common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
                     res_vec.size());
-                if (IsRootSingleBlockTx(iter->second->tx.type())) {
+                if (IsShardSingleBlockTx(iter->second->tx.type())) {
                     break;
                 }
 

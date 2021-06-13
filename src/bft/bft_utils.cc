@@ -78,7 +78,7 @@ std::string GetUniversalGid(bool to, const std::string& gid) {
 }
 
 int32_t GetLeaderPoolIndex() {
-    return elect::MemberManager::Instance()->IsLeader(
+    return elect::ElectManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
 }

@@ -26,7 +26,7 @@ public:
     void RemoveBft(const std::string& gid);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id) {
-        return elect::MemberManager::Instance()->GetNetworkMembers(network_id);
+        return elect::ElectManager::Instance()->GetNetworkMembers(network_id);
     }
 
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);

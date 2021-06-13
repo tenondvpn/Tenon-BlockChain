@@ -184,12 +184,12 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 }
 
 bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
-    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         network::kRootCongressNetworkId);
-    auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
-    auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
     if (mem_ptr != nullptr && (mem_index % leader_count) == mem_ptr->pool_index_mod_num) {

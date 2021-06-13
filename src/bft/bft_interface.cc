@@ -26,14 +26,14 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     if (leader_count <= 0) {
         BFT_ERROR("leader_count invalid[%d].", leader_count);
         return false;
     }
 
-    int32_t leader_pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
+    int32_t leader_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
     if ((int32_t)pool_index() % leader_count != leader_pool_mod_idx) {
@@ -47,7 +47,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto leader_mem_ptr = elect::MemberManager::Instance()->GetMember(
+    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
     if (leader_mem_ptr == nullptr) {
@@ -67,7 +67,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto local_mem_ptr = elect::MemberManager::Instance()->GetMember(
+    auto local_mem_ptr = elect::ElectManager::Instance()->GetMember(
             bft_msg.net_id(),
             common::GlobalInfo::Instance()->id());
     if (local_mem_ptr == nullptr) {
@@ -81,7 +81,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 }
 
 bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
-    int32_t leader_pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
+    int32_t leader_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
     if (leader_pool_mod_idx < 0) {
@@ -92,7 +92,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         return false;
     }
 
-    int32_t local_pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
+    int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
     if (local_pool_mod_idx == leader_pool_mod_idx) {
@@ -104,10 +104,10 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 }
 
 bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
-    int32_t local_pool_mod_idx = elect::MemberManager::Instance()->IsLeader(
+    int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
-    int32_t leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+    int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     if ((int32_t)pool_index() % leader_count != local_pool_mod_idx) {
         BFT_ERROR("prepare message pool index invalid.[%u][%s][%d][%u]",
@@ -175,7 +175,7 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (agree) {
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id_, index);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
         if (!security::MultiSign::Instance()->VerifyResponse(
                 res,
                 challenge_,
@@ -295,7 +295,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             continue;
         }
 
-        elect::BftMemberPtr mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
+        elect::BftMemberPtr mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
         auto iter = backup_prepare_response_.find(i);
         assert(iter != backup_prepare_response_.end());
@@ -322,7 +322,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
             continue;
         }
 
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), i);
         auto iter = backup_precommit_response_.find(i);
         assert(iter != backup_precommit_response_.end());
         responses.push_back(iter->second->response);
@@ -371,7 +371,7 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
             continue;
         }
 
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network_id(), i);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
     }
 

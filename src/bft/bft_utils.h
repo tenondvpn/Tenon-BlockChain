@@ -89,7 +89,7 @@ static const uint32_t kBftBroadcastStopTimes = 2u;
 static const uint32_t kBftHopLimit = 5u;
 static const uint32_t kBftHopToLayer = 2u;
 static const uint32_t kBftNeighborCount = 7u;
-static const uint32_t kBftLeaderBitmapSize = 640u;
+static const uint32_t kBftLeaderBitmapSize = 4096u;
 static const uint32_t kBftTimeout = 6u * 1000u * 1000u;  // bft timeout 6s
 // tx pool timeout 3 * kTimeBlockCreatePeriodSeconds seconds
 static const uint32_t kTxPoolTimeoutSeconds = 3 * common::kTimeBlockCreatePeriodSeconds;

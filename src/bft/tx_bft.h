@@ -88,6 +88,7 @@ private:
         TxItemPtr& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
+    int LeaderCreateStatistic(protobuf::TxInfo& tx);
     int CreateContractCallExcute(
         const TxItemPtr& tx_info,
         uint64_t gas_limit,

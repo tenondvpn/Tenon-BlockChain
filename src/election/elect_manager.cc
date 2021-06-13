@@ -188,11 +188,14 @@ void ElectManager::ProcessNewElectBlock(
         auto index_map_iter = in_index_members.find(iter->first);
         assert(index_map_iter != in_index_members.end());
         pool_manager_.NetworkMemberChange(iter->first, iter->second);
-        MemberManager::Instance()->SetNetworkMember(
+        auto member_ptr = std::make_shared<MemberManager>();
+        member_ptr->SetNetworkMember(
             iter->first,
             iter->second,
             index_map_iter->second,
             elect_block.leader_count());
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        elect_members_[height] = member_ptr;
     }
 }
 
@@ -215,6 +218,180 @@ void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protob
     bft::protobuf::BftMessage bft_msg;
     pool_manager_.LeaderCreateElectionBlockTx(shard_network_id, bft_msg);
     msg->set_data(bft_msg.SerializeAsString());
+}
+
+int32_t ElectManager::IsLeader(
+        uint64_t elect_height,
+        uint32_t network_id,
+        const std::string& node_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {    
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return -1;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->IsLeader(network_id, node_id);
+}
+
+uint32_t ElectManager::GetMemberIndex(
+        uint64_t elect_height,
+        uint32_t network_id,
+        const std::string& node_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return kInvalidMemberIndex;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetMemberIndex(network_id, node_id);
+}
+
+elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height, uint32_t network_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return nullptr;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetNetworkMembers(network_id);
+}
+
+elect::BftMemberPtr ElectManager::GetMember(
+        uint64_t elect_height,
+        uint32_t network_id,
+        const std::string& node_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return nullptr;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetMember(network_id, node_id);
+}
+
+elect::BftMemberPtr ElectManager::GetMember(
+        uint64_t elect_height,
+        uint32_t network_id,
+        uint32_t index) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return nullptr;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetMember(network_id, index);
+}
+
+uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return 0;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetMemberCount(network_id);
+}
+
+int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height_;
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return 0;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    return mem_ptr->GetNetworkLeaderCount(network_id);
+}
+
+int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
+    return IsLeader(common::kInvalidUint64, network_id, node_id);
+}
+
+uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
+    return GetMemberIndex(common::kInvalidUint64, network_id, node_id);
+}
+
+elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
+    return GetNetworkMembers(common::kInvalidUint64, network_id);
+}
+
+elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, const std::string& node_id) {
+    return GetMember(common::kInvalidUint64, network_id, node_id);
+}
+
+elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index) {
+    return GetMember(common::kInvalidUint64, network_id, index);
+}
+
+uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
+    return GetMemberCount(common::kInvalidUint64, network_id);
+
+}
+
+int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
+    return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
 }
 
 }  // namespace elect

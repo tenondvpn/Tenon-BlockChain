@@ -30,6 +30,7 @@ public:
     std::string GetBaseAddr();
     void AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
     void SatisticBlock();
+    int GetStatisticInfo(std::string* res);
 
 private:
     int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);

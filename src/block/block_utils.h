@@ -45,6 +45,8 @@ struct StatisticItem {
     std::unordered_map<uint32_t, uint32_t> succ_tx_count;
     uint32_t all_tx_count;
     std::unordered_set<uint64_t> added_height;
+    uint64_t elect_height;
+    uint64_t tmblock_height;
 };
 
 static const uint32_t kUnicastAddressLength = 20u;

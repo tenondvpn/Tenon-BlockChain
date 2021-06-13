@@ -7,6 +7,7 @@
 #include "common/bitmap.h"
 #include "db/db_utils.h"
 #include "block/block_manager.h"
+#include "election/member_manager.h"
 
 namespace tenon {
 
@@ -316,6 +317,8 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
         return kBlockSuccess;
     }
 
+    iter->second.tmblock_height = block_item->timeblock_height();
+    iter->second.elect_height = block_item->electblock_height();
     iter->second.added_height.insert(block_item->height());
     iter->second.all_tx_count += block_item->tx_list_size();
     std::vector<uint64_t> bitmap_data;
@@ -323,10 +326,18 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
         bitmap_data.push_back(block_item->bitmap(i));
     }
 
+    uint32_t member_count = elect::ElectManager::Instance()->GetMemberCount(
+        common::GlobalInfo::Instance()->network_id());
     common::Bitmap final_bitmap(bitmap_data);
     uint32_t bit_size = final_bitmap.data().size() * 64;
-    for (uint32_t i = 0; i < bit_size; ++i) {
+    assert(member_count <= bit_size);
+    for (uint32_t i = 0; i < member_count; ++i) {
         if (!final_bitmap.Valid(i)) {
+            auto fail_iter = iter->second.succ_tx_count.find(i);
+            if (fail_iter == iter->second.succ_tx_count.end()) {
+                iter->second.succ_tx_count[i] = 0;
+            }
+
             continue;
         }
 
@@ -351,6 +362,22 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
         }
     }
 
+    return kBlockSuccess;
+}
+
+int DbPoolInfo::GetStatisticInfo(std::string* res) {
+    SatisticBlock();
+    std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
+    auto iter = statistic_for_tmblock_.find(max_time_block_height_);
+    if (iter == statistic_for_tmblock_.end()) {
+        return kBlockError;
+    }
+
+    block::protobuf::StatisticInfo statistic_info;
+    statistic_info.set_timeblock_height(iter->second.tmblock_height);
+    statistic_info.set_elect_height(iter->second.elect_height);
+    statistic_info.set_all_tx_count(iter->second.all_tx_count);
+    
     return kBlockSuccess;
 }
 

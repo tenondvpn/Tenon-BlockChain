@@ -92,9 +92,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        auto leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+        auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
             network::kRootCongressNetworkId);
-        auto mem_index = elect::MemberManager::Instance()->GetMemberIndex(
+        auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
             common::GlobalInfo::Instance()->network_id(),
             common::GlobalInfo::Instance()->id());
         if (mem_index % leader_count == pool_mod_idx) {
@@ -1795,6 +1795,10 @@ void TxBft::LeaderCreateTxBlock(
                 continue;
             }
         } else if (tx.type() == common::kConsensusStatistic) {
+            if (LeaderCreateStatistic(tx) != kBftSuccess) {
+                return;
+            }
+
             tx.set_gas_used(0);
             tx.set_balance(0);
         } else {
@@ -1836,6 +1840,10 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_hash(GetBlockHash(tenon_block));
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height());
+}
+
+int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
+    return kBftSuccess;
 }
 
 int TxBft::LeaderAddNormalTransaction(

@@ -130,7 +130,7 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
         ((network_id >= network::kConsensusShardBeginNetworkId &&
             network_id < network::kConsensusShardEndNetworkId) ||
             network_id == network::kRootCongressNetworkId)) {
-        if (elect::MemberManager::Instance()->GetMember(network_id, id) != nullptr) {
+        if (elect::ElectManager::Instance()->GetMember(network_id, id) != nullptr) {
             return true;
         }
     }

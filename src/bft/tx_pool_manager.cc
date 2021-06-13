@@ -289,7 +289,7 @@ void TxPoolManager::GetTx(
         std::vector<TxItemPtr>& res_vec) {
     int valid_pool = -1;
     uint64_t height = 0;
-    int32_t leader_count = elect::MemberManager::Instance()->GetNetworkLeaderCount(
+    int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     for (int32_t i = prev_pool_index_; i < (int32_t)common::kImmutablePoolSize; ++i) {

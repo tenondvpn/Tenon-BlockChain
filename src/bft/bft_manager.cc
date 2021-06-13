@@ -46,7 +46,7 @@ BftManager* BftManager::Instance() {
 }
 
 uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
-    return elect::MemberManager::Instance()->GetMemberIndex(network_id, node_id);
+    return elect::ElectManager::Instance()->GetMemberIndex(network_id, node_id);
 }
 
 void BftManager::HandleMessage(transport::protobuf::Header& header) {
@@ -86,7 +86,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         bft_ptr->set_pool_index(bft_msg.pool_index());
         bft_ptr->set_status(kBftPrepare);
         bft_ptr->set_member_count(
-            elect::MemberManager::Instance()->GetMemberCount(bft_msg.net_id()));
+            elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
         if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
             BFT_ERROR("BackupPrepare leader invalid", bft_ptr, header);
             return;
@@ -173,7 +173,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
             continue;
         }
 
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(block.network_id(), i);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
         pubkeys.push_back(mem_ptr->pubkey);
     }
 
@@ -247,7 +247,9 @@ void BftManager::HandleRootTxBlock(
             exit(0);
         }
 
-        if (tx_list[0].type() == common::kConsensusRootTimeBlock) {
+        if (tx_list[0].type() == common::kConsensusRootTimeBlock &&
+                common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardBeginNetworkId &&
+                common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId){
             ShardAddTimeBlockStatisticTransaction(tx_bft.to_tx().block().height(), tx_list[0]);
         }
 
@@ -301,7 +303,7 @@ int BftManager::ShardAddTimeBlockStatisticTransaction(
 
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         protobuf::TxInfo tx_info;
-        tx_info.set_type(common::kConsensusRootTimeBlock);
+        tx_info.set_type(common::kConsensusStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
         if (tx_info.from().empty()) {
             continue;
@@ -495,7 +497,7 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
-    bft_ptr->set_member_count(elect::MemberManager::Instance()->GetMemberCount(
+    bft_ptr->set_member_count(elect::ElectManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
     int leader_pre = LeaderPrepare(bft_ptr, pool_mod_index);
     if (leader_pre != kBftSuccess) {
@@ -1245,7 +1247,7 @@ int BftManager::VerifySignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
     if (!mem_ptr) {
         return kBftError;
     }
@@ -1269,7 +1271,7 @@ int BftManager::VerifyBlockSignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::MemberManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
     if (!mem_ptr) {
         return kBftError;
     }
@@ -1296,7 +1298,7 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::MemberManager::Instance()->GetMember(
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
         bft_msg.net_id(),
         bft_ptr->leader_index());
     if (!mem_ptr) {

@@ -12,6 +12,7 @@
 #include "block/account_manager.h"
 #include "security/crypto_utils.h"
 #include "election/elect_dht.h"
+#include "election/elect_manager.h"
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
 #include "bft/tests/test_transport.h"
@@ -829,13 +830,11 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            elect::MemberManager::Instance()->SetNetworkMember(
+            elect::ElectManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
                 index_map_iter->second,
                 1);
-            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 
@@ -879,7 +878,7 @@ public:
             }
 
             CreateElectionBlock(network::kRootCongressNetworkId, pri_vec);
-            ASSERT_EQ(elect::MemberManager::Instance()->IsLeader(
+            ASSERT_EQ(elect::ElectManager::Instance()->IsLeader(
                 network::kRootCongressNetworkId,
                 common::GlobalInfo::Instance()->id()), 0);
         }
@@ -972,8 +971,8 @@ public:
     }
 
     void ResetBftSecret(const std::string& bft_gid, uint32_t net_id, const std::string& id) {
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(net_id, id);
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(net_id, member_index);
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(net_id, id);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(net_id, member_index);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = mem_ptr->secret;
         std::string sec_str;
         mem_ptr->secret.Serialize(sec_str);
@@ -1059,8 +1058,8 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
@@ -1139,10 +1138,10 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
             common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
@@ -1302,8 +1301,8 @@ public:
             src_balance = to_acc_info->balance_;
         }
 
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
@@ -1585,10 +1584,10 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
             common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid]->secret_ = leader_sec;
@@ -1693,13 +1692,11 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            elect::MemberManager::Instance()->SetNetworkMember(
+            elect::ElectManager::Instance()->SetNetworkMember(
                 iter->first,
                 iter->second,
                 index_map_iter->second,
                 1);
-            ASSERT_TRUE(elect::MemberManager::Instance()->network_members_[iter->first] != nullptr);
-            ASSERT_TRUE(elect::MemberManager::Instance()->node_index_map_[iter->first] != nullptr);
         }
     }
 
@@ -1869,10 +1866,10 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
             common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
@@ -1950,10 +1947,10 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::MemberManager::Instance()->GetMemberIndex(
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(
             network::kRootCongressNetworkId,
             common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::MemberManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
         for (auto iter = backup_msgs.begin(); iter != backup_msgs.end(); ++iter) {
