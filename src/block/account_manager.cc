@@ -252,9 +252,7 @@ int AccountManager::AddBlockItem(
         assert(consistent_pool_index < common::kInvalidPoolIndex);
         SetPool(
             consistent_pool_index,
-            block_item->height(),
-            block_item->timeblock_height(),
-            block_item->hash(),
+            block_item,
             db_batch);
     }
 
@@ -670,9 +668,7 @@ int AccountManager::GetBlockInfo(
 
 void AccountManager::SetPool(
         uint32_t pool_index,
-        uint64_t now_height,
-        uint64_t now_tmblock_height,
-        const std::string& hash,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     block::DbPoolInfo* db_pool_info = nullptr;
@@ -682,7 +678,7 @@ void AccountManager::SetPool(
             return;
         }
 
-        if (height > now_height) {
+        if (height > block_item->height()) {
             return;
         }
 
@@ -694,14 +690,17 @@ void AccountManager::SetPool(
 
     uint64_t height = 0;
     if (db_pool_info->GetHeight(&height) == block::kBlockSuccess) {
-        if (height > now_height) {
+        if (height > block_item->height()) {
             return;
         }
     }
 
-    db_pool_info->SetHash(hash, db_batch);
-    db_pool_info->SetHeight(now_height, db_batch);
-    db_pool_info->SetTimeBlockHeight(now_tmblock_height, now_height, db_batch);
+    db_pool_info->SetHash(block_item->hash(), db_batch);
+    db_pool_info->SetHeight(block_item->height(), db_batch);
+    db_pool_info->SetTimeBlockHeight(
+        block_item->timeblock_height(),
+        block_item->height(),
+        db_batch);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

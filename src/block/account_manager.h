@@ -48,9 +48,7 @@ private:
         db::DbWriteBach& db_batch);
     void SetPool(
         uint32_t pool_index,
-        uint64_t now_height,
-        uint64_t now_tmblock_height,
-        const std::string& hash,
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
     int GenesisAddAccountInfo(
         const std::string& account_id,

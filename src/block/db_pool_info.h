@@ -26,12 +26,13 @@ public:
         uint64_t block_height,
         db::DbWriteBach& db_batch);
     int GetTimeBlockHeight(uint64_t* height, uint64_t* block_height);
-    int SetLastBlock(const bft::protobuf::Block& block_item, db::DbWriteBach& db_batch);
     int GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index);
     std::string GetBaseAddr();
+    void AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
+    void SatisticBlock();
 
 private:
-    int AddStatistic(const bft::protobuf::Block& block_item);
+    int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
     int LoadBlocksUtilLatestStatisticBlock();
 
     std::string dict_key_;
@@ -48,7 +49,7 @@ private:
     uint64_t max_time_block_height_{ 0 };
     std::mutex statistic_for_tmblock_mutex_;
     std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
-    common::ThreadSafeQueue<int32_t> server_bandwidth_queue_;
+    common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> server_bandwidth_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

@@ -106,24 +106,6 @@ int DbPoolInfo::GetHash(std::string* hash) {
     return kBlockSuccess;
 }
 
-int DbPoolInfo::SetLastBlock(
-        const bft::protobuf::Block& block_item,
-        db::DbWriteBach& db_batch) {
-    std::string block_str = block_item.SerializeAsString();
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kPoolLastBlockStr,
-            block_str,
-            db_batch)) {
-        return kBlockError;
-    }
-
-    std::lock_guard<std::mutex> guard(hash_mutex_);
-    last_block_str_ = block_str;
-    last_block_ = block_item;
-    return kBlockSuccess;
-}
-
 int DbPoolInfo::GetLastBlockInfo(
         uint64_t* block_height,
         uint64_t* block_tm,
@@ -257,6 +239,10 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
     return kBlockSuccess;
 }
 
+void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    server_bandwidth_queue_.push(block_ptr);
+}
+
 int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
     std::string prev_hash;
     {
@@ -272,18 +258,18 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
             return kBlockError;
         }
 
-        bft::protobuf::Block block_item;
-        if (!block_item.ParseFromString(block_str)) {
+        auto block_item = std::make_shared<bft::protobuf::Block>();
+        if (!block_item->ParseFromString(block_str)) {
             return kBlockError;
         }
 
-        if (block_item.tx_list_size() == 1 &&
-                block_item.tx_list(0).type() == common::kConsensusStatistic) {
+        if (block_item->tx_list_size() == 1 &&
+                block_item->tx_list(0).type() == common::kConsensusStatistic) {
             break;
         }
 
         AddStatistic(block_item);
-        prev_hash = block_item.prehash();
+        prev_hash = block_item->prehash();
         if (prev_hash.empty()) {
             break;
         }
@@ -292,35 +278,48 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
     return kBlockSuccess;
 }
 
-int DbPoolInfo::AddStatistic(const bft::protobuf::Block& block_item) {
+void DbPoolInfo::SatisticBlock() {
+    while (server_bandwidth_queue_.size() > 0) {
+        std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
+        if (!server_bandwidth_queue_.pop(&block_ptr)) {
+            break;
+        }
+
+        if (block_ptr != nullptr) {
+            AddStatistic(block_ptr);
+        }
+    }
+}
+
+int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
     // TODO: sync thread to load block
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     if (max_time_block_height_ > 2) {
-        if (block_item.timeblock_height() <= max_time_block_height_ - 2) {
+        if (block_item->timeblock_height() <= max_time_block_height_ - 2) {
             return kBlockSuccess;
         }
     }
 
-    if (block_item.timeblock_height() > max_time_block_height_) {
-        max_time_block_height_ = block_item.timeblock_height();
+    if (block_item->timeblock_height() > max_time_block_height_) {
+        max_time_block_height_ = block_item->timeblock_height();
     }
 
-    auto iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+    auto iter = statistic_for_tmblock_.find(block_item->timeblock_height());
     if (iter == statistic_for_tmblock_.end()) {
-        statistic_for_tmblock_[block_item.timeblock_height()] = StatisticItem();
-        iter = statistic_for_tmblock_.find(block_item.timeblock_height());
+        statistic_for_tmblock_[block_item->timeblock_height()] = StatisticItem();
+        iter = statistic_for_tmblock_.find(block_item->timeblock_height());
     }
 
-    auto ext_iter = iter->second.added_height.find(block_item.height());
+    auto ext_iter = iter->second.added_height.find(block_item->height());
     if (ext_iter != iter->second.added_height.end()) {
         return kBlockSuccess;
     }
 
-    iter->second.added_height.insert(block_item.height());
-    iter->second.all_tx_count += block_item.tx_list_size();
+    iter->second.added_height.insert(block_item->height());
+    iter->second.all_tx_count += block_item->tx_list_size();
     std::vector<uint64_t> bitmap_data;
-    for (int32_t i = 0; i < block_item.bitmap_size(); ++i) {
-        bitmap_data.push_back(block_item.bitmap(i));
+    for (int32_t i = 0; i < block_item->bitmap_size(); ++i) {
+        bitmap_data.push_back(block_item->bitmap(i));
     }
 
     common::Bitmap final_bitmap(bitmap_data);
