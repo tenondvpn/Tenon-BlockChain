@@ -30,10 +30,7 @@ public:
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db);
-    uint64_t latest_height() {
-        return latest_height_;
-    }
-
+    uint64_t latest_height(uint32_t network_id);
     // get member
     int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
@@ -65,7 +62,6 @@ private:
     void HandleMessage(transport::protobuf::Header& header);
     void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
     void CreateAllElectTx();
-    uint64_t GetNetworkLatestElectHeight(uint32_t network_id);
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;

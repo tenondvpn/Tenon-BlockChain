@@ -236,13 +236,13 @@ void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protob
     msg->set_data(bft_msg.SerializeAsString());
 }
 
-uint64_t ElectManager::GetNetworkLatestElectHeight(uint32_t network_id) {
+uint64_t ElectManager::latest_height(uint32_t network_id) {
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
     auto net_heights_iter = elect_net_heights_map_.find(network_id);
     if (net_heights_iter == elect_net_heights_map_.end()) {
         return common::kInvalidUint64;
     }
-    
+
     return net_heights_iter->second.top();
 }
 
@@ -251,7 +251,7 @@ int32_t ElectManager::IsLeader(
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return -1;
         }
@@ -276,7 +276,7 @@ uint32_t ElectManager::GetMemberIndex(
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return kInvalidMemberIndex;
         }
@@ -298,7 +298,7 @@ uint32_t ElectManager::GetMemberIndex(
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return nullptr;
         }
@@ -323,7 +323,7 @@ elect::BftMemberPtr ElectManager::GetMember(
         uint32_t network_id,
         const std::string& node_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return nullptr;
         }
@@ -348,7 +348,7 @@ elect::BftMemberPtr ElectManager::GetMember(
         uint32_t network_id,
         uint32_t index) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return nullptr;
         }
@@ -370,7 +370,7 @@ elect::BftMemberPtr ElectManager::GetMember(
 
 uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return 0;
         }
@@ -392,7 +392,7 @@ uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id
 
 int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id) {
     if (elect_height == common::kInvalidUint64) {
-        elect_height = GetNetworkLatestElectHeight(network_id);
+        elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
             return 0;
         }
