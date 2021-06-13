@@ -28,7 +28,7 @@ uint64_t MinHeapUniqueVal(const uint32_t& val);
 template<>
 uint64_t MinHeapUniqueVal(const int32_t& val);
 
-template <class Type, uint32_t kMaxSize>
+template <class Type, uint32_t kMaxSize, bool kIsMaxHep=false>
 class MinHeap {
 public:
     MinHeap(bool unique) : unique_(unique) {
@@ -64,8 +64,8 @@ public:
     }
 
     inline int32_t push(Type val) {
-        if (size_ >= kMaxSize && val < data_[0]) {
-            TENON_ERROR("min heap push failed![%d]", val < data_[0]);
+        if (size_ >= kMaxSize && OperaterMinOrMax(val, data_[0])) {
+            TENON_ERROR("min heap push failed![%d]", OperaterMinOrMax(val, data_[0]));
             return -1;
         }
 
@@ -121,7 +121,7 @@ public:
 
             int32_t r_child = RightChild(index);
             if (r_child >= size_) {
-                if (!(data_[l_child] < data_[index])) {
+                if (!OperaterMinOrMax(data_[l_child], data_[index])) {
                     break;
                 }
 
@@ -130,16 +130,15 @@ public:
                 continue;
             }
 
-            if (data_[index] < data_[r_child] &&
-                    data_[index] < data_[l_child]) {
+            if (OperaterMinOrMax(data_[index], data_[r_child]) &&
+                    OperaterMinOrMax(data_[index], data_[l_child])) {
                 break;
             }
 
-            if (data_[l_child] < data_[r_child]) {
+            if (OperaterMinOrMax(data_[l_child], data_[r_child])) {
                 Swap(l_child, index);
                 index = l_child;
-            }
-            else {
+            } else {
                 Swap(r_child, index);
                 index = r_child;
             }
@@ -151,7 +150,7 @@ public:
     int32_t AdjustUp(int32_t index) {
         while (index > 0) {
             int32_t parent_idx = ParentIndex(index);
-            if (!(data_[index] < data_[parent_idx])) {
+            if (!OperaterMinOrMax(data_[index], data_[parent_idx])) {
                 break;
             }
 
@@ -182,6 +181,14 @@ public:
         Type tmp_val = data_[l];
         data_[l] = data_[r];
         data_[r] = tmp_val;
+    }
+
+    inline bool OperaterMinOrMax(const Type& left, const Type& right) {
+        if (kIsMaxHep) {
+            return left > right;
+        }
+
+        return left < right;
     }
 
     Type* data_{ nullptr };

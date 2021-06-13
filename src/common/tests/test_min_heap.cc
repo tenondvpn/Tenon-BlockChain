@@ -34,8 +34,8 @@ private:
 TEST_F(TestMinHeap, ALL) {
     MinHeap<uint64_t, 1024> test_min_heap(true);
     uint64_t max_data = 0;
-    for (uint64_t i = 0; i < 10000000; ++i) {
-        auto data = common::Random::RandomUint64();
+    for (uint64_t i = 0; i < 1000; ++i) {
+        auto data = common::Random::RandomUint16();
         test_min_heap.push(data);
         if (max_data < data) {
             max_data = data;
