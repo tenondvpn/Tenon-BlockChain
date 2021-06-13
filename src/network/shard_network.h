@@ -9,7 +9,6 @@
 #include "network/dht_manager.h"
 #include "network/bootstrap.h"
 #include "election/elect_dht.h"
-#include "election/elect_manager.h"
 #include "security/aes.h"
 #include "security/ecdh_create_key.h"
 #include "security/schnorr.h"
@@ -239,6 +238,8 @@ int ShardNetwork<DhtType>::JoinShard() {
 
     return kNetworkSuccess;
 }
+
+typedef ShardNetwork<elect::ElectDht> ElectNode;
 
 }  // namespace network
 

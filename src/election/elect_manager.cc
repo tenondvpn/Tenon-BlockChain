@@ -8,6 +8,7 @@
 #include "bft/bft_manager.h"
 #include "security/secp256k1.h"
 #include "election/proto/elect_proto.h"
+#include "network/shard_network.h"
 
 namespace tenon {
 
@@ -36,7 +37,7 @@ int ElectManager::Join(uint32_t network_id) {
         }
     }
 
-    elect_node_ptr_ = std::make_shared<ElectNode>(network_id);
+    elect_node_ptr_ = std::make_shared<network::ElectNode>(network_id);
     if (elect_node_ptr_->Init() != network::kNetworkSuccess) {
         ELECT_ERROR("node join network [%u] failed!", network_id);
         return kElectError;
