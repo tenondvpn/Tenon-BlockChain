@@ -739,6 +739,9 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
+            elect::ElectManager::Instance()->pool_manager_.NetworkMemberChange(
+                iter->first,
+                iter->second);
             elect::ElectManager::Instance()->SetNetworkMember(
                 elect_height++,
                 iter->first,
