@@ -368,6 +368,21 @@ public:
         InitEnv();
     }
 
+    static std::string GetValidPoolBaseAddr(uint32_t network_id, uint32_t pool_index) {
+        uint32_t id_idx = 0;
+        while (true) {
+            std::string addr = common::Encode::HexDecode(common::StringUtil::Format(
+                "%04d%s%04d",
+                network_id,
+                common::kStatisticFromAddressMidllefix.c_str(),
+                id_idx++));
+            uint32_t pool_idx = common::GetPoolIndex(addr);
+            if (pool_idx == pool_index) {
+                return addr;
+            }
+        }
+    }
+
     static void AddGenisisBlock(uint32_t type) {
         uint64_t genesis_account_balance = 21000000000llu * common::kTenonMiniTransportUnit / pool_index_map_.size();
         uint64_t all_balance = 0llu;
@@ -384,11 +399,7 @@ public:
                 auto tx_info = tx_list->Add();
                 tx_info->set_version(common::kTransactionVersion);
                 tx_info->set_gid(common::CreateGID(""));
-                tx_info->set_from(common::StringUtil::Format(
-                    "%04d%s%04d",
-                    network::kConsensusShardBeginNetworkId,
-                    common::kStatisticFromAddressMidllefix.c_str(),
-                    id_idx++));
+                tx_info->set_from(GetValidPoolBaseAddr(network::kConsensusShardBeginNetworkId, id_idx));
                 tx_info->set_from_pubkey("");
                 tx_info->set_from_sign("");
                 tx_info->set_to("");
@@ -398,6 +409,7 @@ public:
                 tx_info->set_type(type);
                 tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
             }
+
             {
                 auto tx_info = tx_list->Add();
                 tx_info->set_version(common::kTransactionVersion);
