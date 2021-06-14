@@ -28,14 +28,17 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     std::string coming_id = root_node_id + std::to_string(
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     if (coming_root_nodes_.find(coming_id) != coming_root_nodes_.end()) {
+        std::cout << "coming_id has find." << common::Encode::HexEncode(coming_id) << std::endl;
         return;
     }
 
     coming_root_nodes_.insert(coming_id);
+    std::cout << "coming_id has added." << common::Encode::HexEncode(coming_id) << std::endl;
     auto member_index = ElectManager::Instance()->GetMemberIndex(
-        waiting_shard_id_ - network::kConsensusWaitingShardOffset,
+        network::kRootCongressNetworkId,
         root_node_id);
     if (member_index == elect::kInvalidMemberIndex) {
+        std::cout << "member_index == elect::kInvalidMemberIndex" << std::endl;
         return;
     }
 
@@ -62,6 +65,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         all_nodes_waiting_map_[wait_ptr->nodes_hash] = wait_ptr;
     } else {
         ++iter->second->same_root_count;
+        std::cout << "UpdateWaitingNodes same_root_count: " << iter->second->same_root_count << std::endl;
     }
 }
 

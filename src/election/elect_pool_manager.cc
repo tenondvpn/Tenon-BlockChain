@@ -325,6 +325,7 @@ void ElectPoolManager::UpdateWaitingNodes(
         uint32_t waiting_shard_id,
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter) {
+    std::cout << "UpdateWaitingNodes root_node_id: " << common::Encode::HexEncode(root_node_id) << ", waiting_shard_id: " << waiting_shard_id << std::endl;
     if (waiting_shard_id < network::kConsensusWaitingShardBeginNetworkId ||
         waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
         return;
@@ -341,6 +342,7 @@ void ElectPoolManager::UpdateWaitingNodes(
         waiting_pool_ptr = iter->second;
     }
 
+    std::cout << "UpdateWaitingNodes root_node_id: " << common::Encode::HexEncode(root_node_id) << std::endl;
     waiting_pool_ptr->UpdateWaitingNodes(root_node_id, nodes_filter);
 }
 

@@ -153,6 +153,7 @@ int DbPoolInfo::GetLastBlockInfo(
 }
 
 int DbPoolInfo::SetHeight(uint64_t height, db::DbWriteBach& db_batch) {
+    std::cout << "pool index set height: " << height << ", pool index: " << pool_index_ << std::endl;
     if (!db::Dict::Instance()->Hset(
             dict_key_,
             kPoolHeight,

@@ -525,6 +525,7 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
+    std::cout << "add bft gid: " << common::Encode::HexEncode(bft_ptr->gid()) << std::endl;
     int res = AddBft(bft_ptr);
     if (res != kBftSuccess) {
         return res;

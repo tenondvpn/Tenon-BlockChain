@@ -20,6 +20,7 @@
 #include "bft/gid_manager.h"
 #include "common/random.h"
 #include "contract/contract_utils.h"
+#include "root/root_utils.h"
 #include "security/secp256k1.h"
 #include "tvm/execution.h"
 #include "tvm/tvm_utils.h"
@@ -482,6 +483,111 @@ public:
         }
 
         ASSERT_EQ(all_balance, 21000000000llu * common::kTenonMiniTransportUnit);
+
+        uint64_t root_single_block_height = 0llu;
+        // for root single block chain
+        std::string root_pre_hash;
+        {
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(0);
+            tx_info->set_balance(0);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            tenon_block->set_prehash("");
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(common::kRootChainPoolIndex);
+            tenon_block->set_height(root_single_block_height++);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+            ASSERT_EQ(bft::BftManager::Instance()->AddGenisisBlock(tenon_block), bft::kBftSuccess);
+            std::string pool_hash;
+            uint64_t pool_height = 0;
+            uint64_t tm_height;
+            uint64_t tm_with_block_height;
+            int res = block::AccountManager::Instance()->GetBlockInfo(
+                common::kRootChainPoolIndex,
+                &pool_height,
+                &pool_hash,
+                &tm_height,
+                &tm_with_block_height);
+            ASSERT_EQ(res, block::kBlockSuccess);
+            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+                root::kRootChainSingleBlockTxAddress);
+            ASSERT_TRUE(account_ptr != nullptr);
+            uint64_t balance = 0;
+            ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
+            ASSERT_TRUE(balance == 0);
+            root_pre_hash = bft::GetBlockHash(*tenon_block);
+        }
+
+        {
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(0);
+            tx_info->set_balance(0);
+            tx_info->set_gas_limit(0);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            tx_info->set_type(common::kConsensusRootTimeBlock);
+            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_gas_limit(0llu);
+            tx_info->set_amount(0);
+            tx_info->set_network_id(network::kRootCongressNetworkId);
+            auto all_exits_attr = tx_info->add_attr();
+            all_exits_attr->set_key(tmblock::kAttrTimerBlock);
+            auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
+            all_exits_attr->set_value(std::to_string(now_tm));
+            tenon_block->set_prehash(root_pre_hash);
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(common::kRootChainPoolIndex);
+            tenon_block->set_height(root_single_block_height++);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+            auto tmp_str = tenon_block->SerializeAsString();
+            bft::protobuf::Block tenon_block2;
+            tenon_block2.ParseFromString(tmp_str);
+            assert(tenon_block2.tx_list_size() > 0);
+            tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm);
+            ASSERT_EQ(bft::BftManager::Instance()->AddGenisisBlock(tenon_block), bft::kBftSuccess);
+            std::string pool_hash;
+            uint64_t pool_height = 0;
+            uint64_t tm_height;
+            uint64_t tm_with_block_height;
+            int res = block::AccountManager::Instance()->GetBlockInfo(
+                common::kRootChainPoolIndex,
+                &pool_height,
+                &pool_hash,
+                &tm_height,
+                &tm_with_block_height);
+            ASSERT_EQ(res, block::kBlockSuccess);
+            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+                root::kRootChainSingleBlockTxAddress);
+            ASSERT_TRUE(account_ptr != nullptr);
+            uint64_t balance = 0;
+            ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
+            ASSERT_TRUE(balance == 0);
+        }
     }
 
     void CreateNewTransaction(
@@ -1614,6 +1720,7 @@ public:
         ASSERT_EQ(res, kBftSuccess);
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
+        std::cout << "bft_gid is: " << common::Encode::HexEncode(bft_gid) << std::endl;
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         auto leader_sec = iter->second->secret_;
