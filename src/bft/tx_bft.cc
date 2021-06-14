@@ -440,65 +440,14 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                 return check_res;
             }
         } else if(local_tx_info->tx.type() == common::kConsensusStatistic) {
-            if (tx_info.gas_limit() != 0) {
-                return kBftInvalidPackage;
-            }
-
-            if (tx_info.balance() != 0) {
-                return kBftInvalidPackage;
-            }
-
-            if (tx_info.gas_used() != 0) {
-                return kBftInvalidPackage;
-            }
-
-            int32_t valid_count = 0;
-            for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-                if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
-                    auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
-                    if (iter == local_tx_info->attr_map.end()) {
-                        return kBftInvalidPackage;
-                    }
-
-                    if (iter->second != tx_info.attr(i).value()) {
-                        return kBftInvalidPackage;
-                    }
-
-                    ++valid_count;
-                }
-
-                if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
-                    auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
-                    if (iter == local_tx_info->attr_map.end()) {
-                        return kBftInvalidPackage;
-                    }
-
-                    if (iter->second != tx_info.attr(i).value()) {
-                        return kBftInvalidPackage;
-                    }
-
-                    ++valid_count;
-                }
-
-                if (tx_info.attr(i).key() == kStatisticAttr) {
-                    std::string statistic_info;
-                    int res = block::AccountManager::Instance()->GetPoolStatistic(
-                        pool_index(),
-                        &statistic_info);
-                    if (res != block::kBlockSuccess) {
-                        return kBftInvalidPackage;
-                    }
-
-                    if (statistic_info != tx_info.attr(i).value()) {
-                        return kBftInvalidPackage;
-                    }
-
-                    ++valid_count;
-                }
-            }
-
-            if (valid_count != 3) {
-                return kBftInvalidPackage;
+            int check_res = BackupCheckStatistic(
+                local_tx_info,
+                tx_info,
+                locked_account_map,
+                acc_balance_map);
+            if (check_res != kBftSuccess) {
+                BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
+                return check_res;
             }
         } else {
             switch (local_tx_info->tx.call_contract_step()) {
@@ -544,6 +493,75 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
     SetBlock(block_ptr);
+    return kBftSuccess;
+}
+
+int TxBft::BackupCheckStatistic(
+        const TxItemPtr& local_tx_info,
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, bool>& locked_account_map,
+        std::unordered_map<std::string, int64_t>& acc_balance_map) {
+    if (tx_info.gas_limit() != 0) {
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.balance() != 0) {
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.gas_used() != 0) {
+        return kBftInvalidPackage;
+    }
+
+    int32_t valid_count = 0;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
+            if (iter == local_tx_info->attr_map.end()) {
+                return kBftInvalidPackage;
+            }
+
+            if (iter->second != tx_info.attr(i).value()) {
+                return kBftInvalidPackage;
+            }
+
+            ++valid_count;
+        }
+
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
+            if (iter == local_tx_info->attr_map.end()) {
+                return kBftInvalidPackage;
+            }
+
+            if (iter->second != tx_info.attr(i).value()) {
+                return kBftInvalidPackage;
+            }
+
+            ++valid_count;
+        }
+
+        if (tx_info.attr(i).key() == kStatisticAttr) {
+            std::string statistic_info;
+            int res = block::AccountManager::Instance()->GetPoolStatistic(
+                pool_index(),
+                &statistic_info);
+            if (res != block::kBlockSuccess) {
+                return kBftInvalidPackage;
+            }
+
+            if (statistic_info != tx_info.attr(i).value()) {
+                return kBftInvalidPackage;
+            }
+
+            ++valid_count;
+        }
+    }
+
+    if (valid_count != 3) {
+        return kBftInvalidPackage;
+    }
+
     return kBftSuccess;
 }
 

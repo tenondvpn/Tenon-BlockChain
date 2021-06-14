@@ -105,11 +105,6 @@ private:
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
-    int BackupCheckContractInited(
-        const TxItemPtr& local_tx_ptr,
-        const protobuf::TxInfo& tx_info,
-        std::unordered_map<std::string, int64_t>& acc_balance_map,
-        std::unordered_map<std::string, bool>& locked_account_map);
     int BackupCheckContractExceute(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
@@ -117,6 +112,11 @@ private:
     int BackupCheckContractCalled(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, int64_t>& acc_balance_map);
+    int BackupCheckStatistic(
+        const TxItemPtr& local_tx_ptr,
+        const protobuf::TxInfo& tx_info,
+        std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
