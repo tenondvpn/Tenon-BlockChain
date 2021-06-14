@@ -2886,10 +2886,8 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBallotSuccess) {
                 attrs);
             auto from_balance = GetBalanceByPrikey(from_prikey);
             to_balance = GetBalanceByPrikey(to_prikey);
-            std::cout << "to account address: " << common::Encode::HexEncode(GetIdByPrikey(to_prikey)) << std::endl;
             ASSERT_EQ(from_balance, init_balance - all_gas * common::GlobalInfo::Instance()->gas_price() - all_amount);
             ASSERT_EQ(to_balance, all_amount);
-
             delegaters.push_back(common::Encode::HexEncode(GetIdByPrikey(to_prikey)));
         }
     }

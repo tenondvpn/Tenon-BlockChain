@@ -400,10 +400,10 @@ public:
             tenon_block->set_pool_index(iter->first);
             tenon_block->set_height(0);
             tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block->set_hash(GetBlockHash(*tenon_block));
             tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
+            tenon_block->set_hash(GetBlockHash(*tenon_block));
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
             uint64_t pool_height = 0;
