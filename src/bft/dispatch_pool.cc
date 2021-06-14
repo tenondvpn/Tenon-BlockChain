@@ -77,7 +77,7 @@ int DispatchPool::CheckFromAddressValid(
         const bft::protobuf::TxInfo& new_tx) {
     // from must valid
     if (!new_tx.to_add()) {
-        if (IsRootSingleBlockTx(new_tx.type())) {
+        if (IsRootSingleBlockTx(new_tx.type()) || IsShardSingleBlockTx(new_tx.type())) {
             // must leader can transaction
             if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
                 BFT_ERROR("from is not valid root address[%s][%s]",
@@ -94,6 +94,16 @@ int DispatchPool::CheckFromAddressValid(
                 return kBftError;
             }
         } else {
+            auto id_from_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(
+                bft_msg.pubkey());
+            if (id_from_pubkey != new_tx.from()) {
+                BFT_ERROR("transaction from public key not match tx from.[%s][%s][%s]",
+                    common::Encode::HexEncode(bft_msg.pubkey()).c_str(),
+                    common::Encode::HexEncode(new_tx.from()).c_str(),
+                    common::Encode::HexEncode(id_from_pubkey).c_str());
+                return kBftError;
+            }
+
             auto from_account = block::AccountManager::Instance()->GetAcountInfo(new_tx.from());
             if (from_account == nullptr) {
                 BFT_ERROR("from_account is is not exists[%s].",

@@ -508,8 +508,18 @@ public:
             auto hash128 = GetTxMessageHash(*new_tx);
             auto tx_data = tx_bft.SerializeAsString();
             bft_msg.set_data(tx_data);
-            bft_msg.set_sign_challenge("");
-            bft_msg.set_sign_response("");
+            bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+            security::Signature sign;
+            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+                hash128,
+                *(security::Schnorr::Instance()->prikey()),
+                *(security::Schnorr::Instance()->pubkey()),
+                sign));
+            std::string sign_challenge_str;
+            std::string sign_response_str;
+            sign.Serialize(sign_challenge_str, sign_response_str);
+            bft_msg.set_sign_challenge(sign_challenge_str);
+            bft_msg.set_sign_response(sign_response_str);
         } else {
             security::PrivateKey from_private_key(from_prikey);
             security::PublicKey from_pubkey(from_private_key);
