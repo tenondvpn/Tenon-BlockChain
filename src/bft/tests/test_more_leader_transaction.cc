@@ -901,17 +901,13 @@ public:
         auto leader_id = leader_mem_ptr->id;
         auto leader_private_key = network_with_private_keys_[network::kConsensusShardBeginNetworkId][leader_index];
         leader_private_key = common::Encode::HexEncode(leader_private_key);
-        // leader_private_key = "12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
-
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-        
         SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
-
         if (bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num) != kBftSuccess) {
             std::cout << "start bft failed!" << std::endl;
             return;
