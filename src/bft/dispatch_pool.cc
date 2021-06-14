@@ -77,30 +77,36 @@ int DispatchPool::CheckFromAddressValid(
         const bft::protobuf::TxInfo& new_tx) {
     // from must valid
     if (!new_tx.to_add()) {
-        if (IsRootSingleBlockTx(new_tx.type()) || IsShardSingleBlockTx(new_tx.type())) {
+        if (IsRootSingleBlockTx(new_tx.type())) {
             // must leader can transaction
-            if (IsRootSingleBlockTx(new_tx.type())) {
-                if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
-                    BFT_ERROR("from is not valid root address[%s][%s]",
-                        common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str(),
-                        common::Encode::HexEncode(new_tx.from()).c_str());
-                    return kBftError;
-                }
+            if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
+                BFT_ERROR("from is not valid root address[%s][%s]",
+                    common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str(),
+                    common::Encode::HexEncode(new_tx.from()).c_str());
+                return kBftError;
             }
-
-            if (IsShardSingleBlockTx(new_tx.type())) {
-                if (!block::IsPoolBaseAddress(new_tx.from())) {
-                    BFT_ERROR("from is not valid shard base address[%s]",
-                        common::Encode::HexEncode(new_tx.from()).c_str());
-                        return kBftError;
-                }
-            }
-
+            
             auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
             if (id.empty() || elect::ElectManager::Instance()->IsLeader(
                     network::kRootCongressNetworkId,
                     id) < 0) {
-                BFT_ERROR("id is valid elected member error.");
+                BFT_ERROR("id is valid elected member error.[%s]",
+                    common::Encode::HexEncode(id).c_str());
+                return kBftError;
+            }
+        } else if (IsShardSingleBlockTx(new_tx.type())) {
+            if (!block::IsPoolBaseAddress(new_tx.from())) {
+                BFT_ERROR("from is not valid shard base address[%s]",
+                    common::Encode::HexEncode(new_tx.from()).c_str());
+                return kBftError;
+            }
+
+            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
+            if (id.empty() || elect::ElectManager::Instance()->IsLeader(
+                    common::GlobalInfo::Instance()->network_id(),
+                    id) < 0) {
+                BFT_ERROR("id is valid elected member error.[%s]",
+                    common::Encode::HexEncode(id).c_str());
                 return kBftError;
             }
         } else {

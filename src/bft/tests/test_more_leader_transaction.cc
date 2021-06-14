@@ -889,7 +889,6 @@ public:
             std::map<std::string, std::string>& attrs,
             transport::protobuf::Header* broadcast_msg) {
         transport::protobuf::Header msg;
-        CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
         int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
         if (tx_type == common::kConsensusStatistic) {
             pool_index_from = common::GetPoolIndex(from_prikey);
@@ -901,11 +900,15 @@ public:
         auto leader_id = leader_mem_ptr->id;
         auto leader_private_key = network_with_private_keys_[network::kConsensusShardBeginNetworkId][leader_index];
         leader_private_key = common::Encode::HexEncode(leader_private_key);
+        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
+        std::cout << "leader private key: " << leader_private_key
+            << ", leader id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(common::Encode::HexDecode(leader_private_key)))
+            << std::endl;
+        CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-        SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->HandleMessage(msg);
         usleep(bft::kBftStartDeltaTime);
         if (bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num) != kBftSuccess) {
