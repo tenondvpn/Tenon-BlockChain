@@ -25,6 +25,7 @@
 #include "tvm/tvm_utils.h"
 #include "tvm/tenon_host.h"
 #include "timeblock/time_block_manager.h"
+#include "timeblock/time_block_utils.h"
 
 namespace tenon {
 
@@ -370,6 +371,7 @@ public:
     static void AddGenisisBlock(uint32_t type) {
         uint64_t genesis_account_balance = 21000000000llu * common::kTenonMiniTransportUnit / pool_index_map_.size();
         uint64_t all_balance = 0llu;
+        uint32_t id_idx = 0;
         for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
             auto tenon_block = std::make_shared<bft::protobuf::Block>();
             auto tx_list = tenon_block->mutable_tx_list();
@@ -378,18 +380,39 @@ public:
             std::string pubkey_str;
             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-            auto tx_info = tx_list->Add();
-            tx_info->set_version(common::kTransactionVersion);
-            tx_info->set_gid(common::CreateGID(""));
-            tx_info->set_from(address);
-            tx_info->set_from_pubkey(pubkey_str);
-            tx_info->set_from_sign("");
-            tx_info->set_to("");
-            tx_info->set_amount(genesis_account_balance);
-            tx_info->set_balance(genesis_account_balance);
-            tx_info->set_gas_limit(0);
-            tx_info->set_type(type);
-            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            {
+                auto tx_info = tx_list->Add();
+                tx_info->set_version(common::kTransactionVersion);
+                tx_info->set_gid(common::CreateGID(""));
+                tx_info->set_from(common::StringUtil::Format(
+                    "%04d%s%04d",
+                    network::kConsensusShardBeginNetworkId,
+                    common::kStatisticFromAddressMidllefix.c_str(),
+                    id_idx++));
+                tx_info->set_from_pubkey("");
+                tx_info->set_from_sign("");
+                tx_info->set_to("");
+                tx_info->set_amount(0);
+                tx_info->set_balance(0);
+                tx_info->set_gas_limit(0);
+                tx_info->set_type(type);
+                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            }
+            {
+                auto tx_info = tx_list->Add();
+                tx_info->set_version(common::kTransactionVersion);
+                tx_info->set_gid(common::CreateGID(""));
+                tx_info->set_from(address);
+                tx_info->set_from_pubkey(pubkey_str);
+                tx_info->set_from_sign("");
+                tx_info->set_to("");
+                tx_info->set_amount(genesis_account_balance);
+                tx_info->set_balance(genesis_account_balance);
+                tx_info->set_gas_limit(0);
+                tx_info->set_type(type);
+                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            }
+            
             tenon_block->set_prehash("");
             tenon_block->set_version(common::kTransactionVersion);
             tenon_block->set_agg_pubkey("");
@@ -470,44 +493,60 @@ public:
         bft_msg.set_pubkey(from_pubkey_str);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
-        auto iter = attrs.find("contract_orignal_gid");
-        if (iter == attrs.end()) {
-            new_tx->set_gid(common::CreateGID(from_pubkey_str));
+        if (tx_type == common::kConsensusStatistic) {
+            new_tx->set_type(common::kConsensusStatistic);
+            new_tx->set_from(from_prikey);
+            ASSERT_TRUE(!new_tx->from().empty());
+            new_tx->set_gid(common::Hash::Hash256(std::to_string(0) + from_prikey));
+            new_tx->set_gas_limit(0llu);
+            new_tx->set_amount(0);
+            new_tx->set_network_id(common::GlobalInfo::Instance()->network_id());
+            auto height_attr = new_tx->add_attr();
+            height_attr->set_key(tmblock::kAttrTimerBlockHeight);
+            height_attr->set_value(std::to_string(0));
+            auto tm_attr = new_tx->add_attr();
+            tm_attr->set_key(tmblock::kAttrTimerBlockTm);
+            tm_attr->set_value(std::to_string(0));
         } else {
-            new_tx->set_gid(iter->second);
-        }
+            auto iter = attrs.find("contract_orignal_gid");
+            if (iter == attrs.end()) {
+                new_tx->set_gid(common::CreateGID(from_pubkey_str));
+            } else {
+                new_tx->set_gid(iter->second);
+            }
 
-        new_tx->set_from(id);
-        new_tx->set_from_pubkey(from_pubkey_str);
-        if (!to_prikey.empty() && !just_to_id) {
-            security::PrivateKey to_private_key(to_prikey);
-            security::PublicKey to_pubkey(to_private_key);
-            std::string to_pubkey_str;
-            ASSERT_EQ(to_pubkey.Serialize(to_pubkey_str, false), security::kPublicKeyUncompressSize);
-            std::string to_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_str);
-            new_tx->set_to(to_id);
-        }
+            new_tx->set_from(id);
+            new_tx->set_from_pubkey(from_pubkey_str);
+            if (!to_prikey.empty() && !just_to_id) {
+                security::PrivateKey to_private_key(to_prikey);
+                security::PublicKey to_pubkey(to_private_key);
+                std::string to_pubkey_str;
+                ASSERT_EQ(to_pubkey.Serialize(to_pubkey_str, false), security::kPublicKeyUncompressSize);
+                std::string to_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(to_pubkey_str);
+                new_tx->set_to(to_id);
+            }
 
-        if (just_to_id) {
-            new_tx->set_to(to_prikey);
-        }
+            if (just_to_id) {
+                new_tx->set_to(to_prikey);
+            }
 
-        if (tx_type == common::kConsensusCreateContract) {
-            ASSERT_TRUE(attrs.find(bft::kContractBytesCode) != attrs.end());
-            std::string contract_addres = security::Secp256k1::Instance()->GetContractAddress(
-                id,
-                new_tx->gid(),
-                attrs[bft::kContractBytesCode]);
-            new_tx->set_to(contract_addres);
-        }
+            if (tx_type == common::kConsensusCreateContract) {
+                ASSERT_TRUE(attrs.find(bft::kContractBytesCode) != attrs.end());
+                std::string contract_addres = security::Secp256k1::Instance()->GetContractAddress(
+                    id,
+                    new_tx->gid(),
+                    attrs[bft::kContractBytesCode]);
+                new_tx->set_to(contract_addres);
+            }
 
-        new_tx->set_amount(amount);
-        new_tx->set_gas_limit(gas_limit);
-        new_tx->set_type(tx_type);
-        for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
-            auto attr = new_tx->add_attr();
-            attr->set_key(iter->first);
-            attr->set_value(iter->second);
+            new_tx->set_amount(amount);
+            new_tx->set_gas_limit(gas_limit);
+            new_tx->set_type(tx_type);
+            for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
+                auto attr = new_tx->add_attr();
+                attr->set_key(iter->first);
+                attr->set_value(iter->second);
+            }
         }
 
         auto hash128 = GetTxMessageHash(*new_tx);
@@ -823,6 +862,10 @@ public:
         transport::protobuf::Header msg;
         CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
         int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        if (tx_type == common::kConsensusStatistic) {
+            pool_index_from = common::GetPoolIndex(from_prikey);
+        }
+
         int32_t leader_index = pool_index_from % elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kConsensusShardBeginNetworkId);
         auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, leader_index);
         ASSERT_TRUE(leader_mem_ptr);
@@ -1263,6 +1306,10 @@ public:
             if (des_network_id == network::kRootCongressNetworkId) {
                 transport::protobuf::Header to_root_broadcast_msg;
                 CreateNewAccountWithInvalidNode(from_prikey, to_prikey, just_to_id, broadcast_msg, &to_root_broadcast_msg);
+                if (tx_type == common::kConsensusStatistic) {
+                    return;
+                }
+
                 ASSERT_TRUE(to_root_broadcast_msg.IsInitialized());
                 transport::protobuf::Header tmp_broadcast_msg;
                 NewAccountDestNetworkTransfer(true, tx_type, just_to_id, to_root_broadcast_msg, from_prikey, to_prikey, attrs, false, &tmp_broadcast_msg);
@@ -3669,6 +3716,22 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBlindAuctionSuccess) {
 
         auto beneficiary_balance = GetBalanceByPrikey(from_prikey);
         ASSERT_EQ(beneficiary_balance, new_from_balance);
+    }
+}
+
+TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
+    uint64_t all_amount = 0;
+    uint64_t amount = 0;
+    uint64_t all_gas = 0;
+    std::map<std::string, std::string> attrs;
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        auto from = block::AccountManager::Instance()->GetPoolBaseAddr(i);
+        Transaction(
+            from, "", amount, all_gas,
+            common::kConsensusStatistic, true, false, attrs);
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
+        ASSERT_TRUE(account_info != nullptr);
+        ASSERT_EQ(account_info->balance_, 0);
     }
 }
 

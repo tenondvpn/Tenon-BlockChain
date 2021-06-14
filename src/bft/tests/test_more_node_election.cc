@@ -376,76 +376,13 @@ public:
         pool_index_map_.insert(std::make_pair(254, common::Encode::HexDecode("9dde2eaab26334ff348959a02bcebedee37de577792b82992e90f0a8136347ae")));
         pool_index_map_.insert(std::make_pair(255, common::Encode::HexDecode("593bee91f956047f7dfa1df3603dfdb701b5e5fb601e4836a00ebd7a65f48d4d")));
         test_from_key = pool_index_map_[0];
-//         pool_index_map_.insert(std::make_pair(0, common::Encode::HexDecode(common::Encode::HexEncode(test_from_key))));
-//         pool_index_map_.insert(std::make_pair(1, common::Encode::HexDecode("294ad6b66799796d822107b4dcb7a6a9c0c2fd743fddf93512ac921a0731d2de")));
-//         pool_index_map_.insert(std::make_pair(2, common::Encode::HexDecode("a834ef78741f8bc3f6263612c31c50a05ccdaf7add038849e709aee76c0e1151")));
-//         pool_index_map_.insert(std::make_pair(3, common::Encode::HexDecode("323b875d52948910330d81de19fc3d894232a333368819c2c12b6433151067ca")));
-//         pool_index_map_.insert(std::make_pair(4, common::Encode::HexDecode("0fedd74ffc1e65816f006eeeefa0497cb766eb9c1d238264cfd006f34152245d")));
-//         pool_index_map_.insert(std::make_pair(5, common::Encode::HexDecode("e5cd559f521e9d8fc6f07253b866ac79ca13c6ac02d50aff44509312e41a6f47")));
-//         pool_index_map_.insert(std::make_pair(6, common::Encode::HexDecode("d0a056e99a11564f75a6af4bb5cd06c1b373efdf6e64f04c42e64f94db2f80e4")));
-//         pool_index_map_.insert(std::make_pair(7, common::Encode::HexDecode("cbf17ab377d51731003f9ed093e02125e6c4ac78b5cc2d7f2bb0ca9deebdf6cd")));
-//         pool_index_map_.insert(std::make_pair(8, common::Encode::HexDecode("010cfd6f7f88f6be077b62c10c3f8f79277843a9e289eb5fc3fc65c8755f8f51")));
-//         pool_index_map_.insert(std::make_pair(9, common::Encode::HexDecode("f5ba6ea0edfb33f9f1e44e434872fbf9e6f403c88d5d37ddf57235d573fd4c7a")));
-//         pool_index_map_.insert(std::make_pair(10, common::Encode::HexDecode("c627c5ac57e89516c677f6731c15b345087db9ff552a20fb40cffc44234aa8ce")));
-//         pool_index_map_.insert(std::make_pair(11, common::Encode::HexDecode("81db11fd404ae99c333a50c3140a29e4fc267e0519276cf63b89efe7ba7a1e40")));
-//         pool_index_map_.insert(std::make_pair(12, common::Encode::HexDecode("5640c58362fc5858474bb9f686d70cd685e3c2fb26f033dca2c7fc4b64679500")));
-//         pool_index_map_.insert(std::make_pair(13, common::Encode::HexDecode("8379d77981871f5439b98f811ae9c22670ae2e7d872b11ed20a576019be4a270")));
-//         pool_index_map_.insert(std::make_pair(14, common::Encode::HexDecode("f55797602d3b5955f3f9d99ffb1b8ed39c7a345472127b6db4dc8ef0b8893928")));
-//         pool_index_map_.insert(std::make_pair(15, common::Encode::HexDecode("ee303c6dfb067fc8dd0c19e4aeaf7901cb1393e123bfca57cfd43e9f30462873")));
-//         pool_index_map_.insert(std::make_pair(16, common::Encode::HexDecode("dd672dd8d64c56e22ad2696708a56d36c20cfdce546a0e8291fd7b721ca83dfe")));
-//         pool_index_map_.insert(std::make_pair(17, common::Encode::HexDecode("db759a1db3cb82d9a8668c569516a2e725265d93449bdfffcaefa4b25b5e726f")));
-//         pool_index_map_.insert(std::make_pair(18, common::Encode::HexDecode("08d717b745a8593f69beccbbc1ac05584bde045c4c5f57c14ee3140161f9543d")));
-//         pool_index_map_.insert(std::make_pair(19, common::Encode::HexDecode("713acc06c1a292f8902975f0538f4b7f50388b303154d6a95ead7d91386e5c68")));
-//         pool_index_map_.insert(std::make_pair(20, common::Encode::HexDecode("0a25fcd049cf67b52e6a44bad7b98b3f02a6ccc572190649691e141b6bc37aff")));
-//         pool_index_map_.insert(std::make_pair(21, common::Encode::HexDecode("a0b22507aff97e5e47a051436b3acf749f2cd052e7d4d2017281e2a1f873a653")));
-//         pool_index_map_.insert(std::make_pair(22, common::Encode::HexDecode("520005390b419a60a53fb62405644507f0d6c3e2862dd8acd5662c8d42088585")));
-//         pool_index_map_.insert(std::make_pair(23, common::Encode::HexDecode("e2690365aa06865f11e4a18e37b04c7839175276dc11e86b7da0a478387c2842")));
-//         pool_index_map_.insert(std::make_pair(24, common::Encode::HexDecode("eb592e3fb7838de0a33effa3462dab0d52376c911bedaa68d513548d5c367bad")));
-//         pool_index_map_.insert(std::make_pair(25, common::Encode::HexDecode("c61d917451c041c6d45c62f2306734bd8259aa4d33fb16c6b4d39db6cec02ab6")));
-//         pool_index_map_.insert(std::make_pair(26, common::Encode::HexDecode("6da5f6787dbb88eb83b08d52e9514f9688c09af89bb5aab9f1a8b49e70382954")));
-//         pool_index_map_.insert(std::make_pair(27, common::Encode::HexDecode("b5a93a83f93113b677a18713015dd349a6efec561ae2f101ea8a538de1323765")));
-//         pool_index_map_.insert(std::make_pair(28, common::Encode::HexDecode("b998de215ae5f7c23fcd7b8e55974a466c6b5e29019d45a95a5035c2512f7fff")));
-//         pool_index_map_.insert(std::make_pair(29, common::Encode::HexDecode("d4dab7c1c2acd53e03a9601a2ff65a17d7038da41ae836d4e27b8c5981cedf0a")));
-//         pool_index_map_.insert(std::make_pair(30, common::Encode::HexDecode("0392fefaaf0a5ae974f411c73d1e4d2d065080c77b267baf89142de958745f08")));
-//         pool_index_map_.insert(std::make_pair(31, common::Encode::HexDecode("ff605ad605d73204a97492be36a9e7ccd1c9532f330b906feb16f55b3cdbd261")));
-//         pool_index_map_.insert(std::make_pair(32, common::Encode::HexDecode("a7eae03fb5903ed80c1376ff173bcc884d607c7fe780dd726a3993f1015f1028")));
-//         pool_index_map_.insert(std::make_pair(33, common::Encode::HexDecode("76482bf9e7d69d1e4f460731c79993a8bee579c51a225127fb5044f2c923ca5f")));
-//         pool_index_map_.insert(std::make_pair(34, common::Encode::HexDecode("2743547f69cfca2692ba7b0e0e3396a96b3330235e544e27abf96b57344daaf1")));
-//         pool_index_map_.insert(std::make_pair(35, common::Encode::HexDecode("a70604f5432da3deaf1c89439f0671c684a03a168ee96bdf11b93eb47343752b")));
-//         pool_index_map_.insert(std::make_pair(36, common::Encode::HexDecode("6984a610cc6b55817b373f4602c56db07bfc243afa36d7424685348c4fbcdc45")));
-//         pool_index_map_.insert(std::make_pair(37, common::Encode::HexDecode("68a4580ad70fbc56c6d0f1b410f1c2ba8b2826306a57d3bcd3e6763e0ba29e76")));
-//         pool_index_map_.insert(std::make_pair(38, common::Encode::HexDecode("90dc94f6820d17c6c1027451bd141912dd3a4d41f683b99f8676b2f62925aeb7")));
-//         pool_index_map_.insert(std::make_pair(39, common::Encode::HexDecode("93ade5f5b072cb712cfee8cba8917bc3067f5bfd74e8b781f2f5171eb9c6fca9")));
-//         pool_index_map_.insert(std::make_pair(40, common::Encode::HexDecode("8e4171b50da6d0b8ede12d9506499748579524767ed8e96960ddcb22e87b3a96")));
-//         pool_index_map_.insert(std::make_pair(41, common::Encode::HexDecode("3fe4f6b512b84469b15f91cc68f817e8924f3d698361124f2915bf992524cbcb")));
-//         pool_index_map_.insert(std::make_pair(42, common::Encode::HexDecode("9c0c35a98b8d5ff63000ee875fbf91d0828ccb95bd9a5fd2e8c929f1900289b2")));
-//         pool_index_map_.insert(std::make_pair(43, common::Encode::HexDecode("f87c3e4b3ea584b1f944b82dd4a6904b54cb46fcd3f8cd7baa0c14843f7ea7bf")));
-//         pool_index_map_.insert(std::make_pair(44, common::Encode::HexDecode("ddac94b039a6ae659ad8e51ad43e4b720d1238f5cd01cae4d2639e2177744725")));
-//         pool_index_map_.insert(std::make_pair(45, common::Encode::HexDecode("e5cb18fe22135f6f8d96c3271f6570cc59462292a25c3b792418377a37edc115")));
-//         pool_index_map_.insert(std::make_pair(46, common::Encode::HexDecode("2bbe593aa80c7dfe587530446e7abc03b1bf12dfb2606ea74b47fb529cab92e5")));
-//         pool_index_map_.insert(std::make_pair(47, common::Encode::HexDecode("6dc3f90ab471e37382b712aa1ff445d043ce801f6161b7b0e362616e05febd07")));
-//         pool_index_map_.insert(std::make_pair(48, common::Encode::HexDecode("5df6d4ef4b4308f7bdd8c99444714ec52217c2a568a64716e6e109e612b8c598")));
-//         pool_index_map_.insert(std::make_pair(49, common::Encode::HexDecode("a5056891b513f2df869d00b90019dfdd74a51b10dd15afdc2c879c2351bead65")));
-//         pool_index_map_.insert(std::make_pair(50, common::Encode::HexDecode("225abeb86f7dbc2dc02bdfc826513f6277510c856b8ca5b21535655ffccfc5e5")));
-//         pool_index_map_.insert(std::make_pair(51, common::Encode::HexDecode("f1d181e02753f0a8da022095d4d74473227e939f6b50ce600b40801f0d5766b4")));
-//         pool_index_map_.insert(std::make_pair(52, common::Encode::HexDecode("6e0c1236c2dbdccc6d26d4399c7fca88f9265165e1bbd5568e168eaa26760caa")));
-//         pool_index_map_.insert(std::make_pair(53, common::Encode::HexDecode("b818aeefa8253549f42e7105dd946faba81ccf60c1ace50734825e925f6f348c")));
-//         pool_index_map_.insert(std::make_pair(54, common::Encode::HexDecode("a0931639f512a991c46055808752b65b51fa003673503356e10046ac8e57e328")));
-//         pool_index_map_.insert(std::make_pair(55, common::Encode::HexDecode("f484c02dabc8a0ec3d0e1b75cb1f7cd0e81d17ac29712a5a18b6a689fd1afb93")));
-//         pool_index_map_.insert(std::make_pair(56, common::Encode::HexDecode("624c5422ec2776f892d56718258c50f29b577135b259c727b29bfb6dafcea7e5")));
-//         pool_index_map_.insert(std::make_pair(57, common::Encode::HexDecode("4a8184505b56d11effb9cc4a8edce9abef35ce0482a5e2ba43dcf79d57a9f4a0")));
-//         pool_index_map_.insert(std::make_pair(58, common::Encode::HexDecode("cf3555535837b78d8a944b90a415b8d8492aba1289ec962fb4b3a22e78e2e135")));
-//         pool_index_map_.insert(std::make_pair(59, common::Encode::HexDecode("c92503f9647df7340500b323233036c30d96b6f01747cdf4eb996f5d7358c518")));
-//         pool_index_map_.insert(std::make_pair(60, common::Encode::HexDecode("a86857de21eb88f0e3b8a164ddf8b6cc570c509efff21143d3ee282a920c769d")));
-//         pool_index_map_.insert(std::make_pair(61, common::Encode::HexDecode("78dcd96f41e69dbc7bfdd98c95c951686908ad70896c34fe66543669b4b1d80f")));
-//         pool_index_map_.insert(std::make_pair(62, common::Encode::HexDecode("267bc076e3860457da661168ca4758141f048af1bcc449a91fd6dea8673e30db")));
-//         pool_index_map_.insert(std::make_pair(63, common::Encode::HexDecode("9c59e2c30ad1a10336e2e55f4186a8856f7107f84df3f8f89a13dda311da9568"))
         InitEnv();
     }
 
     static void AddGenisisBlock(uint32_t type) {
         uint64_t genesis_account_balance = 21000000000llu * common::kTenonMiniTransportUnit / pool_index_map_.size();
         uint64_t all_balance = 0llu;
+        uint32_t id_idx = 0;
         for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
             auto tenon_block = std::make_shared<bft::protobuf::Block>();
             auto tx_list = tenon_block->mutable_tx_list();
@@ -454,18 +391,39 @@ public:
             std::string pubkey_str;
             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-            auto tx_info = tx_list->Add();
-            tx_info->set_version(common::kTransactionVersion);
-            tx_info->set_gid(common::CreateGID(""));
-            tx_info->set_from(address);
-            tx_info->set_from_pubkey(pubkey_str);
-            tx_info->set_from_sign("");
-            tx_info->set_to("");
-            tx_info->set_amount(genesis_account_balance);
-            tx_info->set_balance(genesis_account_balance);
-            tx_info->set_gas_limit(0);
-            tx_info->set_type(type);
-            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            {
+                auto tx_info = tx_list->Add();
+                tx_info->set_version(common::kTransactionVersion);
+                tx_info->set_gid(common::CreateGID(""));
+                tx_info->set_from(common::StringUtil::Format(
+                    "%04d%s%04d",
+                    network::kConsensusShardBeginNetworkId,
+                    common::kStatisticFromAddressMidllefix.c_str(),
+                    id_idx++));
+                tx_info->set_from_pubkey("");
+                tx_info->set_from_sign("");
+                tx_info->set_to("");
+                tx_info->set_amount(0);
+                tx_info->set_balance(0);
+                tx_info->set_gas_limit(0);
+                tx_info->set_type(type);
+                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            }
+            {
+                auto tx_info = tx_list->Add();
+                tx_info->set_version(common::kTransactionVersion);
+                tx_info->set_gid(common::CreateGID(""));
+                tx_info->set_from(address);
+                tx_info->set_from_pubkey(pubkey_str);
+                tx_info->set_from_sign("");
+                tx_info->set_to("");
+                tx_info->set_amount(genesis_account_balance);
+                tx_info->set_balance(genesis_account_balance);
+                tx_info->set_gas_limit(0);
+                tx_info->set_type(type);
+                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+            }
+            
             tenon_block->set_prehash("");
             tenon_block->set_version(common::kTransactionVersion);
             tenon_block->set_agg_pubkey("");
