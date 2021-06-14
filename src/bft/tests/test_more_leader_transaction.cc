@@ -386,7 +386,6 @@ public:
     static void AddGenisisBlock(uint32_t type) {
         uint64_t genesis_account_balance = 21000000000llu * common::kTenonMiniTransportUnit / pool_index_map_.size();
         uint64_t all_balance = 0llu;
-        uint32_t id_idx = 0;
         for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
             auto tenon_block = std::make_shared<bft::protobuf::Block>();
             auto tx_list = tenon_block->mutable_tx_list();
@@ -399,7 +398,9 @@ public:
                 auto tx_info = tx_list->Add();
                 tx_info->set_version(common::kTransactionVersion);
                 tx_info->set_gid(common::CreateGID(""));
-                tx_info->set_from(GetValidPoolBaseAddr(network::kConsensusShardBeginNetworkId, id_idx));
+                tx_info->set_from(GetValidPoolBaseAddr(
+                    network::kConsensusShardBeginNetworkId,
+                    common::GetPoolIndex(address)));
                 tx_info->set_from_pubkey("");
                 tx_info->set_from_sign("");
                 tx_info->set_to("");
@@ -1687,10 +1688,15 @@ std::map<uint32_t, std::vector<std::string>> TestMoreLeaderTransaction::network_
 TEST_F(TestMoreLeaderTransaction, LeaderCountTest) {
     for (uint32_t i = 3; i < 1024; ++i) {
         int32_t expect_leader_count = (int32_t)pow(2.0, (double)((int32_t)log2(double(i / 3))));
-        std::cout << i << ":" << expect_leader_count
-            << ", i / 3: " << (i / 3)
-            << ", log2(double(i / 3)): " << log2(double(i / 3))
-            << std::endl;
+        ASSERT_TRUE(expect_leader_count == 1 ||
+            expect_leader_count == 2 ||
+            expect_leader_count == 4 ||
+            expect_leader_count == 8 ||
+            expect_leader_count == 16 ||
+            expect_leader_count == 32 ||
+            expect_leader_count == 64 ||
+            expect_leader_count == 128 ||
+            expect_leader_count == 256);
     }
 }
 
