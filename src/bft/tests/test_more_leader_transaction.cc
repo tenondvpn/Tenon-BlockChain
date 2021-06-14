@@ -1533,7 +1533,7 @@ public:
             uint32_t des_network_id = dht::DhtKeyManager::DhtKeyGetNetId(broadcast_msg.des_dht_key());
             if (des_network_id == network::kRootCongressNetworkId) {
                 transport::protobuf::Header to_root_broadcast_msg;
-                CreateNewAccountWithInvalidNode(from_prikey, to_prikey, just_to_id, broadcast_msg, &to_root_broadcast_msg);
+                CreateNewAccountWithInvalidNode(from_prikey, to_prikey, just_to_id, tx_type, broadcast_msg, &to_root_broadcast_msg);
                 if (tx_type == common::kConsensusStatistic) {
                     return;
                 }
@@ -1692,6 +1692,7 @@ public:
             const std::string& from_prikey,
             const std::string& to_prikey,
             bool just_to_id,
+            uint32_t tx_type,
             transport::protobuf::Header& msg,
             transport::protobuf::Header* broadcast_msg) {
         bft::protobuf::BftMessage bft_msg;
@@ -1703,6 +1704,10 @@ public:
             pool_index_to = common::GetPoolIndex(to_prikey);
         } else {
             pool_index_to = common::GetPoolIndex(GetIdByPrikey(to_prikey));
+        }
+
+        if (tx_type == common::kConsensusStatistic) {
+            pool_index_to = common::GetPoolIndex(from_prikey);
         }
 
         int32_t leader_index = pool_index_to % elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);

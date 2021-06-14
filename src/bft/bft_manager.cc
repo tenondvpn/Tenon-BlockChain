@@ -92,6 +92,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
             return;
         }
 
+        std::cout << "backup prepare gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         AddBft(bft_ptr);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
