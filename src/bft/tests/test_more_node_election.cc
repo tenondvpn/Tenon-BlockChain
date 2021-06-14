@@ -391,39 +391,18 @@ public:
             std::string pubkey_str;
             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-            {
-                auto tx_info = tx_list->Add();
-                tx_info->set_version(common::kTransactionVersion);
-                tx_info->set_gid(common::CreateGID(""));
-                tx_info->set_from(common::StringUtil::Format(
-                    "%04d%s%04d",
-                    network::kConsensusShardBeginNetworkId,
-                    common::kStatisticFromAddressMidllefix.c_str(),
-                    id_idx++));
-                tx_info->set_from_pubkey("");
-                tx_info->set_from_sign("");
-                tx_info->set_to("");
-                tx_info->set_amount(0);
-                tx_info->set_balance(0);
-                tx_info->set_gas_limit(0);
-                tx_info->set_type(type);
-                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-            }
-            {
-                auto tx_info = tx_list->Add();
-                tx_info->set_version(common::kTransactionVersion);
-                tx_info->set_gid(common::CreateGID(""));
-                tx_info->set_from(address);
-                tx_info->set_from_pubkey(pubkey_str);
-                tx_info->set_from_sign("");
-                tx_info->set_to("");
-                tx_info->set_amount(genesis_account_balance);
-                tx_info->set_balance(genesis_account_balance);
-                tx_info->set_gas_limit(0);
-                tx_info->set_type(type);
-                tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-            }
-            
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(address);
+            tx_info->set_from_pubkey(pubkey_str);
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(genesis_account_balance);
+            tx_info->set_balance(genesis_account_balance);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(type);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
             tenon_block->set_prehash("");
             tenon_block->set_version(common::kTransactionVersion);
             tenon_block->set_agg_pubkey("");

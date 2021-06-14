@@ -28,6 +28,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
 DbPoolInfo::~DbPoolInfo() {}
 
 int DbPoolInfo::InitWithGenesisBlock() {
+    std::cout << "InitWithGenesisBlock called!" << std::endl;
     {
         std::lock_guard<std::mutex> guard(base_addr_mutex_);
         if (!base_addr_.empty()) {
@@ -45,8 +46,8 @@ int DbPoolInfo::InitWithGenesisBlock() {
     }
 
     for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
-        if (genesis_block.tx_list(i).from().substr(4, 32) ==
-                common::kStatisticFromAddressMidllefix) {
+        std::cout << "InitWithGenesisBlock called: " << i << ":" << common::Encode::HexEncode(genesis_block.tx_list(i).from()) << std::endl;
+        if (genesis_block.tx_list(i).from().substr(4, 32) == common::kStatisticFromAddressMidllefixDecode) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);
             base_addr_ = genesis_block.tx_list(i).from();
             return kBlockSuccess;
@@ -66,6 +67,13 @@ std::string DbPoolInfo::GetBaseAddr() {
 
     // TODO: add to sync
     InitWithGenesisBlock();
+    {
+        std::lock_guard<std::mutex> guard(base_addr_mutex_);
+        if (!base_addr_.empty()) {
+            return base_addr_;
+        }
+    }
+
     return "";
 }
 

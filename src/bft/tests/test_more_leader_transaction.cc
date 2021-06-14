@@ -489,21 +489,6 @@ public:
         bft_msg.set_bft_step(bft::kBftInit);
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
-        security::PrivateKey from_private_key(from_prikey);
-        security::PublicKey from_pubkey(from_private_key);
-        std::string from_pubkey_str;
-        ASSERT_EQ(from_pubkey.Serialize(from_pubkey_str, false), security::kPublicKeyUncompressSize);
-        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pubkey_str);
-        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            uint32_t from_net_id = 0;
-            ASSERT_EQ(block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                id,
-                &from_net_id), block::kBlockSuccess);
-            ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
-        }
-        
-        bft_msg.set_node_id(id);
-        bft_msg.set_pubkey(from_pubkey_str);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         if (tx_type == common::kConsensusStatistic) {
@@ -520,7 +505,27 @@ public:
             auto tm_attr = new_tx->add_attr();
             tm_attr->set_key(tmblock::kAttrTimerBlockTm);
             tm_attr->set_value(std::to_string(0));
+            auto hash128 = GetTxMessageHash(*new_tx);
+            auto tx_data = tx_bft.SerializeAsString();
+            bft_msg.set_data(tx_data);
+            bft_msg.set_sign_challenge("");
+            bft_msg.set_sign_response("");
         } else {
+            security::PrivateKey from_private_key(from_prikey);
+            security::PublicKey from_pubkey(from_private_key);
+            std::string from_pubkey_str;
+            ASSERT_EQ(from_pubkey.Serialize(from_pubkey_str, false), security::kPublicKeyUncompressSize);
+            std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pubkey_str);
+            if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+                uint32_t from_net_id = 0;
+                ASSERT_EQ(block::AccountManager::Instance()->GetAddressConsensusNetworkId(
+                    id,
+                    &from_net_id), block::kBlockSuccess);
+                ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
+            }
+
+            bft_msg.set_node_id(id);
+            bft_msg.set_pubkey(from_pubkey_str);
             auto iter = attrs.find("contract_orignal_gid");
             if (iter == attrs.end()) {
                 new_tx->set_gid(common::CreateGID(from_pubkey_str));
@@ -560,22 +565,23 @@ public:
                 attr->set_key(iter->first);
                 attr->set_value(iter->second);
             }
-        }
 
-        auto hash128 = GetTxMessageHash(*new_tx);
-        auto tx_data = tx_bft.SerializeAsString();
-        bft_msg.set_data(tx_data);
-        security::Signature sign;
-        ASSERT_TRUE(security::Schnorr::Instance()->Sign(
-            hash128,
-            from_private_key,
-            from_pubkey,
-            sign));
-        std::string sign_challenge_str;
-        std::string sign_response_str;
-        sign.Serialize(sign_challenge_str, sign_response_str);
-        bft_msg.set_sign_challenge(sign_challenge_str);
-        bft_msg.set_sign_response(sign_response_str);
+            auto hash128 = GetTxMessageHash(*new_tx);
+            auto tx_data = tx_bft.SerializeAsString();
+            bft_msg.set_data(tx_data);
+            security::Signature sign;
+            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+                hash128,
+                from_private_key,
+                from_pubkey,
+                sign));
+            std::string sign_challenge_str;
+            std::string sign_response_str;
+            sign.Serialize(sign_challenge_str, sign_response_str);
+            bft_msg.set_sign_challenge(sign_challenge_str);
+            bft_msg.set_sign_response(sign_response_str);
+        }
+        
         msg.set_data(bft_msg.SerializeAsString());
     }
 
@@ -3742,6 +3748,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
     std::map<std::string, std::string> attrs;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         auto from = block::AccountManager::Instance()->GetPoolBaseAddr(i);
+        ASSERT_TRUE(!from.empty());
         Transaction(
             from, "", amount, all_gas,
             common::kConsensusStatistic, true, false, attrs);
