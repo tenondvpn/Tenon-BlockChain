@@ -129,6 +129,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
             return kBlockError;
         }
 
+        std::cout << "HandleElectBlock called: " << height << ", network id: " << tx_info.network_id() << std::endl;
         elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, false);
     }
 

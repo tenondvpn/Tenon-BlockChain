@@ -211,6 +211,7 @@ int BlockManager::InitRootElectBlocks() {
         return kBlockError;
     }
 
+    std::cout << "InitRootElectBlocks called: " << latest_elect_block_height << ", network id: " << elect_block.in(0).net_id() << std::endl;
     elect::ElectManager::Instance()->ProcessNewElectBlock(
         latest_elect_block_height,
         elect_block,
