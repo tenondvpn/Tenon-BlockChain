@@ -444,7 +444,7 @@ public:
                 precommit_bitmap_.Set(index++);
             }
 
-            for (int i = 0; i < precommit_bitmap_.data().size(); ++i) {
+            for (uint32_t i = 0; i < precommit_bitmap_.data().size(); ++i) {
                 tenon_block->add_bitmap(precommit_bitmap_.data()[i]);
             }
 

@@ -540,22 +540,26 @@ int TxBft::BackupCheckStatistic(
 
             ++valid_count;
         }
+    }
 
-        if (tx_info.attr(i).key() == kStatisticAttr) {
-            std::string statistic_info;
-            int res = block::AccountManager::Instance()->GetPoolStatistic(
-                pool_index(),
-                &statistic_info);
-            if (res != block::kBlockSuccess) {
-                return kBftInvalidPackage;
-            }
+    if (tx_info.storages_size() != 1) {
+        return kBftLeaderInfoInvalid;
+    }
 
-            if (statistic_info != tx_info.attr(i).value()) {
-                return kBftInvalidPackage;
-            }
+    if (tx_info.storages(0).key() != kStatisticAttr) {
+        return kBftLeaderInfoInvalid;
+    }
 
-            ++valid_count;
-        }
+    std::string statistic_info;
+    int res = block::AccountManager::Instance()->GetPoolStatistic(
+        pool_index(),
+        &statistic_info);
+    if (res != block::kBlockSuccess) {
+        return kBftInvalidPackage;
+    }
+
+    if (statistic_info != tx_info.attr(0).value()) {
+        return kBftInvalidPackage;
     }
 
     if (valid_count != 3) {
@@ -1899,7 +1903,7 @@ int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
         return kBftError;
     }
 
-    auto statistic_attr = tx.add_attr();
+    auto statistic_attr = tx.add_storages();
     statistic_attr->set_key(kStatisticAttr);
     statistic_attr->set_value(statistic_info);
     return kBftSuccess;
