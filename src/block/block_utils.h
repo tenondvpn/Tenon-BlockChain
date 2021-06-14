@@ -72,7 +72,7 @@ inline static std::string StorageDbKey(const std::string& account_id,  const std
 }
 
 inline static bool IsPoolBaseAddress(const std::string& address) {
-    if (address.substr(4, 32) == common::kStatisticFromAddressMidllefixDecode) {
+    if (address.substr(2, 16) == common::kStatisticFromAddressMidllefixDecode) {
         return true;
     }
 

@@ -46,10 +46,11 @@ int DbPoolInfo::InitWithGenesisBlock() {
     }
 
     for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
-        std::cout << "InitWithGenesisBlock called: " << i << ":" << common::Encode::HexEncode(genesis_block.tx_list(i).from()) << std::endl;
-        if (genesis_block.tx_list(i).from().substr(4, 32) == common::kStatisticFromAddressMidllefixDecode) {
+        std::cout << "InitWithGenesisBlock called: " << i << ":" << common::Encode::HexEncode(genesis_block.tx_list(i).from().substr(2, 16)) << ":" << common::Encode::HexEncode(common::kStatisticFromAddressMidllefixDecode) << std::endl;
+        if (genesis_block.tx_list(i).from().substr(2, 16) == common::kStatisticFromAddressMidllefixDecode) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);
             base_addr_ = genesis_block.tx_list(i).from();
+            std::cout << "base_addr_ InitWithGenesisBlock called: " << i << ":" << common::Encode::HexEncode(base_addr_) << std::endl;
             return kBlockSuccess;
         }
     }
