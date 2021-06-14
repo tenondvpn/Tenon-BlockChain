@@ -20,6 +20,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace protobuf_elect_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodeHeartbeat;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodesMessage;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_member;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_ElectBlock;
@@ -42,6 +43,11 @@ class WaitingNodesMessageDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<WaitingNodesMessage>
       _instance;
 } _WaitingNodesMessage_default_instance_;
+class WaitingNodeHeartbeatDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<WaitingNodeHeartbeat>
+      _instance;
+} _WaitingNodeHeartbeat_default_instance_;
 class ElectMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<ElectMessage>
@@ -94,6 +100,20 @@ static void InitDefaultsWaitingNodesMessage() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodesMessage =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsWaitingNodesMessage}, {}};
 
+static void InitDefaultsWaitingNodeHeartbeat() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::elect::protobuf::_WaitingNodeHeartbeat_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::WaitingNodeHeartbeat();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::elect::protobuf::WaitingNodeHeartbeat::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodeHeartbeat =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsWaitingNodeHeartbeat}, {}};
+
 static void InitDefaultsElectMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -105,19 +125,21 @@ static void InitDefaultsElectMessage() {
   ::tenon::elect::protobuf::ElectMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<2> scc_info_ElectMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsElectMessage}, {
+::google::protobuf::internal::SCCInfo<3> scc_info_ElectMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsElectMessage}, {
       &protobuf_elect_2eproto::scc_info_ElectBlock.base,
-      &protobuf_elect_2eproto::scc_info_WaitingNodesMessage.base,}};
+      &protobuf_elect_2eproto::scc_info_WaitingNodesMessage.base,
+      &protobuf_elect_2eproto::scc_info_WaitingNodeHeartbeat.base,}};
 
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_member.base);
   ::google::protobuf::internal::InitSCC(&scc_info_ElectBlock.base);
   ::google::protobuf::internal::InitSCC(&scc_info_WaitingNodesMessage.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_WaitingNodeHeartbeat.base);
   ::google::protobuf::internal::InitSCC(&scc_info_ElectMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[4];
+::google::protobuf::Metadata file_level_metadata[5];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, _has_bits_),
@@ -173,6 +195,19 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, waiting_shard_id_),
   ~0u,
   0,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, public_port_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, timestamp_sec_),
+  0,
+  1,
+  2,
+  3,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -183,23 +218,27 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, sign_ch_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, sign_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, waiting_heartbeat_),
   3,
   4,
   0,
   1,
   2,
+  5,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 17, sizeof(::tenon::elect::protobuf::member)},
   { 29, 39, sizeof(::tenon::elect::protobuf::ElectBlock)},
   { 44, 51, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
-  { 53, 63, sizeof(::tenon::elect::protobuf::ElectMessage)},
+  { 53, 62, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
+  { 66, 77, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_member_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectBlock_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_WaitingNodesMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_WaitingNodeHeartbeat_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectMessage_default_instance_),
 };
 
@@ -218,7 +257,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 4);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 5);
 }
 
 void AddDescriptorsImpl() {
@@ -236,14 +275,19 @@ void AddDescriptorsImpl() {
       "\022\022\n\nacc_pubkey\030\003 \001(\014\022\020\n\010acc_sign\030\004 \001(\014\022\024"
       "\n\014leader_count\030\005 \001(\005\"E\n\023WaitingNodesMess"
       "age\022\024\n\014nodes_filter\030\001 \003(\004\022\030\n\020waiting_sha"
-      "rd_id\030\002 \001(\r\"\272\001\n\014ElectMessage\0225\n\013elect_bl"
-      "ock\030\001 \001(\0132 .tenon.elect.protobuf.ElectBl"
-      "ock\022@\n\rwaiting_nodes\030\002 \001(\0132).tenon.elect"
-      ".protobuf.WaitingNodesMessage\022\016\n\006pubkey\030"
-      "\003 \001(\014\022\017\n\007sign_ch\030\004 \001(\014\022\020\n\010sign_res\030\005 \001(\014"
+      "rd_id\030\002 \001(\r\"i\n\024WaitingNodeHeartbeat\022\021\n\tp"
+      "ublic_ip\030\001 \001(\014\022\023\n\013public_port\030\002 \001(\r\022\022\n\nn"
+      "etwork_id\030\003 \001(\r\022\025\n\rtimestamp_sec\030\004 \001(\004\"\201"
+      "\002\n\014ElectMessage\0225\n\013elect_block\030\001 \001(\0132 .t"
+      "enon.elect.protobuf.ElectBlock\022@\n\rwaitin"
+      "g_nodes\030\002 \001(\0132).tenon.elect.protobuf.Wai"
+      "tingNodesMessage\022\016\n\006pubkey\030\003 \001(\014\022\017\n\007sign"
+      "_ch\030\004 \001(\014\022\020\n\010sign_res\030\005 \001(\014\022E\n\021waiting_h"
+      "eartbeat\030\006 \001(\0132*.tenon.elect.protobuf.Wa"
+      "itingNodeHeartbeat"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 680);
+      descriptor, 858);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -1682,11 +1726,376 @@ void WaitingNodesMessage::InternalSwap(WaitingNodesMessage* other) {
 
 // ===================================================================
 
+void WaitingNodeHeartbeat::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int WaitingNodeHeartbeat::kPublicIpFieldNumber;
+const int WaitingNodeHeartbeat::kPublicPortFieldNumber;
+const int WaitingNodeHeartbeat::kNetworkIdFieldNumber;
+const int WaitingNodeHeartbeat::kTimestampSecFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+WaitingNodeHeartbeat::WaitingNodeHeartbeat()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_elect_2eproto::scc_info_WaitingNodeHeartbeat.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.WaitingNodeHeartbeat)
+}
+WaitingNodeHeartbeat::WaitingNodeHeartbeat(const WaitingNodeHeartbeat& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_public_ip()) {
+    public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
+  }
+  ::memcpy(&public_port_, &from.public_port_,
+    static_cast<size_t>(reinterpret_cast<char*>(&timestamp_sec_) -
+    reinterpret_cast<char*>(&public_port_)) + sizeof(timestamp_sec_));
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.WaitingNodeHeartbeat)
+}
+
+void WaitingNodeHeartbeat::SharedCtor() {
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&public_port_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&timestamp_sec_) -
+      reinterpret_cast<char*>(&public_port_)) + sizeof(timestamp_sec_));
+}
+
+WaitingNodeHeartbeat::~WaitingNodeHeartbeat() {
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  SharedDtor();
+}
+
+void WaitingNodeHeartbeat::SharedDtor() {
+  public_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void WaitingNodeHeartbeat::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* WaitingNodeHeartbeat::descriptor() {
+  ::protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const WaitingNodeHeartbeat& WaitingNodeHeartbeat::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_elect_2eproto::scc_info_WaitingNodeHeartbeat.base);
+  return *internal_default_instance();
+}
+
+
+void WaitingNodeHeartbeat::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    public_ip_.ClearNonDefaultToEmptyNoArena();
+  }
+  if (cached_has_bits & 14u) {
+    ::memset(&public_port_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&timestamp_sec_) -
+        reinterpret_cast<char*>(&public_port_)) + sizeof(timestamp_sec_));
+  }
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool WaitingNodeHeartbeat::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes public_ip = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_public_ip()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 public_port = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_public_port();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &public_port_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 network_id = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          set_has_network_id();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &network_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 timestamp_sec = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          set_has_timestamp_sec();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &timestamp_sec_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  return false;
+#undef DO_
+}
+
+void WaitingNodeHeartbeat::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes public_ip = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->public_ip(), output);
+  }
+
+  // optional uint32 public_port = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->public_port(), output);
+  }
+
+  // optional uint32 network_id = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->network_id(), output);
+  }
+
+  // optional uint64 timestamp_sec = 4;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->timestamp_sec(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.WaitingNodeHeartbeat)
+}
+
+::google::protobuf::uint8* WaitingNodeHeartbeat::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes public_ip = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->public_ip(), target);
+  }
+
+  // optional uint32 public_port = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->public_port(), target);
+  }
+
+  // optional uint32 network_id = 3;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->network_id(), target);
+  }
+
+  // optional uint64 timestamp_sec = 4;
+  if (cached_has_bits & 0x00000008u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->timestamp_sec(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  return target;
+}
+
+size_t WaitingNodeHeartbeat::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 15u) {
+    // optional bytes public_ip = 1;
+    if (has_public_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->public_ip());
+    }
+
+    // optional uint32 public_port = 2;
+    if (has_public_port()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->public_port());
+    }
+
+    // optional uint32 network_id = 3;
+    if (has_network_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->network_id());
+    }
+
+    // optional uint64 timestamp_sec = 4;
+    if (has_timestamp_sec()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->timestamp_sec());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void WaitingNodeHeartbeat::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  GOOGLE_DCHECK_NE(&from, this);
+  const WaitingNodeHeartbeat* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const WaitingNodeHeartbeat>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.WaitingNodeHeartbeat)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.WaitingNodeHeartbeat)
+    MergeFrom(*source);
+  }
+}
+
+void WaitingNodeHeartbeat::MergeFrom(const WaitingNodeHeartbeat& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 15u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_public_ip();
+      public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      public_port_ = from.public_port_;
+    }
+    if (cached_has_bits & 0x00000004u) {
+      network_id_ = from.network_id_;
+    }
+    if (cached_has_bits & 0x00000008u) {
+      timestamp_sec_ = from.timestamp_sec_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void WaitingNodeHeartbeat::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void WaitingNodeHeartbeat::CopyFrom(const WaitingNodeHeartbeat& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.WaitingNodeHeartbeat)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool WaitingNodeHeartbeat::IsInitialized() const {
+  return true;
+}
+
+void WaitingNodeHeartbeat::Swap(WaitingNodeHeartbeat* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void WaitingNodeHeartbeat::InternalSwap(WaitingNodeHeartbeat* other) {
+  using std::swap;
+  public_ip_.Swap(&other->public_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(public_port_, other->public_port_);
+  swap(network_id_, other->network_id_);
+  swap(timestamp_sec_, other->timestamp_sec_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata WaitingNodeHeartbeat::GetMetadata() const {
+  protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void ElectMessage::InitAsDefaultInstance() {
   ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->elect_block_ = const_cast< ::tenon::elect::protobuf::ElectBlock*>(
       ::tenon::elect::protobuf::ElectBlock::internal_default_instance());
   ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->waiting_nodes_ = const_cast< ::tenon::elect::protobuf::WaitingNodesMessage*>(
       ::tenon::elect::protobuf::WaitingNodesMessage::internal_default_instance());
+  ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->waiting_heartbeat_ = const_cast< ::tenon::elect::protobuf::WaitingNodeHeartbeat*>(
+      ::tenon::elect::protobuf::WaitingNodeHeartbeat::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ElectMessage::kElectBlockFieldNumber;
@@ -1694,6 +2103,7 @@ const int ElectMessage::kWaitingNodesFieldNumber;
 const int ElectMessage::kPubkeyFieldNumber;
 const int ElectMessage::kSignChFieldNumber;
 const int ElectMessage::kSignResFieldNumber;
+const int ElectMessage::kWaitingHeartbeatFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ElectMessage::ElectMessage()
@@ -1730,6 +2140,11 @@ ElectMessage::ElectMessage(const ElectMessage& from)
   } else {
     waiting_nodes_ = NULL;
   }
+  if (from.has_waiting_heartbeat()) {
+    waiting_heartbeat_ = new ::tenon::elect::protobuf::WaitingNodeHeartbeat(*from.waiting_heartbeat_);
+  } else {
+    waiting_heartbeat_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.ElectMessage)
 }
 
@@ -1738,8 +2153,8 @@ void ElectMessage::SharedCtor() {
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&elect_block_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&waiting_nodes_) -
-      reinterpret_cast<char*>(&elect_block_)) + sizeof(waiting_nodes_));
+      reinterpret_cast<char*>(&waiting_heartbeat_) -
+      reinterpret_cast<char*>(&elect_block_)) + sizeof(waiting_heartbeat_));
 }
 
 ElectMessage::~ElectMessage() {
@@ -1753,6 +2168,7 @@ void ElectMessage::SharedDtor() {
   sign_res_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete elect_block_;
   if (this != internal_default_instance()) delete waiting_nodes_;
+  if (this != internal_default_instance()) delete waiting_heartbeat_;
 }
 
 void ElectMessage::SetCachedSize(int size) const {
@@ -1776,7 +2192,7 @@ void ElectMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 31u) {
+  if (cached_has_bits & 63u) {
     if (cached_has_bits & 0x00000001u) {
       pubkey_.ClearNonDefaultToEmptyNoArena();
     }
@@ -1793,6 +2209,10 @@ void ElectMessage::Clear() {
     if (cached_has_bits & 0x00000010u) {
       GOOGLE_DCHECK(waiting_nodes_ != NULL);
       waiting_nodes_->Clear();
+    }
+    if (cached_has_bits & 0x00000020u) {
+      GOOGLE_DCHECK(waiting_heartbeat_ != NULL);
+      waiting_heartbeat_->Clear();
     }
   }
   _has_bits_.Clear();
@@ -1869,6 +2289,18 @@ bool ElectMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional .tenon.elect.protobuf.WaitingNodeHeartbeat waiting_heartbeat = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_waiting_heartbeat()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1926,6 +2358,12 @@ void ElectMessage::SerializeWithCachedSizes(
       5, this->sign_res(), output);
   }
 
+  // optional .tenon.elect.protobuf.WaitingNodeHeartbeat waiting_heartbeat = 6;
+  if (cached_has_bits & 0x00000020u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->_internal_waiting_heartbeat(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -1976,6 +2414,13 @@ void ElectMessage::SerializeWithCachedSizes(
         5, this->sign_res(), target);
   }
 
+  // optional .tenon.elect.protobuf.WaitingNodeHeartbeat waiting_heartbeat = 6;
+  if (cached_has_bits & 0x00000020u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        6, this->_internal_waiting_heartbeat(), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -1993,7 +2438,7 @@ size_t ElectMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 31u) {
+  if (_has_bits_[0 / 32] & 63u) {
     // optional bytes pubkey = 3;
     if (has_pubkey()) {
       total_size += 1 +
@@ -2029,6 +2474,13 @@ size_t ElectMessage::ByteSizeLong() const {
           *waiting_nodes_);
     }
 
+    // optional .tenon.elect.protobuf.WaitingNodeHeartbeat waiting_heartbeat = 6;
+    if (has_waiting_heartbeat()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *waiting_heartbeat_);
+    }
+
   }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
@@ -2058,7 +2510,7 @@ void ElectMessage::MergeFrom(const ElectMessage& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 31u) {
+  if (cached_has_bits & 63u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_pubkey();
       pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
@@ -2076,6 +2528,9 @@ void ElectMessage::MergeFrom(const ElectMessage& from) {
     }
     if (cached_has_bits & 0x00000010u) {
       mutable_waiting_nodes()->::tenon::elect::protobuf::WaitingNodesMessage::MergeFrom(from.waiting_nodes());
+    }
+    if (cached_has_bits & 0x00000020u) {
+      mutable_waiting_heartbeat()->::tenon::elect::protobuf::WaitingNodeHeartbeat::MergeFrom(from.waiting_heartbeat());
     }
   }
 }
@@ -2112,6 +2567,7 @@ void ElectMessage::InternalSwap(ElectMessage* other) {
     GetArenaNoVirtual());
   swap(elect_block_, other->elect_block_);
   swap(waiting_nodes_, other->waiting_nodes_);
+  swap(waiting_heartbeat_, other->waiting_heartbeat_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -2136,6 +2592,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::ElectBlo
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::WaitingNodesMessage* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::WaitingNodesMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::WaitingNodesMessage >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::WaitingNodeHeartbeat* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::WaitingNodeHeartbeat >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::WaitingNodeHeartbeat >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::ElectMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::ElectMessage >(arena);
