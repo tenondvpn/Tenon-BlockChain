@@ -452,6 +452,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                 return kBftInvalidPackage;
             }
 
+            int32_t valid_count = 0;
             for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
                 if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
                     auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
@@ -462,6 +463,8 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                     if (iter->second != tx_info.attr(i).value()) {
                         return kBftInvalidPackage;
                     }
+
+                    ++valid_count;
                 }
 
                 if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
@@ -473,7 +476,29 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                     if (iter->second != tx_info.attr(i).value()) {
                         return kBftInvalidPackage;
                     }
+
+                    ++valid_count;
                 }
+
+                if (tx_info.attr(i).key() == kStatisticAttr) {
+                    std::string statistic_info;
+                    int res = block::AccountManager::Instance()->GetPoolStatistic(
+                        pool_index(),
+                        &statistic_info);
+                    if (res != block::kBlockSuccess) {
+                        return kBftInvalidPackage;
+                    }
+
+                    if (statistic_info != tx_info.attr(i).value()) {
+                        return kBftInvalidPackage;
+                    }
+
+                    ++valid_count;
+                }
+            }
+
+            if (valid_count != 3) {
+                return kBftInvalidPackage;
             }
         } else {
             switch (local_tx_info->tx.call_contract_step()) {
@@ -1847,6 +1872,18 @@ void TxBft::LeaderCreateTxBlock(
 }
 
 int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
+    std::string statistic_info;
+    int res = block::AccountManager::Instance()->GetPoolStatistic(
+        pool_index(),
+        &statistic_info);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return kBftError;
+    }
+
+    auto statistic_attr = tx.add_attr();
+    statistic_attr->set_key(kStatisticAttr);
+    statistic_attr->set_value(statistic_info);
     return kBftSuccess;
 }
 

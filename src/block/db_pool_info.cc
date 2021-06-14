@@ -377,7 +377,15 @@ int DbPoolInfo::GetStatisticInfo(std::string* res) {
     statistic_info.set_timeblock_height(iter->second.tmblock_height);
     statistic_info.set_elect_height(iter->second.elect_height);
     statistic_info.set_all_tx_count(iter->second.all_tx_count);
-    
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        auto siter = iter->second.succ_tx_count.find(i);
+        if (siter == iter->second.succ_tx_count.end()) {
+            statistic_info.add_succ_tx_count(0);
+        } else {
+            statistic_info.add_succ_tx_count(siter->second);
+        }
+    }
+
     return kBlockSuccess;
 }
 

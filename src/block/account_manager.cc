@@ -515,14 +515,6 @@ bool AccountManager::IsInvalidKey(const std::string& key) {
         return true;
     }
 
-//     if (key == kFieldContractOwner) {
-//         return true;
-//     }
-
-//     if (key == kFieldFullAddress) {
-//         return true;
-//     }
-
     return false;
 }
 
@@ -533,14 +525,11 @@ int AccountManager::SetAccountAttrs(
         uint64_t tmp_now_height,
         block::DbAccountInfo* account_info,
         db::DbWriteBach& db_batch) {
-//     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-//         return kBlockSuccess;
-//     }
-// 
-
     if (tx_info.status() == bft::kBftSuccess) {
         int res = 0;
-        if (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add() && account_id == tx_info.to()) {
+        if (tx_info.type() == common::kConsensusCreateContract &&
+                tx_info.to_add() &&
+                account_id == tx_info.to()) {
             res += account_info->SetAddressType(kContractAddress, db_batch);
             for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
                 if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
@@ -729,6 +718,16 @@ void AccountManager::StatisticDpPool() {
         kStatisticPeriod,
         std::bind(&AccountManager::StatisticDpPool, this));
 }
+
+int AccountManager::GetPoolStatistic(uint32_t pool_index, std::string* res) {
+    std::lock_guard<std::mutex> guard(network_block_mutex_);
+    if (network_block_[pool_index] != nullptr) {
+        return network_block_[pool_index]->GetStatisticInfo(res);
+    }
+
+    return kBlockError;
+}
+
 
 }  // namespace block
 

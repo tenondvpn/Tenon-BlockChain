@@ -109,6 +109,7 @@ static const std::string kContractInputCode = "__cinput";
 static const std::string kContractCallerbalance = "__ccontractcallerbalance";
 static const std::string kContractCallerChangeAmount = "__ccontractcallerchangeamount";
 static const std::string kContractCallerGasUsed = "__ccontractcallergasused";
+static const std::string kStatisticAttr = "__statistic_attr";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;
