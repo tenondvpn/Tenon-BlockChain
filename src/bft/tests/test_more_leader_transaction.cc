@@ -369,6 +369,15 @@ public:
         InitEnv();
     }
 
+    static std::string GetIdByPrikey(const std::string& private_key) {
+        security::PrivateKey prikey(private_key);
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        EXPECT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        return id;
+    }
+
     static std::string GetValidPoolBaseAddr(uint32_t network_id, uint32_t pool_index) {
         uint32_t id_idx = 0;
         while (true) {
@@ -709,6 +718,7 @@ public:
     }
 
     static void AddElectWaitingPoolNode() {
+        common::BloomFilter fiter(elect::kBloomfilterWaitingSize, elect::kBloomfilterWaitingHashCount);
         for (uint32_t i = 1; i < 32; ++i) {
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kWaitingNodeIdEndFix);
@@ -734,6 +744,43 @@ public:
             security::Signature sign;
             ASSERT_TRUE(security::Schnorr::Instance()->Sign(
                 hash_str,
+                prikey,
+                pubkey,
+                sign));
+            std::string sign_challenge_str;
+            std::string sign_response_str;
+            sign.Serialize(sign_challenge_str, sign_response_str);
+            elect_msg.set_sign_ch(sign_challenge_str);
+            elect_msg.set_sign_res(sign_response_str);
+            header.set_data(elect_msg.SerializeAsString());
+            header.set_type(common::kElectMessage);
+            elect::ElectManager::Instance()->HandleMessage(header);
+            fiter.Add(common::Hash::Hash64(GetIdByPrikey(str_prikey)));
+        }
+
+        for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
+                iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
+            std::string str_prikey = *iter;
+            security::PrivateKey prikey(str_prikey);
+            security::PublicKey pubkey(prikey);
+            std::string str_pubkey;
+            pubkey.Serialize(str_pubkey);
+            transport::protobuf::Header header;
+            elect::protobuf::ElectMessage elect_msg;
+            auto waiting_nodes = elect_msg.mutable_waiting_nodes();
+            for (uint32_t i = 0; i < fiter.data().size(); ++i) {
+                waiting_nodes->add_nodes_filter(fiter.data()[i]);
+            }
+
+            waiting_nodes->set_waiting_shard_id(
+                network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+            std::string hash_str = fiter.Serialize() +
+                std::to_string(waiting_nodes->waiting_shard_id());
+            auto message_hash = common::Hash::keccak256(hash_str);
+            elect_msg.set_pubkey(str_pubkey);
+            security::Signature sign;
+            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+                message_hash,
                 prikey,
                 pubkey,
                 sign));
@@ -1360,15 +1407,6 @@ public:
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
         }
-    }
-
-    std::string GetIdByPrikey(const std::string& private_key) {
-        security::PrivateKey prikey(private_key);
-        security::PublicKey pubkey(prikey);
-        std::string pubkey_str;
-        EXPECT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
-        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        return id;
     }
 
     void Transaction(

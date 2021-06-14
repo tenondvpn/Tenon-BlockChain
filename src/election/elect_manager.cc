@@ -110,26 +110,29 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (ec_msg.has_waiting_nodes()) {
-        std::vector<uint64_t> filter_vec;
-        for (int32_t i = 0; i < ec_msg.waiting_nodes().nodes_filter_size(); ++i) {
-            filter_vec.push_back(ec_msg.waiting_nodes().nodes_filter(i));
-        }
-
-        common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
-        std::string hash_str = fiter.Serialize() +
-            std::to_string(ec_msg.waiting_nodes().waiting_shard_id());
-        auto message_hash = common::Hash::keccak256(hash_str);
-        auto pubkey = security::PublicKey(ec_msg.pubkey());
-        auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
-        if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-            return;
-        }
-
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
-        pool_manager_.UpdateWaitingNodes(
-            ec_msg.waiting_nodes().waiting_shard_id(),
-            id,
-            fiter);
+        auto mem_ptr = GetMember(network::kRootCongressNetworkId, id);
+        if (mem_ptr) {
+            std::vector<uint64_t> filter_vec;
+            for (int32_t i = 0; i < ec_msg.waiting_nodes().nodes_filter_size(); ++i) {
+                filter_vec.push_back(ec_msg.waiting_nodes().nodes_filter(i));
+            }
+
+            common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
+            std::string hash_str = fiter.Serialize() +
+                std::to_string(ec_msg.waiting_nodes().waiting_shard_id());
+            auto message_hash = common::Hash::keccak256(hash_str);
+            auto pubkey = security::PublicKey(ec_msg.pubkey());
+            auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
+            if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                return;
+            }
+
+            pool_manager_.UpdateWaitingNodes(
+                ec_msg.waiting_nodes().waiting_shard_id(),
+                id,
+                fiter);
+        }
     }
 
     if (ec_msg.has_waiting_heartbeat()) {
