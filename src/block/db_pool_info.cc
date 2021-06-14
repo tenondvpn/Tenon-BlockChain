@@ -251,6 +251,11 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
 }
 
 void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    std::cout << "tt AddNewBlock bitmap size: " << block_ptr->bitmap_size() << std::endl;
+    if (block_ptr->bitmap_size() == 0) {
+        return;
+    }
+
     server_bandwidth_queue_.push(block_ptr);
 }
 
@@ -279,6 +284,7 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
             break;
         }
 
+        std::cout << "0 AddStatistic bitmap size: " << block_item->bitmap_size() << std::endl;
         AddStatistic(block_item);
         prev_hash = block_item->prehash();
         if (prev_hash.empty()) {
@@ -297,6 +303,7 @@ void DbPoolInfo::SatisticBlock() {
         }
 
         if (block_ptr != nullptr) {
+            std::cout << "1 AddStatistic bitmap size: " << block_ptr->bitmap_size() << std::endl;
             AddStatistic(block_ptr);
         }
     }
@@ -379,6 +386,7 @@ int DbPoolInfo::GetStatisticInfo(std::string* res) {
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     auto iter = statistic_for_tmblock_.find(max_time_block_height_);
     if (iter == statistic_for_tmblock_.end()) {
+        std::cout << "GetStatisticInfo statistic_for_tmblock_ error: " << max_time_block_height_ << std::endl;
         return kBlockError;
     }
 

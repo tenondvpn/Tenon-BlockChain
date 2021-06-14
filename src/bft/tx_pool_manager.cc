@@ -191,6 +191,10 @@ bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_addres
         }
     }
 
+    if (block::IsPoolBaseAddress(caller_address)) {
+        return true;
+    }
+
     uint64_t db_balance = 0;
     if (acc_info->GetBalance(&db_balance) != block::kBlockSuccess) {
         BFT_ERROR("tx invalid. account address not exists");

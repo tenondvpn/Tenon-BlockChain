@@ -725,6 +725,7 @@ int AccountManager::GetPoolStatistic(uint32_t pool_index, std::string* res) {
         return network_block_[pool_index]->GetStatisticInfo(res);
     }
 
+    std::cout << "pool_index invalid: " << pool_index << std::endl;
     return kBlockError;
 }
 

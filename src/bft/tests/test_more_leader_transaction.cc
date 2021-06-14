@@ -437,6 +437,17 @@ public:
             tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
+            common::Bitmap precommit_bitmap_{ kBftLeaderBitmapSize };
+            uint32_t index = 0;
+            for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
+                    iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
+                precommit_bitmap_.Set(index++);
+            }
+
+            for (int i = 0; i < precommit_bitmap_.data().size(); ++i) {
+                tenon_block->add_bitmap(precommit_bitmap_.data()[i]);
+            }
+
             tenon_block->set_hash(GetBlockHash(*tenon_block));
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
