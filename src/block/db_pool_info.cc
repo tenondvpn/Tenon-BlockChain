@@ -251,7 +251,6 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
 }
 
 void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    std::cout << "tt AddNewBlock bitmap size: " << block_ptr->bitmap_size() << std::endl;
     if (block_ptr->bitmap_size() == 0) {
         return;
     }

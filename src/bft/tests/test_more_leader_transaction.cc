@@ -743,9 +743,9 @@ public:
             elect_msg.set_sign_ch(sign_challenge_str);
             elect_msg.set_sign_res(sign_response_str);
             header.set_data(elect_msg.SerializeAsString());
+            header.set_type(common::kElectMessage);
             elect::ElectManager::Instance()->HandleMessage(header);
         }
-
     }
 
     static void CreateElectionBlock(uint32_t network_id, std::vector<std::string>& pri_vec) {
@@ -792,6 +792,7 @@ public:
         }
 
         network_with_private_keys_[network_id] = pri_vec;
+        AddElectWaitingPoolNode();
     }
 
     static void JoinNetwork(uint32_t network_id) {

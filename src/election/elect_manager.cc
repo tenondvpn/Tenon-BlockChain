@@ -98,10 +98,14 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (!security::IsValidPublicKey(ec_msg.pubkey())) {
+        ELECT_ERROR("invalid public key: %s!", common::Encode::HexEncode(ec_msg.pubkey()));
         return;
     }
 
     if (!security::IsValidSignature(ec_msg.sign_ch(), ec_msg.sign_res())) {
+        ELECT_ERROR("invalid sign: %s, %s!",
+            common::Encode::HexEncode(ec_msg.sign_ch()),
+            common::Encode::HexEncode(ec_msg.sign_res()));
         return;
     }
 
@@ -130,9 +134,9 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
 
     if (ec_msg.has_waiting_heartbeat()) {
         auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-        if ((now_tm_sec > ec_msg.waiting_heartbeat().timestamp_sec() &&
+        if ((now_tm_sec >= ec_msg.waiting_heartbeat().timestamp_sec() &&
                 now_tm_sec - ec_msg.waiting_heartbeat().timestamp_sec() < 10) ||
-                (now_tm_sec < ec_msg.waiting_heartbeat().timestamp_sec() &&
+                (now_tm_sec <= ec_msg.waiting_heartbeat().timestamp_sec() &&
                 ec_msg.waiting_heartbeat().timestamp_sec() - now_tm_sec < 10)) {
             auto message_hash = GetElectHeartbeatHash(
                 ec_msg.waiting_heartbeat().public_ip(),
@@ -142,6 +146,7 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
             if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                ELECT_ERROR("verify signature failed!");
                 return;
             }
 
