@@ -57,6 +57,10 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
 }
 
 DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
+    if (acc_id.size() != security::kTenonAddressSize) {
+        return nullptr;
+    }
+
     {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         auto iter = acc_map_.find(acc_id);

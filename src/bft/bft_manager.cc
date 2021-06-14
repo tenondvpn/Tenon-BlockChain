@@ -407,6 +407,18 @@ void BftManager::HandleToAccountTxBlock(
 
     bool just_broadcast = false;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        if (IsShardSingleBlockTx(tx_list[i].type())) {
+            bft::protobuf::TxInfo tx_info;
+            if (elect::ElectManager::Instance()->CreateElectTransaction(
+                    tx_list[i].network_id(),
+                    tx_list[i],
+                    tx_info) != elect::kElectSuccess) {
+                BFT_ERROR("create elect transaction error!");
+            }
+
+            continue;
+        }
+
         if (tx_list[i].to().empty()) {
             BFT_ERROR("to error tx_list[i].to().empty()[%d],  tx_list[i].to_add()[%d]!",
                 tx_list[i].to().empty(), tx_list[i].to_add());
@@ -632,6 +644,7 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             false,
             msg);
+        BFT_DEBUG("BackupPrepare RemoveBft");
         RemoveBft(bft_ptr->gid());
     } else {
         BftProto::BackupCreatePrepare(
@@ -710,6 +723,7 @@ int BftManager::LeaderPrecommit(
     if (res == kBftAgree) {
         return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose");
         RemoveBft(bft_ptr->gid());
         BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
     } else {
@@ -794,6 +808,7 @@ int BftManager::BackupPrecommit(
             agg_res,
             false,
             msg);
+        BFT_DEBUG("BackupPrecommit RemoveBft");
         RemoveBft(bft_ptr->gid());
     } else {
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
@@ -875,6 +890,7 @@ int BftManager::LeaderCommit(
     }  else if (res == kBftReChallenge) {
         return LeaderReChallenge(bft_ptr);
     } else if (res == kBftOppose) {
+        BFT_DEBUG("LeaderCommit RemoveBft kBftOppose");
         RemoveBft(bft_ptr->gid());
         BFT_DEBUG("LeaderCommit oppose", bft_ptr);
     } else {
@@ -934,6 +950,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr->prpare_block());
+    BFT_DEBUG("LeaderCallCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
     leader_commit_msg_ = msg;
     BFT_DEBUG("LeaderCommit");
@@ -960,6 +977,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
             sec_res,
             common::GlobalInfo::Instance()->id()) == kBftOppose) {
         BFT_ERROR("leader commit failed!");
+        BFT_DEBUG("LeaderReChallenge RemoveBft");
         RemoveBft(bft_ptr->gid());
         return kBftError;
     }
@@ -1068,6 +1086,7 @@ int BftManager::BackupCommit(
     bft_ptr->set_status(kBftCommited);
 //     LeaderBroadcastToAcc(bft_ptr->prpare_block());
     BFT_DEBUG("BackupCommit");
+    BFT_DEBUG("BackupCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
     // start new bft
     return kBftSuccess;
@@ -1099,6 +1118,12 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        if (tx_list[i].status() == kBftSuccess && tx_list[i].type() == common::kConsensusStatistic) {
+            broadcast_nets.insert(network::kRootCongressNetworkId);
+            std::cout << "kConsensusStatistic broadcast to root." << std::endl;
+            continue;
+        }
+
         // contract must unlock caller
         if (tx_list[i].status() != kBftSuccess &&
                 (tx_list[i].type() != common::kConsensusCreateContract &&

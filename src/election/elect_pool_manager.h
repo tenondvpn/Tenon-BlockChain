@@ -26,6 +26,10 @@ public:
         uint32_t waiting_shard_id,
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter);
+    int CreateElectTransaction(
+        uint32_t shard_netid,
+        bft::protobuf::TxInfo& src_tx_info,
+        bft::protobuf::TxInfo& tx_info);
 
 private:
     int GetAllLeaderBloomFiler(

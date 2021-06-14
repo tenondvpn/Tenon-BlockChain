@@ -33,6 +33,10 @@ public:
         protobuf::ElectBlock& elect_block,
         bool load_from_db);
     uint64_t latest_height(uint32_t network_id);
+    int CreateElectTransaction(
+        uint32_t shard_netid,
+        bft::protobuf::TxInfo& src_tx_info,
+        bft::protobuf::TxInfo& tx_info);
     // get member
     int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint64_t elect_height, uint32_t network_id, const std::string& node_id);

@@ -32,6 +32,7 @@ static const uint32_t kCommitPointSize = 33u;
 static const uint32_t kPrivateKeySize = 32u;
 static const uint32_t kPublicKeySize = 33u;
 static const uint32_t kPublicKeyUncompressSize = 65u;
+static const uint32_t kTenonAddressSize = 20u;
 
 bool IsValidPublicKey(const std::string& pubkey);
 bool IsValidSignature(const std::string& ch, const std::string& res);

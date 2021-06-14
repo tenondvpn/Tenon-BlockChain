@@ -428,18 +428,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
             return tmp_res;
         }
 
-        if (local_tx_info->tx.type() != common::kConsensusCallContract &&
-                local_tx_info->tx.type() != common::kConsensusCreateContract) {
-            int check_res = BackupNormalCheck(
-                local_tx_info,
-                tx_info,
-                locked_account_map,
-                acc_balance_map);
-            if (check_res != kBftSuccess) {
-                BFT_ERROR("BackupNormalCheck failed!");
-                return check_res;
-            }
-        } else if(local_tx_info->tx.type() == common::kConsensusStatistic) {
+        if (local_tx_info->tx.type() == common::kConsensusStatistic) {
             int check_res = BackupCheckStatistic(
                 local_tx_info,
                 tx_info,
@@ -449,7 +438,8 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                 BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
                 return check_res;
             }
-        } else {
+        } else if (local_tx_info->tx.type() == common::kConsensusCallContract ||
+                local_tx_info->tx.type() == common::kConsensusCreateContract) {
             switch (local_tx_info->tx.call_contract_step()) {
             case contract::kCallStepDefault: {
                 int check_res = BackupCheckContractDefault(
@@ -461,6 +451,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                     BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
                     return check_res;
                 }
+
                 break;
             }
             case contract::kCallStepCallerInited: {
@@ -469,6 +460,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                     BFT_ERROR("BackupCheckContractExceute transaction failed![%d]", tmp_res);
                     return check_res;
                 }
+
                 break;
             }
             case contract::kCallStepContractCalled: {
@@ -477,10 +469,21 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
                     BFT_ERROR("BackupCheckContractCalled transaction failed![%d]", tmp_res);
                     return check_res;
                 }
+
                 break;
             }
             default:
                 return kBftInvalidPackage;
+            }
+        } else {
+            int check_res = BackupNormalCheck(
+                local_tx_info,
+                tx_info,
+                locked_account_map,
+                acc_balance_map);
+            if (check_res != kBftSuccess) {
+                BFT_ERROR("BackupNormalCheck failed!");
+                return check_res;
             }
         }
     }
@@ -502,14 +505,24 @@ int TxBft::BackupCheckStatistic(
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     if (tx_info.gas_limit() != 0) {
+        BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
         return kBftInvalidPackage;
     }
 
     if (tx_info.balance() != 0) {
+        BFT_ERROR("tx info balance error[%llu]", tx_info.balance());
         return kBftInvalidPackage;
     }
 
     if (tx_info.gas_used() != 0) {
+        BFT_ERROR("tx info gas_used error[%llu]", tx_info.gas_used());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.network_id() != common::GlobalInfo::Instance()->network_id()) {
+        BFT_ERROR("tx info network error[%u][%u]",
+            tx_info.network_id(),
+            common::GlobalInfo::Instance()->network_id());
         return kBftInvalidPackage;
     }
 
@@ -518,10 +531,12 @@ int TxBft::BackupCheckStatistic(
         if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
             auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
             if (iter == local_tx_info->attr_map.end()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
                 return kBftInvalidPackage;
             }
 
             if (iter->second != tx_info.attr(i).value()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
                 return kBftInvalidPackage;
             }
 
@@ -531,10 +546,12 @@ int TxBft::BackupCheckStatistic(
         if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
             auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
             if (iter == local_tx_info->attr_map.end()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
                 return kBftInvalidPackage;
             }
 
             if (iter->second != tx_info.attr(i).value()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
                 return kBftInvalidPackage;
             }
 
@@ -542,11 +559,18 @@ int TxBft::BackupCheckStatistic(
         }
     }
 
+    if (valid_count != 2) {
+        BFT_ERROR("tx info attr error");
+        return kBftInvalidPackage;
+    }
+
     if (tx_info.storages_size() != 1) {
+        BFT_ERROR("tx info storage error[%d]", tx_info.storages_size());
         return kBftLeaderInfoInvalid;
     }
 
     if (tx_info.storages(0).key() != kStatisticAttr) {
+        BFT_ERROR("tx info storage key error[%s]", kStatisticAttr.c_str());
         return kBftLeaderInfoInvalid;
     }
 
@@ -555,14 +579,12 @@ int TxBft::BackupCheckStatistic(
         pool_index(),
         &statistic_info);
     if (res != block::kBlockSuccess) {
+        BFT_ERROR("GetPoolStatistic error[%d]", res);
         return kBftInvalidPackage;
     }
 
-    if (statistic_info != tx_info.attr(0).value()) {
-        return kBftInvalidPackage;
-    }
-
-    if (valid_count != 3) {
+    if (statistic_info != tx_info.storages(0).value()) {
+        BFT_ERROR("statistic_info not eq error");
         return kBftInvalidPackage;
     }
 
@@ -1849,6 +1871,7 @@ void TxBft::LeaderCreateTxBlock(
                 return;
             }
 
+            tx.set_network_id(common::GlobalInfo::Instance()->network_id());
             tx.set_gas_used(0);
             tx.set_balance(0);
         } else {

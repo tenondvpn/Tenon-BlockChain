@@ -60,8 +60,8 @@ public:
         }
 
         std::string log_str = ("# log4cpp.properties\n"
-            "log4cpp.rootCategory = WARN\n"
-            "log4cpp.category.sub1 = WARN, programLog\n"
+            "log4cpp.rootCategory = DEBUG\n"
+            "log4cpp.category.sub1 = DEBUG, programLog\n"
             "log4cpp.appender.rootAppender = ConsoleAppender\n"
             "log4cpp.appender.rootAppender.layout = PatternLayout\n"
             "log4cpp.appender.rootAppender.layout.ConversionPattern = %d [%p] %m%n\n"
@@ -3771,7 +3771,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
         ASSERT_TRUE(!from.empty());
         Transaction(
             from, "", amount, all_gas,
-            common::kConsensusStatistic, true, false, attrs);
+            common::kConsensusStatistic, true, true, attrs);
         auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
         ASSERT_TRUE(account_info != nullptr);
         ASSERT_EQ(account_info->balance_, 0);

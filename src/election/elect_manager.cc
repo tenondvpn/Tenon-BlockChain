@@ -206,7 +206,8 @@ void ElectManager::ProcessNewElectBlock(
         elect_members_[height] = member_ptr;
         auto net_heights_iter = elect_net_heights_map_.find(iter->first);
         if (net_heights_iter == elect_net_heights_map_.end()) {
-            elect_net_heights_map_[iter->first] = std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
+            elect_net_heights_map_[iter->first] =
+                std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
             elect_net_heights_map_[iter->first]->push(height);
         } else {
             net_heights_iter->second->push(height);
@@ -217,6 +218,13 @@ void ElectManager::ProcessNewElectBlock(
 
 void ElectManager::CreateAllElectTx() {
 
+}
+
+int ElectManager::CreateElectTransaction(
+        uint32_t shard_netid,
+        bft::protobuf::TxInfo& src_tx_info,
+        bft::protobuf::TxInfo& tx_info) {
+    return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
 }
 
 void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg) {
