@@ -1110,9 +1110,6 @@ public:
         auto leader_private_key = network_with_private_keys_[network::kConsensusShardBeginNetworkId][leader_index];
         leader_private_key = common::Encode::HexEncode(leader_private_key);
         SetGloableInfo(leader_private_key, network::kConsensusShardBeginNetworkId);
-        std::cout << "leader private key: " << leader_private_key
-            << ", leader id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(common::Encode::HexDecode(leader_private_key)))
-            << std::endl;
         CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.ParseFromString(msg.data());
@@ -1725,7 +1722,6 @@ public:
         ASSERT_EQ(res, kBftSuccess);
         auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
             std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
-        std::cout << "bft_gid is: " << common::Encode::HexEncode(bft_gid) << std::endl;
         auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
         ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
         auto leader_sec = iter->second->secret_;
@@ -1870,17 +1866,21 @@ public:
         bft::protobuf::TxBft tx_bft_t;
         ASSERT_TRUE(tx_bft_t.ParseFromString(bft_msg_t.data()));
         ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).amount(), tx_bft_t.to_tx().block().tx_list(0).amount());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from(), tx_bft_t.to_tx().block().tx_list(0).from());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).to(), tx_bft_t.to_tx().block().tx_list(0).to());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from_pubkey(), tx_bft_t.to_tx().block().tx_list(0).from_pubkey());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from_sign(), tx_bft_t.to_tx().block().tx_list(0).from_sign());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).gid(), tx_bft_t.to_tx().block().tx_list(0).gid());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).attr_size(), tx_bft_t.to_tx().block().tx_list(0).attr_size());
+        if (!IsRootSingleBlockTx(tx_bft_t.to_tx().block().tx_list(0).type())) {
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from(), tx_bft_t.to_tx().block().tx_list(0).from());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).to(), tx_bft_t.to_tx().block().tx_list(0).to());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from_pubkey(), tx_bft_t.to_tx().block().tx_list(0).from_pubkey());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).from_sign(), tx_bft_t.to_tx().block().tx_list(0).from_sign());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).gid(), tx_bft_t.to_tx().block().tx_list(0).gid());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).attr_size(), tx_bft_t.to_tx().block().tx_list(0).attr_size());
 
-        // hash128(gid + from + to + amount + type + attrs(k:v))
-        tx_bft_t.mutable_to_tx()->mutable_block()->mutable_tx_list(0)->set_type(tx_bft.to_tx().block().tx_list(0).type());
-        ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).type(), tx_bft_t.to_tx().block().tx_list(0).type());
-        ASSERT_EQ(GetTxMessageHash(tx_bft.to_tx().block().tx_list(0)), GetTxMessageHash(tx_bft_t.to_tx().block().tx_list(0)));
+            // hash128(gid + from + to + amount + type + attrs(k:v))
+            tx_bft_t.mutable_to_tx()->mutable_block()->mutable_tx_list(0)->set_type(tx_bft.to_tx().block().tx_list(0).type());
+            ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).type(), tx_bft_t.to_tx().block().tx_list(0).type());
+            ASSERT_EQ(GetTxMessageHash(tx_bft.to_tx().block().tx_list(0)), GetTxMessageHash(tx_bft_t.to_tx().block().tx_list(0)));
+        }  else {
+            ASSERT_EQ(root::kRootChainSingleBlockTxAddress, tx_bft_t.to_tx().block().tx_list(0).from());
+        }
     }
 
     void ResetInvalidNodes(float invalid_root_node_rate, float invalid_consensus_node_rate) {
@@ -3962,11 +3962,12 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
     uint64_t all_gas = 0;
     std::map<std::string, std::string> attrs;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        SetGloableInfo(network_with_private_keys_[network::kConsensusShardBeginNetworkId][0], network::kConsensusShardBeginNetworkId);
         auto from = block::AccountManager::Instance()->GetPoolBaseAddr(i);
         ASSERT_TRUE(!from.empty());
         Transaction(
             from, "", amount, all_gas,
-            common::kConsensusStatistic, true, true, attrs);
+            common::kConsensusStatistic, false, true, attrs);
         auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
         ASSERT_TRUE(account_info != nullptr);
         ASSERT_EQ(account_info->balance_, 0);

@@ -127,8 +127,6 @@ void TimeBlockManager::UpdateTimeBlock(
     if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
         latest_time_blocks_.pop_front();
     }
-
-    std::cout << "UpdateTimeBlock latest_time_block_tm_: " << latest_time_block_tm_ << ", latest_time_block_height_: " << latest_time_block_height_ << std::endl;
 }
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {

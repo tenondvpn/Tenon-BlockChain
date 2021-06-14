@@ -92,7 +92,6 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
             return;
         }
 
-        std::cout << "backup prepare gid: " << common::Encode::HexEncode(bft_msg.gid()) << std::endl;
         AddBft(bft_ptr);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
@@ -526,7 +525,6 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-    std::cout << "add bft gid: " << common::Encode::HexEncode(bft_ptr->gid()) << std::endl;
     int res = AddBft(bft_ptr);
     if (res != kBftSuccess) {
         return res;
@@ -1127,7 +1125,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (tx_list[i].status() == kBftSuccess && tx_list[i].type() == common::kConsensusStatistic) {
             broadcast_nets.insert(network::kRootCongressNetworkId);
-            std::cout << "kConsensusStatistic broadcast to root." << std::endl;
             continue;
         }
 

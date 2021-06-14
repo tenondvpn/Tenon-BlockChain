@@ -129,7 +129,6 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
             return kBlockError;
         }
 
-        std::cout << "HandleElectBlock called: " << height << ", network id: " << tx_info.network_id() << std::endl;
         elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, false);
     }
 
@@ -730,7 +729,6 @@ int AccountManager::GetPoolStatistic(uint32_t pool_index, std::string* res) {
         return network_block_[pool_index]->GetStatisticInfo(res);
     }
 
-    std::cout << "pool_index invalid: " << pool_index << std::endl;
     return kBlockError;
 }
 

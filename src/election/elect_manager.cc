@@ -109,7 +109,6 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    std::cout << "ec_msg.has_waiting_nodes(): " << ec_msg.has_waiting_nodes() << std::endl;
     if (ec_msg.has_waiting_nodes()) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         auto mem_ptr = GetMember(network::kRootCongressNetworkId, id);
@@ -126,7 +125,6 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
             if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-                std::cout << "Verify signature failed." << std::endl;
                 return;
             }
 
