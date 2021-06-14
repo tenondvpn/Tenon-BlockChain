@@ -34,6 +34,7 @@ message WaitingNodeHeartbeat {
     optional bytes public_ip = 1;
 	optional uint32 public_port = 2;
     optional uint32 network_id = 3;
+    optional uint64 timestamp_sec = 4;
 }
 
 message ElectMessage {
