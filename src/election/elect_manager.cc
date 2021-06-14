@@ -130,15 +130,15 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
 
     if (ec_msg.has_waiting_heartbeat()) {
         auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-        if ((now_tm_sec > ec_msg.waiting_heartbeat.timestamp_sec() &&
-                now_tm_sec - ec_msg.waiting_heartbeat.timestamp_sec() < 10) ||
-                (now_tm_sec < ec_msg.waiting_heartbeat.timestamp_sec() &&
-                ec_msg.waiting_heartbeat.timestamp_sec() - now_tm_sec < 10)) {
-            std::string hash_str = ec_msg.waiting_heartbeat.public_ip() + "_" +
-                std::to_string(ec_msg.waiting_heartbeat.public_port()) + "_" +
-                std::to_string(ec_msg.waiting_heartbeat.network_id()) + "_" +
-                std::to_string(ec_msg.waiting_heartbeat.timestamp_sec());
-            auto message_hash = common::Hash::keccak256(hash_str);
+        if ((now_tm_sec > ec_msg.waiting_heartbeat().timestamp_sec() &&
+                now_tm_sec - ec_msg.waiting_heartbeat().timestamp_sec() < 10) ||
+                (now_tm_sec < ec_msg.waiting_heartbeat().timestamp_sec() &&
+                ec_msg.waiting_heartbeat().timestamp_sec() - now_tm_sec < 10)) {
+            auto message_hash = GetElectHeartbeatHash(
+                ec_msg.waiting_heartbeat().public_ip(),
+                ec_msg.waiting_heartbeat().public_port(),
+                ec_msg.waiting_heartbeat().network_id(),
+                ec_msg.waiting_heartbeat().timestamp_sec());
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
             if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
@@ -146,12 +146,12 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             }
 
             auto elect_node_ptr = std::make_shared<ElectNodeDetail>();
-            elect_node_ptr->public_ip = ec_msg.waiting_heartbeat.public_ip();
-            elect_node_ptr->public_port = ec_msg.waiting_heartbeat.public_port();
+            elect_node_ptr->public_ip = ec_msg.waiting_heartbeat().public_ip();
+            elect_node_ptr->public_port = ec_msg.waiting_heartbeat().public_port();
             elect_node_ptr->id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
                 ec_msg.pubkey());
             elect_node_ptr->public_key = ec_msg.pubkey();
-            pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat.network_id(), elect_node_ptr);
+            pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat().network_id(), elect_node_ptr);
         }
     }
 }

@@ -3,6 +3,7 @@
 #include "common/utils.h"
 #include "common/log.h"
 #include "common/min_heap.h"
+#include "common/hash.h"
 
 #define ELECT_DEBUG(fmt, ...) TENON_DEBUG("[elect]" fmt, ## __VA_ARGS__)
 #define ELECT_INFO(fmt, ...) TENON_INFO("[elect]" fmt, ## __VA_ARGS__)
@@ -55,6 +56,18 @@ static const std::string kElectNodeAttrElectBlock = "__elect_block";
 // if not, it is opposed
 static const uint32_t kElectAvailableJoinTime = 35llu * 60llu * 1000000llu;
 static const uint32_t kElectAvailableTolerateTime = 5llu * 60llu * 1000000llu;
+
+inline static std::string GetElectHeartbeatHash(
+        const std::string& ip,
+        uint16_t port,
+        uint32_t net_id,
+        uint64_t tm) {
+    std::string hash_str = ip + "_" +
+        std::to_string(port) + "_" +
+        std::to_string(net_id) + "_" +
+        std::to_string(tm);
+    return common::Hash::keccak256(hash_str);
+}
 
 }  // namespace elect
 

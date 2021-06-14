@@ -46,6 +46,7 @@ static const uint32_t kConsensusNodeCount = 31u;
 static std::set<uint32_t> invalid_consensus_node_vec;
 static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 static const char* kConsensusNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
+static const char* kWaitingNodeIdEndFix = "2f72f72efffee770264e1234521c9d2bab63aec39941aad09acda57b4851";
 static std::string test_from_key = "";
 
 class TestMoreLeaderTransaction : public testing::Test {
@@ -705,6 +706,46 @@ public:
         bft_msg.set_sign_challenge(sign_challenge_str);
         bft_msg.set_sign_response(sign_response_str);
         msg.set_data(bft_msg.SerializeAsString());
+    }
+
+    static void AddElectWaitingPoolNode() {
+        for (uint32_t i = 1; i < 32; ++i) {
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "%04d%s", i, kWaitingNodeIdEndFix);
+            std::string str_prikey = common::Encode::HexDecode(from_data);
+            security::PrivateKey prikey(str_prikey);
+            security::PublicKey pubkey(prikey);
+            std::string str_pubkey;
+            pubkey.Serialize(str_pubkey);
+            transport::protobuf::Header header;
+            elect::protobuf::ElectMessage elect_msg;
+            auto waiting_hb_msg = elect_msg.mutable_waiting_heartbeat();
+            waiting_hb_msg->set_public_ip("127.0.0.1");
+            waiting_hb_msg->set_public_port(i + 1700);
+            waiting_hb_msg->set_network_id(
+                network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+            waiting_hb_msg->set_timestamp_sec(common::TimeUtils::TimestampSeconds());
+            elect_msg.set_pubkey(str_pubkey);
+            auto hash_str = elect::GetElectHeartbeatHash(
+                waiting_hb_msg->public_ip(),
+                waiting_hb_msg->public_port(),
+                waiting_hb_msg->network_id(),
+                waiting_hb_msg->timestamp_sec());
+            security::Signature sign;
+            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+                hash_str,
+                prikey,
+                pubkey,
+                sign));
+            std::string sign_challenge_str;
+            std::string sign_response_str;
+            sign.Serialize(sign_challenge_str, sign_response_str);
+            elect_msg.set_sign_ch(sign_challenge_str);
+            elect_msg.set_sign_res(sign_response_str);
+            header.set_data(elect_msg.SerializeAsString());
+            elect::ElectManager::Instance()->HandleMessage(header);
+        }
+
     }
 
     static void CreateElectionBlock(uint32_t network_id, std::vector<std::string>& pri_vec) {
