@@ -414,6 +414,11 @@ void BftManager::HandleToAccountTxBlock(
                     tx_list[i],
                     tx_info) != elect::kElectSuccess) {
                 BFT_ERROR("create elect transaction error!");
+                continue;
+            }
+
+            if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
+                BFT_ERROR("dispatch pool failed!");
             }
 
             continue;
