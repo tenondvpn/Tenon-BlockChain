@@ -6,6 +6,7 @@
 #include "contract/contract_manager.h"
 #include "contract/contract_utils.h"
 #include "block/account_manager.h"
+#include "block/proto/block.pb.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "sync/key_value_sync.h"
@@ -574,7 +575,12 @@ int TxBft::BackupCheckStatistic(
         return kBftLeaderInfoInvalid;
     }
 
-    std::string statistic_info;
+    block::protobuf::StatisticInfo leader_statistic_info;
+    if (!leader_statistic_info.ParseFromString(tx_info.storages(0).value())) {
+        return kBftLeaderInfoInvalid;
+    }
+
+    block::protobuf::StatisticInfo statistic_info;
     int res = block::AccountManager::Instance()->GetPoolStatistic(
         pool_index(),
         &statistic_info);
@@ -583,9 +589,26 @@ int TxBft::BackupCheckStatistic(
         return kBftInvalidPackage;
     }
 
-    if (statistic_info != tx_info.storages(0).value()) {
-        BFT_ERROR("statistic_info not eq error");
+    if (statistic_info.timeblock_height() != leader_statistic_info.timeblock_height()) {
         return kBftInvalidPackage;
+    }
+    
+    if (statistic_info.elect_height() != leader_statistic_info.elect_height()) {
+        return kBftInvalidPackage;
+    }
+
+    if (statistic_info.all_tx_count() != leader_statistic_info.all_tx_count()) {
+        return kBftInvalidPackage;
+    }
+
+    if (statistic_info.succ_tx_count_size() != leader_statistic_info.succ_tx_count_size()) {
+        return kBftInvalidPackage;
+    }
+
+    for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
+        if (statistic_info.succ_tx_count(i) != leader_statistic_info.succ_tx_count(i)) {
+            return kBftInvalidPackage;
+        }
     }
 
     return kBftSuccess;
@@ -1917,7 +1940,7 @@ void TxBft::LeaderCreateTxBlock(
 }
 
 int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
-    std::string statistic_info;
+    block::protobuf::StatisticInfo statistic_info;
     int res = block::AccountManager::Instance()->GetPoolStatistic(
         pool_index(),
         &statistic_info);
@@ -1928,7 +1951,7 @@ int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
 
     auto statistic_attr = tx.add_storages();
     statistic_attr->set_key(kStatisticAttr);
-    statistic_attr->set_value(statistic_info);
+    statistic_attr->set_value(statistic_info.SerializeAsString());
     return kBftSuccess;
 }
 

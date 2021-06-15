@@ -30,6 +30,10 @@ uint64_t TimeBlockManager::LatestTimestamp() {
     return latest_time_block_tm_;
 }
 
+uint64_t TimeBlockManager::LatestTimestampHeight() {
+    return latest_time_block_height_;
+}
+
 TimeBlockManager::TimeBlockManager() {
     create_tm_block_tick_.CutOff(
         kCheckTimeBlockPeriodUs,

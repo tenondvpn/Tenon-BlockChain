@@ -10,6 +10,7 @@
 #include "election/member_manager.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_manager.h"
+#include "block/shard_statistic.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
 
@@ -182,6 +183,10 @@ int AccountManager::AddBlockItem(
             if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
                 return kBlockError;
             }
+        }
+
+        if (tx_list[i].type() == common::kConsensusStatistic) {
+            block::ShardStatistic::Instance()->AddShardPoolStatistic(block_item);
         }
 
         std::string account_id;
@@ -723,10 +728,12 @@ void AccountManager::StatisticDpPool() {
         std::bind(&AccountManager::StatisticDpPool, this));
 }
 
-int AccountManager::GetPoolStatistic(uint32_t pool_index, std::string* res) {
+int AccountManager::GetPoolStatistic(
+        uint32_t pool_index,
+        block::protobuf::StatisticInfo* statistic_info) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_index] != nullptr) {
-        return network_block_[pool_index]->GetStatisticInfo(res);
+        return network_block_[pool_index]->GetStatisticInfo(statistic_info);
     }
 
     return kBlockError;

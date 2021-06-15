@@ -38,7 +38,7 @@ public:
     int GetAddressConsensusNetworkId(const std::string& address, uint32_t* network_id);
     DbAccountInfo* GetContractInfoByAddress(const std::string& address);
     std::string GetPoolBaseAddr(uint32_t pool_index);
-    int GetPoolStatistic(uint32_t pool_index, std::string* res);
+    int GetPoolStatistic(uint32_t pool_index, block::protobuf::StatisticInfo* statistic_info);
 
 private:
     AccountManager();

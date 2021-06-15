@@ -485,6 +485,30 @@ void ElectManager::SetNetworkMember(
         }
     }
 
+    {
+        Members tmp_leaders;
+        uint32_t leader_count = GetNetworkLeaderCount(
+            common::GlobalInfo::Instance()->network_id());
+        std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+        std::vector<uint32_t> node_index_vec;
+        uint32_t index = 0;
+        for (auto iter = members_ptr->begin(); iter != members_ptr->end(); ++iter) {
+            if ((*iter)->pool_index_mod_num >= 0) {
+                tmp_leaders.push_back(*iter);
+                node_index_vec.push_back(index++);
+            }
+        }
+
+        std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), g2);
+        std::lock_guard<std::mutex> guard(leaders_mutex_);
+        leaders_.clear();
+        for (auto iter = node_index_vec.begin();
+                iter != node_index_vec.end() &&
+                leaders_.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
+            leaders_.insert(tmp_leaders[*iter]->id);
+        }
+    }
+
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
 }
 
@@ -518,6 +542,15 @@ uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
 
 int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
     return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
+}
+
+bool ElectManager::IsValidShardLeaders(const std::string& id) {
+    // Each shard has a certain number of leaders
+    // for the generation of public transaction blocks
+    // if transaction create by this node, no balance change
+    // and backup also check leader valid.
+    std::lock_guard<std::mutex> guard(leaders_mutex_);
+    return leaders_.find(id) != leaders_.end();
 }
 
 }  // namespace elect

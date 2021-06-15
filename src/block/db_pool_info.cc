@@ -317,7 +317,9 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     auto iter = statistic_for_tmblock_.find(block_item->timeblock_height());
-    if (iter == statistic_for_tmblock_.end()) {
+    // use max elect height
+    if (iter == statistic_for_tmblock_.end() ||
+            block_item->electblock_height() > iter->second.elect_height) {
         statistic_for_tmblock_[block_item->timeblock_height()] = StatisticItem();
         iter = statistic_for_tmblock_.find(block_item->timeblock_height());
     }
@@ -375,7 +377,7 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
     return kBlockSuccess;
 }
 
-int DbPoolInfo::GetStatisticInfo(std::string* res) {
+int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
     SatisticBlock();
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     auto iter = statistic_for_tmblock_.find(max_time_block_height_);
@@ -383,16 +385,15 @@ int DbPoolInfo::GetStatisticInfo(std::string* res) {
         return kBlockError;
     }
 
-    block::protobuf::StatisticInfo statistic_info;
-    statistic_info.set_timeblock_height(iter->second.tmblock_height);
-    statistic_info.set_elect_height(iter->second.elect_height);
-    statistic_info.set_all_tx_count(iter->second.all_tx_count);
+    statistic_info->set_timeblock_height(iter->second.tmblock_height);
+    statistic_info->set_elect_height(iter->second.elect_height);
+    statistic_info->set_all_tx_count(iter->second.all_tx_count);
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         auto siter = iter->second.succ_tx_count.find(i);
         if (siter == iter->second.succ_tx_count.end()) {
-            statistic_info.add_succ_tx_count(0);
+            statistic_info->add_succ_tx_count(0);
         } else {
-            statistic_info.add_succ_tx_count(siter->second);
+            statistic_info->add_succ_tx_count(siter->second);
         }
     }
 

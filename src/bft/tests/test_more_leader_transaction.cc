@@ -3962,7 +3962,9 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
     uint64_t all_gas = 0;
     std::map<std::string, std::string> attrs;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        SetGloableInfo(network_with_private_keys_[network::kConsensusShardBeginNetworkId][0], network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(
+            network_with_private_keys_[network::kConsensusShardBeginNetworkId][0],
+            network::kConsensusShardBeginNetworkId);
         auto from = block::AccountManager::Instance()->GetPoolBaseAddr(i);
         ASSERT_TRUE(!from.empty());
         Transaction(

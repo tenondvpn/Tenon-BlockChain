@@ -3,6 +3,7 @@
 #include <mutex>
 #include <memory>
 #include <map>
+#include <unordered_set>
 
 #include "common/utils.h"
 #include "common/tick.h"
@@ -60,6 +61,12 @@ public:
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
+    bool IsValidShardLeaders(const std::string& id);
+
+    std::unordered_set<std::string> leaders() {
+        std::lock_guard<std::mutex> guard(leaders_mutex_);
+        return leaders_;
+    }
 
 private:
     ElectManager();
@@ -78,6 +85,8 @@ private:
     std::unordered_map<uint64_t, std::shared_ptr<MemberManager>> elect_members_;
     std::unordered_map<uint32_t, HeightLimitHeapPtr> elect_net_heights_map_;
     std::mutex elect_members_mutex_;
+    std::unordered_set<std::string> leaders_;
+    std::mutex leaders_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

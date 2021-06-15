@@ -95,7 +95,16 @@ bool IsRootSingleBlockTx(uint32_t tx_type) {
 }
 
 bool IsShardSingleBlockTx(uint32_t tx_type) {
-    if (tx_type == common::kConsensusStatistic) {
+    if (tx_type == common::kConsensusStatistic ||
+            tx_type == common::kConsensusFinalStatistic) {
+        return true;
+    }
+
+    return false;
+}
+
+bool IsShardSuperSingleBlockTx(uint32_t tx_type) {
+    if (tx_type == common::kConsensusFinalStatistic) {
         return true;
     }
 
