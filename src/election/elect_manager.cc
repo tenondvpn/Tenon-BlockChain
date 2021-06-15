@@ -499,7 +499,10 @@ void ElectManager::SetNetworkMember(
             }
         }
 
-        std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), g2);
+        auto RandFunc = [&g2](int i) -> int {
+            return g2() % (std::numeric_limits<int>::max)();
+        };
+        std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), RandFunc);
         std::lock_guard<std::mutex> guard(leaders_mutex_);
         leaders_.clear();
         for (auto iter = node_index_vec.begin();

@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <vector>
 #include <functional>
+#include <cassert>
 
 #include "common/utils.h"
 #include "common/log.h"

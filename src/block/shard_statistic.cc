@@ -53,7 +53,7 @@ void ShardStatistic::AddShardPoolStatistic(
             return;
         }
 
-        for (int32_t i = 0; i < block_item->tx_list(0).attr_size; ++i) {
+        for (int32_t i = 0; i < block_item->tx_list(0).attr_size(); ++i) {
             if (block_item->tx_list(0).attr(0).key() == bft::kStatisticAttr) {
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).attr(0).value())) {
