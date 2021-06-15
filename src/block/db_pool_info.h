@@ -6,6 +6,7 @@
 #include "db/dict.h"
 #include "db/db.h"
 #include "block/block_utils.h"
+#include "block/proto/block.pb.h"
 #include "bft/proto/bft.pb.h"
 
 namespace tenon {

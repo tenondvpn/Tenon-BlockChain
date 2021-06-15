@@ -6,11 +6,12 @@
 
 #include "common/config.h"
 #include "common/tick.h"
+#include "bft/proto/bft.pb.h"
 #include "db/db.h"
 #include "block/block_utils.h"
 #include "block/db_account_info.h"
-#include "bft/proto/bft.pb.h"
 #include "block/db_pool_info.h"
+#include "block/proto/block.pb.h"
 
 namespace tenon {
 
