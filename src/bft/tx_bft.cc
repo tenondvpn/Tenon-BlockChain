@@ -389,8 +389,6 @@ int TxBft::RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
             break;
         case common::kConsensusRootVssBlock:
             break;
-        case common::kConsensusFinalStatistic:
-            return RootBackupCheckElectConsensusShardPrepare(block);
         default:
             return RootBackupCheckCreateAccountAddressPrepare(block);
             break;
@@ -1822,7 +1820,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tx.set_balance(0);
     tx.set_status(kBftSuccess);
     // create address must to and have transfer amount
-    if (tx.type() != common::kConsensusFinalStatistic) {
+    if (tx.type() != common::kConsensusRootElectShard) {
         assert(false);
         return;
     }
@@ -1882,9 +1880,6 @@ void TxBft::RootLeaderCreateTxBlock(
             RootLeaderCreateTimerBlock(pool_idx, tx_vec, ltx_msg);
             break;
         case common::kConsensusRootVssBlock:
-            break;
-        case common::kConsensusFinalStatistic:
-            RootLeaderCreateElectConsensusShardBlock(pool_idx, tx_vec, ltx_msg);
             break;
         default:
             RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, ltx_msg);
