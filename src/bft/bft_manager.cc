@@ -407,6 +407,7 @@ void BftManager::HandleToAccountTxBlock(
 
     bool just_broadcast = false;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        std::cout << "tx_list[i].type(): " << tx_list[i].type() << std::endl;
         if (tx_list[i].type() == common::kConsensusFinalStatistic) {
             bft::protobuf::TxInfo tx_info;
             if (elect::ElectManager::Instance()->CreateElectTransaction(
@@ -421,12 +422,11 @@ void BftManager::HandleToAccountTxBlock(
                 BFT_ERROR("dispatch pool failed!");
             }
 
+            std::cout << "create kConsensusFinalStatistic success." << std::endl;
             continue;
         }
 
         if (tx_list[i].to().empty()) {
-            BFT_ERROR("to error tx_list[i].to().empty()[%d],  tx_list[i].to_add()[%d]!",
-                tx_list[i].to().empty(), tx_list[i].to_add());
             continue;
         }
 
@@ -1123,7 +1123,8 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].status() == kBftSuccess && tx_list[i].type() == common::kConsensusStatistic) {
+        if (tx_list[i].status() == kBftSuccess &&
+                tx_list[i].type() == common::kConsensusFinalStatistic) {
             broadcast_nets.insert(network::kRootCongressNetworkId);
             continue;
         }

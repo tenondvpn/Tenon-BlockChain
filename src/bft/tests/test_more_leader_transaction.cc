@@ -1989,6 +1989,7 @@ public:
         }
 
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
+        std::cout << "final consensus to elect block." << std::endl;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
             if ((int32_t)i == leader_index) {
                 continue;
@@ -4092,8 +4093,8 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
                 network::kConsensusShardBeginNetworkId);
             transport::protobuf::Header broadcast_msg;
             RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
-            final_st_msgs.push_back(broadcast_msg);
             transport::protobuf::Header root_broadcast_msg;
+            std::cout << "FFFFFFFFFFFFFFFFFFFF" << std::endl;
             CreateNewAccountWithInvalidNode(
                 *iter,
                 *iter,
@@ -4101,6 +4102,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
                 common::kConsensusFinalStatistic,
                 broadcast_msg,
                 &root_broadcast_msg);
+            std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD" << std::endl;
         }
     }
 

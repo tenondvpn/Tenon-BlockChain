@@ -1714,7 +1714,8 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tx.set_balance(0);
     tx.set_status(kBftSuccess);
     // create address must to and have transfer amount
-    if (tx.type() != common::kConsensusRootElectShard) {
+    if (tx.type() != common::kConsensusFinalStatistic) {
+        assert(false);
         return;
     }
 
