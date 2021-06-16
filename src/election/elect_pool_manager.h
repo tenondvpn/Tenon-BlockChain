@@ -5,6 +5,7 @@
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
+#include "block/proto/block.pb.h"
 #include "elect_waiting_nodes.h"
 
 namespace tenon {
@@ -18,10 +19,9 @@ public:
     void NetworkMemberChange(uint32_t network_id, MembersPtr& members_ptr);
     void AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& node_ptr);
     void UpdateNodeInfoWithBlock(const bft::protobuf::Block& block_info);
-    int LeaderCreateElectionBlockTx(
-        uint32_t shard_netid,
-        bft::protobuf::BftMessage& bft_msg);
-    int BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx_info);
+    int BackupCheckElectionBlockTx(
+        const bft::protobuf::TxInfo& local_tx_info,
+        const bft::protobuf::TxInfo& tx_info);
     void UpdateWaitingNodes(
         uint32_t waiting_shard_id,
         const std::string& root_node_id,
@@ -32,7 +32,7 @@ public:
         bft::protobuf::TxInfo& tx_info);
 
 private:
-    int GetAllLeaderBloomFiler(
+    int GetAllTxInfoBloomFiler(
         const bft::protobuf::TxInfo& tx_info,
         common::BloomFilter* cons_all,
         common::BloomFilter* cons_weed_out,
@@ -40,6 +40,7 @@ private:
         common::BloomFilter* pick_in,
         elect::protobuf::ElectBlock* ec_block);
     int GetAllBloomFilerAndNodes(
+        const block::protobuf::StatisticInfo& statistic_info,
         uint32_t shard_netid,
         common::BloomFilter* cons_all,
         common::BloomFilter* cons_weed_out,

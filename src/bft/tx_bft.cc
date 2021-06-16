@@ -339,7 +339,8 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
         return kBftError;
     }
 
-    if (elect::ElectManager::Instance()->BackupCheckElectConsensusShard(
+    if (elect::ElectManager::Instance()->BackupCheckElectionBlockTx(
+            local_tx_info->tx,
             tx_info) != elect::kElectSuccess) {
         return kBftError;
     }
@@ -388,6 +389,8 @@ int TxBft::RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
             break;
         case common::kConsensusRootVssBlock:
             break;
+        case common::kConsensusFinalStatistic:
+            return RootBackupCheckElectConsensusShardPrepare(block);
         default:
             return RootBackupCheckCreateAccountAddressPrepare(block);
             break;

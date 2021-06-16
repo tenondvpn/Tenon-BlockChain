@@ -116,6 +116,10 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
 
 void ShardStatistic::CreateStatisticTransaction() {
     auto super_leader_ids = elect::ElectManager::Instance()->leaders();
+    if (super_leader_ids.empty()) {
+        return;
+    }
+
     auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     // avoid the unreliability of a single leader

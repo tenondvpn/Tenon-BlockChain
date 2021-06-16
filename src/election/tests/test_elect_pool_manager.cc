@@ -245,25 +245,7 @@ private:
 };
 
 TEST_F(TestElectPoolManager, All) {
-    const uint32_t kMemberCount = 31;
-    const uint32_t kWaitingCount = 11;
-    CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
-    for (uint32_t i = 0; i < 20; ++i) {
-        UpdateNodeInfoWithBlock(kMemberCount, i);
-    }
-
-    AddWaitingPoolNetworkNodes(
-        kWaitingCount,
-        network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
-    UpdateWaitingNodesConsensusCount(kMemberCount);
-    bft::protobuf::BftMessage bft_msg;
-    ASSERT_EQ(elect_pool_manager_.LeaderCreateElectionBlockTx(
-        network::kConsensusShardBeginNetworkId,
-        bft_msg), kElectSuccess);
-    bft::protobuf::TxBft tx_bft;
-    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
-    ASSERT_EQ(elect_pool_manager_.BackupCheckElectionBlockTx(
-        tx_bft.new_tx()), kElectSuccess);
+    
 }
 
 }  // namespace test

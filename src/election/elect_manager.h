@@ -28,7 +28,6 @@ public:
     static ElectManager* Instance();
     int Join(uint32_t network_id);
     int Quit(uint32_t network_id);
-    int BackupCheckElectConsensusShard(const bft::protobuf::TxInfo& tx_info);
     void ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
@@ -38,6 +37,9 @@ public:
         uint32_t shard_netid,
         bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info);
+    int BackupCheckElectionBlockTx(
+        const bft::protobuf::TxInfo& local_tx_info,
+        const bft::protobuf::TxInfo& tx_info);
     // get member
     int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
@@ -73,8 +75,6 @@ private:
     ~ElectManager();
 
     void HandleMessage(transport::protobuf::Header& header);
-    void CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg);
-    void CreateAllElectTx();
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;

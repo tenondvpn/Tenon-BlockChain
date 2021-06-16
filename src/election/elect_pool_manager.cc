@@ -14,6 +14,7 @@
 #include "security/public_key.h"
 #include "network/network_utils.h"
 #include "root/root_utils.h"
+#include "timeblock/time_block_utils.h"
 
 namespace tenon {
 
@@ -23,108 +24,31 @@ ElectPoolManager::ElectPoolManager() {}
 
 ElectPoolManager::~ElectPoolManager() {}
 
-int ElectPoolManager::LeaderCreateElectionBlockTx(
-        uint32_t shard_netid,
-        bft::protobuf::BftMessage& bft_msg) {
-    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
-    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
-    std::vector<NodeDetailPtr> exists_shard_nodes;
-    std::vector<NodeDetailPtr> weed_out_vec;
-    std::vector<NodeDetailPtr> pick_in_vec;
-    int32_t leader_count = 0;
-    if (GetAllBloomFilerAndNodes(
-            shard_netid,
-            &cons_all,
-            &cons_weed_out,
-            &pick_all,
-            &pick_in,
-            exists_shard_nodes,
-            weed_out_vec,
-            pick_in_vec,
-            &leader_count) != kElectSuccess) {
-        ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
-        return kElectError;
-    }
-
-    bft::protobuf::TxBft tx_bft;
-    auto tx_info = tx_bft.mutable_new_tx();
-    tx_info->set_type(common::kConsensusRootElectShard);
-    tx_info->set_from(root::kRootChainSingleBlockTxAddress);
-    tx_info->set_gas_limit(0llu);
-    tx_info->set_amount(0);
-    tx_info->set_network_id(shard_netid);
-    auto all_exits_attr = tx_info->add_attr();
-    all_exits_attr->set_key(kElectNodeAttrKeyAllBloomfilter);
-    all_exits_attr->set_value(cons_all.Serialize());
-    auto weed_out_attr = tx_info->add_attr();
-    weed_out_attr->set_key(kElectNodeAttrKeyWeedoutBloomfilter);
-    weed_out_attr->set_value(cons_weed_out.Serialize());
-    auto all_pick_attr = tx_info->add_attr();
-    all_pick_attr->set_key(kElectNodeAttrKeyAllPickBloomfilter);
-    all_pick_attr->set_value(pick_all.Serialize());
-    auto pick_in_attr = tx_info->add_attr();
-    pick_in_attr->set_key(kElectNodeAttrKeyPickInBloomfilter);
-    pick_in_attr->set_value(pick_in.Serialize());
-    std::set<std::string> weed_out_id_set;
-    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-        weed_out_id_set.insert((*iter)->id);
-    }
-
-    elect::protobuf::ElectBlock ec_block;
-    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
-        if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
-            continue;
-        }
-
-        auto in = ec_block.add_in();
-        in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
-    }
-
-    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
-        auto in = ec_block.add_in();
-        in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
-    }
-
-    ec_block.set_leader_count(leader_count);
-    auto ec_block_attr = tx_info->add_attr();
-    ec_block_attr->set_key(kElectNodeAttrElectBlock);
-    ec_block_attr->set_value(ec_block.SerializeAsString());
-    bft_msg.set_net_id(shard_netid);
-    bft_msg.set_data(tx_bft.SerializeAsString());
-    bft_msg.set_gid(common::CreateGID(""));
-    bft_msg.set_rand(0);
-    bft_msg.set_bft_step(bft::kBftInit);
-    bft_msg.set_leader(false);
-    bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
-    auto hash128 = bft::GetTxMessageHash(*tx_info);
-    auto tx_data = tx_bft.SerializeAsString();
-    bft_msg.set_data(tx_data);
-    security::Signature sign;
-    if (!security::Schnorr::Instance()->Sign(
-            hash128,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
-            sign)) {
-        return kElectError;
-    }
-
-    std::string sign_challenge_str;
-    std::string sign_response_str;
-    sign.Serialize(sign_challenge_str, sign_response_str);
-    bft_msg.set_sign_challenge(sign_challenge_str);
-    bft_msg.set_sign_response(sign_response_str);
-    return kElectSuccess;
-}
-
 int ElectPoolManager::CreateElectTransaction(
         uint32_t shard_netid,
         bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
+    block::protobuf::StatisticInfo statistic_info;
+    bool statistic_valid = false;
+    for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
+        if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+            tx_info.set_gid(common::Hash::Hash256(
+                std::string("root_fn") + src_tx_info.attr(i).value()));
+        }
+
+        if (src_tx_info.attr(i).key() == bft::kStatisticAttr) {
+            if (!statistic_info.ParseFromString(src_tx_info.attr(i).value())) {
+                return kElectError;
+            }
+
+            statistic_valid = true;
+        }
+    }
+
+    if (!statistic_valid) {
+        return kElectError;
+    }
+
     common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
@@ -134,6 +58,7 @@ int ElectPoolManager::CreateElectTransaction(
     std::vector<NodeDetailPtr> pick_in_vec;
     int32_t leader_count = 0;
     if (GetAllBloomFilerAndNodes(
+            statistic_info,
             shard_netid,
             &cons_all,
             &cons_weed_out,
@@ -144,6 +69,10 @@ int ElectPoolManager::CreateElectTransaction(
             pick_in_vec,
             &leader_count) != kElectSuccess) {
         ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
+        return kElectError;
+    }
+
+    if (tx_info.gid().empty()) {
         return kElectError;
     }
 
@@ -193,106 +122,81 @@ int ElectPoolManager::CreateElectTransaction(
     return kElectSuccess;
 }
 
-int ElectPoolManager::BackupCheckElectionBlockTx(const bft::protobuf::TxInfo& tx_info) {
+int ElectPoolManager::BackupCheckElectionBlockTx(
+        const bft::protobuf::TxInfo& local_tx_info,
+        const bft::protobuf::TxInfo& tx_info) {
     common::BloomFilter leader_cons_all;
     common::BloomFilter leader_cons_weed_out;
     common::BloomFilter leader_pick_all;
     common::BloomFilter leader_pick_in;
     elect::protobuf::ElectBlock leader_ec_block;
-    if (GetAllLeaderBloomFiler(
+    if (GetAllTxInfoBloomFiler(
             tx_info,
             &leader_cons_all,
             &leader_cons_weed_out,
             &leader_pick_all,
             &leader_pick_in,
             &leader_ec_block) != kElectSuccess) {
-        ELECT_ERROR("GetAllLeaderBloomFiler failed!");
+        ELECT_ERROR("GetAllTxInfoBloomFiler failed!");
         return kElectError;
     }
 
-    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
-    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
-    std::vector<NodeDetailPtr> exists_shard_nodes;
-    std::vector<NodeDetailPtr> weed_out_vec;
-    std::vector<NodeDetailPtr> pick_in_vec;
-    int32_t leader_count = 0;
-    if (GetAllBloomFilerAndNodes(
-            tx_info.network_id(),
-            &cons_all,
-            &cons_weed_out,
-            &pick_all,
-            &pick_in,
-            exists_shard_nodes,
-            weed_out_vec,
-            pick_in_vec,
-            &leader_count) != kElectSuccess) {
-        ELECT_ERROR("local GetAllBloomFilerAndNodes failed!");
+    common::BloomFilter local_cons_all;
+    common::BloomFilter local_cons_weed_out;
+    common::BloomFilter local_pick_all;
+    common::BloomFilter local_pick_in;
+    elect::protobuf::ElectBlock local_ec_block;
+    if (GetAllTxInfoBloomFiler(
+            local_tx_info,
+            &local_cons_all,
+            &local_cons_weed_out,
+            &local_pick_all,
+            &local_pick_in,
+            &local_ec_block) != kElectSuccess) {
+        ELECT_ERROR("GetAllTxInfoBloomFiler failed!");
         return kElectError;
     }
 
-    if (leader_ec_block.leader_count() != leader_count) {
+    if (leader_ec_block.leader_count() != local_ec_block.leader_count()) {
         ELECT_ERROR("leader_ec_block.leader_count()[%d] != leader_count[%d]!",
-            leader_ec_block.leader_count(), leader_count);
+            leader_ec_block.leader_count(), local_ec_block.leader_count());
         return kElectError;
     }
 
     // exists shard nodes must equal
-    if (cons_all != leader_cons_all) {
-        ELECT_ERROR("cons_all != leader_cons_all!");
+    if (local_cons_all != leader_cons_all) {
+        ELECT_ERROR("local_cons_all != leader_cons_all!");
         return kElectError;
     }
 
-    if (cons_weed_out != leader_cons_weed_out) {
+    if (local_cons_weed_out != leader_cons_weed_out) {
         ELECT_ERROR("cons_weed_out != leader_cons_weed_out!");
         return kElectError;
     }
-    
-    if (pick_all != leader_pick_all) {
+
+    if (local_pick_all != leader_pick_all) {
         ELECT_ERROR("pick_all != leader_pick_all!");
         return kElectError;
     }
 
-    if (pick_in != leader_pick_in) {
+    if (local_pick_in != leader_pick_in) {
         ELECT_ERROR("pick_in != leader_pick_in");
         return kElectError;
     }
 
-    std::set<std::string> weed_out_id_set;
-    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-        weed_out_id_set.insert((*iter)->id);
-    }
-
-    if ((uint32_t)leader_ec_block.in_size() < exists_shard_nodes.size() - weed_out_id_set.size()) {
+    if (leader_ec_block.in_size() != local_ec_block.in_size()) {
         ELECT_ERROR("leader_ec_block.in_size() error!");
         return kElectError;
     }
 
-    uint32_t leader_idx = 0;
-    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
-        if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
-            continue;
-        }
-
-        if (leader_ec_block.in(leader_idx).pubkey() != (*iter)->public_key) {
+    for (int32_t leader_idx = 0; leader_idx < leader_ec_block.in_size(); ++leader_idx) {
+        if (leader_ec_block.in(leader_idx).pubkey() != local_ec_block.in(leader_idx).pubkey()) {
             ELECT_ERROR("leader_ec_block public key not equal local public key error!");
             return kElectError;
         }
 
-        if (leader_ec_block.in(leader_idx).pool_idx_mod_num() != (*iter)->pool_index_mod_num) {
+        if (leader_ec_block.in(leader_idx).pool_idx_mod_num() != local_ec_block.in(leader_idx).pool_idx_mod_num()) {
             ELECT_ERROR("leader_ec_block pool_idx_mod_num not equal local error!");
-            return kElectError;
-        }
-
-        ++leader_idx;
-    }
-
-    for (int32_t i = leader_idx; i < leader_ec_block.in_size(); ++i) {
-        auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            leader_ec_block.in(leader_idx).pubkey());
-        if (!leader_pick_in.Contain(common::Hash::Hash64(id))) {
-            ELECT_ERROR("leader_pick_in.Contain error!");
             return kElectError;
         }
     }
@@ -345,6 +249,7 @@ void ElectPoolManager::UpdateWaitingNodes(
 }
 
 int ElectPoolManager::GetAllBloomFilerAndNodes(
+        const block::protobuf::StatisticInfo& statistic_info,
         uint32_t shard_netid,
         common::BloomFilter* cons_all,
         common::BloomFilter* cons_weed_out,
@@ -513,7 +418,7 @@ void ElectPoolManager::SmoothFtsValue(
     }
 }
 
-int ElectPoolManager::GetAllLeaderBloomFiler(
+int ElectPoolManager::GetAllTxInfoBloomFiler(
         const bft::protobuf::TxInfo& tx_info,
         common::BloomFilter* cons_all,
         common::BloomFilter* cons_weed_out,

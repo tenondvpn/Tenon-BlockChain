@@ -84,10 +84,6 @@ int ElectManager::Quit(uint32_t network_id) {
     return kElectSuccess;
 }
 
-int ElectManager::BackupCheckElectConsensusShard(const bft::protobuf::TxInfo& tx_info) {
-    return pool_manager_.BackupCheckElectionBlockTx(tx_info);
-}
-
 void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     assert(header.type() == common::kElectMessage);
     // TODO: verify message signature
@@ -252,8 +248,10 @@ void ElectManager::ProcessNewElectBlock(
     }
 }
 
-void ElectManager::CreateAllElectTx() {
-
+int ElectManager::BackupCheckElectionBlockTx(
+        const bft::protobuf::TxInfo& local_tx_info,
+        const bft::protobuf::TxInfo& tx_info) {
+    return pool_manager_.BackupCheckElectionBlockTx(local_tx_info, tx_info);
 }
 
 int ElectManager::CreateElectTransaction(
@@ -261,23 +259,6 @@ int ElectManager::CreateElectTransaction(
         bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
     return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
-}
-
-void ElectManager::CreateNewElectTx(uint32_t shard_network_id, transport::protobuf::Header* msg) {
-    msg->set_src_dht_key("");
-    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-    dht::DhtKeyManager dht_key(des_net_id, 0);
-    msg->set_des_dht_key(dht_key.StrKey());
-    msg->set_priority(transport::kTransportPriorityHighest);
-    msg->set_id(common::GlobalInfo::Instance()->MessageId());
-    msg->set_type(common::kBftMessage);
-    msg->set_client(false);
-    msg->set_hop_count(0);
-    auto broad_param = msg->mutable_broadcast();
-    ElectProto::SetDefaultBroadcastParam(broad_param);
-    bft::protobuf::BftMessage bft_msg;
-    pool_manager_.LeaderCreateElectionBlockTx(shard_network_id, bft_msg);
-    msg->set_data(bft_msg.SerializeAsString());
 }
 
 uint64_t ElectManager::latest_height(uint32_t network_id) {
