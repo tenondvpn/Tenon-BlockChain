@@ -433,13 +433,15 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
         }
 
         if (local_tx_info->tx.type() == common::kConsensusStatistic) {
-            int check_res = BackupCheckStatistic(
-                local_tx_info,
-                tx_info,
-                locked_account_map,
-                acc_balance_map);
+            int check_res = BackupCheckStatistic(local_tx_info, tx_info);
             if (check_res != kBftSuccess) {
                 BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
+                return check_res;
+            }
+        } else if (local_tx_info->tx.type() == common::kConsensusFinalStatistic) {
+            int check_res = BackupCheckFinalStatistic(local_tx_info, tx_info);
+            if (check_res != kBftSuccess) {
+                BFT_ERROR("BackupCheckFinalStatistic transaction failed![%d]", tmp_res);
                 return check_res;
             }
         } else if (local_tx_info->tx.type() == common::kConsensusCallContract ||
@@ -505,9 +507,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
 
 int TxBft::BackupCheckStatistic(
         const TxItemPtr& local_tx_info,
-        const protobuf::TxInfo& tx_info,
-        std::unordered_map<std::string, bool>& locked_account_map,
-        std::unordered_map<std::string, int64_t>& acc_balance_map) {
+        const protobuf::TxInfo& tx_info) {
     if (tx_info.gas_limit() != 0) {
         BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
         return kBftInvalidPackage;
@@ -612,6 +612,114 @@ int TxBft::BackupCheckStatistic(
         if (statistic_info.succ_tx_count(i) != leader_statistic_info.succ_tx_count(i)) {
             return kBftInvalidPackage;
         }
+    }
+
+    return kBftSuccess;
+}
+
+int TxBft::BackupCheckFinalStatistic(
+        const TxItemPtr& local_tx_info,
+        const protobuf::TxInfo& tx_info) {
+    if (tx_info.gas_limit() != 0) {
+        BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.balance() != 0) {
+        BFT_ERROR("tx info balance error[%llu]", tx_info.balance());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.gas_used() != 0) {
+        BFT_ERROR("tx info gas_used error[%llu]", tx_info.gas_used());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.network_id() != common::GlobalInfo::Instance()->network_id()) {
+        BFT_ERROR("tx info network error[%u][%u]",
+            tx_info.network_id(),
+            common::GlobalInfo::Instance()->network_id());
+        return kBftInvalidPackage;
+    }
+
+    int32_t valid_count = 0;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
+            if (iter == local_tx_info->attr_map.end()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
+                return kBftInvalidPackage;
+            }
+
+            if (iter->second != tx_info.attr(i).value()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
+                return kBftInvalidPackage;
+            }
+
+            ++valid_count;
+        }
+
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
+            if (iter == local_tx_info->attr_map.end()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
+                return kBftInvalidPackage;
+            }
+
+            if (iter->second != tx_info.attr(i).value()) {
+                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
+                return kBftInvalidPackage;
+            }
+
+            ++valid_count;
+        }
+
+        if (tx_info.attr(i).key() == kStatisticAttr) {
+            auto iter = local_tx_info->attr_map.find(kStatisticAttr);
+            if (iter == local_tx_info->attr_map.end()) {
+                BFT_ERROR("tx info attr error[%s]", kStatisticAttr.c_str());
+                return kBftInvalidPackage;
+            }
+
+            block::protobuf::StatisticInfo leader_statistic_info;
+            if (!leader_statistic_info.ParseFromString(tx_info.attr(i).value())) {
+                return kBftInvalidPackage;
+            }
+
+            block::protobuf::StatisticInfo local_statistic_info;
+            if (!local_statistic_info.ParseFromString(iter->second)) {
+                return kBftInvalidPackage;
+            }
+
+            if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
+                return kBftInvalidPackage;
+            }
+
+            if (leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()) {
+                return kBftInvalidPackage;
+            }
+
+            if (leader_statistic_info.elect_height() != local_statistic_info.elect_height()) {
+                return kBftInvalidPackage;
+            }
+
+            if (leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()) {
+                return kBftInvalidPackage;
+            }
+
+            for (uint32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
+                if (leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count(i)) {
+                    return kBftInvalidPackage;
+                }
+            }
+
+            ++valid_count;
+        }
+    }
+
+    if (valid_count != 3) {
+        BFT_ERROR("tx info attr error");
+        return kBftInvalidPackage;
     }
 
     return kBftSuccess;
@@ -1901,6 +2009,11 @@ void TxBft::LeaderCreateTxBlock(
                 return;
             }
 
+            tx.set_network_id(common::GlobalInfo::Instance()->network_id());
+            tx.set_gas_used(0);
+            tx.set_balance(0);
+        } else if (tx.type() == common::kConsensusFinalStatistic) {
+            // just use tx info
             tx.set_network_id(common::GlobalInfo::Instance()->network_id());
             tx.set_gas_used(0);
             tx.set_balance(0);

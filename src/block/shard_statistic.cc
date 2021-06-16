@@ -159,7 +159,7 @@ void ShardStatistic::CreateStatisticTransaction() {
             tmblock::TimeBlockManager::Instance()->LatestTimestamp()));
         block::protobuf::StatisticInfo statistic_info;
         GetStatisticInfo(&statistic_info);
-        auto statistic_attr = tx_info.add_storages();
+        auto statistic_attr = tx_info.add_attr();
         statistic_attr->set_key(bft::kStatisticAttr);
         statistic_attr->set_value(statistic_info.SerializeAsString());
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {

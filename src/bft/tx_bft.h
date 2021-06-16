@@ -119,9 +119,11 @@ private:
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckStatistic(
         const TxItemPtr& local_tx_ptr,
-        const protobuf::TxInfo& tx_info,
-        std::unordered_map<std::string, bool>& locked_account_map,
-        std::unordered_map<std::string, int64_t>& acc_balance_map);
+        const protobuf::TxInfo& tx_info);
+    int BackupCheckFinalStatistic(
+        const TxItemPtr& local_tx_ptr,
+        const protobuf::TxInfo& tx_info);
+
     int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
