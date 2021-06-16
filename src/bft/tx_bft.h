@@ -36,20 +36,24 @@ private:
         TxItemPtr* local_tx);
     void LeaderCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& bft_msg);
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootLeaderCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& bft_msg);
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootLeaderCreateAccountAddressBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& bft_msg);
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootLeaderCreateElectConsensusShardBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& bft_msg);
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootLeaderCreateTimerBlock(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
+    void RootLeaderCreateConsensusBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& bft_msg);

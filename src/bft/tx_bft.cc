@@ -1771,6 +1771,9 @@ void TxBft::RootLeaderCreateTxBlock(
             break;
         case common::kConsensusRootVssBlock:
             break;
+        case common::kConsensusFinalStatistic:
+            RootLeaderCreateElectConsensusShardBlock(pool_idx, tx_vec, ltx_msg);
+            break;
         default:
             RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, ltx_msg);
             break;
