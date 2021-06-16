@@ -19,6 +19,7 @@ ShardStatistic* ShardStatistic::Instance() {
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
     if (block_item->tx_list_size() != 1) {
+        std::cout << "block_item->tx_list_size() != 1" << std::endl;
         return;
     }
 
@@ -30,6 +31,7 @@ void ShardStatistic::AddShardPoolStatistic(
     {
         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
         if (block_item->timeblock_height() < latest_tm_height_) {
+            std::cout << "block_item->timeblock_height() < latest_tm_height_" << std::endl;
             return;
         }
 
@@ -49,14 +51,14 @@ void ShardStatistic::AddShardPoolStatistic(
             return;
         }
 
-        if (valid_pool_.find(block_item->pool_index()) != valid_pool_.end()) {
+        if (valid_pool_.find(block_item->pool_index()) == valid_pool_.end()) {
             return;
         }
 
-        for (int32_t i = 0; i < block_item->tx_list(0).attr_size(); ++i) {
-            if (block_item->tx_list(0).attr(0).key() == bft::kStatisticAttr) {
+        for (int32_t i = 0; i < block_item->tx_list(0).storages_size(); ++i) {
+            if (block_item->tx_list(0).storages(i).key() == bft::kStatisticAttr) {
                 block::protobuf::StatisticInfo statistic_info;
-                if (statistic_info.ParseFromString(block_item->tx_list(0).attr(0).value())) {
+                if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
                     if (statistic_info.elect_height() < latest_elect_height_) {
                         return;
                     }
@@ -113,14 +115,15 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
 }
 
 void ShardStatistic::CreateStatisticTransaction() {
-    bft::protobuf::TxInfo tx_info;
-    tx_info.set_type(common::kConsensusFinalStatistic);
     auto super_leader_ids = elect::ElectManager::Instance()->leaders();
     // avoid the unreliability of a single leader
     for (auto iter = super_leader_ids.begin(); iter != super_leader_ids.end(); ++iter) {
         auto pool_idx = common::GetPoolIndex(*iter);
+        bft::protobuf::TxInfo tx_info;
+        tx_info.set_type(common::kConsensusFinalStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(pool_idx));
         if (tx_info.from().empty()) {
+            std::cout << "tx_info.from().empty()!" << std::endl;
             return;
         }
 
@@ -147,6 +150,8 @@ void ShardStatistic::CreateStatisticTransaction() {
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
             BFT_ERROR("dispatch pool failed!");
         }
+
+        std::cout << "dispatch final statistic transaction called!: " << pool_idx << std::endl;
     }
 }
 

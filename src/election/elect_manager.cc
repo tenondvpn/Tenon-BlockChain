@@ -500,7 +500,7 @@ void ElectManager::SetNetworkMember(
         }
 
         auto RandFunc = [&g2](int i) -> int {
-            return g2() % (std::numeric_limits<int>::max)();
+            return g2() % i;
         };
         std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), RandFunc);
         std::lock_guard<std::mutex> guard(leaders_mutex_);
