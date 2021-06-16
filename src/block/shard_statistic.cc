@@ -20,7 +20,6 @@ ShardStatistic* ShardStatistic::Instance() {
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
     if (block_item->tx_list_size() != 1) {
-        std::cout << "block_item->tx_list_size() != 1" << std::endl;
         return;
     }
 
@@ -32,7 +31,6 @@ void ShardStatistic::AddShardPoolStatistic(
     {
         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
         if (block_item->timeblock_height() < latest_tm_height_) {
-            std::cout << "block_item->timeblock_height() < latest_tm_height_" << std::endl;
             return;
         }
 
@@ -140,7 +138,6 @@ void ShardStatistic::CreateStatisticTransaction() {
         tx_info.set_type(common::kConsensusFinalStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(pool_idx));
         if (tx_info.from().empty()) {
-            std::cout << "tx_info.from().empty()!" << std::endl;
             return;
         }
 
@@ -167,8 +164,6 @@ void ShardStatistic::CreateStatisticTransaction() {
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
             BFT_ERROR("dispatch pool failed!");
         }
-
-        std::cout << "dispatch final statistic transaction called!: " << pool_idx << std::endl;
     }
 }
 

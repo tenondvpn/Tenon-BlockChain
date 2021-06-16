@@ -4084,6 +4084,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
 
     auto leaders = elect::ElectManager::Instance()->leaders(network::kConsensusShardBeginNetworkId);
     std::vector<transport::protobuf::Header> final_st_msgs;
+    bool create_elect_block = false;
     for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
             iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
         auto id = GetIdByPrikey(*iter);
@@ -4094,14 +4095,13 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
             transport::protobuf::Header broadcast_msg;
             RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
             transport::protobuf::Header root_broadcast_msg;
-            std::cout << "FFFFFFFFFFFFFFFFFFFF" << std::endl;
-            // 
             auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
             auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
                 network::kRootCongressNetworkId);
             for (auto root_id_iter = root_leaders.begin();
                     root_id_iter != root_leaders.end(); ++root_id_iter) {
-                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, *iter);
+                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+                    network::kRootCongressNetworkId, *root_id_iter);
                 ASSERT_TRUE(root_mem_ptr != nullptr);
                 if (common::kRootChainPoolIndex % root_leader_count == root_mem_ptr->pool_index_mod_num) {
                     CreateNewAccountWithInvalidNode(
@@ -4111,14 +4111,16 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
                         common::kConsensusRootElectShard,
                         broadcast_msg,
                         &root_broadcast_msg);
-                    std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD" << std::endl;
+                    create_elect_block = true;
                     break;
                 }
             }
+
+            break;
         }
     }
 
-
+    ASSERT_TRUE(create_elect_block);
 }
 
 }  // namespace test

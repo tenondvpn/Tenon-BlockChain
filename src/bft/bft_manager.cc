@@ -407,7 +407,6 @@ void BftManager::HandleToAccountTxBlock(
 
     bool just_broadcast = false;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        std::cout << "tx_list[i].type(): " << tx_list[i].type() << std::endl;
         if (tx_list[i].type() == common::kConsensusFinalStatistic) {
             bft::protobuf::TxInfo tx_info;
             if (elect::ElectManager::Instance()->CreateElectTransaction(

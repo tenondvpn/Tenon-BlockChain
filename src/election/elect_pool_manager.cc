@@ -49,6 +49,11 @@ int ElectPoolManager::CreateElectTransaction(
         return kElectError;
     }
 
+    if (tx_info.gid().empty()) {
+        return kElectError;
+    }
+
+    ELECT_DEBUG("create new tx gid: %s", common::Encode::HexEncode(tx_info.gid()).c_str());
     common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
@@ -69,10 +74,6 @@ int ElectPoolManager::CreateElectTransaction(
             pick_in_vec,
             &leader_count) != kElectSuccess) {
         ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
-        return kElectError;
-    }
-
-    if (tx_info.gid().empty()) {
         return kElectError;
     }
 
