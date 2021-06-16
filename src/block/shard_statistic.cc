@@ -116,9 +116,20 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
 
 void ShardStatistic::CreateStatisticTransaction() {
     auto super_leader_ids = elect::ElectManager::Instance()->leaders();
+    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+        common::GlobalInfo::Instance()->network_id());
     // avoid the unreliability of a single leader
     for (auto iter = super_leader_ids.begin(); iter != super_leader_ids.end(); ++iter) {
-        auto pool_idx = common::GetPoolIndex(*iter);
+        uint32_t pool_idx = 0;
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+            common::GlobalInfo::Instance()->network_id(),
+            *iter);
+        for (pool_idx = 0; pool_idx < common::kImmutablePoolSize; ++pool_idx) {
+            if (pool_idx % leader_count == mem_ptr->pool_index_mod_num) {
+                break;
+            }
+        }
+
         bft::protobuf::TxInfo tx_info;
         tx_info.set_type(common::kConsensusFinalStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(pool_idx));

@@ -114,7 +114,7 @@ bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     if ((int32_t)pool_index() % leader_count != local_pool_mod_idx) {
         BFT_ERROR("prepare message pool index invalid.[%u][%s][%d][%u]",
             common::GlobalInfo::Instance()->network_id(),
-            common::Encode::HexEncode(bft_msg.node_id()).c_str(),
+            common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
             local_pool_mod_idx,
             (int32_t)pool_index() % leader_count);
         return false;
