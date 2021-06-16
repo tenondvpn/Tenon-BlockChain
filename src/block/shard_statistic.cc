@@ -128,7 +128,7 @@ void ShardStatistic::CreateStatisticTransaction() {
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(
             common::GlobalInfo::Instance()->network_id(),
             *iter);
-        for (pool_idx = 0; pool_idx < common::kImmutablePoolSize; ++pool_idx) {
+        for (pool_idx = 0; pool_idx < (int32_t)common::kImmutablePoolSize; ++pool_idx) {
             if (pool_idx % leader_count == mem_ptr->pool_index_mod_num) {
                 break;
             }
