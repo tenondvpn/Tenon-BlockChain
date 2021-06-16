@@ -484,13 +484,15 @@ void ElectManager::SetNetworkMember(
             return g2() % i;
         };
         std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), RandFunc);
-        std::lock_guard<std::mutex> guard(leaders_mutex_);
-        leaders_.clear();
+        std::lock_guard<std::mutex> guard(network_leaders_mutex_);
+        std::unordered_set<std::string> leaders;
         for (auto iter = node_index_vec.begin();
                 iter != node_index_vec.end() &&
-                leaders_.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
-            leaders_.insert(tmp_leaders[*iter]->id);
+                leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
+            leaders.insert(tmp_leaders[*iter]->id);
         }
+
+        network_leaders_[network_id] = leaders;
     }
 
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);

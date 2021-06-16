@@ -115,6 +115,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
         }
     }
 
+    std::cout << "get root tx: " << tx_vec[0]->tx.type() << ", common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id() << std::endl;
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
         add_item_index_vec(tx_vec[i]->index);
         push_bft_item_vec(tx_vec[i]->tx.gid());
@@ -124,6 +125,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     bft::protobuf::TxBft tx_bft;
     auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        std::cout << "DDDDDDDDDDDDDDDDD root create tx: " << tx_vec[0]->tx.type() << std::endl;
         RootLeaderCreateTxBlock(pool_index, tx_vec, ltx_prepare);
     } else {
         LeaderCreateTxBlock(tx_vec, ltx_prepare);

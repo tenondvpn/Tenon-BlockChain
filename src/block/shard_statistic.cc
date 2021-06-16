@@ -1,5 +1,6 @@
 #include "block/shard_statistic.h"
 
+#include "common/global_info.h"
 #include "bft/bft_utils.h"
 #include "bft/dispatch_pool.h"
 #include "block/account_manager.h"
@@ -115,7 +116,8 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
 }
 
 void ShardStatistic::CreateStatisticTransaction() {
-    auto super_leader_ids = elect::ElectManager::Instance()->leaders();
+    auto super_leader_ids = elect::ElectManager::Instance()->leaders(
+        common::GlobalInfo::Instance()->network_id());
     if (super_leader_ids.empty()) {
         return;
     }

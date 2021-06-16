@@ -141,6 +141,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
     }
 
+    std::cout << "add pool index: " << tx_ptr->tx.type() << ", pool_index: " << pool_index << std::endl;
     return tx_pool_[pool_index].AddTx(tx_ptr);
 }
 

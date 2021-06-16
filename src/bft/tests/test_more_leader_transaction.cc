@@ -4082,7 +4082,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
         ASSERT_EQ(account_info->balance_, 0);
     }
 
-    auto leaders = elect::ElectManager::Instance()->leaders();
+    auto leaders = elect::ElectManager::Instance()->leaders(network::kConsensusShardBeginNetworkId);
     std::vector<transport::protobuf::Header> final_st_msgs;
     for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
             iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
@@ -4095,14 +4095,26 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
             RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
             transport::protobuf::Header root_broadcast_msg;
             std::cout << "FFFFFFFFFFFFFFFFFFFF" << std::endl;
-            CreateNewAccountWithInvalidNode(
-                *iter,
-                *iter,
-                false,
-                common::kConsensusFinalStatistic,
-                broadcast_msg,
-                &root_broadcast_msg);
-            std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD" << std::endl;
+            // 
+            auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
+            auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+                network::kRootCongressNetworkId);
+            for (auto root_id_iter = root_leaders.begin();
+                    root_id_iter != root_leaders.end(); ++root_id_iter) {
+                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, *iter);
+                ASSERT_TRUE(root_mem_ptr != nullptr);
+                if (common::kRootChainPoolIndex % root_leader_count == root_mem_ptr->pool_index_mod_num) {
+                    CreateNewAccountWithInvalidNode(
+                        *root_id_iter,
+                        *root_id_iter,
+                        false,
+                        common::kConsensusRootElectShard,
+                        broadcast_msg,
+                        &root_broadcast_msg);
+                    std::cout << "DDDDDDDDDDDDDDDDDDDDDDDD" << std::endl;
+                    break;
+                }
+            }
         }
     }
 

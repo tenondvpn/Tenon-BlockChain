@@ -87,8 +87,7 @@ bool IsRootSingleBlockTx(uint32_t tx_type) {
     if (tx_type == common::kConsensusRootElectRoot ||
             tx_type == common::kConsensusRootElectShard ||
             tx_type == common::kConsensusRootTimeBlock ||
-            tx_type == common::kConsensusRootVssBlock ||
-            tx_type == common::kConsensusFinalStatistic) {
+            tx_type == common::kConsensusRootVssBlock) {
         return true;
     }
 

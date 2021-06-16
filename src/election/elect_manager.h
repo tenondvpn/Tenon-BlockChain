@@ -65,9 +65,14 @@ public:
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     bool IsValidShardLeaders(const std::string& id);
 
-    std::unordered_set<std::string> leaders() {
-        std::lock_guard<std::mutex> guard(leaders_mutex_);
-        return leaders_;
+    std::unordered_set<std::string> leaders(uint32_t network_id) {
+        std::lock_guard<std::mutex> guard(network_leaders_mutex_);
+        auto iter = network_leaders_.find(network_id);
+        if (iter != network_leaders_.end()) {
+            return iter->second;
+        }
+
+        return {};
     }
 
 private:
@@ -85,8 +90,8 @@ private:
     std::unordered_map<uint64_t, std::shared_ptr<MemberManager>> elect_members_;
     std::unordered_map<uint32_t, HeightLimitHeapPtr> elect_net_heights_map_;
     std::mutex elect_members_mutex_;
-    std::unordered_set<std::string> leaders_;
-    std::mutex leaders_mutex_;
+    std::unordered_map<uint32_t, std::unordered_set<std::string>> network_leaders_;
+    std::mutex network_leaders_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };
