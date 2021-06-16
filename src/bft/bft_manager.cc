@@ -421,7 +421,6 @@ void BftManager::HandleToAccountTxBlock(
                 BFT_ERROR("dispatch pool failed!");
             }
 
-            std::cout << "create kConsensusFinalStatistic success." << std::endl;
             continue;
         }
 
@@ -1097,7 +1096,6 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    std::cout << "0 LeaderBroadcastToAcc called: " << block_ptr->tx_list(0).type() << ":" << block_ptr->tx_list(0).status() << std::endl;
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
     if (!dht_ptr) {
@@ -1105,7 +1103,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         return;
     }
 
-    std::cout << "1 LeaderBroadcastToAcc called: " << block_ptr->tx_list(0).type() << ":" << block_ptr->tx_list(0).status() << std::endl;
     auto local_node = dht_ptr->local_node();
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         transport::protobuf::Header msg;
@@ -1122,13 +1119,11 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     }
 
     std::set<uint32_t> broadcast_nets;
-    std::cout << "2 LeaderBroadcastToAcc called: " << block_ptr->tx_list(0).type() << ":" << block_ptr->tx_list(0).status() << std::endl;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (tx_list[i].status() == kBftSuccess &&
                 tx_list[i].type() == common::kConsensusFinalStatistic) {
             broadcast_nets.insert(network::kRootCongressNetworkId);
-            std::cout << "common::kConsensusFinalStatistic broadcast to root network." << std::endl;
             continue;
         }
 

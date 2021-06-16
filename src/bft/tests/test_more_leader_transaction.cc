@@ -1921,7 +1921,7 @@ public:
 
         std::vector<transport::protobuf::Header> backup_msgs;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if ((int32_t)i == leader_index) {
+            if (i == leader_index) {
                 continue;
             }
 
@@ -1960,7 +1960,7 @@ public:
         backup_msgs.clear();
 
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if ((int32_t)i == leader_index) {
+            if (i == leader_index) {
                 continue;
             }
 
@@ -1991,7 +1991,7 @@ public:
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         std::cout << "final consensus to elect block." << std::endl;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
-            if ((int32_t)i == leader_index) {
+            if (i == leader_index) {
                 continue;
             }
 
@@ -4103,7 +4103,8 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
                 auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
                     network::kRootCongressNetworkId, *root_id_iter);
                 ASSERT_TRUE(root_mem_ptr != nullptr);
-                if (common::kRootChainPoolIndex % root_leader_count == root_mem_ptr->pool_index_mod_num) {
+                if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
+                        root_mem_ptr->pool_index_mod_num) {
                     CreateNewAccountWithInvalidNode(
                         *root_id_iter,
                         *root_id_iter,
