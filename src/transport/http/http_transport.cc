@@ -67,69 +67,69 @@ static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_
     broad_param->set_neighbor_count(kBftNeighborCount);
 }
 
-static std::string CreateWxAliPayRequest(
-        std::string& gid,
-        std::string& to,
-        uint64_t amount,
-        transport::protobuf::Header& msg) {
-    if (gid.empty()) {
-        gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
-    }
-
-    auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
-            network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId));
-    if (!uni_dht) {
-        return "";
-    }
-
-    msg.set_src_dht_key(uni_dht->local_node()->dht_key());
-    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-    dht::DhtKeyManager dht_key(des_net_id, 0);
-    msg.set_des_dht_key(dht_key.StrKey());
-    msg.set_priority(transport::kTransportPriorityHighest);
-    msg.set_id(common::GlobalInfo::Instance()->MessageId());
-    msg.set_type(common::kBftMessage);
-    msg.set_client(false);
-    msg.set_hop_count(0);
-    auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
-    bft::protobuf::BftMessage bft_msg;
-    bft_msg.set_gid(gid);
-    bft_msg.set_rand(0);
-    bft_msg.set_bft_step(bft::kBftInit);
-    bft_msg.set_leader(false);
-    bft_msg.set_net_id(des_net_id);
-    bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
-    bft::protobuf::TxBft tx_bft;
-    auto new_tx = tx_bft.mutable_new_tx();
-    new_tx->set_gid(gid);
-    new_tx->set_from(common::GlobalInfo::Instance()->id());
-    new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
-    new_tx->set_to(to);
-    new_tx->set_amount(amount);
-    auto tx_data = tx_bft.SerializeAsString();
-    bft_msg.set_data(tx_data);
-
-    auto hash128 = common::Hash::Hash128(tx_data);
-    security::Signature sign;
-    if (!security::Schnorr::Instance()->Sign(
-            hash128,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
-            sign)) {
-        TRANSPORT_ERROR("leader pre commit signature failed!");
-        return "";
-    }
-    std::string sign_challenge_str;
-    std::string sign_response_str;
-    sign.Serialize(sign_challenge_str, sign_response_str);
-    bft_msg.set_sign_challenge(sign_challenge_str);
-    bft_msg.set_sign_response(sign_response_str);
-    msg.set_data(bft_msg.SerializeAsString());
-    return gid;
-}
+// static std::string CreateWxAliPayRequest(
+//         std::string& gid,
+//         std::string& to,
+//         uint64_t amount,
+//         transport::protobuf::Header& msg) {
+//     if (gid.empty()) {
+//         gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+//     }
+// 
+//     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
+//             network::UniversalManager::Instance()->GetUniversal(
+//             network::kUniversalNetworkId));
+//     if (!uni_dht) {
+//         return "";
+//     }
+// 
+//     msg.set_src_dht_key(uni_dht->local_node()->dht_key());
+//     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+//     dht::DhtKeyManager dht_key(des_net_id, 0);
+//     msg.set_des_dht_key(dht_key.StrKey());
+//     msg.set_priority(transport::kTransportPriorityHighest);
+//     msg.set_id(common::GlobalInfo::Instance()->MessageId());
+//     msg.set_type(common::kBftMessage);
+//     msg.set_client(false);
+//     msg.set_hop_count(0);
+//     auto broad_param = msg.mutable_broadcast();
+//     SetDefaultBroadcastParam(broad_param);
+//     bft::protobuf::BftMessage bft_msg;
+//     bft_msg.set_gid(gid);
+//     bft_msg.set_rand(0);
+//     bft_msg.set_bft_step(bft::kBftInit);
+//     bft_msg.set_leader(false);
+//     bft_msg.set_net_id(des_net_id);
+//     bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
+//     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+//     bft::protobuf::TxBft tx_bft;
+//     auto new_tx = tx_bft.mutable_new_tx();
+//     new_tx->set_gid(gid);
+//     new_tx->set_from(common::GlobalInfo::Instance()->id());
+//     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+//     new_tx->set_to(to);
+//     new_tx->set_amount(amount);
+//     auto tx_data = tx_bft.SerializeAsString();
+//     bft_msg.set_data(tx_data);
+// 
+//     auto hash128 = common::Hash::Hash128(tx_data);
+//     security::Signature sign;
+//     if (!security::Schnorr::Instance()->Sign(
+//             hash128,
+//             *(security::Schnorr::Instance()->prikey()),
+//             *(security::Schnorr::Instance()->pubkey()),
+//             sign)) {
+//         TRANSPORT_ERROR("leader pre commit signature failed!");
+//         return "";
+//     }
+//     std::string sign_challenge_str;
+//     std::string sign_response_str;
+//     sign.Serialize(sign_challenge_str, sign_response_str);
+//     bft_msg.set_sign_challenge(sign_challenge_str);
+//     bft_msg.set_sign_response(sign_response_str);
+//     msg.set_data(bft_msg.SerializeAsString());
+//     return gid;
+// }
 
 static void UseLocalCreateTxRequest(
         const nlohmann::json& data,

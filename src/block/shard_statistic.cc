@@ -108,7 +108,7 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
     statistic_info->set_all_tx_count(all_tx_count_);
     statistic_info->set_timeblock_height(latest_tm_height_);
     statistic_info->set_elect_height(latest_tm_height_);
-    for (uint32_t i = 0; i < elect_member_count_; ++i) {
+    for (int32_t i = 0; i < elect_member_count_; ++i) {
         statistic_info->add_succ_tx_count(pool_statistics_[i]);
     }
 }
@@ -124,7 +124,7 @@ void ShardStatistic::CreateStatisticTransaction() {
         common::GlobalInfo::Instance()->network_id());
     // avoid the unreliability of a single leader
     for (auto iter = super_leader_ids.begin(); iter != super_leader_ids.end(); ++iter) {
-        uint32_t pool_idx = 0;
+        int32_t pool_idx = 0;
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(
             common::GlobalInfo::Instance()->network_id(),
             *iter);

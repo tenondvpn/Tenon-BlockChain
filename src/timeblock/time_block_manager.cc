@@ -188,7 +188,7 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
     auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         network::kRootCongressNetworkId);
-    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+    int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
     auto mem_ptr = elect::ElectManager::Instance()->GetMember(

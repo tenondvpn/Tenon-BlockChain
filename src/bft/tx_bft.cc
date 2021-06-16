@@ -95,7 +95,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
             network::kRootCongressNetworkId);
-        auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+        int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
             common::GlobalInfo::Instance()->network_id(),
             common::GlobalInfo::Instance()->id());
         if (mem_index % leader_count == pool_mod_idx) {
@@ -705,7 +705,7 @@ int TxBft::BackupCheckFinalStatistic(
                 return kBftInvalidPackage;
             }
 
-            for (uint32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
+            for (int32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
                 if (leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count(i)) {
                     return kBftInvalidPackage;
                 }

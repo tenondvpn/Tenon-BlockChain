@@ -1989,7 +1989,6 @@ public:
         }
 
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
-        std::cout << "final consensus to elect block." << std::endl;
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
             if (i == leader_index) {
                 continue;

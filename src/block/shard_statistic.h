@@ -32,7 +32,7 @@ private:
     std::mutex pool_statistics_mutex_;
     std::unordered_set<uint32_t> valid_pool_;
     uint32_t all_tx_count_{ 0 };
-    uint32_t elect_member_count_{ 0 };
+    int32_t elect_member_count_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(ShardStatistic);
 };
