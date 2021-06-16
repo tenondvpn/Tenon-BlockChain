@@ -530,13 +530,19 @@ int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
     return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
 }
 
-bool ElectManager::IsValidShardLeaders(const std::string& id) {
+bool ElectManager::IsValidShardLeaders(uint32_t network_id, const std::string& id) {
     // Each shard has a certain number of leaders
     // for the generation of public transaction blocks
     // if transaction create by this node, no balance change
     // and backup also check leader valid.
-    std::lock_guard<std::mutex> guard(leaders_mutex_);
-    return leaders_.find(id) != leaders_.end();
+    std::lock_guard<std::mutex> guard(network_leaders_mutex_);
+    auto iter = network_leaders_.find(network_id);
+    if (iter == network_leaders_.end()) {
+        return false;
+    }
+
+
+    return iter->second.find(id) != iter->second.end();
 }
 
 }  // namespace elect
