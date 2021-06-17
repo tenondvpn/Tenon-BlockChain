@@ -2017,7 +2017,9 @@ public:
                 auto tx_info = tx_list->Add();
                 tx_info->set_version(common::kTransactionVersion);
                 tx_info->set_gid(common::CreateGID(""));
-                tx_info->set_from(address);
+                tx_info->set_from(GetValidPoolBaseAddr(
+                    network::kConsensusShardBeginNetworkId,
+                    common::GetPoolIndex(address)));
                 tx_info->set_from_pubkey(pubkey_str);
                 tx_info->set_from_sign("");
                 tx_info->set_to("");
