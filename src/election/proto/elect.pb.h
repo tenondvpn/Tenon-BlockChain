@@ -220,10 +220,10 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_sign();
   void set_allocated_sign(::std::string* sign);
 
-  // optional bytes dht_key = 6;
+  // optional bytes dht_key = 5;
   bool has_dht_key() const;
   void clear_dht_key();
-  static const int kDhtKeyFieldNumber = 6;
+  static const int kDhtKeyFieldNumber = 5;
   const ::std::string& dht_key() const;
   void set_dht_key(const ::std::string& value);
   #if LANG_CXX11
@@ -235,10 +235,10 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_dht_key();
   void set_allocated_dht_key(::std::string* dht_key);
 
-  // optional bytes public_ip = 8;
+  // optional bytes public_ip = 7;
   bool has_public_ip() const;
   void clear_public_ip();
-  static const int kPublicIpFieldNumber = 8;
+  static const int kPublicIpFieldNumber = 7;
   const ::std::string& public_ip() const;
   void set_public_ip(const ::std::string& value);
   #if LANG_CXX11
@@ -250,10 +250,10 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_public_ip();
   void set_allocated_public_ip(::std::string* public_ip);
 
-  // optional bytes local_ip = 10;
+  // optional bytes local_ip = 9;
   bool has_local_ip() const;
   void clear_local_ip();
-  static const int kLocalIpFieldNumber = 10;
+  static const int kLocalIpFieldNumber = 9;
   const ::std::string& local_ip() const;
   void set_local_ip(const ::std::string& value);
   #if LANG_CXX11
@@ -265,45 +265,38 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_local_ip();
   void set_allocated_local_ip(::std::string* local_ip);
 
-  // optional uint32 net_id = 4;
-  bool has_net_id() const;
-  void clear_net_id();
-  static const int kNetIdFieldNumber = 4;
-  ::google::protobuf::uint32 net_id() const;
-  void set_net_id(::google::protobuf::uint32 value);
-
-  // optional uint32 country = 5;
+  // optional uint32 country = 4;
   bool has_country() const;
   void clear_country();
-  static const int kCountryFieldNumber = 5;
+  static const int kCountryFieldNumber = 4;
   ::google::protobuf::uint32 country() const;
   void set_country(::google::protobuf::uint32 value);
 
-  // optional int32 nat_type = 7;
+  // optional int32 nat_type = 6;
   bool has_nat_type() const;
   void clear_nat_type();
-  static const int kNatTypeFieldNumber = 7;
+  static const int kNatTypeFieldNumber = 6;
   ::google::protobuf::int32 nat_type() const;
   void set_nat_type(::google::protobuf::int32 value);
 
-  // optional uint32 public_port = 9;
+  // optional uint32 public_port = 8;
   bool has_public_port() const;
   void clear_public_port();
-  static const int kPublicPortFieldNumber = 9;
+  static const int kPublicPortFieldNumber = 8;
   ::google::protobuf::uint32 public_port() const;
   void set_public_port(::google::protobuf::uint32 value);
 
-  // optional uint32 local_port = 11;
+  // optional uint32 local_port = 10;
   bool has_local_port() const;
   void clear_local_port();
-  static const int kLocalPortFieldNumber = 11;
+  static const int kLocalPortFieldNumber = 10;
   ::google::protobuf::uint32 local_port() const;
   void set_local_port(::google::protobuf::uint32 value);
 
-  // optional int32 pool_idx_mod_num = 12;
+  // optional int32 pool_idx_mod_num = 11;
   bool has_pool_idx_mod_num() const;
   void clear_pool_idx_mod_num();
-  static const int kPoolIdxModNumFieldNumber = 12;
+  static const int kPoolIdxModNumFieldNumber = 11;
   ::google::protobuf::int32 pool_idx_mod_num() const;
   void set_pool_idx_mod_num(::google::protobuf::int32 value);
 
@@ -315,8 +308,6 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_pubkey();
   void set_has_sign();
   void clear_has_sign();
-  void set_has_net_id();
-  void clear_has_net_id();
   void set_has_country();
   void clear_has_country();
   void set_has_dht_key();
@@ -343,7 +334,6 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::ArenaStringPtr dht_key_;
   ::google::protobuf::internal::ArenaStringPtr public_ip_;
   ::google::protobuf::internal::ArenaStringPtr local_ip_;
-  ::google::protobuf::uint32 net_id_;
   ::google::protobuf::uint32 country_;
   ::google::protobuf::int32 nat_type_;
   ::google::protobuf::uint32 public_port_;
@@ -508,6 +498,13 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::int32 leader_count() const;
   void set_leader_count(::google::protobuf::int32 value);
 
+  // optional uint32 shard_network_id = 6;
+  bool has_shard_network_id() const;
+  void clear_shard_network_id();
+  static const int kShardNetworkIdFieldNumber = 6;
+  ::google::protobuf::uint32 shard_network_id() const;
+  void set_shard_network_id(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectBlock)
  private:
   void set_has_acc_pubkey();
@@ -516,6 +513,8 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_acc_sign();
   void set_has_leader_count();
   void clear_has_leader_count();
+  void set_has_shard_network_id();
+  void clear_has_shard_network_id();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -525,6 +524,7 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr acc_pubkey_;
   ::google::protobuf::internal::ArenaStringPtr acc_sign_;
   ::google::protobuf::int32 leader_count_;
+  ::google::protobuf::uint32 shard_network_id_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1218,39 +1218,15 @@ inline void member::set_allocated_sign(::std::string* sign) {
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.member.sign)
 }
 
-// optional uint32 net_id = 4;
-inline bool member::has_net_id() const {
+// optional uint32 country = 4;
+inline bool member::has_country() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void member::set_has_net_id() {
+inline void member::set_has_country() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void member::clear_has_net_id() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void member::clear_net_id() {
-  net_id_ = 0u;
-  clear_has_net_id();
-}
-inline ::google::protobuf::uint32 member::net_id() const {
-  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.member.net_id)
-  return net_id_;
-}
-inline void member::set_net_id(::google::protobuf::uint32 value) {
-  set_has_net_id();
-  net_id_ = value;
-  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.net_id)
-}
-
-// optional uint32 country = 5;
-inline bool member::has_country() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void member::set_has_country() {
-  _has_bits_[0] |= 0x00000080u;
-}
 inline void member::clear_has_country() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void member::clear_country() {
   country_ = 0u;
@@ -1266,7 +1242,7 @@ inline void member::set_country(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.country)
 }
 
-// optional bytes dht_key = 6;
+// optional bytes dht_key = 5;
 inline bool member::has_dht_key() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1332,15 +1308,15 @@ inline void member::set_allocated_dht_key(::std::string* dht_key) {
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.member.dht_key)
 }
 
-// optional int32 nat_type = 7;
+// optional int32 nat_type = 6;
 inline bool member::has_nat_type() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void member::set_has_nat_type() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void member::clear_has_nat_type() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void member::clear_nat_type() {
   nat_type_ = 0;
@@ -1356,7 +1332,7 @@ inline void member::set_nat_type(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.nat_type)
 }
 
-// optional bytes public_ip = 8;
+// optional bytes public_ip = 7;
 inline bool member::has_public_ip() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -1422,15 +1398,15 @@ inline void member::set_allocated_public_ip(::std::string* public_ip) {
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.member.public_ip)
 }
 
-// optional uint32 public_port = 9;
+// optional uint32 public_port = 8;
 inline bool member::has_public_port() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void member::set_has_public_port() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void member::clear_has_public_port() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void member::clear_public_port() {
   public_port_ = 0u;
@@ -1446,7 +1422,7 @@ inline void member::set_public_port(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.public_port)
 }
 
-// optional bytes local_ip = 10;
+// optional bytes local_ip = 9;
 inline bool member::has_local_ip() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
@@ -1512,15 +1488,15 @@ inline void member::set_allocated_local_ip(::std::string* local_ip) {
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.member.local_ip)
 }
 
-// optional uint32 local_port = 11;
+// optional uint32 local_port = 10;
 inline bool member::has_local_port() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void member::set_has_local_port() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void member::clear_has_local_port() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void member::clear_local_port() {
   local_port_ = 0u;
@@ -1536,15 +1512,15 @@ inline void member::set_local_port(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.local_port)
 }
 
-// optional int32 pool_idx_mod_num = 12;
+// optional int32 pool_idx_mod_num = 11;
 inline bool member::has_pool_idx_mod_num() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void member::set_has_pool_idx_mod_num() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void member::clear_has_pool_idx_mod_num() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void member::clear_pool_idx_mod_num() {
   pool_idx_mod_num_ = 0;
@@ -1778,6 +1754,30 @@ inline void ElectBlock::set_leader_count(::google::protobuf::int32 value) {
   set_has_leader_count();
   leader_count_ = value;
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.leader_count)
+}
+
+// optional uint32 shard_network_id = 6;
+inline bool ElectBlock::has_shard_network_id() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ElectBlock::set_has_shard_network_id() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ElectBlock::clear_has_shard_network_id() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ElectBlock::clear_shard_network_id() {
+  shard_network_id_ = 0u;
+  clear_has_shard_network_id();
+}
+inline ::google::protobuf::uint32 ElectBlock::shard_network_id() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.shard_network_id)
+  return shard_network_id_;
+}
+inline void ElectBlock::set_shard_network_id(::google::protobuf::uint32 value) {
+  set_has_shard_network_id();
+  shard_network_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.shard_network_id)
 }
 
 // -------------------------------------------------------------------

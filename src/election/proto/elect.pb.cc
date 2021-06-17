@@ -150,7 +150,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, sign_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, net_id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, country_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, dht_key_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::member, nat_type_),
@@ -163,14 +162,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   1,
   2,
   6,
-  7,
   3,
-  8,
+  7,
   4,
-  9,
+  8,
   5,
+  9,
   10,
-  11,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -181,11 +179,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, acc_pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, acc_sign_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, leader_count_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, shard_network_id_),
   ~0u,
   ~0u,
   0,
   1,
   2,
+  3,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -227,8 +227,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   5,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 17, sizeof(::tenon::elect::protobuf::member)},
-  { 29, 39, sizeof(::tenon::elect::protobuf::ElectBlock)},
+  { 0, 16, sizeof(::tenon::elect::protobuf::member)},
+  { 27, 38, sizeof(::tenon::elect::protobuf::ElectBlock)},
   { 44, 51, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
   { 53, 62, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
   { 66, 77, sizeof(::tenon::elect::protobuf::ElectMessage)},
@@ -263,31 +263,31 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\013elect.proto\022\024tenon.elect.protobuf\"\336\001\n\006"
+      "\n\013elect.proto\022\024tenon.elect.protobuf\"\316\001\n\006"
       "member\022\n\n\002id\030\001 \001(\014\022\016\n\006pubkey\030\002 \001(\014\022\014\n\004si"
-      "gn\030\003 \001(\014\022\016\n\006net_id\030\004 \001(\r\022\017\n\007country\030\005 \001("
-      "\r\022\017\n\007dht_key\030\006 \001(\014\022\020\n\010nat_type\030\007 \001(\005\022\021\n\t"
-      "public_ip\030\010 \001(\014\022\023\n\013public_port\030\t \001(\r\022\020\n\010"
-      "local_ip\030\n \001(\014\022\022\n\nlocal_port\030\013 \001(\r\022\030\n\020po"
-      "ol_idx_mod_num\030\014 \001(\005\"\235\001\n\nElectBlock\022(\n\002i"
-      "n\030\001 \003(\0132\034.tenon.elect.protobuf.member\022)\n"
-      "\003out\030\002 \003(\0132\034.tenon.elect.protobuf.member"
-      "\022\022\n\nacc_pubkey\030\003 \001(\014\022\020\n\010acc_sign\030\004 \001(\014\022\024"
-      "\n\014leader_count\030\005 \001(\005\"E\n\023WaitingNodesMess"
-      "age\022\024\n\014nodes_filter\030\001 \003(\004\022\030\n\020waiting_sha"
-      "rd_id\030\002 \001(\r\"i\n\024WaitingNodeHeartbeat\022\021\n\tp"
-      "ublic_ip\030\001 \001(\014\022\023\n\013public_port\030\002 \001(\r\022\022\n\nn"
-      "etwork_id\030\003 \001(\r\022\025\n\rtimestamp_sec\030\004 \001(\004\"\201"
-      "\002\n\014ElectMessage\0225\n\013elect_block\030\001 \001(\0132 .t"
-      "enon.elect.protobuf.ElectBlock\022@\n\rwaitin"
-      "g_nodes\030\002 \001(\0132).tenon.elect.protobuf.Wai"
-      "tingNodesMessage\022\016\n\006pubkey\030\003 \001(\014\022\017\n\007sign"
-      "_ch\030\004 \001(\014\022\020\n\010sign_res\030\005 \001(\014\022E\n\021waiting_h"
-      "eartbeat\030\006 \001(\0132*.tenon.elect.protobuf.Wa"
-      "itingNodeHeartbeat"
+      "gn\030\003 \001(\014\022\017\n\007country\030\004 \001(\r\022\017\n\007dht_key\030\005 \001"
+      "(\014\022\020\n\010nat_type\030\006 \001(\005\022\021\n\tpublic_ip\030\007 \001(\014\022"
+      "\023\n\013public_port\030\010 \001(\r\022\020\n\010local_ip\030\t \001(\014\022\022"
+      "\n\nlocal_port\030\n \001(\r\022\030\n\020pool_idx_mod_num\030\013"
+      " \001(\005\"\267\001\n\nElectBlock\022(\n\002in\030\001 \003(\0132\034.tenon."
+      "elect.protobuf.member\022)\n\003out\030\002 \003(\0132\034.ten"
+      "on.elect.protobuf.member\022\022\n\nacc_pubkey\030\003"
+      " \001(\014\022\020\n\010acc_sign\030\004 \001(\014\022\024\n\014leader_count\030\005"
+      " \001(\005\022\030\n\020shard_network_id\030\006 \001(\r\"E\n\023Waitin"
+      "gNodesMessage\022\024\n\014nodes_filter\030\001 \003(\004\022\030\n\020w"
+      "aiting_shard_id\030\002 \001(\r\"i\n\024WaitingNodeHear"
+      "tbeat\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013public_port\030"
+      "\002 \001(\r\022\022\n\nnetwork_id\030\003 \001(\r\022\025\n\rtimestamp_s"
+      "ec\030\004 \001(\004\"\201\002\n\014ElectMessage\0225\n\013elect_block"
+      "\030\001 \001(\0132 .tenon.elect.protobuf.ElectBlock"
+      "\022@\n\rwaiting_nodes\030\002 \001(\0132).tenon.elect.pr"
+      "otobuf.WaitingNodesMessage\022\016\n\006pubkey\030\003 \001"
+      "(\014\022\017\n\007sign_ch\030\004 \001(\014\022\020\n\010sign_res\030\005 \001(\014\022E\n"
+      "\021waiting_heartbeat\030\006 \001(\0132*.tenon.elect.p"
+      "rotobuf.WaitingNodeHeartbeat"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 858);
+      descriptor, 868);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -315,7 +315,6 @@ void member::InitAsDefaultInstance() {
 const int member::kIdFieldNumber;
 const int member::kPubkeyFieldNumber;
 const int member::kSignFieldNumber;
-const int member::kNetIdFieldNumber;
 const int member::kCountryFieldNumber;
 const int member::kDhtKeyFieldNumber;
 const int member::kNatTypeFieldNumber;
@@ -362,9 +361,9 @@ member::member(const member& from)
   if (from.has_local_ip()) {
     local_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.local_ip_);
   }
-  ::memcpy(&net_id_, &from.net_id_,
+  ::memcpy(&country_, &from.country_,
     static_cast<size_t>(reinterpret_cast<char*>(&pool_idx_mod_num_) -
-    reinterpret_cast<char*>(&net_id_)) + sizeof(pool_idx_mod_num_));
+    reinterpret_cast<char*>(&country_)) + sizeof(pool_idx_mod_num_));
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.member)
 }
 
@@ -375,9 +374,9 @@ void member::SharedCtor() {
   dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   local_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&net_id_, 0, static_cast<size_t>(
+  ::memset(&country_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&pool_idx_mod_num_) -
-      reinterpret_cast<char*>(&net_id_)) + sizeof(pool_idx_mod_num_));
+      reinterpret_cast<char*>(&country_)) + sizeof(pool_idx_mod_num_));
 }
 
 member::~member() {
@@ -436,14 +435,14 @@ void member::Clear() {
     }
   }
   if (cached_has_bits & 192u) {
-    ::memset(&net_id_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&country_) -
-        reinterpret_cast<char*>(&net_id_)) + sizeof(country_));
+    ::memset(&country_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&nat_type_) -
+        reinterpret_cast<char*>(&country_)) + sizeof(nat_type_));
   }
-  if (cached_has_bits & 3840u) {
-    ::memset(&nat_type_, 0, static_cast<size_t>(
+  if (cached_has_bits & 1792u) {
+    ::memset(&public_port_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&pool_idx_mod_num_) -
-        reinterpret_cast<char*>(&nat_type_)) + sizeof(pool_idx_mod_num_));
+        reinterpret_cast<char*>(&public_port_)) + sizeof(pool_idx_mod_num_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -495,24 +494,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint32 net_id = 4;
+      // optional uint32 country = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
-          set_has_net_id();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &net_id_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional uint32 country = 5;
-      case 5: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
           set_has_country();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
@@ -523,10 +508,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes dht_key = 6;
-      case 6: {
+      // optional bytes dht_key = 5;
+      case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_dht_key()));
         } else {
@@ -535,10 +520,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 nat_type = 7;
-      case 7: {
+      // optional int32 nat_type = 6;
+      case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(56u /* 56 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
           set_has_nat_type();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -549,10 +534,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes public_ip = 8;
-      case 8: {
+      // optional bytes public_ip = 7;
+      case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_public_ip()));
         } else {
@@ -561,10 +546,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint32 public_port = 9;
-      case 9: {
+      // optional uint32 public_port = 8;
+      case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(72u /* 72 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(64u /* 64 & 0xFF */)) {
           set_has_public_port();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
@@ -575,10 +560,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes local_ip = 10;
-      case 10: {
+      // optional bytes local_ip = 9;
+      case 9: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(82u /* 82 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(74u /* 74 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_local_ip()));
         } else {
@@ -587,10 +572,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint32 local_port = 11;
-      case 11: {
+      // optional uint32 local_port = 10;
+      case 10: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(88u /* 88 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(80u /* 80 & 0xFF */)) {
           set_has_local_port();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
@@ -601,10 +586,10 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 pool_idx_mod_num = 12;
-      case 12: {
+      // optional int32 pool_idx_mod_num = 11;
+      case 11: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(96u /* 96 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(88u /* 88 & 0xFF */)) {
           set_has_pool_idx_mod_num();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -660,52 +645,47 @@ void member::SerializeWithCachedSizes(
       3, this->sign(), output);
   }
 
-  // optional uint32 net_id = 4;
+  // optional uint32 country = 4;
   if (cached_has_bits & 0x00000040u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->net_id(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->country(), output);
   }
 
-  // optional uint32 country = 5;
-  if (cached_has_bits & 0x00000080u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->country(), output);
-  }
-
-  // optional bytes dht_key = 6;
+  // optional bytes dht_key = 5;
   if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      6, this->dht_key(), output);
+      5, this->dht_key(), output);
   }
 
-  // optional int32 nat_type = 7;
-  if (cached_has_bits & 0x00000100u) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->nat_type(), output);
+  // optional int32 nat_type = 6;
+  if (cached_has_bits & 0x00000080u) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->nat_type(), output);
   }
 
-  // optional bytes public_ip = 8;
+  // optional bytes public_ip = 7;
   if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      8, this->public_ip(), output);
+      7, this->public_ip(), output);
   }
 
-  // optional uint32 public_port = 9;
-  if (cached_has_bits & 0x00000200u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(9, this->public_port(), output);
+  // optional uint32 public_port = 8;
+  if (cached_has_bits & 0x00000100u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(8, this->public_port(), output);
   }
 
-  // optional bytes local_ip = 10;
+  // optional bytes local_ip = 9;
   if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      10, this->local_ip(), output);
+      9, this->local_ip(), output);
   }
 
-  // optional uint32 local_port = 11;
+  // optional uint32 local_port = 10;
+  if (cached_has_bits & 0x00000200u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->local_port(), output);
+  }
+
+  // optional int32 pool_idx_mod_num = 11;
   if (cached_has_bits & 0x00000400u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(11, this->local_port(), output);
-  }
-
-  // optional int32 pool_idx_mod_num = 12;
-  if (cached_has_bits & 0x00000800u) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(12, this->pool_idx_mod_num(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->pool_idx_mod_num(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -744,55 +724,50 @@ void member::SerializeWithCachedSizes(
         3, this->sign(), target);
   }
 
-  // optional uint32 net_id = 4;
+  // optional uint32 country = 4;
   if (cached_has_bits & 0x00000040u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->net_id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->country(), target);
   }
 
-  // optional uint32 country = 5;
-  if (cached_has_bits & 0x00000080u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->country(), target);
-  }
-
-  // optional bytes dht_key = 6;
+  // optional bytes dht_key = 5;
   if (cached_has_bits & 0x00000008u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        6, this->dht_key(), target);
+        5, this->dht_key(), target);
   }
 
-  // optional int32 nat_type = 7;
-  if (cached_has_bits & 0x00000100u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->nat_type(), target);
+  // optional int32 nat_type = 6;
+  if (cached_has_bits & 0x00000080u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->nat_type(), target);
   }
 
-  // optional bytes public_ip = 8;
+  // optional bytes public_ip = 7;
   if (cached_has_bits & 0x00000010u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        8, this->public_ip(), target);
+        7, this->public_ip(), target);
   }
 
-  // optional uint32 public_port = 9;
-  if (cached_has_bits & 0x00000200u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(9, this->public_port(), target);
+  // optional uint32 public_port = 8;
+  if (cached_has_bits & 0x00000100u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(8, this->public_port(), target);
   }
 
-  // optional bytes local_ip = 10;
+  // optional bytes local_ip = 9;
   if (cached_has_bits & 0x00000020u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        10, this->local_ip(), target);
+        9, this->local_ip(), target);
   }
 
-  // optional uint32 local_port = 11;
+  // optional uint32 local_port = 10;
+  if (cached_has_bits & 0x00000200u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->local_port(), target);
+  }
+
+  // optional int32 pool_idx_mod_num = 11;
   if (cached_has_bits & 0x00000400u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(11, this->local_port(), target);
-  }
-
-  // optional int32 pool_idx_mod_num = 12;
-  if (cached_has_bits & 0x00000800u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(12, this->pool_idx_mod_num(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->pool_idx_mod_num(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -834,65 +809,58 @@ size_t member::ByteSizeLong() const {
           this->sign());
     }
 
-    // optional bytes dht_key = 6;
+    // optional bytes dht_key = 5;
     if (has_dht_key()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->dht_key());
     }
 
-    // optional bytes public_ip = 8;
+    // optional bytes public_ip = 7;
     if (has_public_ip()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->public_ip());
     }
 
-    // optional bytes local_ip = 10;
+    // optional bytes local_ip = 9;
     if (has_local_ip()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->local_ip());
     }
 
-    // optional uint32 net_id = 4;
-    if (has_net_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->net_id());
-    }
-
-    // optional uint32 country = 5;
+    // optional uint32 country = 4;
     if (has_country()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->country());
     }
 
-  }
-  if (_has_bits_[8 / 32] & 3840u) {
-    // optional int32 nat_type = 7;
+    // optional int32 nat_type = 6;
     if (has_nat_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->nat_type());
     }
 
-    // optional uint32 public_port = 9;
+  }
+  if (_has_bits_[8 / 32] & 1792u) {
+    // optional uint32 public_port = 8;
     if (has_public_port()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->public_port());
     }
 
-    // optional uint32 local_port = 11;
+    // optional uint32 local_port = 10;
     if (has_local_port()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->local_port());
     }
 
-    // optional int32 pool_idx_mod_num = 12;
+    // optional int32 pool_idx_mod_num = 11;
     if (has_pool_idx_mod_num()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -954,24 +922,21 @@ void member::MergeFrom(const member& from) {
       local_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.local_ip_);
     }
     if (cached_has_bits & 0x00000040u) {
-      net_id_ = from.net_id_;
+      country_ = from.country_;
     }
     if (cached_has_bits & 0x00000080u) {
-      country_ = from.country_;
+      nat_type_ = from.nat_type_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 3840u) {
+  if (cached_has_bits & 1792u) {
     if (cached_has_bits & 0x00000100u) {
-      nat_type_ = from.nat_type_;
-    }
-    if (cached_has_bits & 0x00000200u) {
       public_port_ = from.public_port_;
     }
-    if (cached_has_bits & 0x00000400u) {
+    if (cached_has_bits & 0x00000200u) {
       local_port_ = from.local_port_;
     }
-    if (cached_has_bits & 0x00000800u) {
+    if (cached_has_bits & 0x00000400u) {
       pool_idx_mod_num_ = from.pool_idx_mod_num_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -1014,7 +979,6 @@ void member::InternalSwap(member* other) {
     GetArenaNoVirtual());
   local_ip_.Swap(&other->local_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  swap(net_id_, other->net_id_);
   swap(country_, other->country_);
   swap(nat_type_, other->nat_type_);
   swap(public_port_, other->public_port_);
@@ -1040,6 +1004,7 @@ const int ElectBlock::kOutFieldNumber;
 const int ElectBlock::kAccPubkeyFieldNumber;
 const int ElectBlock::kAccSignFieldNumber;
 const int ElectBlock::kLeaderCountFieldNumber;
+const int ElectBlock::kShardNetworkIdFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ElectBlock::ElectBlock()
@@ -1064,14 +1029,18 @@ ElectBlock::ElectBlock(const ElectBlock& from)
   if (from.has_acc_sign()) {
     acc_sign_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.acc_sign_);
   }
-  leader_count_ = from.leader_count_;
+  ::memcpy(&leader_count_, &from.leader_count_,
+    static_cast<size_t>(reinterpret_cast<char*>(&shard_network_id_) -
+    reinterpret_cast<char*>(&leader_count_)) + sizeof(shard_network_id_));
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.ElectBlock)
 }
 
 void ElectBlock::SharedCtor() {
   acc_pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   acc_sign_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  leader_count_ = 0;
+  ::memset(&leader_count_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&shard_network_id_) -
+      reinterpret_cast<char*>(&leader_count_)) + sizeof(shard_network_id_));
 }
 
 ElectBlock::~ElectBlock() {
@@ -1115,7 +1084,11 @@ void ElectBlock::Clear() {
       acc_sign_.ClearNonDefaultToEmptyNoArena();
     }
   }
-  leader_count_ = 0;
+  if (cached_has_bits & 12u) {
+    ::memset(&leader_count_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&shard_network_id_) -
+        reinterpret_cast<char*>(&leader_count_)) + sizeof(shard_network_id_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1192,6 +1165,20 @@ bool ElectBlock::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 shard_network_id = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
+          set_has_shard_network_id();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &shard_network_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1254,6 +1241,11 @@ void ElectBlock::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->leader_count(), output);
   }
 
+  // optional uint32 shard_network_id = 6;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->shard_network_id(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -1304,6 +1296,11 @@ void ElectBlock::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->leader_count(), target);
   }
 
+  // optional uint32 shard_network_id = 6;
+  if (cached_has_bits & 0x00000008u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->shard_network_id(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -1343,7 +1340,7 @@ size_t ElectBlock::ByteSizeLong() const {
     }
   }
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 15u) {
     // optional bytes acc_pubkey = 3;
     if (has_acc_pubkey()) {
       total_size += 1 +
@@ -1363,6 +1360,13 @@ size_t ElectBlock::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->leader_count());
+    }
+
+    // optional uint32 shard_network_id = 6;
+    if (has_shard_network_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->shard_network_id());
     }
 
   }
@@ -1396,7 +1400,7 @@ void ElectBlock::MergeFrom(const ElectBlock& from) {
   in_.MergeFrom(from.in_);
   out_.MergeFrom(from.out_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_acc_pubkey();
       acc_pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.acc_pubkey_);
@@ -1407,6 +1411,9 @@ void ElectBlock::MergeFrom(const ElectBlock& from) {
     }
     if (cached_has_bits & 0x00000004u) {
       leader_count_ = from.leader_count_;
+    }
+    if (cached_has_bits & 0x00000008u) {
+      shard_network_id_ = from.shard_network_id_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -1443,6 +1450,7 @@ void ElectBlock::InternalSwap(ElectBlock* other) {
   acc_sign_.Swap(&other->acc_sign_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(leader_count_, other->leader_count_);
+  swap(shard_network_id_, other->shard_network_id_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
