@@ -284,24 +284,26 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         if (iter == waiting_pool_map_.end()) {
             ELECT_ERROR("find waiting shard network failed [%u]!",
                 shard_netid + network::kConsensusWaitingShardOffset);
-            return kElectError;
+        } else {
+            waiting_pool_ptr = iter->second;
+        }
+    }
+
+    if (waiting_pool_ptr != nullptr) {
+        std::vector<NodeDetailPtr> pick_all_vec;
+        waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
+        if (pick_all_vec.empty()) {
+            return kElectSuccess;
         }
 
-        waiting_pool_ptr = iter->second;
+        FtsGetNodes(
+            false,
+            weed_out_count,
+            pick_in,
+            pick_all_vec,
+            pick_in_vec);
     }
-
-    std::vector<NodeDetailPtr> pick_all_vec;
-    waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
-    if (pick_all_vec.empty()) {
-        return kElectSuccess;
-    }
-
-    FtsGetNodes(
-        false,
-        weed_out_count,
-        pick_in,
-        pick_all_vec,
-        pick_in_vec);
+    
     FtsGetNodes(
         true,
         pick_in_vec.size(),
@@ -409,6 +411,11 @@ void ElectPoolManager::SmoothFtsValue(
     sort_vec[0]->fts_value = 100llu;  // diff with default node fts value 0
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
+        if (fts_val_diff == 0) {
+            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value;
+            continue;
+        }
+
         if (fts_val_diff < diff_2b3) {
             auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
             sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / diff_2b3;

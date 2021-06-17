@@ -4369,34 +4369,19 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
     for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
         iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
         auto id = GetIdByPrikey(*iter);
-        if (leaders.find(id) != leaders.end()) {
-            SetGloableInfo(
-                common::Encode::HexEncode(*iter),
-                network::kRootCongressNetworkId);
-            transport::protobuf::Header broadcast_msg;
-            RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &broadcast_msg);
-            auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
-            auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
-                network::kRootCongressNetworkId);
-            for (auto root_id_iter = root_leaders.begin();
-                root_id_iter != root_leaders.end(); ++root_id_iter) {
-                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
-                    network::kRootCongressNetworkId, *root_id_iter);
-                ASSERT_TRUE(root_mem_ptr != nullptr);
-                if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
-                        root_mem_ptr->pool_index_mod_num) {
-                    CreateNewAccountWithInvalidNode(
-                        *root_id_iter,
-                        *root_id_iter,
-                        false,
-                        common::kConsensusRootElectShard,
-                        broadcast_msg,
-                        &root_broadcast_msg);
-                    create_elect_block = true;
-                    break;
-                }
-            }
-
+        SetGloableInfo(
+            common::Encode::HexEncode(*iter),
+            network::kRootCongressNetworkId);
+        transport::protobuf::Header broadcast_msg;
+        auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+            network::kRootCongressNetworkId);
+        auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+            network::kRootCongressNetworkId, id);
+        ASSERT_TRUE(root_mem_ptr != nullptr);
+        if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
+                root_mem_ptr->pool_index_mod_num) {
+            RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &root_broadcast_msg);
+            create_elect_block = true;
             break;
         }
     }

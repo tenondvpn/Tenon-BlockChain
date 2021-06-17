@@ -380,8 +380,6 @@ int TxBft::RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
     if (block.tx_list_size() == 1) {
         switch (block.tx_list(0).type())
         {
-        case common::kConsensusRootElectRoot:
-            break;
         case common::kConsensusRootElectShard:
             return RootBackupCheckElectConsensusShardPrepare(block);
             break;
@@ -1981,8 +1979,6 @@ void TxBft::RootLeaderCreateTxBlock(
     if (tx_vec.size() == 1) {
         switch (tx_vec[0]->tx.type())
         {
-        case common::kConsensusRootElectRoot:
-            break;
         case common::kConsensusRootElectShard:
             RootLeaderCreateElectConsensusShardBlock(pool_idx, tx_vec, ltx_msg);
             break;

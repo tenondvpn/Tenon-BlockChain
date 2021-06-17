@@ -153,7 +153,6 @@ int AccountManager::HandleRootSingleBlockTx(
         uint64_t height,
         const bft::protobuf::TxInfo& tx_info) {
     switch (tx_info.type()) {
-    case common::kConsensusRootElectRoot:
     case common::kConsensusRootElectShard:
         return HandleElectBlock(height, tx_info);
     case common::kConsensusRootTimeBlock:
@@ -588,8 +587,7 @@ int AccountManager::SetAccountAttrs(
                 (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add())) {
             if (exist_height <= tmp_now_height) {
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
-                    if (tx_info.type() == common::kConsensusRootElectShard ||
-                            tx_info.type() == common::kConsensusRootElectRoot) {
+                    if (tx_info.type() == common::kConsensusRootElectShard) {
                         if (tx_info.attr(attr_idx).key() == elect::kElectNodeAttrElectBlock) {
                             account_info->AddNewElectBlock(
                                 tx_info.network_id(),
