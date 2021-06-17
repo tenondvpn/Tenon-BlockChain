@@ -124,7 +124,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     bft::protobuf::TxBft tx_bft;
     auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        std::cout << "root create tx block: " << tx_vec[0]->tx.type() << std::endl;
         RootLeaderCreateTxBlock(pool_index, tx_vec, ltx_prepare);
     } else {
         LeaderCreateTxBlock(tx_vec, ltx_prepare);
@@ -430,7 +429,6 @@ int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    std::cout << "BackupCheckFinalStatistic success!" << std::endl;
     push_bft_item_vec(tx_info.gid());
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
@@ -468,7 +466,6 @@ int TxBft::RootBackupCheckStatistic(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    std::cout << "BackupCheckStatistic success!" << std::endl;
     push_bft_item_vec(tx_info.gid());
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {

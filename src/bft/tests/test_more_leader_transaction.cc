@@ -620,7 +620,6 @@ public:
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         if (tx_type == common::kConsensusStatistic) {
-            std::cout << "CreateNewTransaction called!" << std::endl;
             new_tx->set_type(common::kConsensusStatistic);
             new_tx->set_from(from_prikey);
             ASSERT_TRUE(!new_tx->from().empty());
