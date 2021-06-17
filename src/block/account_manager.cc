@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "common/encode.h"
+#include "bft/dispatch_pool.h"
 #include "statistics/statistics.h"
 #include "contract/contract_manager.h"
 #include "db/db.h"
@@ -157,11 +158,37 @@ int AccountManager::HandleRootSingleBlockTx(
         return HandleElectBlock(height, tx_info);
     case common::kConsensusRootTimeBlock:
         return HandleTimeBlock(height, tx_info);
-        break;
     case common::kConsensusRootVssBlock:
         break;
+    case common::kConsensusFinalStatistic:
+        return HandleFinalStatisticBlock(height, tx_info);
     default:
         break;
+    }
+
+    return kBlockSuccess;
+}
+
+int AccountManager::HandleFinalStatisticBlock(
+        uint64_t height,
+        const bft::protobuf::TxInfo& tx_info) {
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        // add elect root transaction
+        bft::protobuf::TxInfo elect_tx;
+        if (elect::ElectManager::Instance()->CreateElectTransaction(
+                tx_info.network_id(),
+                tx_info,
+                elect_tx) != elect::kElectSuccess) {
+            BFT_ERROR("create elect transaction error!");
+            return kBlockError;
+        }
+
+        if (bft::DispatchPool::Instance()->Dispatch(elect_tx) != bft::kBftSuccess) {
+            BFT_ERROR("dispatch pool failed!");
+            return kBlockError;
+        }
+
+        std::cout << "dispatch final statistic transaction success!" << std::endl;
     }
 
     return kBlockSuccess;

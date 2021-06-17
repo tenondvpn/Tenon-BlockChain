@@ -68,6 +68,7 @@ private:
     int HandleRootSingleBlockTx(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
+    int HandleFinalStatisticBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     void StatisticDpPool();
 
     static const uint64_t kStatisticPeriod = 3000000llu;

@@ -256,7 +256,7 @@ int ElectManager::BackupCheckElectionBlockTx(
 
 int ElectManager::CreateElectTransaction(
         uint32_t shard_netid,
-        bft::protobuf::TxInfo& src_tx_info,
+        const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
     return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
 }

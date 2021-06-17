@@ -35,7 +35,7 @@ public:
     uint64_t latest_height(uint32_t network_id);
     int CreateElectTransaction(
         uint32_t shard_netid,
-        bft::protobuf::TxInfo& src_tx_info,
+        const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info);
     int BackupCheckElectionBlockTx(
         const bft::protobuf::TxInfo& local_tx_info,
