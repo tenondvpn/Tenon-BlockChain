@@ -160,8 +160,6 @@ int AccountManager::HandleRootSingleBlockTx(
         return HandleTimeBlock(height, tx_info);
     case common::kConsensusRootVssBlock:
         break;
-    case common::kConsensusFinalStatistic:
-        return HandleFinalStatisticBlock(height, tx_info);
     default:
         break;
     }
@@ -208,6 +206,13 @@ int AccountManager::AddBlockItem(
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
             if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
+                return kBlockError;
+            }
+        }
+
+        if (tx_list[i].type() == common::kConsensusFinalStatistic &&
+                common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            if (HandleFinalStatisticBlock(block_item->height(), tx_list[i]) != kBlockSuccess) {
                 return kBlockError;
             }
         }

@@ -28,7 +28,7 @@ public:
         const common::BloomFilter& nodes_filter);
     int CreateElectTransaction(
         uint32_t shard_netid,
-        bft::protobuf::TxInfo& src_tx_info,
+        const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info);
 
 private:

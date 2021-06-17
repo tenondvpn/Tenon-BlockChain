@@ -26,7 +26,7 @@ ElectPoolManager::~ElectPoolManager() {}
 
 int ElectPoolManager::CreateElectTransaction(
         uint32_t shard_netid,
-        bft::protobuf::TxInfo& src_tx_info,
+        const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
     block::protobuf::StatisticInfo statistic_info;
     bool statistic_valid = false;
