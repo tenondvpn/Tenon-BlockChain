@@ -620,6 +620,7 @@ public:
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         if (tx_type == common::kConsensusStatistic) {
+            std::cout << "CreateNewTransaction called!" << std::endl;
             new_tx->set_type(common::kConsensusStatistic);
             new_tx->set_from(from_prikey);
             ASSERT_TRUE(!new_tx->from().empty());
@@ -4354,22 +4355,22 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
         auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
         ASSERT_TRUE(account_info != nullptr);
         ASSERT_EQ(account_info->balance_, 0);
-        exit(0);
     }
 
-    auto leaders = elect::ElectManager::Instance()->leaders(network::kConsensusShardBeginNetworkId);
+    auto leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
     std::vector<transport::protobuf::Header> final_st_msgs;
     bool create_elect_block = false;
     transport::protobuf::Header root_broadcast_msg;
-    for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
-        iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
+    for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
+        iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
         auto id = GetIdByPrikey(*iter);
         if (leaders.find(id) != leaders.end()) {
             SetGloableInfo(
                 common::Encode::HexEncode(*iter),
-                network::kConsensusShardBeginNetworkId);
+                network::kRootCongressNetworkId);
             transport::protobuf::Header broadcast_msg;
-            RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
+            RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &broadcast_msg);
+            exit(0);
             auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
             auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
                 network::kRootCongressNetworkId);
