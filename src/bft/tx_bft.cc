@@ -430,33 +430,6 @@ int TxBft::RootBackupCheckStatistic(const bft::protobuf::Block& block) {
         return kBftTxNotExists;
     }
 
-    if (local_tx_info->tx.amount() != tx_info.amount()) {
-        BFT_ERROR("local amount is not equal leader amount.");
-        return kBftError;
-    }
-
-    if (local_tx_info->tx.to() != tx_info.to()) {
-        BFT_ERROR("local to is not equal leader to.");
-        return kBftError;
-    }
-
-    if (local_tx_info->tx.gas_limit() != tx_info.gas_limit()) {
-        BFT_ERROR("local gas_limit is not equal leader gas_limit.");
-        return kBftError;
-    }
-
-    if (local_tx_info->tx.balance() != tx_info.balance()) {
-        BFT_ERROR("local balance is not equal leader balance.");
-        return kBftError;
-    }
-
-    if (local_tx_info->tx.type() != tx_info.type() ||
-        tx_info.type() != common::kConsensusRootTimeBlock) {
-        BFT_ERROR("local tx type[%d] not eq to leader[%d].",
-            local_tx_info->tx.type(), tx_info.type());
-        return kBftError;
-    }
-
     if (BackupCheckStatistic(local_tx_info, tx_info) != kBftSuccess) {
         BFT_ERROR("BackupCheckStatistic error.");
         return kBftError;
@@ -600,6 +573,33 @@ int TxBft::BackupCheckStatistic(
             tx_info.network_id(),
             common::GlobalInfo::Instance()->network_id());
         return kBftInvalidPackage;
+    }
+
+    if (local_tx_info->tx.amount() != tx_info.amount()) {
+        BFT_ERROR("local amount is not equal leader amount.");
+        return kBftError;
+    }
+
+    if (local_tx_info->tx.to() != tx_info.to()) {
+        BFT_ERROR("local to is not equal leader to.");
+        return kBftError;
+    }
+
+    if (local_tx_info->tx.gas_limit() != tx_info.gas_limit()) {
+        BFT_ERROR("local gas_limit is not equal leader gas_limit.");
+        return kBftError;
+    }
+
+    if (local_tx_info->tx.balance() != tx_info.balance()) {
+        BFT_ERROR("local balance is not equal leader balance.");
+        return kBftError;
+    }
+
+    if (local_tx_info->tx.type() != tx_info.type() ||
+        tx_info.type() != common::kConsensusRootTimeBlock) {
+        BFT_ERROR("local tx type[%d] not eq to leader[%d].",
+            local_tx_info->tx.type(), tx_info.type());
+        return kBftError;
     }
 
     int32_t valid_count = 0;
