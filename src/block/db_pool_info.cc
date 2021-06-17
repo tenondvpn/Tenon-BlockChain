@@ -41,6 +41,11 @@ int DbPoolInfo::InitWithGenesisBlock() {
             pool_index_,
             0,
             genesis_block) != kBlockSuccess) {
+        BLOCK_ERROR("get base addr net id[%u], pool: %u, failed!",
+            common::GlobalInfo::Instance()->network_id(), pool_index_);
+        printf("get base addr net id[%u], pool: %u, failed!\n",
+            common::GlobalInfo::Instance()->network_id(), pool_index_);
+
         return kBlockError;
     }
 

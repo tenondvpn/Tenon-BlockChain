@@ -5,6 +5,7 @@
 
 #define private public
 #include "bft/bft_utils.h"
+#include "db/db.h"
 #include "dht/dht_key.h"
 #include "network/network_utils.h"
 #include "transport/transport_utils.h"
@@ -1997,6 +1998,197 @@ public:
             SetGloableInfo(
                 common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
                 network::kConsensusShardBeginNetworkId);
+            auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
+            bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
+            bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
+        }
+    }
+
+    void AddRootGenisisBlock(uint32_t type) {
+        for (auto iter = pool_index_map_.begin(); iter != pool_index_map_.end(); ++iter) {
+            auto tenon_block = std::make_shared<bft::protobuf::Block>();
+            auto tx_list = tenon_block->mutable_tx_list();
+            security::PrivateKey prikey(iter->second);
+            security::PublicKey pubkey(prikey);
+            std::string pubkey_str;
+            ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+            std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+            {
+                auto tx_info = tx_list->Add();
+                tx_info->set_version(common::kTransactionVersion);
+                tx_info->set_gid(common::CreateGID(""));
+                tx_info->set_from(address);
+                tx_info->set_from_pubkey(pubkey_str);
+                tx_info->set_from_sign("");
+                tx_info->set_to("");
+                tx_info->set_amount(0);
+                tx_info->set_balance(0);
+                tx_info->set_gas_limit(0);
+                tx_info->set_type(type);
+                tx_info->set_network_id(network::kRootCongressNetworkId);
+            }
+
+            tenon_block->set_prehash("");
+            tenon_block->set_version(common::kTransactionVersion);
+            tenon_block->set_agg_pubkey("");
+            tenon_block->set_agg_sign_challenge("");
+            tenon_block->set_agg_sign_response("");
+            tenon_block->set_pool_index(iter->first);
+            tenon_block->set_height(0);
+            tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
+            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+            tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
+                common::GlobalInfo::Instance()->network_id()));
+            common::Bitmap precommit_bitmap_{ kBftLeaderBitmapSize };
+            uint32_t index = 0;
+            for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
+                iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
+                precommit_bitmap_.Set(index++);
+            }
+
+            for (uint32_t i = 0; i < precommit_bitmap_.data().size(); ++i) {
+                tenon_block->add_bitmap(precommit_bitmap_.data()[i]);
+            }
+
+            tenon_block->set_hash(GetBlockHash(*tenon_block));
+           
+
+            std::string height_db_key = common::GetHeightDbKey(
+                network::kRootCongressNetworkId,
+                tenon_block->pool_index(),
+                tenon_block->height());
+            db::Db::Instance()->Put(height_db_key, tenon_block->hash());
+            db::Db::Instance()->Put(tenon_block->hash(), tenon_block->SerializeAsString());
+            printf("add base addr net id[%u], pool: %u, success!\n",
+                network::kRootCongressNetworkId, tenon_block->pool_index());
+
+        }
+    }
+
+    void RootTransfer(
+            const std::string& from_prikey,
+            const std::string& to_prikey,
+            uint64_t amount,
+            uint64_t gas_limit,
+            uint32_t tx_type,
+            bool just_to_id,
+            std::map<std::string, std::string>& attrs,
+            transport::protobuf::Header* broadcast_msg) {
+        transport::protobuf::Header msg;
+        int32_t pool_index_from = common::GetPoolIndex(GetIdByPrikey(from_prikey));
+        if (tx_type == common::kConsensusStatistic) {
+            pool_index_from = common::GetPoolIndex(from_prikey);
+        }
+
+        int32_t leader_index = pool_index_from % elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
+        auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, leader_index);
+        ASSERT_TRUE(leader_mem_ptr);
+        auto leader_id = leader_mem_ptr->id;
+        auto leader_private_key = network_with_private_keys_[network::kRootCongressNetworkId][leader_index];
+        leader_private_key = common::Encode::HexEncode(leader_private_key);
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
+        CreateNewTransaction(from_prikey, to_prikey, amount, gas_limit, tx_type, just_to_id, attrs, msg);
+        bft::protobuf::BftMessage bft_msg;
+        bft_msg.ParseFromString(msg.data());
+        bft::protobuf::TxBft tx_bft;
+        EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+        bft::BftManager::Instance()->HandleMessage(msg);
+        usleep(bft::kBftStartDeltaTime);
+        if (bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num) != kBftSuccess) {
+            std::cout << "start bft failed!" << std::endl;
+            return;
+        }
+
+        auto bft_gid = common::GlobalInfo::Instance()->gid_hash_ +
+            std::to_string(common::GlobalInfo::Instance()->gid_idx_ - 1);
+        auto iter = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid);
+        ASSERT_TRUE(iter != bft::BftManager::Instance()->bft_hash_map_.end());
+
+        {
+            auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_.find(bft_gid)->second;
+            bft_ptr->leader_index_ = leader_index;
+        }
+
+        std::vector<transport::protobuf::Header> backup_msgs;
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if ((int32_t)i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
+            auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
+            {
+                protobuf::BftMessage bft_msg;
+                ASSERT_TRUE(bft_msg.ParseFromString(leader_prepare_msg.data()));
+                ASSERT_EQ(bft_msg.gid(), bft_gid);
+            }
+
+            bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
+            backup_msgs.push_back(bft::BftManager::Instance()->backup_prepare_msg_);
+            {
+                protobuf::BftMessage bft_msg;
+                ASSERT_TRUE(bft_msg.ParseFromString(bft::BftManager::Instance()->backup_prepare_msg_.data()));
+                ASSERT_TRUE(bft_msg.agree());
+                ASSERT_EQ(bft_msg.gid(), bft_gid);
+            }
+        }
+        
+        // precommit
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
+        for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
+            auto back_msg = backup_msgs[i];
+            bft::BftManager::Instance()->HandleMessage(back_msg);
+            {
+                protobuf::BftMessage bft_msg;
+                auto back_msg = backup_msgs[i];
+                ASSERT_TRUE(bft_msg.ParseFromString(back_msg.data()));
+                ASSERT_EQ(bft_msg.gid(), bft_gid);
+            }
+        }
+        backup_msgs.clear();
+
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if ((int32_t)i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
+
+            ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+            auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
+            bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
+            backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);
+            {
+                protobuf::BftMessage bft_msg;
+                ASSERT_TRUE(bft_msg.ParseFromString(bft::BftManager::Instance()->backup_precommit_msg_.data()));
+                ASSERT_TRUE(bft_msg.agree());
+                ASSERT_EQ(bft_msg.gid(), bft_gid);
+            }
+        }
+
+        // commit
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, member_index);
+        auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
+
+        SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
+        for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
+            bft::BftManager::Instance()->HandleMessage(backup_msgs[i]);
+        }
+
+        *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
+        for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
+            if ((int32_t)i == leader_index) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(network_with_private_keys_[network::kRootCongressNetworkId][i]),
+                network::kRootCongressNetworkId);
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
@@ -4062,7 +4254,7 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBlindAuctionSuccess) {
     }
 }
 
-TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
+TEST_F(TestMoreLeaderTransaction, TestShardTimeVssStatisticElectConsensus) {
     uint64_t all_amount = 0;
     uint64_t amount = 0;
     uint64_t all_gas = 0;
@@ -4084,6 +4276,7 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
     auto leaders = elect::ElectManager::Instance()->leaders(network::kConsensusShardBeginNetworkId);
     std::vector<transport::protobuf::Header> final_st_msgs;
     bool create_elect_block = false;
+    transport::protobuf::Header root_broadcast_msg;
     for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
             iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
         auto id = GetIdByPrikey(*iter);
@@ -4093,7 +4286,6 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
                 network::kConsensusShardBeginNetworkId);
             transport::protobuf::Header broadcast_msg;
             RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
-            transport::protobuf::Header root_broadcast_msg;
             auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
             auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
                 network::kRootCongressNetworkId);
@@ -4121,6 +4313,106 @@ TEST_F(TestMoreLeaderTransaction, TestStatisticConsensus) {
     }
 
     ASSERT_TRUE(create_elect_block);
+    bft::protobuf::BftMessage bft_msg;
+    ASSERT_TRUE(bft_msg.ParseFromString(root_broadcast_msg.data()));
+    bft::protobuf::TxBft tx_bft;
+    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+    bool ec_block_success = false;
+    for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list_size(); ++i) {
+        for (int32_t j = 0; j < tx_bft.to_tx().block().tx_list(i).attr_size(); ++j) {
+            if (tx_bft.to_tx().block().tx_list(i).attr(j).key() == elect::kElectNodeAttrElectBlock) {
+                elect::protobuf::ElectBlock ec_block;
+                ASSERT_TRUE(ec_block.ParseFromString(tx_bft.to_tx().block().tx_list(i).attr(j).value()));
+                ec_block_success = true;
+                auto tx_info = tx_bft.to_tx().block().tx_list(i);
+                elect::ElectManager::Instance()->ProcessNewElectBlock(tx_bft.to_tx().block().height(), ec_block, false);
+            }
+        }
+    }
+
+    ASSERT_TRUE(ec_block_success);
+}
+
+TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
+    uint64_t all_amount = 0;
+    uint64_t amount = 0;
+    uint64_t all_gas = 0;
+    AddRootGenisisBlock(common::kConsensusCreateGenesisAcount);
+    std::map<std::string, std::string> attrs;
+    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        SetGloableInfo(
+            network_with_private_keys_[network::kRootCongressNetworkId][0],
+            network::kRootCongressNetworkId);
+        auto from = block::AccountManager::Instance()->GetPoolBaseAddr(i);
+        ASSERT_TRUE(!from.empty());
+        transport::protobuf::Header msg;
+        RootTransfer(
+            from, "", amount, all_gas,
+            common::kConsensusStatistic, true, attrs, &msg);
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
+        ASSERT_TRUE(account_info != nullptr);
+        ASSERT_EQ(account_info->balance_, 0);
+        exit(0);
+    }
+
+    auto leaders = elect::ElectManager::Instance()->leaders(network::kConsensusShardBeginNetworkId);
+    std::vector<transport::protobuf::Header> final_st_msgs;
+    bool create_elect_block = false;
+    transport::protobuf::Header root_broadcast_msg;
+    for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
+        iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
+        auto id = GetIdByPrikey(*iter);
+        if (leaders.find(id) != leaders.end()) {
+            SetGloableInfo(
+                common::Encode::HexEncode(*iter),
+                network::kConsensusShardBeginNetworkId);
+            transport::protobuf::Header broadcast_msg;
+            RunFromExistsTxPool(*iter, network::kConsensusShardBeginNetworkId, &broadcast_msg);
+            auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
+            auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+                network::kRootCongressNetworkId);
+            for (auto root_id_iter = root_leaders.begin();
+                root_id_iter != root_leaders.end(); ++root_id_iter) {
+                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+                    network::kRootCongressNetworkId, *root_id_iter);
+                ASSERT_TRUE(root_mem_ptr != nullptr);
+                if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
+                    root_mem_ptr->pool_index_mod_num) {
+                    CreateNewAccountWithInvalidNode(
+                        *root_id_iter,
+                        *root_id_iter,
+                        false,
+                        common::kConsensusRootElectShard,
+                        broadcast_msg,
+                        &root_broadcast_msg);
+                    create_elect_block = true;
+                    break;
+                }
+            }
+
+            break;
+        }
+    }
+
+    ASSERT_TRUE(create_elect_block);
+    bft::protobuf::BftMessage bft_msg;
+    ASSERT_TRUE(bft_msg.ParseFromString(root_broadcast_msg.data()));
+    bft::protobuf::TxBft tx_bft;
+    ASSERT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
+    bool ec_block_success = false;
+    for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list_size(); ++i) {
+        for (int32_t j = 0; j < tx_bft.to_tx().block().tx_list(i).attr_size(); ++j) {
+            if (tx_bft.to_tx().block().tx_list(i).attr(j).key() == elect::kElectNodeAttrElectBlock) {
+                elect::protobuf::ElectBlock ec_block;
+                ASSERT_TRUE(ec_block.ParseFromString(tx_bft.to_tx().block().tx_list(i).attr(j).value()));
+                ec_block_success = true;
+                auto tx_info = tx_bft.to_tx().block().tx_list(i);
+                elect::ElectManager::Instance()->ProcessNewElectBlock(tx_bft.to_tx().block().height(), ec_block, false);
+            }
+        }
+    }
+
+    ASSERT_TRUE(ec_block_success);
 }
 
 }  // namespace test

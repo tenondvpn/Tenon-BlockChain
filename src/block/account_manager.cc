@@ -709,6 +709,7 @@ void AccountManager::SetPool(
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
+    std::cout << "network_block_[pool_index]: " << network_block_[pool_index] << std::endl;
     if (network_block_[pool_index] != nullptr) {
         return network_block_[pool_index]->GetBaseAddr();
     }
