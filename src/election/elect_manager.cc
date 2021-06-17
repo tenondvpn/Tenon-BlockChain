@@ -204,7 +204,7 @@ void ElectManager::ProcessNewElectBlock(
         if (id == common::GlobalInfo::Instance()->id()) {
             if (common::GlobalInfo::Instance()->network_id() != elect_block.shard_network_id()) {
                 if (Join(elect_block.shard_network_id()) != kElectSuccess) {
-                    BFT_ERROR("join elected network failed![%u]", net_id);
+                    BFT_ERROR("join elected network failed![%u]", elect_block.shard_network_id());
                 }
 
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
