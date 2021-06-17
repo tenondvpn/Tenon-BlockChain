@@ -63,13 +63,13 @@ int GenesisBlockInit::CreateElectBlock(
     int32_t node_idx = 0;
     for (auto iter = genesis_nodes.begin(); iter != genesis_nodes.end(); ++iter) {
         auto in = ec_block.add_in();
-        in->set_net_id(shard_netid);
         in->set_pubkey((*iter)->pubkey_str());
         in->set_pool_idx_mod_num(node_idx < expect_leader_count ? node_idx : -1);
         ++node_idx;
     }
 
     ec_block.set_leader_count(expect_leader_count);
+    ec_block.set_shard_network_id(shard_netid);
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(elect::kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());

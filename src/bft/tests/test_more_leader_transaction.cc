@@ -4366,6 +4366,7 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
     std::vector<transport::protobuf::Header> final_st_msgs;
     bool create_elect_block = false;
     transport::protobuf::Header root_broadcast_msg;
+    // final statistic
     for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
         iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
         auto id = GetIdByPrikey(*iter);
@@ -4380,6 +4381,29 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
         ASSERT_TRUE(root_mem_ptr != nullptr);
         if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
                 root_mem_ptr->pool_index_mod_num) {
+            RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &root_broadcast_msg);
+            create_elect_block = true;
+            break;
+        }
+    }
+
+    // elect block
+    ASSERT_TRUE(create_elect_block);
+    create_elect_block = false;
+    for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
+        iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {
+        auto id = GetIdByPrikey(*iter);
+        SetGloableInfo(
+            common::Encode::HexEncode(*iter),
+            network::kRootCongressNetworkId);
+        transport::protobuf::Header broadcast_msg;
+        auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+            network::kRootCongressNetworkId);
+        auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+            network::kRootCongressNetworkId, id);
+        ASSERT_TRUE(root_mem_ptr != nullptr);
+        if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
+            root_mem_ptr->pool_index_mod_num) {
             RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &root_broadcast_msg);
             create_elect_block = true;
             break;

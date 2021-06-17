@@ -33,7 +33,9 @@ int ElectPoolManager::CreateElectTransaction(
     for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
         if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
             tx_info.set_gid(common::Hash::Hash256(
-                std::string("root_fn") + src_tx_info.attr(i).value()));
+                std::to_string(shard_netid) +
+                std::string("root_fn") +
+                src_tx_info.attr(i).value()));
         }
 
         if (src_tx_info.attr(i).key() == bft::kStatisticAttr) {
@@ -117,6 +119,7 @@ int ElectPoolManager::CreateElectTransaction(
     }
 
     ec_block.set_leader_count(leader_count);
+    ec_block.set_shard_network_id(shard_netid);
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());

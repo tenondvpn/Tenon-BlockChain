@@ -6,15 +6,14 @@ message member {
 	optional bytes id = 1;
 	optional bytes pubkey = 2;
 	optional bytes sign = 3;
-	optional uint32 net_id = 4;
-	optional uint32 country = 5;
-	optional bytes dht_key = 6;
-	optional int32 nat_type = 7;
-	optional bytes public_ip = 8;
-	optional uint32 public_port = 9;
-    optional bytes local_ip = 10;
-	optional uint32 local_port = 11;
-	optional int32 pool_idx_mod_num = 12;
+	optional uint32 country = 4;
+	optional bytes dht_key = 5;
+	optional int32 nat_type = 6;
+	optional bytes public_ip = 7;
+	optional uint32 public_port = 8;
+    optional bytes local_ip = 9;
+	optional uint32 local_port = 10;
+	optional int32 pool_idx_mod_num = 11;
 }
 
 message ElectBlock {
@@ -23,6 +22,7 @@ message ElectBlock {
 	optional bytes acc_pubkey = 3;
 	optional bytes acc_sign = 4;
 	optional int32 leader_count = 5;
+	optional uint32 shard_network_id = 6;
 }
 
 message WaitingNodesMessage {

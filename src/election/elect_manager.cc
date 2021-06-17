@@ -164,32 +164,26 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    std::map<uint32_t, MembersPtr> in_members;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
+    auto shard_members_ptr = std::make_shared<Members>();
+    auto shard_members_index_ptr = std::make_shared<
+        std::unordered_map<std::string, uint32_t>>();
+    uint32_t member_index = 0;
     for (int32_t i = 0; i < in.size(); ++i) {
-        auto net_id = in[i].net_id();
-        auto iter = in_members.find(net_id);
-        if (iter == in_members.end()) {
-            in_members[net_id] = std::make_shared<Members>();
-            in_index_members[net_id] = std::make_shared<
-                    std::unordered_map<std::string, uint32_t>>();
-            begin_index_map[net_id] = 0;
-        }
-
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
-        in_members[net_id]->push_back(std::make_shared<BftMember>(
-            net_id,
+        shard_members_ptr->push_back(std::make_shared<BftMember>(
+            elect_block.shard_network_id(),
             id,
             in[i].pubkey(),
-            begin_index_map[net_id],
+            member_index,
             in[i].public_ip(),
             in[i].public_port(),
             in[i].dht_key(),
             in[i].pool_idx_mod_num()));
-        in_index_members[net_id]->insert(std::make_pair(id, begin_index_map[net_id]));
+        (*shard_members_index_ptr)[id] = member_index;
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
                 id,
@@ -208,43 +202,38 @@ void ElectManager::ProcessNewElectBlock(
         }
 
         if (id == common::GlobalInfo::Instance()->id()) {
-            if (common::GlobalInfo::Instance()->network_id() != net_id) {
-                if (Join(net_id) != kElectSuccess) {
+            if (common::GlobalInfo::Instance()->network_id() != elect_block.shard_network_id()) {
+                if (Join(elect_block.shard_network_id()) != kElectSuccess) {
                     BFT_ERROR("join elected network failed![%u]", net_id);
                 }
 
-                common::GlobalInfo::Instance()->set_network_id(net_id);
+                common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
         }
 
-        ++begin_index_map[net_id];
+        ++member_index;
     }
 
-    for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
-        auto index_map_iter = in_index_members.find(iter->first);
-        assert(index_map_iter != in_index_members.end());
-        pool_manager_.NetworkMemberChange(iter->first, iter->second);
-        auto member_ptr = std::make_shared<MemberManager>();
-        member_ptr->SetNetworkMember(
-            iter->first,
-            iter->second,
-            index_map_iter->second,
-            elect_block.leader_count());
-        std::lock_guard<std::mutex> guard(elect_members_mutex_);
-        if (elect_members_.find(height) != elect_members_.end()) {
-            return;
-        }
+    pool_manager_.NetworkMemberChange(elect_block.shard_network_id(), shard_members_ptr);
+    auto member_ptr = std::make_shared<MemberManager>();
+    member_ptr->SetNetworkMember(
+        elect_block.shard_network_id(),
+        shard_members_ptr,
+        shard_members_index_ptr,
+        elect_block.leader_count());
+    std::lock_guard<std::mutex> guard(elect_members_mutex_);
+    if (elect_members_.find(height) != elect_members_.end()) {
+        return;
+    }
 
-        elect_members_[height] = member_ptr;
-        auto net_heights_iter = elect_net_heights_map_.find(iter->first);
-        if (net_heights_iter == elect_net_heights_map_.end()) {
-            elect_net_heights_map_[iter->first] =
-                std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
-            elect_net_heights_map_[iter->first]->push(height);
-        } else {
-            net_heights_iter->second->push(height);
-        }
-
+    elect_members_[height] = member_ptr;
+    auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
+    if (net_heights_iter == elect_net_heights_map_.end()) {
+        elect_net_heights_map_[elect_block.shard_network_id()] =
+            std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
+        elect_net_heights_map_[elect_block.shard_network_id()]->push(height);
+    } else {
+        net_heights_iter->second->push(height);
     }
 }
 
