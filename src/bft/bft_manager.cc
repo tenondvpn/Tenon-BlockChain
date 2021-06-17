@@ -1087,7 +1087,6 @@ int BftManager::BackupCommit(
     }
 
     bft_ptr->set_status(kBftCommited);
-//     LeaderBroadcastToAcc(bft_ptr->prpare_block());
     BFT_DEBUG("BackupCommit");
     BFT_DEBUG("BackupCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
@@ -1105,6 +1104,12 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
 
     auto local_node = dht_ptr->local_node();
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        if (block_ptr->tx_list_size() == 1 &&
+                (block_ptr->tx_list[0].type() == common::kConsensusFinalStatistic ||
+                block_ptr->tx_list[0].type() == common::kConsensusStatistic)) {
+            return;
+        }
+
         transport::protobuf::Header msg;
         BftProto::CreateLeaderBroadcastToAccount(
             local_node,
@@ -1184,15 +1189,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
         network::Route::Instance()->SendToLocal(msg);
         to_leader_broadcast_msg_ = msg;
     }
-
-    transport::protobuf::Header msg;
-    BftProto::CreateLeaderBroadcastToAccount(
-        local_node,
-        network::kConsensusSubscription,
-        common::kSubscriptionMessage,
-        block_ptr,
-        msg);
-    network::Route::Instance()->Send(msg);
 }
 
 void BftManager::CheckTimeout() {

@@ -92,6 +92,7 @@ private:
     int LeaderCallCommit(BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
     int ShardAddTimeBlockStatisticTransaction(uint64_t height, bft::protobuf::TxInfo& tm_tx_info);
+    bool ShouldBroadcast(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;

@@ -1928,8 +1928,8 @@ public:
             }
 
             SetGloableInfo(
-                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
-                network::kConsensusShardBeginNetworkId);
+                common::Encode::HexEncode(network_with_private_keys_[network_id][i]),
+                network_id);
             auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
             {
                 protobuf::BftMessage bft_msg;
@@ -1948,7 +1948,7 @@ public:
         }
 
         // precommit
-        SetGloableInfo(common::Encode::HexEncode(leader_private_key), network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(common::Encode::HexEncode(leader_private_key), network_id);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             auto back_msg = backup_msgs[i];
             bft::BftManager::Instance()->HandleMessage(back_msg);
@@ -1967,9 +1967,9 @@ public:
             }
 
             SetGloableInfo(
-                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
-                network::kConsensusShardBeginNetworkId);
-            ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
+                common::Encode::HexEncode(network_with_private_keys_[network_id][i]),
+                network_id);
+            ResetBftSecret(bft_gid, network_id, common::GlobalInfo::Instance()->id());
             auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
             bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
             backup_msgs.push_back(bft::BftManager::Instance()->backup_precommit_msg_);
@@ -1982,23 +1982,28 @@ public:
         }
 
         // commit
-        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network::kConsensusShardBeginNetworkId, member_index);
+        uint32_t member_index = elect::ElectManager::Instance()->GetMemberIndex(network_id, common::GlobalInfo::Instance()->id());
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id, member_index);
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
-        SetGloableInfo(common::Encode::HexEncode(leader_private_key), network::kConsensusShardBeginNetworkId);
+        SetGloableInfo(common::Encode::HexEncode(leader_private_key), network_id);
         for (uint32_t i = 0; i < backup_msgs.size(); ++i) {
             bft::BftManager::Instance()->HandleMessage(backup_msgs[i]);
         }
 
-        *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
+        if (network_id == network::kRootCongressNetworkId) {
+            *broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
+        } else {
+            *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
+        }
+
         for (uint32_t i = 0; i < kConsensusNodeCount; ++i) {
             if (i == leader_index) {
                 continue;
             }
 
             SetGloableInfo(
-                common::Encode::HexEncode(network_with_private_keys_[network::kConsensusShardBeginNetworkId][i]),
-                network::kConsensusShardBeginNetworkId);
+                common::Encode::HexEncode(network_with_private_keys_[network_id][i]),
+                network_id);
             auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
             bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
             bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
@@ -4370,7 +4375,6 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
                 network::kRootCongressNetworkId);
             transport::protobuf::Header broadcast_msg;
             RunFromExistsTxPool(*iter, network::kRootCongressNetworkId, &broadcast_msg);
-            exit(0);
             auto root_leaders = elect::ElectManager::Instance()->leaders(network::kRootCongressNetworkId);
             auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
                 network::kRootCongressNetworkId);
@@ -4380,7 +4384,7 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
                     network::kRootCongressNetworkId, *root_id_iter);
                 ASSERT_TRUE(root_mem_ptr != nullptr);
                 if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
-                    root_mem_ptr->pool_index_mod_num) {
+                        root_mem_ptr->pool_index_mod_num) {
                     CreateNewAccountWithInvalidNode(
                         *root_id_iter,
                         *root_id_iter,
