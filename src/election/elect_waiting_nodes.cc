@@ -212,7 +212,6 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
-        assert(false);
         return;
     }
 

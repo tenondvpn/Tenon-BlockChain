@@ -261,6 +261,8 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
         network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset];
     ASSERT_TRUE(waiting_pool_ptr != nullptr);
     ASSERT_EQ(waiting_pool_ptr->node_map_.size(), kWaitingCount);
+    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
+    elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     UpdateWaitingNodesConsensusCount(kMemberCount);
     ASSERT_EQ(waiting_pool_ptr->all_nodes_waiting_map_.size(), 1);
     auto waiting_iter = waiting_pool_ptr->all_nodes_waiting_map_.begin();
@@ -275,8 +277,6 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     int32_t leader_count = 0;
     block::protobuf::StatisticInfo statistic_info;
     uint32_t shard_netid = network::kConsensusShardBeginNetworkId;
-    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
-    elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     ASSERT_EQ(elect_pool_manager_.GetAllBloomFilerAndNodes(
         statistic_info,
         shard_netid,
