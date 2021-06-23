@@ -83,3 +83,14 @@ inline static std::string GetElectHeartbeatHash(
 }  // namespace elect
 
 }  // namespace tenon
+
+namespace tenon {
+
+namespace common {
+
+template<>
+uint64_t MinHeapUniqueVal(const elect::HeapItem& val);
+
+}  // namespace common
+
+}  // namespace tenon

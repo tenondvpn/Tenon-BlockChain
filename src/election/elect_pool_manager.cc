@@ -357,7 +357,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             statistic_info,
             statistic_info.succ_tx_count_size() * kInvalidShardNodesRate / 100,
             &direct_weed_out);
-        std::cout << "direct_weed_out: " << direct_weed_out << std::endl;
+        std::cout << "direct_weed_out: " << direct_weed_out.size() << std::endl;
         for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
             if (pick_in_vec.size() >= weed_out_count) {
                 weed_out_vec.push_back(exists_shard_nodes[iter->first]);
