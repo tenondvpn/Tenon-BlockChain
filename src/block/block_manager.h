@@ -91,7 +91,7 @@ private:
 
     static const uint32_t kCacheBlockSize = 1024;
     std::unordered_map<uint64_t, std::pair<std::string*, int32_t>> height_chain_map_;
-    common::LimitHeap<HeightCacheHeapItem, kCacheBlockSize> height_cache_heap_{ false };
+    common::LimitHeap<HeightCacheHeapItem> height_cache_heap_{ false, kCacheBlockSize };
     std::mutex cache_height_block_mutex_;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
