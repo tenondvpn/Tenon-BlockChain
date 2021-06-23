@@ -149,7 +149,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
         if (valid_join_time > now_tm) {
-            std::cout << "1111 valid_join_time > now_tm error." << std::endl;
             continue;
         }
 
@@ -175,7 +174,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         }
 
         if (succ_hb_count < 2 * fail_hb_count) {
-            std::cout << "1111 succ_hb_count < 2 * fail_hb_count error." << std::endl;
             continue;
         }
 
@@ -207,7 +205,6 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
 
     last_send_tm_ = time_block_tm;
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
-    std::cout << "1 GetThisTimeBlockLocallNodes 1111  local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
     if (!local_all_waiting_nodes_.empty()) {
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),
