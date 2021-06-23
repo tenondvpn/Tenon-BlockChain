@@ -21,7 +21,7 @@ namespace elect {
 
 typedef network::ShardNetwork<ElectDht> ElectNode;
 typedef std::shared_ptr<ElectNode> ElectNodePtr;
-typedef std::shared_ptr<common::LimitHeap<uint64_t, 256, true>> HeightLimitHeapPtr;
+typedef std::shared_ptr<common::LimitHeap<uint64_t, true>> HeightLimitHeapPtr;
 
 class ElectManager {
 public:

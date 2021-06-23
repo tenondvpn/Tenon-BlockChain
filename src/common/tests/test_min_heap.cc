@@ -32,7 +32,7 @@ private:
 };
 
 TEST_F(TestMinHeap, TestMax) {
-    LimitHeap<uint64_t, 1024, true> test_min_heap(true);
+    LimitHeap<uint64_t, true> test_min_heap(true, 1024);
     uint64_t max_data = 0;
     for (uint64_t i = 0; i < 1000; ++i) {
         auto data = common::Random::RandomUint16();
@@ -52,7 +52,7 @@ TEST_F(TestMinHeap, TestMax) {
 }
 
 TEST_F(TestMinHeap, TestMin) {
-    LimitHeap<uint64_t, 1024, false> test_min_heap(true);
+    LimitHeap<uint64_t, false> test_min_heap(true, 1024);
     uint64_t max_data = 999999999;
     for (uint64_t i = 0; i < 1000; ++i) {
         auto data = common::Random::RandomUint16();

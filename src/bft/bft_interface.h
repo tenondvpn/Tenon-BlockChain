@@ -218,8 +218,8 @@ private:
     uint32_t min_aggree_member_count_{ 0 };
     uint32_t min_oppose_member_count_{ 0 };
     uint32_t min_prepare_member_count_{ 0 };
-    common::Bitmap prepare_bitmap_{ kBftLeaderBitmapSize };
-    common::Bitmap precommit_bitmap_{ kBftLeaderBitmapSize };
+    common::Bitmap prepare_bitmap_{ common::kEachShardMaxNodeCount };
+    common::Bitmap precommit_bitmap_{ common::kEachShardMaxNodeCount };
     uint32_t status_{ kBftInit };
     std::vector<uint64_t> item_index_vec_;
     std::mutex item_index_vec_mutex_;

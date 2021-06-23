@@ -230,7 +230,7 @@ void ElectManager::ProcessNewElectBlock(
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
         elect_net_heights_map_[elect_block.shard_network_id()] =
-            std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
+            std::make_shared<common::LimitHeap<uint64_t, true>>(true, 256);
         elect_net_heights_map_[elect_block.shard_network_id()]->push(height);
     } else {
         net_heights_iter->second->push(height);
@@ -448,7 +448,7 @@ void ElectManager::SetNetworkMember(
         elect_members_[elect_height] = mem_ptr;
         auto net_heights_iter = elect_net_heights_map_.find(network_id);
         if (net_heights_iter == elect_net_heights_map_.end()) {
-            elect_net_heights_map_[network_id] = std::make_shared<common::LimitHeap<uint64_t, 256, true>>(true);
+            elect_net_heights_map_[network_id] = std::make_shared<common::LimitHeap<uint64_t, true>>(true, 256);
             elect_net_heights_map_[network_id]->push(elect_height);
         } else {
             net_heights_iter->second->push(elect_height);

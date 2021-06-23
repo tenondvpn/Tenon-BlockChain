@@ -244,8 +244,51 @@ private:
     ElectPoolManager elect_pool_manager_;
 };
 
-TEST_F(TestElectPoolManager, All) {
-    
+TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
+    const uint32_t kMemberCount = 31;
+    const uint32_t kWaitingCount = 11;
+    CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
+    CreateElectBlocks(kMemberCount, network::kRootCongressNetworkId);
+    for (uint32_t i = 0; i < 20; ++i) {
+        UpdateNodeInfoWithBlock(kMemberCount, i);
+    }
+
+    AddWaitingPoolNetworkNodes(
+        kWaitingCount,
+        network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset);
+    auto waiting_pool_ptr = elect_pool_manager_.waiting_pool_map_[
+        network::kConsensusShardBeginNetworkId + network::kConsensusWaitingShardOffset];
+    ASSERT_TRUE(waiting_pool_ptr != nullptr);
+    ASSERT_EQ(waiting_pool_ptr->node_map_.size(), kWaitingCount);
+    UpdateWaitingNodesConsensusCount(kMemberCount);
+    ASSERT_EQ(waiting_pool_ptr->all_nodes_waiting_map_.size(), 1);
+    auto waiting_iter = waiting_pool_ptr->all_nodes_waiting_map_.begin();
+    ASSERT_EQ(waiting_iter->second->same_root_count, kMemberCount);
+    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
+    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
+    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
+    std::vector<NodeDetailPtr> exists_shard_nodes;
+    std::vector<NodeDetailPtr> weed_out_vec;
+    std::vector<NodeDetailPtr> pick_in_vec;
+    int32_t leader_count = 0;
+    block::protobuf::StatisticInfo statistic_info;
+    uint32_t shard_netid = network::kConsensusShardBeginNetworkId;
+    ASSERT_EQ(elect_pool_manager_.GetAllBloomFilerAndNodes(
+        statistic_info,
+        shard_netid,
+        &cons_all,
+        &cons_weed_out,
+        &pick_all,
+        &pick_in,
+        exists_shard_nodes,
+        weed_out_vec,
+        pick_in_vec,
+        &leader_count), kElectSuccess);
+    std::cout << "exists_shard_nodes count: " << exists_shard_nodes.size()
+        << ", weed_out_vec size: " << weed_out_vec.size()
+        << ", pick_in_vec: " << pick_in_vec.size()
+        << ", leader_count: " << leader_count << std::endl;
 }
 
 }  // namespace test

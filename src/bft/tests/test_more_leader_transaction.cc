@@ -449,7 +449,7 @@ public:
             tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
-            common::Bitmap precommit_bitmap_{ kBftLeaderBitmapSize };
+            common::Bitmap precommit_bitmap_{ common::kEachShardMaxNodeCount };
             uint32_t index = 0;
             for (auto iter = network_with_private_keys_[network::kConsensusShardBeginNetworkId].begin();
                     iter != network_with_private_keys_[network::kConsensusShardBeginNetworkId].end(); ++iter) {
@@ -2046,7 +2046,7 @@ public:
             tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
-            common::Bitmap precommit_bitmap_{ kBftLeaderBitmapSize };
+            common::Bitmap precommit_bitmap_{ common::kEachShardMaxNodeCount };
             uint32_t index = 0;
             for (auto iter = network_with_private_keys_[network::kRootCongressNetworkId].begin();
                 iter != network_with_private_keys_[network::kRootCongressNetworkId].end(); ++iter) {

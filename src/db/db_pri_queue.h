@@ -40,7 +40,7 @@ public:
 
     ~DbPriQueue() {}
     
-    inline common::LimitHeap<Type, kMaxSize> GetMemData() {
+    inline common::LimitHeap<Type> GetMemData() {
         return mem_min_heap_;
     }
 
@@ -187,7 +187,7 @@ private:
     Type data_[kMaxSize];
     int32_t size_{ 0 };
     std::string dict_name_;
-    common::LimitHeap<Type, kMaxSize> mem_min_heap_{ true };
+    common::LimitHeap<Type> mem_min_heap_{ true, kMaxSize };
     std::unordered_set<Type> unique_set_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPriQueue);

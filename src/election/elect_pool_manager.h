@@ -1,6 +1,7 @@
 #pragma once
 
 #include <random>
+#include <map>
 
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
@@ -60,6 +61,11 @@ private:
         int32_t count,
         std::mt19937_64& g2,
         std::vector<NodeDetailPtr>& src_nodes);
+    void GetMiniTopNInvalidNodes(
+        uint32_t network_id,
+        const block::protobuf::StatisticInfo& statistic_info,
+        uint32_t count,
+        std::map<uint32_t, uint32_t>* nodes);
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;

@@ -24,6 +24,15 @@ enum ElectErrorCode {
     kElectNetworkNotJoined = 6,
 };
 
+struct HeapItem {
+    uint32_t index;
+    uint32_t succ_count;
+};
+
+inline bool operator<(const HeapItem& lhs, const HeapItem& rhs) {
+    return lhs.succ_count < rhs.succ_count;
+}
+
 static const uint32_t kElectBroadcastIgnBloomfilterHop = 1u;
 static const uint32_t kElectBroadcastStopTimes = 2u;
 static const uint32_t kElectHopLimit = 5u;
@@ -33,6 +42,8 @@ static const uint32_t kInvalidMemberIndex = (std::numeric_limits<uint32_t>::max)
 static const uint32_t kMinShardingNetworkNodesCount = 7u;
 // weed out and pick 1/10 nodes each epoch
 static const uint32_t kFtsWeedoutDividRate = 10u;
+static const uint32_t kInvalidShardNodesRate = 6u;
+static const uint32_t kEachShardMaxTps = 2000u;
 // Tolerate 5% difference between leader and backup
 static const uint32_t kTolerateLeaderBackupFiffRate = 5u;  // kTolerateLeaderBackupFiffRate %;
 static const uint64_t kSmoothGradientAmount = 100llu;

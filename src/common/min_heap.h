@@ -28,11 +28,12 @@ uint64_t MinHeapUniqueVal(const uint32_t& val);
 template<>
 uint64_t MinHeapUniqueVal(const int32_t& val);
 
-template <class Type, uint32_t kMaxSize, bool kIsMaxHep=false>
+template <class Type, bool kIsMaxHep=false>
 class LimitHeap {
 public:
-    explicit LimitHeap(bool unique) : unique_(unique) {
-        data_ = new Type[kMaxSize];
+    LimitHeap(bool unique, uint32_t max_size)
+            : unique_(unique), max_size_(max_size) {
+        data_ = new Type[max_size_];
     }
 
     ~LimitHeap() {
@@ -40,8 +41,8 @@ public:
     }
 
     LimitHeap(const LimitHeap &other) {
-        data_ = new Type[kMaxSize];
-//         memcpy(data_, other.data_, kMaxSize * sizeof(other.data_[0]));
+        max_size_ = other.max_size_;
+        data_ = new Type[max_size_];
         for (uint32_t i = 0; i < other.size_; ++i) {
             data_[i] = other.data_[i];
         }
@@ -58,13 +59,12 @@ public:
             data_[i] = other.data_[i];
         }
 
-//         memcpy(data_, other.data_, kMaxSize * sizeof(other.data_[0]));
         size_ = other.size_;
         return *this;
     }
 
     inline int32_t push(Type val) {
-        if (size_ >= kMaxSize && OperaterMinOrMax(val, data_[0])) {
+        if (size_ >= max_size_ && OperaterMinOrMax(val, data_[0])) {
             TENON_ERROR("min heap push failed![%d]", OperaterMinOrMax(val, data_[0]));
             return -1;
         }
@@ -77,7 +77,7 @@ public:
             unique_set_.insert(MinHeapUniqueVal(val));
         }
 
-        if (size_ >= kMaxSize) {
+        if (size_ >= max_size_) {
             pop();
         }
 
@@ -195,6 +195,7 @@ public:
     int32_t size_{ 0 };
     bool unique_{ false };
     std::unordered_set<uint64_t> unique_set_;
+    uint32_t max_size_{ -1 };
 };
 
 }  // namespace common

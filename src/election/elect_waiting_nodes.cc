@@ -28,6 +28,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     std::string coming_id = root_node_id + std::to_string(
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     if (coming_root_nodes_.find(coming_id) != coming_root_nodes_.end()) {
+        std::cout << "coming_id has coming." << std::endl;
         return;
     }
 
@@ -36,6 +37,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         network::kRootCongressNetworkId,
         root_node_id);
     if (member_index == elect::kInvalidMemberIndex) {
+        std::cout << "member_index == elect::kInvalidMemberIndex." << std::endl;
         return;
     }
 
@@ -95,6 +97,10 @@ void ElectWaitingNodes::GetAllValidNodes(
             iter != all_nodes_waiting_map_.end(); ++iter) {
             waiting_nodes.push_back(iter->second);
         }
+    }
+
+    if (waiting_nodes.empty()) {
+        return;
     }
 
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
