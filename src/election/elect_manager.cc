@@ -84,6 +84,10 @@ int ElectManager::Quit(uint32_t network_id) {
     return kElectSuccess;
 }
 
+void ElectManager::OnTimeBlock(uint64_t tm_block_tm) {
+    pool_manager_.OnTimeBlock(tm_block_tm);
+}
+
 void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     assert(header.type() == common::kElectMessage);
     // TODO: verify message signature

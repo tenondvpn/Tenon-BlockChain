@@ -211,6 +211,18 @@ int ElectPoolManager::BackupCheckElectionBlockTx(
     return kElectSuccess;
 }
 
+void ElectPoolManager::OnTimeBlock(uint64_t tm_block_tm) {
+    std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map;
+    {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        waiting_pool_map = waiting_pool_map_;
+    }
+
+    for (auto iter = waiting_pool_map.begin(); iter != waiting_pool_map.end(); ++iter) {
+        iter->second->OnTimeBlock(tm_block_tm);
+    }
+}
+
 void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& node_ptr) {
     if (network_id < network::kConsensusWaitingShardBeginNetworkId ||
             network_id >= network::kConsensusWaitingShardEndNetworkId) {
@@ -328,26 +340,25 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     if (waiting_pool_ptr != nullptr) {
         std::vector<NodeDetailPtr> pick_all_vec;
         waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
-        if (pick_all_vec.empty()) {
-            return kElectSuccess;
-        }
+        std::cout << "waiting_pool_ptr->GetAllValidNodes pick_all_vec size: " << pick_all_vec.size() << std::endl;
+        if (!pick_all_vec.empty()) {
+            if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
+                // TODO: statistic to add new consensus shard
+            }
 
-        if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
-            // TODO: statistic to add new consensus shard
-        }
+            uint32_t pick_in_count = weed_out_count;
+            if (statistic_info.succ_tx_count_size() < common::kEachShardMaxNodeCount) {
+                pick_in_count += weed_out_count / 2;
+            }
 
-        uint32_t pick_in_count = weed_out_count;
-        if (statistic_info.succ_tx_count_size() < common::kEachShardMaxNodeCount) {
-            pick_in_count += weed_out_count / 2;
+            std::cout << "pick_in_count: " << pick_in_count << std::endl;
+            FtsGetNodes(
+                false,
+                pick_in_count,
+                pick_in,
+                pick_all_vec,
+                pick_in_vec);
         }
-
-        std::cout << "pick_in_count: " << pick_in_count << std::endl;
-        FtsGetNodes(
-            false,
-            pick_in_count,
-            pick_in,
-            pick_all_vec,
-            pick_in_vec);
     }
     
     if (exists_shard_nodes.size() == statistic_info.succ_tx_count_size()) {

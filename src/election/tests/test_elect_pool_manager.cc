@@ -16,6 +16,7 @@
 #include "security/schnorr.h"
 #include "network/network_utils.h"
 #include "common/random.h"
+#include "common/time_utils.h"
 
 namespace tenon {
 
@@ -274,6 +275,8 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     int32_t leader_count = 0;
     block::protobuf::StatisticInfo statistic_info;
     uint32_t shard_netid = network::kConsensusShardBeginNetworkId;
+    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
+    elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     ASSERT_EQ(elect_pool_manager_.GetAllBloomFilerAndNodes(
         statistic_info,
         shard_netid,

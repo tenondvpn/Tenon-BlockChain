@@ -49,6 +49,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     std::string all_nodes_ids;
     for (auto iter = local_all_waiting_nodes_.begin();
             iter != local_all_waiting_nodes_.end(); ++iter) {
+        std::cout << "1111 id: " << common::Encode::HexEncode((*iter)->id) << std::endl;
         if (!nodes_filter.Contain(common::Hash::Hash64((*iter)->id))) {
             continue;
         }
@@ -57,6 +58,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         all_nodes_ids += (*iter)->id;
     }
 
+    std::cout << "1111 wait_ptr->nodes_vec size: " << wait_ptr->nodes_vec.size() << ", local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
     wait_ptr->nodes_hash = common::Hash::Hash64(all_nodes_ids);
     auto iter = all_nodes_waiting_map_.find(wait_ptr->nodes_hash);
     if (iter == all_nodes_waiting_map_.end()) {
@@ -85,6 +87,7 @@ void ElectWaitingNodes::GetThisTimeBlockLocallNodes(uint64_t tm_block_tm) {
         kBloomfilterWaitingHashCount);
     local_all_waiting_nodes_.clear();
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
+    std::cout << "0 GetThisTimeBlockLocallNodes 1111  local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
 }
 
 void ElectWaitingNodes::GetAllValidNodes(
@@ -100,9 +103,11 @@ void ElectWaitingNodes::GetAllValidNodes(
     }
 
     if (waiting_nodes.empty()) {
+        std::cout << "111 waiting_nodes.empty()" << std::endl;
         return;
     }
 
+    std::cout << "111 waiting_nodes.size()" << waiting_nodes.size() << std::endl;
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
     auto max_count_nodes = *(waiting_nodes.begin());
     for (auto iter = max_count_nodes->nodes_vec.begin();
@@ -142,6 +147,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     auto now_hb_tm = (std::chrono::steady_clock::now().time_since_epoch().count()
         - (1000000000llu * 1800llu)) / (1000000000llu * 300llu);
     std::vector<NodeDetailPtr> choosed_nodes;
+    std::cout << "GetAllValidHeartbeatNodes node_map szie: " << node_map.size() << std::endl;
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         // for fts poise
         if (time_offset_milli * 1000 > kElectAvailableJoinTime) {
@@ -151,6 +157,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
         if (valid_join_time > now_tm) {
+            std::cout << "1111 valid_join_time > now_tm error." << std::endl;
             continue;
         }
 
@@ -176,12 +183,15 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         }
 
         if (succ_hb_count < 2 * fail_hb_count) {
+            std::cout << "1111 succ_hb_count < 2 * fail_hb_count error." << std::endl;
             continue;
         }
 
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
         nodes.push_back(iter->second);
     }
+
+    std::cout << "GetAllValidHeartbeatNodes nodes szie: " << nodes.size() << std::endl;
 }
 
 void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
@@ -208,6 +218,7 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
 
     last_send_tm_ = time_block_tm;
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
+    std::cout << "1 GetThisTimeBlockLocallNodes 1111  local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
     if (!local_all_waiting_nodes_.empty()) {
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),
