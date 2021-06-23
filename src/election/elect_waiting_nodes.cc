@@ -140,7 +140,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     auto now_hb_tm = (std::chrono::steady_clock::now().time_since_epoch().count()
         - (1000000000llu * 1800llu)) / (1000000000llu * 300llu);
     std::vector<NodeDetailPtr> choosed_nodes;
-    std::cout << "GetAllValidHeartbeatNodes node_map szie: " << node_map.size() << std::endl;
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         // for fts poise
         if (time_offset_milli * 1000 > kElectAvailableJoinTime) {
@@ -183,8 +182,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
         nodes.push_back(iter->second);
     }
-
-    std::cout << "GetAllValidHeartbeatNodes nodes szie: " << nodes.size() << std::endl;
 }
 
 void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
