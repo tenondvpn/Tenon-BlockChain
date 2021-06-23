@@ -323,7 +323,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     uint64_t max_balance = 0;
     consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
     uint32_t weed_out_count = exists_shard_nodes.size() * kFtsWeedoutDividRate / 100;
-    std::cout << "weed_out_count: " << weed_out_count << std::endl;
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
@@ -336,11 +335,9 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
 
-    std::cout << "waiting_pool_ptr != nullptr: " << (waiting_pool_ptr != nullptr) << std::endl;
     if (waiting_pool_ptr != nullptr) {
         std::vector<NodeDetailPtr> pick_all_vec;
         waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
-        std::cout << "waiting_pool_ptr->GetAllValidNodes pick_all_vec size: " << pick_all_vec.size() << std::endl;
         if (!pick_all_vec.empty()) {
             if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
                 // TODO: statistic to add new consensus shard
@@ -351,7 +348,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
                 pick_in_count += weed_out_count / 2;
             }
 
-            std::cout << "pick_in_count: " << pick_in_count << std::endl;
             FtsGetNodes(
                 false,
                 pick_in_count,
@@ -368,7 +364,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             statistic_info,
             statistic_info.succ_tx_count_size() * kInvalidShardNodesRate / 100,
             &direct_weed_out);
-        std::cout << "direct_weed_out: " << direct_weed_out.size() << std::endl;
         for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
             if (pick_in_vec.size() >= weed_out_count) {
                 weed_out_vec.push_back(exists_shard_nodes[iter->first]);
@@ -378,8 +373,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
 
         weed_out_count -= weed_out_vec.size();
-        std::cout << "weed_out_count: " << weed_out_count << std::endl;
-        std::cout << "weed_out_vec.size(): " << weed_out_vec.size() << std::endl;
     }
 
     if (pick_in_vec.size() < weed_out_count + weed_out_vec.size()) {
@@ -390,7 +383,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
 
-    std::cout << "weed_out_count2 :  " << weed_out_count << std::endl;
     std::set<std::string> weed_out_id_set;
     if (weed_out_count > 0) {
         FtsGetNodes(
@@ -404,7 +396,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
 
-    std::cout << "weed_out_id_set size :  " << weed_out_id_set.size() << std::endl;
     std::vector<NodeDetailPtr> elected_nodes;
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
         if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
@@ -414,12 +405,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
-    std::cout << "0 elected_nodes size :  " << elected_nodes.size() << std::endl;
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
         elected_nodes.push_back(*iter);
     }
 
-    std::cout << "1 elected_nodes size :  " << elected_nodes.size() << std::endl;
     int32_t expect_leader_count = (int32_t)pow(
         2.0,
         (double)((int32_t)log2(double(elected_nodes.size() / 3))));
@@ -427,7 +416,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         expect_leader_count = (int32_t)common::kImmutablePoolSize;
     }
 
-    std::cout << "expect_leader_count :  " << expect_leader_count << std::endl;
     common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> leader_nodes;
     FtsGetNodes(
@@ -440,7 +428,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         return kElectError;
     }
 
-    std::cout << "leader_nodes :  " << leader_nodes.size() << std::endl;
     *leader_count = leader_nodes.size();
     int32_t mode_idx = 0;
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {

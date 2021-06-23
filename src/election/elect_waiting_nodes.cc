@@ -28,7 +28,6 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     std::string coming_id = root_node_id + std::to_string(
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     if (coming_root_nodes_.find(coming_id) != coming_root_nodes_.end()) {
-        std::cout << "coming_id has coming." << std::endl;
         return;
     }
 
@@ -37,7 +36,6 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         network::kRootCongressNetworkId,
         root_node_id);
     if (member_index == elect::kInvalidMemberIndex) {
-        std::cout << "member_index == elect::kInvalidMemberIndex." << std::endl;
         return;
     }
 
@@ -49,7 +47,6 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     std::string all_nodes_ids;
     for (auto iter = local_all_waiting_nodes_.begin();
             iter != local_all_waiting_nodes_.end(); ++iter) {
-        std::cout << "1111 id: " << common::Encode::HexEncode((*iter)->id) << std::endl;
         if (!nodes_filter.Contain(common::Hash::Hash64((*iter)->id))) {
             continue;
         }
@@ -58,7 +55,6 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         all_nodes_ids += (*iter)->id;
     }
 
-    std::cout << "1111 wait_ptr->nodes_vec size: " << wait_ptr->nodes_vec.size() << ", local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
     wait_ptr->nodes_hash = common::Hash::Hash64(all_nodes_ids);
     auto iter = all_nodes_waiting_map_.find(wait_ptr->nodes_hash);
     if (iter == all_nodes_waiting_map_.end()) {
@@ -87,7 +83,6 @@ void ElectWaitingNodes::GetThisTimeBlockLocallNodes(uint64_t tm_block_tm) {
         kBloomfilterWaitingHashCount);
     local_all_waiting_nodes_.clear();
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
-    std::cout << "0 GetThisTimeBlockLocallNodes 1111  local_all_waiting_nodes_ size: " << local_all_waiting_nodes_.size() << std::endl;
 }
 
 void ElectWaitingNodes::GetAllValidNodes(
@@ -103,11 +98,9 @@ void ElectWaitingNodes::GetAllValidNodes(
     }
 
     if (waiting_nodes.empty()) {
-        std::cout << "111 waiting_nodes.empty()" << std::endl;
         return;
     }
 
-    std::cout << "111 waiting_nodes.size()" << waiting_nodes.size() << std::endl;
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
     auto max_count_nodes = *(waiting_nodes.begin());
     for (auto iter = max_count_nodes->nodes_vec.begin();
