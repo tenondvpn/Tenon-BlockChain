@@ -67,19 +67,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, tm_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, elect_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, type_),
-  3,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, crypt_data_),
   4,
   5,
   6,
+  7,
   0,
   1,
   2,
-  7,
   8,
   9,
+  10,
+  3,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 15, sizeof(::tenon::vss::protobuf::VssMessage)},
+  { 0, 16, sizeof(::tenon::vss::protobuf::VssMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -107,15 +109,16 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\tvss.proto\022\022tenon.vss.protobuf\"\306\001\n\nVssM"
+      "\n\tvss.proto\022\022tenon.vss.protobuf\"\332\001\n\nVssM"
       "essage\022\023\n\013random_hash\030\001 \001(\004\022\016\n\006random\030\002 "
       "\001(\004\022\023\n\013split_index\030\004 \001(\004\022\024\n\014split_random"
       "\030\005 \001(\004\022\016\n\006pubkey\030\006 \001(\014\022\017\n\007sign_ch\030\007 \001(\014\022"
       "\020\n\010sign_res\030\010 \001(\014\022\021\n\ttm_height\030\t \001(\004\022\024\n\014"
-      "elect_height\030\n \001(\004\022\014\n\004type\030\013 \001(\005"
+      "elect_height\030\n \001(\004\022\014\n\004type\030\013 \001(\005\022\022\n\ncryp"
+      "t_data\030\014 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 232);
+      descriptor, 252);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "vss.proto", &protobuf_RegisterTypes);
 }
@@ -150,6 +153,7 @@ const int VssMessage::kSignResFieldNumber;
 const int VssMessage::kTmHeightFieldNumber;
 const int VssMessage::kElectHeightFieldNumber;
 const int VssMessage::kTypeFieldNumber;
+const int VssMessage::kCryptDataFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 VssMessage::VssMessage()
@@ -176,6 +180,10 @@ VssMessage::VssMessage(const VssMessage& from)
   if (from.has_sign_res()) {
     sign_res_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_res_);
   }
+  crypt_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_crypt_data()) {
+    crypt_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.crypt_data_);
+  }
   ::memcpy(&random_hash_, &from.random_hash_,
     static_cast<size_t>(reinterpret_cast<char*>(&type_) -
     reinterpret_cast<char*>(&random_hash_)) + sizeof(type_));
@@ -186,6 +194,7 @@ void VssMessage::SharedCtor() {
   pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  crypt_data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&random_hash_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&type_) -
       reinterpret_cast<char*>(&random_hash_)) + sizeof(type_));
@@ -200,6 +209,7 @@ void VssMessage::SharedDtor() {
   pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_ch_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_res_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  crypt_data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void VssMessage::SetCachedSize(int size) const {
@@ -223,7 +233,7 @@ void VssMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       pubkey_.ClearNonDefaultToEmptyNoArena();
     }
@@ -233,16 +243,19 @@ void VssMessage::Clear() {
     if (cached_has_bits & 0x00000004u) {
       sign_res_.ClearNonDefaultToEmptyNoArena();
     }
+    if (cached_has_bits & 0x00000008u) {
+      crypt_data_.ClearNonDefaultToEmptyNoArena();
+    }
   }
-  if (cached_has_bits & 248u) {
+  if (cached_has_bits & 240u) {
     ::memset(&random_hash_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&tm_height_) -
-        reinterpret_cast<char*>(&random_hash_)) + sizeof(tm_height_));
+        reinterpret_cast<char*>(&split_random_) -
+        reinterpret_cast<char*>(&random_hash_)) + sizeof(split_random_));
   }
-  if (cached_has_bits & 768u) {
-    ::memset(&elect_height_, 0, static_cast<size_t>(
+  if (cached_has_bits & 1792u) {
+    ::memset(&tm_height_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&type_) -
-        reinterpret_cast<char*>(&elect_height_)) + sizeof(type_));
+        reinterpret_cast<char*>(&tm_height_)) + sizeof(type_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -392,6 +405,18 @@ bool VssMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes crypt_data = 12;
+      case 12: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(98u /* 98 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_crypt_data()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -420,22 +445,22 @@ void VssMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint64 random_hash = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->random_hash(), output);
   }
 
   // optional uint64 random = 2;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->random(), output);
   }
 
   // optional uint64 split_index = 4;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->split_index(), output);
   }
 
   // optional uint64 split_random = 5;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(5, this->split_random(), output);
   }
 
@@ -458,18 +483,24 @@ void VssMessage::SerializeWithCachedSizes(
   }
 
   // optional uint64 tm_height = 9;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(9, this->tm_height(), output);
   }
 
   // optional uint64 elect_height = 10;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->elect_height(), output);
   }
 
   // optional int32 type = 11;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->type(), output);
+  }
+
+  // optional bytes crypt_data = 12;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      12, this->crypt_data(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -488,22 +519,22 @@ void VssMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint64 random_hash = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->random_hash(), target);
   }
 
   // optional uint64 random = 2;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->random(), target);
   }
 
   // optional uint64 split_index = 4;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->split_index(), target);
   }
 
   // optional uint64 split_random = 5;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000080u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->split_random(), target);
   }
 
@@ -529,18 +560,25 @@ void VssMessage::SerializeWithCachedSizes(
   }
 
   // optional uint64 tm_height = 9;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000100u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(9, this->tm_height(), target);
   }
 
   // optional uint64 elect_height = 10;
-  if (cached_has_bits & 0x00000100u) {
+  if (cached_has_bits & 0x00000200u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->elect_height(), target);
   }
 
   // optional int32 type = 11;
-  if (cached_has_bits & 0x00000200u) {
+  if (cached_has_bits & 0x00000400u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->type(), target);
+  }
+
+  // optional bytes crypt_data = 12;
+  if (cached_has_bits & 0x00000008u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        12, this->crypt_data(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -582,6 +620,13 @@ size_t VssMessage::ByteSizeLong() const {
           this->sign_res());
     }
 
+    // optional bytes crypt_data = 12;
+    if (has_crypt_data()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->crypt_data());
+    }
+
     // optional uint64 random_hash = 1;
     if (has_random_hash()) {
       total_size += 1 +
@@ -610,6 +655,8 @@ size_t VssMessage::ByteSizeLong() const {
           this->split_random());
     }
 
+  }
+  if (_has_bits_[8 / 32] & 1792u) {
     // optional uint64 tm_height = 9;
     if (has_tm_height()) {
       total_size += 1 +
@@ -617,8 +664,6 @@ size_t VssMessage::ByteSizeLong() const {
           this->tm_height());
     }
 
-  }
-  if (_has_bits_[8 / 32] & 768u) {
     // optional uint64 elect_height = 10;
     if (has_elect_height()) {
       total_size += 1 +
@@ -676,27 +721,31 @@ void VssMessage::MergeFrom(const VssMessage& from) {
       sign_res_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_res_);
     }
     if (cached_has_bits & 0x00000008u) {
-      random_hash_ = from.random_hash_;
+      set_has_crypt_data();
+      crypt_data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.crypt_data_);
     }
     if (cached_has_bits & 0x00000010u) {
-      random_ = from.random_;
+      random_hash_ = from.random_hash_;
     }
     if (cached_has_bits & 0x00000020u) {
-      split_index_ = from.split_index_;
+      random_ = from.random_;
     }
     if (cached_has_bits & 0x00000040u) {
-      split_random_ = from.split_random_;
+      split_index_ = from.split_index_;
     }
     if (cached_has_bits & 0x00000080u) {
-      tm_height_ = from.tm_height_;
+      split_random_ = from.split_random_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 768u) {
+  if (cached_has_bits & 1792u) {
     if (cached_has_bits & 0x00000100u) {
-      elect_height_ = from.elect_height_;
+      tm_height_ = from.tm_height_;
     }
     if (cached_has_bits & 0x00000200u) {
+      elect_height_ = from.elect_height_;
+    }
+    if (cached_has_bits & 0x00000400u) {
       type_ = from.type_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -732,6 +781,8 @@ void VssMessage::InternalSwap(VssMessage* other) {
   sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   sign_res_.Swap(&other->sign_res_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  crypt_data_.Swap(&other->crypt_data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(random_hash_, other->random_hash_);
   swap(random_, other->random_);

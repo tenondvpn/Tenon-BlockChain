@@ -204,6 +204,21 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_sign_res();
   void set_allocated_sign_res(::std::string* sign_res);
 
+  // optional bytes crypt_data = 12;
+  bool has_crypt_data() const;
+  void clear_crypt_data();
+  static const int kCryptDataFieldNumber = 12;
+  const ::std::string& crypt_data() const;
+  void set_crypt_data(const ::std::string& value);
+  #if LANG_CXX11
+  void set_crypt_data(::std::string&& value);
+  #endif
+  void set_crypt_data(const char* value);
+  void set_crypt_data(const void* value, size_t size);
+  ::std::string* mutable_crypt_data();
+  ::std::string* release_crypt_data();
+  void set_allocated_crypt_data(::std::string* crypt_data);
+
   // optional uint64 random_hash = 1;
   bool has_random_hash() const;
   void clear_random_hash();
@@ -275,6 +290,8 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_elect_height();
   void set_has_type();
   void clear_has_type();
+  void set_has_crypt_data();
+  void clear_has_crypt_data();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -282,6 +299,7 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_ch_;
   ::google::protobuf::internal::ArenaStringPtr sign_res_;
+  ::google::protobuf::internal::ArenaStringPtr crypt_data_;
   ::google::protobuf::uint64 random_hash_;
   ::google::protobuf::uint64 random_;
   ::google::protobuf::uint64 split_index_;
@@ -304,13 +322,13 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
 // optional uint64 random_hash = 1;
 inline bool VssMessage::has_random_hash() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void VssMessage::set_has_random_hash() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void VssMessage::clear_has_random_hash() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void VssMessage::clear_random_hash() {
   random_hash_ = GOOGLE_ULONGLONG(0);
@@ -328,13 +346,13 @@ inline void VssMessage::set_random_hash(::google::protobuf::uint64 value) {
 
 // optional uint64 random = 2;
 inline bool VssMessage::has_random() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void VssMessage::set_has_random() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void VssMessage::clear_has_random() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void VssMessage::clear_random() {
   random_ = GOOGLE_ULONGLONG(0);
@@ -352,13 +370,13 @@ inline void VssMessage::set_random(::google::protobuf::uint64 value) {
 
 // optional uint64 split_index = 4;
 inline bool VssMessage::has_split_index() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void VssMessage::set_has_split_index() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void VssMessage::clear_has_split_index() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void VssMessage::clear_split_index() {
   split_index_ = GOOGLE_ULONGLONG(0);
@@ -376,13 +394,13 @@ inline void VssMessage::set_split_index(::google::protobuf::uint64 value) {
 
 // optional uint64 split_random = 5;
 inline bool VssMessage::has_split_random() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void VssMessage::set_has_split_random() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void VssMessage::clear_has_split_random() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void VssMessage::clear_split_random() {
   split_random_ = GOOGLE_ULONGLONG(0);
@@ -598,13 +616,13 @@ inline void VssMessage::set_allocated_sign_res(::std::string* sign_res) {
 
 // optional uint64 tm_height = 9;
 inline bool VssMessage::has_tm_height() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void VssMessage::set_has_tm_height() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void VssMessage::clear_has_tm_height() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void VssMessage::clear_tm_height() {
   tm_height_ = GOOGLE_ULONGLONG(0);
@@ -622,13 +640,13 @@ inline void VssMessage::set_tm_height(::google::protobuf::uint64 value) {
 
 // optional uint64 elect_height = 10;
 inline bool VssMessage::has_elect_height() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void VssMessage::set_has_elect_height() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void VssMessage::clear_has_elect_height() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void VssMessage::clear_elect_height() {
   elect_height_ = GOOGLE_ULONGLONG(0);
@@ -646,13 +664,13 @@ inline void VssMessage::set_elect_height(::google::protobuf::uint64 value) {
 
 // optional int32 type = 11;
 inline bool VssMessage::has_type() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void VssMessage::set_has_type() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void VssMessage::clear_has_type() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void VssMessage::clear_type() {
   type_ = 0;
@@ -666,6 +684,72 @@ inline void VssMessage::set_type(::google::protobuf::int32 value) {
   set_has_type();
   type_ = value;
   // @@protoc_insertion_point(field_set:tenon.vss.protobuf.VssMessage.type)
+}
+
+// optional bytes crypt_data = 12;
+inline bool VssMessage::has_crypt_data() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void VssMessage::set_has_crypt_data() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void VssMessage::clear_has_crypt_data() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void VssMessage::clear_crypt_data() {
+  crypt_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_crypt_data();
+}
+inline const ::std::string& VssMessage::crypt_data() const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.VssMessage.crypt_data)
+  return crypt_data_.GetNoArena();
+}
+inline void VssMessage::set_crypt_data(const ::std::string& value) {
+  set_has_crypt_data();
+  crypt_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.vss.protobuf.VssMessage.crypt_data)
+}
+#if LANG_CXX11
+inline void VssMessage::set_crypt_data(::std::string&& value) {
+  set_has_crypt_data();
+  crypt_data_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.vss.protobuf.VssMessage.crypt_data)
+}
+#endif
+inline void VssMessage::set_crypt_data(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_crypt_data();
+  crypt_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.vss.protobuf.VssMessage.crypt_data)
+}
+inline void VssMessage::set_crypt_data(const void* value, size_t size) {
+  set_has_crypt_data();
+  crypt_data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.vss.protobuf.VssMessage.crypt_data)
+}
+inline ::std::string* VssMessage::mutable_crypt_data() {
+  set_has_crypt_data();
+  // @@protoc_insertion_point(field_mutable:tenon.vss.protobuf.VssMessage.crypt_data)
+  return crypt_data_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* VssMessage::release_crypt_data() {
+  // @@protoc_insertion_point(field_release:tenon.vss.protobuf.VssMessage.crypt_data)
+  if (!has_crypt_data()) {
+    return NULL;
+  }
+  clear_has_crypt_data();
+  return crypt_data_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void VssMessage::set_allocated_crypt_data(::std::string* crypt_data) {
+  if (crypt_data != NULL) {
+    set_has_crypt_data();
+  } else {
+    clear_has_crypt_data();
+  }
+  crypt_data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), crypt_data);
+  // @@protoc_insertion_point(field_set_allocated:tenon.vss.protobuf.VssMessage.crypt_data)
 }
 
 #ifdef __GNUC__
