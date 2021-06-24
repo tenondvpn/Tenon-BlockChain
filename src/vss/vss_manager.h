@@ -33,14 +33,15 @@ private:
     void BroadcastFirstPeriodHash();
     void BroadcastSecondPeriodRandom();
     void BroadcastThirdPeriodSplitRandom();
-    void HandleFirstPeriodHash();
-    void HandleSecondPeriodRandom();
-    void HandleThirdPeriodSplitRandom();
+    void HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg);
+    void HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg);
+    void HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg);
     void HandleMessage(transport::protobuf::Header& header);
 
     RandomNum local_random_{ true };
     RandomNum other_randoms_[common::kEachShardMaxNodeCount];
     uint64_t prev_tm_height_{ 0 };
+    uint64_t prev_elect_height_{ 0 };
     uint32_t local_member_index_{ common::kEachShardMaxNodeCount };
     common::Tick vss_tick_;
     std::mutex mutex_;

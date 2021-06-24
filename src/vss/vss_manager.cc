@@ -4,7 +4,10 @@
 #include "common/time_utils.h"
 #include "election/elect_utils.h"
 #include "election/elect_manager.h"
+#include "network/route.h"
+#include "security/secp256k1.h"
 #include "vss/proto/vss.pb.h"
+#include "vss/proto/vss_proto.h"
 
 namespace tenon {
 
@@ -39,6 +42,7 @@ void VssManager::OnTimeBlock(
     local_random_.OnTimeBlock(tm_block_tm);
     latest_tm_block_tm_ = tm_block_tm;
     prev_tm_height_ = tm_height;
+    prev_elect_height_ = elect_height;
 }
 
 void VssManager::ClearAll() {
@@ -49,7 +53,11 @@ void VssManager::ClearAll() {
 }
 
 void VssManager::CheckVssPeriods() {
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        // Joined root and continue
+    }
 
+    vss_tick_.CutOff(1000000ll, std::bind(&VssManager::CheckVssPeriods, this));
 }
 
 void VssManager::CheckVssFirstPeriods() {
@@ -95,15 +103,65 @@ bool VssManager::IsVssThirdPeriods() {
 }
 
 void VssManager::BroadcastFirstPeriodHash() {
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
 
+    VssProto::CreateHashMessage(
+        dht->local_node(),
+        local_random_.GetHash(),
+        prev_tm_height_,
+        prev_elect_height_,
+        msg);
+    if (msg.has_data()) {
+        network::Route::Instance()->Send(msg);
+    }
 }
 
 void VssManager::BroadcastSecondPeriodRandom() {
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
 
+    VssProto::CreateRandomMessage(
+        dht->local_node(),
+        local_random_.GetFinalRandomNum(),
+        prev_tm_height_,
+        prev_elect_height_,
+        msg);
+    if (msg.has_data()) {
+        network::Route::Instance()->Send(msg);
+    }
 }
 
 void VssManager::BroadcastThirdPeriodSplitRandom() {
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
 
+    uint64_t random_nums[kVssRandomSplitCount] = { 0 };
+    local_random_.GetRandomNum(random_nums);
+    for (uint32_t i = 0; i < kVssRandomSplitCount; ++i) {
+        VssProto::CreateSplitRandomMessage(
+            dht->local_node(),
+            i,
+            random_nums[i],
+            prev_tm_height_,
+            prev_elect_height_,
+            msg);
+        if (msg.has_data()) {
+            network::Route::Instance()->Send(msg);
+        }
+    }
 }
 
 void VssManager::HandleMessage(transport::protobuf::Header& header) {
@@ -129,29 +187,58 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
 
     switch (vss_msg.type()) {
     case kVssRandomHash:
-        HandleFirstPeriodHash();
+        HandleFirstPeriodHash(vss_msg);
         break;
     case kVssRandom:
-        HandleSecondPeriodRandom();
+        HandleSecondPeriodRandom(vss_msg);
         break;
     case kVssRandomSplit:
-        HandleThirdPeriodSplitRandom();
+        HandleThirdPeriodSplitRandom(vss_msg);
         break;
     default:
         break;
     }
 }
 
-void VssManager::HandleFirstPeriodHash() {
+void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+        vss_msg.elect_height(),
+        network::kRootCongressNetworkId,
+        id);
+    if (mem_index == elect::kInvalidMemberIndex) {
+        return;
+    }
 
+    other_randoms_[mem_index].SetHash(vss_msg.random_hash());
 }
 
-void VssManager::HandleSecondPeriodRandom() {
+void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+        vss_msg.elect_height(),
+        network::kRootCongressNetworkId,
+        id);
+    if (mem_index == elect::kInvalidMemberIndex) {
+        return;
+    }
 
+    other_randoms_[mem_index].SetFinalRandomNum(vss_msg.random());
 }
 
-void VssManager::HandleThirdPeriodSplitRandom() {
+void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg) {
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+        vss_msg.elect_height(),
+        network::kRootCongressNetworkId,
+        id);
+    if (mem_index == elect::kInvalidMemberIndex) {
+        return;  
+    }
 
+    // Check id is valid period member
+    // 
+    other_randoms_[mem_index].SetFinalRandomNum(vss_msg.random());
 }
 
 }  // namespace vss
