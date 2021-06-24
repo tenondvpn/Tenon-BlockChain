@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "election/proto/elect_proto.h"
-#include "election/proto/elect.pb.h"
 
 #include <limits>
 
 #include "common/country_code.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
+#include "election/proto/elect.pb.h"
+#include "election/elect_utils.h"
 #include "security/schnorr.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_key.h"
