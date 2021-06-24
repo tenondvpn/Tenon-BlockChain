@@ -8,6 +8,7 @@
 #include "common/random.h"
 #include "common/hash.h"
 #include "common/limit_heap.h"
+#include "common/global_info.h"
 #include "vss/vss_utils.h"
 
 namespace tenon {

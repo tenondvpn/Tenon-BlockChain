@@ -10,16 +10,6 @@ namespace security {
 class Crypto {
 public:
     static Crypto* Instance();
-    std::string AesEncrypt(
-        const std::string& cipher,
-        const std::string& password,
-        uint32_t rounds,
-        const std::string& salt);
-    std::string AesDecrypt(
-        const std::string& cipher,
-        const std::string& password,
-        uint32_t rounds,
-        const std::string& salt);
     std::string GetEncryptData(
         const security::PublicKey& pub_key,
         const std::string& message);
