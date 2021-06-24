@@ -7,7 +7,7 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "transport/proto/transport.pb.h"
 #include "network/shard_network.h"
 #include "election/elect_utils.h"

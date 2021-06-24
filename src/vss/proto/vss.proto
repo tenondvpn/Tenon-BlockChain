@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package tenon.vss.protobuf;
+
+message VssMessage {
+	optional uint64 random_hash = 1;
+	optional uint64 random = 2;
+	optional uint64 split_index = 4;
+	optional uint64 split_random = 5;
+    optional bytes pubkey = 6;
+	optional bytes sign_ch = 7;
+	optional bytes sign_res = 8;
+	optional uint64 tm_height = 9;
+	optional uint64 elect_height = 10;
+}

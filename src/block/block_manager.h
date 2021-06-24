@@ -3,7 +3,7 @@
 #include <deque>
 
 #include "common/config.h"
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "bft/proto/bft.pb.h"

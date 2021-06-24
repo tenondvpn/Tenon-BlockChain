@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "election/proto/elect_proto.h"
+#include "election/proto/elect.pb.h"
 
 #include <limits>
 
 #include "common/country_code.h"
 #include "common/global_info.h"
+#include "common/user_property_key_define.h"
 #include "security/schnorr.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_key.h"
 #include "dht/base_dht.h"
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
-#include "election/proto/elect.pb.h"
-#include "election/elect_utils.h"
 
 namespace tenon {
 
@@ -22,11 +22,11 @@ void ElectProto::SetDefaultBroadcastParam(
         transport::protobuf::BroadcastParam* broad_param) {
     broad_param->set_layer_left(0);
     broad_param->set_layer_right((std::numeric_limits<uint64_t>::max)());
-    broad_param->set_ign_bloomfilter_hop(kElectBroadcastIgnBloomfilterHop);
-    broad_param->set_stop_times(kElectBroadcastStopTimes);
-    broad_param->set_hop_limit(kElectHopLimit);
-    broad_param->set_hop_to_layer(kElectHopToLayer);
-    broad_param->set_neighbor_count(kElectNeighborCount);
+    broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
+    broad_param->set_stop_times(common::kDefaultBroadcastStopTimes);
+    broad_param->set_hop_limit(common::kDefaultBroadcastHopLimit);
+    broad_param->set_hop_to_layer(common::kDefaultBroadcastHopToLayer);
+    broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
 }
 
 void ElectProto::CreateElectWaitingNodes(

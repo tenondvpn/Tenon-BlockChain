@@ -3,7 +3,7 @@
 #include "db/db.h"
 #include "db/dict.h"
 #include "common/string_utils.h"
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "db/db_utils.h"
 
 namespace tenon {

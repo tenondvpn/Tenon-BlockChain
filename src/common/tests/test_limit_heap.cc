@@ -4,7 +4,7 @@
 #include <chrono>
 
 #define private public
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "common/random.h"
 
 namespace tenon {
@@ -13,7 +13,7 @@ namespace common {
 
 namespace test {
 
-class TestMinHeap : public testing::Test {
+class TestLimitHeap : public testing::Test {
 public:
     static void SetUpTestCase() {
     }
@@ -31,7 +31,7 @@ private:
 
 };
 
-TEST_F(TestMinHeap, TestMax) {
+TEST_F(TestLimitHeap, TestMax) {
     LimitHeap<uint64_t, true> test_min_heap(true, 1024);
     uint64_t max_data = 0;
     for (uint64_t i = 0; i < 1000; ++i) {
@@ -51,7 +51,7 @@ TEST_F(TestMinHeap, TestMax) {
     std::cout << std::endl;
 }
 
-TEST_F(TestMinHeap, TestMin) {
+TEST_F(TestLimitHeap, TestMin) {
     LimitHeap<uint64_t, false> test_min_heap(true, 1024);
     uint64_t max_data = 999999999;
     for (uint64_t i = 0; i < 1000; ++i) {

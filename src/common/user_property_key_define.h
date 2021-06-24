@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "common/encode.h"
 
 namespace tenon {
@@ -121,6 +121,12 @@ static const uint64_t kGenesisFoundationMaxTenon = common::kTenonMaxAmount * 35l
 
 static const uint64_t kVpnVipMinPayfor = 66llu * kTenonMiniTransportUnit;
 static const uint64_t kVpnVipMaxPayfor = 2000u * kTenonMiniTransportUnit;
+
+static const uint32_t kDefaultBroadcastIgnBloomfilterHop = 1u;
+static const uint32_t kDefaultBroadcastStopTimes = 2u;
+static const uint32_t kDefaultBroadcastHopLimit = 5u;
+static const uint32_t kDefaultBroadcastHopToLayer = 2u;
+static const uint32_t kDefaultBroadcastNeighborCount = 7u;
 
 }  // namespace  common
 

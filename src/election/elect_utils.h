@@ -2,7 +2,7 @@
 
 #include "common/utils.h"
 #include "common/log.h"
-#include "common/min_heap.h"
+#include "common/limit_heap.h"
 #include "common/hash.h"
 
 #define ELECT_DEBUG(fmt, ...) TENON_DEBUG("[elect]" fmt, ## __VA_ARGS__)
