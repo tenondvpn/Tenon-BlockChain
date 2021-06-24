@@ -33,7 +33,7 @@ void VssProto::CreateHashMessage(
     msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
-    msg.set_type(common::kElectMessage);
+    msg.set_type(common::kVssMessage);
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
@@ -41,6 +41,7 @@ void VssProto::CreateHashMessage(
     vss_msg.set_random_hash(random_hash);
     vss_msg.set_tm_height(tm_height);
     vss_msg.set_elect_height(elect_height);
+    vss_msg.set_type(kVssRandomHash);
     std::string hash_str = std::to_string(random_hash) + "_" +
         std::to_string(tm_height) + "_" +
         std::to_string(elect_height) + "_" +
@@ -79,7 +80,7 @@ void VssProto::CreateRandomMessage(
     msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
-    msg.set_type(common::kElectMessage);
+    msg.set_type(common::kVssMessage);
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
@@ -87,6 +88,7 @@ void VssProto::CreateRandomMessage(
     vss_msg.set_random(random);
     vss_msg.set_tm_height(tm_height);
     vss_msg.set_elect_height(elect_height);
+    vss_msg.set_type(kVssRandom);
     std::string hash_str = std::to_string(random) + "_" +
         std::to_string(tm_height) + "_" +
         std::to_string(elect_height) + "_" +
@@ -126,7 +128,7 @@ void VssProto::CreateSplitRandomMessage(
     msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
-    msg.set_type(common::kElectMessage);
+    msg.set_type(common::kVssMessage);
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
@@ -135,6 +137,7 @@ void VssProto::CreateSplitRandomMessage(
     vss_msg.set_split_random(split_random);
     vss_msg.set_tm_height(tm_height);
     vss_msg.set_elect_height(elect_height);
+    vss_msg.set_type(kVssRandomSplit);
     std::string hash_str = std::to_string(split_index) + "_" +
         std::to_string(split_random) + "_" +
         std::to_string(tm_height) + "_" +

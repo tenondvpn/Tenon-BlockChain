@@ -126,6 +126,32 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
             common::Encode::HexEncode(vss_msg.sign_res()));
         return;
     }
+
+    switch (vss_msg.type()) {
+    case kVssRandomHash:
+        HandleFirstPeriodHash();
+        break;
+    case kVssRandom:
+        HandleSecondPeriodRandom();
+        break;
+    case kVssRandomSplit:
+        HandleThirdPeriodSplitRandom();
+        break;
+    default:
+        break;
+    }
+}
+
+void VssManager::HandleFirstPeriodHash() {
+
+}
+
+void VssManager::HandleSecondPeriodRandom() {
+
+}
+
+void VssManager::HandleThirdPeriodSplitRandom() {
+
 }
 
 }  // namespace vss

@@ -33,6 +33,9 @@ private:
     void BroadcastFirstPeriodHash();
     void BroadcastSecondPeriodRandom();
     void BroadcastThirdPeriodSplitRandom();
+    void HandleFirstPeriodHash();
+    void HandleSecondPeriodRandom();
+    void HandleThirdPeriodSplitRandom();
     void HandleMessage(transport::protobuf::Header& header);
 
     RandomNum local_random_{ true };

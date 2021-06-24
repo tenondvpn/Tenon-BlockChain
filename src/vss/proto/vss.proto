@@ -12,4 +12,5 @@ message VssMessage {
 	optional bytes sign_res = 8;
 	optional uint64 tm_height = 9;
 	optional uint64 elect_height = 10;
+	optional int32 type = 11;
 }

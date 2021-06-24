@@ -18,6 +18,12 @@ enum VssErrorCode {
     kVssError = 1,
 };
 
+enum VssMessageType {
+    kVssRandomHash = 1,
+    kVssRandom = 2,
+    kVssRandomSplit = 3,
+};
+
 static const uint32_t kVssRandomSplitCount = 7u;
 static const uint32_t kVssRandomduplicationCount = 7u;
 // left 60 seconds for each nodes valid
