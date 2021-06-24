@@ -6,6 +6,7 @@
 #include "security/schnorr.h"
 #include "transport/transport_utils.h"
 #include "vss/vss_utils.h"
+#include "vss/proto/vss.pb.h"
 
 namespace tenon {
 
