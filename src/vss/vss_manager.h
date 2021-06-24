@@ -7,6 +7,7 @@
 #include "common/tick.h"
 #include "transport/proto/transport.pb.h"
 #include "vss/random_num.h"
+#include "vss/proto/vss.pb.h"
 
 namespace tenon {
 

@@ -6,7 +6,6 @@
 #include "election/elect_manager.h"
 #include "network/route.h"
 #include "security/secp256k1.h"
-#include "vss/proto/vss.pb.h"
 #include "vss/proto/vss_proto.h"
 
 namespace tenon {
