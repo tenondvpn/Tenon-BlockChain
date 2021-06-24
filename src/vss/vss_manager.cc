@@ -4,6 +4,7 @@
 #include "common/time_utils.h"
 #include "election/elect_utils.h"
 #include "election/elect_manager.h"
+#include "vss/proto/vss.pb.h"
 
 namespace tenon {
 
@@ -106,23 +107,23 @@ void VssManager::BroadcastThirdPeriodSplitRandom() {
 }
 
 void VssManager::HandleMessage(transport::protobuf::Header& header) {
-    assert(header.type() == common::kElectMessage);
+    assert(header.type() == common::kVssMessage);
     // TODO: verify message signature
-    protobuf::ElectMessage ec_msg;
-    if (!ec_msg.ParseFromString(header.data())) {
+    protobuf::VssMessage vss_msg;
+    if (!vss_msg.ParseFromString(header.data())) {
         ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
         return;
     }
 
-    if (!security::IsValidPublicKey(ec_msg.pubkey())) {
-        ELECT_ERROR("invalid public key: %s!", common::Encode::HexEncode(ec_msg.pubkey()));
+    if (!security::IsValidPublicKey(vss_msg.pubkey())) {
+        ELECT_ERROR("invalid public key: %s!", common::Encode::HexEncode(vss_msg.pubkey()));
         return;
     }
 
-    if (!security::IsValidSignature(ec_msg.sign_ch(), ec_msg.sign_res())) {
+    if (!security::IsValidSignature(vss_msg.sign_ch(), vss_msg.sign_res())) {
         ELECT_ERROR("invalid sign: %s, %s!",
-            common::Encode::HexEncode(ec_msg.sign_ch()),
-            common::Encode::HexEncode(ec_msg.sign_res()));
+            common::Encode::HexEncode(vss_msg.sign_ch()),
+            common::Encode::HexEncode(vss_msg.sign_res()));
         return;
     }
 }

@@ -69,6 +69,7 @@ enum MessageType {
     kUdpDemoTestMessage = 11,
     kRefreshVpnNodesMessage = 12,
     kVpnRelayMessage = 13,
+    kVssMessage = 14,
     // max (message) type
     kLegoMaxMessageTypeCount,
 };

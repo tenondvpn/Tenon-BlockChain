@@ -39,7 +39,8 @@ uint64_t Modexp::GetGasPrice(const std::string& data) {
 
     bigint const maxLength((std::max)(modLength, baseLength));
     bigint const adjustedExpLength(ExpLengthAdjust(baseLength + 96, expLength, data));
-    return static_cast<uint64_t>(MultComplexity(maxLength) * (adjustedExpLength > 1 ? adjustedExpLength : 1)) / 20;
+    return static_cast<uint64_t>(MultComplexity(maxLength) *
+        (adjustedExpLength > 1 ? adjustedExpLength : 1)) / 20;
 }
 
 int Modexp::call(
@@ -68,7 +69,10 @@ int Modexp::call(
     assert(expLength <= std::numeric_limits<size_t>::max() / 8);
     bigint const base(ParseBigEndianRightPadded(param.data, 96, baseLength));
     bigint const exp(ParseBigEndianRightPadded(param.data, 96 + baseLength, expLength));
-    bigint const mod(ParseBigEndianRightPadded(param.data, 96 + baseLength + expLength, modLength));
+    bigint const mod(ParseBigEndianRightPadded(
+        param.data,
+        96 + baseLength + expLength,
+        modLength));
     bigint const result = mod != 0 ? boost::multiprecision::powm(base, exp, mod) : bigint{ 0 };
     res->output_data = new uint8_t[static_cast<size_t>(modLength)];
     bignum::ToBigEndian(result, (uint8_t*)res->output_data, static_cast<size_t>(modLength));
