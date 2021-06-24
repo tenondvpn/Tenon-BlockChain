@@ -66,6 +66,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, sign_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, tm_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, elect_height_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, type_),
   3,
   4,
   5,
@@ -75,9 +76,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   2,
   7,
   8,
+  9,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 14, sizeof(::tenon::vss::protobuf::VssMessage)},
+  { 0, 15, sizeof(::tenon::vss::protobuf::VssMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -105,15 +107,15 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\tvss.proto\022\022tenon.vss.protobuf\"\270\001\n\nVssM"
+      "\n\tvss.proto\022\022tenon.vss.protobuf\"\306\001\n\nVssM"
       "essage\022\023\n\013random_hash\030\001 \001(\004\022\016\n\006random\030\002 "
       "\001(\004\022\023\n\013split_index\030\004 \001(\004\022\024\n\014split_random"
       "\030\005 \001(\004\022\016\n\006pubkey\030\006 \001(\014\022\017\n\007sign_ch\030\007 \001(\014\022"
       "\020\n\010sign_res\030\010 \001(\014\022\021\n\ttm_height\030\t \001(\004\022\024\n\014"
-      "elect_height\030\n \001(\004"
+      "elect_height\030\n \001(\004\022\014\n\004type\030\013 \001(\005"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 218);
+      descriptor, 232);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "vss.proto", &protobuf_RegisterTypes);
 }
@@ -147,6 +149,7 @@ const int VssMessage::kSignChFieldNumber;
 const int VssMessage::kSignResFieldNumber;
 const int VssMessage::kTmHeightFieldNumber;
 const int VssMessage::kElectHeightFieldNumber;
+const int VssMessage::kTypeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 VssMessage::VssMessage()
@@ -174,8 +177,8 @@ VssMessage::VssMessage(const VssMessage& from)
     sign_res_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_res_);
   }
   ::memcpy(&random_hash_, &from.random_hash_,
-    static_cast<size_t>(reinterpret_cast<char*>(&elect_height_) -
-    reinterpret_cast<char*>(&random_hash_)) + sizeof(elect_height_));
+    static_cast<size_t>(reinterpret_cast<char*>(&type_) -
+    reinterpret_cast<char*>(&random_hash_)) + sizeof(type_));
   // @@protoc_insertion_point(copy_constructor:tenon.vss.protobuf.VssMessage)
 }
 
@@ -184,8 +187,8 @@ void VssMessage::SharedCtor() {
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&random_hash_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&elect_height_) -
-      reinterpret_cast<char*>(&random_hash_)) + sizeof(elect_height_));
+      reinterpret_cast<char*>(&type_) -
+      reinterpret_cast<char*>(&random_hash_)) + sizeof(type_));
 }
 
 VssMessage::~VssMessage() {
@@ -236,7 +239,11 @@ void VssMessage::Clear() {
         reinterpret_cast<char*>(&tm_height_) -
         reinterpret_cast<char*>(&random_hash_)) + sizeof(tm_height_));
   }
-  elect_height_ = GOOGLE_ULONGLONG(0);
+  if (cached_has_bits & 768u) {
+    ::memset(&elect_height_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&type_) -
+        reinterpret_cast<char*>(&elect_height_)) + sizeof(type_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -371,6 +378,20 @@ bool VssMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional int32 type = 11;
+      case 11: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(88u /* 88 & 0xFF */)) {
+          set_has_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &type_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -446,6 +467,11 @@ void VssMessage::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(10, this->elect_height(), output);
   }
 
+  // optional int32 type = 11;
+  if (cached_has_bits & 0x00000200u) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->type(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -510,6 +536,11 @@ void VssMessage::SerializeWithCachedSizes(
   // optional uint64 elect_height = 10;
   if (cached_has_bits & 0x00000100u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(10, this->elect_height(), target);
+  }
+
+  // optional int32 type = 11;
+  if (cached_has_bits & 0x00000200u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->type(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -587,13 +618,22 @@ size_t VssMessage::ByteSizeLong() const {
     }
 
   }
-  // optional uint64 elect_height = 10;
-  if (has_elect_height()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->elect_height());
-  }
+  if (_has_bits_[8 / 32] & 768u) {
+    // optional uint64 elect_height = 10;
+    if (has_elect_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->elect_height());
+    }
 
+    // optional int32 type = 11;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->type());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -652,8 +692,14 @@ void VssMessage::MergeFrom(const VssMessage& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 0x00000100u) {
-    set_elect_height(from.elect_height());
+  if (cached_has_bits & 768u) {
+    if (cached_has_bits & 0x00000100u) {
+      elect_height_ = from.elect_height_;
+    }
+    if (cached_has_bits & 0x00000200u) {
+      type_ = from.type_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -693,6 +739,7 @@ void VssMessage::InternalSwap(VssMessage* other) {
   swap(split_random_, other->split_random_);
   swap(tm_height_, other->tm_height_);
   swap(elect_height_, other->elect_height_);
+  swap(type_, other->type_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }

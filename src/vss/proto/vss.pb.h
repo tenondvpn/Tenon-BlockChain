@@ -246,6 +246,13 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint64 elect_height() const;
   void set_elect_height(::google::protobuf::uint64 value);
 
+  // optional int32 type = 11;
+  bool has_type() const;
+  void clear_type();
+  static const int kTypeFieldNumber = 11;
+  ::google::protobuf::int32 type() const;
+  void set_type(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.vss.protobuf.VssMessage)
  private:
   void set_has_random_hash();
@@ -266,6 +273,8 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_tm_height();
   void set_has_elect_height();
   void clear_has_elect_height();
+  void set_has_type();
+  void clear_has_type();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -279,6 +288,7 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint64 split_random_;
   ::google::protobuf::uint64 tm_height_;
   ::google::protobuf::uint64 elect_height_;
+  ::google::protobuf::int32 type_;
   friend struct ::protobuf_vss_2eproto::TableStruct;
 };
 // ===================================================================
@@ -632,6 +642,30 @@ inline void VssMessage::set_elect_height(::google::protobuf::uint64 value) {
   set_has_elect_height();
   elect_height_ = value;
   // @@protoc_insertion_point(field_set:tenon.vss.protobuf.VssMessage.elect_height)
+}
+
+// optional int32 type = 11;
+inline bool VssMessage::has_type() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void VssMessage::set_has_type() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void VssMessage::clear_has_type() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void VssMessage::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::google::protobuf::int32 VssMessage::type() const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.VssMessage.type)
+  return type_;
+}
+inline void VssMessage::set_type(::google::protobuf::int32 value) {
+  set_has_type();
+  type_ = value;
+  // @@protoc_insertion_point(field_set:tenon.vss.protobuf.VssMessage.type)
 }
 
 #ifdef __GNUC__
