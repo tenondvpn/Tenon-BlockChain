@@ -31,6 +31,9 @@ public:
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
+    void GetAllNodes(
+        uint32_t network_id,
+        std::vector<std::string>* nodes);
 
 private:
     elect::MembersPtr* network_members_;

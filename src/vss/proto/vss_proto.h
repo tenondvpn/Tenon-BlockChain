@@ -23,12 +23,21 @@ public:
         uint64_t tm_height,
         uint64_t elect_height,
         transport::protobuf::Header& msg);
-    static void CreateSplitRandomMessage(
+    static void CreateFirstSplitRandomMessage(
         const dht::NodePtr& local_node,
         uint64_t split_index,
         uint64_t split_random,
         uint64_t tm_height,
         uint64_t elect_height,
+        const std::string& des_id,
+        transport::protobuf::Header& msg);
+    static void CreateThirdSplitRandomMessage(
+        const dht::NodePtr& local_node,
+        uint64_t split_index,
+        uint64_t split_random,
+        uint64_t tm_height,
+        uint64_t elect_height,
+        const std::string& des_id,
         transport::protobuf::Header& msg);
 
 private:

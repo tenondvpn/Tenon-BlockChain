@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common/utils.h"
+#include "security/public_key.h"
 
 namespace tenon {
 
@@ -19,6 +20,12 @@ public:
         const std::string& password,
         uint32_t rounds,
         const std::string& salt);
+    std::string GetEncryptData(
+        const security::PublicKey& pub_key,
+        const std::string& message);
+    std::string GetDecryptData(
+        const std::string& pubkey,
+        const std::string& crypt_message);
 
 private:
     Crypto() {}

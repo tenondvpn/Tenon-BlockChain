@@ -492,6 +492,31 @@ void ElectManager::SetNetworkMember(
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
 }
 
+void ElectManager::GetAllNodes(
+        uint64_t elect_height,
+        uint32_t network_id,
+        std::vector<std::string>* nodes) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return;
+        }
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return;
+        }
+
+        mem_ptr = iter->second;
+    }
+
+    mem_ptr->GetAllNodes(network_id, nodes);
+}
+
 int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
     return IsLeader(common::kInvalidUint64, network_id, node_id);
 }
@@ -504,7 +529,9 @@ elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
     return GetNetworkMembers(common::kInvalidUint64, network_id);
 }
 
-elect::BftMemberPtr ElectManager::GetMemberWithId(uint32_t network_id, const std::string& node_id) {
+elect::BftMemberPtr ElectManager::GetMemberWithId(
+        uint32_t network_id,
+        const std::string& node_id) {
     return GetMember(common::kInvalidUint64, network_id, node_id);
 }
 
@@ -522,6 +549,10 @@ uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
 
 int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
     return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
+}
+
+void ElectManager::GetAllNodes(uint32_t network_id, std::vector<std::string>* nodes) {
+    GetAllNodes(common::kInvalidUint64, network_id, nodes);
 }
 
 bool ElectManager::IsValidShardLeaders(uint32_t network_id, const std::string& id) {

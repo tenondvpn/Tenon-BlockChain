@@ -21,10 +21,11 @@ enum VssErrorCode {
 enum VssMessageType {
     kVssRandomHash = 1,
     kVssRandom = 2,
-    kVssRandomSplit = 3,
+    kVssFirstRandomSplit = 3,
+    kVssThirdRandomSplit = 4,
 };
 
-static const uint32_t kVssRandomSplitCount = 7u;
+static const int32_t kVssRandomSplitCount = 3u;
 static const uint32_t kVssRandomduplicationCount = 7u;
 // left 60 seconds for each nodes valid
 static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSeconds - 60;

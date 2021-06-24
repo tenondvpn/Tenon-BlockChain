@@ -46,15 +46,18 @@ public:
         random_num_hash_ = common::Hash::Hash64(std::to_string(final_random_num_));
         tm_block_tm_ = tm_block_tm;
         valid_ = true;
+        owner_id_ = common::GlobalInfo::Instance()->id();
     }
 
-    void SetHash(uint64_t hash_num) {
+    void SetHash(const std::string& id, uint64_t hash_num) {
         std::lock_guard<std::mutex> guard(mutex_);
-        if (valid_ || is_local_) {
+        // owner has came
+        if (valid_ || is_local_ || !owner_id_.empty()) {
             return;
         }
 
         random_num_hash_ = hash_num;
+        owner_id_ = id;
     }
 
     uint64_t GetHash() {
@@ -72,9 +75,10 @@ public:
         return final_random_num_;
     }
     
-    void SetFinalRandomNum(uint64_t final_random_num) {
+    void SetFinalRandomNum(const std::string& id, uint64_t final_random_num) {
         std::lock_guard<std::mutex> guard(mutex_);
-        if (valid_ || is_local_) {
+        // random hash must coming
+        if (valid_ || is_local_ || owner_id_ != id) {
             return;
         }
 
@@ -85,13 +89,34 @@ public:
         }
     }
 
-    void SetRandomNum(
+    void SetFirstSplitRandomNum(
+            uint64_t tm_block_tm,
+            uint32_t index,
+            uint64_t rand_num) {
+        std::lock_guard<std::mutex> guard(first_split_map_mutex_);
+        first_split_map_[index] = rand_num;
+    }
+
+    void GetFirstSplitRandomNum(std::vector<uint64_t>* res) {
+        std::lock_guard<std::mutex> guard(first_split_map_mutex_);
+        for (auto index_itr = first_split_map_.begin();
+            index_itr != first_split_map_.end(); ++index_itr) {
+            res->push_back(index_itr->second);
+        }
+    }
+
+    bool IsRandomValid() {
+        return valid_;
+    }
+
+    void SetThirdSplitRandomNum(
             uint64_t tm_block_tm,
             const std::string& from_id,
             uint32_t index,
             uint64_t rand_num) {
         std::lock_guard<std::mutex> guard(mutex_);
-        if (valid_ || is_local_) {
+        // random hash must coming
+        if (valid_ || is_local_ || owner_id_ != from_id) {
             return;
         }
 
@@ -140,6 +165,7 @@ private:
         random_num_hash_ = 0;
         added_id_set_.clear();
         valid_ = false;
+        owner_id_ = "";
     }
 
     std::mutex mutex_;
@@ -150,8 +176,11 @@ private:
     std::unordered_map<uint64_t, uint32_t> split_num_map_[kVssRandomSplitCount];
     std::pair<uint64_t, uint32_t> max_random_count_[kVssRandomSplitCount];
     std::unordered_set<std::string> added_id_set_;
-    bool valid_{ false };
+    std::atomic<bool> valid_{ false };
     bool is_local_{ false };
+    std::string owner_id_;
+    std::unordered_map<uint32_t, uint64_t> first_split_map_;
+    std::mutex first_split_map_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(RandomNum);
 };

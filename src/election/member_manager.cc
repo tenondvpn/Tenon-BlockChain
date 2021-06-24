@@ -61,6 +61,17 @@ elect::MembersPtr MemberManager::GetNetworkMembers(uint32_t network_id) {
     return network_members_[network_id];
 }
 
+void MemberManager::GetAllNodes(
+        uint32_t network_id,
+        std::vector<std::string>* nodes) {
+    assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
+    std::lock_guard<std::mutex> guard(all_mutex_);
+    for (auto iter = network_members_[network_id]->begin();
+            iter != network_members_[network_id]->end(); ++iter) {
+        nodes->push_back((*iter)->id);
+    }
+}
+
 uint32_t MemberManager::GetMemberCount(uint32_t network_id) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
