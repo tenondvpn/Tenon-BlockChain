@@ -7,6 +7,7 @@
 
 #include "bzlib.h"
 
+#define TENON_UNITTEST
 #define private public
 #include "election/elect_pool_manager.h"
 #include "election/elect_manager.h"
@@ -342,6 +343,57 @@ TEST_F(TestVssManager, OnTimeBlock) {
         ASSERT_TRUE(vss_mgrs[i].local_random_.valid_);
         ASSERT_FALSE(vss_mgrs[i].local_random_.invalid_);
         ASSERT_EQ(vss_mgrs[i].local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    }
+
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].BroadcastFirstPeriodHash();
+        auto first_msg = vss_mgrs[i].first_msg_;
+        protobuf::VssMessage vss_msg;
+        vss_msg.ParseFromString(first_msg.data());
+        auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+        auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
+        ASSERT_EQ(tmp_id1, tmp_id2);
+        for (uint32_t j = 0; j < root_member_count; ++j) {
+            if (i == j) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(first_prikey_root[j]),
+                network::kRootCongressNetworkId);
+            vss_mgrs[j].HandleFirstPeriodHash(vss_msg);
+            ASSERT_EQ(
+                vss_mgrs[j].other_randoms_[i].random_num_hash_,
+                vss_mgrs[i].local_random_.random_num_hash_);
+        }
+
+        vss_mgrs[i].BroadcastFirstPeriodSplitRandom();
+        auto first_split_msgs = vss_mgrs[i].first_split_msgs_;
+        for (uint32_t msg_idx = 0; msg_idx < first_split_msgs.size(); ++msg_idx) {
+            uint32_t begin_idx = (vss_mgrs[i].prev_epoch_final_random_ ^
+                common::Hash::Hash64(tmp_id1)) %
+                root_member_count;
+            for (uint32_t j = 0; j < root_member_count; ++j) {
+                if (i == j) {
+                    continue;
+                }
+
+                if ((j - begin_idx) % kVssRandomSplitCount != 0) {
+                    continue;
+                }
+
+                protobuf::VssMessage tmp_vss_msg;
+                tmp_vss_msg.ParseFromString(first_split_msgs[msg_idx].data());
+                SetGloableInfo(
+                    common::Encode::HexEncode(first_prikey_root[j]),
+                    network::kRootCongressNetworkId);
+                vss_mgrs[j].HandleFirstPeriodSplitRandom(tmp_vss_msg);
+                ASSERT_FALSE(vss_mgrs[j].other_randoms_[i].first_split_map_.empty());
+            }
+        }
     }
 }
 

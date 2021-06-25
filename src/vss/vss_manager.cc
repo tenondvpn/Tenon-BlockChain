@@ -171,6 +171,7 @@ void VssManager::BroadcastFirstPeriodHash() {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
+        VSS_ERROR("not join network[%u]", common::GlobalInfo::Instance()->network_id());
         return;
     }
 
@@ -241,7 +242,9 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
         return;
     }
 
-    uint32_t begin_idx = prev_epoch_final_random_ % all_root_nodes.size();
+    uint32_t begin_idx = (prev_epoch_final_random_ ^
+        common::Hash::Hash64(common::GlobalInfo::Instance()->id())) %
+        all_root_nodes.size();
     for (uint32_t i = 0; i < kVssRandomSplitCount; ++i) {
         begin_idx += i;
         for (int32_t node_idx = begin_idx;
@@ -252,7 +255,7 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
 
             VssProto::CreateFirstSplitRandomMessage(
                 dht->local_node(),
-                node_idx,
+                i,
                 random_nums[i],
                 prev_tm_height_,
                 prev_elect_height_,
@@ -275,7 +278,7 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
 
                 VssProto::CreateFirstSplitRandomMessage(
                     dht->local_node(),
-                    node_idx,
+                    i,
                     random_nums[i],
                     prev_tm_height_,
                     prev_elect_height_,
@@ -381,6 +384,7 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
+        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
         return;
     }
 
@@ -392,6 +396,7 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Schnorr::Instance()->Verify failed");
         return;
     }
 
