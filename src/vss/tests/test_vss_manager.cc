@@ -281,6 +281,14 @@ TEST_F(TestVssManager, OnTimeBlock) {
     elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     vss_mgr.OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
     ASSERT_EQ(vss_mgr.EpochRandom(), 123456789llu);
+    ASSERT_TRUE(vss_mgr.local_random_.valid_);
+    ASSERT_FALSE(vss_mgr.local_random_.invalid_);
+    ASSERT_EQ(vss_mgr.local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    std::cout << "final_random_num_: " << vss_mgr.local_random_.final_random_num_
+        << ", random_num_hash_: " << vss_mgr.local_random_.random_num_hash_
+        << ", tm_block_tm_: " << vss_mgr.local_random_.tm_block_tm_
+        << ", valid_: " << vss_mgr.local_random_.valid_
+        << std::endl;
 }
 
 }  // namespace test

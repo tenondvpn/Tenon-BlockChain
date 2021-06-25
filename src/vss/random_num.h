@@ -28,11 +28,11 @@ public:
     }
 
     void SetId(const std::string& id) {
-        id_ = id;
+        owner_id_ = id;
     }
 
     std::string GetId() {
-        return id_;
+        return owner_id_;
     }
 
     void OnTimeBlock(uint64_t tm_block_tm) {
@@ -112,7 +112,7 @@ public:
         for (auto index_itr = first_split_map_.begin();
                 index_itr != first_split_map_.end(); ++index_itr) {
             auto split_item = vss_msg.add_all_split_random();
-            split_item->set_id(id_);
+            split_item->set_id(owner_id_);
             split_item->set_split_index(index_itr->first);
             split_item->set_split_random(index_itr->second);
         }
@@ -186,7 +186,6 @@ private:
     }
 
     std::mutex mutex_;
-    std::string id_;
     uint64_t random_nums_[kVssRandomSplitCount] = { 0 };
     uint64_t final_random_num_{ 0 };
     uint64_t tm_block_tm_{ 0 };
