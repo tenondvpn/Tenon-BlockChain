@@ -50,7 +50,7 @@ private:
 
     RandomNum local_random_{ true };
     RandomNum other_randoms_[common::kEachShardMaxNodeCount];
-    uint64_t prev_tm_height_{ 0 };
+    uint64_t prev_tm_height_{ common::kInvalidUint64 };
     uint64_t prev_elect_height_{ 0 };
     uint32_t local_member_index_{ common::kEachShardMaxNodeCount };
     common::Tick vss_tick_;

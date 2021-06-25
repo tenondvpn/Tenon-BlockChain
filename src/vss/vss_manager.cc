@@ -36,7 +36,7 @@ void VssManager::OnTimeBlock(
     }
 
     std::lock_guard<std::mutex> guard(mutex_);
-    if (prev_tm_height_ >= tm_height) {
+    if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
         return;
     }
 

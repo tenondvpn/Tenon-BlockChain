@@ -280,6 +280,7 @@ TEST_F(TestVssManager, OnTimeBlock) {
     auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
     elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     vss_mgr.OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
+    ASSERT_EQ(vss_mgr.EpochRandom(), 123456789llu);
 }
 
 }  // namespace test
