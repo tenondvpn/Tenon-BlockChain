@@ -2,6 +2,12 @@ syntax = "proto2";
 
 package tenon.vss.protobuf;
 
+message SplitItem {
+	optional bytes id = 1;
+	optional uint64 split_index = 2;
+	optional uint64 split_random = 3;
+}
+
 message VssMessage {
 	optional uint64 random_hash = 1;
 	optional uint64 random = 2;
@@ -14,4 +20,5 @@ message VssMessage {
 	optional uint64 elect_height = 10;
 	optional int32 type = 11;
 	optional bytes crypt_data = 12;
+	repeated SplitItem all_split_random = 13;
 }

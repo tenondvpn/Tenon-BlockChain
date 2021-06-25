@@ -40,10 +40,22 @@ void VssManager::OnTimeBlock(
     }
 
     ClearAll();
+    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+        elect_height,
+        network::kRootCongressNetworkId,
+        common::GlobalInfo::Instance()->id());
+    if (local_index_ == elect::kInvalidMemberIndex) {
+        return;
+    }
+
     local_random_.OnTimeBlock(tm_block_tm);
     latest_tm_block_tm_ = tm_block_tm;
     prev_tm_height_ = tm_height;
     prev_elect_height_ = elect_height;
+    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+        elect_height,
+        network::kRootCongressNetworkId);
+    
 }
 
 void VssManager::ClearAll() {
@@ -54,11 +66,12 @@ void VssManager::ClearAll() {
 }
 
 void VssManager::CheckVssPeriods() {
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId &&
+            local_index_ != elect::kInvalidMemberIndex) {
         // Joined root and continue
     }
 
-    vss_tick_.CutOff(1000000ll, std::bind(&VssManager::CheckVssPeriods, this));
+    vss_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
 }
 
 void VssManager::CheckVssFirstPeriods() {
@@ -210,11 +223,43 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
 }
 
 void VssManager::BroadcastThirdPeriodSplitRandom() {
+    protobuf::VssMessage vss_msg;
+    for (uint32_t i = 0; i < member_count_; ++i) {
+        if (i == local_index_) {
+            continue;
+        }
 
+        if (other_randoms_[i].IsRandomValid()) {
+            continue;
+        }
+
+        other_randoms_[i].GetFirstSplitRandomNum(vss_msg);
+    }
+
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    VssProto::CreateThirdSplitRandomMessage(
+        dht->local_node(),
+        vss_msg,
+        prev_tm_height_,
+        prev_elect_height_,
+        msg);
+    if (msg.has_data()) {
+        network::Route::Instance()->Send(msg);
+    }
 }
 
 void VssManager::HandleMessage(transport::protobuf::Header& header) {
     assert(header.type() == common::kVssMessage);
+    if (local_index_ == elect::kInvalidMemberIndex) {
+        return;
+    }
+
     // TODO: verify message signature
     protobuf::VssMessage vss_msg;
     if (!vss_msg.ParseFromString(header.data())) {
@@ -234,19 +279,6 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
-    std::string hash_str = std::to_string(vss_msg.split_index()) + "_" +
-        std::to_string(vss_msg.split_random()) + "_" +
-        std::to_string(vss_msg.tm_height()) + "_" +
-        std::to_string(vss_msg.elect_height()) + "_" +
-        id;
-    auto message_hash = common::Hash::keccak256(hash_str);
-    auto pubkey = security::PublicKey(vss_msg.pubkey());
-    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        return;
-    }
-
     switch (vss_msg.type()) {
     case kVssRandomHash:
         HandleFirstPeriodHash(vss_msg);
@@ -255,7 +287,7 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
         HandleSecondPeriodRandom(vss_msg);
         break;
     case kVssFirstRandomSplit:
-        HandleFirstPeriodSplitRandom(message_hash, vss_msg);
+        HandleFirstPeriodSplitRandom(vss_msg);
         break;
     case kVssThirdRandomSplit:
         HandleThirdPeriodSplitRandom(vss_msg);
@@ -275,12 +307,22 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
         return;
     }
 
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    std::string hash_str = std::to_string(vss_msg.random_hash()) + "_" +
+        std::to_string(vss_msg.tm_height()) + "_" +
+        std::to_string(vss_msg.elect_height()) + "_" +
+        id;
+    auto message_hash = common::Hash::keccak256(hash_str);
+    auto pubkey = security::PublicKey(vss_msg.pubkey());
+    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
+    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        return;
+    }
+
     other_randoms_[mem_index].SetHash(id, vss_msg.random_hash());
 }
 
-void VssManager::HandleFirstPeriodSplitRandom(
-        const std::string& msg_hash,
-        const protobuf::VssMessage& vss_msg) {
+void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_msg) {
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),
@@ -290,10 +332,23 @@ void VssManager::HandleFirstPeriodSplitRandom(
         return;
     }
 
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    std::string hash_str = std::to_string(vss_msg.split_index()) + "_" +
+        std::to_string(vss_msg.split_random()) + "_" +
+        std::to_string(vss_msg.tm_height()) + "_" +
+        std::to_string(vss_msg.elect_height()) + "_" +
+        id;
+    auto message_hash = common::Hash::keccak256(hash_str);
+    auto pubkey = security::PublicKey(vss_msg.pubkey());
+    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
+    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        return;
+    }
+
     std::string dec_data = security::Crypto::Instance()->GetDecryptData(
         vss_msg.pubkey(),
         vss_msg.crypt_data());
-    if (memcmp(msg_hash.c_str(), dec_data.c_str(), msg_hash.size()) != 0) {
+    if (memcmp(message_hash.c_str(), dec_data.c_str(), message_hash.size()) != 0) {
         return;
     }
 
@@ -313,6 +368,18 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
         return;
     }
 
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    std::string hash_str = std::to_string(vss_msg.random()) + "_" +
+        std::to_string(vss_msg.tm_height()) + "_" +
+        std::to_string(vss_msg.elect_height()) + "_" +
+        id;
+    auto message_hash = common::Hash::keccak256(hash_str);
+    auto pubkey = security::PublicKey(vss_msg.pubkey());
+    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
+    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        return;
+    }
+
     other_randoms_[mem_index].SetFinalRandomNum(id, vss_msg.random());
 }
 
@@ -326,9 +393,38 @@ void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         return;  
     }
 
-    // Check id is valid period member
-    // 
-    other_randoms_[mem_index].SetFinalRandomNum(id, vss_msg.random());
+    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+    std::string hash_str = std::to_string(vss_msg.tm_height()) + "_" +
+        std::to_string(vss_msg.elect_height()) + "_";
+    for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
+        hash_str += vss_msg.all_split_random(i).id() + "_" +
+            std::to_string(vss_msg.all_split_random(i).split_index()) + "_" +
+            std::to_string(vss_msg.all_split_random(i).split_random()) + "_";
+    }
+
+    auto message_hash = common::Hash::keccak256(hash_str);
+    auto pubkey = security::PublicKey(vss_msg.pubkey());
+    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
+    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        return;
+    }
+
+    for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
+        int32_t valid_member_begin_idx = prev_epoch_final_random_ % all_root_nodes.size() +
+            vss_msg.all_split_random(i).split_index();
+        // must valid reserve split random number node
+        if (abs(mem_index - valid_member_begin_idx) % kVssRandomSplitCount == 0) {
+            int32_t des_member_idx = elect::ElectManager::Instance()->GetMemberIndex(
+                vss_msg.elect_height(),
+                network::kRootCongressNetworkId,
+                vss_msg.all_split_random(i).id());
+            other_randoms_[des_member_idx].SetThirdSplitRandomNum(
+                vss_msg.tm_height(),
+                id,
+                vss_msg.all_split_random(i).split_index(),
+                vss_msg.all_split_random(i).split_random());
+        }
+    }
 }
 
 }  // namespace vss

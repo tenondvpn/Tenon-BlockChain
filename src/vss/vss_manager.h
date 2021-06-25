@@ -5,6 +5,7 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
+#include "election/elect_utils.h"
 #include "security/public_key.h"
 #include "transport/proto/transport.pb.h"
 #include "vss/random_num.h"
@@ -37,9 +38,7 @@ private:
     void BroadcastSecondPeriodRandom();
     void BroadcastThirdPeriodSplitRandom();
     void HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg);
-    void HandleFirstPeriodSplitRandom(
-        const std::string& msg_hash,
-        const protobuf::VssMessage& vss_msg);
+    void HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_msg);
     void HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg);
     void HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg);
     void HandleMessage(transport::protobuf::Header& header);
@@ -50,6 +49,8 @@ private:
     uint64_t prev_elect_height_{ 0 };
     uint32_t local_member_index_{ common::kEachShardMaxNodeCount };
     common::Tick vss_tick_;
+    uint32_t local_index_{ elect::kInvalidMemberIndex };
+    uint32_t member_count_{ 0 };
     std::mutex mutex_;
     std::atomic<uint64_t> latest_tm_block_tm_{ 0 };
     uint64_t prev_epoch_final_random_{ 0 };

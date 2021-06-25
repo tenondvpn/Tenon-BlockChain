@@ -33,11 +33,9 @@ public:
         transport::protobuf::Header& msg);
     static void CreateThirdSplitRandomMessage(
         const dht::NodePtr& local_node,
-        uint64_t split_index,
-        uint64_t split_random,
+        protobuf::VssMessage& vss_msg,
         uint64_t tm_height,
         uint64_t elect_height,
-        const std::string& des_id,
         transport::protobuf::Header& msg);
 
 private:
