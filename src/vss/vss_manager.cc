@@ -382,11 +382,11 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
 
 void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg) {
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
-    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+    int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),
         network::kRootCongressNetworkId,
         id);
-    if (mem_index == elect::kInvalidMemberIndex) {
+    if (mem_index == (int32_t)elect::kInvalidMemberIndex) {
         return;  
     }
 
@@ -406,7 +406,7 @@ void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_ms
     }
 
     for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
-        int32_t valid_member_begin_idx = prev_epoch_final_random_ % all_root_nodes.size() +
+        int32_t valid_member_begin_idx = prev_epoch_final_random_ % member_count_ +
             vss_msg.all_split_random(i).split_index();
         // must valid reserve split random number node
         if (abs(mem_index - valid_member_begin_idx) % kVssRandomSplitCount == 0) {

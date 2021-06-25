@@ -200,7 +200,6 @@ void VssProto::CreateThirdSplitRandomMessage(
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
-    vss::protobuf::VssMessage vss_msg;
     vss_msg.set_tm_height(tm_height);
     vss_msg.set_elect_height(elect_height);
     vss_msg.set_type(kVssThirdRandomSplit);
