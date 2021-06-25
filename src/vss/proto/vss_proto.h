@@ -3,6 +3,7 @@
 #include "transport/proto/transport.pb.h"
 #include "dht/dht_utils.h"
 #include "common/bloom_filter.h"
+#include "vss/proto/vss.pb.h"
 
 namespace tenon {
 

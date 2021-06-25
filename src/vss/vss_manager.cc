@@ -307,7 +307,6 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
         return;
     }
 
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     std::string hash_str = std::to_string(vss_msg.random_hash()) + "_" +
         std::to_string(vss_msg.tm_height()) + "_" +
         std::to_string(vss_msg.elect_height()) + "_" +
@@ -332,7 +331,6 @@ void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         return;
     }
 
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     std::string hash_str = std::to_string(vss_msg.split_index()) + "_" +
         std::to_string(vss_msg.split_random()) + "_" +
         std::to_string(vss_msg.tm_height()) + "_" +
@@ -368,7 +366,6 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
         return;
     }
 
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     std::string hash_str = std::to_string(vss_msg.random()) + "_" +
         std::to_string(vss_msg.tm_height()) + "_" +
         std::to_string(vss_msg.elect_height()) + "_" +
@@ -393,7 +390,6 @@ void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         return;  
     }
 
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     std::string hash_str = std::to_string(vss_msg.tm_height()) + "_" +
         std::to_string(vss_msg.elect_height()) + "_";
     for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
