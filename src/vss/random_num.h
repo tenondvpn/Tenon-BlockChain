@@ -122,6 +122,10 @@ public:
         return valid_;
     }
 
+    bool IsRandomInvalid() {
+        return invalid_;
+    }
+
     void SetThirdSplitRandomNum(
             uint64_t tm_block_tm,
             const std::string& from_id,
@@ -191,6 +195,7 @@ private:
     std::pair<uint64_t, uint32_t> max_random_count_[kVssRandomSplitCount];
     std::unordered_set<std::string> added_id_set_;
     std::atomic<bool> valid_{ false };
+    std::atomic<bool> invalid_{ false };
     bool is_local_{ false };
     std::string owner_id_;
     std::unordered_map<uint32_t, uint64_t> first_split_map_;

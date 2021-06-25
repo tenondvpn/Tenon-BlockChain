@@ -22,7 +22,9 @@
 
 namespace tenon {
 
-namespace elect {
+using namespace elect;
+
+namespace vss {
 
 namespace test {
 
@@ -269,8 +271,19 @@ TEST_F(TestVssManager, RandomNumXorTest) {
     }
 }
 
+TEST_F(TestVssManager, OnTimeBlock) {
+    const uint32_t kMemberCount = 31;
+    const uint32_t kWaitingCount = 11;
+    CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
+    CreateElectBlocks(kMemberCount, network::kRootCongressNetworkId);
+    VssManager vss_mgr;
+    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
+    elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
+    vss_mgr.OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
+}
+
 }  // namespace test
 
-}  // namespace elect
+}  // namespace vss
 
 }  // namespace tenon

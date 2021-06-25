@@ -18,9 +18,14 @@ namespace vss {
 class VssManager {
 public:
     static VssManager* Instance();
-    void OnTimeBlock(uint64_t tm_block_tm, uint64_t tm_height, uint64_t elect_height);
+    void OnTimeBlock(
+        uint64_t tm_block_tm,
+        uint64_t tm_height,
+        uint64_t elect_height,
+        uint64_t epoch_random);
     uint64_t EpochRandom();
-
+    uint64_t GetAllVssValid();
+   
 private:
     VssManager() {}
     ~VssManager() {}
@@ -54,6 +59,10 @@ private:
     std::mutex mutex_;
     std::atomic<uint64_t> latest_tm_block_tm_{ 0 };
     uint64_t prev_epoch_final_random_{ 0 };
+    bool first_period_cheched_{ false };
+    bool second_period_cheched_{ false };
+    bool third_period_cheched_{ false };
+    uint64_t epoch_random_{ 0 };
     
     DISALLOW_COPY_AND_ASSIGN(VssManager);
 };

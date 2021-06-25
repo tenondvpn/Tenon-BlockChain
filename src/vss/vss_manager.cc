@@ -20,13 +20,14 @@ VssManager* VssManager::Instance() {
 }
 
 uint64_t VssManager::EpochRandom() {
-    return 0llu;
+    return epoch_random_;
 }
 
 void VssManager::OnTimeBlock(
         uint64_t tm_block_tm,
         uint64_t tm_height,
-        uint64_t elect_height) {
+        uint64_t elect_height,
+        uint64_t epoch_random) {
     auto root_members = elect::ElectManager::Instance()->GetNetworkMembers(
         elect_height,
         network::kRootCongressNetworkId);
@@ -55,7 +56,7 @@ void VssManager::OnTimeBlock(
     member_count_ = elect::ElectManager::Instance()->GetMemberCount(
         elect_height,
         network::kRootCongressNetworkId);
-    
+    epoch_random_ = epoch_random;
 }
 
 void VssManager::ClearAll() {
@@ -63,27 +64,73 @@ void VssManager::ClearAll() {
     for (uint32_t i = 0; i < common::kEachShardMaxNodeCount; ++i) {
         other_randoms_[i].ResetStatus();
     }
+
+    first_period_cheched_ = false;
+    second_period_cheched_ = false;
+    third_period_cheched_ = false;
 }
 
 void VssManager::CheckVssPeriods() {
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId &&
             local_index_ != elect::kInvalidMemberIndex) {
         // Joined root and continue
+        std::lock_guard<std::mutex> guard(mutex_);
+        CheckVssFirstPeriods();
+        CheckVssSecondPeriods();
+        CheckVssThirdPeriods();
     }
 
     vss_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
 }
 
 void VssManager::CheckVssFirstPeriods() {
+    if (first_period_cheched_) {
+        return;
+    }
 
+    if (IsVssFirstPeriods()) {
+        BroadcastFirstPeriodHash();
+        BroadcastFirstPeriodSplitRandom();
+        first_period_cheched_ = true;
+    }
 }
 
 void VssManager::CheckVssSecondPeriods() {
+    if (second_period_cheched_) {
+        return;
+    }
 
+    if (IsVssSecondPeriods()) {
+        BroadcastSecondPeriodRandom();
+        second_period_cheched_ = true;
+    }
 }
 
 void VssManager::CheckVssThirdPeriods() {
+    if (third_period_cheched_) {
+        return;
+    }
 
+    if (IsVssThirdPeriods()) {
+        BroadcastThirdPeriodSplitRandom();
+        third_period_cheched_ = true;
+    }
+}
+
+uint64_t VssManager::GetAllVssValid() {
+    uint64_t final_random = 0;
+    for (uint32_t i = 0; i < member_count_; ++i) {
+        if (i == local_index_) {
+            continue;
+        }
+
+        if (other_randoms_[i].IsRandomValid()) {
+            final_random ^= other_randoms_[i].GetFinalRandomNum();
+            continue;
+        }
+    }
+
+    return final_random;
 }
 
 bool VssManager::IsVssFirstPeriods() {
@@ -190,6 +237,10 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
         begin_idx += i;
         for (int32_t node_idx = begin_idx;
                 node_idx < (int32_t)all_root_nodes.size(); node_idx += kVssRandomSplitCount) {
+            if (node_idx == local_index_) {
+                continue;
+            }
+
             VssProto::CreateFirstSplitRandomMessage(
                 dht->local_node(),
                 node_idx,
@@ -206,6 +257,10 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
         if (begin_idx >= kVssRandomSplitCount) {
             for (int32_t node_idx = begin_idx - kVssRandomSplitCount;
                     node_idx >= 0; node_idx -= kVssRandomSplitCount) {
+                if (node_idx == local_index_) {
+                    continue;
+                }
+
                 VssProto::CreateFirstSplitRandomMessage(
                     dht->local_node(),
                     node_idx,
@@ -236,6 +291,10 @@ void VssManager::BroadcastThirdPeriodSplitRandom() {
         other_randoms_[i].GetFirstSplitRandomNum(vss_msg);
     }
 
+    if (vss_msg.all_split_random_size() <= 0) {
+        return;
+    }
+
     transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
@@ -260,7 +319,7 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    // TODO: verify message signature
+    // must verify message signature, to avoid evil node
     protobuf::VssMessage vss_msg;
     if (!vss_msg.ParseFromString(header.data())) {
         ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
