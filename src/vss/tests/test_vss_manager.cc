@@ -133,19 +133,7 @@ public:
         }
     }
 
-    void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
-        security::PrivateKey prikey(private_key);
-        security::PublicKey pubkey(prikey);
-        std::string pubkey_str;
-        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
-        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
-        common::GlobalInfo::Instance()->set_id(id);
-        common::GlobalInfo::Instance()->set_consensus_shard_count(1);
-        common::GlobalInfo::Instance()->set_network_id(network_id);
-    }
-
-    void CreateElectBlocks(int32_t member_count, uint32_t network_id) {
+    std::vector<std::string> CreateElectBlocks(int32_t member_count, uint32_t network_id) {
         std::map<uint32_t, MembersPtr> in_members;
         std::map<uint32_t, NodeIndexMapPtr> in_index_members;
         std::map<uint32_t, uint32_t> begin_index_map_;
@@ -185,6 +173,7 @@ public:
 
         SetGloableInfo(pri_vec[0], network::kConsensusShardBeginNetworkId);
         CreateElectionBlockMemeber(network_id, pri_vec);
+        return pri_vec;
     }
 
     void UpdateNodeInfoWithBlock(int32_t member_count, uint64_t height) {
@@ -245,6 +234,48 @@ public:
         }
     }
 
+    static void JoinNetwork(uint32_t network_id) {
+        network::DhtManager::Instance()->UnRegisterDht(network_id);
+        network::UniversalManager::Instance()->UnRegisterUniversal(network_id);
+        dht::DhtKeyManager dht_key(
+            network_id,
+            common::GlobalInfo::Instance()->country(),
+            common::GlobalInfo::Instance()->id());
+        dht::NodePtr local_node = std::make_shared<dht::Node>(
+            common::GlobalInfo::Instance()->id(),
+            dht_key.StrKey(),
+            dht::kNatTypeFullcone,
+            false,
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            security::Schnorr::Instance()->str_pubkey(),
+            common::GlobalInfo::Instance()->node_tag());
+        local_node->first_node = true;
+        transport::TransportPtr transport;
+        auto dht = std::make_shared<elect::ElectDht>(transport, local_node);
+        dht->Init(nullptr, nullptr);
+        auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(dht);
+        network::DhtManager::Instance()->RegisterDht(network_id, base_dht);
+        network::UniversalManager::Instance()->RegisterUniversal(network_id, base_dht);
+    }
+
+    void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
+        security::PrivateKey prikey(common::Encode::HexDecode(private_key));
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        common::GlobalInfo::Instance()->set_id(id);
+        common::GlobalInfo::Instance()->set_consensus_shard_count(1);
+        common::GlobalInfo::Instance()->set_network_id(network_id);
+        JoinNetwork(network::kRootCongressNetworkId);
+        JoinNetwork(network::kUniversalNetworkId);
+        JoinNetwork(network::kConsensusShardBeginNetworkId);
+    }
+
 private:
     ElectPoolManager elect_pool_manager_;
 };
@@ -274,21 +305,44 @@ TEST_F(TestVssManager, RandomNumXorTest) {
 TEST_F(TestVssManager, OnTimeBlock) {
     const uint32_t kMemberCount = 31;
     const uint32_t kWaitingCount = 11;
-    CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
-    CreateElectBlocks(kMemberCount, network::kRootCongressNetworkId);
+    auto first_prikey_shard_1 = CreateElectBlocks(
+        kMemberCount,
+        network::kConsensusShardBeginNetworkId);
+    auto first_prikey_root = CreateElectBlocks(
+        kMemberCount,
+        network::kRootCongressNetworkId);
+    SetGloableInfo(
+        common::Encode::HexEncode(first_prikey_root[0]),
+        network::kRootCongressNetworkId);
     VssManager vss_mgr;
-    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
+    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds();
     elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
     vss_mgr.OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
     ASSERT_EQ(vss_mgr.EpochRandom(), 123456789llu);
     ASSERT_TRUE(vss_mgr.local_random_.valid_);
     ASSERT_FALSE(vss_mgr.local_random_.invalid_);
     ASSERT_EQ(vss_mgr.local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    auto tmp_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[0]);
+    ASSERT_EQ(vss_mgr.local_random_.owner_id_, tmp_id);
     std::cout << "final_random_num_: " << vss_mgr.local_random_.final_random_num_
         << ", random_num_hash_: " << vss_mgr.local_random_.random_num_hash_
         << ", tm_block_tm_: " << vss_mgr.local_random_.tm_block_tm_
         << ", valid_: " << vss_mgr.local_random_.valid_
         << std::endl;
+    // first period
+    uint32_t root_member_count = elect::ElectManager::Instance()->GetMemberCount(
+        network::kRootCongressNetworkId);
+    VssManager* vss_mgrs = new VssManager[root_member_count];
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
+        ASSERT_EQ(vss_mgrs[i].EpochRandom(), 123456789llu);
+        ASSERT_TRUE(vss_mgrs[i].local_random_.valid_);
+        ASSERT_FALSE(vss_mgrs[i].local_random_.invalid_);
+        ASSERT_EQ(vss_mgrs[i].local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    }
 }
 
 }  // namespace test

@@ -63,7 +63,15 @@ private:
     bool second_period_cheched_{ false };
     bool third_period_cheched_{ false };
     uint64_t epoch_random_{ 0 };
-    
+
+    // for unit test
+#ifdef TENON_UNITTEST
+    transport::protobuf::Header first_msg_;
+    std::vector<transport::protobuf::Header> first_split_msgs_;
+    transport::protobuf::Header second_msg_;
+    transport::protobuf::Header third_msg_;
+#endif
+
     DISALLOW_COPY_AND_ASSIGN(VssManager);
 };
 

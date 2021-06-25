@@ -32,11 +32,13 @@ void VssManager::OnTimeBlock(
         elect_height,
         network::kRootCongressNetworkId);
     if (root_members == nullptr || root_members->empty()) {
+        VSS_ERROR("invalid root members.");
         return;
     }
 
     std::lock_guard<std::mutex> guard(mutex_);
     if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
+        VSS_ERROR("prev_tm_height_ >= tm_height[%lu][%lu].", prev_tm_height_, tm_height);
         return;
     }
 
@@ -46,6 +48,7 @@ void VssManager::OnTimeBlock(
         network::kRootCongressNetworkId,
         common::GlobalInfo::Instance()->id());
     if (local_index_ == elect::kInvalidMemberIndex) {
+        VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
         return;
     }
 
@@ -179,6 +182,9 @@ void VssManager::BroadcastFirstPeriodHash() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+        first_msg_ = msg;
+#endif
     }
 }
 
@@ -198,6 +204,9 @@ void VssManager::BroadcastSecondPeriodRandom() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+        second_msg_ = msg;
+#endif
     }
 }
 
@@ -251,6 +260,9 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
                 msg);
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+                first_split_msgs_.push_back(msg);
+#endif
             }
         }
 
@@ -271,6 +283,9 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
                     msg);
                 if (msg.has_data()) {
                     network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+                    first_split_msgs_.push_back(msg);
+#endif
                 }
             }
         }
@@ -310,6 +325,9 @@ void VssManager::BroadcastThirdPeriodSplitRandom() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+        third_msg_ = msg;
+#endif
     }
 }
 
