@@ -38,7 +38,7 @@ namespace protobuf_vss_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[1];
+  static const ::google::protobuf::internal::ParseTable schema[2];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -48,6 +48,9 @@ void AddDescriptors();
 namespace tenon {
 namespace vss {
 namespace protobuf {
+class SplitItem;
+class SplitItemDefaultTypeInternal;
+extern SplitItemDefaultTypeInternal _SplitItem_default_instance_;
 class VssMessage;
 class VssMessageDefaultTypeInternal;
 extern VssMessageDefaultTypeInternal _VssMessage_default_instance_;
@@ -56,6 +59,7 @@ extern VssMessageDefaultTypeInternal _VssMessage_default_instance_;
 }  // namespace tenon
 namespace google {
 namespace protobuf {
+template<> ::tenon::vss::protobuf::SplitItem* Arena::CreateMaybeMessage<::tenon::vss::protobuf::SplitItem>(Arena*);
 template<> ::tenon::vss::protobuf::VssMessage* Arena::CreateMaybeMessage<::tenon::vss::protobuf::VssMessage>(Arena*);
 }  // namespace protobuf
 }  // namespace google
@@ -64,6 +68,148 @@ namespace vss {
 namespace protobuf {
 
 // ===================================================================
+
+class SplitItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.vss.protobuf.SplitItem) */ {
+ public:
+  SplitItem();
+  virtual ~SplitItem();
+
+  SplitItem(const SplitItem& from);
+
+  inline SplitItem& operator=(const SplitItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SplitItem(SplitItem&& from) noexcept
+    : SplitItem() {
+    *this = ::std::move(from);
+  }
+
+  inline SplitItem& operator=(SplitItem&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SplitItem& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SplitItem* internal_default_instance() {
+    return reinterpret_cast<const SplitItem*>(
+               &_SplitItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  void Swap(SplitItem* other);
+  friend void swap(SplitItem& a, SplitItem& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SplitItem* New() const final {
+    return CreateMaybeMessage<SplitItem>(NULL);
+  }
+
+  SplitItem* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SplitItem>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SplitItem& from);
+  void MergeFrom(const SplitItem& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SplitItem* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes id = 1;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // optional uint64 split_index = 2;
+  bool has_split_index() const;
+  void clear_split_index();
+  static const int kSplitIndexFieldNumber = 2;
+  ::google::protobuf::uint64 split_index() const;
+  void set_split_index(::google::protobuf::uint64 value);
+
+  // optional uint64 split_random = 3;
+  bool has_split_random() const;
+  void clear_split_random();
+  static const int kSplitRandomFieldNumber = 3;
+  ::google::protobuf::uint64 split_random() const;
+  void set_split_random(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.vss.protobuf.SplitItem)
+ private:
+  void set_has_id();
+  void clear_has_id();
+  void set_has_split_index();
+  void clear_has_split_index();
+  void set_has_split_random();
+  void clear_has_split_random();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
+  ::google::protobuf::uint64 split_index_;
+  ::google::protobuf::uint64 split_random_;
+  friend struct ::protobuf_vss_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
 
 class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.vss.protobuf.VssMessage) */ {
  public:
@@ -107,7 +253,7 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_VssMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    1;
 
   void Swap(VssMessage* other);
   friend void swap(VssMessage& a, VssMessage& b) {
@@ -158,6 +304,18 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
+
+  // repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+  int all_split_random_size() const;
+  void clear_all_split_random();
+  static const int kAllSplitRandomFieldNumber = 13;
+  ::tenon::vss::protobuf::SplitItem* mutable_all_split_random(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::vss::protobuf::SplitItem >*
+      mutable_all_split_random();
+  const ::tenon::vss::protobuf::SplitItem& all_split_random(int index) const;
+  ::tenon::vss::protobuf::SplitItem* add_all_split_random();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::vss::protobuf::SplitItem >&
+      all_split_random() const;
 
   // optional bytes pubkey = 6;
   bool has_pubkey() const;
@@ -296,6 +454,7 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::vss::protobuf::SplitItem > all_split_random_;
   ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_ch_;
   ::google::protobuf::internal::ArenaStringPtr sign_res_;
@@ -318,6 +477,124 @@ class VssMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// SplitItem
+
+// optional bytes id = 1;
+inline bool SplitItem::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SplitItem::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SplitItem::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SplitItem::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& SplitItem::id() const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.SplitItem.id)
+  return id_.GetNoArena();
+}
+inline void SplitItem::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.vss.protobuf.SplitItem.id)
+}
+#if LANG_CXX11
+inline void SplitItem::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.vss.protobuf.SplitItem.id)
+}
+#endif
+inline void SplitItem::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.vss.protobuf.SplitItem.id)
+}
+inline void SplitItem::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.vss.protobuf.SplitItem.id)
+}
+inline ::std::string* SplitItem::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.vss.protobuf.SplitItem.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* SplitItem::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.vss.protobuf.SplitItem.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void SplitItem::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.vss.protobuf.SplitItem.id)
+}
+
+// optional uint64 split_index = 2;
+inline bool SplitItem::has_split_index() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SplitItem::set_has_split_index() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SplitItem::clear_has_split_index() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SplitItem::clear_split_index() {
+  split_index_ = GOOGLE_ULONGLONG(0);
+  clear_has_split_index();
+}
+inline ::google::protobuf::uint64 SplitItem::split_index() const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.SplitItem.split_index)
+  return split_index_;
+}
+inline void SplitItem::set_split_index(::google::protobuf::uint64 value) {
+  set_has_split_index();
+  split_index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.vss.protobuf.SplitItem.split_index)
+}
+
+// optional uint64 split_random = 3;
+inline bool SplitItem::has_split_random() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SplitItem::set_has_split_random() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SplitItem::clear_has_split_random() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SplitItem::clear_split_random() {
+  split_random_ = GOOGLE_ULONGLONG(0);
+  clear_has_split_random();
+}
+inline ::google::protobuf::uint64 SplitItem::split_random() const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.SplitItem.split_random)
+  return split_random_;
+}
+inline void SplitItem::set_split_random(::google::protobuf::uint64 value) {
+  set_has_split_random();
+  split_random_ = value;
+  // @@protoc_insertion_point(field_set:tenon.vss.protobuf.SplitItem.split_random)
+}
+
+// -------------------------------------------------------------------
+
 // VssMessage
 
 // optional uint64 random_hash = 1;
@@ -752,9 +1029,41 @@ inline void VssMessage::set_allocated_crypt_data(::std::string* crypt_data) {
   // @@protoc_insertion_point(field_set_allocated:tenon.vss.protobuf.VssMessage.crypt_data)
 }
 
+// repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+inline int VssMessage::all_split_random_size() const {
+  return all_split_random_.size();
+}
+inline void VssMessage::clear_all_split_random() {
+  all_split_random_.Clear();
+}
+inline ::tenon::vss::protobuf::SplitItem* VssMessage::mutable_all_split_random(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.vss.protobuf.VssMessage.all_split_random)
+  return all_split_random_.Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField< ::tenon::vss::protobuf::SplitItem >*
+VssMessage::mutable_all_split_random() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.vss.protobuf.VssMessage.all_split_random)
+  return &all_split_random_;
+}
+inline const ::tenon::vss::protobuf::SplitItem& VssMessage::all_split_random(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.vss.protobuf.VssMessage.all_split_random)
+  return all_split_random_.Get(index);
+}
+inline ::tenon::vss::protobuf::SplitItem* VssMessage::add_all_split_random() {
+  // @@protoc_insertion_point(field_add:tenon.vss.protobuf.VssMessage.all_split_random)
+  return all_split_random_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::vss::protobuf::SplitItem >&
+VssMessage::all_split_random() const {
+  // @@protoc_insertion_point(field_list:tenon.vss.protobuf.VssMessage.all_split_random)
+  return all_split_random_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 

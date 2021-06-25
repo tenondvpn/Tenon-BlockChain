@@ -19,9 +19,17 @@
 #endif
 // @@protoc_insertion_point(includes)
 
+namespace protobuf_vss_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_vss_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SplitItem;
+}  // namespace protobuf_vss_2eproto
 namespace tenon {
 namespace vss {
 namespace protobuf {
+class SplitItemDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<SplitItem>
+      _instance;
+} _SplitItem_default_instance_;
 class VssMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<VssMessage>
@@ -31,6 +39,20 @@ class VssMessageDefaultTypeInternal {
 }  // namespace vss
 }  // namespace tenon
 namespace protobuf_vss_2eproto {
+static void InitDefaultsSplitItem() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::vss::protobuf::_SplitItem_default_instance_;
+    new (ptr) ::tenon::vss::protobuf::SplitItem();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::vss::protobuf::SplitItem::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_SplitItem =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSplitItem}, {}};
+
 static void InitDefaultsVssMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -42,16 +64,29 @@ static void InitDefaultsVssMessage() {
   ::tenon::vss::protobuf::VssMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_VssMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsVssMessage}, {}};
+::google::protobuf::internal::SCCInfo<1> scc_info_VssMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsVssMessage}, {
+      &protobuf_vss_2eproto::scc_info_SplitItem.base,}};
 
 void InitDefaults() {
+  ::google::protobuf::internal::InitSCC(&scc_info_SplitItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_VssMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[1];
+::google::protobuf::Metadata file_level_metadata[2];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::SplitItem, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::SplitItem, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::SplitItem, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::SplitItem, split_index_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::SplitItem, split_random_),
+  0,
+  1,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -68,6 +103,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, elect_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, crypt_data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::vss::protobuf::VssMessage, all_split_random_),
   4,
   5,
   6,
@@ -79,12 +115,15 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   9,
   10,
   3,
+  ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 16, sizeof(::tenon::vss::protobuf::VssMessage)},
+  { 0, 8, sizeof(::tenon::vss::protobuf::SplitItem)},
+  { 11, 28, sizeof(::tenon::vss::protobuf::VssMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::vss::protobuf::_SplitItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::vss::protobuf::_VssMessage_default_instance_),
 };
 
@@ -103,22 +142,25 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 1);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 2);
 }
 
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\tvss.proto\022\022tenon.vss.protobuf\"\332\001\n\nVssM"
-      "essage\022\023\n\013random_hash\030\001 \001(\004\022\016\n\006random\030\002 "
-      "\001(\004\022\023\n\013split_index\030\004 \001(\004\022\024\n\014split_random"
-      "\030\005 \001(\004\022\016\n\006pubkey\030\006 \001(\014\022\017\n\007sign_ch\030\007 \001(\014\022"
-      "\020\n\010sign_res\030\010 \001(\014\022\021\n\ttm_height\030\t \001(\004\022\024\n\014"
-      "elect_height\030\n \001(\004\022\014\n\004type\030\013 \001(\005\022\022\n\ncryp"
-      "t_data\030\014 \001(\014"
+      "\n\tvss.proto\022\022tenon.vss.protobuf\"B\n\tSplit"
+      "Item\022\n\n\002id\030\001 \001(\014\022\023\n\013split_index\030\002 \001(\004\022\024\n"
+      "\014split_random\030\003 \001(\004\"\223\002\n\nVssMessage\022\023\n\013ra"
+      "ndom_hash\030\001 \001(\004\022\016\n\006random\030\002 \001(\004\022\023\n\013split"
+      "_index\030\004 \001(\004\022\024\n\014split_random\030\005 \001(\004\022\016\n\006pu"
+      "bkey\030\006 \001(\014\022\017\n\007sign_ch\030\007 \001(\014\022\020\n\010sign_res\030"
+      "\010 \001(\014\022\021\n\ttm_height\030\t \001(\004\022\024\n\014elect_height"
+      "\030\n \001(\004\022\014\n\004type\030\013 \001(\005\022\022\n\ncrypt_data\030\014 \001(\014"
+      "\0227\n\020all_split_random\030\r \003(\0132\035.tenon.vss.p"
+      "rotobuf.SplitItem"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 252);
+      descriptor, 377);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "vss.proto", &protobuf_RegisterTypes);
 }
@@ -140,6 +182,333 @@ namespace protobuf {
 
 // ===================================================================
 
+void SplitItem::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int SplitItem::kIdFieldNumber;
+const int SplitItem::kSplitIndexFieldNumber;
+const int SplitItem::kSplitRandomFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+SplitItem::SplitItem()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_vss_2eproto::scc_info_SplitItem.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.vss.protobuf.SplitItem)
+}
+SplitItem::SplitItem(const SplitItem& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_id()) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  ::memcpy(&split_index_, &from.split_index_,
+    static_cast<size_t>(reinterpret_cast<char*>(&split_random_) -
+    reinterpret_cast<char*>(&split_index_)) + sizeof(split_random_));
+  // @@protoc_insertion_point(copy_constructor:tenon.vss.protobuf.SplitItem)
+}
+
+void SplitItem::SharedCtor() {
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&split_index_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&split_random_) -
+      reinterpret_cast<char*>(&split_index_)) + sizeof(split_random_));
+}
+
+SplitItem::~SplitItem() {
+  // @@protoc_insertion_point(destructor:tenon.vss.protobuf.SplitItem)
+  SharedDtor();
+}
+
+void SplitItem::SharedDtor() {
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void SplitItem::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* SplitItem::descriptor() {
+  ::protobuf_vss_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_vss_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const SplitItem& SplitItem::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_vss_2eproto::scc_info_SplitItem.base);
+  return *internal_default_instance();
+}
+
+
+void SplitItem::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.vss.protobuf.SplitItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    id_.ClearNonDefaultToEmptyNoArena();
+  }
+  if (cached_has_bits & 6u) {
+    ::memset(&split_index_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&split_random_) -
+        reinterpret_cast<char*>(&split_index_)) + sizeof(split_random_));
+  }
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool SplitItem::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.vss.protobuf.SplitItem)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 split_index = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_split_index();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &split_index_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 split_random = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          set_has_split_random();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &split_random_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.vss.protobuf.SplitItem)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.vss.protobuf.SplitItem)
+  return false;
+#undef DO_
+}
+
+void SplitItem::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.vss.protobuf.SplitItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->id(), output);
+  }
+
+  // optional uint64 split_index = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->split_index(), output);
+  }
+
+  // optional uint64 split_random = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->split_random(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.vss.protobuf.SplitItem)
+}
+
+::google::protobuf::uint8* SplitItem::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.vss.protobuf.SplitItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->id(), target);
+  }
+
+  // optional uint64 split_index = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->split_index(), target);
+  }
+
+  // optional uint64 split_random = 3;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->split_random(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.vss.protobuf.SplitItem)
+  return target;
+}
+
+size_t SplitItem::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.vss.protobuf.SplitItem)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 7u) {
+    // optional bytes id = 1;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->id());
+    }
+
+    // optional uint64 split_index = 2;
+    if (has_split_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->split_index());
+    }
+
+    // optional uint64 split_random = 3;
+    if (has_split_random()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->split_random());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SplitItem::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.vss.protobuf.SplitItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SplitItem* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const SplitItem>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.vss.protobuf.SplitItem)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.vss.protobuf.SplitItem)
+    MergeFrom(*source);
+  }
+}
+
+void SplitItem::MergeFrom(const SplitItem& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.vss.protobuf.SplitItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 7u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_id();
+      id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      split_index_ = from.split_index_;
+    }
+    if (cached_has_bits & 0x00000004u) {
+      split_random_ = from.split_random_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void SplitItem::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.vss.protobuf.SplitItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SplitItem::CopyFrom(const SplitItem& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.vss.protobuf.SplitItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SplitItem::IsInitialized() const {
+  return true;
+}
+
+void SplitItem::Swap(SplitItem* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void SplitItem::InternalSwap(SplitItem* other) {
+  using std::swap;
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(split_index_, other->split_index_);
+  swap(split_random_, other->split_random_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata SplitItem::GetMetadata() const {
+  protobuf_vss_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_vss_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void VssMessage::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -154,6 +523,7 @@ const int VssMessage::kTmHeightFieldNumber;
 const int VssMessage::kElectHeightFieldNumber;
 const int VssMessage::kTypeFieldNumber;
 const int VssMessage::kCryptDataFieldNumber;
+const int VssMessage::kAllSplitRandomFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 VssMessage::VssMessage()
@@ -166,7 +536,8 @@ VssMessage::VssMessage()
 VssMessage::VssMessage(const VssMessage& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_) {
+      _has_bits_(from._has_bits_),
+      all_split_random_(from.all_split_random_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_pubkey()) {
@@ -232,6 +603,7 @@ void VssMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  all_split_random_.Clear();
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
@@ -417,6 +789,18 @@ bool VssMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+      case 13: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(106u /* 106 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_all_split_random()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -503,6 +887,15 @@ void VssMessage::SerializeWithCachedSizes(
       12, this->crypt_data(), output);
   }
 
+  // repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->all_split_random_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      13,
+      this->all_split_random(static_cast<int>(i)),
+      output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -581,6 +974,14 @@ void VssMessage::SerializeWithCachedSizes(
         12, this->crypt_data(), target);
   }
 
+  // repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->all_split_random_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        13, this->all_split_random(static_cast<int>(i)), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -598,6 +999,17 @@ size_t VssMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
+  // repeated .tenon.vss.protobuf.SplitItem all_split_random = 13;
+  {
+    unsigned int count = static_cast<unsigned int>(this->all_split_random_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->all_split_random(static_cast<int>(i)));
+    }
+  }
+
   if (_has_bits_[0 / 32] & 255u) {
     // optional bytes pubkey = 6;
     if (has_pubkey()) {
@@ -706,6 +1118,7 @@ void VssMessage::MergeFrom(const VssMessage& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  all_split_random_.MergeFrom(from.all_split_random_);
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
@@ -776,6 +1189,7 @@ void VssMessage::Swap(VssMessage* other) {
 }
 void VssMessage::InternalSwap(VssMessage* other) {
   using std::swap;
+  CastToBase(&all_split_random_)->InternalSwap(CastToBase(&other->all_split_random_));
   pubkey_.Swap(&other->pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
@@ -807,6 +1221,9 @@ void VssMessage::InternalSwap(VssMessage* other) {
 }  // namespace tenon
 namespace google {
 namespace protobuf {
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::vss::protobuf::SplitItem* Arena::CreateMaybeMessage< ::tenon::vss::protobuf::SplitItem >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::vss::protobuf::SplitItem >(arena);
+}
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::vss::protobuf::VssMessage* Arena::CreateMaybeMessage< ::tenon::vss::protobuf::VssMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::vss::protobuf::VssMessage >(arena);
 }
