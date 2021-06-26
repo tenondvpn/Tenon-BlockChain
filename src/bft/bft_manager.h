@@ -101,6 +101,7 @@ private:
     uint64_t tps_btime_{ 0 };
     std::mutex all_test_mutex_;
 
+#ifdef TENON_UNITTEST
     // just for test
     transport::protobuf::Header leader_prepare_msg_;
     transport::protobuf::Header backup_prepare_msg_;
@@ -109,6 +110,7 @@ private:
     transport::protobuf::Header leader_commit_msg_;
     transport::protobuf::Header root_leader_broadcast_msg_;
     transport::protobuf::Header to_leader_broadcast_msg_;
+#endif
 
     DISALLOW_COPY_AND_ASSIGN(BftManager);
 };

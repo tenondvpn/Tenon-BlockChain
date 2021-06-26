@@ -342,6 +342,33 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
         ASSERT_EQ(vss_mgrs[i].local_random_.owner_id_, common::GlobalInfo::Instance()->id());
     }
 
+    // first period split random
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].BroadcastFirstPeriodHash();
+        auto first_msg = vss_mgrs[i].first_msg_;
+        protobuf::VssMessage vss_msg;
+        vss_msg.ParseFromString(first_msg.data());
+        auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+        auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
+        ASSERT_EQ(tmp_id1, tmp_id2);
+        for (uint32_t j = 0; j < root_member_count; ++j) {
+            if (i == j) {
+                continue;
+            }
+
+            SetGloableInfo(
+                common::Encode::HexEncode(first_prikey_root[j]),
+                network::kRootCongressNetworkId);
+            vss_mgrs[j].HandleFirstPeriodHash(vss_msg);
+            ASSERT_EQ(
+                vss_mgrs[j].other_randoms_[i].random_num_hash_,
+                vss_mgrs[i].local_random_.random_num_hash_);
+        }
+    }
+
     // second period random
     for (uint32_t i = 0; i < root_member_count; ++i) {
         SetGloableInfo(
@@ -374,7 +401,7 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
             network::kRootCongressNetworkId);
         vss_mgrs[i].BroadcastThirdPeriodRandom();
         protobuf::VssMessage vss_msg;
-        vss_msg.ParseFromString(vss_mgrs[i].third_msg_.data());
+        ASSERT_TRUE(vss_msg.ParseFromString(vss_mgrs[i].third_msg_.data()));
         auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
         auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
         ASSERT_EQ(tmp_id1, tmp_id2);
@@ -392,6 +419,7 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
 
     // all success
     auto final_random = vss_mgrs[0].GetConsensusFinalRandom();
+    ASSERT_NE(final_random, 0llu);
     for (uint32_t i = 1; i < root_member_count; ++i) {
         auto tmp_final_random = vss_mgrs[0].GetConsensusFinalRandom();
         ASSERT_EQ(final_random, tmp_final_random);

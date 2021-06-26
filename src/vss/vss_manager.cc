@@ -137,12 +137,12 @@ uint64_t VssManager::GetAllVssValid() {
     uint64_t final_random = 0;
     for (uint32_t i = 0; i < member_count_; ++i) {
         if (i == local_index_) {
+            final_random ^= local_random_.GetFinalRandomNum();
             continue;
         }
 
         if (other_randoms_[i].IsRandomValid()) {
             final_random ^= other_randoms_[i].GetFinalRandomNum();
-            continue;
         }
     }
 
@@ -321,6 +321,7 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
+        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
         return;
     }
 
@@ -332,6 +333,7 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Schnorr::Instance()->Verify failed!");
         return;
     }
 
@@ -346,6 +348,7 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
         return;
     }
 
+    final_consensus_nodes_.insert(id);
     auto count_iter = final_consensus_random_count_.find(final_random_num);
     if (count_iter == final_consensus_random_count_.end()) {
         final_consensus_random_count_[final_random_num] = 1;
@@ -366,6 +369,7 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
+        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
         return;
     }
 
@@ -377,6 +381,7 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Schnorr::Instance()->Verify error.");
         return;
     }
 

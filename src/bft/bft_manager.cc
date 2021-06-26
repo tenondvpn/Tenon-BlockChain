@@ -619,7 +619,9 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     bft_ptr->init_prepare_timeout();
 
     // (TODO): just for test
+#ifdef TENON_UNITTEST
     leader_prepare_msg_ = msg;
+#endif
     return kBftSuccess;
 }
 
@@ -676,7 +678,9 @@ int BftManager::BackupPrepare(
             header.from_ip(), header.from_port(), 0, msg);
     }
 
+#ifdef TENON_UNITTEST
     backup_prepare_msg_ = msg;
+#endif
     BFT_DEBUG("BackupPrepare success.");
     return kBftSuccess;
 }
@@ -767,7 +771,9 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
+#endif
     BFT_DEBUG("LeaderCallPrecommit success.");
     return kBftSuccess;
 }
@@ -831,7 +837,9 @@ int BftManager::BackupPrecommit(
             header.from_ip(), header.from_port(), 0, msg);
     }
 
+#ifdef TENON_UNITTEST
     backup_precommit_msg_ = msg;
+#endif
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     std::string agg_cha_str;
@@ -955,7 +963,9 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     LeaderBroadcastToAcc(bft_ptr->prpare_block());
     BFT_DEBUG("LeaderCallCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
+#ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
+#endif
     BFT_DEBUG("LeaderCommit");
     return kBftSuccess;
 }
@@ -999,7 +1009,9 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
     network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
+#endif
     return kBftSuccess;
 }
 
@@ -1119,7 +1131,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             msg);
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
+#ifdef TENON_UNITTEST
         root_leader_broadcast_msg_ = msg;
+#endif
         return;
     }
 
@@ -1187,7 +1201,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             msg);
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
+#ifdef TENON_UNITTEST
         to_leader_broadcast_msg_ = msg;
+#endif
     }
 }
 
