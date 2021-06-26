@@ -1987,7 +1987,7 @@ static uint16_t ServerGetRemotePort(const std::string& ip) {
 
 static void EvVpnServerUdpCallback(EV_P_ ev_io *w, int revents) {
     if (w == nullptr || revents != 3) {
-        if (common::TimeStampMsec() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
+        if (common::TimeUtils::TimestampMs() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
             for (auto iter = global_server_map.begin(); iter != global_server_map.end(); ++iter) {
                 if (iter->second->endpoint != nullptr) {
                     iter->second->endpoint->recv_window_.SendAck();
@@ -1996,7 +1996,7 @@ static void EvVpnServerUdpCallback(EV_P_ ev_io *w, int revents) {
                 }
             }
 
-            global_prev_check_timestamp = common::TimeStampMsec();
+            global_prev_check_timestamp = common::TimeUtils::TimestampMs();
             std::cout << "send count: " << vpn::MessageWindow::all_sent_msg_count_
                 << ", ack count: " << vpn::MessageWindow::all_sent_start_msg_index_
                 << ", recv count: " << vpn::MessageWindow::all_recv_msg_count_

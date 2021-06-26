@@ -159,7 +159,7 @@ static std::unordered_map<uint32_t, uint32_t> type_count_map;
 static std::mutex test_mutex;
 static uint64_t b_time = 0;
 void AddInMessage(uint32_t type) {
-    auto now_tm = common::TimeStampMsec();
+    auto now_tm = common::TimeUtils::TimestampMs();
     std::lock_guard<std::mutex> guard(test_mutex);
     ++type_count_map[type];
     if (now_tm - b_time > 10000) {

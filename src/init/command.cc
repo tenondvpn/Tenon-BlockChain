@@ -730,8 +730,8 @@ int Command::LoadAllTx(
         uint32_t pool_index,
         std::unordered_set<std::string>& added_user_set) {
     std::string tmp_str = frist_hash;
-    auto b_time = common::TimeStampMsec();
-    auto a_b_time = common::TimeStampMsec();
+    auto b_time = common::TimeUtils::TimestampMs();
+    auto a_b_time = common::TimeUtils::TimestampMs();
     int i = 0;
     std::string block_str;
     std::cout << "load all tx now." << pool_index << std::endl;

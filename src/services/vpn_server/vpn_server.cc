@@ -2355,7 +2355,7 @@ void VpnServer::HandleUpdateVpnActiveRequest(
         block::protobuf::BlockMessage& block_msg) {
     db::DbWriteBach db_batch;
     statis::Statistics::Instance()->inc_active_user_count(
-            common::TimeStampMsec(),
+            common::TimeUtils::TimestampMs(),
             block_msg.vpn_active_req().id(),
             db_batch);
     db::Db::Instance()->Put(db_batch);

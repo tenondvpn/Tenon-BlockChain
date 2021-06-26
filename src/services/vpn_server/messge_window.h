@@ -231,12 +231,12 @@ public:
     }
 
     void CheckNak(bool direct) {
-        uint64_t cur_timestamp = common::TimeStampMsec();
+        uint64_t cur_timestamp = common::TimeUtils::TimestampMs();
         if (cur_timestamp - prev_check_nak_timestamp_ <= kCheckNakTimeoutMilli) {
             return;
         }
 
-        prev_check_nak_timestamp_ = common::TimeStampMsec();
+        prev_check_nak_timestamp_ = common::TimeUtils::TimestampMs();
         TimeoutCheckNak();
     }
 

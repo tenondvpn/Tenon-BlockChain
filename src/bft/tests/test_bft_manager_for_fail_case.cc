@@ -598,7 +598,7 @@ public:
         block->set_network_id(common::GlobalInfo::Instance()->network_id());
         block->set_consistency_random(vss::VssManager::Instance()->EpochRandom());
         block->set_height(pool_height + 1);
-        block->set_timestamp(common::TimeStampMsec());
+        block->set_timestamp(common::TimeUtils::TimestampMs());
         block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
         block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id()));

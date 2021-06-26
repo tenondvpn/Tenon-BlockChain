@@ -48,7 +48,7 @@ NetworkInit::~NetworkInit() {
 }
 
 int NetworkInit::Init(int argc, char** argv) {
-    auto b_time = common::TimeStampMsec();
+    auto b_time = common::TimeUtils::TimestampMs();
     // std::lock_guard<std::mutex> guard(init_mutex_);
     if (inited_) {
         INIT_ERROR("network inited!");

@@ -1290,7 +1290,7 @@ static void DecoderCallback(
 uint64_t bTime = 0;
 static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
     if (w == nullptr || revents == 2) {
-        if (common::TimeStampMsec() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
+        if (common::TimeUtils::TimestampMs() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
             for (auto iter = global_server_map.begin(); iter != global_server_map.end(); ++iter) {
                 if (iter->second->endpoint != nullptr) {
                     iter->second->endpoint->udp_user_data_->fec_encoder->Output();
@@ -1300,7 +1300,7 @@ static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
                 }
             }
 
-            global_prev_check_timestamp = common::TimeStampMsec();
+            global_prev_check_timestamp = common::TimeUtils::TimestampMs();
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1ull));

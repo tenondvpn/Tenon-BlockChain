@@ -1910,7 +1910,7 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
@@ -1971,7 +1971,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
@@ -2057,7 +2057,7 @@ void TxBft::RootLeaderCreateFinalStatistic(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
@@ -2117,7 +2117,7 @@ void TxBft::RootLeaderCreateStatistic(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
@@ -2177,7 +2177,7 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
@@ -2281,7 +2281,7 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeStampMsec());
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));

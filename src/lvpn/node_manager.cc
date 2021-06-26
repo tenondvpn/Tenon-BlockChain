@@ -127,7 +127,7 @@ int NodeManager::Init(
         const std::string& des_country) {
     des_country_ = des_country;
     ChangeDesCountry();
-    start_time_ = common::TimeStampMsec();
+    start_time_ = common::TimeUtils::TimestampMs();
     local_conf_path_ = conf_path;
     status_path_ = "./pristatus";
     ChooseVpnNode();
@@ -170,9 +170,9 @@ void NodeManager::ResetNodesFromConf() {
 }
 
 void NodeManager::ParseNodesFromConf() {
-    if (common::TimeStampMsec() - start_time_ >= 3600llu * 1000llu) {
+    if (common::TimeUtils::TimestampMs() - start_time_ >= 3600llu * 1000llu) {
         ChooseVpnNode();
-        start_time_ = common::TimeStampMsec();
+        start_time_ = common::TimeUtils::TimestampMs();
     }
 
     ResetNodesFromConf();

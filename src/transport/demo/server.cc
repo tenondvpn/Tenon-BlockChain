@@ -8,14 +8,14 @@
 
 static void HandleMessage(tenon::transport::protobuf::Header& message) {
     static std::atomic<uint32_t> rcv_cnt(0);
-    static auto b_time = tenon::common::TimeStampMsec();
+    static auto b_time = tenon::common::TimeUtils::TimestampMs();
     if (message.id() == 0) {
         rcv_cnt = 0;
-        b_time = tenon::common::TimeStampMsec();
+        b_time = tenon::common::TimeUtils::TimestampMs();
     }
     ++rcv_cnt;
     if (rcv_cnt % 10000 == 0) {
-        auto use_time_ms = double(tenon::common::TimeStampMsec() - b_time) / 1000.0;
+        auto use_time_ms = double(tenon::common::TimeUtils::TimestampMs() - b_time) / 1000.0;
         std::cout << "receive rcv_cnt: " << rcv_cnt << " use time: " << use_time_ms << " ms" << std::endl;
     }
 }

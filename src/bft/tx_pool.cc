@@ -84,7 +84,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
 }
 
 void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
-    auto timestamp_now = common::TimeStampUsec();
+    auto timestamp_now = common::TimeUtils::TimestampUs();
     auto now_time = std::chrono::steady_clock::now();
     {
         std::lock_guard<std::mutex> guard(tx_pool_mutex_);

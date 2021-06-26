@@ -1292,7 +1292,7 @@ static void UdpServerRecvCallback(
 
 static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
     if (w == nullptr || revents != 3) {
-        if (common::TimeStampMsec() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
+        if (common::TimeUtils::TimestampMs() - global_prev_check_timestamp >= vpn::kCheckNakTimeoutMilli) {
             for (auto iter = global_server_map.begin(); iter != global_server_map.end(); ++iter) {
                 if (iter->second->endpoint != nullptr) {
                     iter->second->endpoint->send_window_.UdpOutput();
@@ -1308,7 +1308,7 @@ static void EvRouteServerUdpCallback(EV_P_ ev_io *w, int revents) {
                 << ", all_sent_out_start_msg_index_: " << vpn::MessageWindow::all_sent_out_start_msg_index_
                 << ", all_recv_from_start_msg_index_ count: " << vpn::MessageWindow::all_recv_from_start_msg_index_
                 << std::endl;
-            global_prev_check_timestamp = common::TimeStampMsec();
+            global_prev_check_timestamp = common::TimeUtils::TimestampMs();
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1ull));

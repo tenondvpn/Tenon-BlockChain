@@ -30,13 +30,13 @@ struct TxItem {
             : tx(in_tx) {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
-        time_valid += common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
+        time_valid = common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
         timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();
         }
     }
-
+    
     protobuf::TxInfo tx;
     std::map<std::string, std::string> attr_map;
     std::chrono::steady_clock::time_point timeout;
