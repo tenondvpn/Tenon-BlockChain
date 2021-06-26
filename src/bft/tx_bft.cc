@@ -90,7 +90,6 @@ int TxBft::Commit(bool leader, std::string& commit) {
 }
 
 int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
-    std::cout << std::endl << "LeaderCreatePrepare"<< std::endl;
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -99,9 +98,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
         int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
             common::GlobalInfo::Instance()->network_id(),
             common::GlobalInfo::Instance()->id());
-        std::cout << "0 pool_mod_idx: " << pool_mod_idx << ", mem_index: " << mem_index
-            << ", mem_index % leader_count: " << (mem_index % leader_count)
-            << ", common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id() << std::endl;
         if (common::kRootChainPoolIndex % leader_count == pool_mod_idx) {
             auto tx_ptr = DispatchPool::Instance()->GetRootTx();
             if (tx_ptr != nullptr) {
@@ -117,11 +113,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
             BFT_ERROR("get tx error, empty.");
             return kBftNoNewTxs;
         }
-
-        std::cout << "1 pool_mod_idx: " << pool_mod_idx << ", pool_index: " << pool_index
-            << ", tx type: " << tx_vec[0]->tx.type()
-            << ", common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id()
-            << std::endl;
     }
 
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
