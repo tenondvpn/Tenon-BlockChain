@@ -98,7 +98,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
         int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
             common::GlobalInfo::Instance()->network_id(),
             common::GlobalInfo::Instance()->id());
-        if (common::kRootChainPoolIndex % leader_count == pool_mod_idx) {
+        if ((int32_t)common::kRootChainPoolIndex % leader_count == pool_mod_idx) {
             auto tx_ptr = DispatchPool::Instance()->GetRootTx();
             if (tx_ptr != nullptr) {
                 pool_index = common::kRootChainPoolIndex;
