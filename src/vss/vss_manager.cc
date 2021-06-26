@@ -212,7 +212,6 @@ void VssManager::BroadcastSecondPeriodRandom() {
 }
 
 void VssManager::BroadcastFirstPeriodSplitRandom() {
-    transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -242,17 +241,18 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
         return;
     }
 
-    uint32_t begin_idx = (prev_epoch_final_random_ ^
+    int32_t src_begin_idx = (prev_epoch_final_random_ ^
         common::Hash::Hash64(common::GlobalInfo::Instance()->id())) %
         all_root_nodes.size();
     for (uint32_t i = 0; i < kVssRandomSplitCount; ++i) {
-        begin_idx += i;
+        int32_t begin_idx = src_begin_idx + i;
         for (int32_t node_idx = begin_idx;
                 node_idx < (int32_t)all_root_nodes.size(); node_idx += kVssRandomSplitCount) {
             if (node_idx == local_index_) {
                 continue;
             }
 
+            transport::protobuf::Header msg;
             VssProto::CreateFirstSplitRandomMessage(
                 dht->local_node(),
                 i,
@@ -276,6 +276,7 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
                     continue;
                 }
 
+                transport::protobuf::Header msg;
                 VssProto::CreateFirstSplitRandomMessage(
                     dht->local_node(),
                     i,
@@ -488,7 +489,8 @@ void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_ms
     }
 
     for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
-        int32_t valid_member_begin_idx = prev_epoch_final_random_ % member_count_ +
+        int32_t valid_member_begin_idx = (prev_epoch_final_random_ ^
+            common::Hash::Hash64(vss_msg.all_split_random(i).id())) % member_count_ +
             vss_msg.all_split_random(i).split_index();
         // must valid reserve split random number node
         if (abs(mem_index - valid_member_begin_idx) % kVssRandomSplitCount == 0) {

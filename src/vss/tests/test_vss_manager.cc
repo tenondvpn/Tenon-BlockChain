@@ -315,6 +315,7 @@ TEST_F(TestVssManager, OnTimeBlock) {
     SetGloableInfo(
         common::Encode::HexEncode(first_prikey_root[0]),
         network::kRootCongressNetworkId);
+    security::EcdhCreateKey::Instance()->Init();
     VssManager vss_mgr;
     auto latest_time_block_tm = common::TimeUtils::TimestampSeconds();
     elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
@@ -356,6 +357,7 @@ TEST_F(TestVssManager, OnTimeBlock) {
         auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
         auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
         ASSERT_EQ(tmp_id1, tmp_id2);
+        std::cout << "i: " << i << std::endl;
         for (uint32_t j = 0; j < root_member_count; ++j) {
             if (i == j) {
                 continue;
@@ -372,10 +374,12 @@ TEST_F(TestVssManager, OnTimeBlock) {
 
         vss_mgrs[i].BroadcastFirstPeriodSplitRandom();
         auto first_split_msgs = vss_mgrs[i].first_split_msgs_;
+        std::cout << "first_split_msgs.size(): " << first_split_msgs.size() << std::endl;
         for (uint32_t msg_idx = 0; msg_idx < first_split_msgs.size(); ++msg_idx) {
             uint32_t begin_idx = (vss_mgrs[i].prev_epoch_final_random_ ^
                 common::Hash::Hash64(tmp_id1)) %
                 root_member_count;
+            std::cout << "msg_idx: " << msg_idx << std::endl;
             for (uint32_t j = 0; j < root_member_count; ++j) {
                 if (i == j) {
                     continue;

@@ -155,6 +155,8 @@ void VssProto::CreateFirstSplitRandomMessage(
         std::to_string(elect_height) + "_" +
         common::GlobalInfo::Instance()->id();
     auto message_hash = common::Hash::keccak256(hash_str);
+    std::string test_pubkey;
+    mem_ptr->pubkey.Serialize(test_pubkey);
     std::string crypt_data = security::Crypto::Instance()->GetEncryptData(
         mem_ptr->pubkey,
         message_hash);
