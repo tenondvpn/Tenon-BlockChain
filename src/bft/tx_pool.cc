@@ -5,6 +5,7 @@
 
 #include "bft/bft_utils.h"
 #include "common/encode.h"
+#include "common/time_utils.h"
 #include "block/account_manager.h"
 #include "bft/gid_manager.h"
 
@@ -101,6 +102,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
             }
 
 
+            BFT_ERROR("00000001 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF: %llu, %llu, %llu", common::TimeUtils::TimestampUs(), iter->second->time_valid, timestamp_now);
             if (iter->second->time_valid <= timestamp_now) {
                 if (IsTxContractLocked(iter->second)) {
                     ++iter;

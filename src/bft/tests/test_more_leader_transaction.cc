@@ -1717,7 +1717,9 @@ public:
         // leader_private_key = "22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
         // prepare
         SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
+        BFT_ERROR("0000000 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF: %llu", common::TimeUtils::TimestampUs());
         bft::BftManager::Instance()->HandleMessage(msg);
+        BFT_ERROR("1111111 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF: %llu", common::TimeUtils::TimestampUs());
         usleep(bft::kBftStartDeltaTime);
         int res = bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num);
         ASSERT_EQ(res, kBftSuccess);
@@ -2066,9 +2068,6 @@ public:
                 tenon_block->height());
             db::Db::Instance()->Put(height_db_key, tenon_block->hash());
             db::Db::Instance()->Put(tenon_block->hash(), tenon_block->SerializeAsString());
-            printf("add base addr net id[%u], pool: %u, success!\n",
-                network::kRootCongressNetworkId, tenon_block->pool_index());
-
         }
     }
 
@@ -3656,7 +3655,7 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBallotSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        if ((i <= 4 && i > 2) || i == 7) {
+        if ((i <= 5 && i > 2) || i >= 8) {
             ASSERT_EQ(new_from_balance, from_balance - 44994 * common::GlobalInfo::Instance()->gas_price());
         }
         else {
@@ -3702,7 +3701,7 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBallotSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, true, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 14741 * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(new_from_balance, from_balance - 12996 * common::GlobalInfo::Instance()->gas_price());
         ASSERT_FALSE(caller_info->locked());
     }
 }
@@ -4303,6 +4302,7 @@ TEST_F(TestMoreLeaderTransaction, TestShardTimeVssStatisticElectConsensus) {
                 ASSERT_TRUE(root_mem_ptr != nullptr);
                 if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
                         root_mem_ptr->pool_index_mod_num) {
+                    BFT_ERROR("DDDDDDDDDDDDDDDDDDDDDDDDDDD");
                     CreateNewAccountWithInvalidNode(
                         *root_id_iter,
                         *root_id_iter,
@@ -4314,7 +4314,6 @@ TEST_F(TestMoreLeaderTransaction, TestShardTimeVssStatisticElectConsensus) {
                     break;
                 }
             }
-
             break;
         }
     }

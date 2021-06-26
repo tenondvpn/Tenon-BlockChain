@@ -14,6 +14,7 @@
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
+#include "common/time_utils.h"
 #include "bft/bft_utils.h"
 #include "bft/bft_interface.h"
 #include "bft/proto/bft.pb.h"
@@ -29,7 +30,7 @@ struct TxItem {
             : tx(in_tx) {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
-        time_valid += common::TimeStampUsec() + kBftStartDeltaTime;
+        time_valid += common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
         timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();

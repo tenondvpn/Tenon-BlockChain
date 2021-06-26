@@ -13,6 +13,7 @@
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "common/random.h"
+#include "common/time_utils.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
 #include "election/elect_manager.h"

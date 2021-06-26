@@ -2510,7 +2510,7 @@ TEST_F(TestBftManager, TestCallContractBallotSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        if ((i <= 4 && i > 2) || i == 7) {
+        if ((i <= 5 && i > 2) || i >= 8) {
             ASSERT_EQ(new_from_balance, from_balance - 44994 * common::GlobalInfo::Instance()->gas_price());
         } else {
             ASSERT_EQ(new_from_balance, from_balance - 64194 * common::GlobalInfo::Instance()->gas_price());
@@ -2555,7 +2555,7 @@ TEST_F(TestBftManager, TestCallContractBallotSuccess) {
         NewAccountDestNetworkTransfer(false, common::kConsensusCallContract,
             true, leader_init_msg, from_prikey, contract_addr, attrs, &leader_lock_msg);
         new_from_balance = GetBalanceByPrikey(from_prikey);
-        ASSERT_EQ(new_from_balance, from_balance - 14741 * common::GlobalInfo::Instance()->gas_price());
+        ASSERT_EQ(new_from_balance, from_balance - 12996 * common::GlobalInfo::Instance()->gas_price());
         ASSERT_FALSE(caller_info->locked());
     }
 }

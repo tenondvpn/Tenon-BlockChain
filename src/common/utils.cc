@@ -69,58 +69,6 @@ namespace common {
     
 volatile bool global_stop = false;
 
-uint64_t TimeStampMsec() {
-#ifdef _WIN32
-    struct timeval tv;
-    time_t clock;
-    struct tm tm;
-    SYSTEMTIME wtm;
-
-    GetLocalTime(&wtm);
-    tm.tm_year = wtm.wYear - 1900;
-    tm.tm_mon = wtm.wMonth - 1;
-    tm.tm_mday = wtm.wDay;
-    tm.tm_hour = wtm.wHour;
-    tm.tm_min = wtm.wMinute;
-    tm.tm_sec = wtm.wSecond;
-    tm.tm_isdst = -1;
-    clock = mktime(&tm);
-    tv.tv_sec = clock;
-    tv.tv_usec = wtm.wMilliseconds * 1000;
-    return ((uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000);
-#else
-    struct timeval tv;
-    gettimeofday(&tv, nullptr);
-    return ((uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000);
-#endif
-}
-
-uint64_t TimeStampUsec() {
-#ifdef _WIN32
-    struct timeval tv;
-    time_t clock;
-    struct tm tm;
-    SYSTEMTIME wtm;
-
-    GetLocalTime(&wtm);
-    tm.tm_year = wtm.wYear - 1900;
-    tm.tm_mon = wtm.wMonth - 1;
-    tm.tm_mday = wtm.wDay;
-    tm.tm_hour = wtm.wHour;
-    tm.tm_min = wtm.wMinute;
-    tm.tm_sec = wtm.wSecond;
-    tm.tm_isdst = -1;
-    clock = mktime(&tm);
-    tv.tv_sec = clock;
-    tv.tv_usec = wtm.wMilliseconds * 1000;
-    return ((uint64_t)tv.tv_sec * 1000 * 1000 + (uint64_t)tv.tv_usec);
-#else
-    struct timeval tv;
-    gettimeofday(&tv, nullptr);
-    return ((uint64_t)tv.tv_sec * 1000 * 1000 + (uint64_t)tv.tv_usec);
-#endif
-}
-
 uint32_t GetPoolIndex(const std::string& acc_addr) {
     if (acc_addr == root::kRootChainSingleBlockTxAddress) {
         return kRootChainPoolIndex;

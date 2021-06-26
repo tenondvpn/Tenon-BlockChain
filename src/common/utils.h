@@ -206,8 +206,6 @@ inline static std::string MicTimestampToDatetime(int64_t timestamp) {
 #endif
 }
 
-uint64_t TimeStampMsec();
-uint64_t TimeStampUsec();
 uint32_t RandomCountry();
 
 void itimeofday(long *sec, long *usec);

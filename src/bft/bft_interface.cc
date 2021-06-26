@@ -37,8 +37,12 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
     if ((int32_t)pool_index() % leader_count != leader_pool_mod_idx) {
-        BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u].",
-            pool_index(), leader_count, leader_pool_mod_idx, (int32_t)pool_index() % leader_count);
+        BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]",
+            pool_index(), leader_count, leader_pool_mod_idx, (int32_t)pool_index() % leader_count,
+            common::GlobalInfo::Instance()->network_id());
+        printf("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]\n",
+            pool_index(), leader_count, leader_pool_mod_idx, (int32_t)pool_index() % leader_count,
+            common::GlobalInfo::Instance()->network_id());
         return false;
     }
 
