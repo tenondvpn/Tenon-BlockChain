@@ -62,6 +62,15 @@ void VssManager::OnTimeBlock(
     epoch_random_ = epoch_random;
 }
 
+uint64_t VssManager::GetConsensusFinalRandom() {
+    std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
+    if ((max_count_ * 3 / 2 + 1) < member_count_) {
+        return 0llu;
+    }
+
+    return max_count_random_;
+}
+
 void VssManager::ClearAll() {
     local_random_.ResetStatus();
     for (uint32_t i = 0; i < common::kEachShardMaxNodeCount; ++i) {
@@ -71,6 +80,12 @@ void VssManager::ClearAll() {
     first_period_cheched_ = false;
     second_period_cheched_ = false;
     third_period_cheched_ = false;
+
+    std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
+    final_consensus_nodes_.clear();
+    final_consensus_random_count_.clear();
+    max_count_ = 0;
+    max_count_random_ = 0;
 }
 
 void VssManager::CheckVssPeriods() {
@@ -80,7 +95,6 @@ void VssManager::CheckVssPeriods() {
         std::lock_guard<std::mutex> guard(mutex_);
         CheckVssFirstPeriods();
         CheckVssSecondPeriods();
-        CheckVssThirdPeriods();
     }
 
     vss_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
@@ -93,7 +107,6 @@ void VssManager::CheckVssFirstPeriods() {
 
     if (IsVssFirstPeriods()) {
         BroadcastFirstPeriodHash();
-        BroadcastFirstPeriodSplitRandom();
         first_period_cheched_ = true;
     }
 }
@@ -115,7 +128,7 @@ void VssManager::CheckVssThirdPeriods() {
     }
 
     if (IsVssThirdPeriods()) {
-        BroadcastThirdPeriodSplitRandom();
+        BroadcastThirdPeriodRandom();
         third_period_cheched_ = true;
     }
 }
@@ -159,7 +172,7 @@ bool VssManager::IsVssSecondPeriods() {
 bool VssManager::IsVssThirdPeriods() {
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssSecondPeriodTimeout <= now_seconds &&
-            latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
+        latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
         return true;
     }
 
@@ -199,6 +212,7 @@ void VssManager::BroadcastSecondPeriodRandom() {
 
     VssProto::CreateRandomMessage(
         dht->local_node(),
+        kVssRandom,
         local_random_.GetFinalRandomNum(),
         prev_tm_height_,
         prev_elect_height_,
@@ -211,109 +225,7 @@ void VssManager::BroadcastSecondPeriodRandom() {
     }
 }
 
-void VssManager::BroadcastFirstPeriodSplitRandom() {
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        return;
-    }
-
-    uint64_t random_nums[kVssRandomSplitCount] = { 0 };
-    local_random_.GetRandomNum(random_nums);
-    auto mem_count = elect::ElectManager::Instance()->GetMemberCount(
-        prev_elect_height_,
-        network::kRootCongressNetworkId);
-    if (mem_count < common::kEachShardMinNodeCount) {
-        return;
-    }
-
-    auto split_mem_count = mem_count / 3;
-    if (split_mem_count < 1) {
-        return;
-    }
-
-    std::vector<std::string> all_root_nodes;
-    elect::ElectManager::Instance()->GetAllNodes(
-        prev_elect_height_,
-        network::kRootCongressNetworkId,
-        &all_root_nodes);
-    if (all_root_nodes.empty()) {
-        return;
-    }
-
-    int32_t src_begin_idx = (prev_epoch_final_random_ ^
-        common::Hash::Hash64(common::GlobalInfo::Instance()->id())) %
-        all_root_nodes.size();
-    for (uint32_t i = 0; i < kVssRandomSplitCount; ++i) {
-        int32_t begin_idx = src_begin_idx + i;
-        for (int32_t node_idx = begin_idx;
-                node_idx < (int32_t)all_root_nodes.size(); node_idx += kVssRandomSplitCount) {
-            if (node_idx == local_index_) {
-                continue;
-            }
-
-            transport::protobuf::Header msg;
-            VssProto::CreateFirstSplitRandomMessage(
-                dht->local_node(),
-                i,
-                random_nums[i],
-                prev_tm_height_,
-                prev_elect_height_,
-                all_root_nodes[node_idx],
-                msg);
-            if (msg.has_data()) {
-                network::Route::Instance()->Send(msg);
-#ifdef TENON_UNITTEST
-                first_split_msgs_.push_back(msg);
-#endif
-            }
-        }
-
-        if (begin_idx >= kVssRandomSplitCount) {
-            for (int32_t node_idx = begin_idx - kVssRandomSplitCount;
-                    node_idx >= 0; node_idx -= kVssRandomSplitCount) {
-                if (node_idx == local_index_) {
-                    continue;
-                }
-
-                transport::protobuf::Header msg;
-                VssProto::CreateFirstSplitRandomMessage(
-                    dht->local_node(),
-                    i,
-                    random_nums[i],
-                    prev_tm_height_,
-                    prev_elect_height_,
-                    all_root_nodes[node_idx],
-                    msg);
-                if (msg.has_data()) {
-                    network::Route::Instance()->Send(msg);
-#ifdef TENON_UNITTEST
-                    first_split_msgs_.push_back(msg);
-#endif
-                }
-            }
-        }
-    }
-}
-
-void VssManager::BroadcastThirdPeriodSplitRandom() {
-    protobuf::VssMessage vss_msg;
-    for (uint32_t i = 0; i < member_count_; ++i) {
-        if (i == local_index_) {
-            continue;
-        }
-
-        if (other_randoms_[i].IsRandomValid()) {
-            continue;
-        }
-
-        other_randoms_[i].GetFirstSplitRandomNum(vss_msg);
-    }
-
-    if (vss_msg.all_split_random_size() <= 0) {
-        return;
-    }
-
+void VssManager::BroadcastThirdPeriodRandom() {
     transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
@@ -321,9 +233,10 @@ void VssManager::BroadcastThirdPeriodSplitRandom() {
         return;
     }
 
-    VssProto::CreateThirdSplitRandomMessage(
+    VssProto::CreateRandomMessage(
         dht->local_node(),
-        vss_msg,
+        kVssFinalRandom,
+        GetAllVssValid(),
         prev_tm_height_,
         prev_elect_height_,
         msg);
@@ -367,11 +280,8 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
     case kVssRandom:
         HandleSecondPeriodRandom(vss_msg);
         break;
-    case kVssFirstRandomSplit:
-        HandleFirstPeriodSplitRandom(vss_msg);
-        break;
-    case kVssThirdRandomSplit:
-        HandleThirdPeriodSplitRandom(vss_msg);
+    case kVssFinalRandom:
+        HandleThirdPeriodRandom(vss_msg);
         break;
     default:
         break;
@@ -404,46 +314,6 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
     other_randoms_[mem_index].SetHash(id, vss_msg.random_hash());
 }
 
-void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_msg) {
-    auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
-    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-        vss_msg.elect_height(),
-        network::kRootCongressNetworkId,
-        id);
-    if (mem_index == elect::kInvalidMemberIndex) {
-        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
-        return;
-    }
-
-    std::string hash_str = std::to_string(vss_msg.split_index()) + "_" +
-        std::to_string(vss_msg.split_random()) + "_" +
-        std::to_string(vss_msg.tm_height()) + "_" +
-        std::to_string(vss_msg.elect_height()) + "_" +
-        id;
-    auto message_hash = common::Hash::keccak256(hash_str);
-    auto pubkey = security::PublicKey(vss_msg.pubkey());
-    auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        VSS_ERROR("security::Schnorr::Instance()->Verify failed");
-        return;
-    }
-
-    std::string dec_data = security::Crypto::Instance()->GetDecryptData(
-        vss_msg.pubkey(),
-        vss_msg.crypt_data());
-    if (memcmp(message_hash.c_str(), dec_data.c_str(), message_hash.size()) != 0) {
-        VSS_ERROR("message_hash decrypt error failed[%s: %s]",
-            common::Encode::HexEncode(message_hash).c_str(),
-            common::Encode::HexEncode(dec_data).c_str());
-        return;
-    }
-
-    other_randoms_[mem_index].SetFirstSplitRandomNum(
-        vss_msg.tm_height(),
-        vss_msg.split_index(),
-        vss_msg.split_random());
-}
-
 void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
@@ -468,24 +338,41 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     other_randoms_[mem_index].SetFinalRandomNum(id, vss_msg.random());
 }
 
-void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg) {
+void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t final_random_num) {
+    std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
+    // random hash must coming
+    auto iter = final_consensus_nodes_.find(id);
+    if (iter != final_consensus_nodes_.end()) {
+        return;
+    }
+
+    auto count_iter = final_consensus_random_count_.find(final_random_num);
+    if (count_iter == final_consensus_random_count_.end()) {
+        final_consensus_random_count_[final_random_num] = 1;
+        return;
+    }
+
+    ++count_iter->second;
+    if (max_count_ < count_iter->second) {
+        max_count_ = count_iter->second;
+        max_count_random_ = final_random_num;
+    }
+}
+
+void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
-    int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),
         network::kRootCongressNetworkId,
         id);
-    if (mem_index == (int32_t)elect::kInvalidMemberIndex) {
-        return;  
+    if (mem_index == elect::kInvalidMemberIndex) {
+        return;
     }
 
-    std::string hash_str = std::to_string(vss_msg.tm_height()) + "_" +
-        std::to_string(vss_msg.elect_height()) + "_";
-    for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
-        hash_str += vss_msg.all_split_random(i).id() + "_" +
-            std::to_string(vss_msg.all_split_random(i).split_index()) + "_" +
-            std::to_string(vss_msg.all_split_random(i).split_random()) + "_";
-    }
-
+    std::string hash_str = std::to_string(vss_msg.random()) + "_" +
+        std::to_string(vss_msg.tm_height()) + "_" +
+        std::to_string(vss_msg.elect_height()) + "_" +
+        id;
     auto message_hash = common::Hash::keccak256(hash_str);
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
@@ -493,23 +380,7 @@ void VssManager::HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         return;
     }
 
-    for (int32_t i = 0; i < vss_msg.all_split_random_size(); ++i) {
-        int32_t valid_member_begin_idx = (prev_epoch_final_random_ ^
-            common::Hash::Hash64(vss_msg.all_split_random(i).id())) % member_count_ +
-            vss_msg.all_split_random(i).split_index();
-        // must valid reserve split random number node
-        if (abs(mem_index - valid_member_begin_idx) % kVssRandomSplitCount == 0) {
-            int32_t des_member_idx = elect::ElectManager::Instance()->GetMemberIndex(
-                vss_msg.elect_height(),
-                network::kRootCongressNetworkId,
-                vss_msg.all_split_random(i).id());
-            other_randoms_[des_member_idx].SetThirdSplitRandomNum(
-                vss_msg.tm_height(),
-                id,
-                vss_msg.all_split_random(i).split_index(),
-                vss_msg.all_split_random(i).split_random());
-        }
-    }
+    SetConsensusFinalRandomNum(id, vss_msg.random());
 }
 
 }  // namespace vss

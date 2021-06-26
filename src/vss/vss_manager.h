@@ -24,12 +24,13 @@ public:
         uint64_t elect_height,
         uint64_t epoch_random);
     uint64_t EpochRandom();
-    uint64_t GetAllVssValid();
+    uint64_t GetConsensusFinalRandom();
    
 private:
     VssManager() {}
     ~VssManager() {}
 
+    // just two period and consensus with time block can also guarantee safety
     void ClearAll();
     void CheckVssPeriods();
     void CheckVssFirstPeriods();
@@ -39,14 +40,14 @@ private:
     bool IsVssSecondPeriods();
     bool IsVssThirdPeriods();
     void BroadcastFirstPeriodHash();
-    void BroadcastFirstPeriodSplitRandom();
     void BroadcastSecondPeriodRandom();
-    void BroadcastThirdPeriodSplitRandom();
+    void BroadcastThirdPeriodRandom();
     void HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg);
-    void HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_msg);
     void HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg);
-    void HandleThirdPeriodSplitRandom(const protobuf::VssMessage& vss_msg);
+    void HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg);
     void HandleMessage(transport::protobuf::Header& header);
+    uint64_t GetAllVssValid();
+    void SetConsensusFinalRandomNum(const std::string& id, uint64_t final_random_num);
 
     RandomNum local_random_{ true };
     RandomNum other_randoms_[common::kEachShardMaxNodeCount];
@@ -63,11 +64,15 @@ private:
     bool second_period_cheched_{ false };
     bool third_period_cheched_{ false };
     uint64_t epoch_random_{ 0 };
+    std::mutex final_consensus_nodes_mutex_;
+    std::unordered_set<std::string> final_consensus_nodes_;
+    std::unordered_map<uint64_t, uint32_t> final_consensus_random_count_;
+    uint32_t max_count_{ 0 };
+    uint64_t max_count_random_{ 0 };
 
     // for unit test
 #ifdef TENON_UNITTEST
     transport::protobuf::Header first_msg_;
-    std::vector<transport::protobuf::Header> first_split_msgs_;
     transport::protobuf::Header second_msg_;
     transport::protobuf::Header third_msg_;
 #endif

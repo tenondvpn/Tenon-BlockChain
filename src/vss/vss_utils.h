@@ -21,8 +21,7 @@ enum VssErrorCode {
 enum VssMessageType {
     kVssRandomHash = 1,
     kVssRandom = 2,
-    kVssFirstRandomSplit = 3,
-    kVssThirdRandomSplit = 4,
+    kVssFinalRandom = 3,
 };
 
 static const int32_t kVssRandomSplitCount = 3u;
