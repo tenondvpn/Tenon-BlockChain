@@ -7,7 +7,6 @@
 
 #include "bzlib.h"
 
-#define TENON_UNITTEST
 #define private public
 #include "election/elect_pool_manager.h"
 #include "election/elect_manager.h"
@@ -305,8 +304,7 @@ TEST_F(TestVssManager, RandomNumXorTest) {
 }
 
 TEST_F(TestVssManager, AllNodeRandomValid) {
-    const uint32_t kMemberCount = 31;
-    const uint32_t kWaitingCount = 11;
+    const uint32_t kMemberCount = 3;
     auto first_prikey_shard_1 = CreateElectBlocks(
         kMemberCount,
         network::kConsensusShardBeginNetworkId);

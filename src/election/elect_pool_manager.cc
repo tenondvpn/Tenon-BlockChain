@@ -277,7 +277,7 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
         return;
     }
 
-    uint32_t member_count = ElectManager::Instance()->GetMemberCount(
+    int32_t member_count = ElectManager::Instance()->GetMemberCount(
         statistic_info.elect_height(),
         network_id);
     if (statistic_info.succ_tx_count_size() != member_count) {
@@ -286,7 +286,7 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
 
     common::LimitHeap<HeapItem, false> min_heap(false, count);
     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
-        min_heap.push({ i, statistic_info.succ_tx_count(i) });
+        min_heap.push({ (uint32_t)i, statistic_info.succ_tx_count(i) });
     }
 
     while (!min_heap.empty()) {
@@ -344,7 +344,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             }
 
             uint32_t pick_in_count = weed_out_count;
-            if (statistic_info.succ_tx_count_size() < common::kEachShardMaxNodeCount) {
+            if (statistic_info.succ_tx_count_size() < (int32_t)common::kEachShardMaxNodeCount) {
                 pick_in_count += weed_out_count / 2;
             }
 
@@ -357,7 +357,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
     
-    if (exists_shard_nodes.size() == statistic_info.succ_tx_count_size()) {
+    if ((int32_t)exists_shard_nodes.size() == statistic_info.succ_tx_count_size()) {
         std::map<uint32_t, uint32_t> direct_weed_out;
         GetMiniTopNInvalidNodes(
             shard_netid,
