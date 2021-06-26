@@ -155,8 +155,6 @@ void VssProto::CreateFirstSplitRandomMessage(
         std::to_string(elect_height) + "_" +
         common::GlobalInfo::Instance()->id();
     auto message_hash = common::Hash::keccak256(hash_str);
-    std::string test_pubkey;
-    mem_ptr->pubkey.Serialize(test_pubkey);
     std::string crypt_data = security::Crypto::Instance()->GetEncryptData(
         mem_ptr->pubkey,
         message_hash);
@@ -176,6 +174,9 @@ void VssProto::CreateFirstSplitRandomMessage(
         return;
     }
 
+    std::string test_pubkey;
+    mem_ptr->pubkey.Serialize(test_pubkey);
+    std::cout << " public key: " << common::Encode::HexEncode(test_pubkey) << ", id: " << common::Encode::HexEncode(des_id) << std::endl;
     std::string sign_challenge_str;
     std::string sign_response_str;
     sign.Serialize(sign_challenge_str, sign_response_str);

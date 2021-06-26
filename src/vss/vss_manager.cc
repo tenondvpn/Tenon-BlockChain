@@ -253,6 +253,7 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
             }
 
             transport::protobuf::Header msg;
+            std::cout << "node_idx: " << node_idx << ", ";
             VssProto::CreateFirstSplitRandomMessage(
                 dht->local_node(),
                 i,
@@ -411,6 +412,7 @@ void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
+        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
         return;
     }
 
@@ -423,6 +425,7 @@ void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_ms
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Schnorr::Instance()->Verify failed");
         return;
     }
 
@@ -430,6 +433,9 @@ void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_ms
         vss_msg.pubkey(),
         vss_msg.crypt_data());
     if (memcmp(message_hash.c_str(), dec_data.c_str(), message_hash.size()) != 0) {
+        VSS_ERROR("message_hash decrypt error failed[%s: %s]",
+            common::Encode::HexEncode(message_hash).c_str(),
+            common::Encode::HexEncode(dec_data).c_str());
         return;
     }
 
