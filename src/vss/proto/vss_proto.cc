@@ -176,9 +176,6 @@ void VssProto::CreateFirstSplitRandomMessage(
 
     std::string test_pubkey;
     mem_ptr->pubkey.Serialize(test_pubkey);
-    std::cout << " public key: " << common::Encode::HexEncode(test_pubkey)
-        << ", id: " << common::Encode::HexEncode(des_id)
-        << std::endl;
     std::string sign_challenge_str;
     std::string sign_response_str;
     sign.Serialize(sign_challenge_str, sign_response_str);

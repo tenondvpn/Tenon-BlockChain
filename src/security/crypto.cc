@@ -33,9 +33,6 @@ std::string Crypto::GetEncryptData(
         return "";
     }
 
-    printf(" encrypt data_size encrypt message![%u, %u] sec: %s, message: %s, encmsg: %s ",
-        data_size, data_size, common::Encode::HexEncode(seckey).c_str(),
-        common::Encode::HexEncode(message).c_str(), common::Encode::HexEncode(res_enc).c_str());
     return res_enc;
 }
 
@@ -61,10 +58,6 @@ std::string Crypto::GetDecryptData(
         return "";
     }
 
-    printf(" decrypt data_size decrypt message![%u, %u] sec: %s, encmsg: %s, dec msg: %s",
-        crypt_message.size(), crypt_message.size(), common::Encode::HexEncode(seckey).c_str(),
-        common::Encode::HexEncode(crypt_message).c_str(),
-        common::Encode::HexEncode(res_dec).c_str());
     return res_dec;
 }
 };  // namespace security
