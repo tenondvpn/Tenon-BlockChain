@@ -269,6 +269,7 @@ public:
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
         security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        security::EcdhCreateKey::Instance()->Init();
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);
@@ -400,14 +401,33 @@ TEST_F(TestVssManager, OnTimeBlock) {
                         tmp_vss_msg.elect_height(),
                         network::kRootCongressNetworkId,
                         id);
+                    ASSERT_EQ(mem_index, other_idx);
+                    auto other_mem = elect::ElectManager::Instance()->GetMember(
+                        tmp_vss_msg.elect_height(),
+                        network::kRootCongressNetworkId,
+                        mem_index);
+                    ASSERT_TRUE(other_mem != nullptr);
+                    std::string other_pubkey;
+                    other_mem->pubkey.Serialize(other_pubkey);
+                    auto tmp_other_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(other_pubkey);
+                    ASSERT_EQ(tmp_other_id, other_id);
                     std::cout << "des mem_index: " << mem_index
-                        << ", pubkey: " << common::Encode::HexEncode(tmp_vss_msg.pubkey())
+                        << ", pubkey: " << common::Encode::HexEncode(other_pubkey)
                         << ", id: " << common::Encode::HexEncode(id)
                         << std::endl;
                     ASSERT_NE(mem_index, elect::kInvalidMemberIndex);
                     SetGloableInfo(
                         common::Encode::HexEncode(first_prikey_root[mem_index]),
                         network::kRootCongressNetworkId);
+
+                    auto src_id = security::Secp256k1::Instance()->ToAddressWithPublicKey(tmp_vss_msg.pubkey());
+                    auto src_mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+                        tmp_vss_msg.elect_height(),
+                        network::kRootCongressNetworkId,
+                        src_id);
+                    ASSERT_FALSE(src_mem_index == elect::kInvalidMemberIndex);
+                    ASSERT_EQ(src_mem_index, i);
+
                     vss_mgrs[mem_index].HandleFirstPeriodSplitRandom(tmp_vss_msg);
                     ASSERT_FALSE(vss_mgrs[mem_index].other_randoms_[i].first_split_map_.empty());
                 }

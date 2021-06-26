@@ -433,6 +433,10 @@ void VssManager::HandleFirstPeriodSplitRandom(const protobuf::VssMessage& vss_ms
     std::string dec_data = security::Crypto::Instance()->GetDecryptData(
         vss_msg.pubkey(),
         vss_msg.crypt_data());
+    std::cout << "src message: " << common::Encode::HexEncode(message_hash)
+        << ", crypt message: " << common::Encode::HexEncode(vss_msg.crypt_data())
+        << ", dec message: " << common::Encode::HexEncode(dec_data)
+        << std::endl;
     if (memcmp(message_hash.c_str(), dec_data.c_str(), message_hash.size()) != 0) {
         VSS_ERROR("message_hash decrypt error failed[%s: %s]",
             common::Encode::HexEncode(message_hash).c_str(),
