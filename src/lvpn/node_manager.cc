@@ -26,6 +26,7 @@ extern "C" {
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "common/string_utils.h"
+#include "common/time_utils.h"
 #include "lvpn/lvpn_utils.h"
 #include "client/vpn_client.h"
 
