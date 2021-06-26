@@ -278,6 +278,7 @@ void VssManager::BroadcastFirstPeriodSplitRandom() {
                 }
 
                 transport::protobuf::Header msg;
+                std::cout << "node_idx: " << node_idx << ", ";
                 VssProto::CreateFirstSplitRandomMessage(
                     dht->local_node(),
                     i,

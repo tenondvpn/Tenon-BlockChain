@@ -372,29 +372,46 @@ TEST_F(TestVssManager, OnTimeBlock) {
                 vss_mgrs[i].local_random_.random_num_hash_);
         }
 
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
         vss_mgrs[i].BroadcastFirstPeriodSplitRandom();
         auto first_split_msgs = vss_mgrs[i].first_split_msgs_;
+        int32_t src_begin_idx = (vss_mgrs[i].prev_epoch_final_random_ ^
+            common::Hash::Hash64(tmp_id1)) %
+            vss_mgrs[i].member_count_;
         for (uint32_t msg_idx = 0; msg_idx < first_split_msgs.size(); ++msg_idx) {
-            uint32_t begin_idx = (vss_mgrs[i].prev_epoch_final_random_ ^
-                common::Hash::Hash64(tmp_id1)) %
-                root_member_count;
             protobuf::VssMessage tmp_vss_msg;
             ASSERT_TRUE(tmp_vss_msg.ParseFromString(first_split_msgs[msg_idx].data()));
-            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(tmp_vss_msg.pubkey());
-            auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-                tmp_vss_msg.elect_height(),
-                network::kRootCongressNetworkId,
-                id);
-            std::cout << "des mem_index: " << mem_index
-                << ", pubkey: " << common::Encode::HexEncode(tmp_vss_msg.pubkey())
-                << ", id: " << common::Encode::HexEncode(id)
-                << std::endl;
-            ASSERT_NE(mem_index, elect::kInvalidMemberIndex);
-            SetGloableInfo(
-                common::Encode::HexEncode(first_prikey_root[mem_index]),
-                network::kRootCongressNetworkId);
-            vss_mgrs[mem_index].HandleFirstPeriodSplitRandom(tmp_vss_msg);
-            ASSERT_FALSE(vss_mgrs[mem_index].other_randoms_[i].first_split_map_.empty());
+            ASSERT_EQ(
+                security::Secp256k1::Instance()->ToAddressWithPublicKey(tmp_vss_msg.pubkey()),
+                security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]));
+            for (int32_t other_idx = 0; other_idx < root_member_count; ++other_idx) {
+                if (other_idx == i) {
+                    continue;
+                }
+
+                auto other_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(
+                    first_prikey_root[other_idx]);
+                dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0, other_id);
+                if (dht_key.StrKey() == first_split_msgs[msg_idx].des_dht_key()) {
+                    auto id = other_id;
+                    auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+                        tmp_vss_msg.elect_height(),
+                        network::kRootCongressNetworkId,
+                        id);
+                    std::cout << "des mem_index: " << mem_index
+                        << ", pubkey: " << common::Encode::HexEncode(tmp_vss_msg.pubkey())
+                        << ", id: " << common::Encode::HexEncode(id)
+                        << std::endl;
+                    ASSERT_NE(mem_index, elect::kInvalidMemberIndex);
+                    SetGloableInfo(
+                        common::Encode::HexEncode(first_prikey_root[mem_index]),
+                        network::kRootCongressNetworkId);
+                    vss_mgrs[mem_index].HandleFirstPeriodSplitRandom(tmp_vss_msg);
+                    ASSERT_FALSE(vss_mgrs[mem_index].other_randoms_[i].first_split_map_.empty());
+                }
+            }
         }
     }
 }
