@@ -43,26 +43,18 @@ int DbPoolInfo::InitWithGenesisBlock() {
             genesis_block) != kBlockSuccess) {
         BLOCK_ERROR("get base addr net id[%u], pool: %u, failed!",
             common::GlobalInfo::Instance()->network_id(), (uint32_t)pool_index_);
-        printf("get base addr net id[%u], pool: %u, failed!\n",
-            common::GlobalInfo::Instance()->network_id(), (uint32_t)pool_index_);
-
         return kBlockError;
     }
 
     for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
-        printf("get base addr net id[%u], pool: %u, genesis_block from: %s!\n",
-            common::GlobalInfo::Instance()->network_id(),
-            (uint32_t)pool_index_,
-            common::Encode::HexEncode(genesis_block.tx_list(i).from()).c_str());
-        if (genesis_block.tx_list(i).from().substr(2, 16) == common::kStatisticFromAddressMidllefixDecode) {
+        if (genesis_block.tx_list(i).from().substr(2, 16) ==
+                common::kStatisticFromAddressMidllefixDecode) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);
             base_addr_ = genesis_block.tx_list(i).from();
             return kBlockSuccess;
         }
     }
 
-    printf("get base addr net id[%u], pool: %u, failed!\n",
-        common::GlobalInfo::Instance()->network_id(), (uint32_t)pool_index_);
     return kBlockError;
 }
 
