@@ -4342,12 +4342,15 @@ TEST_F(TestMoreLeaderTransaction, TestShardTimeVssStatisticElectConsensus) {
     bool ec_block_success = false;
     for (int32_t i = 0; i < tx_bft.to_tx().block().tx_list_size(); ++i) {
         for (int32_t j = 0; j < tx_bft.to_tx().block().tx_list(i).attr_size(); ++j) {
-            if (tx_bft.to_tx().block().tx_list(i).attr(j).key() == elect::kElectNodeAttrElectBlock) {
+            if (tx_bft.to_tx().block().tx_list(i).attr(j).key() ==
+                    elect::kElectNodeAttrElectBlock) {
                 elect::protobuf::ElectBlock ec_block;
-                ASSERT_TRUE(ec_block.ParseFromString(tx_bft.to_tx().block().tx_list(i).attr(j).value()));
+                ASSERT_TRUE(ec_block.ParseFromString(
+                    tx_bft.to_tx().block().tx_list(i).attr(j).value()));
                 ec_block_success = true;
                 auto tx_info = tx_bft.to_tx().block().tx_list(i);
-                elect::ElectManager::Instance()->ProcessNewElectBlock(tx_bft.to_tx().block().height(), ec_block, false);
+                elect::ElectManager::Instance()->ProcessNewElectBlock(
+                    tx_bft.to_tx().block().height(), ec_block, false);
             }
         }
     }

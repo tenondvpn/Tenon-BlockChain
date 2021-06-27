@@ -80,7 +80,6 @@ void VssManager::ClearAll() {
     first_period_cheched_ = false;
     second_period_cheched_ = false;
     third_period_cheched_ = false;
-
     std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
     final_consensus_nodes_.clear();
     final_consensus_random_count_.clear();
@@ -152,7 +151,8 @@ uint64_t VssManager::GetAllVssValid() {
 bool VssManager::IsVssFirstPeriods() {
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ <= now_seconds &&
-            latest_tm_block_tm_ + kVssFirstPeriodTimeout > now_seconds) {
+            latest_tm_block_tm_ + kVssFirstPeriodTimeout - kVssTimePeriodOffsetSeconds >
+            now_seconds) {
         return true;
     }
 
@@ -162,7 +162,8 @@ bool VssManager::IsVssFirstPeriods() {
 bool VssManager::IsVssSecondPeriods() {
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssFirstPeriodTimeout <= now_seconds &&
-            latest_tm_block_tm_ + kVssSecondPeriodTimeout > now_seconds) {
+            latest_tm_block_tm_ + kVssSecondPeriodTimeout - kVssTimePeriodOffsetSeconds >
+            now_seconds) {
         return true;
     }
 
