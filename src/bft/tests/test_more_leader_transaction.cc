@@ -10,6 +10,7 @@
 #include "network/network_utils.h"
 #include "transport/transport_utils.h"
 #include "bft/bft_manager.h"
+#include "bft/dispatch_pool.h"
 #include "block/account_manager.h"
 #include "security/crypto_utils.h"
 #include "election/elect_dht.h"
@@ -1708,12 +1709,24 @@ public:
             pool_index_to = common::GetPoolIndex(from_prikey);
         }
 
+        if (IsRootSingleBlockTx(tx_type)) {
+            pool_index_to = common::kRootChainPoolIndex;
+        }
+
+        auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
         int32_t leader_index = pool_index_to % elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
+        for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+            if ((i % leader_count) == leader_index) {
+                bft::DispatchPool::Instance()->tx_pool_.tx_pool_[i].tx_pool_.clear();
+            }
+        }
+
         auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(network::kRootCongressNetworkId, leader_index);
         ASSERT_TRUE(leader_mem_ptr);
         auto leader_id = leader_mem_ptr->id;
         auto leader_private_key = network_with_private_keys_[network::kRootCongressNetworkId][leader_index];
         leader_private_key = common::Encode::HexEncode(leader_private_key);
+        BFT_ERROR("000000 clear pool index txes: %d, leader_index: %d, leader_count: %d", pool_index_to, leader_index, leader_count);
         // leader_private_key = "22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e"
         // prepare
         SetGloableInfo(leader_private_key, network::kRootCongressNetworkId);
