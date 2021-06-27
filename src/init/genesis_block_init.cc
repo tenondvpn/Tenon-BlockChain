@@ -390,6 +390,21 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
     return kInitSuccess;
 }
 
+std::string GenesisBlockInit::GetValidPoolBaseAddr(uint32_t network_id, uint32_t pool_index) {
+    uint32_t id_idx = 0;
+    while (true) {
+        std::string addr = common::Encode::HexDecode(common::StringUtil::Format(
+            "%04d%s%04d",
+            network_id,
+            common::kStatisticFromAddressMidllefix.c_str(),
+            id_idx++));
+        uint32_t pool_idx = common::GetPoolIndex(addr);
+        if (pool_idx == pool_index) {
+            return addr;
+        }
+    }
+}
+
 int GenesisBlockInit::CreateRootGenesisBlocks(
         const std::vector<dht::NodePtr>& root_genesis_nodes,
         const std::vector<dht::NodePtr>& cons_genesis_nodes) {
@@ -401,18 +416,38 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         auto tx_list = tenon_block->mutable_tx_list();
         auto iter = root_account_with_pool_index_map_.find(i);
         std::string address = iter->second;
-        auto tx_info = tx_list->Add();
-        tx_info->set_version(common::kTransactionVersion);
-        tx_info->set_gid(common::CreateGID(""));
-        tx_info->set_from(address);
-        tx_info->set_from_pubkey("");
-        tx_info->set_from_sign("");
-        tx_info->set_to("");
-        tx_info->set_amount(genesis_account_balance);
-        tx_info->set_balance(genesis_account_balance);
-        tx_info->set_gas_limit(0);
-        tx_info->set_type(common::kConsensusCreateGenesisAcount);
-        tx_info->set_network_id(network::kRootCongressNetworkId);
+        {
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(GetValidPoolBaseAddr(
+                network::kRootCongressNetworkId,
+                common::GetPoolIndex(address)));
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(0);
+            tx_info->set_balance(0);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kRootCongressNetworkId);
+        }
+
+        {
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(address);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(genesis_account_balance);
+            tx_info->set_balance(genesis_account_balance);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kRootCongressNetworkId);
+        }
+        
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
         tenon_block->set_agg_pubkey("");
@@ -484,23 +519,43 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         auto tenon_block = std::make_shared<bft::protobuf::Block>();
         auto tx_list = tenon_block->mutable_tx_list();
         std::string address = iter->second;
-        auto tx_info = tx_list->Add();
-        tx_info->set_version(common::kTransactionVersion);
-        tx_info->set_gid(common::CreateGID(""));
-        tx_info->set_from(address);
-        tx_info->set_from_pubkey("");
-        tx_info->set_from_sign("");
-        tx_info->set_to("");
-
-        if (iter->first == common::kImmutablePoolSize - 1) {
-            genesis_account_balance += common::kGenesisFoundationMaxTenon % pool_index_map_.size();
+        {
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(GetValidPoolBaseAddr(
+                network::kConsensusShardBeginNetworkId,
+                common::GetPoolIndex(address)));
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(0);
+            tx_info->set_balance(0);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         }
 
-        tx_info->set_amount(genesis_account_balance);
-        tx_info->set_balance(genesis_account_balance);
-        tx_info->set_gas_limit(0);
-        tx_info->set_type(common::kConsensusCreateGenesisAcount);
-        tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+        {
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(address);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+
+            if (iter->first == common::kImmutablePoolSize - 1) {
+                genesis_account_balance += common::kGenesisFoundationMaxTenon % pool_index_map_.size();
+            }
+
+            tx_info->set_amount(genesis_account_balance);
+            tx_info->set_balance(genesis_account_balance);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+        }
+        
         std::string pool_hash;
         uint64_t pool_height = 0;
         uint64_t tm_height;

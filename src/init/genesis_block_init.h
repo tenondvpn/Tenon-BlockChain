@@ -37,6 +37,7 @@ private:
         uint64_t height,
         FILE* root_gens_init_block_file,
         const std::vector<dht::NodePtr>& genesis_nodes);
+    std::string GetValidPoolBaseAddr(uint32_t network_id, uint32_t pool_index);
 
     std::map<uint32_t, std::string> pool_index_map_;
     std::map<uint32_t, std::string> root_account_with_pool_index_map_;

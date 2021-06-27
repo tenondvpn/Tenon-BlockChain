@@ -149,6 +149,7 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
     }
 
     if (tmblock_tm == 0) {
+        BLOCK_ERROR("get tmblock timestamp error.");
         return kBlockError;
     }
 
@@ -157,6 +158,7 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
         tx_info.set_type(common::kConsensusStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
         if (tx_info.from().empty()) {
+            BLOCK_ERROR("get pool base addr failed pool index: %d", i);
             continue;
         }
 
@@ -171,11 +173,13 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
         tm_attr->set_key(tmblock::kAttrTimerBlockTm);
         tm_attr->set_value(std::to_string(tmblock_tm));
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
-            BFT_ERROR("dispatch pool failed!");
+            BLOCK_ERROR("dispatch pool failed!pool index: %d", i);
             return kBlockError;
         }
     }
 
+
+    BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction success.");
     return kBlockSuccess;
 }
 
@@ -192,12 +196,14 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
         }
     }
 
+    std::cout << "network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
     if ((common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardBeginNetworkId &&
             common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) ||
             common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         block::AccountManager::Instance()->ShardAddTimeBlockStatisticTransaction(
             height,
             tx_info);
+        std::cout << "ShardAddTimeBlockStatisticTransaction called network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
     }
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
