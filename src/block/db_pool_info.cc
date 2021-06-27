@@ -36,7 +36,6 @@ int DbPoolInfo::InitWithGenesisBlock() {
     }
 
     bft::protobuf::Block genesis_block;
-    std::cout << "BlockManager::Instance()->GetBlockWithHeight network id: " << common::GlobalInfo::Instance()->network_id() << ", pool_index_: " << pool_index_ << std::endl;
     if (BlockManager::Instance()->GetBlockWithHeight(
             common::GlobalInfo::Instance()->network_id(),
             pool_index_,
@@ -48,10 +47,6 @@ int DbPoolInfo::InitWithGenesisBlock() {
     }
 
     for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
-        std::cout << "BlockManager::Instance()->GetBlockWithHeight network id: " << common::GlobalInfo::Instance()->network_id()
-            << ", pool_index_: " << pool_index_
-            << ", from: " << common::Encode::HexEncode(genesis_block.tx_list(i).from())
-            << std::endl;
         if (genesis_block.tx_list(i).from().substr(2, 16) ==
                 common::kStatisticFromAddressMidllefixDecode) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);

@@ -817,23 +817,7 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         return network_block_[pool_index]->GetBaseAddr();
     }
 
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = GetBlockInfo(
-        pool_index,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess || network_block_[pool_index] == nullptr) {
-        BFT_ERROR("GetBlockInfo failed!");
-        return "";
-    }
-
-    return network_block_[pool_index]->GetBaseAddr();
+    return "";
 }
 
 void AccountManager::StatisticDpPool() {
