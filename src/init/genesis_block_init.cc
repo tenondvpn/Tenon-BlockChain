@@ -245,6 +245,9 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         all_exits_attr->set_key(tmblock::kAttrTimerBlock);
         auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
         all_exits_attr->set_value(std::to_string(now_tm));
+        auto vss_random_attr = tx_info->add_attr();
+        vss_random_attr->set_key(tmblock::kVssRandomAttr);
+        vss_random_attr->set_value(std::to_string(now_tm));
         std::cout << "set init timestamp: " << now_tm << std::endl;
         tenon_block->set_prehash(root_pre_hash);
         tenon_block->set_version(common::kTransactionVersion);
@@ -260,7 +263,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tenon_block2.ParseFromString(tmp_str);
         assert(tenon_block2.tx_list_size() > 0);
         fputs((common::Encode::HexEncode(tmp_str) + "\n").c_str(), root_gens_init_block_file);
-        tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm);
+        tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm, now_tm);
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error");
             return kInitError;

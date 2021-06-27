@@ -173,9 +173,11 @@ int BlockManager::InitRootTimeBlocks() {
 
     uint64_t latest_time_block_height = 0;
     uint64_t latest_time_block_tm = 0;
+    uint64_t latest_time_block_vss_random = 0;
     if (account_info->GetLatestTimeBlock(
             &latest_time_block_height,
-            &latest_time_block_tm) != kBlockSuccess) {
+            &latest_time_block_tm,
+            &latest_time_block_vss_random) != kBlockSuccess) {
         BLOCK_INFO("get root single block GetLatestTimeBlock failed![%s]",
             common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
         return kBlockSuccess;
@@ -183,7 +185,8 @@ int BlockManager::InitRootTimeBlocks() {
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
         latest_time_block_height,
-        latest_time_block_tm);
+        latest_time_block_tm,
+        latest_time_block_vss_random);
     return kBlockSuccess;
 }
 

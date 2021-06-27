@@ -2,20 +2,21 @@
 
 #include <cstdlib>
 
+#include "bft/bft_utils.h"
+#include "bft/bft_manager.h"
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
+#include "dht/dht_key.h"
+#include "election/proto/elect_proto.h"
+#include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "network/route.h"
 #include "root/root_utils.h"
-#include "timeblock/time_block_utils.h"
-#include "bft/bft_utils.h"
-#include "bft/bft_manager.h"
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
-#include "election/proto/elect_proto.h"
-#include "election/elect_manager.h"
-#include "dht/dht_key.h"
 #include "transport/transport_utils.h"
+#include "timeblock/time_block_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -71,7 +72,10 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
     all_exits_attr->set_value(std::to_string(new_time_block_tm));
-
+    auto final_random_attr = tx_info->add_attr();
+    final_random_attr->set_key(kVssRandomAttr);
+    final_random_attr->set_value(
+        std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
     bft_msg.set_net_id(network::kRootCongressNetworkId);
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_gid("");
@@ -102,8 +106,18 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
 }
 
 int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_info) {
-    if (tx_info.attr_size() != 1) {
+    if (tx_info.attr_size() != 2) {
         TMBLOCK_ERROR("tx_info.attr_size() error: %d", tx_info.attr_size());
+        return kTimeBlockError;
+    }
+
+    if (tx_info.attr(1).key() != kVssRandomAttr) {
+        TMBLOCK_ERROR("tx_info.attr(1).key() error: %s", tx_info.attr(1).key().c_str());
+        return kTimeBlockError;
+    }
+
+    auto leader_final_cons_random = common::StringUtil::ToUint64(tx_info.attr(1).value());
+    if (leader_final_cons_random != vss::VssManager::Instance()->GetConsensusFinalRandom()) {
         return kTimeBlockError;
     }
 
@@ -123,7 +137,8 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
 
 void TimeBlockManager::UpdateTimeBlock(
         uint64_t latest_time_block_height,
-        uint64_t latest_time_block_tm) {
+        uint64_t latest_time_block_tm,
+        uint64_t vss_random) {
     latest_time_block_height_ = latest_time_block_height;
     latest_time_block_tm_ = latest_time_block_tm;
     std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
@@ -131,6 +146,13 @@ void TimeBlockManager::UpdateTimeBlock(
     if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
         latest_time_blocks_.pop_front();
     }
+
+    vss::VssManager::Instance()->OnTimeBlock(
+        latest_time_block_tm,
+        latest_time_block_height,
+        elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id()),
+        vss_random);
 }
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {

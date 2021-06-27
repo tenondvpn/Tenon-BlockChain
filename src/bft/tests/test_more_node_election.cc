@@ -511,6 +511,9 @@ public:
             all_exits_attr->set_key(tmblock::kAttrTimerBlock);
             auto now_tm = common::TimeUtils::TimestampSeconds() - common::kTimeBlockCreatePeriodSeconds;
             all_exits_attr->set_value(std::to_string(now_tm));
+            auto vss_random_attr = tx_info->add_attr();
+            vss_random_attr->set_key(tmblock::kVssRandomAttr);
+            vss_random_attr->set_value(std::to_string(now_tm));
             tenon_block->set_prehash(root_pre_hash);
             tenon_block->set_version(common::kTransactionVersion);
             tenon_block->set_agg_pubkey("");
@@ -523,7 +526,7 @@ public:
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
             tenon_block->set_hash(GetBlockHash(*tenon_block));
-            tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm);
+            tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(1, now_tm, now_tm);
             ASSERT_EQ(BftManager::Instance()->AddGenisisBlock(tenon_block), kBftSuccess);
             std::string pool_hash;
             uint64_t pool_height = 0;

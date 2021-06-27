@@ -28,6 +28,7 @@ static const std::string kFieldElectBlock("elect_block");
 static const std::string kFieldElectHeight("elect_height");
 static const std::string kFieldTimeBlock("time_block");
 static const std::string kFieldTimeHeight("time_height");
+static const std::string kFieldTimeVssRandom("time_vss_random");
 
 std::unordered_set<std::string> DbAccountInfo::account_id_set_;
 std::mutex DbAccountInfo::account_id_set_mutex_;
@@ -765,6 +766,7 @@ int DbAccountInfo::GetLatestElectBlock(
 int DbAccountInfo::AddNewTimeBlock(
         uint64_t height,
         uint64_t block_tm,
+        uint64_t vss_random,
         db::DbWriteBach& db_batch) {
     if (latest_time_block_heigth_ == common::kInvalidUint64) {
         std::string tmp_key = dict_key_ + "_" + kFieldTimeHeight;
@@ -779,6 +781,13 @@ int DbAccountInfo::AddNewTimeBlock(
             }
 
             latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+            std::string tmp_vss_key = dict_key_ + "_" + kFieldTimeVssRandom;
+            st = db::Db::Instance()->Get(tmp_vss_key, &tmp_str);
+            if (!st.ok()) {
+                return kBlockError;
+            }
+
+            latest_time_block_vss_random_ = common::StringUtil::ToUint64(tmp_str);
         }
     }
 
@@ -790,16 +799,20 @@ int DbAccountInfo::AddNewTimeBlock(
     db_batch.Put(tmp_h_key, std::to_string(height));
     std::string tmp_b_key = dict_key_ + "_" + kFieldTimeBlock;
     db_batch.Put(tmp_b_key, std::to_string(block_tm));
+    std::string tmp_vss_key = dict_key_ + "_" + kFieldTimeVssRandom;
+    db_batch.Put(tmp_vss_key, std::to_string(vss_random));
     latest_time_block_heigth_ = height;
     latest_time_block_tm_ = block_tm;
+    latest_time_block_vss_random_ = vss_random;
     return kBlockSuccess;
 }
 
-int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
+int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm, uint64_t* vss_random) {
     if (latest_time_block_heigth_ != common::kInvalidUint64 &&
             latest_time_block_tm_ != common::kInvalidUint64) {
         *height = latest_time_block_heigth_;
         *block_tm = latest_time_block_tm_;
+        *vss_random = latest_time_block_vss_random_;
         return kBlockSuccess;
     }
 
@@ -818,8 +831,16 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm) {
     }
 
     latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+    std::string tmp_vss_key = dict_key_ + "_" + kFieldTimeVssRandom;
+    st = db::Db::Instance()->Get(tmp_vss_key, &tmp_str);
+    if (!st.ok()) {
+        return kBlockError;
+    }
+
+    latest_time_block_vss_random_ = common::StringUtil::ToUint64(tmp_str);
     *height = latest_time_block_heigth_;
     *block_tm = latest_time_block_tm_;
+    *vss_random = latest_time_block_vss_random_;
     return kBlockSuccess;
 }
 

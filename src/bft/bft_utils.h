@@ -103,12 +103,12 @@ static const std::string kRootCreateNewAccountAttrKey("kRootNewAddr_netid");
 // transaction contract attr keys
 static const std::string kContractAddress = "__caddress";
 static const std::string kContractBytesCode = "__cbytescode";
-static const std::string kContractCreatedBytesCode = "__cbytescode_created";
+static const std::string kContractCreatedBytesCode = "__cbytescodecreated";
 static const std::string kContractInputCode = "__cinput";
 static const std::string kContractCallerbalance = "__ccontractcallerbalance";
 static const std::string kContractCallerChangeAmount = "__ccontractcallerchangeamount";
 static const std::string kContractCallerGasUsed = "__ccontractcallergasused";
-static const std::string kStatisticAttr = "__statistic_attr";
+static const std::string kStatisticAttr = "__statisticattr";
 
 // gas consume
 static const uint64_t kTransferGas = 1000llu;

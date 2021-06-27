@@ -60,8 +60,8 @@ public:
         uint32_t network_id,
         uint64_t* height,
         std::string* elect_block_str);
-    int AddNewTimeBlock(uint64_t height, uint64_t block_tm, db::DbWriteBach& db_batch);
-    int GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm);
+    int AddNewTimeBlock(uint64_t height, uint64_t block_tm, uint64_t vss_random, db::DbWriteBach& db_batch);
+    int GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm, uint64_t* vss_random);
     size_t VmCodeSize();
     std::string VmCodeHash();
     std::string GetCode();
@@ -118,6 +118,7 @@ private:
     std::mutex elect_blocks_map_mutex_;
     std::atomic<uint64_t> latest_time_block_heigth_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
+    std::atomic<uint64_t> latest_time_block_vss_random_{ common::kInvalidUint64 };
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

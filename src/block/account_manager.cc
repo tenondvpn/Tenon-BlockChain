@@ -138,14 +138,22 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
 }
 
 int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
+    uint64_t tmblock_timestamp = 0;
+    uint64_t vss_random = 0;
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         if (tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
-            tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
-                height,
-                common::StringUtil::ToUint64(tx_info.attr(i).value()));
+            tmblock_timestamp = common::StringUtil::ToUint64(tx_info.attr(i).value());
+        }
+
+        if (tx_info.attr(i).key() == tmblock::kVssRandomAttr) {
+            vss_random = common::StringUtil::ToUint64(tx_info.attr(i).value());
         }
     }
 
+    tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
+        height,
+        tmblock_timestamp,
+        vss_random);
     return kBlockSuccess;
 }
 
@@ -584,6 +592,8 @@ int AccountManager::SetAccountAttrs(
                 tx_info.call_contract_step() == contract::kCallStepContractFinal)) ||
                 (tx_info.type() == common::kConsensusCreateContract && tx_info.to_add())) {
             if (exist_height <= tmp_now_height) {
+                uint64_t tmblock_tm = common::kInvalidUint64;
+                uint64_t tmblock_vss_random = common::kInvalidUint64;
                 for (int32_t attr_idx = 0; attr_idx < tx_info.attr_size(); ++attr_idx) {
                     if (tx_info.type() == common::kConsensusRootElectShard) {
                         if (tx_info.attr(attr_idx).key() == elect::kElectNodeAttrElectBlock) {
@@ -597,10 +607,11 @@ int AccountManager::SetAccountAttrs(
 
                     if (tx_info.type() == common::kConsensusRootTimeBlock) {
                         if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
-                            account_info->AddNewTimeBlock(
-                                tmp_now_height,
-                                common::StringUtil::ToUint64(tx_info.attr(attr_idx).value()),
-                                db_batch);
+                            tmblock_tm = common::StringUtil::ToUint64(tx_info.attr(attr_idx).value());
+                        }
+
+                        if (tx_info.attr(attr_idx).key() == tmblock::kVssRandomAttr) {
+                            tmblock_vss_random = common::StringUtil::ToUint64(tx_info.attr(attr_idx).value());
                         }
                     }
 
@@ -618,6 +629,14 @@ int AccountManager::SetAccountAttrs(
                         db_batch);
                 }
 
+                if (tmblock_tm != common::kInvalidUint64) {
+                    account_info->AddNewTimeBlock(
+                        tmp_now_height,
+                        tmblock_tm,
+                        tmblock_vss_random
+                        db_batch);
+                }
+                
                 for (int32_t storage_idx = 0;
                         storage_idx < tx_info.storages_size(); ++storage_idx) {
                     if (tx_info.storages(storage_idx).id() != account_id) {
