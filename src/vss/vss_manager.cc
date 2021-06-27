@@ -19,6 +19,13 @@ VssManager* VssManager::Instance() {
     return &ins;
 }
 
+VssManager::VssManager() {
+    network::Route::Instance()->RegisterMessage(
+        common::kVssMessage,
+        std::bind(&VssManager::HandleMessage, this, std::placeholders::_1));
+    CheckVssPeriods();
+}
+
 uint64_t VssManager::EpochRandom() {
     return epoch_random_;
 }
