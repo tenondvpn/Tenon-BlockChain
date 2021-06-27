@@ -145,6 +145,9 @@ uint64_t VssManager::GetAllVssValid() {
 }
 
 bool VssManager::IsVssFirstPeriods() {
+#ifdef TENON_UNITTEST
+    return true;
+#endif
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ <= now_seconds &&
             latest_tm_block_tm_ + kVssFirstPeriodTimeout - kVssTimePeriodOffsetSeconds >
@@ -156,7 +159,9 @@ bool VssManager::IsVssFirstPeriods() {
 }
 
 bool VssManager::IsVssSecondPeriods() {
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
+#ifdef TENON_UNITTEST
+    return true;
+#endif    auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssFirstPeriodTimeout <= now_seconds &&
             latest_tm_block_tm_ + kVssSecondPeriodTimeout - kVssTimePeriodOffsetSeconds >
             now_seconds) {
@@ -167,7 +172,9 @@ bool VssManager::IsVssSecondPeriods() {
 }
 
 bool VssManager::IsVssThirdPeriods() {
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
+#ifdef TENON_UNITTEST
+    return true;
+#endif    auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssSecondPeriodTimeout <= now_seconds &&
         latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
         return true;
@@ -289,6 +296,10 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
 }
 
 void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
+    if (!IsVssFirstPeriods()) {
+        return;
+    }
+
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),
@@ -315,6 +326,10 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
 }
 
 void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
+    if (!IsVssSecondPeriods()) {
+        return;
+    }
+
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),
@@ -363,6 +378,10 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
 }
 
 void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
+    if (!IsVssThirdPeriods()) {
+        return;
+    }
+
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         vss_msg.elect_height(),

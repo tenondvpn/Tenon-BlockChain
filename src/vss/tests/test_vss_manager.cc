@@ -358,10 +358,6 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
         auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
         ASSERT_EQ(tmp_id1, tmp_id2);
         for (uint32_t j = 0; j < root_member_count; ++j) {
-            if (i == j) {
-                continue;
-            }
-
             SetGloableInfo(
                 common::Encode::HexEncode(first_prikey_root[j]),
                 network::kRootCongressNetworkId);
@@ -385,10 +381,6 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
         auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
         ASSERT_EQ(tmp_id1, tmp_id2);
         for (uint32_t j = 0; j < root_member_count; ++j) {
-            if (i == j) {
-                continue;
-            }
-
             SetGloableInfo(
                 common::Encode::HexEncode(first_prikey_root[j]),
                 network::kRootCongressNetworkId);
