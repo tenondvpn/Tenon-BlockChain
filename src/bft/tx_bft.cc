@@ -113,7 +113,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     if (tx_vec.empty()) {
         DispatchPool::Instance()->GetTx(pool_index, pool_mod_idx, tx_vec);
         if (tx_vec.empty()) {
-            BFT_ERROR("get tx error, empty.");
             return kBftNoNewTxs;
         }
     }

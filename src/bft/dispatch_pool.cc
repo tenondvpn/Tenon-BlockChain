@@ -182,7 +182,6 @@ TxItemPtr DispatchPool::GetRootTx() {
         int32_t pool_mod_idx,
         std::vector<TxItemPtr>& res_vec) {
     tx_pool_.GetTx(pool_index, pool_mod_idx, res_vec);
-    BFT_ERROR("DispatchPool::GetTx size: %u", res_vec.size());
 }
 
  TxItemPtr DispatchPool::GetTx(

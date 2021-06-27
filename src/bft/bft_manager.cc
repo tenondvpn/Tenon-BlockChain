@@ -574,7 +574,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     std::string prepare_data;
     int res = bft_ptr->Prepare(true, pool_mod_idx, prepare_data);
     if (res != kBftSuccess) {
-        BFT_ERROR("bft_ptr->Prepare failed![%d]", res);
         return res;
     }
 

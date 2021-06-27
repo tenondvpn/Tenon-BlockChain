@@ -163,6 +163,7 @@ int BlockManager::InitRootSingleBlocks() {
 }
 
 int BlockManager::InitRootTimeBlocks() {
+    std::cout << "InitRootTimeBlocks called!" << std::endl;
     auto account_info = AccountManager::Instance()->GetAcountInfo(
         root::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
