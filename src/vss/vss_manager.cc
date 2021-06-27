@@ -161,7 +161,8 @@ bool VssManager::IsVssFirstPeriods() {
 bool VssManager::IsVssSecondPeriods() {
 #ifdef TENON_UNITTEST
     return true;
-#endif    auto now_seconds = common::TimeUtils::TimestampSeconds();
+#endif
+    auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssFirstPeriodTimeout <= now_seconds &&
             latest_tm_block_tm_ + kVssSecondPeriodTimeout - kVssTimePeriodOffsetSeconds >
             now_seconds) {
@@ -174,7 +175,8 @@ bool VssManager::IsVssSecondPeriods() {
 bool VssManager::IsVssThirdPeriods() {
 #ifdef TENON_UNITTEST
     return true;
-#endif    auto now_seconds = common::TimeUtils::TimestampSeconds();
+#endif
+    auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssSecondPeriodTimeout <= now_seconds &&
         latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
         return true;
