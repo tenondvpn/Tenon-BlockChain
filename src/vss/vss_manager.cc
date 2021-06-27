@@ -164,7 +164,7 @@ bool VssManager::IsVssFirstPeriods() {
     return true;
 #endif
     auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ <= now_seconds &&
+    if (latest_tm_block_tm_ + kVssTimePeriodOffsetSeconds <= now_seconds &&
             latest_tm_block_tm_ + kVssFirstPeriodTimeout - kVssTimePeriodOffsetSeconds >
             now_seconds) {
         return true;
