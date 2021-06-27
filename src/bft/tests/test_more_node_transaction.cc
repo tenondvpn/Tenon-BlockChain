@@ -25,6 +25,7 @@
 #include "tvm/tvm_utils.h"
 #include "tvm/tenon_host.h"
 #include "timeblock/time_block_manager.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 

@@ -8,6 +8,7 @@
 #include "network/network_utils.h"
 #include "security/crypto_utils.h"
 #include "security/secp256k1.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 

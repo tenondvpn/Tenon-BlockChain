@@ -32,6 +32,7 @@
 #include "network/network_utils.h"
 #include "common/random.h"
 #include "timeblock/time_block_manager.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
