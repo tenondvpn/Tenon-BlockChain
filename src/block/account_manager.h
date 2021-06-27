@@ -40,6 +40,9 @@ public:
     DbAccountInfo* GetContractInfoByAddress(const std::string& address);
     std::string GetPoolBaseAddr(uint32_t pool_index);
     int GetPoolStatistic(uint32_t pool_index, block::protobuf::StatisticInfo* statistic_info);
+    int ShardAddTimeBlockStatisticTransaction(
+        uint64_t height,
+        const bft::protobuf::TxInfo& tm_tx_info);
 
 private:
     AccountManager();

@@ -249,12 +249,6 @@ void BftManager::HandleRootTxBlock(
             exit(0);
         }
 
-        if (tx_list[0].type() == common::kConsensusRootTimeBlock &&
-                common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardBeginNetworkId &&
-                common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId){
-            ShardAddTimeBlockStatisticTransaction(tx_bft.to_tx().block().height(), tx_list[0]);
-        }
-
         return;
     }
 
@@ -286,48 +280,6 @@ void BftManager::HandleRootTxBlock(
     if (pool_mod_index >= 0) {
         StartBft("", pool_mod_index);
     }
-}
-
-int BftManager::ShardAddTimeBlockStatisticTransaction(
-        uint64_t tmblock_height,
-        bft::protobuf::TxInfo& tm_tx_info) {
-    uint64_t tmblock_tm = 0;
-    for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
-        if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
-            tmblock_tm = common::StringUtil::ToUint64(tm_tx_info.attr(i).value());
-            break;
-        }
-    }
-
-    if (tmblock_tm == 0) {
-        return kBftError;
-    }
-
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        protobuf::TxInfo tx_info;
-        tx_info.set_type(common::kConsensusStatistic);
-        tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
-        if (tx_info.from().empty()) {
-            continue;
-        }
-
-        tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm) + std::to_string(i)));
-        tx_info.set_gas_limit(0llu);
-        tx_info.set_amount(0);
-        tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
-        auto height_attr = tx_info.add_attr();
-        height_attr->set_key(tmblock::kAttrTimerBlockHeight);
-        height_attr->set_value(std::to_string(tmblock_height));
-        auto tm_attr = tx_info.add_attr();
-        tm_attr->set_key(tmblock::kAttrTimerBlockTm);
-        tm_attr->set_value(std::to_string(tmblock_tm));
-        if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
-            BFT_ERROR("dispatch pool failed!");
-            return kBftError;
-        }
-    }
-
-    return kBftSuccess;
 }
 
 elect::MembersPtr BftManager::GetNetworkMembers(uint32_t network_id) {
