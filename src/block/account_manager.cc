@@ -633,7 +633,7 @@ int AccountManager::SetAccountAttrs(
                     account_info->AddNewTimeBlock(
                         tmp_now_height,
                         tmblock_tm,
-                        tmblock_vss_random
+                        tmblock_vss_random,
                         db_batch);
                 }
                 
