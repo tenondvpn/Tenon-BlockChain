@@ -25,6 +25,7 @@
 #include "security/secp256k1.h"
 #include "statistics/statistics.h"
 #include "timeblock/time_block_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 

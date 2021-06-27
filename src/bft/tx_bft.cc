@@ -20,6 +20,7 @@
 #include "bft/gid_manager.h"
 #include "timeblock/time_block_manager.h"
 #include "timeblock/time_block_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
