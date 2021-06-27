@@ -57,7 +57,8 @@ int ElectPoolManager::CreateElectTransaction(
         return kElectError;
     }
 
-    ELECT_DEBUG("create new tx gid: %s", common::Encode::HexEncode(tx_info.gid()).c_str());
+    ELECT_DEBUG("create new election tx gid: %s, network: %d",
+        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid);
     common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
