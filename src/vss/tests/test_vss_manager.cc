@@ -304,7 +304,7 @@ TEST_F(TestVssManager, RandomNumXorTest) {
 }
 
 TEST_F(TestVssManager, AllNodeRandomValid) {
-    const uint32_t kMemberCount = 3;
+    const uint32_t kMemberCount = 31;
     auto first_prikey_shard_1 = CreateElectBlocks(
         kMemberCount,
         network::kConsensusShardBeginNetworkId);
@@ -408,6 +408,126 @@ TEST_F(TestVssManager, AllNodeRandomValid) {
                 continue;
             }
 
+            SetGloableInfo(
+                common::Encode::HexEncode(first_prikey_root[j]),
+                network::kRootCongressNetworkId);
+            vss_mgrs[j].HandleThirdPeriodRandom(vss_msg);
+        }
+    }
+
+    // all success
+    auto final_random = vss_mgrs[0].GetConsensusFinalRandom();
+    ASSERT_NE(final_random, 0llu);
+    for (uint32_t i = 1; i < root_member_count; ++i) {
+        auto tmp_final_random = vss_mgrs[0].GetConsensusFinalRandom();
+        ASSERT_EQ(final_random, tmp_final_random);
+    }
+}
+
+TEST_F(TestVssManager, SomeNodeRandomValid) {
+    const uint32_t kMemberCount = 31;
+    auto first_prikey_shard_1 = CreateElectBlocks(
+        kMemberCount,
+        network::kConsensusShardBeginNetworkId);
+    auto first_prikey_root = CreateElectBlocks(
+        kMemberCount,
+        network::kRootCongressNetworkId);
+    SetGloableInfo(
+        common::Encode::HexEncode(first_prikey_root[0]),
+        network::kRootCongressNetworkId);
+    security::EcdhCreateKey::Instance()->Init();
+    VssManager vss_mgr;
+    auto latest_time_block_tm = common::TimeUtils::TimestampSeconds();
+    elect_pool_manager_.OnTimeBlock(latest_time_block_tm);
+    vss_mgr.OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
+    ASSERT_EQ(vss_mgr.EpochRandom(), 123456789llu);
+    ASSERT_TRUE(vss_mgr.local_random_.valid_);
+    ASSERT_FALSE(vss_mgr.local_random_.invalid_);
+    ASSERT_EQ(vss_mgr.local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    auto tmp_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[0]);
+    ASSERT_EQ(vss_mgr.local_random_.owner_id_, tmp_id);
+    // first period random hash
+    uint32_t root_member_count = elect::ElectManager::Instance()->GetMemberCount(
+        network::kRootCongressNetworkId);
+    VssManager* vss_mgrs = new VssManager[root_member_count];
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].OnTimeBlock(latest_time_block_tm, 0, 1, 123456789llu);
+        ASSERT_EQ(vss_mgrs[i].EpochRandom(), 123456789llu);
+        ASSERT_TRUE(vss_mgrs[i].local_random_.valid_);
+        ASSERT_FALSE(vss_mgrs[i].local_random_.invalid_);
+        ASSERT_EQ(vss_mgrs[i].local_random_.owner_id_, common::GlobalInfo::Instance()->id());
+    }
+
+    // first period split random
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].BroadcastFirstPeriodHash();
+        auto first_msg = vss_mgrs[i].first_msg_;
+        protobuf::VssMessage vss_msg;
+        vss_msg.ParseFromString(first_msg.data());
+        auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+        auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
+        ASSERT_EQ(tmp_id1, tmp_id2);
+        for (uint32_t j = 0; j < root_member_count; ++j) {
+            SetGloableInfo(
+                common::Encode::HexEncode(first_prikey_root[j]),
+                network::kRootCongressNetworkId);
+            vss_mgrs[j].HandleFirstPeriodHash(vss_msg);
+            ASSERT_EQ(
+                vss_mgrs[j].other_randoms_[i].random_num_hash_,
+                vss_mgrs[i].local_random_.random_num_hash_);
+        }
+    }
+
+    uint32_t invalid_count = root_member_count * 2 / 3 - 1;
+    std::unordered_set<uint32_t> invalid_index_set;
+    while (invalid_index_set.size() != invalid_count) {
+        invalid_index_set.insert(std::rand() % root_member_count);
+    }
+
+    // second period random
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        auto iter = invalid_index_set.find(i);
+        if (iter != invalid_index_set.end()) {
+            continue;
+        }
+
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].BroadcastSecondPeriodRandom();
+        auto second_msg = vss_mgrs[i].second_msg_;
+        protobuf::VssMessage vss_msg;
+        vss_msg.ParseFromString(second_msg.data());
+        auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+        auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
+        ASSERT_EQ(tmp_id1, tmp_id2);
+        for (uint32_t j = 0; j < root_member_count; ++j) {
+            SetGloableInfo(
+                common::Encode::HexEncode(first_prikey_root[j]),
+                network::kRootCongressNetworkId);
+            vss_mgrs[j].HandleSecondPeriodRandom(vss_msg);
+            ASSERT_TRUE(vss_mgrs[j].other_randoms_[i].valid_);
+        }
+    }
+
+    // third period broadcast the random number with the highest aggregate final ratio
+    for (uint32_t i = 0; i < root_member_count; ++i) {
+        SetGloableInfo(
+            common::Encode::HexEncode(first_prikey_root[i]),
+            network::kRootCongressNetworkId);
+        vss_mgrs[i].BroadcastThirdPeriodRandom();
+        protobuf::VssMessage vss_msg;
+        ASSERT_TRUE(vss_msg.ParseFromString(vss_mgrs[i].third_msg_.data()));
+        auto tmp_id1 = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
+        auto tmp_id2 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(first_prikey_root[i]);
+        ASSERT_EQ(tmp_id1, tmp_id2);
+        for (uint32_t j = 0; j < root_member_count; ++j) {
             SetGloableInfo(
                 common::Encode::HexEncode(first_prikey_root[j]),
                 network::kRootCongressNetworkId);

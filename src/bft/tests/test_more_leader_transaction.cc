@@ -1719,7 +1719,7 @@ public:
 
         auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
         int32_t leader_index = pool_index_to % elect::ElectManager::Instance()->GetNetworkLeaderCount(network::kRootCongressNetworkId);
-        for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        for (int32_t i = 0; i <= (int32_t)common::kImmutablePoolSize; ++i) {
             if ((i % leader_count) == leader_index) {
                 bft::DispatchPool::Instance()->tx_pool_.tx_pool_[i].tx_pool_.clear();
             }

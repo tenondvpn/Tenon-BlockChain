@@ -27,7 +27,10 @@ public:
     uint64_t GetConsensusFinalRandom();
    
 private:
-    VssManager() {}
+    VssManager() {
+        CheckVssPeriods();
+    }
+
     ~VssManager() {}
 
     // just two period and consensus with time block can also guarantee safety

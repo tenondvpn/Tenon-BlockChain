@@ -94,6 +94,7 @@ void VssManager::CheckVssPeriods() {
         std::lock_guard<std::mutex> guard(mutex_);
         CheckVssFirstPeriods();
         CheckVssSecondPeriods();
+        CheckVssThirdPeriods();
     }
 
     vss_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
@@ -135,11 +136,6 @@ void VssManager::CheckVssThirdPeriods() {
 uint64_t VssManager::GetAllVssValid() {
     uint64_t final_random = 0;
     for (uint32_t i = 0; i < member_count_; ++i) {
-        if (i == local_index_) {
-            final_random ^= local_random_.GetFinalRandomNum();
-            continue;
-        }
-
         if (other_randoms_[i].IsRandomValid()) {
             final_random ^= other_randoms_[i].GetFinalRandomNum();
         }
@@ -197,6 +193,7 @@ void VssManager::BroadcastFirstPeriodHash() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+        network::Route::Instance()->SendToLocal(msg);
 #ifdef TENON_UNITTEST
         first_msg_ = msg;
 #endif
@@ -220,6 +217,7 @@ void VssManager::BroadcastSecondPeriodRandom() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+        network::Route::Instance()->SendToLocal(msg);
 #ifdef TENON_UNITTEST
         second_msg_ = msg;
 #endif
@@ -243,6 +241,7 @@ void VssManager::BroadcastThirdPeriodRandom() {
         msg);
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
+        network::Route::Instance()->SendToLocal(msg);
 #ifdef TENON_UNITTEST
         third_msg_ = msg;
 #endif
