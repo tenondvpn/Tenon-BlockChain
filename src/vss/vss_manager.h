@@ -39,6 +39,9 @@ private:
     bool IsVssFirstPeriods();
     bool IsVssSecondPeriods();
     bool IsVssThirdPeriods();
+    bool IsVssFirstPeriodsHandleMessage();
+    bool IsVssSecondPeriodsHandleMessage();
+    bool IsVssThirdPeriodsHandleMessage();
     void BroadcastFirstPeriodHash();
     void BroadcastSecondPeriodRandom();
     void BroadcastThirdPeriodRandom();

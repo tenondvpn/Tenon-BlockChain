@@ -200,6 +200,47 @@ bool VssManager::IsVssThirdPeriods() {
     return false;
 }
 
+bool VssManager::IsVssFirstPeriodsHandleMessage() {
+#ifdef TENON_UNITTEST
+    return true;
+#endif
+    auto now_seconds = common::TimeUtils::TimestampSeconds();
+    if (latest_tm_block_tm_ + kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
+        latest_tm_block_tm_ + kVssFirstPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds > now_seconds) {
+        return true;
+    }
+
+    return false;
+
+}
+
+bool VssManager::IsVssSecondPeriodsHandleMessage() {
+#ifdef TENON_UNITTEST
+    return true;
+#endif
+    auto now_seconds = common::TimeUtils::TimestampSeconds();
+    if (latest_tm_block_tm_ + kVssFirstPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
+        latest_tm_block_tm_ + kVssSecondPeriodTimeout > now_seconds) {
+        return true;
+    }
+
+    return false;
+}
+
+bool VssManager::IsVssThirdPeriodsHandleMessage() {
+#ifdef TENON_UNITTEST
+    return true;
+#endif
+    auto now_seconds = common::TimeUtils::TimestampSeconds();
+    if (latest_tm_block_tm_ + kVssSecondPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
+        latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
+        return true;
+    }
+
+    return false;
+
+}
+
 void VssManager::BroadcastFirstPeriodHash() {
     transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
@@ -316,7 +357,7 @@ void VssManager::HandleMessage(transport::protobuf::Header& header) {
 }
 
 void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
-    if (!IsVssFirstPeriods()) {
+    if (!IsVssFirstPeriodsHandleMessage()) {
         return;
     }
 
@@ -348,7 +389,7 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
 }
 
 void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
-    if (!IsVssSecondPeriods()) {
+    if (!IsVssSecondPeriodsHandleMessage()) {
         return;
     }
 
@@ -402,7 +443,7 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
 }
 
 void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
-    if (!IsVssThirdPeriods()) {
+    if (!IsVssThirdPeriodsHandleMessage()) {
         return;
     }
 
