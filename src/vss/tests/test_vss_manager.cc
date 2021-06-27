@@ -8,6 +8,7 @@
 #include "bzlib.h"
 
 #define private public
+#include "test_transport.h"
 #include "election/elect_pool_manager.h"
 #include "election/elect_manager.h"
 #include "election/elect_manager.h"
@@ -65,6 +66,10 @@ public:
         std::string log_path = config_path_ + "/tenon.log";
         WriteDefaultLogConf(log_conf_path, log_path);
         log4cpp::PropertyConfigurator::configure(log_conf_path);
+
+        auto transport_ptr = std::dynamic_pointer_cast<transport::Transport>(
+            std::make_shared<transport::TestTransport>());
+        transport::MultiThreadHandler::Instance()->Init(transport_ptr, transport_ptr);
     }
 
     static void TearDownTestCase() {
