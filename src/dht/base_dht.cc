@@ -625,7 +625,6 @@ void BaseDht::ProcessRefreshNeighborsResponse(
         SetFrequently(msg);
         int res = CheckJoin(node);
         if (res != kDhtSuccess) {
-            DHT_ERROR("check join failed![%d]", res);
             continue;
         }
 
@@ -769,7 +768,6 @@ bool BaseDht::NodeValid(NodePtr& node) {
 
     if (node->public_ip() == local_node_->public_ip() &&
             node->public_port == local_node_->public_port) {
-        DHT_ERROR("public ip eqal to local: %s:%d", node->public_ip().c_str(), node->public_port);
         return false;
     }
 
