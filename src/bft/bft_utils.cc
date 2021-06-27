@@ -2,6 +2,7 @@
 
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
