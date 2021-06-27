@@ -1,12 +1,13 @@
 #include "block/shard_statistic.h"
 
-#include "common/global_info.h"
 #include "bft/bft_utils.h"
 #include "bft/dispatch_pool.h"
 #include "block/account_manager.h"
+#include "common/global_info.h"
 #include "election/elect_manager.h"
 #include "timeblock/time_block_manager.h"
 #include "timeblock/time_block_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
