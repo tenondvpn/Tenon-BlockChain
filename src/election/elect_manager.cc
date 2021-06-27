@@ -3,15 +3,16 @@
 
 #include <functional>
 
+#include "bft/bft_manager.h"
 #include "common/utils.h"
 #include "common/time_utils.h"
-#include "db/db_utils.h"
 #include "dht/dht_utils.h"
-#include "network/route.h"
-#include "bft/bft_manager.h"
-#include "security/secp256k1.h"
+#include "db/db_utils.h"
 #include "election/proto/elect_proto.h"
+#include "network/route.h"
 #include "network/shard_network.h"
+#include "security/secp256k1.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
