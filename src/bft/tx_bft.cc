@@ -1643,11 +1643,16 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
     }
 
     if (pool_height + 1 != block_info.height()) {
+        BFT_ERROR("block height: %llu, leader height: %llu",
+            (pool_height + 1), block_info.height());
         return kBftBlockHeightError;
     }
 
     if (block_info.timeblock_height() !=
-            tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
+            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight()) {
+        BFT_ERROR("time block height: %llu, leader height: %llu",
+            block_info.timeblock_height(),
+            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
         return kBftBlockHeightError;
     }
 

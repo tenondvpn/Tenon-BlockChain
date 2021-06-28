@@ -1031,9 +1031,8 @@ int BftManager::BackupCommit(
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
-    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
-    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
-        tenon_block->add_bitmap(bitmap_data[i]);
+    for (uint32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+        tenon_block->add_bitmap(bft_msg.bitmap(i));
     }
 
     assert(tenon_block->bitmap_size() > 0);
@@ -1311,10 +1310,21 @@ int BftManager::VerifyLeaderSignature(
         return kBftError;
     }
 
+
+    std::string hash_to_sign = bft_ptr->prepare_hash();
+    if (bft_msg.bft_step() == kBftCommit) {
+        std::string msg_hash_src = bft_ptr->prepare_hash();
+        for (uint32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.bitmap(i));
+        }
+
+        hash_to_sign = common::Hash::Hash256(msg_hash_src);
+    }
+
     std::string pubkey_str;
     mem_ptr->pubkey.Serialize(pubkey_str);
     if (!security::Schnorr::Instance()->Verify(
-            bft_ptr->prepare_hash(),
+            hash_to_sign,
             sign,
             mem_ptr->pubkey)) {
         BFT_ERROR("check signature error!");

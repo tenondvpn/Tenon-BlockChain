@@ -194,16 +194,19 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftCommit);
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
+    std::string msg_hash_src = bft_ptr->prepare_hash();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
         bft_msg.add_bitmap(bitmap_data[i]);
+        msg_hash_src += std::to_string(bitmap_data[i]);
     }
 
+    std::string hash_to_sign = common::Hash::Hash256(msg_hash_src);
     security::Signature sign;
     bool sign_res = security::Schnorr::Instance()->Sign(
-            bft_ptr->prepare_hash(),
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
-            sign);
+        hash_to_sign,
+        *(security::Schnorr::Instance()->prikey()),
+        *(security::Schnorr::Instance()->pubkey()),
+        sign);
     if (!sign_res) {
         BFT_ERROR("signature error.");
         return;

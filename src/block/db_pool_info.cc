@@ -260,7 +260,7 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     BLOCK_DEBUG("BBBBBBBBBBBBBBBBB add new statistic block time height: %lu",
-        block_item->timeblock_height());
+        block_ptr->timeblock_height());
     server_bandwidth_queue_.push(block_ptr);
 }
 
