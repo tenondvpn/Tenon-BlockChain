@@ -163,6 +163,7 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
         }
 
         tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm) + std::to_string(i)));
+        BLOCK_ERROR("ShardAddTimeBlockStatisticTransaction set gid: %s", common:Encode::HexEncode(tx_info.gid()).c_str());
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -817,7 +818,7 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         return network_block_[pool_index]->GetBaseAddr();
     }
 
-    return "";
+    /*
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm_height;
@@ -834,10 +835,11 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         return "";
     }
 
-    BLOCK_DEBUG("GetPoolBaseAddr %d: %s",
-        pool_index,
-        common::Encode::HexEncode(network_block_[pool_index]->GetBaseAddr()).c_str());
     return network_block_[pool_index]->GetBaseAddr();
+    */
+    BFT_ERROR("GetBlockInfo failed!");
+    return "";
+
 }
 
 void AccountManager::StatisticDpPool() {
