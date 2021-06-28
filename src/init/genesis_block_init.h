@@ -41,6 +41,8 @@ private:
 
     std::map<uint32_t, std::string> pool_index_map_;
     std::map<uint32_t, std::string> root_account_with_pool_index_map_;
+    common::Bitmap root_bitmap_{ common::kEachShardMaxNodeCount };
+    common::Bitmap shard_bitmap_{ common::kEachShardMaxNodeCount };
 
     DISALLOW_COPY_AND_ASSIGN(GenesisBlockInit);
 };

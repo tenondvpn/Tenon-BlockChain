@@ -22,6 +22,9 @@ static const std::string kPoolTimeBlockWithChainHeight = "pool_tm_with_block_hei
 DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
     pool_index_ = pool_index;
+    std::string block_latest_hash;
+    GetHash(&block_latest_hash);
+    assert(!hash_.empty());
     LoadBlocksUtilLatestStatisticBlock();
 }
 
@@ -100,6 +103,7 @@ int DbPoolInfo::GetHash(std::string* hash) {
             return kBlockSuccess;
         }
     }
+
     std::string tmp_str;
     if (!db::Dict::Instance()->Hget(
             dict_key_,

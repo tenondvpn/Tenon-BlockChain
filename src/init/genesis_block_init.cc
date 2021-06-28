@@ -30,6 +30,14 @@ int GenesisBlockInit::CreateGenesisBlocks(
         uint32_t net_id,
         const std::vector<dht::NodePtr>& root_genesis_nodes,
         const std::vector<dht::NodePtr>& cons_genesis_nodes) {
+    for (uint32_t i = 0; i < root_genesis_nodes.size(); ++i) {
+        root_bitmap_.Set(i);
+    }
+
+    for (uint32_t i = 0; i < cons_genesis_nodes.size(); ++i) {
+        shard_bitmap_.Set(i);
+    }
+
     if (net_id == network::kRootCongressNetworkId) {
         common::GlobalInfo::Instance()->set_network_id(network::kRootCongressNetworkId);
         return CreateRootGenesisBlocks(root_genesis_nodes, cons_genesis_nodes);
@@ -80,6 +88,11 @@ int GenesisBlockInit::CreateElectBlock(
     tenon_block->set_agg_sign_response("");
     tenon_block->set_pool_index(common::kRootChainPoolIndex);
     tenon_block->set_height(height);
+    const auto& bitmap_data = root_bitmap_.data();
+    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+        tenon_block->add_bitmap(bitmap_data[i]);
+    }
+
     tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
     tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
     fputs((common::Encode::HexEncode(tenon_block->SerializeAsString()) + "\n").c_str(),
@@ -174,6 +187,11 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(common::kRootChainPoolIndex);
         tenon_block->set_height(root_single_block_height++);
+        const auto& bitmap_data = root_bitmap_.data();
+        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+            tenon_block->add_bitmap(bitmap_data[i]);
+        }
+
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
         fputs((common::Encode::HexEncode(tenon_block->SerializeAsString()) + "\n").c_str(),
@@ -256,6 +274,11 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(common::kRootChainPoolIndex);
         tenon_block->set_height(root_single_block_height++);
+        const auto& bitmap_data = root_bitmap_.data();
+        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+            tenon_block->add_bitmap(bitmap_data[i]);
+        }
+
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
         auto tmp_str = tenon_block->SerializeAsString();
@@ -455,6 +478,11 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(iter->first);
         tenon_block->set_height(0);
+        const auto& bitmap_data = root_bitmap_.data();
+        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+            tenon_block->add_bitmap(bitmap_data[i]);
+        }
+
         tenon_block->set_timeblock_height(1);
         tenon_block->set_electblock_height(3);
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -578,6 +606,11 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(iter->first);
         tenon_block->set_height(0);
+        const auto& bitmap_data = root_bitmap_.data();
+        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+            tenon_block->add_bitmap(bitmap_data[i]);
+        }
+
         tenon_block->set_timeblock_height(1);
         tenon_block->set_electblock_height(3);
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());

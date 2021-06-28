@@ -59,6 +59,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    BFT_DEBUG("HandleMessage step: %d, agree: %d", bft_msg.bft_step(), bft_msg.agree());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
@@ -812,11 +813,13 @@ int BftManager::LeaderCommit(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
+        BFT_ERROR("check leader error.");
         return kBftError;
     }
 
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
     if (mem_index == elect::kInvalidMemberIndex) {
+        BFT_ERROR("mem_index == elect::kInvalidMemberIndex.");
         return kBftError;
     }
 
@@ -849,6 +852,7 @@ int BftManager::LeaderCommit(
         bft_msg.agree(),
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+    BFT_DEBUG("call LeaderCommitOk res: %d", res);
     if (res == kBftAgree) {
         return LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {
@@ -871,6 +875,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     BftProto::LeaderCreateCommit(local_node, bft_ptr, msg);
+    BFT_DEBUG("call LeaderCallCommit 0");
     if (!msg.has_data()) {
         BFT_ERROR("leader create commit message failed!");
         return kBftError;
@@ -888,6 +893,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         tenon_block->add_bitmap(bitmap_data[i]);
     }
 
+    BFT_DEBUG("call LeaderCallCommit 1");
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         db::DbWriteBach db_batch;
@@ -899,6 +905,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     }
 
     db::DbWriteBach db_batch;
+    BFT_DEBUG("call LeaderCallCommit 2");
     if (block::BlockManager::Instance()->AddNewBlock(
             tenon_block,
             db_batch) != block::kBlockSuccess) {
@@ -906,11 +913,13 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         return kBftError;
     }
 
+    BFT_DEBUG("call LeaderCallCommit 4");
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
         exit(0);
     }
 
+    BFT_DEBUG("call LeaderCallCommit 5");
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr->prpare_block());

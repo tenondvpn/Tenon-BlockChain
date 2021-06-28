@@ -140,6 +140,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
 int AccountManager::ShardAddTimeBlockStatisticTransaction(
         uint64_t tmblock_height,
         const bft::protobuf::TxInfo& tm_tx_info) {
+    BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 0");
     uint64_t tmblock_tm = 0;
     for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
         if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
@@ -153,7 +154,9 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
         return kBlockError;
     }
 
+    BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 1");
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d", i);
         bft::protobuf::TxInfo tx_info;
         tx_info.set_type(common::kConsensusStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
@@ -198,16 +201,18 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
         }
     }
 
-    std::cout << "network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
+    BLOCK_DEBUG("HandleTimeBlock 0");
     if ((common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardBeginNetworkId &&
             common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) ||
             common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        BLOCK_DEBUG("HandleTimeBlock 1");
         block::AccountManager::Instance()->ShardAddTimeBlockStatisticTransaction(
             height,
             tx_info);
         std::cout << "ShardAddTimeBlockStatisticTransaction called network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
     }
 
+    BLOCK_DEBUG("HandleTimeBlock 2");
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
         height,
         tmblock_timestamp,
@@ -259,6 +264,7 @@ int AccountManager::HandleFinalStatisticBlock(
 int AccountManager::AddBlockItem(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
+    BLOCK_ERROR("AddBlockItem 0");
     const auto& tx_list = block_item->tx_list();
     if (tx_list.empty()) {
         BLOCK_ERROR("tx block tx list is empty.");
@@ -266,10 +272,13 @@ int AccountManager::AddBlockItem(
     }
     
     // one block must be one consensus pool
+    BLOCK_ERROR("AddBlockItem 1");
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        BLOCK_ERROR("AddBlockItem 1 0");
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
             if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
+                BLOCK_ERROR("HandleRootSingleBlockTx failed!");
                 return kBlockError;
             }
         }
@@ -277,10 +286,12 @@ int AccountManager::AddBlockItem(
         if (tx_list[i].type() == common::kConsensusFinalStatistic &&
                 common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             if (HandleFinalStatisticBlock(block_item->height(), tx_list[i]) != kBlockSuccess) {
+                BLOCK_ERROR("HandleFinalStatisticBlock failed!");
                 return kBlockError;
             }
         }
 
+        BLOCK_ERROR("AddBlockItem 1 1");
         if (tx_list[i].type() == common::kConsensusStatistic) {
             block::ShardStatistic::Instance()->AddShardPoolStatistic(block_item);
         }
@@ -292,6 +303,7 @@ int AccountManager::AddBlockItem(
             account_id = tx_list[i].from();
         }
 
+        BLOCK_ERROR("AddBlockItem 1 2");
         if (tx_list[i].type() == common::kConsensusCallContract ||
                 tx_list[i].type() == common::kConsensusCreateContract) {
             switch (tx_list[i].call_contract_step()) {
@@ -309,6 +321,7 @@ int AccountManager::AddBlockItem(
             }
         }
 
+        BLOCK_ERROR("AddBlockItem 1 3");
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
@@ -334,6 +347,7 @@ int AccountManager::AddBlockItem(
             exit(0);
         }
 
+        BLOCK_ERROR("AddBlockItem 1 4");
         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
             std::string account_gid;
             if (tx_list[i].type() != common::kConsensusCallContract &&
@@ -357,6 +371,7 @@ int AccountManager::AddBlockItem(
         }
     }
 
+    BLOCK_ERROR("AddBlockItem 2");
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
@@ -366,6 +381,7 @@ int AccountManager::AddBlockItem(
             db_batch);
     }
 
+    BLOCK_ERROR("AddBlockItem 3");
     return kBlockSuccess;
 }
 
@@ -814,11 +830,14 @@ void AccountManager::SetPool(
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
-    std::lock_guard<std::mutex> guard(network_block_mutex_);
-    if (network_block_[pool_index] != nullptr) {
-        return network_block_[pool_index]->GetBaseAddr();
+    {
+        std::lock_guard<std::mutex> guard(network_block_mutex_);
+        if (network_block_[pool_index] != nullptr) {
+            return network_block_[pool_index]->GetBaseAddr();
+        }
     }
 
+    BLOCK_DEBUG("GetPoolBaseAddr 0");
 //     return "";
     std::string pool_hash;
     uint64_t pool_height = 0;
@@ -836,6 +855,7 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         return "";
     }
 
+    BLOCK_DEBUG("GetPoolBaseAddr 1");
     BLOCK_DEBUG("GetPoolBaseAddr %d: %s",
         pool_index,
         common::Encode::HexEncode(network_block_[pool_index]->GetBaseAddr()).c_str());
@@ -859,6 +879,9 @@ int AccountManager::GetPoolStatistic(
         block::protobuf::StatisticInfo* statistic_info) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_index] != nullptr) {
+        return network_block_[pool_index]->GetStatisticInfo(statistic_info);
+    } else {
+        network_block_[pool_index] = new block::DbPoolInfo(pool_index);
         return network_block_[pool_index]->GetStatisticInfo(statistic_info);
     }
 
