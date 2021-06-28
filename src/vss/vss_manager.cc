@@ -80,7 +80,7 @@ void VssManager::OnTimeBlock(
 uint64_t VssManager::GetConsensusFinalRandom() {
     std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
     if ((max_count_ * 3 / 2 + 1) < member_count_) {
-        return 0llu;
+        return epoch_random_;
     }
 
     return max_count_random_;

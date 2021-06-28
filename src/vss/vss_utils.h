@@ -28,8 +28,8 @@ static const int32_t kVssRandomSplitCount = 3u;
 static const uint32_t kVssRandomduplicationCount = 7u;
 static const int64_t kVssCheckPeriodTimeout = 3000000ll;
 // Avoid small differences in time between different machines leading to cheating
-static const uint32_t kVssTimePeriodOffsetSeconds = 30u;
-static const uint32_t kHandleMessageVssTimePeriodOffsetSeconds = 10u;
+static const uint32_t kVssTimePeriodOffsetSeconds = 3u;
+static const uint32_t kHandleMessageVssTimePeriodOffsetSeconds = 1u;
 // left 60 seconds for each nodes valid
 static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSeconds - 60;
 static const uint64_t kVssFirstPeriodTimeout = kVssAllPeriodSeconds / 3;
