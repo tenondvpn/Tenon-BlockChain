@@ -259,8 +259,6 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
         return;
     }
 
-    BLOCK_DEBUG("BBBBBBBBBBBBBBBBB add new statistic block time height: %lu",
-        block_ptr->timeblock_height());
     server_bandwidth_queue_.push(block_ptr);
 }
 
@@ -404,12 +402,6 @@ int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info)
         } else {
             statistic_info->add_succ_tx_count(siter->second);
         }
-
-        BLOCK_DEBUG("pool index[%u] GetStatisticInfo tm height: %lu, all_tx count: %d, succ_tx_count: %d",
-            (uint32_t)pool_index_,
-            statistic_info->timeblock_height(),
-            statistic_info->all_tx_count(),
-            statistic_info->succ_tx_count(i));
     }
 
     return kBlockSuccess;

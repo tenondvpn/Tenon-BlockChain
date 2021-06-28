@@ -1031,7 +1031,7 @@ int BftManager::BackupCommit(
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
-    for (uint32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+    for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
         tenon_block->add_bitmap(bft_msg.bitmap(i));
     }
 
@@ -1101,6 +1101,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        std::cout << "tx_list[i].status(): " << tx_list[i].status() << ", tx_list[i].has_to(): " << tx_list[i].has_to() << ", tx_list[i].type(): " << tx_list[i].type() << std::endl;
         if (tx_list[i].status() == kBftSuccess &&
                 tx_list[i].type() == common::kConsensusFinalStatistic) {
             broadcast_nets.insert(network::kRootCongressNetworkId);
@@ -1314,7 +1315,7 @@ int BftManager::VerifyLeaderSignature(
     std::string hash_to_sign = bft_ptr->prepare_hash();
     if (bft_msg.bft_step() == kBftCommit) {
         std::string msg_hash_src = bft_ptr->prepare_hash();
-        for (uint32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
             msg_hash_src += std::to_string(bft_msg.bitmap(i));
         }
 

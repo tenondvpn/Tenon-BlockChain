@@ -140,6 +140,9 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
 int AccountManager::ShardAddTimeBlockStatisticTransaction(
         uint64_t tmblock_height,
         const bft::protobuf::TxInfo& tm_tx_info) {
+#ifdef TENON_UNITTEST
+    return kBlockSuccess;
+#endif
     BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 0");
     uint64_t tmblock_tm = 0;
     for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
@@ -264,7 +267,6 @@ int AccountManager::HandleFinalStatisticBlock(
 int AccountManager::AddBlockItem(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_ERROR("AddBlockItem 0");
     const auto& tx_list = block_item->tx_list();
     if (tx_list.empty()) {
         BLOCK_ERROR("tx block tx list is empty.");
@@ -272,10 +274,8 @@ int AccountManager::AddBlockItem(
     }
     
     // one block must be one consensus pool
-    BLOCK_ERROR("AddBlockItem 1");
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        BLOCK_ERROR("AddBlockItem 1 0");
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
             if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
                 BLOCK_ERROR("HandleRootSingleBlockTx failed!");
@@ -291,7 +291,6 @@ int AccountManager::AddBlockItem(
             }
         }
 
-        BLOCK_ERROR("AddBlockItem 1 1");
         if (tx_list[i].type() == common::kConsensusStatistic) {
             block::ShardStatistic::Instance()->AddShardPoolStatistic(block_item);
         }
@@ -303,7 +302,6 @@ int AccountManager::AddBlockItem(
             account_id = tx_list[i].from();
         }
 
-        BLOCK_ERROR("AddBlockItem 1 2");
         if (tx_list[i].type() == common::kConsensusCallContract ||
                 tx_list[i].type() == common::kConsensusCreateContract) {
             switch (tx_list[i].call_contract_step()) {
@@ -321,7 +319,6 @@ int AccountManager::AddBlockItem(
             }
         }
 
-        BLOCK_ERROR("AddBlockItem 1 3");
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
@@ -347,7 +344,6 @@ int AccountManager::AddBlockItem(
             exit(0);
         }
 
-        BLOCK_ERROR("AddBlockItem 1 4");
         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
             std::string account_gid;
             if (tx_list[i].type() != common::kConsensusCallContract &&
@@ -371,7 +367,6 @@ int AccountManager::AddBlockItem(
         }
     }
 
-    BLOCK_ERROR("AddBlockItem 2");
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
@@ -381,7 +376,6 @@ int AccountManager::AddBlockItem(
             db_batch);
     }
 
-    BLOCK_ERROR("AddBlockItem 3");
     return kBlockSuccess;
 }
 
