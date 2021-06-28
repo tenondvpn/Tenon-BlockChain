@@ -685,6 +685,7 @@ int TxBft::BackupCheckStatistic(
 
     block::protobuf::StatisticInfo leader_statistic_info;
     if (!leader_statistic_info.ParseFromString(tx_info.storages(0).value())) {
+        BFT_ERROR("leader_statistic_info.ParseFromString error");
         return kBftLeaderInfoInvalid;
     }
 
@@ -698,23 +699,29 @@ int TxBft::BackupCheckStatistic(
     }
 
     if (statistic_info.timeblock_height() != leader_statistic_info.timeblock_height()) {
+        BFT_ERROR("statistic_info.timeblock_height() != leader_statistic_info.timeblock_height()");
         return kBftInvalidPackage;
     }
     
     if (statistic_info.elect_height() != leader_statistic_info.elect_height()) {
+        BFT_ERROR("statistic_info.elect_height() != leader_statistic_info.elect_height()");
         return kBftInvalidPackage;
     }
 
     if (statistic_info.all_tx_count() != leader_statistic_info.all_tx_count()) {
+        BFT_ERROR("statistic_info.all_tx_count() != leader_statistic_info.all_tx_count()");
         return kBftInvalidPackage;
     }
 
     if (statistic_info.succ_tx_count_size() != leader_statistic_info.succ_tx_count_size()) {
+        BFT_ERROR("statistic_info.succ_tx_count_size() != leader_statistic_info.succ_tx_count_size()");
         return kBftInvalidPackage;
     }
 
     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
         if (statistic_info.succ_tx_count(i) != leader_statistic_info.succ_tx_count(i)) {
+            BFT_ERROR("%d, statistic_info.succ_tx_count(i)[%u] != leader_statistic_info.succ_tx_count(i)[%u]",
+                i, statistic_info.succ_tx_count(i), leader_statistic_info.succ_tx_count(i));
             return kBftInvalidPackage;
         }
     }
@@ -1904,7 +1911,7 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -1965,7 +1972,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -2051,7 +2058,7 @@ void TxBft::RootLeaderCreateFinalStatistic(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -2111,7 +2118,7 @@ void TxBft::RootLeaderCreateStatistic(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -2171,7 +2178,7 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
@@ -2275,7 +2282,7 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));

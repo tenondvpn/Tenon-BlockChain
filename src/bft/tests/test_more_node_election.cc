@@ -412,7 +412,7 @@ public:
             tenon_block->set_pool_index(iter->first);
             tenon_block->set_height(0);
             tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
             tenon_block->set_hash(GetBlockHash(*tenon_block));
@@ -462,7 +462,7 @@ public:
             tenon_block->set_pool_index(common::kRootChainPoolIndex);
             tenon_block->set_height(0);
             tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
             tenon_block->set_hash(GetBlockHash(*tenon_block));
@@ -523,7 +523,7 @@ public:
             tenon_block->set_pool_index(common::kRootChainPoolIndex);
             tenon_block->set_height(1);
             tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
-            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+            tenon_block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
             tenon_block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
             tenon_block->set_hash(GetBlockHash(*tenon_block));
@@ -734,7 +734,7 @@ public:
         block->set_timestamp(common::TimeUtils::TimestampMs());
         block->set_electblock_height(elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id()));
-        block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+        block->set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
         block->set_hash(GetBlockHash(*block));
 
         auto tx_data = tx_bft.SerializeAsString();
