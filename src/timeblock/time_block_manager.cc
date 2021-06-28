@@ -252,14 +252,20 @@ void TimeBlockManager::CreateTimeBlockTx() {
         }
     }
 
+    create_tm_block_tick_.CutOff(
+        kCheckTimeBlockPeriodUs,
+        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
+}
+
+void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = -1;
     if (ThisNodeIsLeader(&pool_mod_num)) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 
-    create_tm_block_tick_.CutOff(
-        kCheckTimeBlockPeriodUs,
-        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
+    check_bft_tick_.CutOff(
+        kCheckBftPeriodUs,
+        std::bind(&TimeBlockManager::CheckBft, this));
 }
 
 }  // namespace tmblock

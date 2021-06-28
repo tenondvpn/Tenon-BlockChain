@@ -34,12 +34,14 @@ private:
 
     void CreateTimeBlockTx();
     bool ThisNodeIsLeader(int32_t* pool_mod_num);
+    void CheckBft();
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
     std::deque<uint64_t> latest_time_blocks_;
     std::mutex latest_time_blocks_mutex_;
     common::Tick create_tm_block_tick_;
+    common::Tick check_bft_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(TimeBlockManager);
 };

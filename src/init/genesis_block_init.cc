@@ -335,6 +335,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
             root_single_block_height++,
             root_gens_init_block_file,
             root_genesis_nodes) != kInitSuccess) {
+        INIT_ERROR("CreateElectBlock kRootCongressNetworkId failed!");
         return kInitError;
     }
 
@@ -344,6 +345,7 @@ int GenesisBlockInit::GenerateRootSingleBlock(
             root_single_block_height++,
             root_gens_init_block_file,
             cons_genesis_nodes) != kInitSuccess) {
+        INIT_ERROR("CreateElectBlock kConsensusShardBeginNetworkId failed!");
         return kInitError;
     }
 
