@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 
+#include "common/bitmap.h"
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
 #include "dht/dht_utils.h"
