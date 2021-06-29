@@ -496,7 +496,7 @@ public:
             auto tx_info = tx_list->Add();
             tx_info->set_version(common::kTransactionVersion);
             tx_info->set_gid(common::CreateGID(""));
-            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from(common::kRootChainSingleBlockTxAddress);
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -527,7 +527,7 @@ public:
                 &tm_with_block_height);
             ASSERT_EQ(res, block::kBlockSuccess);
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
-                root::kRootChainSingleBlockTxAddress);
+                common::kRootChainSingleBlockTxAddress);
             ASSERT_TRUE(account_ptr != nullptr);
             uint64_t balance = 0;
             ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
@@ -541,7 +541,7 @@ public:
             auto tx_info = tx_list->Add();
             tx_info->set_version(common::kTransactionVersion);
             tx_info->set_gid(common::CreateGID(""));
-            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from(common::kRootChainSingleBlockTxAddress);
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -550,7 +550,7 @@ public:
             tx_info->set_gas_limit(0);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
             tx_info->set_type(common::kConsensusRootTimeBlock);
-            tx_info->set_from(root::kRootChainSingleBlockTxAddress);
+            tx_info->set_from(common::kRootChainSingleBlockTxAddress);
             tx_info->set_gas_limit(0llu);
             tx_info->set_amount(0);
             tx_info->set_network_id(network::kRootCongressNetworkId);
@@ -588,7 +588,7 @@ public:
                 &tm_with_block_height);
             ASSERT_EQ(res, block::kBlockSuccess);
             auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
-                root::kRootChainSingleBlockTxAddress);
+                common::kRootChainSingleBlockTxAddress);
             ASSERT_TRUE(account_ptr != nullptr);
             uint64_t balance = 0;
             ASSERT_EQ(account_ptr->GetBalance(&balance), block::kBlockSuccess);
@@ -1897,7 +1897,7 @@ public:
             ASSERT_EQ(tx_bft.to_tx().block().tx_list(0).type(), tx_bft_t.to_tx().block().tx_list(0).type());
             ASSERT_EQ(GetTxMessageHash(tx_bft.to_tx().block().tx_list(0)), GetTxMessageHash(tx_bft_t.to_tx().block().tx_list(0)));
         }  else {
-            ASSERT_EQ(root::kRootChainSingleBlockTxAddress, tx_bft_t.to_tx().block().tx_list(0).from());
+            ASSERT_EQ(common::kRootChainSingleBlockTxAddress, tx_bft_t.to_tx().block().tx_list(0).from());
         }
     }
 

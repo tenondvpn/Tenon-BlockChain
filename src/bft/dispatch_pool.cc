@@ -79,9 +79,9 @@ int DispatchPool::CheckFromAddressValid(
     if (!new_tx.to_add()) {
         if (IsRootSingleBlockTx(new_tx.type())) {
             // must leader can transaction
-            if (new_tx.from() != root::kRootChainSingleBlockTxAddress) {
+            if (new_tx.from() != common::kRootChainSingleBlockTxAddress) {
                 BFT_ERROR("from is not valid root address[%s][%s]",
-                    common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str(),
+                    common::Encode::HexEncode(common::kRootChainSingleBlockTxAddress).c_str(),
                     common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }

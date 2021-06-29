@@ -70,7 +70,7 @@ namespace common {
 volatile bool global_stop = false;
 
 uint32_t GetPoolIndex(const std::string& acc_addr) {
-    if (acc_addr == root::kRootChainSingleBlockTxAddress) {
+    if (acc_addr == common::kRootChainSingleBlockTxAddress) {
         return kRootChainPoolIndex;
     }
 

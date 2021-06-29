@@ -110,6 +110,10 @@ static const std::string kCreateGenesisNetwrokAccount = common::Encode::HexDecod
     "b5be6f0090e4f5d40458258ed9adf843324c0327145c48b55091f33673d2d5a4");
 static const std::string kStatisticFromAddressMidllefix = "00000000000000000000000000000000";
 static const std::string kStatisticFromAddressMidllefixDecode = common::Encode::HexDecode("00000000000000000000000000000000");
+static const std::string kRootChainSingleBlockTxAddress = common::Encode::HexDecode(
+    common::StringUtil::Format(
+        "1000000000000000000000000000000000000%3d",
+        common::kRootChainPoolIndex));
 
 static const uint32_t kVpnShareStakingPrice = 1u;
 

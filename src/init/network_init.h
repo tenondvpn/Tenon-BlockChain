@@ -9,11 +9,6 @@
 
 namespace tenon {
 
-namespace root {
-	class RootInit;
-	typedef std::shared_ptr<RootInit> RootInitPtr;
-}  // namespace root
-
 namespace init {
 
 class NetworkInit {
@@ -52,7 +47,6 @@ protected:
     std::mutex init_mutex_;
     Command cmd_;
     bool ec_block_ok_{ false };
-	root::RootInitPtr root_{ nullptr };
     std::string config_path_;
     std::set<uint16_t> started_port_set_;
 

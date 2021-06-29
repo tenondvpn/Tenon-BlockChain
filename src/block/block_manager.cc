@@ -164,10 +164,10 @@ int BlockManager::InitRootSingleBlocks() {
 
 int BlockManager::InitRootTimeBlocks() {
     auto account_info = AccountManager::Instance()->GetAcountInfo(
-        root::kRootChainSingleBlockTxAddress);
+        common::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
         BLOCK_INFO("get root single block tx address failed![%s]",
-            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            common::Encode::HexEncode(common::kRootChainSingleBlockTxAddress).c_str());
         return kBlockSuccess;
     }
 
@@ -179,7 +179,7 @@ int BlockManager::InitRootTimeBlocks() {
             &latest_time_block_tm,
             &latest_time_block_vss_random) != kBlockSuccess) {
         BLOCK_INFO("get root single block GetLatestTimeBlock failed![%s]",
-            common::Encode::HexEncode(root::kRootChainSingleBlockTxAddress).c_str());
+            common::Encode::HexEncode(common::kRootChainSingleBlockTxAddress).c_str());
         return kBlockSuccess;
     }
 
@@ -192,7 +192,7 @@ int BlockManager::InitRootTimeBlocks() {
 
 int BlockManager::InitRootElectBlocks() {
     auto account_info = AccountManager::Instance()->GetAcountInfo(
-        root::kRootChainSingleBlockTxAddress);
+        common::kRootChainSingleBlockTxAddress);
     if (account_info == nullptr) {
         BLOCK_INFO("this node not load elect blocks, no root address info.");
         return kBlockSuccess;
