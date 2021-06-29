@@ -28,7 +28,6 @@
 #include "bft/bft_manager.h"
 #include "bft/proto/bft_proto.h"
 #include "sync/key_value_sync.h"
-#include "root/root_init.h"
 #include "init/init_utils.h"
 #include "init/genesis_block_init.h"
 #include "client/vpn_client.h"
