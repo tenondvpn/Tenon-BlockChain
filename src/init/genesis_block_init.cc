@@ -10,7 +10,6 @@
 #include "bft/bft_manager.h"
 #include "election/elect_utils.h"
 #include "network/network_utils.h"
-#include "root/root_utils.h"
 #include "security/private_key.h"
 #include "security/public_key.h"
 #include "security/crypto_utils.h"

@@ -22,7 +22,6 @@
 #include "bft/gid_manager.h"
 #include "common/random.h"
 #include "contract/contract_utils.h"
-#include "root/root_utils.h"
 #include "security/secp256k1.h"
 #include "tvm/execution.h"
 #include "tvm/tvm_utils.h"

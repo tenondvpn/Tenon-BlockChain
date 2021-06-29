@@ -4,7 +4,6 @@
 #include "common/encode.h"
 #include "common/bitmap.h"
 #include "db/db.h"
-#include "root/root_utils.h"
 #include "network/network_utils.h"
 
 namespace tenon {

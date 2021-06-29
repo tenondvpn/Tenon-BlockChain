@@ -22,7 +22,6 @@
 #include "election/proto/elect.pb.h"
 #include "election/elect_manager.h"
 #include "init/update_vpn_init.h"
-#include "root/root_utils.h"
 #include "timeblock/time_block_manager.h"
 
 namespace tenon {

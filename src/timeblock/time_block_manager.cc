@@ -11,7 +11,6 @@
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "network/route.h"
-#include "root/root_utils.h"
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
 #include "transport/transport_utils.h"

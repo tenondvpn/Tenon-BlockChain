@@ -31,7 +31,6 @@
 #include "security/crypto_utils.h"
 #include "network/network_utils.h"
 #include "common/random.h"
-#include "root/root_utils.h"
 #include "timeblock/time_block_manager.h"
 #include "timeblock/time_block_utils.h"
 #include "vss/vss_manager.h"

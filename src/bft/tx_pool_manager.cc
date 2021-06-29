@@ -7,7 +7,6 @@
 #include "block/account_manager.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
-#include "root/root_utils.h"
 
 namespace tenon {
 

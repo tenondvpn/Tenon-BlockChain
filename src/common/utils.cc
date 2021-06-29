@@ -31,7 +31,6 @@
 #include "common/split.h"
 #include "common/string_utils.h"
 #include "common/user_property_key_define.h"
-#include "root/root_utils.h"
 
 namespace tenon {
 

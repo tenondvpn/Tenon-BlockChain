@@ -9,7 +9,6 @@
 #include "contract/contract_utils.h"
 #include "security/secp256k1.h"
 #include "election/elect_manager.h"
-#include "root/root_utils.h"
 
 namespace tenon {
 
