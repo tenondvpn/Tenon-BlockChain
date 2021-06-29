@@ -100,7 +100,7 @@ bool IsShardSingleBlockTx(uint32_t tx_type) {
         return true;
     }
 
-    return false;
+    return IsRootSingleBlockTx(tx_type);
 }
 
 bool IsShardSuperSingleBlockTx(uint32_t tx_type) {
