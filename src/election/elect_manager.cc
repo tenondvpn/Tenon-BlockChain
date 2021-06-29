@@ -219,6 +219,35 @@ void ElectManager::ProcessNewElectBlock(
         ++member_index;
     }
 
+    {
+        Members tmp_leaders;
+        uint32_t leader_count = GetNetworkLeaderCount(
+            common::GlobalInfo::Instance()->network_id());
+        std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+        std::vector<uint32_t> node_index_vec;
+        uint32_t index = 0;
+        for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
+            if ((*iter)->pool_index_mod_num >= 0) {
+                tmp_leaders.push_back(*iter);
+                node_index_vec.push_back(index++);
+            }
+        }
+
+        auto RandFunc = [&g2](int i) -> int {
+            return g2() % i;
+        };
+        std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), RandFunc);
+        std::lock_guard<std::mutex> guard(network_leaders_mutex_);
+        std::unordered_set<std::string> leaders;
+        for (auto iter = node_index_vec.begin();
+            iter != node_index_vec.end() &&
+            leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
+            leaders.insert(tmp_leaders[*iter]->id);
+        }
+
+        network_leaders_[elect_block.shard_network_id()] = leaders;
+    }
+
     pool_manager_.NetworkMemberChange(elect_block.shard_network_id(), shard_members_ptr);
     auto member_ptr = std::make_shared<MemberManager>();
     member_ptr->SetNetworkMember(
@@ -488,6 +517,7 @@ void ElectManager::SetNetworkMember(
         }
 
         network_leaders_[network_id] = leaders;
+        ELECT_DEBUG("CreateStatisticTransaction set network_leaders_: %d, size: %d, network member size: %d", network_id, leaders.size(), members_ptr->size());
     }
 
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);

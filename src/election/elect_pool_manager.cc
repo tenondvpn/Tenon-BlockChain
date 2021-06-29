@@ -57,8 +57,6 @@ int ElectPoolManager::CreateElectTransaction(
         return kElectError;
     }
 
-    ELECT_DEBUG("create new election tx gid: %s, network: %d",
-        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid);
     common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
@@ -126,6 +124,9 @@ int ElectPoolManager::CreateElectTransaction(
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
+    ELECT_DEBUG("create new election tx gid: %s, network: %d, exists_shard_nodes: %d, weed_out_vec: %d, pick_in_vec: %d, leader_count: %d",
+        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, exists_shard_nodes.size(), weed_out_vec.size(), pick_in_vec.size(), leader_count);
+
     return kElectSuccess;
 }
 

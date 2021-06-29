@@ -49,7 +49,6 @@ void ShardStatistic::AddShardPoolStatistic(
             latest_tm_height_ = block_item->timeblock_height();
         }
 
-            block_item->timeblock_height(), block_item->electblock_height(), block_item->pool_index());
         if (valid_pool_.empty()) {
             return;
         }
@@ -168,8 +167,6 @@ void ShardStatistic::CreateStatisticTransaction() {
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
             BFT_ERROR("CreateStatisticTransaction dispatch pool failed!");
         }
-
-        BFT_ERROR("CreateStatisticTransaction dispatch pool success! super leader: %s", common::Encode::HexEncode(*iter).c_str());
     }
 }
 
