@@ -155,7 +155,7 @@ int NetworkInit::CheckJoinWaitingPool() {
     return kInitSuccess;
 }
 
-int NetworkInit::GenesisCmd(const common::ParserArgs& parser_arg) {
+int NetworkInit::GenesisCmd(common::ParserArgs& parser_arg) {
     if (parser_arg.Has("U")) {
         conf_.Set("db", "path", std::string("./root_db"));
         if (InitBlock(conf_) != kInitSuccess) {

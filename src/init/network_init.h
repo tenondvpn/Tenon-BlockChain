@@ -31,7 +31,7 @@ protected:
     int SetPriAndPubKey(const std::string& prikey);
     int InitBlock(const common::Config& conf);
     void StartMoreServer();
-    int GenesisCmd(const common::ParserArgs& parser_arg);
+    int GenesisCmd(common::ParserArgs& parser_arg);
     int CheckJoinWaitingPool();
 
     static const uint32_t kDefaultUdpSendBufferSize = 10u * 1024u * 1024u;
