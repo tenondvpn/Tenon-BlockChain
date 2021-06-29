@@ -1084,7 +1084,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        std::cout << "tx_list[i].status(): " << tx_list[i].status() << ", tx_list[i].has_to(): " << tx_list[i].has_to() << ", tx_list[i].type(): " << tx_list[i].type() << std::endl;
         if (tx_list[i].status() == kBftSuccess &&
                 tx_list[i].type() == common::kConsensusFinalStatistic) {
             broadcast_nets.insert(network::kRootCongressNetworkId);

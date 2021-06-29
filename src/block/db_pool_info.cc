@@ -25,7 +25,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     std::string block_latest_hash;
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
-    std::cout << "DbPoolInfo pool_index: " << pool_index << ", hash: " << common::Encode::HexEncode(hash_) << std::endl;
+//     std::cout << "DbPoolInfo pool_index: " << pool_index << ", hash: " << common::Encode::HexEncode(hash_) << std::endl;
     LoadBlocksUtilLatestStatisticBlock();
 }
 
