@@ -123,6 +123,9 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
 
     auto leader_final_cons_random = common::StringUtil::ToUint64(tx_info.attr(1).value());
     if (leader_final_cons_random != vss::VssManager::Instance()->GetConsensusFinalRandom()) {
+        TMBLOCK_ERROR("leader_final_cons_random: %lu, GetConsensusFinalRandom(): %lu",
+            leader_final_cons_random,
+            vss::VssManager::Instance()->GetConsensusFinalRandom());
         return kTimeBlockError;
     }
 
@@ -152,6 +155,9 @@ void TimeBlockManager::UpdateTimeBlock(
         latest_time_blocks_.pop_front();
     }
 
+    BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
+        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
+
     vss::VssManager::Instance()->OnTimeBlock(
         latest_time_block_tm,
         latest_time_block_height,
@@ -175,8 +181,8 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
                 *new_time_block_tm += offset_tm - real_offset;
             }
 
-            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu] final[%lu]",
-                offset_tm, real_offset, *new_time_block_tm);
+            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu] final[%lu], prev[%lu]",
+                offset_tm, real_offset, *new_time_block_tm, (uint64_t)latest_time_block_tm_);
         }
 
         return true;

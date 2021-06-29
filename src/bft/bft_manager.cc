@@ -518,7 +518,6 @@ void BftManager::RemoveBft(const std::string& gid) {
 
     if (bft_ptr) {
         DispatchPool::Instance()->BftOver(bft_ptr);
-        BFT_ERROR("remove", bft_ptr);
     }
 }
 

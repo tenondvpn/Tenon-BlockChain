@@ -216,6 +216,7 @@ int TxBft::RootBackupCheckCreateAccountAddressPrepare(const bft::protobuf::Block
         }
 
         push_bft_item_vec(tx_info.gid());
+        add_item_index_vec(local_tx_info->index);
     }
 
     auto block_hash = GetBlockHash(block);
@@ -283,6 +284,7 @@ int TxBft::RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block) {
     }
 
     push_bft_item_vec(tx_info.gid());
+    add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
         BFT_ERROR("block hash error!");
@@ -348,6 +350,7 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
     }
 
     push_bft_item_vec(tx_info.gid());
+    add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
         BFT_ERROR("block hash error!");
@@ -432,6 +435,7 @@ int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
     }
 
     push_bft_item_vec(tx_info.gid());
+    add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
         BFT_ERROR("block hash error!");
@@ -469,6 +473,7 @@ int TxBft::RootBackupCheckStatistic(const bft::protobuf::Block& block) {
     }
 
     push_bft_item_vec(tx_info.gid());
+    add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
         BFT_ERROR("block hash error!");
