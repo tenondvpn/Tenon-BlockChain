@@ -4,7 +4,7 @@ aux_source_directory(./ init_src)
 add_library(init STATIC ${init_src})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(init PRIVATE election root tvm services limit network dht transport common cork uv protobuf log4cpp )
+    target_link_libraries(init PRIVATE election tvm services limit network dht transport common cork uv protobuf log4cpp )
     if (XENABLE_CODE_COVERAGE)
         target_link_libraries(init PRIVATE gcov)
     endif()
