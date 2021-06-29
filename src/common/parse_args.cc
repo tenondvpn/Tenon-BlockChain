@@ -56,7 +56,7 @@ int ParserArgs::Get(const std::string& key, std::string& value) {
     return kParseSuccess;
 }
 
-bool ParserArgs::Has(const std::string& key) {
+bool ParserArgs::Has(const std::string& key) const {
     auto iter = result_.find(key);
     if (iter == result_.end()) {
         return false;

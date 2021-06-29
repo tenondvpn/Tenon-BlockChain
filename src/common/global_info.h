@@ -246,7 +246,7 @@ private:
     std::set<std::string> watch_ad_reward_accounts_;
     std::set<std::string> vpn_minning_accounts_;
     std::string node_tag_;
-    volatile uint32_t network_id_{ 0 };
+    volatile uint32_t network_id_{ common::kInvalidUint32 };
     volatile uint64_t now_gas_price_{ 100llu };
     volatile uint32_t consensus_shard_count_{ 1 };
     volatile uint64_t gas_price_{ 10 };

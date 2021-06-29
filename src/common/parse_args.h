@@ -25,7 +25,7 @@ public:
     int Get(const std::string& key, int& value);
     int Get(const std::string& key, uint16_t& value);
     int Get(const std::string& key, std::string& value);
-    bool Has(const std::string& key);
+    bool Has(const std::string& key) const;
 
 private:
     KeyFlag GetKeyFlag(std::string &key);

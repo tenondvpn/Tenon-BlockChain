@@ -92,6 +92,70 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
+    int genesis_check = GenesisCmd(parser_arg);
+    if (genesis_check != -1) {
+        return genesis_check;
+    }
+
+    network::DhtManager::Instance();
+    network::Route::Instance();
+    if (InitUdpTransport() != kInitSuccess) {
+        INIT_ERROR("init udp transport failed!");
+        return kInitError;
+    }
+
+    if (InitTcpTransport() != kInitSuccess) {
+        INIT_ERROR("init tcp transport failed!");
+        return kInitError;
+    }
+
+    transport::MultiThreadHandler::Instance()->Init(
+            transport_,
+            tcp_transport_);
+    if (InitHttpTransport() != kInitSuccess) {
+        INIT_ERROR("init http transport failed!");
+        return kInitError;
+    }
+
+    if (InitNetworkSingleton() != kInitSuccess) {
+        INIT_ERROR("InitNetworkSingleton failed!");
+        return kInitError;
+    }
+
+    if (InitBlock(conf_) != kInitSuccess) {
+        INIT_ERROR("init block failed!");
+        return kInitError;
+    }
+
+    // check if is any consensus shard or root node or join in waiting pool
+    if (CheckJoinWaitingPool() != kInitSuccess) {
+        INIT_ERROR("CheckJoinWaitingPool failed!");
+        return kInitError;
+    }
+
+    if (InitCommand() != kInitSuccess) {
+        INIT_ERROR("InitCommand failed!");
+        return kInitError;
+    }
+
+    if (InitBft() != kInitSuccess) {
+        INIT_ERROR("int bft failed!");
+        return kInitError;
+    }
+
+    sync::KeyValueSync::Instance();
+    std::string tx_gid;
+    client::VpnClient::Instance()->Transaction("", 0, tx_gid);
+    inited_ = true;
+    cmd_.Run();
+    return kInitSuccess;
+}
+
+int NetworkInit::CheckJoinWaitingPool() {
+    return kInitSuccess;
+}
+
+int NetworkInit::GenesisCmd(const common::ParserArgs& parser_arg) {
     if (parser_arg.Has("U")) {
         conf_.Set("db", "path", std::string("./root_db"));
         if (InitBlock(conf_) != kInitSuccess) {
@@ -174,52 +238,7 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitSuccess;
     }
 
-    network::DhtManager::Instance();
-    network::Route::Instance();
-    if (InitUdpTransport() != kInitSuccess) {
-        INIT_ERROR("init udp transport failed!");
-        return kInitError;
-    }
-
-    if (InitTcpTransport() != kInitSuccess) {
-        INIT_ERROR("init tcp transport failed!");
-        return kInitError;
-    }
-
-    transport::MultiThreadHandler::Instance()->Init(
-            transport_,
-            tcp_transport_);
-    if (InitHttpTransport() != kInitSuccess) {
-        INIT_ERROR("init http transport failed!");
-        return kInitError;
-    }
-
-    if (InitNetworkSingleton() != kInitSuccess) {
-        INIT_ERROR("InitNetworkSingleton failed!");
-        return kInitError;
-    }
-
-    if (InitBlock(conf_) != kInitSuccess) {
-        INIT_ERROR("init block failed!");
-        return kInitError;
-    }
-
-    if (InitCommand() != kInitSuccess) {
-        INIT_ERROR("InitCommand failed!");
-        return kInitError;
-    }
-
-    if (InitBft() != kInitSuccess) {
-        INIT_ERROR("int bft failed!");
-        return kInitError;
-    }
-
-    sync::KeyValueSync::Instance();
-    std::string tx_gid;
-    client::VpnClient::Instance()->Transaction("", 0, tx_gid);
-    inited_ = true;
-    cmd_.Run();
-    return kInitSuccess;
+    return -1;
 }
 
 void NetworkInit::Destroy() {

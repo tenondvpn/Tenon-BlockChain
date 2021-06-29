@@ -41,7 +41,6 @@ TimeBlockManager::TimeBlockManager() {
     check_bft_tick_.CutOff(
         30 * kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CheckBft, this));
-
 }
 
 TimeBlockManager::~TimeBlockManager() {}
@@ -69,7 +68,6 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(common::kRootChainSingleBlockTxAddress);
     tx_info->set_gid(common::Hash::Hash256(std::to_string(latest_time_block_tm_)));
-    TMBLOCK_DEBUG("LeaderCreateTimeBlockTx set gid: %s", common::Encode::HexEncode(tx_info->gid()).c_str());
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
