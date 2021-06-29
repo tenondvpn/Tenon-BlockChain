@@ -394,7 +394,6 @@ int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info)
 
     statistic_info->set_timeblock_height(iter->second.tmblock_height);
     statistic_info->set_elect_height(iter->second.elect_height);
-    BLOCK_DEBUG("DDDDDDDDDDDD time block height: 1 statistic_info->set_elect_height: %lu", statistic_info->elect_height());
     statistic_info->set_all_tx_count(iter->second.all_tx_count);
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         auto siter = iter->second.succ_tx_count.find(i);

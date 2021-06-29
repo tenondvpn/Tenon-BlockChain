@@ -46,16 +46,9 @@ void ShardStatistic::AddShardPoolStatistic(
                 valid_pool_.insert((*g2_for_random_pool_)() % common::kImmutablePoolSize);
             }
 
-            std::string debug_str = std::string("DDDDDDDDDDDD time block height: ") + std::to_string(block_item->timeblock_height()) + ", valid pools: ";
-            for (auto iter = valid_pool_.begin(); iter != valid_pool_.end(); ++iter) {
-                debug_str += std::to_string(*iter) + " ";
-            }
-
-            BLOCK_DEBUG("%s", debug_str.c_str());
             latest_tm_height_ = block_item->timeblock_height();
         }
 
-        BLOCK_DEBUG("DDDDDDDDDDDD time block height: %llu, elect height: %lu, pool index: %u",
             block_item->timeblock_height(), block_item->electblock_height(), block_item->pool_index());
         if (valid_pool_.empty()) {
             return;
@@ -70,8 +63,6 @@ void ShardStatistic::AddShardPoolStatistic(
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
                     if (statistic_info.elect_height() < latest_elect_height_) {
-                        BLOCK_DEBUG("DDDDDDDDDDDD time block height: error 0 statistic_info.elect_height(): %lu < latest_elect_height_: %lu",
-                            statistic_info.elect_height(), latest_elect_height_);
                         return;
                     }
 
@@ -88,7 +79,6 @@ void ShardStatistic::AddShardPoolStatistic(
                             BLOCK_ERROR("invalid elect member count[%u][%u]",
                                 elect_member_count_, statistic_info.succ_tx_count_size());
                             // assert(false); 
-                            BLOCK_DEBUG("DDDDDDDDDDDD time block height: error 1");
                             return;
                         }
 
@@ -122,7 +112,6 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
     statistic_info->set_all_tx_count(all_tx_count_);
     statistic_info->set_timeblock_height(latest_tm_height_);
     statistic_info->set_elect_height(latest_tm_height_);
-    BLOCK_DEBUG("DDDDDDDDDDDD time block height: 0 statistic_info->set_elect_height: %lu", statistic_info->elect_height());
     for (int32_t i = 0; i < elect_member_count_; ++i) {
         statistic_info->add_succ_tx_count(pool_statistics_[i]);
     }
@@ -177,8 +166,10 @@ void ShardStatistic::CreateStatisticTransaction() {
         statistic_attr->set_key(bft::kStatisticAttr);
         statistic_attr->set_value(statistic_info.SerializeAsString());
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
-            BFT_ERROR("dispatch pool failed!");
+            BFT_ERROR("CreateStatisticTransaction dispatch pool failed!");
         }
+
+        BFT_ERROR("CreateStatisticTransaction dispatch pool success! super leader: %s", common::Encode::HexEncode(*iter).c_str());
     }
 }
 

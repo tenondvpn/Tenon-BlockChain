@@ -1919,7 +1919,6 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 0: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -1981,7 +1980,6 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 1: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -2068,7 +2066,6 @@ void TxBft::RootLeaderCreateFinalStatistic(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 2: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -2129,7 +2126,6 @@ void TxBft::RootLeaderCreateStatistic(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 3: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -2190,7 +2186,6 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 4: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
@@ -2295,7 +2290,6 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    BFT_DEBUG("DDDDDDDDDDDD time block height: 5: %lu", tenon_block.electblock_height());
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 

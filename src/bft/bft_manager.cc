@@ -59,7 +59,6 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    BFT_DEBUG("HandleMessage step: %d, agree: %d", bft_msg.bft_step(), bft_msg.agree());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
@@ -603,7 +602,6 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             false,
             msg);
-        BFT_DEBUG("BackupPrepare RemoveBft");
         RemoveBft(bft_ptr->gid());
     } else {
         BftProto::BackupCreatePrepare(
@@ -626,7 +624,6 @@ int BftManager::BackupPrepare(
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
-        BFT_DEBUG("kBftPreCommit send to [%s:%d]", header.from_ip().c_str(), header.from_port());
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
@@ -635,7 +632,6 @@ int BftManager::BackupPrepare(
 #ifdef TENON_UNITTEST
     backup_prepare_msg_ = msg;
 #endif
-    BFT_DEBUG("BackupPrepare success.");
     return kBftSuccess;
 }
 
@@ -728,7 +724,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
 #endif
-    BFT_DEBUG("LeaderCallPrecommit success.");
     return kBftSuccess;
 }
 
@@ -771,7 +766,6 @@ int BftManager::BackupPrecommit(
             agg_res,
             false,
             msg);
-        BFT_DEBUG("BackupPrecommit RemoveBft");
         RemoveBft(bft_ptr->gid());
     } else {
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
@@ -804,7 +798,6 @@ int BftManager::BackupPrecommit(
     bft_ptr->secret().Serialize(sec_key_str);
     std::string pub_key_str;
     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-    BFT_DEBUG("BackupPrecommit success.");
     return kBftSuccess;
 }
 
@@ -852,7 +845,6 @@ int BftManager::LeaderCommit(
         bft_msg.agree(),
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
-    BFT_DEBUG("call LeaderCommitOk res: %d", res);
     if (res == kBftAgree) {
         return LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {
@@ -875,7 +867,6 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     BftProto::LeaderCreateCommit(local_node, bft_ptr, msg);
-    BFT_DEBUG("call LeaderCallCommit 0");
     if (!msg.has_data()) {
         BFT_ERROR("leader create commit message failed!");
         return kBftError;
@@ -893,7 +884,6 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         tenon_block->add_bitmap(bitmap_data[i]);
     }
 
-    BFT_DEBUG("call LeaderCallCommit 1");
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         db::DbWriteBach db_batch;
@@ -905,7 +895,6 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     }
 
     db::DbWriteBach db_batch;
-    BFT_DEBUG("call LeaderCallCommit 2");
     if (block::BlockManager::Instance()->AddNewBlock(
             tenon_block,
             db_batch) != block::kBlockSuccess) {
@@ -913,17 +902,14 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         return kBftError;
     }
 
-    BFT_DEBUG("call LeaderCallCommit 4");
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
         exit(0);
     }
 
-    BFT_DEBUG("call LeaderCallCommit 5");
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr->prpare_block());
-    BFT_DEBUG("LeaderCallCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
@@ -952,7 +938,6 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
             sec_res,
             common::GlobalInfo::Instance()->id()) == kBftOppose) {
         BFT_ERROR("leader commit failed!");
-        BFT_DEBUG("LeaderReChallenge RemoveBft");
         RemoveBft(bft_ptr->gid());
         return kBftError;
     }
@@ -1061,7 +1046,6 @@ int BftManager::BackupCommit(
 
     bft_ptr->set_status(kBftCommited);
     BFT_DEBUG("BackupCommit");
-    BFT_DEBUG("BackupCommit RemoveBft");
     RemoveBft(bft_ptr->gid());
     // start new bft
     return kBftSuccess;
