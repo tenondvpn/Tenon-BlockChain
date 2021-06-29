@@ -4,6 +4,7 @@
 
 #include "common/limit_heap.h"
 #include "common/encode.h"
+#include "common/string_utils.h"
 
 namespace tenon {
 
