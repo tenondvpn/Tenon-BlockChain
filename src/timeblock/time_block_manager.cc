@@ -161,6 +161,7 @@ void TimeBlockManager::UpdateTimeBlock(
         elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id()),
         vss_random);
+    elect::ElectManager::Instance()->OnTimeBlock(latest_time_block_tm);
 }
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
