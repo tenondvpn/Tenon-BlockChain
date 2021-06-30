@@ -1186,7 +1186,7 @@ void BftManager::CheckTimeout() {
     }
 
     for (uint32_t i = 0; i < timeout_vec.size(); ++i) {
-        timeout_vec[i]->set_status(kBftTimeout);
+        timeout_vec[i]->set_status(kBftStepTimeout);
         DispatchPool::Instance()->BftOver(timeout_vec[i]);
         BFT_ERROR("Timeout %s,", common::Encode::HexEncode(timeout_vec[i]->gid()).c_str());
     }
