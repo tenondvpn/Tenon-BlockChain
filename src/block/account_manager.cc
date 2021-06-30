@@ -231,8 +231,6 @@ int AccountManager::HandleRootSingleBlockTx(
         return HandleElectBlock(height, tx_info);
     case common::kConsensusRootTimeBlock:
         return HandleTimeBlock(height, tx_info);
-    case common::kConsensusRootVssBlock:
-        break;
     default:
         break;
     }

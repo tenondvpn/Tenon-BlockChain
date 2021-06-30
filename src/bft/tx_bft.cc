@@ -390,8 +390,6 @@ int TxBft::RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg) {
         case common::kConsensusRootTimeBlock:
             return RootBackupCheckTimerBlockPrepare(block);
             break;
-        case common::kConsensusRootVssBlock:
-            break;
         case common::kConsensusStatistic:
             return RootBackupCheckStatistic(block);
             break;
@@ -2000,8 +1998,6 @@ void TxBft::RootLeaderCreateTxBlock(
             break;
         case common::kConsensusRootTimeBlock:
             RootLeaderCreateTimerBlock(pool_idx, tx_vec, ltx_msg);
-            break;
-        case common::kConsensusRootVssBlock:
             break;
         case common::kConsensusStatistic:
             RootLeaderCreateStatistic(pool_idx, tx_vec, ltx_msg);
