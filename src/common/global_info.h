@@ -88,7 +88,6 @@ public:
 
 	void set_network_id(uint32_t netid) {
 		network_id_ = netid;
-        delete& network_id_;
 	}
 
 	uint32_t network_id() {

@@ -87,6 +87,7 @@ int32_t MemberManager::IsLeader(
         const std::string& node_id) {
     auto member_ptr = GetMember(network_id, node_id);
     if (member_ptr == nullptr) {
+        ELECT_ERROR("member_ptr == nullptr network_id: %lu, id: %s", network_id, common::Encode::HexDecode(node_id));
         return -1;
     }
 

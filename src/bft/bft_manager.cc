@@ -108,6 +108,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    BFT_ERROR("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_ptr->gid()).c_str(), bft_msg.bft_step());
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
         if (!bft_msg.leader()) {
@@ -1185,8 +1186,9 @@ void BftManager::CheckTimeout() {
     }
 
     for (uint32_t i = 0; i < timeout_vec.size(); ++i) {
+        timeout_vec[i]->set_status(kBftTimeout);
         DispatchPool::Instance()->BftOver(timeout_vec[i]);
-        BFT_ERROR("Timeout", timeout_vec[i]);
+        BFT_ERROR("Timeout %s,", common::Encode::HexEncode(timeout_vec[i]->gid()).c_str());
     }
 
     timeout_tick_.CutOff(

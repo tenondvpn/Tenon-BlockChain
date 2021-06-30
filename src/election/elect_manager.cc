@@ -309,6 +309,7 @@ int32_t ElectManager::IsLeader(
     if (elect_height == common::kInvalidUint64) {
         elect_height = latest_height(network_id);
         if (elect_height == common::kInvalidUint64) {
+            ELECT_ERROR("elect_height == common::kInvalidUint64");
             return -1;
         }
     }
@@ -318,6 +319,7 @@ int32_t ElectManager::IsLeader(
         std::lock_guard<std::mutex> guard(elect_members_mutex_);
         auto iter = elect_members_.find(elect_height);
         if (iter == elect_members_.end()) {
+            ELECT_ERROR("iter == elect_members_.end()[%lu]", elect_height);
             return -1;
         }
 

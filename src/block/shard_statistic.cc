@@ -101,6 +101,7 @@ void ShardStatistic::AddShardPoolStatistic(
         latest_tm_height_ = block_item->timeblock_height();
     }
 
+    BLOCK_ERROR("valid_pool_ size: %d", valid_pool_.size());
     if (dispatch_tx) {
         CreateStatisticTransaction();
     }

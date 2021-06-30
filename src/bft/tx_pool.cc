@@ -208,7 +208,7 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     auto item_vec = bft_ptr->item_index_vec();
     BFT_ERROR("bft over called pool index: %d, status: %d., remove tx index size: %d",
         pool_index_, bft_ptr->status(), item_vec.size());
-    if (bft_ptr->status() != kBftCommited) {
+    if (bft_ptr->status() != kBftCommited && bft_ptr->status() != kBftTimeout) {
         return;
     }
 
