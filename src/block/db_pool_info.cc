@@ -25,7 +25,6 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     std::string block_latest_hash;
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
-//     std::cout << "DbPoolInfo pool_index: " << pool_index << ", hash: " << common::Encode::HexEncode(hash_) << std::endl;
     LoadBlocksUtilLatestStatisticBlock();
 }
 
@@ -283,12 +282,12 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
             return kBlockError;
         }
 
+        AddStatistic(block_item);
         if (block_item->tx_list_size() == 1 &&
                 block_item->tx_list(0).type() == common::kConsensusStatistic) {
             break;
         }
 
-        AddStatistic(block_item);
         prev_hash = block_item->prehash();
         if (prev_hash.empty()) {
             break;
@@ -314,12 +313,6 @@ void DbPoolInfo::SatisticBlock() {
 int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
     // TODO: sync thread to load block
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
-    if (max_time_block_height_ > 2) {
-        if (block_item->timeblock_height() <= max_time_block_height_ - 2) {
-            return kBlockSuccess;
-        }
-    }
-
     if (block_item->timeblock_height() > max_time_block_height_) {
         max_time_block_height_ = block_item->timeblock_height();
     }
@@ -334,6 +327,7 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 
     auto ext_iter = iter->second.added_height.find(block_item->height());
     if (ext_iter != iter->second.added_height.end()) {
+        std::cout << "ext_iter != iter->second.added_height.end() " << block_item->height() << std::endl;
         return kBlockSuccess;
     }
 

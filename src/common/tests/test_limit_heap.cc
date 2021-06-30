@@ -35,7 +35,7 @@ TEST_F(TestLimitHeap, TestMax) {
     LimitHeap<uint64_t, true> test_min_heap(true, 1024);
     uint64_t max_data = 0;
     for (uint64_t i = 0; i < 1000; ++i) {
-        auto data = common::Random::RandomUint16();
+        auto data = i;
         test_min_heap.push(data);
         if (max_data < data) {
             max_data = data;
@@ -55,7 +55,7 @@ TEST_F(TestLimitHeap, TestMin) {
     LimitHeap<uint64_t, false> test_min_heap(true, 1024);
     uint64_t max_data = 999999999;
     for (uint64_t i = 0; i < 1000; ++i) {
-        auto data = common::Random::RandomUint16();
+        auto data = i;
         test_min_heap.push(data);
         if (max_data > data) {
             max_data = data;

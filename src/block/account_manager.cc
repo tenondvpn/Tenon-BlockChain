@@ -874,12 +874,10 @@ int AccountManager::GetPoolStatistic(
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_index] != nullptr) {
         return network_block_[pool_index]->GetStatisticInfo(statistic_info);
-    } else {
-        network_block_[pool_index] = new block::DbPoolInfo(pool_index);
-        return network_block_[pool_index]->GetStatisticInfo(statistic_info);
     }
 
-    return kBlockError;
+    network_block_[pool_index] = new block::DbPoolInfo(pool_index);
+    return network_block_[pool_index]->GetStatisticInfo(statistic_info);
 }
 
 

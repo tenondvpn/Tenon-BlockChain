@@ -2304,6 +2304,7 @@ int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
         pool_index(),
         &statistic_info);
     if (res != block::kBlockSuccess) {
+        std::cout << "get pool index statistic failed: " << pool_index() << std::endl;
         assert(false);
         return kBftError;
     }
