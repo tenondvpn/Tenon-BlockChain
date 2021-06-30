@@ -24,7 +24,7 @@ ElectManager* ElectManager::Instance() {
 }
 
 ElectManager::ElectManager() {
-    network::Route::Instance()->RegisterMessaJIIJKU8ge(
+    network::Route::Instance()->RegisterMessage(
         common::kElectMessage,
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
 }
