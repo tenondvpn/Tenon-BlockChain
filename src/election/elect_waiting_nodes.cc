@@ -120,7 +120,14 @@ void ElectWaitingNodes::GetAllValidNodes(
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
-    node_map_[node_ptr->id] = node_ptr;
+    auto iter = node_map_.find(node_ptr->id);
+    if (iter != node_map_.end()) {
+        iter->second->public_ip = node_ptr->public_ip;
+        iter->second->public_port = node_ptr->public_port;
+        iter->second->dht_key = node_ptr->dht_key;
+    } else {
+        node_map_[node_ptr->id] = node_ptr;
+    }
 }
 
 void ElectWaitingNodes::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
@@ -154,7 +161,12 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
 
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
-        std::cout << "valid_join_time: " << valid_join_time.time_since_epoch().count() << ", now_tm: " << now_tm.time_since_epoch().count() << std::endl;
+        std::cout << "valid_join_time: " << valid_join_time.time_since_epoch().count()
+            << ", now_tm: " << now_tm.time_since_epoch().count()
+            << ", join_tm: " << iter->second->join_tm.time_since_epoch().count()
+            << ", kElectAvailableJoinTime: " << kElectAvailableJoinTime
+            << ", time_offset_milli: " << time_offset_milli
+            << std::endl;
         if (valid_join_time > now_tm) {
             continue;
         }
