@@ -60,8 +60,10 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     if (iter == all_nodes_waiting_map_.end()) {
         wait_ptr->same_root_count = 1;
         all_nodes_waiting_map_[wait_ptr->nodes_hash] = wait_ptr;
+        std::cout << "UpdateWaitingNodes called: " << 1 << ", waiting_shard_id_: " << waiting_shard_id_ << std::endl;
     } else {
         ++iter->second->same_root_count;
+        std::cout << "UpdateWaitingNodes called: " << iter->second->same_root_count << ", waiting_shard_id_: " << waiting_shard_id_ << std::endl;
     }
 }
 
@@ -213,6 +215,7 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
+            std::cout << "SendConsensusNodes called: " << time_block_tm << ", waiting_shard_id_: " << waiting_shard_id_ << std::endl;
         }
     }
 }
