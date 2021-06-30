@@ -517,12 +517,6 @@ int BlockManager::HandleGetBlockRequest(
             return kBlockError;
         }
     } else if (block_msg.block_req().has_height()) {
-//         std::string* cache_block = GetHeightBlockWithCache(block_msg.block_req().height());
-//         if (cache_block != nullptr) {
-//             SendBlockResponse(header, *cache_block);
-//             return kBlockSuccess;
-//         }
-
         auto acc_ptr = AccountManager::Instance()->GetAcountInfo(
                 block_msg.block_req().account_address());
         if (acc_ptr == nullptr) {
@@ -594,34 +588,6 @@ void BlockManager::SendBlockResponse(
         transport::MultiThreadHandler::Instance()->transport()->Send(
                 header.from_ip(), header.from_port(), 0, msg);
     }
-}
-
-void BlockManager::SaveHeightBlockWithCache(uint64_t height, std::string* block_data) {
-    std::lock_guard<std::mutex> guard(cache_height_block_mutex_);
-    if (height_cache_heap_.size() > kCacheBlockSize) {
-        auto iter = height_chain_map_.find(height_cache_heap_.top().height);
-        if (iter != height_chain_map_.end()) {
-            delete iter->second.first;
-            height_chain_map_.erase(iter);
-        }
-
-        height_cache_heap_.pop();
-    }
-
-    int32_t index = height_cache_heap_.push({ height, 1 });
-    height_chain_map_[height] = std::make_pair(block_data, index);
-}
-
-std::string* BlockManager::GetHeightBlockWithCache(uint64_t height) {
-    std::lock_guard<std::mutex> guard(cache_height_block_mutex_);
-    auto iter = height_chain_map_.find(height);
-    if (iter == height_chain_map_.end()) {
-        return nullptr;
-    }
-
-    ++height_cache_heap_.data_[iter->second.second].cache_count;
-    iter->second.second = height_cache_heap_.AdjustDown(iter->second.second);
-    return iter->second.first;
 }
 
 int BlockManager::AddNewBlock(

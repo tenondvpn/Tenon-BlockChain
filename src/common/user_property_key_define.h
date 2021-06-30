@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "common/limit_heap.h"
 #include "common/encode.h"
 #include "common/string_utils.h"
+#include "common/limit_heap.h"
 
 namespace tenon {
 
@@ -79,7 +79,6 @@ struct BlockItemPtr {
 bool operator<(BlockItem& lhs, BlockItem& rhs);
 bool operator<(BlockItemPtr& lhs, BlockItemPtr& rhs);
 bool operator==(const BlockItemPtr& lhs, const BlockItemPtr& rhs);
-
 
 template<>
 uint64_t MinHeapUniqueVal(const tenon::common::BlockItemPtr& val);

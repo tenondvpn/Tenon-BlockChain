@@ -263,11 +263,11 @@ void ElectManager::ProcessNewElectBlock(
     elect_members_[height] = member_ptr;
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
-        elect_net_heights_map_[elect_block.shard_network_id()] =
-            std::make_shared<common::LimitHeap<uint64_t, true>>(true, 256);
-        elect_net_heights_map_[elect_block.shard_network_id()]->push(height);
+        elect_net_heights_map_[elect_block.shard_network_id()] = height;
     } else {
-        net_heights_iter->second->push(height);
+        if (height > net_heights_iter->second) {
+            net_heights_iter->second = height;
+        }
     }
 }
 
@@ -291,7 +291,7 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
         return common::kInvalidUint64;
     }
 
-    return net_heights_iter->second->top();
+    return net_heights_iter->second;
 }
 
 int32_t ElectManager::IsLeader(
@@ -482,11 +482,11 @@ void ElectManager::SetNetworkMember(
         elect_members_[elect_height] = mem_ptr;
         auto net_heights_iter = elect_net_heights_map_.find(network_id);
         if (net_heights_iter == elect_net_heights_map_.end()) {
-            elect_net_heights_map_[network_id] =
-                std::make_shared<common::LimitHeap<uint64_t, true>>(true, 256);
-            elect_net_heights_map_[network_id]->push(elect_height);
+            elect_net_heights_map_[network_id] = elect_height;
         } else {
-            net_heights_iter->second->push(elect_height);
+            if (elect_height > net_heights_iter->second) {
+                net_heights_iter->second = elect_height;
+            }
         }
     }
 

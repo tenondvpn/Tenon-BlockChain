@@ -3,7 +3,6 @@
 #include <deque>
 
 #include "common/config.h"
-#include "common/limit_heap.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "bft/proto/bft.pb.h"
@@ -81,8 +80,6 @@ private:
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(transport::protobuf::Header& header);
-    std::string* GetHeightBlockWithCache(uint64_t height);
-    void SaveHeightBlockWithCache(uint64_t height, std::string* block_data);
     void SendBlockResponse(transport::protobuf::Header& header, const std::string& block_str);
     int64_t FixRewardWithHistory(const std::string& id, int64_t new_amount);
     int InitRootSingleBlocks();
@@ -91,7 +88,6 @@ private:
 
     static const uint32_t kCacheBlockSize = 1024;
     std::unordered_map<uint64_t, std::pair<std::string*, int32_t>> height_chain_map_;
-    common::LimitHeap<HeightCacheHeapItem> height_cache_heap_{ false, kCacheBlockSize };
     std::mutex cache_height_block_mutex_;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;

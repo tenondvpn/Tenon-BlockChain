@@ -28,7 +28,7 @@ uint64_t MinHeapUniqueVal(const uint32_t& val);
 template<>
 uint64_t MinHeapUniqueVal(const int32_t& val);
 
-template <class Type, bool kIsMaxHeap=false>
+template <class Type>
 class LimitHeap {
 public:
     LimitHeap(bool unique, uint32_t max_size)
@@ -66,7 +66,7 @@ public:
     inline int32_t push(Type val) {
         if (size_ >= max_size_ && OperaterMinOrMax(val, data_[0])) {
             TENON_ERROR("min heap push failed![%d] is max heap: %d",
-                OperaterMinOrMax(val, data_[0]), kIsMaxHeap);
+                OperaterMinOrMax(val, data_[0]));
             return -1;
         }
 
@@ -98,7 +98,7 @@ public:
     }
 
     inline Type top() {
-        return data_[0];;
+        return data_[0];
     }
 
     inline bool empty() {
@@ -185,10 +185,6 @@ public:
     }
 
     inline bool OperaterMinOrMax(Type left, Type right) {
-        if (kIsMaxHeap) {
-            return !(left < right);
-        }
-
         return left < right;
     }
 
