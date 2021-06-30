@@ -65,7 +65,7 @@ static const std::string kElectNodeAttrElectBlock = "__elect_block";
 // Set aside 5 minutes as the tolerance range, that is, each consensus node judges
 // whether the node within the local tolerance range is in the master node sequence,
 // if not, it is opposed
-static const uint32_t kElectAvailableJoinTime = 35llu * 60llu * 1000000llu;
+static const uint32_t kElectAvailableJoinTime = 60llu * 1000000llu;
 static const uint32_t kElectAvailableTolerateTime = 5llu * 60llu * 1000000llu;
 
 inline static std::string GetElectHeartbeatHash(
