@@ -68,6 +68,10 @@ void ElectWaitingNodes::UpdateWaitingNodes(
 }
 
 void ElectWaitingNodes::OnTimeBlock(uint64_t tm_block_tm) {
+    std::cout << "ElectWaitingNodes::OnTimeBlock: " << tm_block_tm
+        << ", waiting_shard_id_: " << waiting_shard_id_
+        << ", got_valid_nodes_tm_: " << got_valid_nodes_tm_
+        << std::endl;
     std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
     if (got_valid_nodes_tm_ >= tm_block_tm) {
         return;
@@ -150,6 +154,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
 
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
+        std::cout << "valid_join_time: " << valid_join_time.time_since_epoch().count() << ", now_tm: " << now_tm.time_since_epoch().count() << std::endl;
         if (valid_join_time > now_tm) {
             continue;
         }
@@ -206,6 +211,10 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
 
     last_send_tm_ = time_block_tm;
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
+    std::cout << "SendConsensusNodes called: " << time_block_tm 
+        << ", waiting_shard_id_: " << waiting_shard_id_
+        << ", local_all_waiting_nodes_.empty(): " << local_all_waiting_nodes_.empty()
+        << std::endl;
     if (!local_all_waiting_nodes_.empty()) {
         transport::protobuf::Header msg;
         elect::ElectProto::CreateElectWaitingNodes(
