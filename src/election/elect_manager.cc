@@ -608,6 +608,7 @@ bool ElectManager::IsValidShardLeaders(uint32_t network_id, const std::string& i
 }
 
 void ElectManager::WaitingNodeSendHeartbeat() {
+    std::cout << "WaitingNodeSendHeartbeat network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
     if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressWaitingNetworkId &&
             common::GlobalInfo::Instance()->network_id() <
             network::kConsensusWaitingShardEndNetworkId) {
