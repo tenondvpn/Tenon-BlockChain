@@ -646,6 +646,10 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
     } else {
         security::PrivateKey tmp_prikey;
         prikey_ptr = std::make_shared<security::PrivateKey>(tmp_prikey);
+        prikey_ptr->Serialize(prikey);
+        if (prikey.empty()) {
+            return kInitError;
+        }
     }
 
     security::Schnorr::Instance()->set_prikey(prikey_ptr);

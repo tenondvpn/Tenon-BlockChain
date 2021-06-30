@@ -225,7 +225,7 @@ void ElectPoolManager::OnTimeBlock(uint64_t tm_block_tm) {
 }
 
 void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& node_ptr) {
-    if (network_id < network::kConsensusWaitingShardBeginNetworkId ||
+    if (network_id < network::kRootCongressWaitingNetworkId ||
             network_id >= network::kConsensusWaitingShardEndNetworkId) {
         return;
     }
@@ -243,6 +243,7 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
     }
 
     waiting_pool_ptr->AddNewNode(node_ptr);
+    std::cout << "AddWaitingPoolNode public ip: " << node_ptr->public_ip << ":" << node_ptr->public_port << std::endl;
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
