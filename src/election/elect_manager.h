@@ -103,6 +103,8 @@ private:
     std::mutex elect_members_mutex_;
     std::unordered_map<uint32_t, std::unordered_set<std::string>> network_leaders_;
     std::mutex network_leaders_mutex_;
+    std::unordered_set<uint32_t> valid_shard_networks_;
+    std::mutex valid_shard_networks_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

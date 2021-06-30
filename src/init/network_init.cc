@@ -39,6 +39,7 @@ namespace init {
 
 static const std::string kDefaultConfigPath("./conf/tenon.conf");
 static const uint32_t kDefaultBufferSize = 1024u * 1024u;
+static const std::string kInitJoinWaitingPoolDbKey = "__kInitJoinWaitingPoolDbKey";
 
 NetworkInit::NetworkInit() {}
 
@@ -152,6 +153,21 @@ int NetworkInit::Init(int argc, char** argv) {
 }
 
 int NetworkInit::CheckJoinWaitingPool() {
+    if (common::GlobalInfo::Instance()->network_id() != common::kInvalidUint32) {
+        return kInitSuccess;
+    }
+
+    std::string waiting_netid_str;
+    uint32_t waiting_network_id = common::kInvalidUint32;
+    auto st = db::Db::Instance()->Get(kInitJoinWaitingPoolDbKey, &waiting_netid_str);
+    if (st.ok()) {
+        waiting_network_id = common::StringUtil::ToUint32(waiting_netid_str);
+        if ((waiting_network_id < network::kRootCongressWaitingNetworkId ||
+                waiting_network_id >= network::kConsensusWaitingShardEndNetworkId)) {
+
+        }
+
+    }
     return kInitSuccess;
 }
 

@@ -35,9 +35,11 @@ static const uint32_t kNodeNetworkId = 1u;  // just node id join(for broadcast)
 static const uint32_t kRootCongressNetworkId = 2u;
 static const uint32_t kConsensusShardBeginNetworkId = 3u;  // eq
 static const uint32_t kConsensusShardEndNetworkId = 1027u;  // less
-static const uint32_t kConsensusWaitingShardBeginNetworkId = kConsensusShardEndNetworkId;  // eq
-static const uint32_t kConsensusWaitingShardEndNetworkId = kConsensusWaitingShardBeginNetworkId + kConsensusShardEndNetworkId;  // less
-static const uint32_t kConsensusWaitingShardOffset = kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId;  // less
+static const uint32_t kConsensusWaitingShardOffset = kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId;
+static const uint32_t kRootCongressWaitingNetworkId = kRootCongressNetworkId + kConsensusWaitingShardOffset;
+static const uint32_t kConsensusWaitingShardBeginNetworkId = kConsensusShardBeginNetworkId + kConsensusWaitingShardOffset;  // eq
+static const uint32_t kConsensusWaitingShardEndNetworkId = kConsensusShardEndNetworkId + kConsensusWaitingShardOffset;  // less
+
 static const uint32_t kConsensusShardNetworkCount = (
         kConsensusShardEndNetworkId - kConsensusShardBeginNetworkId + 1);
 static const uint32_t kServiceShardBeginNetworkId = kConsensusWaitingShardEndNetworkId;  // eq

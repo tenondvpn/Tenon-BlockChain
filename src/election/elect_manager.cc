@@ -24,7 +24,7 @@ ElectManager* ElectManager::Instance() {
 }
 
 ElectManager::ElectManager() {
-    network::Route::Instance()->RegisterMessage(
+    network::Route::Instance()->RegisterMessaJIIJKU8ge(
         common::kElectMessage,
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
 }
@@ -255,6 +255,11 @@ void ElectManager::ProcessNewElectBlock(
         shard_members_ptr,
         shard_members_index_ptr,
         elect_block.leader_count());
+    {
+        std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
+        valid_shard_networks_.insert(elect_block.shard_network_id());
+    }
+
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
     if (elect_members_.find(height) != elect_members_.end()) {
         return;
