@@ -285,7 +285,7 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
         return;
     }
 
-    common::LimitHeap<HeapItem, false> min_heap(false, count);
+    common::LimitHeap<HeapItem> min_heap(false, count);
     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
         min_heap.push({ (uint32_t)i, statistic_info.succ_tx_count(i) });
     }
