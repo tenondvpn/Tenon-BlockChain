@@ -3,35 +3,36 @@
 
 #include <functional>
 
+#include "bft/bft_manager.h"
+#include "bft/proto/bft_proto.h"
+#include "block/block_manager.h"
 #include "common/global_info.h"
 #include "common/split.h"
 #include "common/string_utils.h"
 #include "common/global_info.h"
 #include "common/time_utils.h"
-#include "ip/ip_with_country.h"
+#include "common/random.h"
+#include "client/vpn_client.h"
 #include "db/db.h"
-#include "block/block_manager.h"
-#include "security/ecdh_create_key.h"
-#include "transport/multi_thread.h"
-#include "transport/udp/udp_transport.h"
-#include "transport/tcp/tcp_transport.h"
-#include "transport/transport_utils.h"
-#include "transport/http/http_transport.h"
 #include "election/elect_dht.h"
 #include "election/proto/elect_proto.h"
 #include "election/elect_manager.h"
+#include "ip/ip_with_country.h"
+#include "init/init_utils.h"
+#include "init/genesis_block_init.h"
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
 #include "network/bootstrap.h"
 #include "network/route.h"
-#include "bft/bft_manager.h"
-#include "bft/proto/bft_proto.h"
-#include "sync/key_value_sync.h"
-#include "init/init_utils.h"
-#include "init/genesis_block_init.h"
-#include "client/vpn_client.h"
+#include "security/ecdh_create_key.h"
 #include "security/secp256k1.h"
+#include "sync/key_value_sync.h"
+#include "transport/multi_thread.h"
+#include "transport/udp/udp_transport.h"
+#include "transport/tcp/tcp_transport.h"
+#include "transport/transport_utils.h"
+#include "transport/http/http_transport.h"
 
 namespace tenon {
 
@@ -162,12 +163,31 @@ int NetworkInit::CheckJoinWaitingPool() {
     auto st = db::Db::Instance()->Get(kInitJoinWaitingPoolDbKey, &waiting_netid_str);
     if (st.ok()) {
         waiting_network_id = common::StringUtil::ToUint32(waiting_netid_str);
-        if ((waiting_network_id < network::kRootCongressWaitingNetworkId ||
-                waiting_network_id >= network::kConsensusWaitingShardEndNetworkId)) {
-
-        }
-
     }
+
+    if ((waiting_network_id < network::kRootCongressWaitingNetworkId ||
+            waiting_network_id >= network::kConsensusWaitingShardEndNetworkId)) {
+        auto valid_network_ids = elect::ElectManager::Instance()->valid_shard_networks();
+        valid_network_ids.insert(network::kRootCongressNetworkId);
+        valid_network_ids.insert(network::kConsensusShardBeginNetworkId);
+        std::vector<uint32_t> valid_ids(valid_network_ids.begin(), valid_network_ids.end());
+        auto rand_idx = common::Random::RandomUint32() % valid_ids.size();
+        waiting_network_id = valid_ids[rand_idx];
+    }
+
+    if (elect::ElectManager::Instance()->Join(waiting_network_id) != elect::kElectSuccess) {
+        INIT_ERROR("join waiting pool network[%u] failed!", waiting_network_id);
+        return kInitError;
+    }
+
+    if (!st.ok()) {
+        st = db::Db::Instance()->Put(kInitJoinWaitingPoolDbKey, std::to_string(waiting_network_id));
+        if (!st.ok()) {
+            INIT_ERROR("db::Db::Instance()->Put network[%u] failed!", waiting_network_id);
+        }
+    }
+
+    common::GlobalInfo::Instance()->set_network_id(waiting_network_id);
     return kInitSuccess;
 }
 

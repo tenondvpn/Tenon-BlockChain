@@ -16,6 +16,10 @@ public:
         uint32_t waiting_shard_id,
         const common::BloomFilter& nodes_filter,
         transport::protobuf::Header& msg);
+    static void CreateWaitingHeartbeat(
+        const dht::NodePtr& local_node,
+        uint32_t waiting_shard_id,
+        transport::protobuf::Header& msg);
 
 private:
     ElectProto() {}

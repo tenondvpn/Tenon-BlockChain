@@ -86,11 +86,19 @@ public:
         return {};
     }
 
+    std::unordered_set<uint32_t> valid_shard_networks() {
+        std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
+        return valid_shard_networks_;
+    }
+
 private:
     ElectManager();
     ~ElectManager();
 
     void HandleMessage(transport::protobuf::Header& header);
+    void WaitingNodeSendHeartbeat();
+
+    static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
@@ -105,6 +113,7 @@ private:
     std::mutex network_leaders_mutex_;
     std::unordered_set<uint32_t> valid_shard_networks_;
     std::mutex valid_shard_networks_mutex_;
+    common::Tick waiting_hb_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

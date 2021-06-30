@@ -6,6 +6,7 @@
 #include "common/country_code.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
+#include "common/time_utils.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_utils.h"
 #include "security/schnorr.h"
@@ -55,6 +56,54 @@ void ElectProto::CreateElectWaitingNodes(
     std::string hash_str = nodes_filter.Serialize() + std::to_string(waiting_shard_id);
     waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
     auto message_hash = common::Hash::keccak256(hash_str);
+    security::Signature sign;
+    bool sign_res = security::Schnorr::Instance()->Sign(
+        message_hash,
+        *(security::Schnorr::Instance()->prikey()),
+        *(security::Schnorr::Instance()->pubkey()),
+        sign);
+    if (!sign_res) {
+        ELECT_ERROR("signature error.");
+        return;
+    }
+
+    std::string sign_challenge_str;
+    std::string sign_response_str;
+    sign.Serialize(sign_challenge_str, sign_response_str);
+    ec_msg.set_sign_ch(sign_challenge_str);
+    ec_msg.set_sign_res(sign_response_str);
+    ec_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    auto broad_param = msg.mutable_broadcast();
+    SetDefaultBroadcastParam(broad_param);
+    msg.set_data(ec_msg.SerializeAsString());
+}
+
+void ElectProto::CreateWaitingHeartbeat(
+        const dht::NodePtr& local_node,
+        uint32_t waiting_shard_id,
+        transport::protobuf::Header& msg) {
+    msg.set_src_dht_key(local_node->dht_key());
+    dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_priority(transport::kTransportPriorityHigh);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kElectMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_universal(false);
+    msg.set_hop_count(0);
+
+    // now just for test
+    protobuf::ElectMessage ec_msg;
+    auto heartbeat_msg = ec_msg.mutable_waiting_heartbeat();
+    heartbeat_msg->set_public_ip(local_node->public_ip());
+    heartbeat_msg->set_public_port(local_node->public_port);
+    heartbeat_msg->set_network_id(waiting_shard_id);
+    heartbeat_msg->set_timestamp_sec(common::TimeUtils::TimestampSeconds());
+    auto message_hash = GetElectHeartbeatHash(
+        ec_msg.waiting_heartbeat().public_ip(),
+        ec_msg.waiting_heartbeat().public_port(),
+        ec_msg.waiting_heartbeat().network_id(),
+        ec_msg.waiting_heartbeat().timestamp_sec());
     security::Signature sign;
     bool sign_res = security::Schnorr::Instance()->Sign(
         message_hash,

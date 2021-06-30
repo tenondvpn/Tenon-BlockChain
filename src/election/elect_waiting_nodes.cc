@@ -196,7 +196,6 @@ void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
 }
 
 void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
-    transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -206,6 +205,7 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
     last_send_tm_ = time_block_tm;
     GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
     if (!local_all_waiting_nodes_.empty()) {
+        transport::protobuf::Header msg;
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),
             waiting_shard_id_,

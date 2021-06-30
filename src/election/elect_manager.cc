@@ -27,6 +27,9 @@ ElectManager::ElectManager() {
     network::Route::Instance()->RegisterMessage(
         common::kElectMessage,
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
+    waiting_hb_tick_.CutOff(
+        kWaitingHeartbeatPeriod,
+        std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
 }
 
 ElectManager::~ElectManager() {}
@@ -522,7 +525,6 @@ void ElectManager::SetNetworkMember(
         }
 
         network_leaders_[network_id] = leaders;
-        ELECT_DEBUG("CreateStatisticTransaction set network_leaders_: %d, size: %d, network member size: %d", network_id, leaders.size(), members_ptr->size());
     }
 
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
@@ -603,6 +605,29 @@ bool ElectManager::IsValidShardLeaders(uint32_t network_id, const std::string& i
     }
 
     return iter->second.find(id) != iter->second.end();
+}
+
+void ElectManager::WaitingNodeSendHeartbeat() {
+    if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressWaitingNetworkId &&
+            common::GlobalInfo::Instance()->network_id() <
+            network::kConsensusWaitingShardEndNetworkId) {
+        auto dht = network::DhtManager::Instance()->GetDht(
+            common::GlobalInfo::Instance()->network_id());
+        if (dht) {
+            transport::protobuf::Header msg;
+            elect::ElectProto::CreateWaitingHeartbeat(
+                dht->local_node(),
+                common::GlobalInfo::Instance()->network_id(),
+                msg);
+            if (msg.has_data()) {
+                network::Route::Instance()->Send(msg);
+            }
+        }
+    }
+
+    waiting_hb_tick_.CutOff(
+        kWaitingHeartbeatPeriod,
+        std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
 }
 
 }  // namespace elect
