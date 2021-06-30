@@ -163,7 +163,7 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             elect_node_ptr->id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
                 ec_msg.pubkey());
             elect_node_ptr->public_key = ec_msg.pubkey();
-            elect_node_ptr->join_tm = std::chrono::steady_clock::now() + std::chrono::microseconds(kElectAvailableJoinTime);
+            elect_node_ptr->join_tm = std::chrono::steady_clock::now();
             pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat().network_id(), elect_node_ptr);
         }
     }
