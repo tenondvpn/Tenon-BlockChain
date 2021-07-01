@@ -10,6 +10,7 @@
 #include "election/elect_manager.h"
 #include "election/proto/elect.pb.h"
 #include "election/proto/elect_proto.h"
+#include "security/secp256k1.h"
 #include "timeblock/time_block_manager.h"
 
 namespace tenon {
@@ -40,6 +41,11 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         return;
     }
 
+    local_all_waiting_bloom_filter_ = common::BloomFilter(
+        kBloomfilterWaitingSize,
+        kBloomfilterWaitingHashCount);
+    local_all_waiting_nodes_.clear();
+    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
     std::sort(
         local_all_waiting_nodes_.begin(),
         local_all_waiting_nodes_.end(),
@@ -97,15 +103,6 @@ void ElectWaitingNodes::GetAllValidNodes(
             waiting_nodes.push_back(iter->second);
         }
     }
-    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
-        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
-            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
-        }
-
-        std::cout << "0000000 same root node count: " << (*iter)->added_nodes.size() << std::endl;
-    }
-
-
     if (waiting_nodes.empty()) {
         return;
     }
@@ -115,17 +112,22 @@ void ElectWaitingNodes::GetAllValidNodes(
             std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
         }
 
-        std::cout << "1111 same root node count: " << (*iter)->added_nodes.size() << std::endl;
+        std::cout << "0000 same root node count: " << (*iter)->added_nodes.size() << ", nodes_vec size: " << (*iter)->nodes_vec.size() << std::endl;
     }
 
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
-    for (auto iter = (*(waiting_nodes.begin()))->nodes_vec.begin();
-            iter != (*(waiting_nodes.begin()))->nodes_vec.end(); ++iter) {
-        nodes.push_back(*iter);
-        nodes_filter.Add(common::Hash::Hash64((*iter)->id));
+    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
+        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+            nodes.push_back(*siter);
+            nodes_filter.Add(common::Hash::Hash64((*siter)->id));
+            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
+        }
+
+        std::cout << "1111 same root node count: " << (*iter)->added_nodes.size() << ", nodes_vec size: " << (*iter)->nodes_vec.size() << std::endl;
+        break;
     }
 
-    std::cout << "2222 same root node count: " << nodes.size() << std::endl;
+    std::cout << "2222 same root node count: " << nodes.size() << ", (*(waiting_nodes.begin()))->nodes_vec: " << (*(waiting_nodes.begin()))->nodes_vec.size() << std::endl;
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
     std::cout << "3333 same root node count: " << nodes.size() << std::endl;
 }
@@ -246,7 +248,11 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);
-            std::cout << "SendConsensusNodes called: " << time_block_tm << ", waiting_shard_id_: " << waiting_shard_id_ << std::endl;
+            std::cout << "SendConsensusNodes called: " << time_block_tm
+                << ", waiting_shard_id_: " << waiting_shard_id_
+                << ", common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id()
+                << ", local id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey()))
+                << std::endl;
         }
     }
 }
