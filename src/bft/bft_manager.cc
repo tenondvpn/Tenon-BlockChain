@@ -684,7 +684,7 @@ int BftManager::LeaderPrecommit(
         RemoveBft(bft_ptr->gid());
         BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
     } else {
-        BFT_DEBUG("LeaderPrecommit waiting", bft_ptr);
+        BFT_DEBUG("LeaderPrecommit waiting");
         // continue waiting, do nothing.
     }
 
@@ -1165,6 +1165,7 @@ void BftManager::CheckTimeout() {
                     break;
                 }
                 case kTimeoutCallPrecommit: {
+                    printf("DDDDDDDDDDDD kTimeoutCallPrecommit.\n");
                     LeaderCallPrecommit(iter->second);
                     break;
                 }
