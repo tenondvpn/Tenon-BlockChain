@@ -41,19 +41,19 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         return;
     }
 
-    local_all_waiting_bloom_filter_ = common::BloomFilter(
+    auto local_all_waiting_bloom_filter = common::BloomFilter(
         kBloomfilterWaitingSize,
         kBloomfilterWaitingHashCount);
-    local_all_waiting_nodes_.clear();
-    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
+    std::vector<NodeDetailPtr> local_all_waiting_nodes;
+    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
     std::sort(
-        local_all_waiting_nodes_.begin(),
-        local_all_waiting_nodes_.end(),
+        local_all_waiting_nodes.begin(),
+        local_all_waiting_nodes.end(),
         ElectNodeIdCompare);
     WaitingListPtr wait_ptr = std::make_shared<WaitingList>();
     std::string all_nodes_ids;
-    for (auto iter = local_all_waiting_nodes_.begin();
-            iter != local_all_waiting_nodes_.end(); ++iter) {
+    for (auto iter = local_all_waiting_nodes.begin();
+            iter != local_all_waiting_nodes.end(); ++iter) {
         if (!nodes_filter.Contain(common::Hash::Hash64((*iter)->id))) {
             continue;
         }
@@ -78,18 +78,7 @@ void ElectWaitingNodes::OnTimeBlock(uint64_t tm_block_tm) {
         return;
     }
 
-    GetThisTimeBlockLocallNodes(tm_block_tm);
-    SendConsensusNodes(tm_block_tm);
     got_valid_nodes_tm_ = tm_block_tm;
-}
-
-void ElectWaitingNodes::GetThisTimeBlockLocallNodes(uint64_t tm_block_tm) {
-    got_valid_nodes_tm_ = tm_block_tm;
-    local_all_waiting_bloom_filter_ = common::BloomFilter(
-        kBloomfilterWaitingSize,
-        kBloomfilterWaitingHashCount);
-    local_all_waiting_nodes_.clear();
-    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter_, local_all_waiting_nodes_);
 }
 
 void ElectWaitingNodes::GetAllValidNodes(
@@ -238,12 +227,17 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
     }
 
     last_send_tm_ = time_block_tm;
-    if (!local_all_waiting_nodes_.empty()) {
+    auto local_all_waiting_bloom_filter = common::BloomFilter(
+        kBloomfilterWaitingSize,
+        kBloomfilterWaitingHashCount);
+    std::vector<NodeDetailPtr> local_all_waiting_nodes;
+    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
+    if (!local_all_waiting_nodes.empty()) {
         transport::protobuf::Header msg;
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),
             waiting_shard_id_,
-            local_all_waiting_bloom_filter_,
+            local_all_waiting_bloom_filter,
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
@@ -255,6 +249,13 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
                 << std::endl;
         }
     }
+}
+
+void ElectWaitingNodes::WaitingNodesUpdate() {
+    SendConsensusNodes(got_valid_nodes_tm_);
+    waiting_nodes_tick_.CutOff(
+        kWaitingHeartbeatPeriod,
+        std::bind(&ElectWaitingNodes::WaitingNodesUpdate, this));
 }
 
 };  // namespace elect
