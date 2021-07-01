@@ -356,6 +356,9 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             uint32_t pick_in_count = weed_out_count;
             if (statistic_info.succ_tx_count_size() < (int32_t)common::kEachShardMaxNodeCount) {
                 pick_in_count += weed_out_count / 2;
+                if (pick_in_count <= 0) {
+                    pick_in_count = 1;
+                }
             }
 
             FtsGetNodes(
@@ -367,6 +370,9 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
     
+    std::cout << "exists_shard_nodes.size(): " << exists_shard_nodes.size()
+        << ", statistic_info.succ_tx_count_size(): " << statistic_info.succ_tx_count_size()
+        << std::endl;
     if ((int32_t)exists_shard_nodes.size() == statistic_info.succ_tx_count_size()) {
         std::map<uint32_t, uint32_t> direct_weed_out;
         GetMiniTopNInvalidNodes(
@@ -448,6 +454,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         << ", weed_out_vec size: " << weed_out_vec.size()
         << ", pick_in_vec size: " << pick_in_vec.size()
         << ", pick_all_vec size: " << pick_all_vec.size()
+        << ", elected_nodes size: " << elected_nodes.size()
         << std::endl;
     return kElectSuccess;
 }

@@ -18,7 +18,11 @@ namespace tenon {
 namespace elect {
 
 ElectWaitingNodes::ElectWaitingNodes(uint32_t waiting_shard_id, ElectPoolManager* pool_manager)
-    : waiting_shard_id_(waiting_shard_id), pool_manager_(pool_manager) {}
+        : waiting_shard_id_(waiting_shard_id), pool_manager_(pool_manager) {
+    waiting_nodes_tick_.CutOff(
+        kWaitingHeartbeatPeriod,
+        std::bind(&ElectWaitingNodes::WaitingNodesUpdate, this));
+}
 
 ElectWaitingNodes::~ElectWaitingNodes() {}
 
