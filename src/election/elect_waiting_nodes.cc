@@ -24,6 +24,7 @@ ElectWaitingNodes::~ElectWaitingNodes() {}
 void ElectWaitingNodes::UpdateWaitingNodes(
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter) {
+    std::cout << "UpdateWaitingNodes root_node_id: " << common::Encode::HexEncode(root_node_id) << std::endl;
     std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
     std::string coming_id = root_node_id + std::to_string(
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
@@ -96,9 +97,25 @@ void ElectWaitingNodes::GetAllValidNodes(
             waiting_nodes.push_back(iter->second);
         }
     }
+    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
+        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
+        }
+
+        std::cout << "0000000 same root node count: " << (*iter)->added_nodes.size() << std::endl;
+    }
+
 
     if (waiting_nodes.empty()) {
         return;
+    }
+
+    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
+        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
+        }
+
+        std::cout << "1111 same root node count: " << (*iter)->added_nodes.size() << std::endl;
     }
 
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
@@ -108,7 +125,9 @@ void ElectWaitingNodes::GetAllValidNodes(
         nodes_filter.Add(common::Hash::Hash64((*iter)->id));
     }
 
+    std::cout << "2222 same root node count: " << nodes.size() << std::endl;
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
+    std::cout << "3333 same root node count: " << nodes.size() << std::endl;
 }
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
