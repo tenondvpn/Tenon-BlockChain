@@ -251,14 +251,14 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
     }
 
     waiting_pool_ptr->AddNewNode(node_ptr);
-    std::cout << "AddWaitingPoolNode public ip: " << node_ptr->public_ip << ":" << node_ptr->public_port << std::endl;
+    std::cout <<"network_id: " << network_id << ", AddWaitingPoolNode public ip: " << node_ptr->public_ip << ":" << node_ptr->public_port << std::endl;
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
         uint32_t waiting_shard_id,
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter) {
-    if (waiting_shard_id < network::kConsensusWaitingShardBeginNetworkId ||
+    if (waiting_shard_id < network::kRootCongressWaitingNetworkId ||
         waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
         return;
     }
@@ -345,8 +345,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
 
+    std::vector<NodeDetailPtr> pick_all_vec;
     if (waiting_pool_ptr != nullptr) {
-        std::vector<NodeDetailPtr> pick_all_vec;
         waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
         if (!pick_all_vec.empty()) {
             if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
@@ -444,6 +444,11 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         (*iter)->pool_index_mod_num = mode_idx++;
     }
 
+    std::cout << "exists_shard_nodes size: " << exists_shard_nodes.size()
+        << ", weed_out_vec size: " << weed_out_vec.size()
+        << ", pick_in_vec size: " << pick_in_vec.size()
+        << ", pick_all_vec size: " << pick_all_vec.size()
+        << std::endl;
     return kElectSuccess;
 }
 
@@ -490,7 +495,15 @@ void ElectPoolManager::SmoothFtsValue(
         int32_t count,
         std::mt19937_64& g2,
         std::vector<NodeDetailPtr>& sort_vec) {
-    assert(sort_vec.size() > (uint32_t)count);
+    std::cout << "sort_vec.size() > (uint32_t)count: " << sort_vec.size() << ", count: " << count << std::endl;
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        std::cout << "id: " << common::Encode::HexEncode(sort_vec[i]->id)
+            << ", ip: " << sort_vec[i]->public_ip << ":" << sort_vec[i]->public_port
+            << ", sort_vec[i]->choosed_balance: " << sort_vec[i]->choosed_balance
+            << std::endl;
+    }
+
+    assert(sort_vec.size() >= (uint32_t)count);
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         sort_vec[i]->balance_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;

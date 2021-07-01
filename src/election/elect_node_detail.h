@@ -47,7 +47,7 @@ typedef std::shared_ptr<ElectNodeDetail> NodeDetailPtr;
 struct WaitingList {
     std::vector<NodeDetailPtr> nodes_vec;
     uint64_t nodes_hash;
-    uint32_t same_root_count;
+    std::unordered_set<std::string> added_nodes;
 };
 
 typedef std::shared_ptr<WaitingList> WaitingListPtr;
@@ -110,7 +110,7 @@ inline static bool ElectNodeBalanceDiffCompare(
 inline static bool WaitingNodeCountCompare(
         const WaitingListPtr& left,
         const WaitingListPtr& right) {
-    return left->same_root_count < right->same_root_count;
+    return left->added_nodes.size() < right->added_nodes.size();
 }
 
 
