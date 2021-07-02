@@ -1077,6 +1077,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             msg);
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
+        BFT_ERROR("IsRootSingleBlockTx broadcast type: %d", block_ptr->tx_list(0).type());
 #ifdef TENON_UNITTEST
         root_leader_broadcast_msg_ = msg;
 #endif
