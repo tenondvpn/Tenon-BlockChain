@@ -70,8 +70,14 @@ int Route::Send(transport::protobuf::Header& message) {
         dht_ptr = DhtManager::Instance()->GetDht(des_net_id);
     }
 
+    if (message.version() == 14 || message.version() == 15)
+        std::cout << "ddddddddd 0" << std::endl;
+
     if (dht_ptr != nullptr) {
         if (message.has_broadcast()) {
+            if (message.version() == 14 || message.version() == 15)
+                std::cout << "ddddddddd 1" << std::endl;
+
             broadcast_->Broadcasting(dht_ptr, message);
         } else {
             if (message.has_to_ip() && message.has_to_port()) {
