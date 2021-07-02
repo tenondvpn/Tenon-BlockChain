@@ -91,8 +91,8 @@ public:
         return valid_shard_networks_;
     }
 
-    bool IsIdExistsInAnyShard(const std::string& id);
-    bool IsIpExistsInAnyShard(const std::string& ip);
+    bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
+    bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
 
 private:
     ElectManager();
@@ -100,7 +100,8 @@ private:
 
     void HandleMessage(transport::protobuf::Header& header);
     void WaitingNodeSendHeartbeat();
-    void AddNewNodeWithIdAndIp(const std::string& id, const std::string& ip);
+    void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
+    void ClearExistsNetwork(uint32_t network_id);
 
     static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 

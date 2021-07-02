@@ -613,6 +613,18 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         }
     }
 
+    ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        auto iter = waiting_pool_map_.find(network_id + network::kConsensusWaitingShardOffset);
+        if (iter == waiting_pool_map_.end()) {
+            ELECT_ERROR("find waiting shard network failed [%u]!",
+                network_id + network::kConsensusWaitingShardOffset);
+        } else {
+            waiting_pool_ptr = iter->second;
+        }
+    }
+
     std::vector<NodeDetailPtr> node_vec;
     for (auto iter = members_ptr->begin(); iter != members_ptr->end(); ++iter) {
         auto elect_node = std::make_shared<ElectNodeDetail>();
@@ -634,6 +646,9 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
     }
 
     pool_ptr->ReplaceWithElectNodes(node_vec);
+    if (waiting_pool_ptr != nullptr) {
+        waiting_pool_ptr->RemoveNodes(node_vec);
+    }
 }
 
 // leader get all node balance block and broadcast to all root and waiting root

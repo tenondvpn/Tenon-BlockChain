@@ -140,37 +140,42 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (ec_msg.has_waiting_heartbeat()) {
-        auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-        if ((now_tm_sec >= ec_msg.waiting_heartbeat().timestamp_sec() &&
+        if (ec_msg.waiting_heartbeat().network_id() >= network::kRootCongressWaitingNetworkId &&
+                ec_msg.waiting_heartbeat().network_id() < network::kConsensusWaitingShardEndNetworkId) {
+            auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+            if ((now_tm_sec >= ec_msg.waiting_heartbeat().timestamp_sec() &&
                 now_tm_sec - ec_msg.waiting_heartbeat().timestamp_sec() < 10) ||
                 (now_tm_sec <= ec_msg.waiting_heartbeat().timestamp_sec() &&
-                ec_msg.waiting_heartbeat().timestamp_sec() - now_tm_sec < 10)) {
-            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-                ec_msg.pubkey());
-            if (IsIdExistsInAnyShard(id)) {
-                return;
-            }
+                    ec_msg.waiting_heartbeat().timestamp_sec() - now_tm_sec < 10)) {
+                auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
+                    ec_msg.pubkey());
+                if (IsIdExistsInAnyShard(
+                        ec_msg.waiting_heartbeat().network_id() - network::kConsensusWaitingShardOffset,
+                        id)) {
+                    return;
+                }
 
-            // TODO: check public ip is added
-            auto message_hash = GetElectHeartbeatHash(
-                ec_msg.waiting_heartbeat().public_ip(),
-                ec_msg.waiting_heartbeat().public_port(),
-                ec_msg.waiting_heartbeat().network_id(),
-                ec_msg.waiting_heartbeat().timestamp_sec());
-            auto pubkey = security::PublicKey(ec_msg.pubkey());
-            auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
-            if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-                ELECT_ERROR("verify signature failed!");
-                return;
-            }
+                // TODO: check public ip is added
+                auto message_hash = GetElectHeartbeatHash(
+                    ec_msg.waiting_heartbeat().public_ip(),
+                    ec_msg.waiting_heartbeat().public_port(),
+                    ec_msg.waiting_heartbeat().network_id(),
+                    ec_msg.waiting_heartbeat().timestamp_sec());
+                auto pubkey = security::PublicKey(ec_msg.pubkey());
+                auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
+                if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                    ELECT_ERROR("verify signature failed!");
+                    return;
+                }
 
-            auto elect_node_ptr = std::make_shared<ElectNodeDetail>();
-            elect_node_ptr->public_ip = ec_msg.waiting_heartbeat().public_ip();
-            elect_node_ptr->public_port = ec_msg.waiting_heartbeat().public_port();
-            elect_node_ptr->id = id;
-            elect_node_ptr->public_key = ec_msg.pubkey();
-            elect_node_ptr->join_tm = std::chrono::steady_clock::now();
-            pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat().network_id(), elect_node_ptr);
+                auto elect_node_ptr = std::make_shared<ElectNodeDetail>();
+                elect_node_ptr->public_ip = ec_msg.waiting_heartbeat().public_ip();
+                elect_node_ptr->public_port = ec_msg.waiting_heartbeat().public_port();
+                elect_node_ptr->id = id;
+                elect_node_ptr->public_key = ec_msg.pubkey();
+                elect_node_ptr->join_tm = std::chrono::steady_clock::now();
+                pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat().network_id(), elect_node_ptr);
+            }
         }
     }
 }
@@ -179,7 +184,6 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member count: " << elect_block.in_size() << ", height: " << height << std::endl;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -187,6 +191,7 @@ void ElectManager::ProcessNewElectBlock(
     auto shard_members_index_ptr = std::make_shared<
         std::unordered_map<std::string, uint32_t>>();
     uint32_t member_index = 0;
+    ClearExistsNetwork(elect_block.shard_network_id());
     for (int32_t i = 0; i < in.size(); ++i) {
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
@@ -199,7 +204,7 @@ void ElectManager::ProcessNewElectBlock(
             in[i].public_port(),
             in[i].dht_key(),
             in[i].pool_idx_mod_num()));
-        AddNewNodeWithIdAndIp(id, in[i].public_ip());
+        AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
@@ -648,25 +653,40 @@ void ElectManager::WaitingNodeSendHeartbeat() {
         std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
 }
 
-bool ElectManager::IsIdExistsInAnyShard(const std::string& id) {
+bool ElectManager::IsIdExistsInAnyShard(uint32_t network_id, const std::string& id) {
     std::lock_guard<std::mutex> guard(added_id_set_mutex_);
-    return added_id_set_.find(id) != added_id_set_.end();
+    return added_id_set_.find(id + std::to_string(network_id)) != added_id_set_.end();
 }
 
-bool ElectManager::IsIpExistsInAnyShard(const std::string& ip) {
+bool ElectManager::IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip) {
     std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
-    return added_ip_set_.find(ip) != added_ip_set_.end();
+    return added_ip_set_.find(ip + std::to_string(network_id)) != added_ip_set_.end();
 }
 
-void ElectManager::AddNewNodeWithIdAndIp(const std::string& id, const std::string& ip) {
+void ElectManager::ClearExistsNetwork(uint32_t network_id) {
     {
         std::lock_guard<std::mutex> guard(added_id_set_mutex_);
-        added_id_set_.insert(id);
+        added_id_set_.clear();
     }
 
     {
         std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
-        added_ip_set_.insert(ip);
+        added_ip_set_.clear();
+    }
+}
+
+void ElectManager::AddNewNodeWithIdAndIp(
+        uint32_t network_id,
+        const std::string& id,
+        const std::string& ip) {
+    {
+        std::lock_guard<std::mutex> guard(added_id_set_mutex_);
+        added_id_set_.insert(id + std::to_string(network_id));
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
+        added_ip_set_.insert(ip + std::to_string(network_id));
     }
 }
 

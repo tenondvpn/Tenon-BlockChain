@@ -100,29 +100,20 @@ void ElectWaitingNodes::GetAllValidNodes(
         return;
     }
 
-    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
-        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
-            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
-        }
-
-        std::cout << "0000 same root node count: " << (*iter)->added_nodes.size() << ", nodes_vec size: " << (*iter)->nodes_vec.size() << std::endl;
-    }
-
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
-    for (auto iter = waiting_nodes.begin(); iter != waiting_nodes.end(); ++iter) {
-        for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
-            nodes.push_back(*siter);
-            nodes_filter.Add(common::Hash::Hash64((*siter)->id));
-            std::cout << common::Encode::HexEncode((*siter)->id) << ":" << (*siter)->public_ip << ":" << (*siter)->public_port << ", ";
+    auto iter = waiting_nodes.begin();
+    for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+        if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
+            waiting_shard_id_ - network::kConsensusWaitingShardOffset,
+            (*siter)->id)) {
+            continue;
         }
 
-        std::cout << "1111 same root node count: " << (*iter)->added_nodes.size() << ", nodes_vec size: " << (*iter)->nodes_vec.size() << std::endl;
-        break;
+        nodes.push_back(*siter);
+        nodes_filter.Add(common::Hash::Hash64((*siter)->id));
     }
 
-    std::cout << "2222 same root node count: " << nodes.size() << ", (*(waiting_nodes.begin()))->nodes_vec: " << (*(waiting_nodes.begin()))->nodes_vec.size() << std::endl;
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
-    std::cout << "3333 same root node count: " << nodes.size() << std::endl;
 }
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
@@ -138,8 +129,8 @@ void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
 }
 
 void ElectWaitingNodes::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
+    std::lock_guard<std::mutex> guard(node_map_mutex_);
     for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
-        std::lock_guard<std::mutex> guard(node_map_mutex_);
         auto niter = node_map_.find((*iter)->id);
         if (niter != node_map_.end()) {
             node_map_.erase(niter);
@@ -163,6 +154,12 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     std::unordered_set<std::string> added_node_ids;
     std::unordered_set<std::string> added_node_ip;  // same ip just one node
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
+        if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
+                waiting_shard_id_ - network::kConsensusWaitingShardOffset,
+                iter->first)) {
+            continue;
+        }
+
         // for fts poise
         if (time_offset_milli * 1000 > kElectAvailableJoinTime) {
             time_offset_milli = kElectAvailableJoinTime / 1000;
