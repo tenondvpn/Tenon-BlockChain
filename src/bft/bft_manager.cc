@@ -1158,6 +1158,9 @@ void BftManager::CheckTimeout() {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
         for (auto iter = bft_hash_map_.begin(); iter != bft_hash_map_.end();) {
             int timeout_res = iter->second->CheckTimeout();
+            printf("DDDDDDDDDDDD kTimeoutCallPrecommit.[%d]\n", timeout_res);
+            BFT_DEBUG("DDDDDDDDDDDD kTimeoutCallPrecommit.[%d]", timeout_res);
+
             switch (timeout_res) {
                 case kTimeout: {
                     timeout_vec.push_back(iter->second);
@@ -1166,6 +1169,7 @@ void BftManager::CheckTimeout() {
                 }
                 case kTimeoutCallPrecommit: {
                     printf("DDDDDDDDDDDD kTimeoutCallPrecommit.\n");
+                    BFT_DEBUG("DDDDDDDDDDDD kTimeoutCallPrecommit.");
                     LeaderCallPrecommit(iter->second);
                     break;
                 }
