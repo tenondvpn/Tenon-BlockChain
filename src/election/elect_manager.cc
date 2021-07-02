@@ -145,6 +145,13 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
                 now_tm_sec - ec_msg.waiting_heartbeat().timestamp_sec() < 10) ||
                 (now_tm_sec <= ec_msg.waiting_heartbeat().timestamp_sec() &&
                 ec_msg.waiting_heartbeat().timestamp_sec() - now_tm_sec < 10)) {
+            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
+                ec_msg.pubkey());
+            if (IsIdExistsInAnyShard(id)) {
+                return;
+            }
+
+            // TODO: check public ip is added
             auto message_hash = GetElectHeartbeatHash(
                 ec_msg.waiting_heartbeat().public_ip(),
                 ec_msg.waiting_heartbeat().public_port(),
@@ -160,8 +167,7 @@ void ElectManager::HandleMessage(transport::protobuf::Header& header) {
             auto elect_node_ptr = std::make_shared<ElectNodeDetail>();
             elect_node_ptr->public_ip = ec_msg.waiting_heartbeat().public_ip();
             elect_node_ptr->public_port = ec_msg.waiting_heartbeat().public_port();
-            elect_node_ptr->id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-                ec_msg.pubkey());
+            elect_node_ptr->id = id;
             elect_node_ptr->public_key = ec_msg.pubkey();
             elect_node_ptr->join_tm = std::chrono::steady_clock::now();
             pool_manager_.AddWaitingPoolNode(ec_msg.waiting_heartbeat().network_id(), elect_node_ptr);
@@ -193,6 +199,7 @@ void ElectManager::ProcessNewElectBlock(
             in[i].public_port(),
             in[i].dht_key(),
             in[i].pool_idx_mod_num()));
+        AddNewNodeWithIdAndIp(id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
@@ -235,6 +242,9 @@ void ElectManager::ProcessNewElectBlock(
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
+                ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                    common::Encode::HexEncode((*iter)->id).c_str(),
+                    (*iter)->pool_index_mod_num);
                 std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: " << common::Encode::HexEncode((*iter)->id)
                     << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
                     << std::endl;
@@ -636,6 +646,28 @@ void ElectManager::WaitingNodeSendHeartbeat() {
     waiting_hb_tick_.CutOff(
         kWaitingHeartbeatPeriod,
         std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
+}
+
+bool ElectManager::IsIdExistsInAnyShard(const std::string& id) {
+    std::lock_guard<std::mutex> guard(added_id_set_mutex_);
+    return added_id_set_.find(id) != added_id_set_.end();
+}
+
+bool ElectManager::IsIpExistsInAnyShard(const std::string& ip) {
+    std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
+    return added_ip_set_.find(ip) != added_ip_set_.end();
+}
+
+void ElectManager::AddNewNodeWithIdAndIp(const std::string& id, const std::string& ip) {
+    {
+        std::lock_guard<std::mutex> guard(added_id_set_mutex_);
+        added_id_set_.insert(id);
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
+        added_ip_set_.insert(ip);
+    }
 }
 
 }  // namespace elect

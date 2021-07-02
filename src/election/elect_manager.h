@@ -91,12 +91,16 @@ public:
         return valid_shard_networks_;
     }
 
+    bool IsIdExistsInAnyShard(const std::string& id);
+    bool IsIpExistsInAnyShard(const std::string& ip);
+
 private:
     ElectManager();
     ~ElectManager();
 
     void HandleMessage(transport::protobuf::Header& header);
     void WaitingNodeSendHeartbeat();
+    void AddNewNodeWithIdAndIp(const std::string& id, const std::string& ip);
 
     static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 
@@ -114,6 +118,10 @@ private:
     std::unordered_set<uint32_t> valid_shard_networks_;
     std::mutex valid_shard_networks_mutex_;
     common::Tick waiting_hb_tick_;
+    std::unordered_set<std::string> added_id_set_;
+    std::mutex added_id_set_mutex_;
+    std::unordered_set<std::string> added_ip_set_;
+    std::mutex added_ip_set_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

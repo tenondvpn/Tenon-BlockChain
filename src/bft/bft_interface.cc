@@ -157,7 +157,7 @@ int BftInterface::LeaderPrecommitOk(
         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
 
     if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
-            (precommit_aggree_set_.size() > min_aggree_member_count_ &&
+            (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
             now_timestamp >= prepare_timeout_)) {
         LeaderCreatePreCommitAggChallenge();
         leader_handled_precommit_ = true;
@@ -255,7 +255,7 @@ int BftInterface::CheckTimeout() {
     if (!leader_handled_precommit_) {
         auto now_timestamp = std::chrono::steady_clock::now();
         if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
-                (precommit_aggree_set_.size() > min_aggree_member_count_ &&
+                (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
                 now_timestamp >= prepare_timeout_)) {
             LeaderCreatePreCommitAggChallenge();
             leader_handled_precommit_ = true;

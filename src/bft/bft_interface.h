@@ -93,11 +93,6 @@ public:
                 (1.0 / 3.0) * (float)member_count_ + 0.5f);
         min_prepare_member_count_ = static_cast<uint32_t>(
                 (9.5 / 10.0) * (float)member_count_ + 0.5f);
-        std::cout << "set_member_count: " << mem_cnt
-            << ", min_aggree_member_count_: " << min_aggree_member_count_
-            << ", min_oppose_member_count_: " << min_oppose_member_count_
-            << ", min_prepare_member_count_: " << min_prepare_member_count_
-            << std::endl;
     }
 
     const common::Bitmap& precommit_bitmap() const {
