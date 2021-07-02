@@ -46,6 +46,10 @@ void ThreadHandler::HandleMessage() {
             }
             transport::protobuf::Header& msg = *msg_ptr;
             msg.set_hop_count(msg.hop_count() + 1);
+            if (msg.version() == 14 || msg.version() == 15) {
+                std::cout << "receive message broadcast data 2." << msg.type() << std::endl;
+            }
+
             Processor::Instance()->HandleMessage(msg);
         }
 
@@ -185,7 +189,7 @@ void MultiThreadHandler::HandleRemoteMessage(
 	}
 
     if (message_ptr->version() == 14 || message_ptr->version() == 15) {
-        std::cout << "receive message broadcast data." << std::endl;
+        std::cout << "receive message broadcast data 0." << std::endl;
     }
 
 #ifndef LEGO_TRACE_MESSAGE
@@ -270,6 +274,10 @@ void MultiThreadHandler::HandleRemoteMessage(
         transport::protobuf::Header& msg = *message_ptr;
         Processor::Instance()->HandleMessage(msg);
         return;
+    }
+
+    if (message_ptr->version() == 14 || message_ptr->version() == 15) {
+        std::cout << "receive message broadcast data 1." << std::endl;
     }
 
     {

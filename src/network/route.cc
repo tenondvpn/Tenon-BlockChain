@@ -108,6 +108,9 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    if (header.version() == 14 || header.version() == 15) {
+        std::cout << "receive message broadcast data 4" << std::endl;
+    }
     auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
             kUniversalNetworkId);
     if (!uni_dht) {
@@ -115,9 +118,17 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    if (header.version() == 14 || header.version() == 15) {
+        std::cout << "receive message broadcast data 5" << std::endl;
+    }
+
     if (uni_dht->local_node()->client_mode || uni_dht->local_node()->dht_key() == header.des_dht_key()) {
         message_processor_[header.type()](header);
         return;
+    }
+
+    if (header.version() == 14 || header.version() == 15) {
+        std::cout << "receive message broadcast data 6" << std::endl;
     }
 
     // every route message must use dht
@@ -129,6 +140,9 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
 
     if (!header.handled()) {
         message_processor_[header.type()](header);
+    }
+    if (header.version() == 14 || header.version() == 15) {
+        std::cout << "receive message broadcast data 7" << std::endl;
     }
 
     if (header.has_broadcast()) {
