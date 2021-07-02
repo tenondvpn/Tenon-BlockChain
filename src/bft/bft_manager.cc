@@ -236,6 +236,7 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
+        BFT_ERROR("IsRootSingleBlockTx(tx_list[0].type()): %d", tx_list[0].type());
         db::DbWriteBach db_batch;
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
         if (block::BlockManager::Instance()->AddNewBlock(
@@ -1160,7 +1161,6 @@ void BftManager::CheckTimeout() {
             int timeout_res = iter->second->CheckTimeout();
             printf("DDDDDDDDDDDD kTimeoutCallPrecommit.[%d]\n", timeout_res);
             BFT_DEBUG("DDDDDDDDDDDD kTimeoutCallPrecommit.[%d]", timeout_res);
-
             switch (timeout_res) {
                 case kTimeout: {
                     timeout_vec.push_back(iter->second);

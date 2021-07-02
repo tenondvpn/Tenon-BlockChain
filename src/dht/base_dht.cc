@@ -568,6 +568,7 @@ void BaseDht::ProcessRefreshNeighborsRequest(
     if (close_nodes.empty()) {
         return;
     }
+
     transport::protobuf::Header res;
     SetFrequently(res);
     DhtProto::CreateRefreshNeighborsResponse(local_node_, header, close_nodes, res);
