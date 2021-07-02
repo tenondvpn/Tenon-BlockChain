@@ -184,6 +184,10 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
+    if (message_ptr->version() == 14 || message_ptr->version() == 15) {
+        std::cout << "receive message broadcast data." << std::endl;
+    }
+
 #ifndef LEGO_TRACE_MESSAGE
     message_ptr->clear_debug();
 #endif
