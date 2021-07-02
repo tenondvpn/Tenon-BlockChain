@@ -239,6 +239,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
     msg.set_type(message_type);
     msg.set_client(false);
     msg.set_hop_count(0);
+    msg.set_universal(true);
     auto broad_param = msg.mutable_broadcast();
     SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;

@@ -133,7 +133,16 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
 
     // every route message must use dht
     auto dht = GetDht(header.des_dht_key(), header.universal());
+    uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
+    if (header.version() == 14 || header.version() == 15) {
+        std::cout << "receive message broadcast data 6 1: " << header.universal() << ", net_id: " << net_id << std::endl;
+    }
+
     if (!dht) {
+        if (header.version() == 14 || header.version() == 15) {
+            std::cout << "receive message broadcast data 6 2: " << header.universal() << std::endl;
+        }
+
         RouteByUniversal(header);
         return;
     }
@@ -230,6 +239,7 @@ dht::BaseDhtPtr Route::GetDht(const std::string& dht_key, bool universal) {
     } else {
         dht = DhtManager::Instance()->GetDht(net_id);
     }
+
     return dht;
 }
 
