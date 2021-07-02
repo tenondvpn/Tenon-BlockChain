@@ -173,7 +173,7 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member count: " << elect_block.in_size() << std::endl;
+    std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member count: " << elect_block.in_size() << ", height: " << height << std::endl;
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -235,6 +235,9 @@ void ElectManager::ProcessNewElectBlock(
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
+                std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: " << common::Encode::HexEncode((*iter)->id)
+                    << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                    << std::endl;
             }
         }
 

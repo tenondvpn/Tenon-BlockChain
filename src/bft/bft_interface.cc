@@ -153,7 +153,7 @@ int BftInterface::LeaderPrecommitOk(
     auto now_timestamp = std::chrono::steady_clock::now();
     printf("DDDDDDDDDDDD precommit_aggree_set_.size(): %d, min_prepare_member_count_: %d.£¬ min_aggree_member_count_: %d\n",
         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
-    BFT_DEBUG("DDDDDDDDDDDD precommit_aggree_set_.size(): %d, min_prepare_member_count_: %d.£¬ min_aggree_member_count_: %d\n",
+    BFT_DEBUG("DDDDDDDDDDDD precommit_aggree_set_.size(): %d, min_prepare_member_count_: %d, min_aggree_member_count_: %d\n",
         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
 
     if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
