@@ -237,6 +237,7 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     {
+        local_node_is_super_leader_ = false;
         Members tmp_leaders;
         uint32_t leader_count = GetNetworkLeaderCount(
             common::GlobalInfo::Instance()->network_id());
@@ -266,6 +267,9 @@ void ElectManager::ProcessNewElectBlock(
             iter != node_index_vec.end() &&
             leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
             leaders.insert(tmp_leaders[*iter]->id);
+            if (tmp_leaders[*iter]->id == common::GlobalInfo::Instance()->id()) {
+                local_node_is_super_leader_ = true;
+            }
         }
 
         network_leaders_[elect_block.shard_network_id()] = leaders;

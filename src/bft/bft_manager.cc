@@ -75,6 +75,9 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
     case kBftRootBlock:
         HandleRootTxBlock(header, bft_msg);
         break;
+    case kBftSyncBlock:
+        HandleSyncBlock(header, bft_msg);
+        break;
     default:
         break;
     }
@@ -318,7 +321,7 @@ void BftManager::RootCommitAddNewAccount(
     }
 }
 
-void BftManager::HandleToAccountTxBlock(
+void BftManager::HandleSyncBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
@@ -349,6 +352,53 @@ void BftManager::HandleToAccountTxBlock(
         return;
     }
 
+    db::DbWriteBach db_batch;
+    auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
+    if (block::BlockManager::Instance()->AddNewBlock(
+            block_ptr,
+            db_batch) != block::kBlockSuccess) {
+        BFT_ERROR("leader add block to db failed!");
+        return;
+    }
+
+    auto st = db::Db::Instance()->Put(db_batch);
+    if (!st.ok()) {
+        exit(0);
+    }
+
+    std::cout << "HandleSyncBlock called!" << std::endl;
+}
+
+void BftManager::HandleToAccountTxBlock(
+        transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg) {
+    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
+    if (mem_index == elect::kInvalidMemberIndex) {
+        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
+        return;
+    }
+
+    protobuf::TxBft tx_bft;
+    if (!tx_bft.ParseFromString(bft_msg.data())) {
+        BFT_ERROR("tx_bft.ParseFromString failed.");
+        return;
+    }
+
+    if (!(tx_bft.has_to_tx() && tx_bft.to_tx().has_block())) {
+        BFT_ERROR("tx_bft tx_bft.has_to_tx() && tx_bft.to_tx().has_block() failed.");
+        return;
+    }
+
+    auto src_block = tx_bft.to_tx().block();
+    security::Signature sign;
+    if (VerifyBlockSignature(
+            mem_index,
+            bft_msg,
+            tx_bft.mutable_to_tx()->block(),
+            sign) != kBftSuccess) {
+        BFT_ERROR("verify signature error!");
+        return;
+    }
 
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
@@ -975,7 +1025,7 @@ int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& gen
 
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
-        std::cout << "write db faled!" << std::endl;
+        std::cout << "write db failed!" << std::endl;
         exit(0);
     }
 
@@ -1061,6 +1111,39 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     }
 
     auto local_node = dht_ptr->local_node();
+    // broadcast to this consensus shard and waiting pool shard
+    if (elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
+        {
+            transport::protobuf::Header msg;
+            BftProto::CreateLeaderBroadcastToAccount(
+                local_node,
+                common::GlobalInfo::Instance()->network_id(),
+                common::kBftMessage,
+                kBftSyncBlock,
+                block_ptr,
+                msg);
+            if (msg.has_data()) {
+                network::Route::Instance()->Send(msg);
+                network::Route::Instance()->SendToLocal(msg);
+            }
+        }
+
+        {
+            transport::protobuf::Header msg;
+            BftProto::CreateLeaderBroadcastToAccount(
+                local_node,
+                common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
+                common::kBftMessage,
+                kBftSyncBlock,
+                block_ptr,
+                msg);
+            if (msg.has_data()) {
+                network::Route::Instance()->Send(msg);
+                network::Route::Instance()->SendToLocal(msg);
+            }
+        }
+    }
+
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (block_ptr->tx_list_size() == 1 &&
                 (block_ptr->tx_list(0).type() == common::kConsensusFinalStatistic ||
@@ -1073,6 +1156,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             local_node,
             network::kNodeNetworkId,
             common::kBftMessage,
+            kBftRootBlock,
             block_ptr,
             msg);
         if (msg.has_data()) {
@@ -1147,10 +1231,13 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             local_node,
             *iter,
             common::kBftMessage,
+            kBftToTxInit,
             block_ptr,
             msg);
-        network::Route::Instance()->Send(msg);
-        network::Route::Instance()->SendToLocal(msg);
+        if (msg.has_data()) {
+            network::Route::Instance()->Send(msg);
+            network::Route::Instance()->SendToLocal(msg);
+        }
 #ifdef TENON_UNITTEST
         to_leader_broadcast_msg_ = msg;
 #endif

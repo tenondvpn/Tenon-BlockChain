@@ -85,6 +85,20 @@ public:
 
         return {};
     }
+    
+    bool IsSuperLeader(uint32_t network_id, const std::string& id) {
+        std::lock_guard<std::mutex> guard(network_leaders_mutex_);
+        auto iter = network_leaders_.find(network_id);
+        if (iter != network_leaders_.end()) {
+            return iter->second.find(id) != iter->second.end();
+        }
+
+        return false;
+    }
+
+    bool LocalNodeIsSuperLeader() {
+        return local_node_is_super_leader_;
+    }
 
     std::unordered_set<uint32_t> valid_shard_networks() {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
@@ -123,6 +137,7 @@ private:
     std::mutex added_id_set_mutex_;
     std::unordered_set<std::string> added_ip_set_;
     std::mutex added_ip_set_mutex_;
+    std::atomic<bool> local_node_is_super_leader_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

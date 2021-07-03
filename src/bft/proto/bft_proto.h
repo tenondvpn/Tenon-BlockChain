@@ -48,6 +48,7 @@ public:
         const dht::NodePtr& local_node,
         uint32_t net_id,
         uint32_t message_type,
+        uint32_t bft_step,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
         transport::protobuf::Header& msg);
 

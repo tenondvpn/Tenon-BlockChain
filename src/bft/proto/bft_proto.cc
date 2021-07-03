@@ -229,6 +229,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
         const dht::NodePtr& local_node,
         uint32_t net_id,
         uint32_t message_type,
+        uint32_t bft_step,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
@@ -248,12 +249,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
     auto block = to_tx->mutable_block();
     *block = *(block_ptr.get());
     bft_msg.set_data(tx_bft.SerializeAsString());
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        bft_msg.set_bft_step(kBftRootBlock);
-    } else {
-        bft_msg.set_bft_step(kBftToTxInit);
-    }
-
+    bft_msg.set_bft_step(bft_step);
     bft_msg.set_net_id(common::GlobalInfo::Instance()->network_id());
     bft_msg.set_node_id(local_node->id());
     auto block_hash = GetBlockHash(*block);

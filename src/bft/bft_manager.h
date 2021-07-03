@@ -83,6 +83,9 @@ private:
     void HandleRootTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
+    void HandleSyncBlock(
+        transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg);
     int CreateGenisisBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);

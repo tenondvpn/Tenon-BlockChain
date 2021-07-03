@@ -98,6 +98,9 @@ public:
         }
 
         min_prepare_member_count_ = member_count_ * 9 / 10;
+//         if ((member_count_ * 9) % 10 > 0) {
+//             min_prepare_member_count_ += 1;
+//         }
     }
 
     const common::Bitmap& precommit_bitmap() const {

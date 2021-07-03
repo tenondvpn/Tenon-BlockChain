@@ -55,6 +55,7 @@ enum BftStatus {
     kBftRootBlock = 6,
     kBftCallContract = 7,
     kBftStepTimeout = 8,
+    kBftSyncBlock = 9,
 };
 
 enum BftRole {
