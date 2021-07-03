@@ -230,6 +230,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
         uint32_t net_id,
         uint32_t message_type,
         uint32_t bft_step,
+        bool universal,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
@@ -240,7 +241,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
     msg.set_type(message_type);
     msg.set_client(false);
     msg.set_hop_count(0);
-    msg.set_universal(true);
+    msg.set_universal(universal);
     auto broad_param = msg.mutable_broadcast();
     SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;

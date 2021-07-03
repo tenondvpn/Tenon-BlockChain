@@ -1120,11 +1120,11 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
                 common::GlobalInfo::Instance()->network_id(),
                 common::kBftMessage,
                 kBftSyncBlock,
+                false,
                 block_ptr,
                 msg);
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
-                network::Route::Instance()->SendToLocal(msg);
             }
         }
 
@@ -1135,11 +1135,11 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
                 common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
                 common::kBftMessage,
                 kBftSyncBlock,
+                false,
                 block_ptr,
                 msg);
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
-                network::Route::Instance()->SendToLocal(msg);
             }
         }
     }
@@ -1157,6 +1157,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             network::kNodeNetworkId,
             common::kBftMessage,
             kBftRootBlock,
+            true,
             block_ptr,
             msg);
         if (msg.has_data()) {
@@ -1232,6 +1233,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             *iter,
             common::kBftMessage,
             kBftToTxInit,
+            false,
             block_ptr,
             msg);
         if (msg.has_data()) {
