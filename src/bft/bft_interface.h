@@ -87,12 +87,21 @@ public:
 
     void set_member_count(uint32_t mem_cnt) {
         member_count_ = mem_cnt;
-        min_aggree_member_count_ = static_cast<uint32_t>(
-                (2.0 / 3.0) * (float)member_count_ + 0.5f);
-        min_oppose_member_count_ = static_cast<uint32_t>(
-                (1.0 / 3.0) * (float)member_count_ + 0.5f);
-        min_prepare_member_count_ = static_cast<uint32_t>(
-                (9.5 / 10.0) * (float)member_count_ + 0.5f);
+        min_aggree_member_count_ = member_count_ * 2 / 3;
+        if ((member_count_ * 2) % 3 > 0) {
+            min_aggree_member_count_ += 1;
+        }
+
+        min_oppose_member_count_ = member_count_ / 3;
+        if (member_count_ % 3 > 0) {
+            min_oppose_member_count_ += 1;
+        }
+
+        min_prepare_member_count_ = member_count_ * 9 / 10;
+        std::cout << "member_count_: " << member_count_ 
+            << ", min_aggree_member_count_: " << min_aggree_member_count_ 
+            << ", min_oppose_member_count_: " << min_oppose_member_count_ 
+            << std::endl;
     }
 
     const common::Bitmap& precommit_bitmap() const {

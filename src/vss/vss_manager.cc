@@ -77,6 +77,24 @@ void VssManager::OnTimeBlock(
         (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
 }
 
+void VssManager::OnElectBlock(uint64_t elect_height) {
+    std::lock_guard<std::mutex> guard(mutex_);
+    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+        elect_height,
+        network::kRootCongressNetworkId,
+        common::GlobalInfo::Instance()->id());
+    prev_elect_height_ = elect_height;
+    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+        elect_height,
+        network::kRootCongressNetworkId);
+    if (local_index_ == elect::kInvalidMemberIndex) {
+        VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
+        return;
+    }
+
+    local_random_.OnTimeBlock(latest_tm_block_tm_);
+}
+
 uint64_t VssManager::GetConsensusFinalRandom() {
     std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
     if ((max_count_ * 3 / 2 + 1) < member_count_) {
@@ -103,6 +121,7 @@ void VssManager::ClearAll() {
 }
 
 void VssManager::CheckVssPeriods() {
+    std::cout << "common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id() << ", local_index_: " << local_index_ << std::endl;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId &&
             local_index_ != elect::kInvalidMemberIndex) {
         // Joined root and continue
