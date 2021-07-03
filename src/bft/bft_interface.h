@@ -98,10 +98,6 @@ public:
         }
 
         min_prepare_member_count_ = member_count_ * 9 / 10;
-        std::cout << "member_count_: " << member_count_ 
-            << ", min_aggree_member_count_: " << min_aggree_member_count_ 
-            << ", min_oppose_member_count_: " << min_oppose_member_count_ 
-            << std::endl;
     }
 
     const common::Bitmap& precommit_bitmap() const {

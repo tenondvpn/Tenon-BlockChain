@@ -94,14 +94,6 @@ void VssManager::OnElectBlock(uint64_t elect_height) {
         member_count_ = elect::ElectManager::Instance()->GetMemberCount(
             elect_height,
             network::kRootCongressNetworkId);
-        if (local_index_ == elect::kInvalidMemberIndex) {
-            VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
-            return;
-        }
-
-        if (latest_tm_block_tm_ != 0) {
-            local_random_.OnTimeBlock(latest_tm_block_tm_);
-        }
     }
     std::cout << "1 VssManager::OnTimeBlock lock out." << std::endl;
 }
