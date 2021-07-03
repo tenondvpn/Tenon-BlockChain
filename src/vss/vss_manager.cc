@@ -92,7 +92,9 @@ void VssManager::OnElectBlock(uint64_t elect_height) {
         return;
     }
 
-    local_random_.OnTimeBlock(latest_tm_block_tm_);
+    if (latest_tm_block_tm_ != 0) {
+        local_random_.OnTimeBlock(latest_tm_block_tm_);
+    }
 }
 
 uint64_t VssManager::GetConsensusFinalRandom() {
