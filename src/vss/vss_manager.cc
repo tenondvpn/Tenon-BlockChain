@@ -43,58 +43,67 @@ void VssManager::OnTimeBlock(
         return;
     }
 
-    std::lock_guard<std::mutex> guard(mutex_);
-    if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
-        VSS_ERROR("prev_tm_height_ >= tm_height[%lu][%lu].", prev_tm_height_, tm_height);
-        return;
-    }
+    std::cout << "0 VssManager::OnTimeBlock lock in." << std::endl;
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
+            VSS_ERROR("prev_tm_height_ >= tm_height[%lu][%lu].", prev_tm_height_, tm_height);
+            return;
+        }
 
-    ClearAll();
-    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-        elect_height,
-        network::kRootCongressNetworkId,
-        common::GlobalInfo::Instance()->id());
-    latest_tm_block_tm_ = tm_block_tm;
-    prev_tm_height_ = tm_height;
-    prev_elect_height_ = elect_height;
-    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-        elect_height,
-        network::kRootCongressNetworkId);
-    epoch_random_ = epoch_random;
-    if (local_index_ == elect::kInvalidMemberIndex) {
-        VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
-        return;
-    }
+        ClearAll();
+        local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+            elect_height,
+            network::kRootCongressNetworkId,
+            common::GlobalInfo::Instance()->id());
+        latest_tm_block_tm_ = tm_block_tm;
+        prev_tm_height_ = tm_height;
+        prev_elect_height_ = elect_height;
+        member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+            elect_height,
+            network::kRootCongressNetworkId);
+        epoch_random_ = epoch_random;
+        if (local_index_ == elect::kInvalidMemberIndex) {
+            VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
+            return;
+        }
 
-    local_random_.OnTimeBlock(tm_block_tm);
-    VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-        "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
-        (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-        (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
-    printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-        "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu\n",
-        (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-        (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+        local_random_.OnTimeBlock(tm_block_tm);
+        VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
+            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
+            (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
+            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+        printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
+            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu\n",
+            (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
+            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+    }
+    std::cout << "0 VssManager::OnTimeBlock lock out." << std::endl;
 }
 
 void VssManager::OnElectBlock(uint64_t elect_height) {
-    std::lock_guard<std::mutex> guard(mutex_);
-    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-        elect_height,
-        network::kRootCongressNetworkId,
-        common::GlobalInfo::Instance()->id());
-    prev_elect_height_ = elect_height;
-    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-        elect_height,
-        network::kRootCongressNetworkId);
-    if (local_index_ == elect::kInvalidMemberIndex) {
-        VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
-        return;
-    }
+    std::cout << "1 VssManager::OnTimeBlock lock in." << std::endl;
+    {
 
-    if (latest_tm_block_tm_ != 0) {
-        local_random_.OnTimeBlock(latest_tm_block_tm_);
+        std::lock_guard<std::mutex> guard(mutex_);
+        local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+            elect_height,
+            network::kRootCongressNetworkId,
+            common::GlobalInfo::Instance()->id());
+        prev_elect_height_ = elect_height;
+        member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+            elect_height,
+            network::kRootCongressNetworkId);
+        if (local_index_ == elect::kInvalidMemberIndex) {
+            VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
+            return;
+        }
+
+        if (latest_tm_block_tm_ != 0) {
+            local_random_.OnTimeBlock(latest_tm_block_tm_);
+        }
     }
+    std::cout << "1 VssManager::OnTimeBlock lock out." << std::endl;
 }
 
 uint64_t VssManager::GetConsensusFinalRandom() {

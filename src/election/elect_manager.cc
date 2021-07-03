@@ -283,18 +283,21 @@ void ElectManager::ProcessNewElectBlock(
         valid_shard_networks_.insert(elect_block.shard_network_id());
     }
 
-    std::lock_guard<std::mutex> guard(elect_members_mutex_);
-    if (elect_members_.find(height) != elect_members_.end()) {
-        return;
-    }
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        if (elect_members_.find(height) != elect_members_.end()) {
+            return;
+        }
 
-    elect_members_[height] = member_ptr;
-    auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
-    if (net_heights_iter == elect_net_heights_map_.end()) {
-        elect_net_heights_map_[elect_block.shard_network_id()] = height;
-    } else {
-        if (height > net_heights_iter->second) {
-            net_heights_iter->second = height;
+        elect_members_[height] = member_ptr;
+        auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
+        if (net_heights_iter == elect_net_heights_map_.end()) {
+            elect_net_heights_map_[elect_block.shard_network_id()] = height;
+        }
+        else {
+            if (height > net_heights_iter->second) {
+                net_heights_iter->second = height;
+            }
         }
     }
 
