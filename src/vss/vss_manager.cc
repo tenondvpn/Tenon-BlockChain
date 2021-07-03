@@ -43,7 +43,6 @@ void VssManager::OnTimeBlock(
         return;
     }
 
-    std::cout << "0 VssManager::OnTimeBlock lock in." << std::endl;
     {
         std::lock_guard<std::mutex> guard(mutex_);
         if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
@@ -78,24 +77,18 @@ void VssManager::OnTimeBlock(
             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
     }
-    std::cout << "0 VssManager::OnTimeBlock lock out." << std::endl;
 }
 
 void VssManager::OnElectBlock(uint64_t elect_height) {
-    std::cout << "1 VssManager::OnTimeBlock lock in." << std::endl;
-    {
-
-        std::lock_guard<std::mutex> guard(mutex_);
-        local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-            elect_height,
-            network::kRootCongressNetworkId,
-            common::GlobalInfo::Instance()->id());
-        prev_elect_height_ = elect_height;
-        member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-            elect_height,
-            network::kRootCongressNetworkId);
-    }
-    std::cout << "1 VssManager::OnTimeBlock lock out." << std::endl;
+    std::lock_guard<std::mutex> guard(mutex_);
+    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+        elect_height,
+        network::kRootCongressNetworkId,
+        common::GlobalInfo::Instance()->id());
+    prev_elect_height_ = elect_height;
+    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+        elect_height,
+        network::kRootCongressNetworkId);
 }
 
 uint64_t VssManager::GetConsensusFinalRandom() {
@@ -124,7 +117,6 @@ void VssManager::ClearAll() {
 }
 
 void VssManager::CheckVssPeriods() {
-    std::cout << "common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id() << ", local_index_: " << local_index_ << std::endl;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId &&
             local_index_ != elect::kInvalidMemberIndex) {
         // Joined root and continue

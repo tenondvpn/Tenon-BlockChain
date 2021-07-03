@@ -24,7 +24,6 @@ void Processor::UnRegisterProcessor(uint32_t type) {
 void Processor::HandleMessage(tenon::transport::protobuf::Header& message) {
     assert(message.type() < common::kLegoMaxMessageTypeCount);
     if (message_processor_[message.type()] == nullptr) {
-        std::cout << "invalid message type: " << message.type() << std::endl;
         message_processor_[common::kRelayMessage](message);
         return;
     }

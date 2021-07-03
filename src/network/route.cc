@@ -70,14 +70,8 @@ int Route::Send(transport::protobuf::Header& message) {
         dht_ptr = DhtManager::Instance()->GetDht(des_net_id);
     }
 
-    if (message.version() == 14 || message.version() == 15)
-        std::cout << "ddddddddd 0" << std::endl;
-
     if (dht_ptr != nullptr) {
         if (message.has_broadcast()) {
-            if (message.version() == 14 || message.version() == 15)
-                std::cout << "ddddddddd 1" << std::endl;
-
             broadcast_->Broadcasting(dht_ptr, message);
         } else {
             if (message.has_to_ip() && message.has_to_port()) {
@@ -108,9 +102,6 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive message broadcast data 4" << std::endl;
-    }
     auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
             kUniversalNetworkId);
     if (!uni_dht) {
@@ -118,40 +109,21 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive message broadcast data 5" << std::endl;
-    }
-
     if (uni_dht->local_node()->client_mode || uni_dht->local_node()->dht_key() == header.des_dht_key()) {
         message_processor_[header.type()](header);
         return;
     }
 
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive message broadcast data 6" << std::endl;
-    }
-
     // every route message must use dht
     auto dht = GetDht(header.des_dht_key(), header.universal());
     uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive message broadcast data 6 1: " << header.universal() << ", net_id: " << net_id << std::endl;
-    }
-
     if (!dht) {
-        if (header.version() == 14 || header.version() == 15) {
-            std::cout << "receive message broadcast data 6 2: " << header.universal() << std::endl;
-        }
-
         RouteByUniversal(header);
         return;
     }
 
     if (!header.handled()) {
         message_processor_[header.type()](header);
-    }
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive message broadcast data 7" << std::endl;
     }
 
     if (header.has_broadcast()) {

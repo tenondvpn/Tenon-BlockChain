@@ -212,7 +212,6 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
         block::AccountManager::Instance()->ShardAddTimeBlockStatisticTransaction(
             height,
             tx_info);
-        std::cout << "ShardAddTimeBlockStatisticTransaction called network id: " << common::GlobalInfo::Instance()->network_id() << std::endl;
     }
 
     BLOCK_DEBUG("HandleTimeBlock 2");

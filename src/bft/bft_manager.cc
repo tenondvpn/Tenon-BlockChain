@@ -59,9 +59,6 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    if (header.version() == 14 || header.version() == 15) {
-        std::cout << "receive broadcast message: " << bft_msg.bft_step() << std::endl;
-    }
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;

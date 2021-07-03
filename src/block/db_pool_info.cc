@@ -327,7 +327,6 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 
     auto ext_iter = iter->second.added_height.find(block_item->height());
     if (ext_iter != iter->second.added_height.end()) {
-        std::cout << "ext_iter != iter->second.added_height.end() " << block_item->height() << std::endl;
         return kBlockSuccess;
     }
 

@@ -29,7 +29,6 @@ ElectWaitingNodes::~ElectWaitingNodes() {}
 void ElectWaitingNodes::UpdateWaitingNodes(
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter) {
-    std::cout << "UpdateWaitingNodes root_node_id: " << common::Encode::HexEncode(root_node_id) << std::endl;
     std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
     std::string coming_id = root_node_id + std::to_string(
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
@@ -167,12 +166,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
 
         auto valid_join_time = iter->second->join_tm +
             std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
-        std::cout << "valid_join_time: " << valid_join_time.time_since_epoch().count()
-            << ", now_tm: " << now_tm.time_since_epoch().count()
-            << ", join_tm: " << iter->second->join_tm.time_since_epoch().count()
-            << ", kElectAvailableJoinTime: " << kElectAvailableJoinTime
-            << ", time_offset_milli: " << time_offset_milli
-            << std::endl;
         if (valid_join_time > now_tm) {
             continue;
         }
@@ -243,11 +236,6 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);
-            std::cout << "SendConsensusNodes called: " << time_block_tm
-                << ", waiting_shard_id_: " << waiting_shard_id_
-                << ", common::GlobalInfo::Instance()->network_id(): " << common::GlobalInfo::Instance()->network_id()
-                << ", local id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(security::Schnorr::Instance()->str_pubkey()))
-                << std::endl;
         }
     }
 }

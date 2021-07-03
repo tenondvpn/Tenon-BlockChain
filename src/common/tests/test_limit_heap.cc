@@ -44,11 +44,8 @@ TEST_F(TestLimitHeap, TestMax) {
 
 //     ASSERT_EQ(max_data, test_min_heap.top());
     while (!test_min_heap.empty()) {
-        std::cout << test_min_heap.top() << " ";
         test_min_heap.pop();
     }
-
-    std::cout << std::endl;
 }
 
 TEST_F(TestLimitHeap, TestMin) {
@@ -65,11 +62,8 @@ TEST_F(TestLimitHeap, TestMin) {
 
 //     ASSERT_EQ(max_data, test_min_heap.top());
     while (!test_min_heap.empty()) {
-        std::cout << test_min_heap.top() << " ";
         test_min_heap.pop();
     }
-
-    std::cout << std::endl;
 }
 
 }  // namespace test

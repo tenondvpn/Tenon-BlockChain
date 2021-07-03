@@ -20,9 +20,6 @@ FilterBroadcast::~FilterBroadcast() {}
 void FilterBroadcast::Broadcasting(
         dht::BaseDhtPtr& dht_ptr,
         transport::protobuf::Header& message) {
-    if (message.version() == 14 || message.version() == 15)
-        std::cout << "ddddddddd 2" << std::endl;
-
     assert(dht_ptr);
     if (message.broadcast().hop_limit() <= message.hop_count()) {
         return;
@@ -40,21 +37,11 @@ void FilterBroadcast::Broadcasting(
         bloomfilter->Add(common::GlobalInfo::Instance()->id_hash());
     }
 
-    if (message.version() == 14 || message.version() == 15)
-        std::cout << "ddddddddd 3" << std::endl;
-
     if (message.broadcast().has_hop_to_layer() &&
             message.hop_count() >= message.broadcast().hop_to_layer()) {
-
-        if (message.version() == 14 || message.version() == 15)
-            std::cout << "ddddddddd 4" << std::endl;
-
         auto nodes = GetlayerNodes(dht_ptr, bloomfilter, message);
         LayerSend(dht_ptr, message, nodes);
     } else {
-        if (message.version() == 14 || message.version() == 15)
-            std::cout << "ddddddddd 5" << std::endl;
-
         auto nodes = GetRandomFilterNodes(dht_ptr, bloomfilter, message);
         Send(dht_ptr, message, nodes);
     }
@@ -215,8 +202,6 @@ void FilterBroadcast::Send(
                 nodes[i]->local_port + 1,
                 0,
                 message);
-        if (message.version() == 14 || message.version() == 15)
-            std::cout << "broadcast direct send to: " << nodes[i]->public_ip() << ":" << (nodes[i]->local_port + 1) << std::endl;
     }
 }
 
@@ -252,8 +237,6 @@ void FilterBroadcast::LayerSend(
             nodes[i]->local_port + 1,
             0,
             message);
-        if (message.version() == 14 || message.version() == 15)
-        std::cout << "broadcast layer send to: " << nodes[i]->public_ip() << ":" << (nodes[i]->local_port + 1) << std::endl;
     }
 }
 

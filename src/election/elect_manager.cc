@@ -648,7 +648,6 @@ void ElectManager::WaitingNodeSendHeartbeat() {
                 msg);
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
-                std::cout << "WaitingNodeSendHeartbeat public ip: " << dht->local_node()->public_ip() << ":" << dht->local_node()->public_port << std::endl;
             }
         }
     }
