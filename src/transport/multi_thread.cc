@@ -23,7 +23,7 @@ namespace tenon {
 
 namespace transport {
 
-ThreadHandler::ThreadHandler() {
+ThreadHandler::ThreadHandler(uint32_t thread_idx) : thread_idx_(thread_idx) {
     thread_.reset(new std::thread(&ThreadHandler::HandleMessage, this));
 }
 
@@ -40,7 +40,7 @@ void ThreadHandler::Join() {
 void ThreadHandler::HandleMessage() {
     while (!common::global_stop) {
         while (!common::global_stop) {
-            auto msg_ptr = MultiThreadHandler::Instance()->GetMessageFromQueue();
+            auto msg_ptr = MultiThreadHandler::Instance()->GetMessageFromQueue(thread_idx_);
             if (!msg_ptr) {
                 break;
             }
@@ -54,7 +54,7 @@ void ThreadHandler::HandleMessage() {
 }
 
 MultiThreadHandler::MultiThreadHandler() {
-    for (uint32_t i = kTransportPriorityHighest; i <= kTransportPriorityLowest; ++i) {
+    for (uint32_t i = kTransportPrioritySystem; i < kTransportPriorityMaxCount; ++i) {
         priority_queue_map_[i] = std::queue<std::shared_ptr<protobuf::Header>>();
     }
 }
@@ -79,7 +79,7 @@ void MultiThreadHandler::Init(
     }
 
     for (uint32_t i = 0; i < kMessageHandlerThreadCount; ++i) {
-        thread_vec_.push_back(std::make_shared<ThreadHandler>());
+        thread_vec_.push_back(std::make_shared<ThreadHandler>(i));
     }
     transport_ = transport_ptr;
     tcp_transport_ = tcp_transport_ptr;
@@ -268,13 +268,14 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
     }
 
+    uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kTransportPriorityMaxCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-		uint32_t priority = kTransportPriorityLowest;
-		if (message_ptr->has_priority() &&
-			(message_ptr->priority() < kTransportPriorityLowest)) {
-			priority = message_ptr->priority();
-		}
+// 		uint32_t priority = kTransportPriorityLowest;
+// 		if (message_ptr->has_priority() &&
+// 			(message_ptr->priority() < kTransportPriorityLowest)) {
+// 			priority = message_ptr->priority();
+// 		}
 
         priority_queue_map_[priority].push(message_ptr);
 	}
@@ -333,15 +334,15 @@ int MultiThreadHandler::HandleClientMessage(
     return kTransportSuccess;
 }
 
-std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue() {
+std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue(uint32_t thread_idx) {
+    auto queue_idx = thread_idx % kTransportPriorityMaxCount;
     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-    for (uint32_t i = kTransportPrioritySystem; i <= kTransportPriorityLowest; ++i) {
-        if (!priority_queue_map_[i].empty()) {
-            std::shared_ptr<protobuf::Header> msg_obj = priority_queue_map_[i].front();
-            priority_queue_map_[i].pop();
-            return msg_obj;
-        }
+    if (!priority_queue_map_[queue_idx].empty()) {
+        std::shared_ptr<protobuf::Header> msg_obj = priority_queue_map_[queue_idx].front();
+        priority_queue_map_[queue_idx].pop();
+        return msg_obj;
     }
+
     return nullptr;
 }
 

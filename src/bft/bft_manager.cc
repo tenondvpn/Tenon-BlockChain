@@ -59,12 +59,13 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
+    BFT_ERROR("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_msg.gid()).c_str(), bft_msg.bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
     }
 
-	// TODO: check account address's network id valid. and this node is valid bft node
+    // TODO: check account address's network id valid. and this node is valid bft node
     switch (bft_msg.bft_step()) {
     case kBftInit:
         InitBft(header, bft_msg);
@@ -198,10 +199,10 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
 void BftManager::HandleRootTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        BFT_ERROR("root congress don't handle this message.");
-        return;
-    }
+//     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+//         BFT_ERROR("root congress don't handle this message.");
+//         return;
+//     }
 
     protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {

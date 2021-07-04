@@ -23,7 +23,7 @@ class MultiThreadHandler;
 
 class ThreadHandler {
 public:
-    ThreadHandler();
+    ThreadHandler(uint32_t thread_idx);
     ~ThreadHandler();
     void Join();
 
@@ -32,6 +32,7 @@ private:
 
     std::shared_ptr<std::thread> thread_{ nullptr };
     bool destroy_{ false };
+    uint32_t thread_idx_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(ThreadHandler);
 };
@@ -57,7 +58,7 @@ public:
 			const char* buf,
 			uint32_t len,
             int32_t transport_type);
-	std::shared_ptr<protobuf::Header> GetMessageFromQueue();
+	std::shared_ptr<protobuf::Header> GetMessageFromQueue(uint32_t thread_idx);
     void Destroy();
     void ResetTransport(TransportPtr& transport_ptr);
     void ResetTcpTransport(TransportPtr& transport_ptr);

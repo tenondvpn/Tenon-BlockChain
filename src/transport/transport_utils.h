@@ -39,6 +39,7 @@ enum TransportPriority {
     kTransportPriorityMiddle = 3,
     kTransportPriorityLow = 4,
     kTransportPriorityLowest = 5,
+    kTransportPriorityMaxCount,
 };
 
 enum PacketTransportType {
