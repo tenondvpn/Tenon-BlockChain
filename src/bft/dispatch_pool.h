@@ -24,6 +24,12 @@ public:
     void BftOver(BftInterfacePtr& bft_ptr);
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);
     TxItemPtr GetRootTx();
+    void RemoveTx(
+        uint32_t pool_index,
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
 
 private:
     DispatchPool();

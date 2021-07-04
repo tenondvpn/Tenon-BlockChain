@@ -389,6 +389,17 @@ TxItemPtr TxPoolManager::GetTx(
     return tx_pool_[pool_index].GetTx(add_to, tx_type, call_contract_step, gid);
 }
 
+void TxPoolManager::RemoveTx(
+        uint32_t pool_index,
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid) {
+    assert(pool_index < common::kInvalidPoolIndex);
+    tx_pool_[pool_index].RemoveTx(add_to, tx_type, call_contract_step, gid);
+}
+
+
 void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     assert(bft_ptr->pool_index() < common::kInvalidPoolIndex);
     tx_pool_[bft_ptr->pool_index()].BftOver(bft_ptr);

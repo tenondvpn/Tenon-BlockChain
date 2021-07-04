@@ -27,6 +27,12 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     TxItemPtr GetRootTx();
+    TxItemPtr RemoveTx(
+        uint32_t pool_index,
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);

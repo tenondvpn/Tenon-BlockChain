@@ -371,6 +371,17 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
+    auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
+    if (tx_list.empty()) {
+        BFT_ERROR("to has no transaction info!");
+        return;
+    }
+
+    if (!AggSignValid(tx_bft.to_tx().block())) {
+        BFT_ERROR("ts block agg sign verify failed!");
+        return;
+    }
+
     db::DbWriteBach db_batch;
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
     if (block::BlockManager::Instance()->AddNewBlock(
@@ -383,6 +394,15 @@ void BftManager::HandleSyncBlock(
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
         exit(0);
+    }
+
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            block_ptr->pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
     }
 }
 

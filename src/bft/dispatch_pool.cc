@@ -176,20 +176,29 @@ TxItemPtr DispatchPool::GetRootTx() {
     return tx_pool_.GetRootTx();
 }
 
- void DispatchPool::GetTx(
+void DispatchPool::GetTx(
         uint32_t& pool_index,
         int32_t pool_mod_idx,
         std::vector<TxItemPtr>& res_vec) {
     tx_pool_.GetTx(pool_index, pool_mod_idx, res_vec);
 }
 
- TxItemPtr DispatchPool::GetTx(
+TxItemPtr DispatchPool::GetTx(
          uint32_t pool_index,
          bool add_to,
          uint32_t tx_type,
          uint32_t call_contract_step,
          const std::string& gid) {
      return tx_pool_.GetTx(pool_index, add_to, tx_type, call_contract_step, gid);
+}
+
+void DispatchPool::RemoveTx(
+        uint32_t pool_index,
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid) {
+    return tx_pool_.RemoveTx(pool_index, add_to, tx_type, call_contract_step, gid);
 }
 
 void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {

@@ -229,6 +229,28 @@ TxItemPtr TxPool::GetTx(
     return nullptr;
 }
 
+void TxPool::RemoveTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid) {
+    std::string uni_gid = GidManager::Instance()->GetUniversalGid(
+        add_to,
+        tx_type,
+        call_contract_step,
+        gid);
+    std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+    auto iter = added_tx_map_.find(uni_gid);
+    if (iter == added_tx_map_.end()) {
+        return;
+    }
+
+    auto item_iter = tx_pool_.find(iter->second);
+    if (item_iter != tx_pool_.end()) {
+        tx_pool_.erase(item_iter);
+    }
+}
+
 bool TxPool::TxPoolEmpty() {
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     return tx_pool_.empty();

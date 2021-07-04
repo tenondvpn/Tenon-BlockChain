@@ -68,6 +68,11 @@ public:
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;
     }
+    void RemoveTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid);
 
 private:
     bool IsTxContractLocked(TxItemPtr& tx_ptr);
