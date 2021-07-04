@@ -152,8 +152,10 @@ void ShardStatistic::CreateStatisticTransaction() {
 
         tx_info.set_gid(std::string("ft") +
             common::Hash::Hash256(
-                std::to_string(tmblock::TimeBlockManager::Instance()->LatestTimestamp())) +
+            std::to_string(tmblock::TimeBlockManager::Instance()->LatestTimestamp())) +
             std::to_string(pool_idx));
+        BLOCK_DEBUG("create new final statistic time stamp: %lu",
+            tmblock::TimeBlockManager::Instance()->LatestTimestamp());
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
