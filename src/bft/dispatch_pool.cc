@@ -198,7 +198,7 @@ void DispatchPool::RemoveTx(
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid) {
-    return tx_pool_.RemoveTx(pool_index, add_to, tx_type, call_contract_step, gid);
+    tx_pool_.RemoveTx(pool_index, add_to, tx_type, call_contract_step, gid);
 }
 
 void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {
