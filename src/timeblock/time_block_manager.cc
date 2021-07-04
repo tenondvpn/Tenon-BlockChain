@@ -104,6 +104,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     msg->set_data(bft_msg.SerializeAsString());
+    TMBLOCK_ERROR("leader create new time block transaction: %lu", new_time_block_tm);
     return kTimeBlockSuccess;
 }
 
@@ -144,6 +145,10 @@ void TimeBlockManager::UpdateTimeBlock(
         uint64_t latest_time_block_height,
         uint64_t latest_time_block_tm,
         uint64_t vss_random) {
+    if (latest_time_block_height_ >= latest_time_block_height) {
+        return;
+    }
+
     latest_time_block_height_ = latest_time_block_height;
     latest_time_block_tm_ = latest_time_block_tm;
     std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
@@ -154,7 +159,6 @@ void TimeBlockManager::UpdateTimeBlock(
 
     BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
         (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
-
     vss::VssManager::Instance()->OnTimeBlock(
         latest_time_block_tm,
         latest_time_block_height,
