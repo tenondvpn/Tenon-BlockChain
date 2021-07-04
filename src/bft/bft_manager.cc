@@ -111,7 +111,6 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    BFT_ERROR("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_ptr->gid()).c_str(), bft_msg.bft_step());
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
         if (!bft_msg.leader()) {
@@ -947,11 +946,18 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        db::DbWriteBach db_batch;
-        RootCommitAddNewAccount(*tenon_block, db_batch);
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
+        if (tenon_block->tx_list_size() == 1 &&
+                (tenon_block->tx_list(0).type() == common::kConsensusFinalStatistic ||
+                tenon_block->tx_list(0).type() == common::kConsensusStatistic ||
+                tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
+                tenon_block->tx_list(0).type() == common::kConsensusRootTimeBlock)) {
+        } else {
+            db::DbWriteBach db_batch;
+            RootCommitAddNewAccount(*tenon_block, db_batch);
+            auto st = db::Db::Instance()->Put(db_batch);
+            if (!st.ok()) {
+                exit(0);
+            }
         }
     }
 
@@ -1083,11 +1089,18 @@ int BftManager::BackupCommit(
 
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        db::DbWriteBach db_batch;
-        RootCommitAddNewAccount(*tenon_block, db_batch);
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
+        if (tenon_block->tx_list_size() == 1 &&
+                (tenon_block->tx_list(0).type() == common::kConsensusFinalStatistic ||
+                tenon_block->tx_list(0).type() == common::kConsensusStatistic ||
+                tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
+                tenon_block->tx_list(0).type() == common::kConsensusRootTimeBlock)) {
+        } else {
+            db::DbWriteBach db_batch;
+            RootCommitAddNewAccount(*tenon_block, db_batch);
+            auto st = db::Db::Instance()->Put(db_batch);
+            if (!st.ok()) {
+                exit(0);
+            }
         }
     }
 
@@ -1162,6 +1175,7 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     }
 
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        std::cout << "network::kRootCongressNetworkId broadcast: " << block_ptr->tx_list_size() << ", type: " << block_ptr->tx_list(0).type() << std::endl;
         if (block_ptr->tx_list_size() == 1 &&
                 (block_ptr->tx_list(0).type() == common::kConsensusFinalStatistic ||
                 block_ptr->tx_list(0).type() == common::kConsensusStatistic)) {

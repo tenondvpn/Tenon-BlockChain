@@ -143,7 +143,6 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
 #ifdef TENON_UNITTEST
     return kBlockSuccess;
 #endif
-    BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 0");
     uint64_t tmblock_tm = 0;
     for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
         if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
@@ -157,7 +156,6 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
         return kBlockError;
     }
 
-    BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 1");
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d", i);
         bft::protobuf::TxInfo tx_info;
@@ -204,17 +202,14 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
         }
     }
 
-    BLOCK_DEBUG("HandleTimeBlock 0");
     if ((common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardBeginNetworkId &&
             common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) ||
             common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        BLOCK_DEBUG("HandleTimeBlock 1");
         block::AccountManager::Instance()->ShardAddTimeBlockStatisticTransaction(
             height,
             tx_info);
     }
 
-    BLOCK_DEBUG("HandleTimeBlock 2");
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
         height,
         tmblock_timestamp,
