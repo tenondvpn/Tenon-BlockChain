@@ -354,12 +354,17 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
             continue;
         }
 
+        uint32_t succ_count = 0;
         auto succ_iter = iter->second.succ_tx_count.find(i);
         if (succ_iter != iter->second.succ_tx_count.end()) {
             ++succ_iter->second;
+            succ_count = succ_iter->second;
         } else {
             iter->second.succ_tx_count[i] = 1;
+            succ_count = 1;
         }
+
+        BLOCK_ERROR("add pool statistic succ count: %d, tm height: %lu, pool index: %d", succ_count, block_item->timeblock_height(), pool_index_);
     }
 
     if (max_time_block_height_ > 2) {
