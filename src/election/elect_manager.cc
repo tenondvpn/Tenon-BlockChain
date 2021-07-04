@@ -270,8 +270,8 @@ void ElectManager::ProcessNewElectBlock(
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
         std::unordered_set<std::string> leaders;
         for (auto iter = node_index_vec.begin();
-            iter != node_index_vec.end() &&
-            leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
+                iter != node_index_vec.end() &&
+                leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
             leaders.insert(tmp_leaders[*iter]->id);
             if (tmp_leaders[*iter]->id == common::GlobalInfo::Instance()->id()) {
                 local_node_is_super_leader_ = true;

@@ -417,10 +417,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
-    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
-        elected_nodes.push_back(*iter);
-    }
-
     int32_t expect_leader_count = (int32_t)pow(
         2.0,
         (double)((int32_t)log2(double(elected_nodes.size() / 3))));
@@ -444,6 +440,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     int32_t mode_idx = 0;
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
         (*iter)->pool_index_mod_num = mode_idx++;
+    }
+
+    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
+        elected_nodes.push_back(*iter);
     }
 
     return kElectSuccess;
