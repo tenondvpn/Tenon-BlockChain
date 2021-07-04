@@ -20,11 +20,14 @@ ShardStatistic* ShardStatistic::Instance() {
 
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
+    BLOCK_ERROR("AddShardPoolStatistic block_item->pool_index(): %d", block_item->pool_index());
     if (block_item->tx_list_size() != 1) {
         return;
     }
 
-    if (block_item->network_id() != common::GlobalInfo::Instance()->network_id()) {
+    if (!network::IsSameShardOrSameWaitingPool(
+            common::GlobalInfo::Instance()->network_id(),
+            block_item->network_id())) {
         return;
     }
 

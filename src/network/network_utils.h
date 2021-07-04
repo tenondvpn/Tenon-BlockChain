@@ -57,6 +57,20 @@ enum ServiceNetworkType {
     kWaitingPoolNetworkId,
 };
 
+inline static bool IsSameShardOrSameWaitingPool(uint32_t local_net_id, uint32_t des_net_id) {
+    if (des_net_id == local_net_id) {
+        return true;
+    }
+
+    if (des_net_id >= kRootCongressNetworkId &&
+            des_net_id < kConsensusShardEndNetworkId &&
+            local_net_id == (des_net_id + kConsensusWaitingShardOffset)) {
+        return true;
+    }
+
+    return false;
+}
+
 }  // namespace network
 
 }  // namespace tenon
