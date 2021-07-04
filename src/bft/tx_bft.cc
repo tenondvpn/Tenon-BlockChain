@@ -798,32 +798,49 @@ int TxBft::BackupCheckFinalStatistic(
 
             block::protobuf::StatisticInfo leader_statistic_info;
             if (!leader_statistic_info.ParseFromString(tx_info.attr(i).value())) {
+                BFT_ERROR("leader_statistic_info.ParseFromString error");
                 return kBftInvalidPackage;
             }
 
             block::protobuf::StatisticInfo local_statistic_info;
             if (!local_statistic_info.ParseFromString(iter->second)) {
+                BFT_ERROR("local_statistic_info.ParseFromString error");
                 return kBftInvalidPackage;
             }
 
             if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
+                BFT_ERROR("leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()[%d][%d]",
+                    leader_statistic_info.all_tx_count(),
+                    local_statistic_info.all_tx_count());
                 return kBftInvalidPackage;
             }
 
             if (leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()) {
+                BFT_ERROR("leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()[%lu][%lu]",
+                    leader_statistic_info.timeblock_height(),
+                    local_statistic_info.timeblock_height());
                 return kBftInvalidPackage;
             }
 
             if (leader_statistic_info.elect_height() != local_statistic_info.elect_height()) {
+                BFT_ERROR("leader_statistic_info.elect_height() != local_statistic_info.elect_height()[%lu][%lu]",
+                    leader_statistic_info.elect_height(),
+                    local_statistic_info.elect_height());
                 return kBftInvalidPackage;
             }
 
             if (leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()) {
+                BFT_ERROR("leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()[%u][%u]",
+                    leader_statistic_info.succ_tx_count_size(),
+                    local_statistic_info.succ_tx_count_size());
                 return kBftInvalidPackage;
             }
 
             for (int32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
                 if (leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count(i)) {
+                    BFT_ERROR("leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count()[%u][%u]",
+                        leader_statistic_info.succ_tx_count(i),
+                        local_statistic_info.succ_tx_count(i));
                     return kBftInvalidPackage;
                 }
             }
