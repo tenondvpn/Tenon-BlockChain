@@ -119,4 +119,5 @@ message BftMessage {
 	optional bool agree = 16;
 	optional uint32 pool_index = 17;
 	optional bytes data = 18;
+	optional bytes prepare_hash = 19;
 }

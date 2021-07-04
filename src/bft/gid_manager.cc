@@ -76,7 +76,10 @@ TxItemPtr GidManager::GetTx(
     auto st = db::Db::Instance()->Get(db_for_gid, &bft_msg);
     if (!st.ok()) {
         // get from brother nodes
-        sync::KeyValueSync::Instance()->AddSync(4, db_for_gid, sync::kSyncHighest);
+        sync::KeyValueSync::Instance()->AddSync(
+            common::GlobalInfo::Instance()->network_id(),
+            db_for_gid,
+            sync::kSyncHighest);
         return nullptr;
     }
 

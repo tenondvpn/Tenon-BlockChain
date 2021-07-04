@@ -1128,21 +1128,23 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     auto local_node = dht_ptr->local_node();
     // broadcast to this consensus shard and waiting pool shard
     if (elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
-        {
-            transport::protobuf::Header msg;
-            BftProto::CreateLeaderBroadcastToAccount(
-                local_node,
-                common::GlobalInfo::Instance()->network_id(),
-                common::kBftMessage,
-                kBftSyncBlock,
-                false,
-                block_ptr,
-                msg);
-            if (msg.has_data()) {
-                network::Route::Instance()->Send(msg);
-            }
-        }
+        // consensus pool sync by pull
+//         {
+//             transport::protobuf::Header msg;
+//             BftProto::CreateLeaderBroadcastToAccount(
+//                 local_node,
+//                 common::GlobalInfo::Instance()->network_id(),
+//                 common::kBftMessage,
+//                 kBftSyncBlock,
+//                 false,
+//                 block_ptr,
+//                 msg);
+//             if (msg.has_data()) {
+//                 network::Route::Instance()->Send(msg);
+//             }
+//         }
 
+        // waiting pool sync by push
         {
             transport::protobuf::Header msg;
             BftProto::CreateLeaderBroadcastToAccount(

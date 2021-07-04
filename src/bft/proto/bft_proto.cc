@@ -53,6 +53,7 @@ void BftProto::LeaderCreatePrepare(
     sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
+    bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -132,6 +133,7 @@ void BftProto::LeaderCreatePreCommit(
     leader_sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
+    bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -222,6 +224,7 @@ void BftProto::LeaderCreateCommit(
     bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
     bft_msg.set_agg_sign_challenge(agg_sign_challenge_str);
     bft_msg.set_agg_sign_response(agg_sign_response_str);
+    bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     msg.set_data(bft_msg.SerializeAsString());
 }
 
