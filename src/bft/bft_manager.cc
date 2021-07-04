@@ -80,7 +80,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         break;
     case kBftSyncBlock:
         HandleSyncBlock(header, bft_msg);
-        break;
+        return;
     default:
         break;
     }

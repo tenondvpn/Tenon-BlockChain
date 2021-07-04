@@ -360,8 +360,15 @@ int AccountManager::AddBlockItem(
     }
 
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
-            consistent_pool_index == common::kRootChainPoolIndex) {
+            consistent_pool_index == common::kRootChainPoolIndex ||
+            (block_item->network_id() >= network::kConsensusShardBeginNetworkId &&
+            block_item->network_id() < network::kConsensusShardEndNetworkId &&
+            block_item->network_id() + network::kConsensusWaitingShardOffset ==
+            common::GlobalInfo::Instance()->network_id())) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
+        BLOCK_DEBUG("set pool: %u hash: %s",
+            consistent_pool_index,
+            common::Encode::HexEncode(block_item->hash()).c_str());
         SetPool(
             consistent_pool_index,
             block_item,

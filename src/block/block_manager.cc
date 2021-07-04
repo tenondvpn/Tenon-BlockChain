@@ -593,6 +593,7 @@ void BlockManager::SendBlockResponse(
 int BlockManager::AddNewBlock(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
+    BLOCK_ERROR("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     std::string height_db_key = common::GetHeightDbKey(
         block_item->network_id(),
         block_item->pool_index(),
