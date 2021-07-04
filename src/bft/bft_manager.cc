@@ -23,6 +23,8 @@
 #include "network/universal_manager.h"
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
+#include "sync/key_value_sync.h"
+#include "sync/sync_utils.h"
 #include "statistics/statistics.h"
 #include "timeblock/time_block_utils.h"
 #include "vss/vss_manager.h"
@@ -102,6 +104,13 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
+            if (bft_msg.bft_step() == kBftCommit && !bft_msg.leader()) {
+                sync::KeyValueSync::Instance()->AddSync(
+                    bft_msg.net_id(),
+                    bft_msg.prepare_hash(),
+                    sync::kSyncHighest);
+            }
+
             BFT_ERROR("get bft failed[%s]!", common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
@@ -375,8 +384,6 @@ void BftManager::HandleSyncBlock(
     if (!st.ok()) {
         exit(0);
     }
-
-    std::cout << "HandleSyncBlock called!" << std::endl;
 }
 
 void BftManager::HandleToAccountTxBlock(
@@ -1142,22 +1149,8 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     auto local_node = dht_ptr->local_node();
     // broadcast to this consensus shard and waiting pool shard
     if (elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
-        // consensus pool sync by pull
-//         {
-//             transport::protobuf::Header msg;
-//             BftProto::CreateLeaderBroadcastToAccount(
-//                 local_node,
-//                 common::GlobalInfo::Instance()->network_id(),
-//                 common::kBftMessage,
-//                 kBftSyncBlock,
-//                 false,
-//                 block_ptr,
-//                 msg);
-//             if (msg.has_data()) {
-//                 network::Route::Instance()->Send(msg);
-//             }
-//         }
-
+        // consensus pool sync by pull in bft step commit
+        //
         // waiting pool sync by push
         {
             transport::protobuf::Header msg;
@@ -1176,7 +1169,6 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
     }
 
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        std::cout << "network::kRootCongressNetworkId broadcast: " << block_ptr->tx_list_size() << ", type: " << block_ptr->tx_list(0).type() << std::endl;
         if (block_ptr->tx_list_size() == 1 &&
                 (block_ptr->tx_list(0).type() == common::kConsensusFinalStatistic ||
                 block_ptr->tx_list(0).type() == common::kConsensusStatistic)) {

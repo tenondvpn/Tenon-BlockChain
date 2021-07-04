@@ -54,7 +54,7 @@ void ThreadHandler::HandleMessage() {
 }
 
 MultiThreadHandler::MultiThreadHandler() {
-    for (uint32_t i = kTransportPrioritySystem; i < kTransportPriorityMaxCount; ++i) {
+    for (uint32_t i = 0; i < kMessageHandlerThreadCount; ++i) {
         priority_queue_map_[i] = std::queue<std::shared_ptr<protobuf::Header>>();
     }
 }
@@ -268,7 +268,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
     }
 
-    uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kTransportPriorityMaxCount;
+    uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
 // 		uint32_t priority = kTransportPriorityLowest;
@@ -335,7 +335,7 @@ int MultiThreadHandler::HandleClientMessage(
 }
 
 std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue(uint32_t thread_idx) {
-    auto queue_idx = thread_idx % kTransportPriorityMaxCount;
+    auto queue_idx = thread_idx % kMessageHandlerThreadCount;
     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
     if (!priority_queue_map_[queue_idx].empty()) {
         std::shared_ptr<protobuf::Header> msg_obj = priority_queue_map_[queue_idx].front();

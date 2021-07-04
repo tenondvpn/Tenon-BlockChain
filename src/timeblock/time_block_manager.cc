@@ -169,18 +169,10 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
-        if (!latest_time_blocks_.empty()) {
-            // Correction time
-            auto offset_tm = (latest_time_block_tm_ - latest_time_blocks_.front());
-            auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
-            if (real_offset > offset_tm) {
-                *new_time_block_tm += real_offset - offset_tm;
-            } else {
-                *new_time_block_tm += offset_tm - real_offset;
-            }
-
-            BFT_ERROR("LeaderNewTimeBlockValid offset_tm[%llu]real_offset[%llu] final[%lu], prev[%lu]",
-                offset_tm, real_offset, *new_time_block_tm, (uint64_t)latest_time_block_tm_);
+        if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
+            *new_time_block_tm += kTimeBlockMaxOffsetSeconds;
+        } else {
+            *new_time_block_tm += now_tm - *new_time_block_tm;
         }
 
         return true;
@@ -191,28 +183,14 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     uint64_t backup_latest_time_block_tm = latest_time_block_tm_;
-    if (!latest_time_blocks_.empty()) {
-        // Correction time
-        auto offset_tm = (backup_latest_time_block_tm - latest_time_blocks_.front());
-        auto real_offset = common::kTimeBlockCreatePeriodSeconds * (latest_time_blocks_.size() - 1);
-        if (real_offset > offset_tm) {
-            backup_latest_time_block_tm += real_offset - offset_tm;
-        } else {
-            backup_latest_time_block_tm += offset_tm - real_offset;
-        }
-
-        BFT_ERROR("BackupheckNewTimeBlockValid offset_tm[%llu]real_offset[%llu]final[%llu]",
-            offset_tm, real_offset, (backup_latest_time_block_tm + common::kTimeBlockCreatePeriodSeconds));
-    }
-
     backup_latest_time_block_tm += common::kTimeBlockCreatePeriodSeconds;
     if (new_time_block_tm < (backup_latest_time_block_tm + kTimeBlockTolerateSeconds) &&
             new_time_block_tm > (backup_latest_time_block_tm - kTimeBlockTolerateSeconds)) {
         return true;
     }
 
-    BFT_ERROR("BackupheckNewTimeBlockValid error[%llu][%llu]",
-        new_time_block_tm, (uint64_t)backup_latest_time_block_tm);
+    BFT_ERROR("BackupheckNewTimeBlockValid error[%llu][%llu] latest_time_block_tm_[%lu]",
+        new_time_block_tm, (uint64_t)backup_latest_time_block_tm, (uint64_t)latest_time_block_tm_);
     return false;
 }
 
