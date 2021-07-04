@@ -267,6 +267,12 @@ void BftManager::HandleRootTxBlock(
     }
 
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            tx_bft.to_tx().block().pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
         if (tx_list[i].status() != 0) {
             continue;
         }
