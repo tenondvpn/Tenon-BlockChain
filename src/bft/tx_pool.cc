@@ -8,6 +8,8 @@
 #include "common/time_utils.h"
 #include "block/account_manager.h"
 #include "bft/gid_manager.h"
+#include "timeblock/time_block_utils.h"
+#include "timeblock/time_block_manager.h"
 
 namespace tenon {
 
@@ -86,24 +88,15 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
 
 void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
     auto timestamp_now = common::TimeUtils::TimestampUs();
-    auto now_time = std::chrono::steady_clock::now();
     {
         std::lock_guard<std::mutex> guard(tx_pool_mutex_);
         for (auto iter = tx_pool_.begin(); iter != tx_pool_.end();) {
-            if (iter->second->timeout <= now_time) {
+            if (!IsTxValid(iter->second)) {
                 tx_pool_.erase(iter++);
                 BFT_ERROR("timeout and remove tx.");
                 continue;
             }
 
-            if (iter->second == nullptr) {
-                ++iter;
-                BFT_ERROR("iter second invalid.");
-                continue;
-            }
-
-
-            BFT_ERROR("00000001 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF: %llu, %llu, %llu", common::TimeUtils::TimestampUs(), iter->second->time_valid, timestamp_now);
             if (iter->second->time_valid <= timestamp_now) {
                 if (IsTxContractLocked(iter->second)) {
                     ++iter;
@@ -144,6 +137,36 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }
+}
+
+bool TxPool::IsTxValid(TxItemPtr& tx_ptr) {
+    auto now_time = std::chrono::steady_clock::now();
+    if (tx_ptr->timeout <= now_time) {
+        BFT_ERROR("timeout and remove tx.");
+        return false;
+    }
+
+    if (!tx_ptr) {
+        BFT_ERROR("iter second invalid.");
+        return false;
+    }
+
+    if (tx_ptr->tx.type() == common::kConsensusRootTimeBlock) {
+        for (int32_t i = 0; i < tx_ptr->tx.attr_size(); ++i) {
+            if (tx_ptr->tx.attr(i).key() == tmblock::kAttrTimerBlock) {
+                auto tmblock_tm = common::StringUtil::ToUint64(tx_ptr->tx.attr(i).key());
+                if (tmblock_tm < tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {

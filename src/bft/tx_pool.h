@@ -76,6 +76,7 @@ public:
 
 private:
     bool IsTxContractLocked(TxItemPtr& tx_ptr);
+    bool IsTxValid();
 
     static const uint32_t kKeepCoverLoadCount = 1024u;
 
