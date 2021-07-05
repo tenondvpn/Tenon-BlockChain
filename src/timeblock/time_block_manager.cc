@@ -68,8 +68,8 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(common::kRootChainSingleBlockTxAddress);
     tx_info->set_gid(common::Hash::Hash256(std::to_string(latest_time_block_tm_)));
-    BFT_ERROR("LeaderCreateTimeBlockTx %lu latest_time_block_tm_[%lu]",
-        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
+    BFT_ERROR("LeaderCreateTimeBlockTx %lu latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
 
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
