@@ -138,9 +138,8 @@ int ShardNetwork<DhtType>::JoinUniversal() {
 template<class DhtType>
 bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::string& id) {
     if (network_id == common::GlobalInfo::Instance()->network_id() &&
-        ((network_id >= network::kConsensusShardBeginNetworkId &&
-            network_id < network::kConsensusShardEndNetworkId) ||
-            network_id == network::kRootCongressNetworkId)) {
+            network_id >= network::kRootCongressNetworkId &&
+            network_id < network::kConsensusShardEndNetworkId) {
         if (member_callback_ != nullptr) {
             if (member_callback_(network_id, id) != nullptr) {
                 return true;
@@ -148,11 +147,16 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
         }
     }
 
-    return false;
+    return true;
 }
 
 template<class DhtType>
 int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
+    if (!(network_id_ >= network::kRootCongressNetworkId &&
+            network_id_ < network::kConsensusShardEndNetworkId)) {
+        return dht::kDhtSuccess;
+    }
+
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
     auto network_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key());
     if (IsThisNetworkNode(network_id, node->id()) &&

@@ -117,10 +117,7 @@ void DhtManager::NetworkDetection() {
         }
 
 //         node->join_way = dht::kJoinFromNetworkDetection;
-//         if ((*iter)->Join(node) != dht::kDhtSuccess) {
-//             continue;
-//         }
-
+        (*iter)->Join(node);
         network::UniversalManager::Instance()->AddNodeToUniversal(node);
         transport::protobuf::Header msg;
         (*iter)->SetFrequently(msg);

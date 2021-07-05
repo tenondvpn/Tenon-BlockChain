@@ -629,6 +629,7 @@ void BaseDht::ProcessRefreshNeighborsResponse(
             continue;
         }
 
+        Join(node);
         if (DhtProto::CreateConnectRequest(
                 local_node_,
                 node,
