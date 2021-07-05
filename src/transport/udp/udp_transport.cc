@@ -234,7 +234,6 @@ void UdpTransport::Run() {
 }
 
 int UdpTransport::SendToLocal(transport::protobuf::Header& message) {
-    return kTransportSuccess;
     message.clear_broadcast();
     MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;

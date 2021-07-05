@@ -254,6 +254,8 @@ int TcpTransport::Send(
 }
 
 int TcpTransport::SendToLocal(transport::protobuf::Header& message) {
+    message.clear_broadcast();
+    MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;
 }
 
