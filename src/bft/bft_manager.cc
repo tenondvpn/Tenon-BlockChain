@@ -189,6 +189,10 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
         }
 
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
+        if (mem_ptr == nullptr) {
+            return false;
+        }
+
         pubkeys.push_back(mem_ptr->pubkey);
     }
 

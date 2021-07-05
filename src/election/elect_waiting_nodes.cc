@@ -152,6 +152,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     std::vector<NodeDetailPtr> choosed_nodes;
     std::unordered_set<std::string> added_node_ids;
     std::unordered_set<std::string> added_node_ip;  // same ip just one node
+    std::string debug_info = "valid heartbeat nodes: ";
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
                 waiting_shard_id_ - network::kConsensusWaitingShardOffset,
@@ -196,8 +197,11 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         }
 
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
+        debug_info += iter->second->public_ip + ":" + std::to_string(->second->public_port) + ", ";
         nodes.push_back(iter->second);
     }
+
+    ELECT_DEBUG("%s", debug_info.c_str());
 }
 
 void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
