@@ -106,10 +106,7 @@ void DhtManager::NetworkDetection() {
     for (auto iter = detect_dhts.begin(); iter != detect_dhts.end(); ++iter) {
         uint32_t network_id = dht::DhtKeyManager::DhtKeyGetNetId(
                 (*iter)->local_node()->dht_key());
-//         auto nodes = universal_dht->RemoteGetNetworkNodes(network_id, 4);
         auto nodes = universal_dht->LocalGetNetworkNodes(network_id, 4);
-//         nodes.insert(nodes.end(), local_nodes.begin(), local_nodes.end());
-        std::cout << "network_id: " << network_id << ", nodes size: " << nodes.size() << std::endl;
         if (nodes.empty()) {
             nodes = universal_dht->RemoteGetNetworkNodes(network_id, 4);
             if (nodes.empty()) {
@@ -118,13 +115,11 @@ void DhtManager::NetworkDetection() {
         }
 
         auto node = nodes[std::rand() % nodes.size()];
-        std::cout << "network_id: " << network_id << ", nodes size: " << nodes.size() << ", node: " << node->public_ip() << ":" << node->public_port << std::endl;
         if (node->dht_key_hash == (*iter)->local_node()->dht_key_hash) {
             continue;
         }
 
         int res = (*iter)->Join(node);
-        std::cout << "network_id: " << network_id << ", nodes size: " << nodes.size() << ", join: " << res << std::endl;
         network::UniversalManager::Instance()->AddNodeToUniversal(node);
         transport::protobuf::Header msg;
         (*iter)->SetFrequently(msg);
