@@ -189,7 +189,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
         }
 
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
-        if (mem_ptr == nullptr) {
+        if (!mem_ptr) {
             return false;
         }
 
@@ -251,6 +251,15 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            tx_bft.to_tx().block().pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
+    }
+
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         BFT_ERROR("IsRootSingleBlockTx(tx_list[0].type()): %d", tx_list[0].type());
         db::DbWriteBach db_batch;
@@ -271,12 +280,6 @@ void BftManager::HandleRootTxBlock(
     }
 
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        DispatchPool::Instance()->RemoveTx(
-            tx_bft.to_tx().block().pool_index(),
-            tx_list[i].to_add(),
-            tx_list[i].type(),
-            tx_list[i].call_contract_step(),
-            tx_list[i].gid());
         if (tx_list[i].status() != 0) {
             continue;
         }

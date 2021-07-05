@@ -70,7 +70,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
-    BFT_ERROR("add new tx tx_index: %lu, [to: %d] [pool idx: %d] type: %d,"
+    BFT_ERROR("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
         "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s]!",
         tx_index,
         tx_ptr->tx.to_add(),
