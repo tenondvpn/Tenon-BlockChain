@@ -70,8 +70,9 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
-    BFT_ERROR("add new tx [to: %d] [pool idx: %d] type: %d,"
+    BFT_ERROR("add new tx tx_index: %lu, [to: %d] [pool idx: %d] type: %d,"
         "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s]!",
+        tx_index,
         tx_ptr->tx.to_add(),
         pool_index_,
         tx_ptr->tx.type(),
@@ -278,7 +279,8 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     for (uint32_t i = 0; i < item_vec.size(); ++i) {
         auto iter = tx_pool_.find(item_vec[i]);
         if (iter != tx_pool_.end()) {
-            BFT_ERROR("remove tx from: %s, to: %s, gid: %s, amount: %lu.",
+            BFT_ERROR("remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
+                item_vec[i],
                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
