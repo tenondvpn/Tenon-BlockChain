@@ -154,7 +154,7 @@ bool TxPool::IsTxValid(TxItemPtr& tx_ptr) {
     if (tx_ptr->tx.type() == common::kConsensusRootTimeBlock) {
         for (int32_t i = 0; i < tx_ptr->tx.attr_size(); ++i) {
             if (tx_ptr->tx.attr(i).key() == tmblock::kAttrTimerBlock) {
-                auto tmblock_tm = common::StringUtil::ToUint64(tx_ptr->tx.attr(i).key());
+                auto tmblock_tm = common::StringUtil::ToUint64(tx_ptr->tx.attr(i).value());
                 if (tmblock_tm < tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
                     return false;
                 }
