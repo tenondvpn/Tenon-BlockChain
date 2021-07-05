@@ -197,9 +197,6 @@ void FilterBroadcast::Send(
 //                 nodes[i]->local_port,
 //                 0,
 //                 message);
-        if (nodes[i]->local_port == 9101) {
-            std::cout << "send to: " << nodes[i]->public_ip() << ":" << (nodes[i]->local_port + 1) << std::endl;
-        }
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                 nodes[i]->public_ip(),
                 nodes[i]->local_port + 1,
@@ -235,9 +232,6 @@ void FilterBroadcast::LayerSend(
             broad_param->set_layer_right(GetLayerRight(src_right, message));
         }
 
-        if (nodes[i]->local_port == 9101) {
-            std::cout << "send to: " << nodes[i]->public_ip() << ":" << (nodes[i]->local_port + 1) << std::endl;
-        }
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             nodes[i]->public_ip(),
             nodes[i]->local_port + 1,
