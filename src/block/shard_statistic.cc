@@ -50,6 +50,7 @@ void ShardStatistic::AddShardPoolStatistic(
             }
 
             latest_tm_height_ = block_item->timeblock_height();
+            all_tx_count_ = 0;
         }
 
         if (valid_pool_.empty()) {
