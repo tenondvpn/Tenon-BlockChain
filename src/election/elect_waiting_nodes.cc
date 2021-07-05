@@ -197,7 +197,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         }
 
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
-        debug_info += iter->second->public_ip + ":" + std::to_string(->second->public_port) + ", ";
+        debug_info += iter->second->public_ip + ":" + std::to_string(iter->second->public_port) + ", ";
         nodes.push_back(iter->second);
     }
 

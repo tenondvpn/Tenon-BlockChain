@@ -527,7 +527,7 @@ int BftManager::InitBft(
         bft::protobuf::BftMessage& bft_msg) {
     uint32_t network_id = 0;
     if (!DispatchPool::Instance()->InitCheckTxValid(bft_msg)) {
-        DHT_ERROR("invalid bft request, gid cover or new addr cover![%s], type:[%d]",
+        DHT_ERROR("invalid bft request, gid cover or new addr cover![%s]",
                 common::Encode::HexEncode(bft_msg.gid()).c_str());
         return kBftError;
     }
