@@ -301,7 +301,7 @@ void KeyValueSync::ProcessSyncValueResponse(
         protobuf::SyncMessage& sync_msg) {
     assert(sync_msg.has_sync_value_res());
     auto& res_arr = sync_msg.sync_value_res().res();
-    SYNC_DEBUG("recv sync response from[%s:%d] key size: ",
+    SYNC_DEBUG("recv sync response from[%s:%d] key size: %u",
         header.from_ip().c_str(), header.from_port(), res_arr.size());
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
@@ -329,20 +329,23 @@ void KeyValueSync::ProcessSyncValueResponse(
 }
 
 void KeyValueSync::CheckSyncTimeout() {
-    std::lock_guard<std::mutex> guard(synced_map_mutex_);
-    for (auto iter = synced_map_.begin(); iter != synced_map_.end();) {
-        if (iter->second->sync_times >= kSyncMaxRetryTimes) {
+    {
+        std::lock_guard<std::mutex> guard(synced_map_mutex_);
+        for (auto iter = synced_map_.begin(); iter != synced_map_.end();) {
+            if (iter->second->sync_times >= kSyncMaxRetryTimes) {
+                synced_map_.erase(iter++);
+                continue;
+            }
+
+            {
+                std::lock_guard<std::mutex> tmp_guard(prio_sync_queue_[iter->second->priority].mutex);
+                prio_sync_queue_[iter->second->priority].sync_queue.push(iter->second);
+            }
+
             synced_map_.erase(iter++);
-            continue;
         }
-
-        {
-            std::lock_guard<std::mutex> tmp_guard(prio_sync_queue_[iter->second->priority].mutex);
-            prio_sync_queue_[iter->second->priority].sync_queue.push(iter->second);
-        }
-        ++iter;
     }
-
+    
     sync_timeout_tick_.CutOff(
             kTimeoutCheckPeriod,
             std::bind(&KeyValueSync::CheckSyncTimeout, this));
