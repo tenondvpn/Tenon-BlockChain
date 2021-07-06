@@ -229,18 +229,18 @@ void TimeBlockManager::CreateTimeBlockTx() {
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
                     network::Route::Instance()->SendToLocal(msg);
-//                     std::cout << "send time transaction: "
-//                         << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
-//                         << ", id: "
-//                         << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-//                         << ", id from prikey: "
-//                         << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
-//                             security::Schnorr::Instance()->str_prikey()))
-//                         << ", network id: " << common::GlobalInfo::Instance()->network_id()
-//                         << ", now_tm_sec: " << now_tm_sec
-//                         << ", latest_time_block_tm_: " << latest_time_block_tm_
-//                         << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
-//                         << std::end 
+                    std::cout << "send time transaction: "
+                        << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
+                        << ", id: "
+                        << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+                        << ", id from prikey: "
+                        << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
+                            security::Schnorr::Instance()->str_prikey()))
+                        << ", network id: " << common::GlobalInfo::Instance()->network_id()
+                        << ", now_tm_sec: " << now_tm_sec
+                        << ", latest_time_block_tm_: " << latest_time_block_tm_
+                        << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
+                        << std::endl;
                 }
             }
         }
