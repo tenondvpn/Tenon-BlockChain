@@ -21,6 +21,7 @@ namespace tenon {
 
 namespace elect {
 
+static const std::string kElectGidPrefix = common::Encode::HexDecode("fc04c804d4049808ae33755fe9ae5acd50248f249a3ca8aea74fbea679274a11");
 ElectPoolManager::ElectPoolManager() {}
 
 ElectPoolManager::~ElectPoolManager() {}
@@ -34,8 +35,10 @@ int ElectPoolManager::CreateElectTransaction(
     for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
         if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
             tx_info.set_gid(common::Hash::Hash256(
-                std::to_string(shard_netid) +
-                std::string("root_fn") +
+                kElectGidPrefix +
+                std::to_string(elect::ElectManager::Instance()->latest_height(
+                    common::GlobalInfo::Instance()->network_id())) +
+                "_" +
                 src_tx_info.attr(i).value()));
         }
 

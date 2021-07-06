@@ -19,6 +19,8 @@ namespace tenon {
 
 namespace block {
 
+static const std::string kPoolGidPrefixStr = common::Encode::HexDecode("cdcd41af3b1af1f402107969536664d3e249075843f635961041592ce83823b9");
+
 AccountManager* AccountManager::Instance() {
     static AccountManager ins;
     return &ins;
@@ -166,7 +168,12 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
             continue;
         }
 
-        tx_info.set_gid(common::Hash::Hash256(std::to_string(tmblock_tm) + std::to_string(i)));
+        tx_info.set_gid(common::Hash::Hash256(
+            kPoolGidPrefixStr +
+            std::to_string(elect::ElectManager::Instance()->latest_height(
+                common::GlobalInfo::Instance()->network_id())) +
+            std::to_string(tmblock_tm) + "_" +
+            std::to_string(i)));
         BLOCK_DEBUG("common::kConsensusStatistic set gid: %s",
             common::Encode::HexEncode(tx_info.gid()).c_str());
         tx_info.set_gas_limit(0llu);

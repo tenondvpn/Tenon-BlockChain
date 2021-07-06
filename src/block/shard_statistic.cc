@@ -1,9 +1,10 @@
 #include "block/shard_statistic.h"
 
+#include "common/global_info.h"
+#include "common/encode.h"
 #include "bft/bft_utils.h"
 #include "bft/dispatch_pool.h"
 #include "block/account_manager.h"
-#include "common/global_info.h"
 #include "election/elect_manager.h"
 #include "timeblock/time_block_manager.h"
 #include "timeblock/time_block_utils.h"
@@ -12,6 +13,8 @@
 namespace tenon {
 
 namespace block {
+
+static const std::string kShardFinalStaticPrefix = common::Encode::HexDecode("027a252b30589b8ed984cf437c475b069d0597fc6d51ec6570e95a681ffa9fe7");
 
 ShardStatistic* ShardStatistic::Instance() {
     static ShardStatistic ins;
@@ -164,9 +167,11 @@ void ShardStatistic::CreateStatisticTransaction() {
             return;
         }
 
-        tx_info.set_gid(std::string("ft") +
-            common::Hash::Hash256(
+        tx_info.set_gid(common::Hash::Hash256(
+            kShardFinalStaticPrefix +
+            std::to_string(elect::ElectManager::Instance()->latest_height(common::GlobalInfo::Instance()->network_id())) +
             std::to_string(tmblock::TimeBlockManager::Instance()->LatestTimestamp())) +
+            "_" +
             std::to_string(pool_idx));
         BLOCK_DEBUG("create new final statistic time stamp: %lu",
             tmblock::TimeBlockManager::Instance()->LatestTimestamp());
