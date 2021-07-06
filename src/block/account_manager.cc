@@ -14,6 +14,7 @@
 #include "block/shard_statistic.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -134,6 +135,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
         }
 
         elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, false);
+        vss::VssManager::Instance()->OnElectBlock(height);
     }
 
     return kBlockSuccess;

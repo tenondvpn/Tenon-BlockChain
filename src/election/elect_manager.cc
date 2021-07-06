@@ -305,8 +305,6 @@ void ElectManager::ProcessNewElectBlock(
             net_heights_iter->second = height;
         }
     }
-
-    vss::VssManager::Instance()->OnElectBlock(height);
 }
 
 int ElectManager::BackupCheckElectionBlockTx(

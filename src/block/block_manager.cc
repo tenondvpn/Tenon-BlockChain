@@ -23,6 +23,7 @@
 #include "election/elect_manager.h"
 #include "init/update_vpn_init.h"
 #include "timeblock/time_block_manager.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -217,6 +218,7 @@ int BlockManager::InitRootElectBlocks() {
         latest_elect_block_height,
         elect_block,
         false);
+    vss::VssManager::Instance()->OnElectBlock(latest_elect_block_height);
     return kBlockSuccess;
 }
 
