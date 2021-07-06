@@ -200,7 +200,10 @@ uint64_t KeyValueSync::SendSyncRequest(
     SyncProto::CreateSyncValueReqeust(dht->local_node(), node, sync_msg, msg);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             node->public_ip(), node->local_port + 1, 0, msg);
-    SYNC_ERROR("sent sync request [%s:%d]", node->public_ip().c_str(), node->public_port);
+    SYNC_DEBUG("sent sync request [%s:%d], key size: %d",
+        node->public_ip().c_str(),
+        node->public_port,
+        sync_msg.sync_value_req().keys_size());
     return node->id_hash;
 }
 
@@ -232,6 +235,7 @@ void KeyValueSync::ProcessSyncValueRequest(
                 sync_msg.sync_value_req().network_id());
         return;
     }
+
     protobuf::SyncMessage res_sync_msg;
     auto sync_res = res_sync_msg.mutable_sync_value_res();
     uint32_t add_size = 0;
@@ -262,7 +266,11 @@ void KeyValueSync::ProcessSyncValueRequest(
     } else {
         dht->transport()->Send(header.from_ip(), header.from_port(), 0, msg);
     }
-    SYNC_ERROR("send sync request ");
+
+    SYNC_DEBUG("send sync responce to: %s:%d, key size: %d",
+        header.from_ip().c_str(),
+        header.from_port(),
+        res_sync_msg.sync_value_res().res_size());
 }
 
 int KeyValueSync::HandleExistsBlock(const std::string& key) {
@@ -293,6 +301,8 @@ void KeyValueSync::ProcessSyncValueResponse(
         protobuf::SyncMessage& sync_msg) {
     assert(sync_msg.has_sync_value_res());
     auto& res_arr = sync_msg.sync_value_res().res();
+    SYNC_DEBUG("recv sync response from[%s:%d] key size: ",
+        header.from_ip().c_str(), header.from_port(), res_arr.size());
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();

@@ -113,7 +113,6 @@ inline static bool WaitingNodeCountCompare(
     return left->added_nodes.size() > right->added_nodes.size();
 }
 
-
 };  // namespace elect
 
 };  // namespace tenon

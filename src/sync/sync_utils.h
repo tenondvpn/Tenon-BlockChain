@@ -37,6 +37,8 @@ static const uint32_t kSyncTickPeriod = 5u * 100u * 1000u;
 static const uint32_t kSyncPacketMaxSize = 5u * 1024u;  // 5k for test(later rudp to 1M)
 static const uint32_t kSyncMaxKeyCount = 1024u;
 static const uint32_t kSyncMaxRetryTimes = 3u;  // fail retry 3 times
+static const uint32_t kPoolHeightPairCount = 2u * (common::kImmutablePoolSize + 1u);
+static const uint32_t kEachMerkleTreeMaxByteSize = 1024u * 1024u;  // each merkle block 1M
 
 }  // namespace sync
 
