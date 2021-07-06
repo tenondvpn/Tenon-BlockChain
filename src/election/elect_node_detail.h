@@ -110,7 +110,7 @@ inline static bool ElectNodeBalanceDiffCompare(
 inline static bool WaitingNodeCountCompare(
         const WaitingListPtr& left,
         const WaitingListPtr& right) {
-    return left->added_nodes.size() < right->added_nodes.size();
+    return left->added_nodes.size() > right->added_nodes.size();
 }
 
 

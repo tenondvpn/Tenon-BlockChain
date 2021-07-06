@@ -95,6 +95,7 @@ void ElectWaitingNodes::GetAllValidNodes(
             waiting_nodes.push_back(iter->second);
         }
     }
+
     if (waiting_nodes.empty()) {
         return;
     }
