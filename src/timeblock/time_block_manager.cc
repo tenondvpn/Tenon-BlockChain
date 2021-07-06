@@ -253,6 +253,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = -1;
     if (ThisNodeIsLeader(&pool_mod_num)) {
+        std::cout << "is leader valid pool_mod_num: " << pool_mod_num << std::endl;
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 

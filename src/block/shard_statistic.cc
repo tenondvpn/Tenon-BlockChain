@@ -22,12 +22,16 @@ void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
     BLOCK_ERROR("AddShardPoolStatistic block_item->pool_index(): %d", block_item->pool_index());
     if (block_item->tx_list_size() != 1) {
+        BLOCK_ERROR("block_item->tx_list_size() != 1: %d", block_item->tx_list_size());
         return;
     }
 
     if (!network::IsSameShardOrSameWaitingPool(
             common::GlobalInfo::Instance()->network_id(),
             block_item->network_id())) {
+        BLOCK_ERROR("network invalid local: %d, block: %d",
+            common::GlobalInfo::Instance()->network_id(),
+            block_item->network_id());
         return;
     }
 
@@ -35,6 +39,9 @@ void ShardStatistic::AddShardPoolStatistic(
     {
         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
         if (block_item->timeblock_height() < latest_tm_height_) {
+            BLOCK_ERROR("block_item->timeblock_height() < latest_tm_height_[%lu][%lu]",
+                block_item->timeblock_height(),
+                latest_tm_height_);
             return;
         }
 
@@ -54,6 +61,7 @@ void ShardStatistic::AddShardPoolStatistic(
         }
 
         if (valid_pool_.empty()) {
+            BLOCK_ERROR("valid_pool_.empty()");
             return;
         }
 
@@ -66,6 +74,8 @@ void ShardStatistic::AddShardPoolStatistic(
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
                     if (statistic_info.elect_height() < latest_elect_height_) {
+                        BLOCK_ERROR("statistic_info.elect_height() < latest_elect_height_[%lu][%lu]",
+                            statistic_info.elect_height(), latest_elect_height_);
                         return;
                     }
 
