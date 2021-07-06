@@ -8,6 +8,7 @@
 #include "block/account_manager.h"
 #include "block/proto/block.pb.h"
 #include "election/elect_manager.h"
+#include "election/elect_utils.h"
 #include "network/network_utils.h"
 #include "sync/key_value_sync.h"
 #include "security/secp256k1.h"
@@ -316,35 +317,41 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
         return kBftTxNotExists;
     }
 
-    if (local_tx_info->tx.amount() != tx_info.amount()) {
+    auto local_mutable_tx = local_tx_info->tx;
+    if (elect::ElectManager::Instance()->GetElectionTxInfo(local_mutable_tx) != elect::kElectSuccess) {
+        BFT_ERROR("elect::ElectManager::Instance()->GetElectionTxInfo error.");
+        return kBftError;
+    }
+
+    if (local_mutable_tx.amount() != tx_info.amount()) {
         BFT_ERROR("local amount is not equal leader amount.");
         return kBftError;
     }
 
-    if (local_tx_info->tx.to() != tx_info.to()) {
+    if (local_mutable_tx.to() != tx_info.to()) {
         BFT_ERROR("local to is not equal leader to.");
         return kBftError;
     }
 
-    if (local_tx_info->tx.gas_limit() != tx_info.gas_limit()) {
+    if (local_mutable_tx.gas_limit() != tx_info.gas_limit()) {
         BFT_ERROR("local gas_limit is not equal leader gas_limit.");
         return kBftError;
     }
 
-    if (local_tx_info->tx.balance() != tx_info.balance()) {
+    if (local_mutable_tx.balance() != tx_info.balance()) {
         BFT_ERROR("local balance is not equal leader balance.");
         return kBftError;
     }
 
-    if (local_tx_info->tx.type() != tx_info.type() ||
+    if (local_mutable_tx.type() != tx_info.type() ||
             tx_info.type() != common::kConsensusRootElectShard) {
         BFT_ERROR("local tx type[%d] not eq to leader[%d].",
-            local_tx_info->tx.type(), tx_info.type());
+            local_mutable_tx.type(), tx_info.type());
         return kBftError;
     }
 
     if (elect::ElectManager::Instance()->BackupCheckElectionBlockTx(
-            local_tx_info->tx,
+            local_mutable_tx,
             tx_info) != elect::kElectSuccess) {
         return kBftError;
     }
@@ -1952,14 +1959,13 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
 
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     protobuf::TxInfo tx = tx_vec[0]->tx;
-    tx.set_version(common::kTransactionVersion);
-    tx.set_amount(0);
-    tx.set_gas_limit(0);
-    tx.set_gas_used(0);
-    tx.set_balance(0);
-    tx.set_status(kBftSuccess);
-    // create address must to and have transfer amount
     if (tx.type() != common::kConsensusRootElectShard) {
+        assert(false);
+        return;
+    }
+
+    // use new node status
+    if (elect::ElectManager::Instance()->GetElectionTxInfo(tx) != elect::kElectSuccess) {
         assert(false);
         return;
     }

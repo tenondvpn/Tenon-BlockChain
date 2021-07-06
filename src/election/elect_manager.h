@@ -39,6 +39,7 @@ public:
         const bft::protobuf::TxInfo& local_tx_info,
         const bft::protobuf::TxInfo& tx_info);
     void OnTimeBlock(uint64_t tm_block_tm);
+    int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
 
     // get member
     int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);

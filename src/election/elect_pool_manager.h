@@ -32,6 +32,7 @@ public:
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info);
     void OnTimeBlock(uint64_t tm_block_tm);
+    int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
 
 private:
     int GetAllTxInfoBloomFiler(

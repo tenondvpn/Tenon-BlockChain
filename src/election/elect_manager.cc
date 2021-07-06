@@ -328,6 +328,10 @@ int ElectManager::CreateElectTransaction(
     return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
 }
 
+int ElectManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
+    return pool_manager_.GetElectionTxInfo(tx_info);
+}
+
 uint64_t ElectManager::latest_height(uint32_t network_id) {
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
     auto net_heights_iter = elect_net_heights_map_.find(network_id);
