@@ -229,18 +229,6 @@ void TimeBlockManager::CreateTimeBlockTx() {
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
                     network::Route::Instance()->SendToLocal(msg);
-                    std::cout << "send time transaction: "
-                        << common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey())
-                        << ", id: "
-                        << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-                        << ", id from prikey: "
-                        << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPrivateKey(
-                            security::Schnorr::Instance()->str_prikey()))
-                        << ", network id: " << common::GlobalInfo::Instance()->network_id()
-                        << ", now_tm_sec: " << now_tm_sec
-                        << ", latest_time_block_tm_: " << latest_time_block_tm_
-                        << ", kTimeBlockCreatePeriodSeconds: " << common::kTimeBlockCreatePeriodSeconds
-                        << std::endl;
                 }
             }
         }
@@ -254,7 +242,6 @@ void TimeBlockManager::CreateTimeBlockTx() {
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = -1;
     if (ThisNodeIsLeader(&pool_mod_num)) {
-        std::cout << "is leader valid pool_mod_num: " << pool_mod_num << std::endl;
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 
