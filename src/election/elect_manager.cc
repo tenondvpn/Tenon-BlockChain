@@ -246,8 +246,6 @@ void ElectManager::ProcessNewElectBlock(
     {
         local_node_is_super_leader_ = false;
         Members tmp_leaders;
-        uint32_t leader_count = GetNetworkLeaderCount(
-            common::GlobalInfo::Instance()->network_id());
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
@@ -260,6 +258,7 @@ void ElectManager::ProcessNewElectBlock(
                     (*iter)->pool_index_mod_num);
                 std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: " << common::Encode::HexEncode((*iter)->id)
                     << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                    << ", leader count: " << elect_block.leader_count()
                     << std::endl;
             }
         }
