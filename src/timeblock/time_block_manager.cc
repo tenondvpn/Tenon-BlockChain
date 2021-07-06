@@ -4,6 +4,7 @@
 
 #include "bft/bft_utils.h"
 #include "bft/bft_manager.h"
+#include "bft/gid_manager.h"
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
 #include "dht/dht_key.h"
@@ -46,6 +47,7 @@ TimeBlockManager::TimeBlockManager() {
 TimeBlockManager::~TimeBlockManager() {}
 
 int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) {
+    auto gid = common::Hash::Hash256(std::to_string(latest_time_block_tm_));
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
     dht::DhtKeyManager dht_key(des_net_id, 0);
     msg->set_src_dht_key(dht_key.StrKey());
@@ -67,13 +69,17 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(common::kRootChainSingleBlockTxAddress);
-    tx_info->set_gid(common::Hash::Hash256(std::to_string(latest_time_block_tm_)));
+    tx_info->set_gid(gid);
     BFT_ERROR("LeaderCreateTimeBlockTx %lu latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
         (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
 
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
+    if (!bft::GidManager::Instance()->NewGidTxValid(gid, *tx_info)) {
+        return kTimeBlockError;
+    }
+
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
     all_exits_attr->set_value(std::to_string(new_time_block_tm));
