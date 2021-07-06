@@ -176,12 +176,6 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
-        if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
-            *new_time_block_tm += kTimeBlockMaxOffsetSeconds;
-        } else {
-            *new_time_block_tm += now_tm - *new_time_block_tm;
-        }
-
         return true;
     }
 
@@ -191,8 +185,7 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     uint64_t backup_latest_time_block_tm = latest_time_block_tm_;
     backup_latest_time_block_tm += common::kTimeBlockCreatePeriodSeconds;
-    if (new_time_block_tm < (backup_latest_time_block_tm + kTimeBlockTolerateSeconds) &&
-            new_time_block_tm > (backup_latest_time_block_tm - kTimeBlockTolerateSeconds)) {
+    if (new_time_block_tm == backup_latest_time_block_tm)) {
         return true;
     }
 
@@ -223,7 +216,9 @@ void TimeBlockManager::CreateTimeBlockTx() {
     if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             int32_t pool_mod_num = -1;
-            if (ThisNodeIsLeader(&pool_mod_num) && pool_mod_num == 0) {
+            if (elect::ElectManager::Instance()->IsSuperLeader(
+                    common::GlobalInfo::Instance()->network_id(),
+                    common::GlobalInfo::Instance()->id())) {
                 transport::protobuf::Header msg;
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
