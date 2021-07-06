@@ -185,7 +185,7 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     uint64_t backup_latest_time_block_tm = latest_time_block_tm_;
     backup_latest_time_block_tm += common::kTimeBlockCreatePeriodSeconds;
-    if (new_time_block_tm == backup_latest_time_block_tm)) {
+    if (new_time_block_tm == backup_latest_time_block_tm) {
         return true;
     }
 
