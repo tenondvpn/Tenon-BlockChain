@@ -27,6 +27,7 @@ public:
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
     void GetAllValidHeartbeatNodes(
+        bool no_delay,
         uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);

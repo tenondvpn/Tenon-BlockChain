@@ -48,7 +48,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         kBloomfilterWaitingSize,
         kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> local_all_waiting_nodes;
-    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
+    GetAllValidHeartbeatNodes(true, 0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
     std::sort(
         local_all_waiting_nodes.begin(),
         local_all_waiting_nodes.end(),
@@ -139,6 +139,7 @@ void ElectWaitingNodes::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
 }
 
 void ElectWaitingNodes::GetAllValidHeartbeatNodes(
+        bool no_delay,
         uint64_t time_offset_milli,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
@@ -153,56 +154,54 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     std::vector<NodeDetailPtr> choosed_nodes;
     std::unordered_set<std::string> added_node_ids;
     std::unordered_set<std::string> added_node_ip;  // same ip just one node
-    std::string debug_info = "valid heartbeat nodes: ";
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
-        if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
+        if (!no_delay) {
+            if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
                 waiting_shard_id_ - network::kConsensusWaitingShardOffset,
                 iter->first)) {
-            continue;
-        }
-
-        // for fts poise
-        if (time_offset_milli * 1000 > kElectAvailableJoinTime) {
-            time_offset_milli = kElectAvailableJoinTime / 1000;
-        }
-
-        auto valid_join_time = iter->second->join_tm +
-            std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
-        if (valid_join_time > now_tm) {
-            continue;
-        }
-
-        uint32_t succ_hb_count = 0;
-        uint32_t fail_hb_count = 0;
-        std::lock_guard<std::mutex> guard(iter->second->heartbeat_mutex);
-        for (auto hb_iter = iter->second->heatbeat_succ_count.begin();
-                hb_iter != iter->second->heatbeat_succ_count.end();) {
-            if (hb_iter->first < now_hb_tm) {
-                iter->second->heatbeat_succ_count.erase(hb_iter++);
-            } else {
-                succ_hb_count += hb_iter->second;
+                continue;
             }
-        }
 
-        for (auto hb_iter = iter->second->heatbeat_fail_count.begin();
-            hb_iter != iter->second->heatbeat_fail_count.end();) {
-            if (hb_iter->first < now_hb_tm) {
-                iter->second->heatbeat_fail_count.erase(hb_iter++);
-            } else {
-                fail_hb_count += hb_iter->second;
+            // for fts poise
+            if (time_offset_milli * 1000 > kElectAvailableJoinTime) {
+                time_offset_milli = kElectAvailableJoinTime / 1000;
             }
-        }
 
-        if (succ_hb_count < 2 * fail_hb_count) {
-            continue;
+            auto valid_join_time = iter->second->join_tm +
+                std::chrono::microseconds(kElectAvailableJoinTime - time_offset_milli * 1000);
+            if (valid_join_time > now_tm) {
+                continue;
+            }
+
+            uint32_t succ_hb_count = 0;
+            uint32_t fail_hb_count = 0;
+            std::lock_guard<std::mutex> guard(iter->second->heartbeat_mutex);
+            for (auto hb_iter = iter->second->heatbeat_succ_count.begin();
+                    hb_iter != iter->second->heatbeat_succ_count.end();) {
+                if (hb_iter->first < now_hb_tm) {
+                    iter->second->heatbeat_succ_count.erase(hb_iter++);
+                } else {
+                    succ_hb_count += hb_iter->second;
+                }
+            }
+
+            for (auto hb_iter = iter->second->heatbeat_fail_count.begin();
+                hb_iter != iter->second->heatbeat_fail_count.end();) {
+                if (hb_iter->first < now_hb_tm) {
+                    iter->second->heatbeat_fail_count.erase(hb_iter++);
+                } else {
+                    fail_hb_count += hb_iter->second;
+                }
+            }
+
+            if (succ_hb_count < 2 * fail_hb_count) {
+                continue;
+            }
         }
 
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
-        debug_info += iter->second->public_ip + ":" + std::to_string(iter->second->public_port) + ", ";
         nodes.push_back(iter->second);
     }
-
-    ELECT_DEBUG("%s", debug_info.c_str());
 }
 
 void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
@@ -230,7 +229,7 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
         kBloomfilterWaitingSize,
         kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> local_all_waiting_nodes;
-    GetAllValidHeartbeatNodes(0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
+    GetAllValidHeartbeatNodes(false, 0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
     if (!local_all_waiting_nodes.empty()) {
         transport::protobuf::Header msg;
         elect::ElectProto::CreateElectWaitingNodes(
