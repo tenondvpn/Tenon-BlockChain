@@ -223,7 +223,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
     if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             int32_t pool_mod_num = -1;
-            if (ThisNodeIsLeader(&pool_mod_num)) {
+            if (ThisNodeIsLeader(&pool_mod_num) && pool_mod_num == 0) {
                 transport::protobuf::Header msg;
                 if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                     network::Route::Instance()->Send(msg);
