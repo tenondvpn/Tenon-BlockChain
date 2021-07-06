@@ -184,12 +184,10 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
-    {
-        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+    std::lock_guard<std::mutex> guard(elect_members_mutex_);
         if (elect_members_.find(height) != elect_members_.end()) {
             return;
         }
-    }
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -293,21 +291,18 @@ void ElectManager::ProcessNewElectBlock(
         valid_shard_networks_.insert(elect_block.shard_network_id());
     }
 
-    {
-        std::lock_guard<std::mutex> guard(elect_members_mutex_);
-        if (elect_members_.find(height) != elect_members_.end()) {
-            return;
-        }
+    if (elect_members_.find(height) != elect_members_.end()) {
+        return;
+    }
 
-        elect_members_[height] = member_ptr;
-        auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
-        if (net_heights_iter == elect_net_heights_map_.end()) {
-            elect_net_heights_map_[elect_block.shard_network_id()] = height;
-        }
-        else {
-            if (height > net_heights_iter->second) {
-                net_heights_iter->second = height;
-            }
+    elect_members_[height] = member_ptr;
+    auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
+    if (net_heights_iter == elect_net_heights_map_.end()) {
+        elect_net_heights_map_[elect_block.shard_network_id()] = height;
+    }
+    else {
+        if (height > net_heights_iter->second) {
+            net_heights_iter->second = height;
         }
     }
 
