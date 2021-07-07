@@ -283,7 +283,6 @@ void TimeBlockManager::BroadcastTimeBlock() {
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
     }
-
 }
 
 void TimeBlockManager::CreateTmBroadcastMessage(
@@ -298,10 +297,7 @@ void TimeBlockManager::CreateTmBroadcastMessage(
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
-    std::string hash_str = std::to_string(random_hash) + "_" +
-        std::to_string(tm_height) + "_" +
-        std::to_string(elect_height) + "_" +
-        common::GlobalInfo::Instance()->id();
+    std::string hash_str;
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;
     bool sign_res = security::Schnorr::Instance()->Sign(
@@ -317,12 +313,8 @@ void TimeBlockManager::CreateTmBroadcastMessage(
     std::string sign_challenge_str;
     std::string sign_response_str;
     sign.Serialize(sign_challenge_str, sign_response_str);
-    vss_msg.set_sign_ch(sign_challenge_str);
-    vss_msg.set_sign_res(sign_response_str);
-    vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
-    msg.set_data(vss_msg.SerializeAsString());
+//     msg.set_data(vss_msg.SerializeAsString());
 }
 }  // namespace tmblock
 
