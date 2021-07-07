@@ -827,7 +827,7 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    BLOCK_ERROR("2222 SetPool: %d, height: %lu, hash: %s, tm height: %lu",
+    BLOCK_DEBUG("2222 SetPool: %d, height: %lu, hash: %s, tm height: %lu",
         pool_index,
         block_item->height(),
         common::Encode::HexEncode(block_item->hash()).c_str(),

@@ -182,10 +182,23 @@ void TimeBlockManager::UpdateTimeBlock(
 }
 
 bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
+//     auto now_tm = common::TimeUtils::TimestampSeconds();
+//     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
+//         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
+//         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
+//         return true;
+//     }
+
     auto now_tm = common::TimeUtils::TimestampSeconds();
+    std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-        std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
+        if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
+            *new_time_block_tm += kTimeBlockMaxOffsetSeconds;
+        } else {
+            *new_time_block_tm += now_tm - *new_time_block_tm;
+        }
+
         return true;
     }
 
@@ -254,6 +267,63 @@ void TimeBlockManager::CheckBft() {
         std::bind(&TimeBlockManager::CheckBft, this));
 }
 
+void TimeBlockManager::BroadcastTimeBlock() {
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        TMBLOCK_ERROR("not join network[%u]", common::GlobalInfo::Instance()->network_id());
+        return;
+    }
+
+    CreateTmBroadcastMessage(
+        dht->local_node(),
+        msg);
+    if (msg.has_data()) {
+        network::Route::Instance()->Send(msg);
+        network::Route::Instance()->SendToLocal(msg);
+    }
+
+}
+
+void TimeBlockManager::CreateTmBroadcastMessage(
+        const dht::NodePtr& local_node,
+        transport::protobuf::Header& msg) {
+    msg.set_src_dht_key(local_node->dht_key());
+    dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_priority(transport::kTransportPriorityHigh);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kTtimeBlockMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_universal(false);
+    msg.set_hop_count(0);
+    std::string hash_str = std::to_string(random_hash) + "_" +
+        std::to_string(tm_height) + "_" +
+        std::to_string(elect_height) + "_" +
+        common::GlobalInfo::Instance()->id();
+    auto message_hash = common::Hash::keccak256(hash_str);
+    security::Signature sign;
+    bool sign_res = security::Schnorr::Instance()->Sign(
+        message_hash,
+        *(security::Schnorr::Instance()->prikey()),
+        *(security::Schnorr::Instance()->pubkey()),
+        sign);
+    if (!sign_res) {
+        VSS_ERROR("signature error.");
+        return;
+    }
+
+    std::string sign_challenge_str;
+    std::string sign_response_str;
+    sign.Serialize(sign_challenge_str, sign_response_str);
+    vss_msg.set_sign_ch(sign_challenge_str);
+    vss_msg.set_sign_res(sign_response_str);
+    vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    auto broad_param = msg.mutable_broadcast();
+    SetDefaultBroadcastParam(broad_param);
+    msg.set_data(vss_msg.SerializeAsString());
+}
 }  // namespace tmblock
 
 }  // namespace tenon

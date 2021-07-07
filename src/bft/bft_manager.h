@@ -23,7 +23,6 @@ public:
     int StartBft(const std::string& gid, int32_t pool_mod_index);
     int AddBft(BftInterfacePtr& bft_ptr);
     BftInterfacePtr GetBft(const std::string& gid);
-    void RemoveBft(const std::string& gid);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
@@ -35,6 +34,7 @@ private:
     int InitBft(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
+    void RemoveBft(const std::string& gid, bool remove_tx);
     int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx);
     int BackupPrepare(
         BftInterfacePtr& bft_ptr,

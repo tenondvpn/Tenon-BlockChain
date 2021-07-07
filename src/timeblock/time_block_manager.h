@@ -4,11 +4,12 @@
 #include <mutex>
 #include <deque>
 
+#include "bft/proto/bft.pb.h"
 #include "common/utils.h"
 #include "common/time_utils.h"
 #include "common/tick.h"
+#include "dht/dht_utils.h"
 #include "transport/proto/transport.pb.h"
-#include "bft/proto/bft.pb.h"
 
 namespace tenon {
 
@@ -35,6 +36,10 @@ private:
     void CreateTimeBlockTx();
     bool ThisNodeIsLeader(int32_t* pool_mod_num);
     void CheckBft();
+    void BroadcastTimeBlock();
+    void CreateTmBroadcastMessage(
+        const dht::NodePtr& local_node,
+        transport::protobuf::Header& msg);
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
@@ -42,6 +47,7 @@ private:
     std::mutex latest_time_blocks_mutex_;
     common::Tick create_tm_block_tick_;
     common::Tick check_bft_tick_;
+    common::Tick broadcast_tm_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(TimeBlockManager);
 };
