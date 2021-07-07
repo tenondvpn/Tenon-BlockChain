@@ -368,7 +368,7 @@ void TxPoolManager::GetTx(
     }
 
     tx_pool_[valid_pool].GetTx(res_vec);
-    BFT_ERROR("pool index: %d get tx size: %u", valid_pool, res_vec.size());
+    BFT_DEBUG("pool index: %d get tx size: %u", valid_pool, res_vec.size());
     if (res_vec.empty()) {
         waiting_pools_.UnSet(valid_pool);
         return;
@@ -413,7 +413,7 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
                 waiting_pools_.UnSet(bft_ptr->pool_index());
             }
 
-            BFT_ERROR("bft over pool index: %d", bft_ptr->pool_index());
+            BFT_DEBUG("bft over pool index: %d", bft_ptr->pool_index());
         }
     }
 }

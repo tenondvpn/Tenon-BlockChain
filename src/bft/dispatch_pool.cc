@@ -32,15 +32,6 @@ int DispatchPool::Dispatch(const bft::protobuf::BftMessage& bft_msg, const std::
 }
 
 int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
-    BFT_ERROR("Dispatch tx [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d not has tx[%s]to[%s][%s]!",
-        tx_info.to_add(),
-        0,
-        tx_info.type(),
-        tx_info.call_contract_step(),
-        common::Encode::HexEncode(tx_info.from()).c_str(),
-        common::Encode::HexEncode(tx_info.to()).c_str(),
-        common::Encode::HexEncode(tx_info.gid()).c_str());
     auto tx_ptr = std::make_shared<TxItem>(tx_info);
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
         BFT_ERROR("global check gid exists: %s",

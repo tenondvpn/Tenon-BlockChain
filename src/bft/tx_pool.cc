@@ -72,7 +72,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
-    BFT_ERROR("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
+    BFT_DEBUG("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
         "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s]!",
         tx_index,
         tx_ptr->tx.to_add(),
@@ -110,7 +110,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
 
                 res_vec.push_back(iter->second);
-                BFT_ERROR("get tx [to: %d] [pool idx: %d] type: %d,"
+                BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
                     iter->second->tx.to_add(),
                     pool_index_,
@@ -133,7 +133,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
         }
     }
 
-    BFT_ERROR("get tx size[%u]", res_vec.size());
+    BFT_DEBUG("get tx size[%u]", res_vec.size());
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }

@@ -61,7 +61,7 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    BFT_ERROR("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_msg.gid()).c_str(), bft_msg.bft_step());
+    BFT_DEBUG("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_msg.gid()).c_str(), bft_msg.bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
@@ -261,7 +261,7 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
-        BFT_ERROR("IsRootSingleBlockTx(tx_list[0].type()): %d", tx_list[0].type());
+        BFT_DEBUG("IsRootSingleBlockTx(tx_list[0].type()): %d", tx_list[0].type());
         db::DbWriteBach db_batch;
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
         if (block::BlockManager::Instance()->AddNewBlock(
@@ -785,6 +785,7 @@ int BftManager::LeaderPrecommit(
         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose");
         RemoveBft(bft_ptr->gid());
         BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
+        delete &res;
     } else {
         BFT_DEBUG("LeaderPrecommit waiting");
         // continue waiting, do nothing.

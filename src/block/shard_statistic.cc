@@ -23,7 +23,7 @@ ShardStatistic* ShardStatistic::Instance() {
 
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
-    BLOCK_ERROR("AddShardPoolStatistic block_item->pool_index(): %d", block_item->pool_index());
+    BLOCK_DEBUG("AddShardPoolStatistic block_item->pool_index(): %d", block_item->pool_index());
     if (block_item->tx_list_size() != 1) {
         BLOCK_ERROR("block_item->tx_list_size() != 1: %d", block_item->tx_list_size());
         return;
@@ -123,7 +123,7 @@ void ShardStatistic::AddShardPoolStatistic(
         tmp_str += std::to_string(*iter) + " ";
     }
 
-    BLOCK_ERROR("valid_pool_ size: %d, pools: %s", valid_pool_.size(), tmp_str.c_str());
+    BLOCK_DEBUG("valid_pool_ size: %d, pools: %s", valid_pool_.size(), tmp_str.c_str());
     if (dispatch_tx) {
         CreateStatisticTransaction();
     }
