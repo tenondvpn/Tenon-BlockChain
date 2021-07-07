@@ -439,6 +439,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     uint64_t min_balance = 0;
     uint64_t max_balance = 0;
     consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
+    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
+        (*iter)->pool_index_mod_num = -1;
+    }
+
     uint32_t weed_out_count = exists_shard_nodes.size() * kFtsWeedoutDividRate / 100;
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
@@ -456,6 +460,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     if (waiting_pool_ptr != nullptr) {
         waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
         if (!pick_all_vec.empty()) {
+            for (auto iter = pick_all_vec.begin(); iter != pick_all_vec.end(); ++iter) {
+                (*iter)->pool_index_mod_num = -1;
+            }
+
             if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
                 // TODO: statistic to add new consensus shard
             }
