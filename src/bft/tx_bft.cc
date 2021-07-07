@@ -136,6 +136,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
     SetBlock(block_ptr);
     bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
+    BFT_DEBUG("new block hash: %s, prehash: %s.",
+        common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),
+        common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
     return kBftSuccess;
 }
 
@@ -1646,6 +1649,10 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
                 block_info.prehash(),
                 sync::kSyncHighest);
         if (res != sync::kSyncBlockReloaded) {
+            BFT_ERROR("000 hash block missing pool[%d] now[%s], prev[%s]",
+                pool_index(),
+                common::Encode::HexEncode(pool_hash).c_str(),
+                common::Encode::HexEncode(block_info.prehash()).c_str());
             return kBftBlockPreHashError;
         }
 
@@ -1661,7 +1668,7 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
         }
 
         if (pool_hash != block_info.prehash()) {
-            BFT_ERROR("hash block missing pool[%d] now[%s], prev[%s]",
+            BFT_ERROR("111 hash block missing pool[%d] now[%s], prev[%s]",
                     pool_index(),
                     common::Encode::HexEncode(pool_hash).c_str(),
                     common::Encode::HexEncode(block_info.prehash()).c_str());
