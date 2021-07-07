@@ -20,12 +20,12 @@ public:
     TxBft();
     virtual ~TxBft();
     virtual int Init(bool leader);
-    virtual int Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare);
+    virtual int Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare);
     virtual int PreCommit(bool leader, std::string& pre_commit);
     virtual int Commit(bool leader, std::string& commit);
 
 private:
-    int LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str);
+    int LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str);
     int BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg);
     int LeaderCreatePreCommit(std::string& bft_str);
     int LeaderCreateCommit(std::string& bft_str);

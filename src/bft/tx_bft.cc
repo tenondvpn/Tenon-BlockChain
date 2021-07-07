@@ -42,13 +42,13 @@ int TxBft::Init(bool leader) {
     return kBftSuccess;
 }
 
-int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) {
+int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare) {
     if (leader) {
         return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
     bft::protobuf::BftMessage bft_msg;
-    if (!bft_msg.ParseFromString(prepare)) {
+    if (!bft_msg.ParseFromString(*prepare)) {
         BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
         return kBftInvalidPackage;
     }
@@ -68,7 +68,7 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string& prepare) {
         }
     }
 
-    prepare = "";
+    *prepare = "";
     return kBftSuccess;
 }
 
@@ -91,7 +91,7 @@ int TxBft::Commit(bool leader, std::string& commit) {
     return kBftSuccess;
 }
 
-int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
+int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     uint32_t pool_index = 0;
     std::vector<TxItemPtr> tx_vec;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -134,7 +134,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string& bft_str) {
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
     SetBlock(block_ptr);
-    bft_str = tx_bft.SerializeAsString();
+    *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
     BFT_DEBUG("new block hash: %s, prehash: %s.",
         common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),

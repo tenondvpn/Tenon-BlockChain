@@ -575,14 +575,10 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
     bft_ptr->set_member_count(elect::ElectManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
+    std::string prepare_data;
     int leader_pre = LeaderPrepare(bft_ptr, pool_mod_index);
     if (leader_pre != kBftSuccess) {
         return leader_pre;
-    }
-
-    int res = AddBft(bft_ptr);
-    if (res != kBftSuccess) {
-        return res;
     }
 
     return kBftSuccess;
@@ -624,10 +620,11 @@ void BftManager::RemoveBft(const std::string& gid) {
     }
 }
 
+;
 int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     std::string prepare_data;
-    int res = bft_ptr->Prepare(true, pool_mod_idx, prepare_data);
-    if (res != kBftSuccess) {
+    int res = bft_ptr->Prepare(true, pool_mod_idx, &prepare_data);
+    if (res != kBftSuccess || prepare_data.empty()) {
         return res;
     }
 
@@ -657,11 +654,18 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         true,
         bft_ptr->secret(),
         common::GlobalInfo::Instance()->id());
+
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
         BFT_ERROR("this node has not joined consensus network[%u].", bft_ptr->network_id());
         return kBftError;
     }
+
+    int res = AddBft(bft_ptr);
+    if (res != kBftSuccess) {
+        return res;
+    }
+
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     BftProto::LeaderCreatePrepare(
