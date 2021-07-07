@@ -615,7 +615,12 @@ void BftManager::RemoveBft(const std::string& gid, bool remove_tx) {
         }
     }
 
-    if (bft_ptr && remove_tx) {
+    if (bft_ptr && !remove_tx) {
+        // don't remove tx
+        bft_ptr->clear_item_index_vec();
+    }
+
+    if (bft_ptr) {
         DispatchPool::Instance()->BftOver(bft_ptr);
     }
 }

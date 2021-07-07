@@ -125,6 +125,11 @@ public:
         item_index_vec_.push_back(index);
     }
 
+    void clear_item_index_vec() {
+        std::lock_guard<std::mutex> guard(item_index_vec_mutex_);
+        item_index_vec_.clear();
+    }
+
     void reset_timeout() {
         timeout_ = (std::chrono::steady_clock::now() +
                 std::chrono::microseconds(kBftTimeout));
