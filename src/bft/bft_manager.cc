@@ -661,7 +661,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
-    int res = AddBft(bft_ptr);
+    res = AddBft(bft_ptr);
     if (res != kBftSuccess) {
         return res;
     }
