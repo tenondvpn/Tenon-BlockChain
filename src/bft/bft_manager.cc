@@ -782,11 +782,11 @@ int BftManager::LeaderPrecommit(
     if (res == kBftAgree) {
         return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
-        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose");
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid());
-        BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
+        BFT_DEBUG("LeaderPrecommit oppose pool_index: %u", bft_ptr->pool_index());
     } else {
-        BFT_DEBUG("LeaderPrecommit waiting");
+        BFT_DEBUG("LeaderPrecommit waiting pool_index: %u", bft_ptr->pool_index());
         // continue waiting, do nothing.
     }
 
@@ -952,12 +952,11 @@ int BftManager::LeaderCommit(
     }  else if (res == kBftReChallenge) {
         return LeaderReChallenge(bft_ptr);
     } else if (res == kBftOppose) {
-        BFT_DEBUG("LeaderCommit RemoveBft kBftOppose");
+        BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid());
-        BFT_DEBUG("LeaderCommit oppose", bft_ptr);
     } else {
         // continue waiting, do nothing.
-        BFT_DEBUG("LeaderCommit waiting", bft_ptr);
+        BFT_DEBUG("LeaderCommit RemoveBft waiting pool_index: %u", bft_ptr->pool_index());
     }
 
     return kBftSuccess;
@@ -1023,7 +1022,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-    BFT_DEBUG("LeaderCommit");
+    BFT_DEBUG("LeaderCommit success waiting pool_index: %u", bft_ptr->pool_index());
     return kBftSuccess;
 }
 
@@ -1161,7 +1160,7 @@ int BftManager::BackupCommit(
     }
 
     bft_ptr->set_status(kBftCommited);
-    BFT_DEBUG("BackupCommit");
+    BFT_DEBUG("BackupCommit success waiting pool_index: %u", bft_ptr->pool_index());
     RemoveBft(bft_ptr->gid());
     // start new bft
     return kBftSuccess;
