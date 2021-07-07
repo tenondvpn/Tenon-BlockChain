@@ -74,81 +74,6 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
     return kElectSuccess;
-/*    common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
-    common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
-    common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
-    std::vector<NodeDetailPtr> exists_shard_nodes;
-    std::vector<NodeDetailPtr> weed_out_vec;
-    std::vector<NodeDetailPtr> pick_in_vec;
-    int32_t leader_count = 0;
-    if (GetAllBloomFilerAndNodes(
-            statistic_info,
-            shard_netid,
-            &cons_all,
-            &cons_weed_out,
-            &pick_all,
-            &pick_in,
-            exists_shard_nodes,
-            weed_out_vec,
-            pick_in_vec,
-            &leader_count) != kElectSuccess) {
-        ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
-        return kElectError;
-    }
-
-    auto all_exits_attr = tx_info.add_attr();
-    all_exits_attr->set_key(kElectNodeAttrKeyAllBloomfilter);
-    all_exits_attr->set_value(cons_all.Serialize());
-    auto weed_out_attr = tx_info.add_attr();
-    weed_out_attr->set_key(kElectNodeAttrKeyWeedoutBloomfilter);
-    weed_out_attr->set_value(cons_weed_out.Serialize());
-    auto all_pick_attr = tx_info.add_attr();
-    all_pick_attr->set_key(kElectNodeAttrKeyAllPickBloomfilter);
-    all_pick_attr->set_value(pick_all.Serialize());
-    auto pick_in_attr = tx_info.add_attr();
-    pick_in_attr->set_key(kElectNodeAttrKeyPickInBloomfilter);
-    pick_in_attr->set_value(pick_in.Serialize());
-    std::set<std::string> weed_out_id_set;
-    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-        weed_out_id_set.insert((*iter)->id);
-    }
-
-    elect::protobuf::ElectBlock ec_block;
-    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
-        if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
-            continue;
-        }
-
-        auto in = ec_block.add_in();
-        in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
-    }
-
-    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
-        auto in = ec_block.add_in();
-        in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
-    }
-
-    ec_block.set_leader_count(leader_count);
-    ec_block.set_shard_network_id(shard_netid);
-    auto ec_block_attr = tx_info.add_attr();
-    ec_block_attr->set_key(kElectNodeAttrElectBlock);
-    ec_block_attr->set_value(ec_block.SerializeAsString());
-    ELECT_DEBUG("create new election tx gid: %s, network: %d,"
-        "exists_shard_nodes: %d, weed_out_vec: %d,"
-        "pick_in_vec: %d, leader_count: %d, tm height: %lu, tm block tm: %lu",
-        common::Encode::HexEncode(tx_info.gid()).c_str(),
-        shard_netid,
-        exists_shard_nodes.size(), weed_out_vec.size(),
-        pick_in_vec.size(),
-        leader_count,
-        tmblock::TimeBlockManager::Instance()->LatestTimestampHeight(),
-        tmblock::TimeBlockManager::Instance()->LatestTimestamp());
-
-    return kElectSuccess;
-    */
 }
 
 int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
@@ -222,7 +147,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num(0);
+        in->set_pool_idx_mod_num(-1);
     }
 
     ec_block.set_leader_count(leader_count);
