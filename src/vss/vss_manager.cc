@@ -57,11 +57,6 @@ void VssManager::OnTimeBlock(
             common::GlobalInfo::Instance()->id());
         latest_tm_block_tm_ = tm_block_tm;
         prev_tm_height_ = tm_height;
-
-        if (prev_elect_height_ >= elect_height) {
-            delete &elect_height;
-        }
-
         prev_elect_height_ = elect_height;
         member_count_ = elect::ElectManager::Instance()->GetMemberCount(
             elect_height,
