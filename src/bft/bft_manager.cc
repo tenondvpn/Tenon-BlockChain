@@ -785,7 +785,6 @@ int BftManager::LeaderPrecommit(
         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose");
         RemoveBft(bft_ptr->gid());
         BFT_DEBUG("LeaderPrecommit oppose", bft_ptr);
-        delete &res;
     } else {
         BFT_DEBUG("LeaderPrecommit waiting");
         // continue waiting, do nothing.

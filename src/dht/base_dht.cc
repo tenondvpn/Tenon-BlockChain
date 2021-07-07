@@ -490,7 +490,6 @@ void BaseDht::ProcessBootstrapResponse(
     joined_ = true;
     join_res_con_.notify_one();
     local_node_->set_public_ip(dht_msg.bootstrap_res().public_ip());
-    DHT_ERROR("set local public ip: %s", local_node_->public_ip().c_str());
     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
         local_node_->public_port = dht_msg.bootstrap_res().public_port() - 1;
     } else {

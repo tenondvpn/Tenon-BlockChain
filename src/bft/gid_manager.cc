@@ -58,7 +58,6 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
         tx_ptr->tx.type(),
         tx_ptr->tx.call_contract_step(),
         tx_ptr->tx.gid());
-    BFT_DEBUG("NewGidTxValid get tx gid: %s", common::Encode::HexEncode(tx_gid).c_str());
     {
         std::lock_guard<std::mutex> guard(tx_map_mutex_);
         auto iter = tx_map_.find(tx_gid);

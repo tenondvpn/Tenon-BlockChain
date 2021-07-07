@@ -374,7 +374,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
         if (iter == waiting_pool_map_.end()) {
-            ELECT_ERROR("find waiting shard network failed [%u]!",
+            ELECT_DEBUG("find waiting shard network failed [%u]!",
                 shard_netid + network::kConsensusWaitingShardOffset);
         } else {
             waiting_pool_ptr = iter->second;
@@ -641,7 +641,7 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(network_id + network::kConsensusWaitingShardOffset);
         if (iter == waiting_pool_map_.end()) {
-            ELECT_ERROR("find waiting shard network failed [%u]!",
+            ELECT_DEBUG("find waiting shard network failed [%u]!",
                 network_id + network::kConsensusWaitingShardOffset);
         } else {
             waiting_pool_ptr = iter->second;

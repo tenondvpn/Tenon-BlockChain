@@ -796,7 +796,6 @@ void AccountManager::SetPool(
         uint32_t pool_index,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_ERROR("0000 SetPool: %d", pool_index);
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     block::DbPoolInfo* db_pool_info = nullptr;
     if (network_block_[pool_index] != nullptr) {
@@ -816,7 +815,6 @@ void AccountManager::SetPool(
     }
 
     uint64_t height = 0;
-    BLOCK_ERROR("1111 SetPool: %d", pool_index);
     if (db_pool_info->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
             return;
@@ -829,7 +827,7 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    BLOCK_ERROR("2222 SetPool: %d, height: %lu, hash: %s, tm height£º %lu",
+    BLOCK_ERROR("2222 SetPool: %d, height: %lu, hash: %s, tm height: %lu",
         pool_index,
         block_item->height(),
         common::Encode::HexEncode(block_item->hash()).c_str(),
