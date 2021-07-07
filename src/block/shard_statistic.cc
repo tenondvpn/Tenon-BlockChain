@@ -76,12 +76,6 @@ void ShardStatistic::AddShardPoolStatistic(
             if (block_item->tx_list(0).storages(i).key() == bft::kStatisticAttr) {
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
-                    if (statistic_info.elect_height() < latest_elect_height_) {
-                        BLOCK_ERROR("statistic_info.elect_height() < latest_elect_height_[%lu][%lu]",
-                            statistic_info.elect_height(), latest_elect_height_);
-                        return;
-                    }
-
                     if (statistic_info.elect_height() > latest_elect_height_) {
                         latest_elect_height_ = statistic_info.elect_height();
                         pool_statistics_.clear();
@@ -133,7 +127,7 @@ void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_
     std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
     statistic_info->set_all_tx_count(all_tx_count_);
     statistic_info->set_timeblock_height(latest_tm_height_);
-    statistic_info->set_elect_height(latest_tm_height_);
+    statistic_info->set_elect_height(latest_elect_height_);
     for (int32_t i = 0; i < elect_member_count_; ++i) {
         statistic_info->add_succ_tx_count(pool_statistics_[i]);
     }
