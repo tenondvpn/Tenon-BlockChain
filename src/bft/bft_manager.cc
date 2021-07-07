@@ -696,7 +696,7 @@ int BftManager::BackupPrepare(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    auto& data = *(header.mutable_data());
+    auto data = header.mutable_data();
     if (bft_ptr->Prepare(false, -1, data) != kBftSuccess) {
         BFT_ERROR("bft backup prepare failed!");
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
@@ -714,7 +714,7 @@ int BftManager::BackupPrepare(
             header,
             bft_msg,
             local_node,
-            data,
+            *data,
             bft_ptr->secret(),
             true,
             msg);

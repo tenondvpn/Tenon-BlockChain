@@ -35,7 +35,7 @@ private:
     int InitBft(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
-    int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx, std::string* prepare_data);
+    int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx);
     int BackupPrepare(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
