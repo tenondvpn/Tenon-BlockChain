@@ -185,9 +185,10 @@ void ElectManager::ProcessNewElectBlock(
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
-        if (elect_members_.find(height) != elect_members_.end()) {
-            return;
-        }
+    if (elect_members_.find(height) != elect_members_.end()) {
+        return;
+    }
+
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -251,10 +252,14 @@ void ElectManager::ProcessNewElectBlock(
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
-                ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+                    "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                    elect_block.shard_network_id(),
                     common::Encode::HexEncode((*iter)->id).c_str(),
                     (*iter)->pool_index_mod_num);
-                std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock member leader: " << common::Encode::HexEncode((*iter)->id)
+                std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+                    << elect_block.shard_network_id()
+                    << ", member leader: " << common::Encode::HexEncode((*iter)->id)
                     << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
                     << ", leader count: " << elect_block.leader_count()
                     << std::endl;
