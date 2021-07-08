@@ -483,7 +483,9 @@ void Command::AddBaseCommands() {
 
         std::string cmd = std::string("./tcping ") + args[0] + " " + args[1];
         bool reachable = false;
-        common::RemoteReachable(args[0], common::StringUtil::ToUint16(args[1]), &reachable);
+        uint16_t tmp_val = 0;
+        common::StringUtil::ToUint16(args[1], &tmp_val);
+        common::RemoteReachable(args[0], tmp_val, &reachable);
         std::cout << "remote reachable: " << reachable << std::endl;
     });
     AddCommand("bg", [this](const std::vector<std::string>& args) {
