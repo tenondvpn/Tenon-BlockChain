@@ -273,84 +273,84 @@ T UnsignedCheckCastValue(const char* str) {
     return static_cast<T>(val);
 }
 
-uint8_t StringUtil::ToUint8(const char* str, uint8_t* res) try {
+bool StringUtil::ToUint8(const char* str, uint8_t* res) try {
     *res = UnsignedCheckCastValue<uint8_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint16_t StringUtil::ToUint16(const char* str, uint16_t* res) try {
+bool StringUtil::ToUint16(const char* str, uint16_t* res) try {
     *res = UnsignedCheckCastValue<uint16_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint32_t StringUtil::ToUint32(const char* str, uint32_t* res) try {
+bool StringUtil::ToUint32(const char* str, uint32_t* res) try {
     *res = UnsignedCheckCastValue<uint32_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint64_t StringUtil::ToUint64(const char* str, uint64_t* res) try {
+bool StringUtil::ToUint64(const char* str, uint64_t* res) try {
     *res = UnsignedLongLong(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint8_t StringUtil::ToUint8(const std::string& str, uint8_t* res) try {
+bool StringUtil::ToUint8(const std::string& str, uint8_t* res) try {
     *res = UnsignedCheckCastValue<uint8_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint16_t StringUtil::ToUint16(const std::string& str, uint16_t* res) try {
+bool StringUtil::ToUint16(const std::string& str, uint16_t* res) try {
     *res = UnsignedCheckCastValue<uint16_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint32_t StringUtil::ToUint32(const std::string& str, uint32_t* res) try {
+bool StringUtil::ToUint32(const std::string& str, uint32_t* res) try {
     *res = UnsignedCheckCastValue<uint32_t>(str);
     return true;
 } catch (...) {
     return false;
 }
 
-uint64_t StringUtil::ToUint64(const std::string& str, uint64_t* res) try {
+bool StringUtil::ToUint64(const std::string& str, uint64_t* res) try {
     *res = UnsignedLongLong(str.c_str());
     return true;
 } catch (...) {
     return false;
 }
 
-float StringUtil::ToFloat(const char* str, float* res) try {
+bool StringUtil::ToFloat(const char* str, float* res) try {
     *res = Float(str);
     return true;
 } catch (...) {
     return false;
 }
 
-double StringUtil::ToDouble(const char* str, double* res) try {
+bool StringUtil::ToDouble(const char* str, double* res) try {
     *res = Double(str);
     return true;
 } catch (...) {
     return false;
 }
 
-float StringUtil::ToFloat(const std::string& str, float* res) try {
+bool StringUtil::ToFloat(const std::string& str, float* res) try {
     *res = Float(str.c_str());
     return true;
 } catch (...) {
     return false;
 }
 
-double StringUtil::ToDouble(const std::string& str, double* res) try {
+bool StringUtil::ToDouble(const std::string& str, double* res) try {
     *res = Double(str.c_str());
     return true;
 } catch (...) {
