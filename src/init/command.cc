@@ -249,7 +249,7 @@ void Command::AddBaseCommands() {
 
         uint32_t count = 9;
         common::StringUtil::ToUint32(args[2], &count);
-        for (int i = 0; i < count; ++i) {
+        for (uint32_t i = 0; i < count; ++i) {
             std::string to = common::Encode::HexDecode(args[0]);
             uint32_t amount = 0;
             common::StringUtil::ToUint32(args[1], &amount);

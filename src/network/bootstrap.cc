@@ -82,7 +82,8 @@ int Bootstrap::Init(common::Config& config) {
             std::string(field_split[0], field_split.SubLen(0)),
             node_dht_key.StrKey(),
             std::string(field_split[1], field_split.SubLen(1)),
-`            str_pubkey,
+            port,
+            str_pubkey,
             ""));
         NETWORK_INFO("bootstrap[%s][%d][%s][%s][%s]",
                 field_split[0], field_split.SubLen(0), field_split[1], field_split[2],
