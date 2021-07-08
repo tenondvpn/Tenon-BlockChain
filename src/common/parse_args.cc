@@ -23,9 +23,7 @@ int ParserArgs::Get(const std::string& key, int& value) {
         return kParseFailed;
     }
 
-    try {
-        value = StringUtil::ToUint32(iter->second[0]);
-    } catch (...) {
+    if (!StringUtil::ToInt32(iter->second[0], &value)) {
         return kParseFailed;
     }
 
