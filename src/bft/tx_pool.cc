@@ -199,7 +199,7 @@ TxItemPtr TxPool::GetTx(
         tx_type,
         call_contract_step,
         gid);
-    BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
+    BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
         "call_contract_step: %d get tx[%s]to[%s][%s], uni_gid[%s]!",
         add_to,
         pool_index_,
@@ -227,7 +227,7 @@ TxItemPtr TxPool::GetTx(
 
     auto item_iter = tx_pool_.find(iter->second);
     if (item_iter != tx_pool_.end()) {
-        BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
+        BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
             "call_contract_step: %d got tx[%s]to[%s][%s], uni_gid[%s]!",
             add_to,
             pool_index_,
@@ -292,7 +292,7 @@ bool TxPool::TxPoolEmpty() {
 
 void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     auto item_vec = bft_ptr->item_index_vec();
-    BFT_ERROR("bft over called pool index: %d, status: %d., remove tx index size: %d",
+    BFT_DEBUG("bft over called pool index: %d, status: %d., remove tx index size: %d",
         pool_index_, bft_ptr->status(), item_vec.size());
     if (bft_ptr->status() != kBftCommited && bft_ptr->status() != kBftStepTimeout) {
         return;
@@ -302,7 +302,7 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     for (uint32_t i = 0; i < item_vec.size(); ++i) {
         auto iter = tx_pool_.find(item_vec[i]);
         if (iter != tx_pool_.end()) {
-            BFT_ERROR("remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
+            BFT_DEBUG("remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
                 item_vec[i],
                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),

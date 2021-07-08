@@ -701,14 +701,15 @@ int BftManager::BackupPrepare(
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     auto data = header.mutable_data();
-    if (bft_ptr->Prepare(false, -1, data) != kBftSuccess) {
+    int prepare_res = bft_ptr->Prepare(false, -1, data);
+    if (prepare_res != kBftSuccess) {
         BFT_ERROR("bft backup prepare failed!");
-        std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
+        std::string res_data = std::to_string(prepare_res) + "," + *data;
         BftProto::BackupCreatePrepare(
             header,
             bft_msg,
             local_node,
-            rand_num_str,
+            res_data,
             bft_ptr->secret(),
             false,
             msg);
@@ -787,19 +788,32 @@ int BftManager::LeaderPrecommit(
             bft_msg.agree(),
             backup_secret,
             security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+    if (!bft_msg.agree()) {
+    }
+
     if (res == kBftAgree) {
         return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
-        BFT_DEBUG("LeaderPrecommit oppose pool_index: %u", bft_ptr->pool_index());
     } else {
-        BFT_DEBUG("LeaderPrecommit waiting pool_index: %u", bft_ptr->pool_index());
         // continue waiting, do nothing.
+        BFT_DEBUG("LeaderPrecommit waiting pool_index: %u", bft_ptr->pool_index());
     }
 
     // broadcast pre-commit to backups
     return kBftSuccess;
+}
+
+void BftManager::HandleOpposeNodeMsg(
+        bft::protobuf::BftMessage& bft_msg,
+        BftInterfacePtr& bft_ptr) {
+    common::Split<> spliter(bft_msg.data().c_str(), ',', bft_msg.data().size());
+    if (spliter.Count() < 2) {
+        return;
+    }
+        
+    auto res = common::StringUtil::ToInt32(spliter[0]);
 }
 
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {

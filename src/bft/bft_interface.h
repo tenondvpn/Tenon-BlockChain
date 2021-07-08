@@ -202,6 +202,33 @@ public:
         return prpare_block_;
     }
 
+    void AddInvalidTxIndex(int32_t tx_index) {
+        std::lock_guard<std::mutex> guard(invalid_tx_index_count_mutex_);
+        auto iter = invalid_tx_index_count_.find(tx_index);
+        if (iter == invalid_tx_index_count_.end()) {
+            invalid_tx_index_count_[tx_index] = 1;
+        } else {
+            ++iter->second;
+        }
+    }
+
+    int32_t GetInvalidTxIndex() {
+        std::lock_guard<std::mutex> guard(invalid_tx_index_count_mutex_);
+        for (auto iter = invalid_tx_index_count_.begin();
+                iter != invalid_tx_index_count_.end(); ++iter) {
+            if (iter->second >= min_oppose_member_count_) {
+                return iter->first;
+            }
+        }
+
+        return -1;
+    }
+
+    void ClearInvalidTxIndex() {
+        std::lock_guard<std::mutex> guard(invalid_tx_index_count_mutex_);
+        invalid_tx_index_count_.clear();
+    }
+
 protected:
     BftInterface() {
         bft_item_vec_.reserve(kBftOneConsensusMaxCount);
@@ -252,6 +279,9 @@ private:
     std::unordered_set<std::string> precommit_oppose_set_;
     std::unordered_set<std::string> commit_aggree_set_;
     std::unordered_set<std::string> commit_oppose_set_;
+    std::unordered_map<int32_t, uint32_t> invalid_tx_index_count_;
+    std::mutex invalid_tx_index_count_mutex_;
+
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 

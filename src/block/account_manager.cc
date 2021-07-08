@@ -252,12 +252,10 @@ int AccountManager::HandleFinalStatisticBlock(
                 tx_info,
                 elect_tx) != elect::kElectSuccess) {
             BFT_ERROR("create elect transaction error!");
-            return kBlockError;
         }
 
         if (bft::DispatchPool::Instance()->Dispatch(elect_tx) != bft::kBftSuccess) {
             BFT_ERROR("dispatch pool failed!");
-            return kBlockError;
         }
     }
 

@@ -43,6 +43,9 @@ enum BftErrorCode {
     kBftCreateContractKeyError = 22,
     kBftContractAddressLocked = 23,
     kBftContractBytesCodeError = 24,
+    kBftTimeBlockHeightError = 25,
+    kBftElectBlockHeightError = 26,
+    kBftLeaderTxInfoInvalid = 27,
 };
 
 enum BftStatus {

@@ -26,7 +26,7 @@ public:
 
 private:
     int LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str);
-    int BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg);
+    int BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx);
     int LeaderCreatePreCommit(std::string& bft_str);
     int LeaderCreateCommit(std::string& bft_str);
     int CheckBlockInfo(const protobuf::Block& block_info);
@@ -65,8 +65,10 @@ private:
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
-    int RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg);
-    int RootBackupCheckCreateAccountAddressPrepare(const bft::protobuf::Block& block);
+    int RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx);
+    int RootBackupCheckCreateAccountAddressPrepare(
+        const bft::protobuf::Block& block,
+        int32_t* invalid_tx_idx);
     int RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block& block);
     int RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block);
     int RootBackupCheckStatistic(const bft::protobuf::Block& block);

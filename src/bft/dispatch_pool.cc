@@ -164,6 +164,7 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
 }
 
 TxItemPtr DispatchPool::GetRootTx() {
+    // Check this pool height if behind
     return tx_pool_.GetRootTx();
 }
 
@@ -171,6 +172,7 @@ void DispatchPool::GetTx(
         uint32_t& pool_index,
         int32_t pool_mod_idx,
         std::vector<TxItemPtr>& res_vec) {
+    // Check this pool height if behind
     tx_pool_.GetTx(pool_index, pool_mod_idx, res_vec);
 }
 
