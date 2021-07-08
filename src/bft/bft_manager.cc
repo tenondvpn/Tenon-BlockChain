@@ -188,9 +188,14 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
             continue;
         }
 
-        std::cout << "AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
+        if (block.tx_list(0).type() == common::kConsensusRootElectShard || block.tx_list(0).type() == common::kConsensusRootTimeBlock) {
+            std::cout << "AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
+        }
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
         if (!mem_ptr) {
+            if (block.tx_list(0).type() == common::kConsensusRootElectShard || block.tx_list(0).type() == common::kConsensusRootTimeBlock) {
+                std::cout << "error AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
+            }
             return false;
         }
 
@@ -248,7 +253,9 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (!AggSignValid(tx_bft.to_tx().block())) {
-        BFT_ERROR("block agg sign verify failed!");
+        BFT_ERROR("block agg sign verify failed! height: %lu, type: %d",
+            tx_bft.to_tx().block().height(),
+            tx_bft.to_tx().block().tx_list(0).type());
         return;
     }
 

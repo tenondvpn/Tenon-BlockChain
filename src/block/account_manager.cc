@@ -120,9 +120,9 @@ int AccountManager::GetAddressConsensusNetworkId(
 }
 
 int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
-    if (tx_info.network_id() == common::GlobalInfo::Instance()->network_id() ||
-            tx_info.network_id() + network::kConsensusWaitingShardOffset ==
-            common::GlobalInfo::Instance()->network_id()) {
+//     if (tx_info.network_id() == common::GlobalInfo::Instance()->network_id() ||
+//             tx_info.network_id() + network::kConsensusWaitingShardOffset ==
+//             common::GlobalInfo::Instance()->network_id()) {
         elect::protobuf::ElectBlock elect_block;
         for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
             if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
@@ -139,7 +139,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
             << ", block height: "<< height << std::endl;
         elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
         vss::VssManager::Instance()->OnElectBlock(height);
-    }
+//     }
 
     return kBlockSuccess;
 }
