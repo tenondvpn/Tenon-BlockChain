@@ -142,14 +142,16 @@ void Command::AddBaseCommands() {
         if (args.size() <= 0) {
             return;
         }
-        uint32_t network_id = common::StringUtil::ToUint32(args[0]);
+        uint32_t network_id = 0;
+        common::StringUtil::ToUint32(args[0], &network_id);
         PrintDht(network_id);
     });
     AddCommand("mem", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {
             return;
         }
-        uint32_t network_id = common::StringUtil::ToUint32(args[0]);
+        uint32_t network_id = 0;
+        common::StringUtil::ToUint32(args[0], &network_id);
         PrintMembers(network_id);
     });
     AddCommand("p2p", [this](const std::vector<std::string>& args) {
@@ -245,10 +247,12 @@ void Command::AddBaseCommands() {
             return;
         }
 
-        int32_t count = common::StringUtil::ToUint32(args[2]);
+        uint32_t count = 9;
+        common::StringUtil::ToUint32(args[2], &count);
         for (int i = 0; i < count; ++i) {
             std::string to = common::Encode::HexDecode(args[0]);
-            uint32_t amount = common::StringUtil::ToUint32(args[1]);
+            uint32_t amount = 0;
+            common::StringUtil::ToUint32(args[1], &amount);
             SendClientUseBandwidth(to, amount);
             std::cout << i << ": " << count << std::endl;
             std::this_thread::sleep_for(std::chrono::microseconds(50000ull));
@@ -413,8 +417,10 @@ void Command::AddBaseCommands() {
             uint64_t pool_height = 0;
             uint64_t tm_height;
             uint64_t tm_with_block_height;
+            uint32_t tmp_val = 0;
+            common::StringUtil::ToUint32(args[0], &tmp_val);
             int res = block::AccountManager::Instance()->GetBlockInfo(
-                common::StringUtil::ToUint32(args[0]),
+                tmp_val,
                 &pool_height,
                 &pool_hash,
                 &tm_height,
@@ -452,7 +458,7 @@ void Command::AddBaseCommands() {
 
         uint64_t amount = 0;
         if (args.size() > 1) {
-            amount = common::StringUtil::ToUint64(args[1]);
+            common::StringUtil::ToUint64(args[1], &amount);
         }
         tenon::client::VpnClient::Instance()->Transaction(to, amount, tx_gid);
     });
@@ -464,7 +470,7 @@ void Command::AddBaseCommands() {
 
         uint64_t amount = 0;
         if (args.size() > 1) {
-            amount = common::StringUtil::ToUint64(args[1]);
+            common::StringUtil::ToUint64(args[1], &amount);
         }
         std::string gid;
         auto tx_gid = tenon::client::VpnClient::Instance()->PayForVPN(to, gid, amount);
@@ -488,7 +494,7 @@ void Command::AddBaseCommands() {
         std::string hash = args[0];
         bool is_gid = false;
         if (args.size() > 1) {
-            is_gid = common::StringUtil::ToBool(args[1]);
+            common::StringUtil::ToBool(args[1], &is_gid);
         }
 
         std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
