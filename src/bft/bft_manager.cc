@@ -183,11 +183,12 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
     common::Bitmap leader_agg_bitmap(data);
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = leader_agg_bitmap.data().size() * 64;
-    for (uint32_t i = 0; i < bit_size; ++i) {
+        for (uint32_t i = 0; i < bit_size; ++i) {
         if (!leader_agg_bitmap.Valid(i)) {
             continue;
         }
 
+        std::cout << "AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
         if (!mem_ptr) {
             return false;
