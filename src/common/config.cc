@@ -73,13 +73,7 @@ bool Config::Get(const std::string& field, const std::string& key, int8_t& value
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint8(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToInt8(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, uint8_t& value) const {
@@ -88,14 +82,7 @@ bool Config::Get(const std::string& field, const std::string& key, uint8_t& valu
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint8(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
-
+    return StringUtil::ToUint8(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, int16_t& value) const {
@@ -104,13 +91,7 @@ bool Config::Get(const std::string& field, const std::string& key, int16_t& valu
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint16(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToInt16(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, uint16_t& value) const {
@@ -119,13 +100,7 @@ bool Config::Get(const std::string& field, const std::string& key, uint16_t& val
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint16(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToUint16(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, int32_t& value)  const {
@@ -134,13 +109,7 @@ bool Config::Get(const std::string& field, const std::string& key, int32_t& valu
         return false;
     }
 
-    try {
-        value = StringUtil::ToInt32(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToInt32(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, uint32_t& value) const {
@@ -149,13 +118,7 @@ bool Config::Get(const std::string& field, const std::string& key, uint32_t& val
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint32(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToUint32(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, int64_t& value) const {
@@ -164,13 +127,7 @@ bool Config::Get(const std::string& field, const std::string& key, int64_t& valu
         return false;
     }
 
-    try {
-        value = StringUtil::ToInt64(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToInt64(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, uint64_t& value) const {
@@ -179,13 +136,7 @@ bool Config::Get(const std::string& field, const std::string& key, uint64_t& val
         return false;
     }
 
-    try {
-        value = StringUtil::ToUint64(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToUint64(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, float& value)  const {
@@ -194,13 +145,7 @@ bool Config::Get(const std::string& field, const std::string& key, float& value)
         return false;
     }
 
-    try {
-        value = StringUtil::ToFloat(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToFloat(tmp_val, &value);
 }
 
 bool Config::Get(const std::string& field, const std::string& key, double& value) const {
@@ -209,13 +154,7 @@ bool Config::Get(const std::string& field, const std::string& key, double& value
         return false;
     }
 
-    try {
-        value = StringUtil::ToDouble(tmp_val);
-        return true;
-    } catch (...) {
-        return false;
-    }
-    return false;
+    return StringUtil::ToDouble(tmp_val, &value);
 }
 
 bool Config::Set(const std::string& field, const std::string& key, const std::string& value) {
