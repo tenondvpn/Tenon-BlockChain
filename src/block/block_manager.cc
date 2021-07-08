@@ -330,9 +330,9 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
         std::string val;
         auto res = db::Db::Instance()->Get(key, &val);
         if (res.ok()) {
-            uint64_t val = 0;
-            common::StringUtil::ToUint64(val, &val);
-            account_reward_map_[key] = val;
+            uint64_t tmp_val = 0;
+            common::StringUtil::ToUint64(val, &tmp_val);
+            account_reward_map_[key] = tmp_val;
             iter = account_reward_map_.find(key);
         } else {
             account_reward_map_[key] = new_amount;
