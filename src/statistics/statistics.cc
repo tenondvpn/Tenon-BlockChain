@@ -449,7 +449,7 @@ std::deque<float> Statistics::tps_queue() {
         std::string tmp_val;
         tps_queue_.get(i, &tmp_val);
         float tmp_to_val = 0.0;
-        common::StringUtil::ToFloat(tmp_val, &tmp_to_val)
+        common::StringUtil::ToFloat(tmp_val, &tmp_to_val);
         tmp_queue.push_back(tmp_to_val);
     }
 
