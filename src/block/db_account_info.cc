@@ -211,7 +211,7 @@ int DbAccountInfo::GetBalance(uint64_t* balance) {
         return kBlockError;
     } 
 
-    if (!common::StringUtil::ToUint64(str_balance, &balance)) {
+    if (!common::StringUtil::ToUint64(str_balance, balance)) {
         return kBlockError;
     }
 
