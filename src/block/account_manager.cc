@@ -150,7 +150,10 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
     uint64_t tmblock_tm = 0;
     for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
         if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
-            tmblock_tm = common::StringUtil::ToUint64(tm_tx_info.attr(i).value());
+            if (!common::StringUtil::ToUint64(tm_tx_info.attr(i).value(), &tmblock_tm)) {
+                return kBlockError;
+            }
+
             break;
         }
     }
@@ -202,11 +205,11 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
     uint64_t vss_random = 0;
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         if (tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
-            tmblock_timestamp = common::StringUtil::ToUint64(tx_info.attr(i).value());
+            common::StringUtil::ToUint64(tx_info.attr(i).value(), &tmblock_timestamp);
         }
 
         if (tx_info.attr(i).key() == tmblock::kVssRandomAttr) {
-            vss_random = common::StringUtil::ToUint64(tx_info.attr(i).value());
+            common::StringUtil::ToUint64(tx_info.attr(i).value(), &vss_random);
         }
     }
 
@@ -680,11 +683,15 @@ int AccountManager::SetAccountAttrs(
 
                     if (tx_info.type() == common::kConsensusRootTimeBlock) {
                         if (tx_info.attr(attr_idx).key() == tmblock::kAttrTimerBlock) {
-                            tmblock_tm = common::StringUtil::ToUint64(tx_info.attr(attr_idx).value());
+                            if (!common::StringUtil::ToUint64(tx_info.attr(attr_idx).value(), &tmblock_tm)) {
+                                return kBlockError;
+                            }
                         }
 
                         if (tx_info.attr(attr_idx).key() == tmblock::kVssRandomAttr) {
-                            tmblock_vss_random = common::StringUtil::ToUint64(tx_info.attr(attr_idx).value());
+                            if (!common::StringUtil::ToUint64(tx_info.attr(attr_idx).value(), &tmblock_vss_random)) {
+                                return kBlockError;
+                            }
                         }
                     }
 

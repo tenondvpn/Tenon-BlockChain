@@ -2207,7 +2207,12 @@ int VpnServer::Init(uint16_t min_port, uint16_t max_port) {
                     continue;
                 }
 
-                vpn_node_used_count_map_[sec_split[0]][common::StringUtil::ToUint64(third_split[i])] =
+                uint64_t third_num = 0;
+                if (!common::StringUtil::ToUint64(third_split[i], &third_num)) {
+                    continue;
+                }
+
+                vpn_node_used_count_map_[sec_split[0]][third_num] =
                         std::chrono::steady_clock::now() + std::chrono::seconds(120);
             }
         }
@@ -2583,9 +2588,7 @@ void VpnServer::HandleClientBandwidthResponse(
     }
 
     uint64_t used = 0;
-    try {
-        used = common::StringUtil::ToUint64(client_bw_res.attr_value());
-    } catch(...) {
+    if (!common::StringUtil::ToUint64(client_bw_res.attr_value(), &used)) {
         return;
     }
 

@@ -132,7 +132,11 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
         return kTimeBlockError;
     }
 
-    auto leader_final_cons_random = common::StringUtil::ToUint64(tx_info.attr(1).value());
+    uint64_t leader_final_cons_random = 0;
+    if (!common::StringUtil::ToUint64(tx_info.attr(1).value(), &leader_final_cons_random)) {
+        return kTimeBlockError;
+    }
+
     if (leader_final_cons_random != vss::VssManager::Instance()->GetConsensusFinalRandom()) {
         TMBLOCK_ERROR("leader_final_cons_random: %lu, GetConsensusFinalRandom(): %lu",
             leader_final_cons_random,
@@ -145,7 +149,11 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
         return kTimeBlockError;
     }
 
-    uint64_t leader_tm = common::StringUtil::ToUint64(tx_info.attr(0).value());
+    uint64_t leader_tm = 0;
+    if (!common::StringUtil::ToUint64(tx_info.attr(0).value(), &leader_tm)) {
+        return kTimeBlockError;
+    }
+
     if (!BackupheckNewTimeBlockValid(leader_tm)) {
         TMBLOCK_ERROR("BackupheckNewTimeBlockValid error: %llu", leader_tm);
         return kTimeBlockError;

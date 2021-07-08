@@ -40,12 +40,18 @@ int VpnClientLogin::InitWithAttr(
         if (item_split.Count() != 2) {
             continue;
         }
-        try {
-            country_count_map[common::StringUtil::ToUint32(item_split[0])] =
-                    common::StringUtil::ToUint32(item_split[1]);
-        } catch (...) {
+
+        uint32_t key = 0;
+        if (!common::StringUtil::ToUint32(item_split[0], &key)) {
             continue;
         }
+
+        uint32_t val = 0;
+        if (!common::StringUtil::ToUint32(item_split[1], &val)) {
+            continue;
+        }
+
+        country_count_map[key] = val;
     }
 
     std::lock_guard<std::mutex> guard(client_login_map_mutex_);

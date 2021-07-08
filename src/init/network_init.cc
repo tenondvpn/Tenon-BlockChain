@@ -162,7 +162,9 @@ int NetworkInit::CheckJoinWaitingPool() {
     uint32_t waiting_network_id = common::kInvalidUint32;
     auto st = db::Db::Instance()->Get(kInitJoinWaitingPoolDbKey, &waiting_netid_str);
     if (st.ok()) {
-        waiting_network_id = common::StringUtil::ToUint32(waiting_netid_str);
+        if (!common::StringUtil::ToUint32(waiting_netid_str, &waiting_network_id)) {
+            return kInitError;
+        }
     }
 
     waiting_network_id = network::kRootCongressWaitingNetworkId;
@@ -218,7 +220,10 @@ int NetworkInit::GenesisCmd(common::ParserArgs& parser_arg) {
                 auto node_ptr = std::make_shared<dht::Node>();
                 node_ptr->set_pubkey(common::Encode::HexDecode(node_info[0]));
                 node_ptr->set_public_ip(node_info[1]);
-                node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
+                if (!common::StringUtil::ToUint16(node_info[2], &node_ptr->public_port)) {
+                    continue;
+                }
+
                 root_genesis_nodes.push_back(node_ptr);
             }
         }
@@ -240,7 +245,10 @@ int NetworkInit::GenesisCmd(common::ParserArgs& parser_arg) {
                 auto node_ptr = std::make_shared<dht::Node>();
                 node_ptr->set_pubkey(common::Encode::HexDecode(node_info[0]));
                 node_ptr->set_public_ip(node_info[1]);
-                node_ptr->public_port = common::StringUtil::ToUint16(node_info[2]);
+                if (!common::StringUtil::ToUint16(node_info[2], &node_ptr->public_port)) {
+                    continue;
+                }
+
                 cons_genesis_nodes.push_back(node_ptr);
             }
         }

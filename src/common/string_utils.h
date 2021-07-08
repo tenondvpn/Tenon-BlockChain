@@ -23,31 +23,32 @@ private:
 class StringUtil {
 public:
     static void Trim(std::string& str);
-    static bool ToBool(const char* str);
-    static int8_t ToInt8(const char* str);
-    static int16_t ToInt16(const char* str);
-    static int32_t ToInt32(const char* str);
-    static int64_t ToInt64(const char* str);
-    static uint8_t ToUint8(const char* str);
-    static uint16_t ToUint16(const char* str);
-    static uint32_t ToUint32(const char* str);
-    static uint64_t ToUint64(const char* str);
-    static float ToFloat(const char* str);
-    static double ToDouble(const char* str);
+    
     static bool IsNumeric(const char* str);
+    static bool ToBool(const char* str, bool* res);
+    static bool ToInt8(const char* str, int8_t* res);
+    static bool ToInt16(const char* str, int16_t* res);
+    static bool ToInt32(const char* str, int32_t* res);
+    static bool ToInt64(const char* str, int64_t* res);
+    static bool ToUint8(const char* str, uint8_t* res);
+    static bool ToUint16(const char* str, uint16_t* res);
+    static bool ToUint32(const char* str, uint32_t* res);
+    static bool ToUint64(const char* str, uint64_t* res);
+    static bool ToFloat(const char* str, float* res);
+    static bool ToDouble(const char* str, double* res);
 
-    static bool ToBool(const std::string& str);
-    static int8_t ToInt8(const std::string& str);
-    static int16_t ToInt16(const std::string& str);
-    static int32_t ToInt32(const std::string& str);
-    static int64_t ToInt64(const std::string& str);
-    static uint8_t ToUint8(const std::string& str);
-    static uint16_t ToUint16(const std::string& str);
-    static uint32_t ToUint32(const std::string& str);
-    static uint64_t ToUint64(const std::string& str);
-    static float ToFloat(const std::string& str);
-    static double ToDouble(const std::string& str);
     static bool IsNumeric(const std::string& str);
+    static bool ToBool(const std::string& str, bool* res);
+    static bool ToInt8(const std::string& str, int8_t* res);
+    static bool ToInt16(const std::string& str, int16_t* res);
+    static bool ToInt32(const std::string& str, int32_t* res);
+    static bool ToInt64(const std::string& str, int64_t* res);
+    static bool ToUint8(const std::string& str, uint8_t* res);
+    static bool ToUint16(const std::string& str, uint16_t* res);
+    static bool ToUint32(const std::string& str, uint32_t* res);
+    static bool ToUint64(const std::string& str, uint64_t* res);
+    static bool ToFloat(const std::string& str, float* res);
+    static bool ToDouble(const std::string& str, double* res);
 
     template<typename ... Args>
     static std::string Format(const std::string& format, Args ... args) {

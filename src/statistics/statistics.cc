@@ -77,7 +77,9 @@ uint32_t Statistics::get_addr_count() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kAddrCount, &tmp_str)) {
-        addr_count_ = common::StringUtil::ToUint32(tmp_str);
+        uint32_t tmp_val = 0;
+        common::StringUtil::ToUint32(tmp_str, &tmp_val);
+        addr_count_ = tmp_val;
     }
 
     return addr_count_;
@@ -115,7 +117,9 @@ int64_t Statistics::get_all_lego() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kAllLego, &tmp_str)) {
-        all_acc_lego_ = common::StringUtil::ToInt64(tmp_str);
+        int64_t tmp_val = 0;
+        common::StringUtil::ToInt64(tmp_str, &tmp_val);
+        all_acc_lego_ = tmp_val;
     }
 
     return all_acc_lego_;
@@ -143,7 +147,9 @@ uint32_t Statistics::tx_count() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kTxCount, &tmp_str)) {
-        tx_count_ = common::StringUtil::ToUint32(tmp_str);
+        uint32_t tmp_val = 0;
+        common::StringUtil::ToUint32(tmp_str, &tmp_val);
+        tx_count_ = tmp_val;
     }
 
     return tx_count_;
@@ -156,7 +162,9 @@ uint32_t Statistics::all_tx_count() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kAllTxCount, &tmp_str)) {
-        all_tx_count_ = common::StringUtil::ToUint32(tmp_str);
+        uint32_t tmp_val = 0;
+        common::StringUtil::ToUint32(tmp_str, &tmp_val);
+        all_tx_count_ = tmp_val;
     }
 
     return all_tx_count_;
@@ -184,7 +192,9 @@ uint64_t Statistics::tx_amount() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kTxAmount, &tmp_str)) {
-        tx_amount_ = common::StringUtil::ToUint64(tmp_str);
+        uint64_t tmp_val = 0;
+        common::StringUtil::ToUint64(tmp_str, &tmp_val);
+        tx_amount_ = tmp_val;
     }
 
     return tx_amount_;
@@ -197,7 +207,9 @@ uint64_t Statistics::all_tx_amount() {
 
     std::string tmp_str;
     if (db::Dict::Instance()->Hget(dict_key_, kAllTxAmount, &tmp_str)) {
-        all_tx_amount_ = common::StringUtil::ToUint64(tmp_str);
+        uint64_t tmp_val = 0;
+        common::StringUtil::ToUint64(tmp_str, &tmp_val);
+        all_tx_amount_ = tmp_val;
     }
 
     return all_tx_amount_;
@@ -235,7 +247,9 @@ void Statistics::inc_active_user_count(
             if (day_iter == active_user_map_.end()) {
                 std::string tmp_str;
                 if (db::Dict::Instance()->Hget(dict_key_, month_key, &tmp_str)) {
-                    active_user_map_[month_tm] = common::StringUtil::ToUint32(tmp_str) + 1;
+                    uint32_t tmp_val = 0;
+                    common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                    active_user_map_[month_tm] = tmp_val + 1;
                 } else {
                     active_user_map_[month_tm] = 1;
                 }
@@ -277,7 +291,9 @@ void Statistics::inc_active_user_count(
             if (day_iter == active_user_map_.end()) {
                 std::string tmp_str;
                 if (db::Dict::Instance()->Hget(dict_key_, day_key, &tmp_str)) {
-                    active_user_map_[day_tm] = common::StringUtil::ToUint32(tmp_str) + 1;
+                    uint32_t tmp_val = 0;
+                    common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                    active_user_map_[day_tm] = tmp_val + 1;
                 } else {
                     active_user_map_[day_tm] = 1;
                 }
@@ -314,7 +330,9 @@ void Statistics::inc_active_user_count(
             if (hour_iter == active_user_map_.end()) {
                 std::string tmp_str;
                 if (db::Dict::Instance()->Hget(dict_key_, hour_key, &tmp_str)) {
-                    active_user_map_[hour_tm] = common::StringUtil::ToUint32(tmp_str) + 1;
+                    uint32_t tmp_val = 0;
+                    common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                    active_user_map_[hour_tm] = tmp_val + 1;
                 } else {
                     active_user_map_[hour_tm] = 1;
                 }
@@ -355,7 +373,9 @@ std::deque<uint32_t> Statistics::ActiveUserCountForMonth(uint32_t count) {
         if (day_iter == active_user_map_.end()) {
             std::string tmp_str;
             if (db::Dict::Instance()->Hget(dict_key_, day_key, &tmp_str)) {
-                active_user_map_[i] = common::StringUtil::ToUint32(tmp_str);
+                uint32_t tmp_val = 0;
+                common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                active_user_map_[i] = tmp_val;
             } else {
                 active_user_map_[i] = 0;
             }
@@ -377,7 +397,9 @@ std::deque<uint32_t> Statistics::ActiveUserCountForDay(uint32_t count) {
         if (day_iter == active_user_map_.end()) {
             std::string tmp_str;
             if (db::Dict::Instance()->Hget(dict_key_, day_key, &tmp_str)) {
-                active_user_map_[i] = common::StringUtil::ToUint32(tmp_str);
+                uint32_t tmp_val = 0;
+                common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                active_user_map_[i] = tmp_val;
             } else {
                 active_user_map_[i] = 0;
             }
@@ -399,7 +421,9 @@ std::deque<uint32_t> Statistics::ActiveUserCountForHour(uint32_t count) {
         if (day_iter == active_user_map_.end()) {
             std::string tmp_str;
             if (db::Dict::Instance()->Hget(dict_key_, hour_key, &tmp_str)) {
-                active_user_map_[i] = common::StringUtil::ToUint32(tmp_str);
+                uint32_t tmp_val = 0;
+                common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                active_user_map_[i] = tmp_val;
             } else {
                 active_user_map_[i] = 0;
             }
@@ -424,7 +448,9 @@ std::deque<float> Statistics::tps_queue() {
     for (uint32_t i = 0; i < size; ++i) {
         std::string tmp_val;
         tps_queue_.get(i, &tmp_val);
-        tmp_queue.push_back(common::StringUtil::ToFloat(tmp_val));
+        float tmp_to_val = 0.0;
+        common::StringUtil::ToFloat(tmp_val, &tmp_to_val)
+        tmp_queue.push_back(tmp_to_val);
     }
 
     std::lock_guard<std::mutex> guard(tmp_tps_queue_mutex_);
@@ -446,7 +472,9 @@ std::deque<uint32_t> Statistics::tx_count_q() {
     for (uint32_t i = 0; i < size; ++i) {
         std::string tmp_val;
         tx_count_q_.get(i, &tmp_val);
-        tmp_queue.push_back(common::StringUtil::ToUint32(tmp_val));
+        uint32_t tmp_to_val = 0;
+        common::StringUtil::ToUint32(tmp_val, &tmp_to_val);
+        tmp_queue.push_back(tmp_to_val);
     }
 
     std::lock_guard<std::mutex> guard(tmp_txcount_queue_mutex_);
@@ -468,7 +496,9 @@ std::deque<uint64_t> Statistics::tx_amount_q() {
     for (uint32_t i = 0; i < qsize; ++i) {
         std::string tmp_val;
         tx_amount_q_.get(i, &tmp_val);
-        tmp_queue.push_back(common::StringUtil::ToUint64(tmp_val));
+        uint64_t tmp_to_val = 0;
+        common::StringUtil::ToUint64(tmp_val, &tmp_to_val);
+        tmp_queue.push_back(tmp_to_val);
     }
 
     std::lock_guard<std::mutex> guard(tmp_txamount_queue_mutex_);
@@ -564,7 +594,9 @@ void Statistics::inc_new_user_count(
             if (day_iter == new_user_map_.end()) {
                 std::string tmp_str;
                 if (db::Dict::Instance()->Hget(dict_key_, day_key, &tmp_str)) {
-                    new_user_map_[day_tm] = common::StringUtil::ToUint32(tmp_str) + 1;
+                    uint32_t tmp_to_val = 0;
+                    common::StringUtil::ToUint32(tmp_str, &tmp_to_val);
+                    new_user_map_[day_tm] = tmp_to_val + 1;
                 } else {
                     new_user_map_[day_tm] = 1;
                 }
@@ -601,7 +633,9 @@ void Statistics::inc_new_user_count(
             if (hour_iter == new_user_map_.end()) {
                 std::string tmp_str;
                 if (db::Dict::Instance()->Hget(dict_key_, hour_key, &tmp_str)) {
-                    new_user_map_[hour_tm] = common::StringUtil::ToUint32(tmp_str) + 1;
+                    uint32_t tmp_to_val = 0;
+                    common::StringUtil::ToUint32(tmp_str, &tmp_to_val);
+                    new_user_map_[hour_tm] = tmp_to_val + 1;
                 } else {
                     new_user_map_[hour_tm] = 1;
                 }
@@ -634,7 +668,9 @@ std::deque<uint32_t> Statistics::NewUserCountForDay(uint32_t count) {
         if (day_iter == new_user_map_.end()) {
             std::string tmp_str;
             if (db::Dict::Instance()->Hget(dict_key_, day_key, &tmp_str)) {
-                new_user_map_[i] = common::StringUtil::ToUint32(tmp_str);
+                uint32_t tmp_val = 0;
+                common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                new_user_map_[i] = tmp_val;
             } else {
                 new_user_map_[i] = 0;
             }
@@ -656,7 +692,9 @@ std::deque<uint32_t> Statistics::NewUserCountForHour(uint32_t count) {
         if (day_iter == new_user_map_.end()) {
             std::string tmp_str;
             if (db::Dict::Instance()->Hget(dict_key_, hour_key, &tmp_str)) {
-                new_user_map_[i] = common::StringUtil::ToUint32(tmp_str);
+                uint32_t tmp_val = 0;
+                common::StringUtil::ToUint32(tmp_str, &tmp_val);
+                new_user_map_[i] = tmp_val;
             } else {
                 new_user_map_[i] = 0;
             }

@@ -1354,18 +1354,27 @@ int TxBft::BackupCheckContractExceute(
     bool caller_gas_used_valid = false;
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         if (tx_info.storages(i).key() == kContractCallerChangeAmount) {
-            BFT_ERROR("caller_balance_add[%lu], tx_info.storages(i).value(): %s",
+            BFT_DEBUG("caller_balance_add[%lu], tx_info.storages(i).value(): %s",
                 caller_balance_add, tx_info.storages(i).value().c_str());
-            if (caller_balance_add - (int64_t)(local_tx_info->tx.amount()) ==
-                    common::StringUtil::ToInt64(tx_info.storages(i).value())) {
+            int64_t st_val = -1;
+            if (!common::StringUtil::ToInt64(tx_info.storages(i).value(), &st_val)) {
+                return kBftLeaderInfoInvalid;
+            }
+
+            if (caller_balance_add - (int64_t)(local_tx_info->tx.amount()) == st_val) {
                 caller_balance_valid = true;
             }
         }
 
         if (tx_info.storages(i).key() == kContractCallerGasUsed) {
-            BFT_ERROR("gas_used[%lu], tx_info.storages(i).value(): %s",
+            BFT_DEBUG("gas_used[%lu], tx_info.storages(i).value(): %s",
                 gas_used, tx_info.storages(i).value().c_str());
-            if (gas_used == common::StringUtil::ToUint64(tx_info.storages(i).value())) {
+            uint64_t st_val = 0;
+            if (!common::StringUtil::ToUint64(tx_info.storages(i).value(), &st_val)) {
+                return kBftLeaderInfoInvalid;
+            }
+
+            if (gas_used == st_val) {
                 caller_gas_used_valid = true;
             }
         }
@@ -1432,7 +1441,10 @@ int TxBft::BackupCheckContractCalled(
 
         for (int32_t i = 0; i < local_tx_ptr->tx.storages_size(); ++i) {
             if (local_tx_ptr->tx.storages(i).key() == kContractCallerChangeAmount) {
-                caller_balance_add = common::StringUtil::ToInt64(local_tx_ptr->tx.storages(i).value());
+                if (!common::StringUtil::ToInt64(local_tx_ptr->tx.storages(i).value(), &caller_balance_add)) {
+                    return kBftError;
+                }
+
                 if (local_tx_ptr->tx.status() == kBftSuccess) {
                     if (caller_balance_add < 0) {
                         if (from_balance < (uint64_t)(-caller_balance_add)) {
@@ -1447,7 +1459,10 @@ int TxBft::BackupCheckContractCalled(
             }
 
             if (local_tx_ptr->tx.storages(i).key() == kContractCallerGasUsed) {
-                caller_gas_used = common::StringUtil::ToUint64(local_tx_ptr->tx.storages(i).value());
+                if (!common::StringUtil::ToUint64(local_tx_ptr->tx.storages(i).value(), &caller_gas_used)) {
+                    return kBftLeaderInfoInvalid;
+                }
+
                 if (from_balance >= caller_gas_used * local_tx_ptr->tx.gas_price()) {
                     from_balance -= caller_gas_used * local_tx_ptr->tx.gas_price();
                 } else {
@@ -2833,7 +2848,10 @@ int TxBft::LeaderCallContractCalled(
     uint64_t caller_gas_used = 0;
     for (int32_t i = 0; i < tx_info->tx.storages_size(); ++i) {
         if (tx_info->tx.storages(i).key() == kContractCallerChangeAmount) {
-            caller_balance_add = common::StringUtil::ToInt64(tx_info->tx.storages(i).value());
+            if (!common::StringUtil::ToInt64(tx_info->tx.storages(i).value(), &caller_balance_add)) {
+                return kBftError;
+            }
+
             if (tx_info->tx.status() == kBftSuccess) {
                 if (caller_balance_add < 0) {
                     if (from_balance < (uint64_t)(-caller_balance_add)) {
@@ -2848,7 +2866,10 @@ int TxBft::LeaderCallContractCalled(
         }
 
         if (tx_info->tx.storages(i).key() == kContractCallerGasUsed) {
-            caller_gas_used = common::StringUtil::ToUint64(tx_info->tx.storages(i).value());
+            if (!common::StringUtil::ToUint64(tx_info->tx.storages(i).value(), &caller_gas_used)) {
+                return kBftError;
+            }
+
             if (from_balance >= caller_gas_used * tx_info->tx.gas_price()) {
                 from_balance -= caller_gas_used * tx_info->tx.gas_price();
             } else {

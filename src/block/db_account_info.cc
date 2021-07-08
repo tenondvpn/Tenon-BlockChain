@@ -176,7 +176,10 @@ int DbAccountInfo::GetConsensuseNetId(uint32_t* network_id) {
         return kBlockError;
     }
         
-    *network_id = common::StringUtil::ToUint32(str_net_id);
+    if (!common::StringUtil::ToUint32(str_net_id, network_id)) {
+        return kBlockError;
+    }
+
     consensuse_net_id_ = *network_id;
     return kBlockSuccess;
 }
@@ -208,7 +211,10 @@ int DbAccountInfo::GetBalance(uint64_t* balance) {
         return kBlockError;
     } 
 
-    *balance = common::StringUtil::ToUint64(str_balance);
+    if (!common::StringUtil::ToUint64(str_balance, &balance)) {
+        return kBlockError;
+    }
+
     balance_ = *balance;
     return kBlockSuccess;
 }
@@ -281,134 +287,6 @@ void DbAccountInfo::GetTxHeights(std::vector<uint64_t>* res) {
         res->push_back(height_data[i]);
     }
 }
-// 
-// int DbAccountInfo::SetOutCount(uint32_t out_count, db::DbWriteBach& db_batch) {
-//     if (!db::Dict::Instance()->Hset(
-//             dict_key_,
-//             kFieldOutCount,
-//             std::to_string(out_count),
-//             db_batch)) {
-//         return kBlockError;
-//     }
-// 
-//     out_count_ = out_count;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::GetOutCount(uint32_t* out_count) {
-//     if (out_count_ != common::kInvalidUint32) {
-//         *out_count = out_count_;
-//         return kBlockSuccess;
-//     }
-// 
-//     std::string tmp_str;
-//     if (!db::Dict::Instance()->Hget(
-//             dict_key_,
-//             kFieldOutCount,
-//             &tmp_str)) {
-//         return kBlockError;
-//     }
-// 
-//     *out_count = common::StringUtil::ToUint32(tmp_str);
-//     out_count_ = *out_count;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::SetInCount(uint32_t in_count, db::DbWriteBach& db_batch) {
-//     if (!db::Dict::Instance()->Hset(
-//             dict_key_,
-//             kFieldInCount,
-//             std::to_string(in_count),
-//             db_batch)) {
-//         return kBlockError;
-//     }
-// 
-//     in_count_ = in_count;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::GetInCount(uint32_t* in_count) {
-//     if (in_count_ != common::kInvalidUint32) {
-//         *in_count = in_count_;
-//         return kBlockSuccess;
-//     }
-// 
-//     std::string tmp_str;
-//     if (!db::Dict::Instance()->Hget(
-//             dict_key_,
-//             kFieldInCount,
-//             &tmp_str)) {
-//         return kBlockError;
-//     }
-// 
-//     *in_count = common::StringUtil::ToUint32(tmp_str);
-//     in_count_ = *in_count;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::SetOutLego(uint64_t out_lego, db::DbWriteBach& db_batch) {
-//     if (!db::Dict::Instance()->Hset(
-//             dict_key_,
-//             kFieldOutLego,
-//             std::to_string(out_lego),
-//             db_batch)) {
-//         return kBlockError;
-//     }
-// 
-//     out_lego_ = out_lego;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::GetOutLego(uint64_t* out_lego) {
-//     if (out_lego_ != common::kInvalidUint64) {
-//         *out_lego = out_lego_;
-//         return kBlockSuccess;
-//     }
-// 
-//     std::string tmp_str;
-//     if (!db::Dict::Instance()->Hget(
-//             dict_key_,
-//             kFieldOutLego,
-//             &tmp_str)) {
-//         return kBlockError;
-//     }
-// 
-//     *out_lego = common::StringUtil::ToUint64(tmp_str);
-//     out_lego_ = *out_lego;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::SetInLego(uint64_t in_lego, db::DbWriteBach& db_batch) {
-//     if (!db::Dict::Instance()->Hset(
-//             dict_key_,
-//             kFieldInLego,
-//             std::to_string(in_lego),
-//             db_batch)) {
-//         return kBlockError;
-//     }
-// 
-//     in_lego_ = in_lego;
-//     return kBlockSuccess;
-// }
-// 
-// int DbAccountInfo::GetInLego(uint64_t* in_lego) {
-//     if (in_lego_ != common::kInvalidUint64) {
-//         *in_lego = in_lego_;
-//         return kBlockSuccess;
-//     }
-// 
-//     std::string tmp_str;
-//     if (!db::Dict::Instance()->Hget(
-//             dict_key_,
-//             kFieldInLego,
-//             &tmp_str)) {
-//         return kBlockError;
-//     }
-// 
-//     *in_lego = common::StringUtil::ToUint64(tmp_str);
-//     in_lego_ = *in_lego;
-//     return kBlockSuccess;
-// }
 
 int DbAccountInfo::SetCreateAccountHeight(
         uint64_t create_account_height,
@@ -440,7 +318,10 @@ int DbAccountInfo::GetCreateAccountHeight(uint64_t* create_account_height) {
 
     }
 
-    *create_account_height = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, create_account_height)) {
+        return kBlockError;
+    }
+
     create_account_height_ = *create_account_height;
     return kBlockSuccess;
 }
@@ -488,7 +369,10 @@ int DbAccountInfo::GetMaxHeight(uint64_t* max_height) {
         return kBlockError;
     }
 
-    *max_height = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, max_height)) {
+        return kBlockError;
+    }
+
     max_height_ = *max_height;
     return kBlockSuccess;
 }
@@ -559,7 +443,10 @@ int DbAccountInfo::GetAttrWithHeight(const std::string& attr_key, uint64_t* heig
         return kBlockError;
     }
 
-    *height = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, height)) {
+        return kBlockError;
+    }
+
     {
         std::lock_guard<std::mutex> guard(attrs_with_height_map_mutex_);
         attrs_with_height_map_[attr_key] = *height;
@@ -660,7 +547,10 @@ int DbAccountInfo::GetAddressType(uint32_t* address_type) {
         return kBlockError;
     }
 
-    *address_type = common::StringUtil::ToUint32(str_address_type);
+    if (!common::StringUtil::ToUint32(str_address_type, address_type)) {
+        return kBlockError;
+    }
+
     type_ = *address_type;
     return kBlockSuccess;
 }
@@ -704,7 +594,11 @@ int DbAccountInfo::AddNewElectBlock(
         std::string tmp_str;
         auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
         if (st.ok()) {
-            auto db_height = common::StringUtil::ToUint64(tmp_str);
+            uint64_t db_height = 0;
+            if (!common::StringUtil::ToUint64(tmp_str, &db_height)) {
+                return kBlockError;
+            }
+
             if (db_height > height) {
                 tmp_key = dict_key_ + "_" + std::to_string(network_id) + "_" + kFieldElectBlock;
                 st = db::Db::Instance()->Get(tmp_key, &tmp_str);
@@ -751,7 +645,10 @@ int DbAccountInfo::GetLatestElectBlock(
         return kBlockError;
     }
         
-    *height = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, height)) {
+        return kBlockError;
+    }
+
     tmp_key = dict_key_ + "_" + std::to_string(network_id) + "_" + kFieldElectBlock;
     st = db::Db::Instance()->Get(tmp_key, elect_block_str);
     if (!st.ok()) {
@@ -772,21 +669,36 @@ int DbAccountInfo::AddNewTimeBlock(
         std::string tmp_str;
         auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
         if (st.ok()) {
-            latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
+            uint64_t tmp_tm_height = 0;
+            if (!common::StringUtil::ToUint64(tmp_str, &tmp_tm_height)) {
+                return kBlockError;
+            }
+
+            latest_time_block_heigth_ = tmp_tm_height;
             tmp_key = dict_key_ + "_" + kFieldTimeBlock;
             auto st = db::Db::Instance()->Get(tmp_key, &tmp_str);
             if (!st.ok()) {
                 return kBlockError;
             }
 
-            latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+            uint64_t tmp_tm = 0;
+            if (!common::StringUtil::ToUint64(tmp_str, &tmp_tm)) {
+                return kBlockError;
+            }
+
+            latest_time_block_tm_ = tmp_tm;
             std::string tmp_vss_key = dict_key_ + "_" + kFieldTimeVssRandom;
             st = db::Db::Instance()->Get(tmp_vss_key, &tmp_str);
             if (!st.ok()) {
                 return kBlockError;
             }
 
-            latest_time_block_vss_random_ = common::StringUtil::ToUint64(tmp_str);
+            uint64_t tmp_vss_random = 0;
+            if (!common::StringUtil::ToUint64(tmp_str, &tmp_vss_random)) {
+                return kBlockError;
+            }
+             
+            latest_time_block_vss_random_ = tmp_vss_random;
         }
     }
 
@@ -822,21 +734,34 @@ int DbAccountInfo::GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm, uint
         return kBlockError;
     }
 
-    latest_time_block_heigth_ = common::StringUtil::ToUint64(tmp_str);
+    uint64_t tmp_val = 0;
+    if (!common::StringUtil::ToUint64(tmp_str, &tmp_val)) {
+        return kBlockError;
+    }
+
+    latest_time_block_heigth_ = tmp_val;
     std::string tmp_b_key = dict_key_ + "_" + kFieldTimeBlock;
     st = db::Db::Instance()->Get(tmp_b_key, &tmp_str);
     if (!st.ok()) {
         return kBlockError;
     }
 
-    latest_time_block_tm_ = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, &tmp_val)) {
+        return kBlockError;
+    }
+
+    latest_time_block_tm_ = tmp_val;
     std::string tmp_vss_key = dict_key_ + "_" + kFieldTimeVssRandom;
     st = db::Db::Instance()->Get(tmp_vss_key, &tmp_str);
     if (!st.ok()) {
         return kBlockError;
     }
 
-    latest_time_block_vss_random_ = common::StringUtil::ToUint64(tmp_str);
+    if (!common::StringUtil::ToUint64(tmp_str, &tmp_val)) {
+        return kBlockError;
+    }
+
+    latest_time_block_vss_random_ = tmp_val;
     *height = latest_time_block_heigth_;
     *block_tm = latest_time_block_tm_;
     *vss_random = latest_time_block_vss_random_;

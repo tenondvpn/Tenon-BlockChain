@@ -237,10 +237,11 @@ bool IsVlanIp(const std::string& ip_str)
     }
 
     int32_t ip[2];
-    try {
-        ip[0] = common::StringUtil::ToInt32(ip_dot[0]);
-        ip[1] = common::StringUtil::ToInt32(ip_dot[1]);
-    } catch (...) {
+    if (!common::StringUtil::ToInt32(ip_dot[0], &ip[0])) {
+        return false;
+    }
+    
+    if (!common::StringUtil::ToInt32(ip_dot[1], &ip[1])) {
         return false;
     }
 

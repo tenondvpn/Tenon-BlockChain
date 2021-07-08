@@ -158,7 +158,11 @@ void VpnMining::PayForMiningNode() {
         return;
     }
 
-    auto b_day_tm = common::StringUtil::ToUint64(item_split[2]);
+    uint64_t b_day_tm = 0;
+    if (!common::StringUtil::ToUint64(item_split[2], &b_day_tm)) {
+        return;
+    }
+
     if (b_day_tm == day_tm) {
         CONTRACT_ERROR("day tm error[%lu][%lu]!", b_day_tm, day_tm);
         return;
@@ -171,7 +175,9 @@ void VpnMining::PayForMiningNode() {
             std::string("contract_pay_for_mining_") + std::to_string(b_day_tm),
             &all_val);
     if (res.ok()) {
-        all_bandwidth = common::StringUtil::ToUint64(all_val);
+        if (!common::StringUtil::ToUint64(all_val, &all_bandwidth)) {
+            return;
+        }
     }
 
     if (all_bandwidth == 0) {
@@ -188,7 +194,11 @@ void VpnMining::PayForMiningNode() {
                 continue;
             }
 
-            auto tmp_day_tm = common::StringUtil::ToUint64(item_split[2]);
+            uint64_t tmp_day_tm = 0;
+            if (!common::StringUtil::ToUint64(item_split[2], &tmp_day_tm)) {
+                continue;
+            }
+
             if (tmp_day_tm != b_day_tm) {
                 continue;
             }
@@ -196,7 +206,10 @@ void VpnMining::PayForMiningNode() {
             std::string tmp_val;
             auto item_res = db::Db::Instance()->Get(tmp_item, &tmp_val);
             if (item_res.ok()) {
-                all_bandwidth += common::StringUtil::ToUint64(tmp_val);
+                uint64_t get_tmp_val = 0;
+                if (common::StringUtil::ToUint64(tmp_val, &get_tmp_val)) {
+                    all_bandwidth += get_tmp_val;
+                }
             }
         }
 
@@ -221,7 +234,11 @@ void VpnMining::PayForMiningNode() {
             continue;
         }
 
-        auto tmp_day_tm = common::StringUtil::ToUint64(item_split[2]);
+        uint64_t tmp_day_tm = 0;
+        if (!common::StringUtil::ToUint64(item_split[2], &tmp_day_tm)) {
+            continue;
+        }
+
         if (tmp_day_tm != b_day_tm) {
             CONTRACT_ERROR("day tm error[%lu][%lu]!", tmp_day_tm, b_day_tm);
             continue;
@@ -241,7 +258,11 @@ void VpnMining::PayForMiningNode() {
             continue;
         }
 
-        uint64_t bandwidth_node = common::StringUtil::ToUint64(tmp_band);
+        uint64_t bandwidth_node = 0;
+        if (!common::StringUtil::ToUint64(tmp_band, &bandwidth_node)) {
+            continue;
+        }
+
         auto to = common::Encode::HexDecode(item_split[1]);
         uint64_t amount = (uint64_t)((double)bandwidth_node / (double)all_bandwidth *
             (double)(4000llu * common::kTenonMiniTransportUnit));
@@ -264,7 +285,11 @@ void VpnMining::PayForMiningNode() {
                 continue;
             }
 
-            auto tmp_day_tm = common::StringUtil::ToUint64(item_split[2]);
+            uint64_t tmp_day_tm = 0;
+            if (!common::StringUtil::ToUint64(item_split[2], &tmp_day_tm)) {
+                continue;
+            }
+
             if (tmp_day_tm != b_day_tm) {
                 break;
             }
@@ -312,16 +337,17 @@ int VpnMining::HandleConsensusVpnMining(
     }
 
     uint64_t bandwidth = 0;
-    try {
-        bandwidth = common::StringUtil::ToUint64(attr_val);
-    } catch (...) {
+    if (!common::StringUtil::ToUint64(attr_val, &bandwidth)) {
         return kContractSuccess;
     }
 
     std::string db_bandwidth;
     auto db_res = db::Db::Instance()->Get(attr_key, &db_bandwidth);
     if (db_res.ok()) {
-        bandwidth += common::StringUtil::ToUint64(db_bandwidth);
+        uint64_t tmp_band = 0;
+        if (common::StringUtil::ToUint64(db_bandwidth, &tmp_band)) {
+            bandwidth += tmp_band;
+        }
     }
 
     db_batch.Put(attr_key, std::to_string(bandwidth));

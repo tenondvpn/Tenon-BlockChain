@@ -57,9 +57,7 @@ int VpnSvrBandwidth::InitWithAttr(
     }
 
     uint32_t bandwidth = 0;
-    try {
-        bandwidth = common::StringUtil::ToUint32(attr_val);
-    } catch (...) {
+    if (!common::StringUtil::ToUint32(attr_val, &bandwidth)) {
         return kContractSuccess;
     }
 

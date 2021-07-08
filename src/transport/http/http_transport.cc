@@ -726,8 +726,10 @@ std::string HttpTransport::GetCountryLoad(int32_t pre_days) try {
                 continue;
             }
 
-            int32_t key = common::StringUtil::ToInt32(tmp_split[0]);
-            int32_t val = common::StringUtil::ToInt32(tmp_split[1]);
+            int32_t key = 0;
+            common::StringUtil::ToInt32(tmp_split[0], &key);
+            int32_t val = 0;
+            common::StringUtil::ToInt32(tmp_split[1], &val);
             auto iter = res_map.find(key);
             if (iter == res_map.end()) {
                 res_map[key] = val;

@@ -814,7 +814,23 @@ void BftManager::HandleOpposeNodeMsg(
         return;
     }
         
-    auto res = common::StringUtil::ToInt32(spliter[0]);
+    int32_t res = 0;
+    if (!common::StringUtil::ToInt32(spliter[0], &res)) {
+        return;
+    }
+
+    if (res == kBftBlockPreHashError) {
+        return;
+    }
+
+    int32_t tx_index = -1;
+    if (!common::StringUtil::ToInt32(spliter[1], &tx_index)) {
+        return;
+    }
+
+    if (tx_index >= 0) {
+        bft_ptr->AddInvalidTxIndex(tx_index);
+    }
 }
 
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
@@ -1361,6 +1377,7 @@ void BftManager::CheckTimeout() {
 
     for (uint32_t i = 0; i < timeout_vec.size(); ++i) {
         timeout_vec[i]->set_status(kBftStepTimeout);
+        timeout_vec[i]->clear_item_index_vec();
         DispatchPool::Instance()->BftOver(timeout_vec[i]);
         BFT_ERROR("Timeout %s,", common::Encode::HexEncode(timeout_vec[i]->gid()).c_str());
     }

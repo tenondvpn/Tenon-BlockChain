@@ -58,7 +58,6 @@ int Bootstrap::Init(common::Config& config) {
             continue;
         }
 
-//         auto pubkey_ptr = std::make_shared<security::PublicKey>(pubkey);
         tenon::dht::DhtKeyManager root_dht_key(
                 kUniversalNetworkId,
                 common::GlobalInfo::Instance()->country(),
@@ -67,20 +66,24 @@ int Bootstrap::Init(common::Config& config) {
                 kNodeNetworkId,
                 common::GlobalInfo::Instance()->country(),
                 std::string(field_split[0], field_split.SubLen(0)));
+        uint16_t port = 0;
+        if (!tenon::common::StringUtil::ToUint16(field_split[2], &port)) {
+            return kNetworkError;
+        }
+
         root_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
-                std::string(field_split[0], field_split.SubLen(0)),
-                root_dht_key.StrKey(),
-                std::string(field_split[1], field_split.SubLen(1)),
-                tenon::common::StringUtil::ToUint16(field_split[2]),
-                str_pubkey,
-                ""));
+            std::string(field_split[0], field_split.SubLen(0)),
+            root_dht_key.StrKey(),
+            std::string(field_split[1], field_split.SubLen(1)),
+            port,
+            str_pubkey,
+            ""));
         node_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
-                std::string(field_split[0], field_split.SubLen(0)),
-                node_dht_key.StrKey(),
-                std::string(field_split[1], field_split.SubLen(1)),
-                tenon::common::StringUtil::ToUint16(field_split[2]),
-                str_pubkey,
-                ""));
+            std::string(field_split[0], field_split.SubLen(0)),
+            node_dht_key.StrKey(),
+            std::string(field_split[1], field_split.SubLen(1)),
+`            str_pubkey,
+            ""));
         NETWORK_INFO("bootstrap[%s][%d][%s][%s][%s]",
                 field_split[0], field_split.SubLen(0), field_split[1], field_split[2],
                 common::Encode::HexEncode(root_dht_key.StrKey()).c_str());

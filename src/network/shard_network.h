@@ -201,7 +201,11 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
 
         auto now_tm_sec = std::chrono::steady_clock::now().time_since_epoch().count() /
             1000000000llu;
-        auto peer_tm_sec = common::StringUtil::ToUint64(tmp_out_enc);
+        uint64_t peer_tm_sec = 0;
+        if (!common::StringUtil::ToUint64(tmp_out_enc, &peer_tm_sec)) {
+            return dht::kDhtError;
+        }
+
         free(tmp_out_enc);
         if (now_tm_sec <= peer_tm_sec - 15 && now_tm_sec >= peer_tm_sec + 15) {
             return dht::kDhtError;

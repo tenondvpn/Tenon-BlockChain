@@ -114,11 +114,16 @@ std::string VpnClient::UpdateUseVpnNode(
             continue;
         }
 
+        uint16_t port = 0;
+        if (!common::StringUtil::ToUint16(svr[1], &port)) {
+            continue;
+        }
+
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                svr[0],
-                common::StringUtil::ToUint16(svr[1]),
-                0,
-                msg);
+            svr[0],
+            port,
+            0,
+            msg);
     }
 
     std::unique_lock<std::mutex> vpn_node_info_lock(vpn_node_info_mutex_);
@@ -288,10 +293,7 @@ void VpnClient::HandleContractMessage(transport::protobuf::Header& header) {
             return;
         }
 
-        try {
-            today_used_bandwidth_ = common::StringUtil::ToUint32(client_bw_res.attr_value());
-        } catch (...) {
-        }
+        common::StringUtil::ToInt32(client_bw_res.attr_value(), &today_used_bandwidth_);
     }
 }
 

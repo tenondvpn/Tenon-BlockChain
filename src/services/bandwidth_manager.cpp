@@ -44,17 +44,17 @@ BandwidthManager::BandwidthManager() {
     std::string val;
     auto res = db::Db::Instance()->Get("tvpn_local_prev_flush_to_bft_tm", &val);
     if (res.ok()) {
-        prev_flush_to_bft_tm_ = common::StringUtil::ToUint64(val);
+        common::StringUtil::ToUint64(val, &prev_flush_to_bft_tm_);
     }
 
     res = db::Db::Instance()->Get("tvpn_svr_node_bw", &val);
     if (res.ok()) {
-        svr_bandwidth_all_ = common::StringUtil::ToUint64(val);
+        common::StringUtil::ToUint64(val, &svr_bandwidth_all_);
     }
 
     res = db::Db::Instance()->Get("tvpn_route_node_bw", &val);
     if (res.ok()) {
-        route_bandwidth_all_ = common::StringUtil::ToUint64(val);
+        common::StringUtil::ToUint64(val, &route_bandwidth_all_);
     }
 
     FlushToDb();

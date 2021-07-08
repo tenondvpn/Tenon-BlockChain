@@ -619,15 +619,11 @@ void UpdateVpnInit::SetVersionInfo(const std::string& ver) {
         common::Split<> tmp_split(splits[split_idx], ';', splits.SubLen(split_idx));
         if (tmp_split.Count() >= 2) {
             if (memcmp(tmp_split[0], "free_max_bw", strlen("free_max_bw")) == 0) {
-                try {
-                    max_free_bandwidth_ = common::StringUtil::ToUint64(tmp_split[1]);
-                } catch (...) {}
+                common::StringUtil::ToUint64(tmp_split[1], (uint64_t*)&max_free_bandwidth_);
             }
 
             if (memcmp(tmp_split[0], "vip_max_bw", strlen("vip_max_bw")) == 0) {
-                try {
-                    max_vip_bandwidth_ = common::StringUtil::ToUint64(tmp_split[1]);
-                } catch (...) {}
+                common::StringUtil::ToUint64(tmp_split[1], (uint64_t*)&max_vip_bandwidth_);
             }
 
             if (memcmp(tmp_split[0], "vpn_country", strlen("vpn_country")) == 0) {
@@ -886,8 +882,12 @@ void UpdateVpnInit::HandleBftNodes(const std::string& nodes) {
         }
 
         bft_nodes_.insert(ip);
-        uint16_t port = common::StringUtil::ToUint16(
-                std::string(item_split[1], item_split.SubLen(1)));
+        uint16_t port = 0;
+        if (!common::StringUtil::ToUint16(
+                std::string(item_split[1], item_split.SubLen(1)),
+                &port)) {
+            continue;
+        }
         bft_nodes_vec_.push_back(std::make_pair(ip, port));
     }
 }

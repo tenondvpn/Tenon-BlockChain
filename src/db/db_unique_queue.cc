@@ -22,12 +22,16 @@ UniqueQueue::UniqueQueue(const std::string& name, uint32_t max_size) {
 
     std::string begin_index_str;
     if (Db::Instance()->Get(db_bindex_name_, &begin_index_str).ok()) {
-        begin_index_ = common::StringUtil::ToUint32(begin_index_str);
+        uint32_t tmp_index = 0;
+        common::StringUtil::ToUint32(begin_index_str, &tmp_index);
+        begin_index_ = tmp_index;
     }
 
     std::string end_index_str;
     if (Db::Instance()->Get(db_eindex_name_, &end_index_str).ok()) {
-        end_index_ = common::StringUtil::ToUint32(end_index_str);
+        uint32_t tmp_index = 0;
+        common::StringUtil::ToUint32(end_index_str, &tmp_index);
+        end_index_ = tmp_index;
         ++end_index_;
     }
 
