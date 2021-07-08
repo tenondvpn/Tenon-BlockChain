@@ -789,6 +789,7 @@ int BftManager::LeaderPrecommit(
             backup_secret,
             security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
     if (!bft_msg.agree()) {
+        HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
     if (res == kBftAgree) {
