@@ -247,7 +247,7 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (!AggSignValid(tx_bft.to_tx().block())) {
-        BFT_ERROR("ts block agg sign verify failed!");
+        BFT_ERROR("block agg sign verify failed!");
         return;
     }
 

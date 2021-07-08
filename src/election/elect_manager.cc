@@ -245,7 +245,6 @@ void ElectManager::ProcessNewElectBlock(
     {
         local_node_is_super_leader_ = false;
         Members tmp_leaders;
-        std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
         for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
@@ -266,6 +265,7 @@ void ElectManager::ProcessNewElectBlock(
             }
         }
 
+        std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
         auto RandFunc = [&g2](int i) -> int {
             return g2() % i;
         };
@@ -297,6 +297,7 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     elect_members_[height] = member_ptr;
+    std::cout << "add elect height: " << height << ", member count: " << shard_members_ptr->size() << std::endl;
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;

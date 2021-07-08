@@ -219,7 +219,7 @@ int BlockManager::InitRootElectBlocks() {
         elect::ElectManager::Instance()->ProcessNewElectBlock(
             latest_elect_block_height,
             elect_block,
-            false);
+            true);
         vss::VssManager::Instance()->OnElectBlock(latest_elect_block_height);
     }
     
