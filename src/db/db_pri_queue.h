@@ -19,7 +19,7 @@ public:
         dict_name_ = db::kGlobalDbPriQueuePrefix + "_" + name;
         std::string tmp_val;
         if (db::Dict::Instance()->Hget(dict_name_, kFieldSize, &tmp_val)) {
-            common::StringUtil::ToUint32(tmp_val, &size_);
+            common::StringUtil::ToInt32(tmp_val, &size_);
         }
 
         for (uint32_t i = 0; i < size_; ++i) {
