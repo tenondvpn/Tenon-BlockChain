@@ -131,7 +131,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
         }
 
         if (!elect_block.IsInitialized()) {
-            return kBlockError;
+            return kBlockSuccess;
         }
 
         elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, false);
@@ -192,7 +192,6 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
             return kBlockError;
         }
     }
-
 
     BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction success.");
     return kBlockSuccess;
