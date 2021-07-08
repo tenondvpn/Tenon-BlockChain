@@ -134,6 +134,10 @@ elect::BftMemberPtr MemberManager::GetMember(uint32_t network_id, uint32_t index
         return nullptr;
     }
 
+    if (member_ptr->size() <= index) {
+        return nullptr;
+    }
+
     assert(member_ptr != nullptr);
     assert(!member_ptr->empty());
     return (*member_ptr)[index];

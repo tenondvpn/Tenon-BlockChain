@@ -198,27 +198,31 @@ int BlockManager::InitRootElectBlocks() {
         return kBlockSuccess;
     }
 
-    uint64_t latest_elect_block_height = 0;
-    std::string latest_elect_block_str;
-    if (account_info->GetLatestElectBlock(
-            network::kRootCongressNetworkId,
-            &latest_elect_block_height,
-            &latest_elect_block_str) != kBlockSuccess) {
-        BLOCK_INFO("this node not load elect blocks, no latest elect block.");
-        return kBlockSuccess;
-    }
+    for (uint32_t i = network::kRootCongressNetworkId;
+            i < network::kConsensusShardEndNetworkId; ++i) {
+        uint64_t latest_elect_block_height = 0;
+        std::string latest_elect_block_str;
+        if (account_info->GetLatestElectBlock(
+                i,
+                &latest_elect_block_height,
+                &latest_elect_block_str) != kBlockSuccess) {
+            BLOCK_INFO("this node not load elect blocks, no latest elect block.");
+            return kBlockSuccess;
+        }
 
-    elect::protobuf::ElectBlock elect_block;
-    if (!elect_block.ParseFromString(latest_elect_block_str)) {
-        BLOCK_ERROR("this node not load elect blocks, parse failed");
-        return kBlockError;
-    }
+        elect::protobuf::ElectBlock elect_block;
+        if (!elect_block.ParseFromString(latest_elect_block_str)) {
+            BLOCK_ERROR("this node not load elect blocks, parse failed");
+            return kBlockError;
+        }
 
-    elect::ElectManager::Instance()->ProcessNewElectBlock(
-        latest_elect_block_height,
-        elect_block,
-        false);
-    vss::VssManager::Instance()->OnElectBlock(latest_elect_block_height);
+        elect::ElectManager::Instance()->ProcessNewElectBlock(
+            latest_elect_block_height,
+            elect_block,
+            false);
+        vss::VssManager::Instance()->OnElectBlock(latest_elect_block_height);
+    }
+    
     return kBlockSuccess;
 }
 

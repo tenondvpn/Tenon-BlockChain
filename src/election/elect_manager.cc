@@ -291,16 +291,11 @@ void ElectManager::ProcessNewElectBlock(
         valid_shard_networks_.insert(elect_block.shard_network_id());
     }
 
-    if (elect_members_.find(height) != elect_members_.end()) {
-        return;
-    }
-
     elect_members_[height] = member_ptr;
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;
-    }
-    else {
+    } else {
         if (height > net_heights_iter->second) {
             net_heights_iter->second = height;
         }

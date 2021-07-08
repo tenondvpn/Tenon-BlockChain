@@ -585,20 +585,20 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         }
         
-        std::string pool_hash;
-        uint64_t pool_height = 0;
-        uint64_t tm_height;
-        uint64_t tm_with_block_height;
-        int res = block::AccountManager::Instance()->GetBlockInfo(
-            iter->first,
-            &pool_height,
-            &pool_hash,
-            &tm_height,
-            &tm_with_block_height);
-        if (res != block::kBlockSuccess) {
-            INIT_ERROR("GetBlockInfo error.");
-            return kInitError;
-        }
+//         std::string pool_hash;
+//         uint64_t pool_height = 0;
+//         uint64_t tm_height;
+//         uint64_t tm_with_block_height;
+//         int res = block::AccountManager::Instance()->GetBlockInfo(
+//             iter->first,
+//             &pool_height,
+//             &pool_hash,
+//             &tm_height,
+//             &tm_with_block_height);
+//         if (res != block::kBlockSuccess) {
+//             INIT_ERROR("GetBlockInfo error.");
+//             return kInitError;
+//         }
 
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
