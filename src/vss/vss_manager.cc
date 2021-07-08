@@ -40,7 +40,6 @@ void VssManager::OnTimeBlock(
         ClearAll();
         epoch_random_ = epoch_random;
         latest_tm_block_tm_ = tm_block_tm;
-        prev_tm_height_ = tm_height;
         prev_elect_height_ = elect_height;
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
             if (prev_tm_height_ != common::kInvalidUint64 && prev_tm_height_ >= tm_height) {
@@ -63,6 +62,7 @@ void VssManager::OnTimeBlock(
             local_random_.OnTimeBlock(tm_block_tm);
         }
 
+        prev_tm_height_ = tm_height;
         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
