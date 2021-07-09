@@ -74,15 +74,23 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(common::kRootChainSingleBlockTxAddress);
     tx_info->set_gid(gid);
-    BFT_ERROR("LeaderCreateTimeBlockTx %lu latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
-        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
 
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
     if (!bft::GidManager::Instance()->NewGidTxValid(gid, *tx_info)) {
+        BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu"
+            "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+            common::Encode::HexEncode(gid).c_str(),
+            (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
+
         return kTimeBlockError;
     }
+
+    BFT_ERROR("LeaderCreateTimeBlockTx success gid exists[%s] %lu"
+        "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+        common::Encode::HexEncode(gid).c_str(),
+        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
 
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
@@ -166,16 +174,18 @@ void TimeBlockManager::UpdateTimeBlock(
         uint64_t latest_time_block_height,
         uint64_t latest_time_block_tm,
         uint64_t vss_random) {
-    if (latest_time_block_height_ >= latest_time_block_height) {
-        return;
-    }
+    {
+        std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
+        if (latest_time_block_height_ >= latest_time_block_height) {
+            return;
+        }
 
-    latest_time_block_height_ = latest_time_block_height;
-    latest_time_block_tm_ = latest_time_block_tm;
-    std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
-    latest_time_blocks_.push_back(latest_time_block_tm_);
-    if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
-        latest_time_blocks_.pop_front();
+        latest_time_block_height_ = latest_time_block_height;
+        latest_time_block_tm_ = latest_time_block_tm;
+        latest_time_blocks_.push_back(latest_time_block_tm_);
+        if (latest_time_blocks_.size() >= kTimeBlockAvgCount) {
+            latest_time_blocks_.pop_front();
+        }
     }
 
     BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
@@ -198,7 +208,6 @@ bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
 //     }
 
     auto now_tm = common::TimeUtils::TimestampSeconds();
-    std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
         if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
@@ -253,17 +262,20 @@ bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
 }
 
 void TimeBlockManager::CreateTimeBlockTx() {
-    auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-    if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-            int32_t pool_mod_num = -1;
-            if (elect::ElectManager::Instance()->IsSuperLeader(
+    {
+        std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
+        auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+        if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
+            if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+                int32_t pool_mod_num = -1;
+                if (elect::ElectManager::Instance()->IsSuperLeader(
                     common::GlobalInfo::Instance()->network_id(),
                     common::GlobalInfo::Instance()->id())) {
-                transport::protobuf::Header msg;
-                if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
-                    network::Route::Instance()->Send(msg);
-                    network::Route::Instance()->SendToLocal(msg);
+                    transport::protobuf::Header msg;
+                    if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
+                        network::Route::Instance()->Send(msg);
+                        network::Route::Instance()->SendToLocal(msg);
+                    }
                 }
             }
         }
