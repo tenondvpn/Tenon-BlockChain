@@ -16,7 +16,12 @@ ElectPool::~ElectPool() {}
 
 void ElectPool::ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
-    elect_nodes_ = nodes;
+    elect_nodes_.clear();
+    for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+        auto copy_ptr = std::make_shared<ElectNodeDetail>(*((*iter).get()));
+        copy_ptr->pool_index_mod_num = -1;
+        elect_nodes_.push_back(copy_ptr);
+    }
 }
 
 void ElectPool::GetAllValidNodes(
