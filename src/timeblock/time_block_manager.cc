@@ -253,8 +253,8 @@ bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
     auto mem_ptr = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         common::GlobalInfo::Instance()->id());
-    if (mem_ptr != nullptr && mem_ptr->pool_index_mod_num >= 0) {
-        *pool_mod_num = mem_ptr->pool_index_mod_num;
+    if (mem_ptr != nullptr && mem_ptr->pool_index_mod_num() >= 0) {
+        *pool_mod_num = mem_ptr->pool_index_mod_num();
         return true;
     }
     

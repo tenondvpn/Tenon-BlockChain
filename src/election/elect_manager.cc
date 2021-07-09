@@ -248,18 +248,18 @@ void ElectManager::ProcessNewElectBlock(
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
         for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
-            if ((*iter)->pool_index_mod_num >= 0) {
+            if ((*iter)->pool_index_mod_num() >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
                 ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
                     "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                     elect_block.shard_network_id(),
                     common::Encode::HexEncode((*iter)->id).c_str(),
-                    (*iter)->pool_index_mod_num);
+                    (*iter)->pool_index_mod_num());
                 std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
                     << elect_block.shard_network_id()
                     << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                    << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                    << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num()
                     << ", leader count: " << elect_block.leader_count()
                     << std::endl;
             }
@@ -546,7 +546,7 @@ void ElectManager::SetNetworkMember(
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
         for (auto iter = members_ptr->begin(); iter != members_ptr->end(); ++iter) {
-            if ((*iter)->pool_index_mod_num >= 0) {
+            if ((*iter)->pool_index_mod_num() >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
             }
