@@ -120,26 +120,19 @@ int AccountManager::GetAddressConsensusNetworkId(
 }
 
 int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
-//     if (tx_info.network_id() == common::GlobalInfo::Instance()->network_id() ||
-//             tx_info.network_id() + network::kConsensusWaitingShardOffset ==
-//             common::GlobalInfo::Instance()->network_id()) {
-        elect::protobuf::ElectBlock elect_block;
-        for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-            if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
-                elect_block.ParseFromString(tx_info.attr(i).value());
-            }
+    elect::protobuf::ElectBlock elect_block;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
+            elect_block.ParseFromString(tx_info.attr(i).value());
         }
+    }
 
-        if (!elect_block.IsInitialized()) {
-            return kBlockSuccess;
-        }
+    if (!elect_block.IsInitialized()) {
+        return kBlockSuccess;
+    }
 
-        std::cout << "handle elect block: " << elect_block.shard_network_id()
-            << ", size: " << elect_block.in_size()
-            << ", block height: "<< height << std::endl;
-        elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
-        vss::VssManager::Instance()->OnElectBlock(height);
-//     }
+    elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
+    vss::VssManager::Instance()->OnElectBlock(height);
 
     return kBlockSuccess;
 }
