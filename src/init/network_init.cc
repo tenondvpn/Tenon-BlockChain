@@ -167,7 +167,7 @@ int NetworkInit::CheckJoinWaitingPool() {
         }
     }
 
-    waiting_network_id = network::kRootCongressWaitingNetworkId;
+//     waiting_network_id = network::kRootCongressWaitingNetworkId;
     if ((waiting_network_id < network::kRootCongressWaitingNetworkId ||
             waiting_network_id >= network::kConsensusWaitingShardEndNetworkId)) {
         auto valid_network_ids = elect::ElectManager::Instance()->valid_shard_networks();

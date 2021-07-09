@@ -60,7 +60,6 @@ void VssManager::OnTimeBlock(
         }
 
         member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-            elect_height,
             common::GlobalInfo::Instance()->network_id());
         prev_tm_height_ = tm_height;
         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
