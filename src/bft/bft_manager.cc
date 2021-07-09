@@ -188,7 +188,10 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
             continue;
         }
 
-        auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+            block.electblock_height(),
+            block.network_id(),
+            i);
         if (!mem_ptr) {
             return false;
         }
@@ -247,7 +250,7 @@ void BftManager::HandleRootTxBlock(
     }
 
     if (!AggSignValid(tx_bft.to_tx().block())) {
-        BFT_ERROR("block agg sign verify failed! height: %lu, type: %d",
+        BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
             tx_bft.to_tx().block().height(),
             tx_bft.to_tx().block().tx_list(0).type());
         return;
@@ -393,7 +396,7 @@ void BftManager::HandleSyncBlock(
     }
 
     if (!AggSignValid(tx_bft.to_tx().block())) {
-        BFT_ERROR("ts block agg sign verify failed!");
+        BFT_ERROR("sync block agg sign verify failed!");
         return;
     }
 
