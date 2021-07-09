@@ -81,9 +81,6 @@ int32_t MemberManager::IsLeader(
         return -1;
     }
 
-    ELECT_DEBUG("IsLeader network_id: %u, node_id: %s, pool_index_mod_num: %d, des id: %s",
-        network_id, common::Encode::HexEncode(node_id).c_str(),
-        member_ptr->pool_index_mod_num(), common::Encode::HexEncode(member_ptr->id).c_str());
     return member_ptr->pool_index_mod_num();
 }
 

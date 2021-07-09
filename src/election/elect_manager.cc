@@ -363,8 +363,6 @@ int32_t ElectManager::IsLeader(
         mem_ptr = iter->second;
     }
 
-    ELECT_DEBUG("IsLeader elect_height: %lu, network_id: %u, node_id: %s",
-        elect_height, network_id, common::Encode::HexEncode(node_id).c_str());
     return mem_ptr->IsLeader(network_id, node_id);
 }
 
