@@ -31,29 +31,48 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
 DbPoolInfo::~DbPoolInfo() {}
 
 int DbPoolInfo::InitWithGenesisBlock() {
-    {
-        std::lock_guard<std::mutex> guard(base_addr_mutex_);
-        if (!base_addr_.empty()) {
-            return kBlockSuccess;
-        }
-    }
-
-    bft::protobuf::Block genesis_block;
-    if (BlockManager::Instance()->GetBlockWithHeight(
+//     if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+//         common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+//         return kBlockError;
+//     }
+// 
+//     {
+//         std::lock_guard<std::mutex> guard(base_addr_mutex_);
+//         if (!base_addr_.empty()) {
+//             return kBlockSuccess;
+//         }
+//     }
+// 
+//     bft::protobuf::Block genesis_block;
+//     if (BlockManager::Instance()->GetBlockWithHeight(
+//             common::GlobalInfo::Instance()->network_id(),
+//             pool_index_,
+//             0,
+//             genesis_block) != kBlockSuccess) {
+//         BLOCK_ERROR("get base addr net id[%u], pool: %u, failed!",
+//             common::GlobalInfo::Instance()->network_id(), (uint32_t)pool_index_);
+//         return kBlockError;
+//     }
+// 
+//     for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
+//         if (genesis_block.tx_list(i).from().substr(2, 16) ==
+//                 common::kStatisticFromAddressMidllefixDecode) {
+//             std::lock_guard<std::mutex> guard(base_addr_mutex_);
+//             base_addr_ = genesis_block.tx_list(i).from();
+//             return kBlockSuccess;
+//         }
+//     }
+    uint32_t id_idx = 0;
+    while (true) {
+        std::string addr = common::Encode::HexDecode(common::StringUtil::Format(
+            "%04d%s%04d",
             common::GlobalInfo::Instance()->network_id(),
-            pool_index_,
-            0,
-            genesis_block) != kBlockSuccess) {
-        BLOCK_ERROR("get base addr net id[%u], pool: %u, failed!",
-            common::GlobalInfo::Instance()->network_id(), (uint32_t)pool_index_);
-        return kBlockError;
-    }
-
-    for (int32_t i = 0; i < genesis_block.tx_list_size(); ++i) {
-        if (genesis_block.tx_list(i).from().substr(2, 16) ==
-                common::kStatisticFromAddressMidllefixDecode) {
+            common::kStatisticFromAddressMidllefix.c_str(),
+            id_idx++));
+        uint32_t pool_idx = common::GetPoolIndex(addr);
+        if (pool_idx == pool_index_) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);
-            base_addr_ = genesis_block.tx_list(i).from();
+            base_addr_ = addr;
             return kBlockSuccess;
         }
     }
