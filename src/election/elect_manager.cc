@@ -251,18 +251,19 @@ void ElectManager::ProcessNewElectBlock(
             if ((*iter)->pool_index_mod_num() >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
-                ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
-                    "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-                    elect_block.shard_network_id(),
-                    common::Encode::HexEncode((*iter)->id).c_str(),
-                    (*iter)->pool_index_mod_num());
-                std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-                    << elect_block.shard_network_id()
-                    << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                    << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num()
-                    << ", leader count: " << elect_block.leader_count()
-                    << std::endl;
             }
+
+            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+                "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                elect_block.shard_network_id(),
+                common::Encode::HexEncode((*iter)->id).c_str(),
+                (*iter)->pool_index_mod_num());
+            std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+                << elect_block.shard_network_id()
+                << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num()
+                << ", leader count: " << elect_block.leader_count()
+                << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
@@ -652,13 +653,13 @@ bool ElectManager::IsIpExistsInAnyShard(uint32_t network_id, const std::string& 
 
 void ElectManager::ClearExistsNetwork(uint32_t network_id) {
     {
-        std::lock_guard<std::mutex> guard(added_id_set_mutex_);
-        added_id_set_.clear();
+        std::lock_guard<std::mutex> guard(added_net_id_set_mutex_);
+        added_net_id_set_[network_id] = std::unordered_set<std::string>();
     }
 
     {
-        std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
-        added_ip_set_.clear();
+        std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
+        added_net_ip_set_[network_id] = std::unordered_set<std::string>();
     }
 }
 
@@ -667,13 +668,13 @@ void ElectManager::AddNewNodeWithIdAndIp(
         const std::string& id,
         const std::string& ip) {
     {
-        std::lock_guard<std::mutex> guard(added_id_set_mutex_);
-        added_id_set_.insert(id + std::to_string(network_id));
+        std::lock_guard<std::mutex> guard(added_net_id_set_mutex_);
+        added_net_id_set_[network_id].insert(id);
     }
 
     {
-        std::lock_guard<std::mutex> guard(added_ip_set_mutex_);
-        added_ip_set_.insert(ip + std::to_string(network_id));
+        std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
+        added_net_ip_set_[network_id].insert(ip);
     }
 }
 

@@ -84,7 +84,7 @@ struct BftMember {
         return pool_index_mod_num_;
     }
 private:
-    int32_t pool_index_mod_num_;
+    volatile int32_t pool_index_mod_num_;
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;
