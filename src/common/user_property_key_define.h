@@ -133,7 +133,7 @@ static const uint32_t kDefaultBroadcastNeighborCount = 7u;
 
 static inline bool IsBaseAddress(const std::string& address) {
     return (address.substr(4, kStatisticFromAddressMidllefixDecode.size()) ==
-        kStatisticFromAddressMidllefixDecode)
+        kStatisticFromAddressMidllefixDecode);
 }
 
 }  // namespace  common
