@@ -175,7 +175,7 @@ int NetworkInit::CheckJoinWaitingPool() {
         valid_network_ids.insert(network::kConsensusShardBeginNetworkId);
         std::vector<uint32_t> valid_ids(valid_network_ids.begin(), valid_network_ids.end());
         auto rand_idx = common::Random::RandomUint32() % valid_ids.size();
-        waiting_network_id = network::kRootCongressWaitingNetworkId + network::kConsensusWaitingShardOffset;
+        waiting_network_id = valid_ids[rand_idx] + network::kConsensusWaitingShardOffset;
     }
 
     if (elect::ElectManager::Instance()->Join(waiting_network_id) != elect::kElectSuccess) {
