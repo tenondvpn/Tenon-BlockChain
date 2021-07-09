@@ -92,8 +92,8 @@ int32_t MemberManager::IsLeader(
         return -1;
     }
 
-    ELECT_DEBUG("IsLeader elect_height: %lu, network_id: %u, node_id: %s, pool_index_mod_num: %d",
-        elect_height, network_id, common::Encode::HexEncode(node_id).c_str(), member_ptr->pool_index_mod_num);
+    ELECT_DEBUG("IsLeader network_id: %u, node_id: %s, pool_index_mod_num: %d",
+        network_id, common::Encode::HexEncode(node_id).c_str(), member_ptr->pool_index_mod_num);
     return member_ptr->pool_index_mod_num;
 }
 
