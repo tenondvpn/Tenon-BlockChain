@@ -148,7 +148,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
 
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num());
+        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
     }
 
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
