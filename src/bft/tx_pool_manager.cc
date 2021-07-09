@@ -7,6 +7,8 @@
 #include "block/account_manager.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
+#include "timeblock/time_block_utils.h"
+#include "timeblock/time_block_manager.h"
 
 namespace tenon {
 
@@ -33,6 +35,28 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
         return false;
     }
 
+    if (tx_bft.new_tx().type() == common::kConsensusRootTimeBlock) {
+        bool tm_tx_valid = false;
+        for (int32_t i = 0; i < tx_bft.new_tx().attr_size(); ++i) {
+            if (tx_bft.new_tx().attr(0).key() == tmblock::kAttrTimerBlock) {
+                uint64_t leader_tm = 0;
+                if (!common::StringUtil::ToUint64(tx_bft.new_tx().attr(0).value(), &leader_tm)) {
+                    return false;
+                }
+
+                if (!tmblock::TimeBlockManager::Instance()->BackupheckNewTimeBlockValid(leader_tm)) {
+                    return false;
+                }
+
+                tm_tx_valid = true;
+                break;
+            }
+        }
+
+        if (!tm_tx_valid) {
+            return false;
+        }
+    }
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         uint32_t network_id = 0;
         if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
