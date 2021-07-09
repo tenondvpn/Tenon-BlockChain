@@ -219,8 +219,10 @@ int BlockManager::InitRootElectBlocks() {
         elect::ElectManager::Instance()->ProcessNewElectBlock(
             latest_elect_block_height,
             elect_block,
-            true);
-        vss::VssManager::Instance()->OnElectBlock(latest_elect_block_height);
+            false);
+        vss::VssManager::Instance()->OnElectBlock(
+            elect_block.shard_network_id(),
+            latest_elect_block_height);
     }
     
     return kBlockSuccess;

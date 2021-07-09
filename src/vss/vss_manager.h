@@ -23,7 +23,7 @@ public:
         uint64_t tm_height,
         uint64_t elect_height,
         uint64_t epoch_random);
-    void OnElectBlock(uint64_t elect_height);
+    void OnElectBlock(uint32_t network_id, uint64_t elect_height);
     uint64_t EpochRandom();
     uint64_t GetConsensusFinalRandom();
    

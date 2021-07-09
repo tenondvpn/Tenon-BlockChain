@@ -132,7 +132,7 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
     }
 
     elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
-    vss::VssManager::Instance()->OnElectBlock(height);
+    vss::VssManager::Instance()->OnElectBlock(elect_block.shard_network_id(), height);
 
     return kBlockSuccess;
 }

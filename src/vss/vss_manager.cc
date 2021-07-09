@@ -74,16 +74,19 @@ void VssManager::OnTimeBlock(
     }
 }
 
-void VssManager::OnElectBlock(uint64_t elect_height) {
-    std::lock_guard<std::mutex> guard(mutex_);
-    local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-        elect_height,
-        network::kRootCongressNetworkId,
-        common::GlobalInfo::Instance()->id());
-    prev_elect_height_ = elect_height;
-    member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-        elect_height,
-        network::kRootCongressNetworkId);
+void VssManager::OnElectBlock(uint32_t network_id, uint64_t elect_height) {
+    if (network_id == network::kRootCongressNetworkId &&
+            common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
+            elect_height,
+            network::kRootCongressNetworkId,
+            common::GlobalInfo::Instance()->id());
+        prev_elect_height_ = elect_height;
+        member_count_ = elect::ElectManager::Instance()->GetMemberCount(
+            elect_height,
+            network::kRootCongressNetworkId);
+    }
 }
 
 uint64_t VssManager::GetConsensusFinalRandom() {
