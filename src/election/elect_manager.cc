@@ -318,6 +318,10 @@ int ElectManager::CreateElectTransaction(
         uint32_t shard_netid,
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+        return kElectError;
+    }
+
     return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
 }
 

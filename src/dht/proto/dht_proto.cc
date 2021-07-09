@@ -136,7 +136,6 @@ void DhtProto::CreateBootstrapResponse(
         }
 
         res_cb(id, boot_init_msg, uid, header.version());
-        DHT_ERROR("get boot init message called!");
     }
 
 	auto node_country = ip::IpWithCountry::Instance()->GetCountryUintCode(header.from_ip());

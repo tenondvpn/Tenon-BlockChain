@@ -48,7 +48,7 @@ bool TxPool::NewAddrValid(const std::string& new_addr) {
         new_addr_queue_.pop_front();
     }
 
-    BFT_ERROR("insert new addr : %s", common::Encode::HexEncode(new_addr).c_str());
+    BFT_DEBUG("insert new addr : %s", common::Encode::HexEncode(new_addr).c_str());
     new_addr_set_.insert(new_addr);
     return true;
 }

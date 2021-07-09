@@ -55,10 +55,12 @@ int ElectPoolManager::CreateElectTransaction(
     }
 
     if (!statistic_valid) {
+        ELECT_ERROR("CreateElectTransaction get statistic error shard id: %u", shard_netid);
         return kElectError;
     }
 
     if (tx_info.gid().empty()) {
+        ELECT_ERROR("CreateElectTransaction gid error shard id: %u", shard_netid);
         return kElectError;
     }
 
@@ -73,6 +75,8 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_gas_used(0);
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
+    ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u",
+        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid);
     return kElectSuccess;
 }
 

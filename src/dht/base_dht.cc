@@ -364,7 +364,6 @@ void BaseDht::ProcessBootstrapRequest(
         uid = dht_msg.bootstrap_req().uid();
     }
 
-    DHT_ERROR("receive bootstarp request: %s: %d", header.from_ip().c_str(), header.from_port());
     DhtProto::CreateBootstrapResponse(
         dht_msg.bootstrap_req().node_id(),
         uid,

@@ -188,14 +188,8 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
             continue;
         }
 
-        if (block.tx_list(0).type() == common::kConsensusRootElectShard || block.tx_list(0).type() == common::kConsensusRootTimeBlock) {
-            std::cout << "AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
-        }
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(block.network_id(), i);
         if (!mem_ptr) {
-            if (block.tx_list(0).type() == common::kConsensusRootElectShard || block.tx_list(0).type() == common::kConsensusRootTimeBlock) {
-                std::cout << "error AggSignValid check: " << block.network_id() << ", index: " << i << std::endl;
-            }
             return false;
         }
 
