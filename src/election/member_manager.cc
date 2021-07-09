@@ -61,17 +61,6 @@ elect::MembersPtr MemberManager::GetNetworkMembers(uint32_t network_id) {
     return network_members_[network_id];
 }
 
-void MemberManager::GetAllNodes(
-        uint32_t network_id,
-        std::vector<std::string>* nodes) {
-    assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
-    std::lock_guard<std::mutex> guard(all_mutex_);
-    for (auto iter = network_members_[network_id]->begin();
-            iter != network_members_[network_id]->end(); ++iter) {
-        nodes->push_back((*iter)->id);
-    }
-}
-
 uint32_t MemberManager::GetMemberCount(uint32_t network_id) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard
@@ -92,8 +81,9 @@ int32_t MemberManager::IsLeader(
         return -1;
     }
 
-    ELECT_DEBUG("IsLeader network_id: %u, node_id: %s, pool_index_mod_num: %d",
-        network_id, common::Encode::HexEncode(node_id).c_str(), member_ptr->pool_index_mod_num);
+    ELECT_DEBUG("IsLeader network_id: %u, node_id: %s, pool_index_mod_num: %d, des id: %s",
+        network_id, common::Encode::HexEncode(node_id).c_str(),
+        member_ptr->pool_index_mod_num, common::Encode::HexEncode(member_ptr->id).c_str());
     return member_ptr->pool_index_mod_num;
 }
 
