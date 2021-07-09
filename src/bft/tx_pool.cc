@@ -178,14 +178,14 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
         return false;
     }
 
-    auto contract_info = block::AccountManager::Instance()->GetAcountInfo(
-        tx_ptr->tx.from());
-    assert(contract_info != nullptr);
     if (tx_ptr->tx.type() == common::kConsensusCallContract &&
-            tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
+        tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
         return false;
     }
 
+    auto contract_info = block::AccountManager::Instance()->GetAcountInfo(
+        tx_ptr->tx.from());
+    assert(contract_info != nullptr);
     if (contract_info->locked()) {
         return true;
     }
