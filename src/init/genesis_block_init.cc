@@ -553,23 +553,6 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_version(common::kTransactionVersion);
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
-                network::kRootCongressNetworkId,
-                common::GetPoolIndex(address)));
-            tx_info->set_from_pubkey("");
-            tx_info->set_from_sign("");
-            tx_info->set_to("");
-            tx_info->set_amount(0);
-            tx_info->set_balance(0);
-            tx_info->set_gas_limit(0);
-            tx_info->set_type(common::kConsensusCreateGenesisAcount);
-            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
-        }
-
-        {
-            auto tx_info = tx_list->Add();
-            tx_info->set_version(common::kTransactionVersion);
-            tx_info->set_gid(common::CreateGID(""));
-            tx_info->set_from(GetValidPoolBaseAddr(
                 network::kConsensusShardBeginNetworkId,
                 common::GetPoolIndex(address)));
             tx_info->set_from_pubkey("");
