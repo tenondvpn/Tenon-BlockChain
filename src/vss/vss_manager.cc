@@ -327,6 +327,10 @@ void VssManager::BroadcastThirdPeriodRandom() {
 
 void VssManager::HandleMessage(transport::protobuf::Header& header) {
     assert(header.type() == common::kVssMessage);
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+        return;
+    }
+
     if (local_index_ == elect::kInvalidMemberIndex) {
         return;
     }
