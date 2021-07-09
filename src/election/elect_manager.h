@@ -62,10 +62,6 @@ public:
         elect::NodeIndexMapPtr& node_index_map,
         int32_t leader_count);
     bool IsValidShardLeaders(uint64_t elect_height, uint32_t network_id, const std::string& id);
-    void GetAllNodes(
-        uint64_t elect_height,
-        uint32_t network_id,
-        std::vector<std::string>* nodes);
     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
@@ -75,7 +71,6 @@ public:
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     bool IsValidShardLeaders(uint32_t network_id, const std::string& id);
-    void GetAllNodes(uint32_t network_id, std::vector<std::string>* nodes);
 
     std::unordered_set<std::string> leaders(uint32_t network_id) {
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
