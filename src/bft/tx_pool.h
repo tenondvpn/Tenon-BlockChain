@@ -54,8 +54,8 @@ public:
     TxPool();
     ~TxPool();
 
-    bool GidValid(const std::string& gid);
-    bool NewAddrValid(const std::string& new_addr);
+//     bool GidValid(const std::string& gid);
+//     bool NewAddrValid(const std::string& new_addr);
     int AddTx(TxItemPtr& account_ptr);
     void GetTx(std::vector<TxItemPtr>& res_vec);
     bool TxPoolEmpty();

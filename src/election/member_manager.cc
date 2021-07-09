@@ -87,10 +87,13 @@ int32_t MemberManager::IsLeader(
         const std::string& node_id) {
     auto member_ptr = GetMember(network_id, node_id);
     if (member_ptr == nullptr) {
-        ELECT_ERROR("member_ptr == nullptr network_id: %lu, id: %s", network_id, common::Encode::HexDecode(node_id));
+        ELECT_ERROR("member_ptr == nullptr network_id: %lu, id: %s",
+            network_id, common::Encode::HexDecode(node_id));
         return -1;
     }
 
+    ELECT_DEBUG("IsLeader elect_height: %lu, network_id: %u, node_id: %s, pool_index_mod_num: %d",
+        elect_height, network_id, common::Encode::HexEncode(node_id).c_str(), member_ptr->pool_index_mod_num);
     return member_ptr->pool_index_mod_num;
 }
 

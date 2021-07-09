@@ -59,41 +59,6 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
         }
     }
 
-    uint32_t pool_index = common::GetPoolIndex(tx_bft.new_tx().from());
-    if (!tx_pool_[pool_index].GidValid(tx_bft.new_tx().gid())) {
-        BFT_ERROR("GID exists[%s] type[%d] from[%s] to[%s] failed!",
-            common::Encode::HexEncode(tx_bft.new_tx().gid()).c_str(),
-            tx_bft.new_tx().type(),
-            common::Encode::HexEncode(tx_bft.new_tx().from()).c_str(),
-            common::Encode::HexEncode(tx_bft.new_tx().to()).c_str());
-        return false;
-    }
-
-//     std::string tx_gid = common::GetTxDbKey(true, tx_bft.new_tx().gid());
-//     if (db::Db::Instance()->Exist(tx_gid)) {
-//         BFT_ERROR("tx gid: %s exists failed!",
-//                 common::Encode::HexEncode(tx_bft.new_tx().gid()).c_str());
-//         return false;
-//     }
-
-    if (!tx_bft.new_tx().to().empty()) {
-        return true;
-    }
-
-    if (tx_bft.new_tx().attr_size() > 0) {
-        return true;
-    }
-
-    // overload new addr request
-    if (!tx_pool_[pool_index].NewAddrValid(tx_bft.new_tx().from())) {
-        BFT_ERROR("new from acc addr exists[%s][to: %s][tenon: %llu][type: %u] failed!",
-                common::Encode::HexEncode(tx_bft.new_tx().from()).c_str(),
-                common::Encode::HexEncode(tx_bft.new_tx().to()).c_str(),
-                tx_bft.new_tx().amount(),
-                tx_bft.new_tx().type());
-        return false;
-    }
-
     return true;
 }
 
