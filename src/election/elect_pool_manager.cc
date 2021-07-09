@@ -36,6 +36,9 @@ int ElectPoolManager::CreateElectTransaction(
         if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
             tx_info.set_gid(common::Hash::Hash256(
                 kElectGidPrefix +
+                "_" +
+                std::to_string(shard_netid) +
+                "_" +
                 std::to_string(elect::ElectManager::Instance()->latest_height(
                     common::GlobalInfo::Instance()->network_id())) +
                 "_" +

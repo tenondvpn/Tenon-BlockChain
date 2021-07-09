@@ -822,6 +822,9 @@ void BftManager::HandleOpposeNodeMsg(
     }
 
     if (res == kBftBlockPreHashError) {
+        auto pos = bft_msg.data().find(',');
+        std::string preshash = bft_msg.data().substr(pos + 1, bft_msg.data().size() - pos);
+        std::cout << "backup prehash error: " << common::Encode::HexEncode(preshash) << std::endl;
         return;
     }
 

@@ -211,6 +211,13 @@ void ElectManager::ProcessNewElectBlock(
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
+        std::cout << "direct join shard network: " << elect_block.shard_network_id()
+            << ", id: " << common::Encode::HexDecode(id)
+            << ", public ip: " << in[i].has_public_ip()
+            << ", public port: " << in[i].public_port()
+            << ", load_from_db: " << load_from_db
+            << std::endl;
+
         if (load_from_db && in[i].has_public_ip()) {
             dht::NodePtr node = std::make_shared<dht::Node>(
                 id,
@@ -224,7 +231,12 @@ void ElectManager::ProcessNewElectBlock(
                 in[i].pubkey(),
                 "bft");
             node->join_way = dht::kJoinFromElectBlock;
-            elect_node_ptr_->GetDht()->Join(node);
+            int join_res = elect_node_ptr_->GetDht()->Join(node);
+            std::cout << "direct join shard network: " << elect_block.shard_network_id()
+                << ", id: " << common::Encode::HexDecode(id)
+                << ", public ip: " << in[i].has_public_ip()
+                << ", public port: " << in[i].public_port()
+                << std::endl;
             network::UniversalManager::Instance()->AddNodeToUniversal(node);
         }
 
