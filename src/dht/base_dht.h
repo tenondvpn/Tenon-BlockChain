@@ -125,7 +125,7 @@ protected:
     void GetNetIdAndCountry(uint32_t& net_id, uint8_t& country);
     NodePtr FindNodeDirect(transport::protobuf::Header& message);
 
-    static const uint32_t kRefreshNeighborPeriod = 30 * 1000 * 1000;
+    static const uint32_t kRefreshNeighborPeriod = 3 * 1000 * 1000;
     static const uint32_t kHeartbeatPeriod = 3 * 1000 * 1000;
     static const uint32_t kHeartbeatMaxSendTimes = 20u;
     static const uint32_t kSendToClosestNodeCount = 3u;
