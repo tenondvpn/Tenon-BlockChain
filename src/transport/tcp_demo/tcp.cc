@@ -20,7 +20,7 @@ static void HandleMessage(tenon::transport::protobuf::Header& message) {
 
     if (message.client()) {
         message.clear_client();
-        tcp_ptr->Send(message.from_ip(), message.from_port, 0, message);
+        tcp_ptr->Send(message.from_ip(), message.from_port(), 0, message);
     }
 
     ++rcv_cnt;
