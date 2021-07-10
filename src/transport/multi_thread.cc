@@ -218,7 +218,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         }
     }
 
-    std::cout << 2 << std::endl;
+    std::cout << 2 << ":" << message_ptr->des_dht_key().size() << std::endl;
 #ifdef ENABLE_CLIENT_MODE
     if (message_ptr->des_dht_key().size() != dht::kDhtKeySize) {
         return;
