@@ -69,7 +69,7 @@ void BftProto::LeaderCreatePrepare(
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port);
+        bft_msg.set_leader_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());
@@ -165,7 +165,7 @@ void BftProto::LeaderCreatePreCommit(
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port);
+        bft_msg.set_leader_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());
@@ -272,7 +272,7 @@ void BftProto::LeaderCreateCommit(
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port);
+        bft_msg.set_leader_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());
