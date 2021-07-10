@@ -119,7 +119,10 @@ DbAccountInfo::DbAccountInfo(const std::string& account_id)
     }
 }
 
-DbAccountInfo::~DbAccountInfo() {}
+DbAccountInfo::~DbAccountInfo() {
+    std::lock_guard<std::mutex> guard(elect_blocks_map_mutex_);
+    elect_blocks_map_.clear();
+}
 
 int DbAccountInfo::GetBlockWithHeight(uint64_t height, std::string* block_str) {
     std::string hash;

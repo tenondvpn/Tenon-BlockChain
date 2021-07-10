@@ -35,10 +35,23 @@ AccountManager::AccountManager() {
 }
 
 AccountManager::~AccountManager() {
-    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
-        if (network_block_[i] != nullptr) {
-            delete network_block_[i];
+    {
+        std::lock_guard<std::mutex> guard(network_block_mutex_);
+        for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
+            if (network_block_[i] != nullptr) {
+                delete network_block_[i];
+            }
         }
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(acc_map_mutex_);
+
+        for (auto iter = acc_map_.begin(); iter != acc_map_.end(); ++iter) {
+            delete iter->second;
+        }
+
+        acc_map_.clear();
     }
 }
 
@@ -409,39 +422,51 @@ int AccountManager::AddNewAccount(
     }
 
     account_info = new block::DbAccountInfo(account_id);
-    if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
-        BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
-                common::Encode::HexEncode(account_id).c_str());
-        return kBlockError;
-    }
-
-    account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
-    account_info->NewHeight(tmp_now_height, db_batch);
-    int res = account_info->SetBalance(0, db_batch);
-    res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
-    if (res != 0) {
-        BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
-            common::Encode::HexEncode(account_id).c_str());
-        return kBlockError;
-    }
-
-    if (tx_info.type() == common::kConsensusCreateContract) {
-        res += account_info->SetAddressType(kContractAddress, db_batch);
-        for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
-            if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
-                res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
-            }
+    int res = kBlockSuccess;
+    do 
+    {
+        if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
+            BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
+                    common::Encode::HexEncode(account_id).c_str());
+            res = kBlockError;
+            break;
         }
 
-        res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
-    } else {
-        res += account_info->SetAddressType(kNormalAddress, db_batch);
-    }
+        account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
+        account_info->NewHeight(tmp_now_height, db_batch);
+        int res = account_info->SetBalance(0, db_batch);
+        res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
+        if (res != 0) {
+            BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
+                common::Encode::HexEncode(account_id).c_str());
+            res = kBlockError;
+            break;
+        }
 
-    res += account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
+        if (tx_info.type() == common::kConsensusCreateContract) {
+            res += account_info->SetAddressType(kContractAddress, db_batch);
+            for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+                if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
+                    res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
+                }
+            }
+
+            res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
+        } else {
+            res += account_info->SetAddressType(kNormalAddress, db_batch);
+        }
+
+        res += account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
+        if (res != kBlockSuccess) {
+            BLOCK_ERROR("SetConsensuseNetid failed: %s, %llu",
+                common::Encode::HexEncode(account_id).c_str());
+            res = kBlockError;
+            break;
+        }
+    } while (0);
+
     if (res != kBlockSuccess) {
-        BLOCK_ERROR("SetOutLego failed: %s, %llu",
-            common::Encode::HexEncode(account_id).c_str());
+        delete account_info;
         return kBlockError;
     }
 

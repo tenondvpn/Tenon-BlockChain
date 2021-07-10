@@ -14,6 +14,7 @@ Db::Db() {
 }
 
 Db::~Db() {
+    db_->Close();
 }
 
 Db* Db::Instance() {
