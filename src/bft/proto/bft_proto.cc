@@ -63,7 +63,9 @@ void BftProto::LeaderCreatePrepare(
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
-            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+            uint16_t port = 0;
+            common::StringUtil::ToUint16(spliter[0], &port);
+            bft_msg.set_leader_port(port);
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
@@ -157,7 +159,9 @@ void BftProto::LeaderCreatePreCommit(
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
-            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+            uint16_t port = 0;
+            common::StringUtil::ToUint16(spliter[0], &port);
+            bft_msg.set_leader_port(port);
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
@@ -262,7 +266,9 @@ void BftProto::LeaderCreateCommit(
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
-            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+            uint16_t port = 0;
+            common::StringUtil::ToUint16(spliter[0], &port);
+            bft_msg.set_leader_port(port);
         }
     } else {
         bft_msg.set_leader_ip(local_node->public_ip());
