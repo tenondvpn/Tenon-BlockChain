@@ -64,7 +64,7 @@ void BftProto::LeaderCreatePrepare(
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
             uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[0], &port);
+            common::StringUtil::ToUint16(spliter[1], &port);
             bft_msg.set_leader_port(port);
         }
     } else {
@@ -160,7 +160,7 @@ void BftProto::LeaderCreatePreCommit(
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
             uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[0], &port);
+            common::StringUtil::ToUint16(spliter[1], &port);
             bft_msg.set_leader_port(port);
         }
     } else {
@@ -267,7 +267,7 @@ void BftProto::LeaderCreateCommit(
         if (spliter.Count() == 2) {
             bft_msg.set_leader_ip(spliter[0]);
             uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[0], &port);
+            common::StringUtil::ToUint16(spliter[1], &port);
             bft_msg.set_leader_port(port);
         }
     } else {
