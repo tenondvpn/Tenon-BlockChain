@@ -743,7 +743,7 @@ int BftManager::BackupPrepare(
     // send prepare to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.leader_ip(), bft_msg.leader_port(), msg);
+            bft_msg.leader_ip(), bft_msg.leader_port(), 0, msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
