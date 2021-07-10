@@ -2,6 +2,8 @@
 #include "bft/proto/bft_proto.h"
 
 #include "common/global_info.h"
+#include "common/split.h"
+#include "common/string_utils.h"
 #include "security/schnorr.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_key.h"
@@ -15,10 +17,10 @@ namespace bft {
 void BftProto::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
     broad_param->set_layer_left(0);
     broad_param->set_layer_right(((std::numeric_limits<uint64_t>::max))());
-    broad_param->set_ign_bloomfilter_hop(kBftBroadcastIgnBloomfilterHop);
+    broad_param->set_ign_bloomfilter_hop(3);
     broad_param->set_stop_times(kBftBroadcastStopTimes);
-    broad_param->set_hop_limit(kBftHopLimit);
-    broad_param->set_hop_to_layer(kBftHopToLayer);
+    broad_param->set_hop_limit(10);
+    broad_param->set_hop_to_layer(3);
     broad_param->set_neighbor_count(kBftNeighborCount);
 }
 
@@ -54,6 +56,20 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    if (common::GlobalInfo::Instance()->config_first_node()) {
+        common::Split<> spliter(
+            common::GlobalInfo::Instance()->tcp_spec().c_str(),
+            ':',
+            common::GlobalInfo::Instance()->tcp_spec().size());
+        if (spliter.Count() == 2) {
+            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+        }
+    } else {
+        bft_msg.set_leader_ip(local_node->public_ip());
+        bft_msg.set_leader_port(local_node->public_port));
+    }
+
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -134,6 +150,20 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    if (common::GlobalInfo::Instance()->config_first_node()) {
+        common::Split<> spliter(
+            common::GlobalInfo::Instance()->tcp_spec().c_str(),
+            ':',
+            common::GlobalInfo::Instance()->tcp_spec().size());
+        if (spliter.Count() == 2) {
+            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+        }
+    } else {
+        bft_msg.set_leader_ip(local_node->public_ip());
+        bft_msg.set_leader_port(local_node->public_port));
+    }
+
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -225,6 +255,20 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_agg_sign_challenge(agg_sign_challenge_str);
     bft_msg.set_agg_sign_response(agg_sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    if (common::GlobalInfo::Instance()->config_first_node()) {
+        common::Split<> spliter(
+            common::GlobalInfo::Instance()->tcp_spec().c_str(),
+            ':',
+            common::GlobalInfo::Instance()->tcp_spec().size());
+        if (spliter.Count() == 2) {
+            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_leader_port(common::StringUtil::ToUint16(spliter[0]));
+        }
+    } else {
+        bft_msg.set_leader_ip(local_node->public_ip());
+        bft_msg.set_leader_port(local_node->public_port));
+    }
+
     msg.set_data(bft_msg.SerializeAsString());
 }
 

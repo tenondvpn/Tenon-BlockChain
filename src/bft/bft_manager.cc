@@ -664,7 +664,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         true,
         bft_ptr->secret(),
         common::GlobalInfo::Instance()->id());
-
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
         BFT_ERROR("this node has not joined consensus network[%u].", bft_ptr->network_id());
@@ -744,7 +743,7 @@ int BftManager::BackupPrepare(
     // send prepare to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            header.from_ip(), header.from_port(), 0, msg);
+            bft_msg.leader_ip(), bft_msg.leader_port(), msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
@@ -861,7 +860,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
             member_idx,
             true,
             sec_res,
-            common::GlobalInfo::Instance()->id()) == kBftOppose) {
+            common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
         RemoveBft(bft_ptr->gid(), false);
         return kBftError;
@@ -933,7 +932,7 @@ int BftManager::BackupPrecommit(
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            header.from_ip(), header.from_port(), 0, msg);
+            bft_msg.leader_ip(), bft_msg.leader_port(), 0, msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
@@ -1110,7 +1109,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
             member_idx,
             true,
             sec_res,
-            common::GlobalInfo::Instance()->id()) == kBftOppose) {
+            common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
         RemoveBft(bft_ptr->gid(), false);
         return kBftError;
