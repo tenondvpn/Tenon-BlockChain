@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
         }
 
-        usleep(10000);
+        usleep(100);
     }
 
     return 0;

@@ -1001,7 +1001,20 @@ int BftManager::LeaderCommit(
         RemoveBft(bft_ptr->gid(), false);
     } else {
         // continue waiting, do nothing.
-        BFT_DEBUG("LeaderCommit RemoveBft waiting pool_index: %u", bft_ptr->pool_index());
+        BFT_DEBUG("LeaderCommit RemoveBft waiting pool_index: %u"
+            ", member count: %u"
+            ", min_aggree_member_count: %u"
+            ", min_oppose_member_count: %u"
+            ", min_prepare_member_count: %u"
+            ", precommit_aggree_count: %u"
+            ", commit_aggree_count: %u",
+            bft_ptr->pool_index(),
+            bft_ptr->member_count(),
+            bft_ptr->min_aggree_member_count(),
+            bft_ptr->min_oppose_member_count(),
+            bft_ptr->min_prepare_member_count(),
+            bft_ptr->precommit_aggree_count(),
+            bft_ptr->commit_aggree_count());
     }
 
     return kBftSuccess;

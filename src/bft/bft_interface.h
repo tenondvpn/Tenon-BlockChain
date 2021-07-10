@@ -85,6 +85,32 @@ public:
         return rand_num_;
     }
 
+    uint32_t member_count() {
+        return member_count_;
+    }
+
+    uint32_t min_aggree_member_count() {
+        return min_aggree_member_count_;
+    }
+
+    uint32_t min_oppose_member_count() {
+        return min_oppose_member_count_;
+    }
+
+    uint32_t min_prepare_member_count() {
+        return min_prepare_member_count_;
+    }
+
+    uint32_t precommit_aggree_count() {
+        std::lock_guard<std::mutex> guard(mutex_);
+        return precommit_aggree_set_.size();
+    }
+
+    uint32_t commit_aggree_count() {
+        std::lock_guard<std::mutex> guard(mutex_);
+        return commit_aggree_set_.size();
+    }
+
     void set_member_count(uint32_t mem_cnt) {
         member_count_ = mem_cnt;
         min_aggree_member_count_ = member_count_ * 2 / 3;
