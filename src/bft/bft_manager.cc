@@ -720,6 +720,8 @@ int BftManager::BackupPrepare(
             false,
             msg);
         RemoveBft(bft_ptr->gid(), false);
+        BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
         BftProto::BackupCreatePrepare(
             header,
@@ -729,6 +731,8 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             true,
             msg);
+        BFT_DEBUG("bft backup prepare success! agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
     }
 
     if (!msg.has_data()) {
@@ -903,7 +907,8 @@ int BftManager::BackupPrecommit(
     transport::protobuf::Header msg;
     auto& data = *(header.mutable_data());
     if (bft_ptr->PreCommit(false, data) != kBftSuccess) {
-        BFT_ERROR("bft backup pre-commit failed!");
+        BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
         BftProto::BackupCreatePreCommit(
             header,
@@ -915,6 +920,8 @@ int BftManager::BackupPrecommit(
             msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
+        BFT_DEBUG("bft backup pre-commit success! agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
     }
 
