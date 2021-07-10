@@ -17,11 +17,11 @@ namespace bft {
 void BftProto::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
     broad_param->set_layer_left(0);
     broad_param->set_layer_right(((std::numeric_limits<uint64_t>::max))());
-    broad_param->set_ign_bloomfilter_hop(3);
-    broad_param->set_stop_times(kBftBroadcastStopTimes);
-    broad_param->set_hop_limit(10);
-    broad_param->set_hop_to_layer(3);
-    broad_param->set_neighbor_count(kBftNeighborCount);
+    broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
+    broad_param->set_stop_times(common::kDefaultBroadcastStopTimes);
+    broad_param->set_hop_limit(common::kDefaultBroadcastHopLimit);
+    broad_param->set_hop_to_layer(common::kDefaultBroadcastHopToLayer);
+    broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
 }
 
 void BftProto::LeaderCreatePrepare(

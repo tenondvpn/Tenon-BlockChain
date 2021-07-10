@@ -730,8 +730,9 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             true,
             msg);
-        BFT_DEBUG("bft backup prepare success! agree bft gid: %s",
-            common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from£º %s:%d",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+            bft_msg.leader_ip().c_str(), bft_msg.leader_port());
     }
 
     if (!msg.has_data()) {
@@ -919,8 +920,9 @@ int BftManager::BackupPrecommit(
             msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
-        BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s",
-            header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
+            header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+            bft_msg.leader_ip(), bft_msg.leader_port());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
     }
 
