@@ -18,8 +18,8 @@ static void HandleMessage(tenon::transport::protobuf::Header& message) {
         b_time = tenon::common::TimeUtils::TimestampMs();
     }
 
-    if (message.client()) {
-        message.clear_client();
+    if (message.id() == 10) {
+        message.set_id(12);
         tcp_ptr->Send(message.from_ip(), message.from_port(), 0, message);
     }
 
@@ -99,7 +99,8 @@ int main(int argc, char** argv) {
             msg.set_src_dht_key(std::string(32, 'a'));
             msg.set_des_dht_key(std::string(32, 'a'));
             msg.set_data("DDDDDDDDDDDDDDDDDDDDDDDDDDD" + std::to_string(common::TimeUtils::TimestampUs()));
-            msg.set_client(true);
+            msg.set_client(false);
+            msg.set_id(10);
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
         }
 
