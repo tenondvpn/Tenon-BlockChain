@@ -225,6 +225,7 @@ void MultiThreadHandler::HandleRemoteMessage(
     }
 #endif
 
+    std::cout << 21 << std::endl;
     if (thread_vec_.empty()) {
 		return;
 	}
