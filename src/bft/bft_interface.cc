@@ -177,6 +177,7 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (!prepare_bitmap_.Valid(index)) {
+        BFT_DEBUG("node is not in prepare_bitmap_ id: %s", common::Encode::HexEncode(id));
         return kBftWaitingBackup;
     }
 
