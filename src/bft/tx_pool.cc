@@ -178,6 +178,10 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
         return false;
     }
 
+    if (common::IsBaseAddress(tx_ptr->tx.from())) {
+        return false;
+    }
+
     if (tx_ptr->tx.type() == common::kConsensusCallContract &&
         tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
         return false;
@@ -185,7 +189,12 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
 
     auto contract_info = block::AccountManager::Instance()->GetAcountInfo(
         tx_ptr->tx.from());
-    assert(contract_info != nullptr);
+    if (contract_info == nullptr) {
+        BFT_ERROR("account address not exists: %s", common::Encode::HexEncode(tx_ptr->tx.from()).c_str());
+        assert(contract_info != nullptr);
+        return false;
+    }
+
     if (contract_info->locked()) {
         return true;
     }
