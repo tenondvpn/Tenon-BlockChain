@@ -525,6 +525,7 @@ void TcpTransport::Stop() {
 }
 
 bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packet) {
+    std::cout << "OnClientPacket called!" << std::endl;
     TcpConnection* tcp_conn = dynamic_cast<TcpConnection*>(&conn);
     if (conn.GetSocket() == nullptr) {
         packet.Free();
