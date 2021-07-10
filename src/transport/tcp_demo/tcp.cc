@@ -36,7 +36,6 @@ int main(int argc, char** argv) {
     using namespace tenon::common;
 
     ParserArgs args_parser;
-    args_parser.AddArgType('r', "role", kMaybeValue);
     args_parser.AddArgType('a', "ip", kMaybeValue);
     args_parser.AddArgType('p', "port", kMaybeValue);
     args_parser.AddArgType('A', "peer ip", kMaybeValue);
@@ -58,9 +57,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    int role = 0;  // server
-    args_parser.Get("r", role);
-
     std::string local_ip;
     if (args_parser.Get("a", local_ip) != kParseSuccess) {
         std::cout << "param must has a(local ip)." << std::endl;
@@ -76,9 +72,10 @@ int main(int argc, char** argv) {
     TransportPtr udp_ptr = nullptr;
     MultiThreadHandler::Instance()->Init(udp_ptr, tcp_ptr);
     static const uint32_t kTestMsgType = kUdpDemoTestMessage;
+    std::string tcpsec = local_ip + ":" + std::to_string(local_port);
     Processor::Instance()->RegisterProcessor(kTestMsgType, HandleMessage);
     tcp_ptr = std::make_shared<transport::TcpTransport>(
-        argv[1],
+        tcpsec,
         128,
         true);
     if (tcp_ptr->Init() != transport::kTransportSuccess) {
