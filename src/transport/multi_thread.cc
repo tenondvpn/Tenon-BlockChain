@@ -184,6 +184,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
+    std::cout << 1 << std::endl;
 #ifndef LEGO_TRACE_MESSAGE
     message_ptr->clear_debug();
 #endif
@@ -217,6 +218,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         }
     }
 
+    std::cout << 2 << std::endl;
 #ifdef ENABLE_CLIENT_MODE
     if (message_ptr->des_dht_key().size() != dht::kDhtKeySize) {
         return;
@@ -227,12 +229,14 @@ void MultiThreadHandler::HandleRemoteMessage(
 		return;
 	}
 
+    std::cout << 3 << std::endl;
     assert(message_ptr->has_hash());
 	if (message_ptr->hop_count() >= kMaxHops) {
 		const auto& msg = *message_ptr;
 		return;
 	}
 
+    std::cout << 4 << std::endl;
     if (message_ptr->has_broadcast()) {
 		if (MessageFilter::Instance()->StopBroadcast(*message_ptr)) {
 			return;
@@ -250,11 +254,11 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 	}
 
+    std::cout << 5 << std::endl;
     message_ptr->set_transport_type(transport_type);
     message_ptr->set_from_ip(from_ip);
     message_ptr->set_from_port(from_port);
     message_ptr->set_hop_count(message_ptr->hop_count() + 1);
-    LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(*message_ptr, from_ip + ":" + std::to_string(from_port));
     if (message_ptr->client()) {
 		if (HandleClientMessage(message_ptr, from_ip, from_port) != kTransportSuccess) {
 			const auto& msg = *message_ptr;
@@ -262,12 +266,14 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 	}
 
+    std::cout << 6 << std::endl;
     if (common::GlobalInfo::Instance()->is_client()) {
         transport::protobuf::Header& msg = *message_ptr;
         Processor::Instance()->HandleMessage(msg);
         return;
     }
 
+    std::cout << 7 << std::endl;
     uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);

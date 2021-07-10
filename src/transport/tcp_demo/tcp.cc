@@ -96,7 +96,9 @@ int main(int argc, char** argv) {
         if (!peer_ip.empty()) {
             tenon::transport::protobuf::Header msg;
             msg.set_type(kTestMsgType);
-            msg.set_data("DDDDDDDDDDDDDDDDDDDDDDDDDDD");
+            msg.set_src_dht_key("src_dht_key");
+            msg.set_des_dht_key("des_dht_key");
+            msg.set_data("DDDDDDDDDDDDDDDDDDDDDDDDDDD" + std::to_string(common::TimeUtils::TimestampUs()));
             msg.set_client(true);
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
         }
