@@ -4,7 +4,7 @@ add_compile_options(-Wno-unused-parameter)
 
 add_executable(udp_demo_svr server.cc)
 
-add_dependencies(udp_demo_svr transport uv common protobuf pthread)
+add_dependencies(udp_demo_svr transport uv common protobuf pthread dl)
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_libraries(udp_demo_svr PRIVATE transport common uv pthread)
+    target_link_libraries(udp_demo_svr PRIVATE transport common uv pthread dl)
 endif()

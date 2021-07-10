@@ -95,6 +95,7 @@ int main(int argc, char** argv) {
     while (true) {
         if (!peer_ip.empty()) {
             tenon::transport::protobuf::Header msg;
+            msg.set_type(kTestMsgType);
             msg.set_data("DDDDDDDDDDDDDDDDDDDDDDDDDDD");
             msg.set_client(true);
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
