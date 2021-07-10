@@ -269,8 +269,27 @@ void TimeBlockManager::CreateTimeBlockTx() {
             if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
                 int32_t pool_mod_num = -1;
                 if (elect::ElectManager::Instance()->IsSuperLeader(
-                    common::GlobalInfo::Instance()->network_id(),
-                    common::GlobalInfo::Instance()->id())) {
+                        common::GlobalInfo::Instance()->network_id(),
+                        common::GlobalInfo::Instance()->id())) {
+                    int32_t pool_mod_num = -1;
+                    if (!ThisNodeIsLeader(&pool_mod_num)) {
+                        auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+                            network::kRootCongressNetworkId);
+                        int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
+                            common::GlobalInfo::Instance()->network_id(),
+                            common::GlobalInfo::Instance()->id());
+                        auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+                            common::GlobalInfo::Instance()->network_id(),
+                            common::GlobalInfo::Instance()->id());
+                        std::cout << "mem_index: " << mem_index
+                            << ", local id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
+                            << ", des id: " << common::Encode::HexEncode(mem_ptr->id)
+                            << ", leader_count: " << leader_count
+                            << std::endl;
+                        
+                        delete& pool_mod_num;
+                    }
+
                     transport::protobuf::Header msg;
                     if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                         network::Route::Instance()->Send(msg);
