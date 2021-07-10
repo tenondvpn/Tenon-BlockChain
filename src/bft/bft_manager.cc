@@ -920,8 +920,8 @@ int BftManager::BackupPrecommit(
             msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
-        BFT_DEBUG("bft backup pre-commit success! agree bft gid: %s",
-            common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s",
+            header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
     }
 
@@ -1008,13 +1008,14 @@ int BftManager::LeaderCommit(
         RemoveBft(bft_ptr->gid(), false);
     } else {
         // continue waiting, do nothing.
-        BFT_DEBUG("LeaderCommit RemoveBft waiting pool_index: %u"
+        BFT_DEBUG("LeaderCommit from port: %d, waiting pool_index: %u"
             ", member count: %u"
             ", min_aggree_member_count: %u"
             ", min_oppose_member_count: %u"
             ", min_prepare_member_count: %u"
             ", precommit_aggree_count: %u"
             ", commit_aggree_count: %u",
+            header.from_port(),
             bft_ptr->pool_index(),
             bft_ptr->member_count(),
             bft_ptr->min_aggree_member_count(),
