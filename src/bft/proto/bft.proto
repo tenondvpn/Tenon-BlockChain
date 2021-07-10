@@ -120,6 +120,6 @@ message BftMessage {
 	optional uint32 pool_index = 17;
 	optional bytes data = 18;
 	optional bytes prepare_hash = 19;
-	optional bytes leader_ip = 20;
-	optional uint32 leader_port = 21;
+	optional bytes node_ip = 20;
+	optional uint32 node_port = 21;
 }

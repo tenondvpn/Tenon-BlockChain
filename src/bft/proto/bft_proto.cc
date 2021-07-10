@@ -62,14 +62,14 @@ void BftProto::LeaderCreatePrepare(
             ':',
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
-            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_node_ip(spliter[0]);
             uint16_t port = 0;
             common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_leader_port(port);
+            bft_msg.set_node_port(port);
         }
     } else {
-        bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port + 1);
+        bft_msg.set_node_ip(local_node->public_ip());
+        bft_msg.set_node_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());
@@ -158,14 +158,14 @@ void BftProto::LeaderCreatePreCommit(
             ':',
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
-            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_node_ip(spliter[0]);
             uint16_t port = 0;
             common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_leader_port(port);
+            bft_msg.set_node_port(port);
         }
     } else {
-        bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port + 1);
+        bft_msg.set_node_ip(local_node->public_ip());
+        bft_msg.set_node_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());
@@ -265,14 +265,14 @@ void BftProto::LeaderCreateCommit(
             ':',
             common::GlobalInfo::Instance()->tcp_spec().size());
         if (spliter.Count() == 2) {
-            bft_msg.set_leader_ip(spliter[0]);
+            bft_msg.set_node_ip(spliter[0]);
             uint16_t port = 0;
             common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_leader_port(port);
+            bft_msg.set_node_port(port);
         }
     } else {
-        bft_msg.set_leader_ip(local_node->public_ip());
-        bft_msg.set_leader_port(local_node->public_port + 1);
+        bft_msg.set_node_ip(local_node->public_ip());
+        bft_msg.set_node_port(local_node->public_port + 1);
     }
 
     msg.set_data(bft_msg.SerializeAsString());

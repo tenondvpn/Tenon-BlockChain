@@ -732,7 +732,7 @@ int BftManager::BackupPrepare(
             msg);
         BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from£º %s:%d",
             common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-            bft_msg.leader_ip().c_str(), bft_msg.leader_port());
+            bft_msg.node_ip().c_str(), bft_msg.node_port());
     }
 
     if (!msg.has_data()) {
@@ -744,7 +744,7 @@ int BftManager::BackupPrepare(
     // send prepare to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.leader_ip(), bft_msg.leader_port(), 0, msg);
+            bft_msg.node_ip(), bft_msg.node_port(), 0, msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
@@ -922,7 +922,7 @@ int BftManager::BackupPrecommit(
     } else {
         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-            bft_msg.leader_ip(), bft_msg.leader_port());
+            bft_msg.node_ip(), bft_msg.node_port());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
     }
 
@@ -934,7 +934,7 @@ int BftManager::BackupPrecommit(
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.leader_ip(), bft_msg.leader_port(), 0, msg);
+            bft_msg.node_ip(), bft_msg.node_port(), 0, msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
