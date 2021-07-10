@@ -24,10 +24,10 @@ static void HandleMessage(tenon::transport::protobuf::Header& message) {
     }
 
     ++rcv_cnt;
-//     if (rcv_cnt % 10000 == 0) {
+    if (rcv_cnt % 10000 == 0) {
         auto use_time_ms = double(tenon::common::TimeUtils::TimestampMs() - b_time) / 1000.0;
         std::cout << "receive rcv_cnt: " << rcv_cnt << " use time: " << use_time_ms << " ms" << std::endl;
-//     }
+    }
 }
 
 int main(int argc, char** argv) {
