@@ -547,11 +547,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, pool_index_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, data_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, prepare_hash_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, leader_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, leader_port_),
   0,
-  12,
   13,
-  15,
   14,
+  16,
+  15,
   1,
   2,
   3,
@@ -562,10 +564,12 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   8,
   9,
   ~0u,
-  16,
   17,
+  18,
   10,
   11,
+  12,
+  19,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::tenon::bft::protobuf::AccountAttributes)},
@@ -581,7 +585,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 150, 156, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
   { 157, 163, sizeof(::tenon::bft::protobuf::ToAccountTx)},
   { 164, 176, sizeof(::tenon::bft::protobuf::TxBft)},
-  { 183, 207, sizeof(::tenon::bft::protobuf::BftMessage)},
+  { 183, 209, sizeof(::tenon::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -666,7 +670,7 @@ void AddDescriptorsImpl() {
       "mmit\022<\n\rbtx_precommit\030\006 \001(\0132%.tenon.bft."
       "protobuf.BackupTxPreCommit\0226\n\nltx_commit"
       "\030\007 \001(\0132\".tenon.bft.protobuf.LeaderTxComm"
-      "it\"\354\002\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014\n\004rand\030\002"
+      "it\"\224\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014\n\004rand\030\002"
       " \001(\004\022\020\n\010bft_step\030\003 \001(\005\022\016\n\006leader\030\004 \001(\010\022\016"
       "\n\006net_id\030\005 \001(\r\022\017\n\007node_id\030\006 \001(\014\022\016\n\006pubke"
       "y\030\007 \001(\014\022\026\n\016sign_challenge\030\010 \001(\014\022\025\n\rsign_"
@@ -675,10 +679,11 @@ void AddDescriptorsImpl() {
       "challenge\030\r \001(\014\022\031\n\021agg_sign_response\030\016 \001"
       "(\014\022\016\n\006bitmap\030\017 \003(\004\022\r\n\005agree\030\020 \001(\010\022\022\n\npoo"
       "l_index\030\021 \001(\r\022\014\n\004data\030\022 \001(\014\022\024\n\014prepare_h"
-      "ash\030\023 \001(\014"
+      "ash\030\023 \001(\014\022\021\n\tleader_ip\030\024 \001(\014\022\023\n\013leader_p"
+      "ort\030\025 \001(\r"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2129);
+      descriptor, 2169);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft.proto", &protobuf_RegisterTypes);
 }
@@ -5834,6 +5839,8 @@ const int BftMessage::kAgreeFieldNumber;
 const int BftMessage::kPoolIndexFieldNumber;
 const int BftMessage::kDataFieldNumber;
 const int BftMessage::kPrepareHashFieldNumber;
+const int BftMessage::kLeaderIpFieldNumber;
+const int BftMessage::kLeaderPortFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BftMessage::BftMessage()
@@ -5897,9 +5904,13 @@ BftMessage::BftMessage(const BftMessage& from)
   if (from.has_prepare_hash()) {
     prepare_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_hash_);
   }
+  leader_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_leader_ip()) {
+    leader_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.leader_ip_);
+  }
   ::memcpy(&rand_, &from.rand_,
-    static_cast<size_t>(reinterpret_cast<char*>(&pool_index_) -
-    reinterpret_cast<char*>(&rand_)) + sizeof(pool_index_));
+    static_cast<size_t>(reinterpret_cast<char*>(&leader_port_) -
+    reinterpret_cast<char*>(&rand_)) + sizeof(leader_port_));
   // @@protoc_insertion_point(copy_constructor:tenon.bft.protobuf.BftMessage)
 }
 
@@ -5916,9 +5927,10 @@ void BftMessage::SharedCtor() {
   agg_sign_response_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   prepare_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  leader_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&rand_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&pool_index_) -
-      reinterpret_cast<char*>(&rand_)) + sizeof(pool_index_));
+      reinterpret_cast<char*>(&leader_port_) -
+      reinterpret_cast<char*>(&rand_)) + sizeof(leader_port_));
 }
 
 BftMessage::~BftMessage() {
@@ -5939,6 +5951,7 @@ void BftMessage::SharedDtor() {
   agg_sign_response_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   prepare_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  leader_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void BftMessage::SetCachedSize(int size) const {
@@ -5989,7 +6002,7 @@ void BftMessage::Clear() {
       response_.ClearNonDefaultToEmptyNoArena();
     }
   }
-  if (cached_has_bits & 3840u) {
+  if (cached_has_bits & 7936u) {
     if (cached_has_bits & 0x00000100u) {
       agg_sign_challenge_.ClearNonDefaultToEmptyNoArena();
     }
@@ -6002,16 +6015,19 @@ void BftMessage::Clear() {
     if (cached_has_bits & 0x00000800u) {
       prepare_hash_.ClearNonDefaultToEmptyNoArena();
     }
+    if (cached_has_bits & 0x00001000u) {
+      leader_ip_.ClearNonDefaultToEmptyNoArena();
+    }
   }
-  if (cached_has_bits & 61440u) {
+  if (cached_has_bits & 57344u) {
     ::memset(&rand_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&leader_) -
-        reinterpret_cast<char*>(&rand_)) + sizeof(leader_));
+        reinterpret_cast<char*>(&net_id_) -
+        reinterpret_cast<char*>(&rand_)) + sizeof(net_id_));
   }
-  if (cached_has_bits & 196608u) {
-    ::memset(&agree_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&pool_index_) -
-        reinterpret_cast<char*>(&agree_)) + sizeof(pool_index_));
+  if (cached_has_bits & 983040u) {
+    ::memset(&leader_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&leader_port_) -
+        reinterpret_cast<char*>(&leader_)) + sizeof(leader_port_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -6274,6 +6290,32 @@ bool BftMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes leader_ip = 20;
+      case 20: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(162u /* 162 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_leader_ip()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 leader_port = 21;
+      case 21: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(168u /* 168 & 0xFF */)) {
+          set_has_leader_port();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &leader_port_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -6308,22 +6350,22 @@ void BftMessage::SerializeWithCachedSizes(
   }
 
   // optional uint64 rand = 2;
-  if (cached_has_bits & 0x00001000u) {
+  if (cached_has_bits & 0x00002000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->rand(), output);
   }
 
   // optional int32 bft_step = 3;
-  if (cached_has_bits & 0x00002000u) {
+  if (cached_has_bits & 0x00004000u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->bft_step(), output);
   }
 
   // optional bool leader = 4;
-  if (cached_has_bits & 0x00008000u) {
+  if (cached_has_bits & 0x00010000u) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->leader(), output);
   }
 
   // optional uint32 net_id = 5;
-  if (cached_has_bits & 0x00004000u) {
+  if (cached_has_bits & 0x00008000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->net_id(), output);
   }
 
@@ -6388,12 +6430,12 @@ void BftMessage::SerializeWithCachedSizes(
   }
 
   // optional bool agree = 16;
-  if (cached_has_bits & 0x00010000u) {
+  if (cached_has_bits & 0x00020000u) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(16, this->agree(), output);
   }
 
   // optional uint32 pool_index = 17;
-  if (cached_has_bits & 0x00020000u) {
+  if (cached_has_bits & 0x00040000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(17, this->pool_index(), output);
   }
 
@@ -6407,6 +6449,17 @@ void BftMessage::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00000800u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       19, this->prepare_hash(), output);
+  }
+
+  // optional bytes leader_ip = 20;
+  if (cached_has_bits & 0x00001000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      20, this->leader_ip(), output);
+  }
+
+  // optional uint32 leader_port = 21;
+  if (cached_has_bits & 0x00080000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(21, this->leader_port(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6432,22 +6485,22 @@ void BftMessage::SerializeWithCachedSizes(
   }
 
   // optional uint64 rand = 2;
-  if (cached_has_bits & 0x00001000u) {
+  if (cached_has_bits & 0x00002000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->rand(), target);
   }
 
   // optional int32 bft_step = 3;
-  if (cached_has_bits & 0x00002000u) {
+  if (cached_has_bits & 0x00004000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->bft_step(), target);
   }
 
   // optional bool leader = 4;
-  if (cached_has_bits & 0x00008000u) {
+  if (cached_has_bits & 0x00010000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->leader(), target);
   }
 
   // optional uint32 net_id = 5;
-  if (cached_has_bits & 0x00004000u) {
+  if (cached_has_bits & 0x00008000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->net_id(), target);
   }
 
@@ -6519,12 +6572,12 @@ void BftMessage::SerializeWithCachedSizes(
     WriteUInt64ToArray(15, this->bitmap_, target);
 
   // optional bool agree = 16;
-  if (cached_has_bits & 0x00010000u) {
+  if (cached_has_bits & 0x00020000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(16, this->agree(), target);
   }
 
   // optional uint32 pool_index = 17;
-  if (cached_has_bits & 0x00020000u) {
+  if (cached_has_bits & 0x00040000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(17, this->pool_index(), target);
   }
 
@@ -6540,6 +6593,18 @@ void BftMessage::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         19, this->prepare_hash(), target);
+  }
+
+  // optional bytes leader_ip = 20;
+  if (cached_has_bits & 0x00001000u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        20, this->leader_ip(), target);
+  }
+
+  // optional uint32 leader_port = 21;
+  if (cached_has_bits & 0x00080000u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(21, this->leader_port(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6655,6 +6720,13 @@ size_t BftMessage::ByteSizeLong() const {
           this->prepare_hash());
     }
 
+    // optional bytes leader_ip = 20;
+    if (has_leader_ip()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->leader_ip());
+    }
+
     // optional uint64 rand = 2;
     if (has_rand()) {
       total_size += 1 +
@@ -6676,13 +6748,13 @@ size_t BftMessage::ByteSizeLong() const {
           this->net_id());
     }
 
+  }
+  if (_has_bits_[16 / 32] & 983040u) {
     // optional bool leader = 4;
     if (has_leader()) {
       total_size += 1 + 1;
     }
 
-  }
-  if (_has_bits_[16 / 32] & 196608u) {
     // optional bool agree = 16;
     if (has_agree()) {
       total_size += 2 + 1;
@@ -6693,6 +6765,13 @@ size_t BftMessage::ByteSizeLong() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->pool_index());
+    }
+
+    // optional uint32 leader_port = 21;
+    if (has_leader_port()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->leader_port());
     }
 
   }
@@ -6777,25 +6856,32 @@ void BftMessage::MergeFrom(const BftMessage& from) {
       prepare_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_hash_);
     }
     if (cached_has_bits & 0x00001000u) {
-      rand_ = from.rand_;
+      set_has_leader_ip();
+      leader_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.leader_ip_);
     }
     if (cached_has_bits & 0x00002000u) {
-      bft_step_ = from.bft_step_;
+      rand_ = from.rand_;
     }
     if (cached_has_bits & 0x00004000u) {
-      net_id_ = from.net_id_;
+      bft_step_ = from.bft_step_;
     }
     if (cached_has_bits & 0x00008000u) {
-      leader_ = from.leader_;
+      net_id_ = from.net_id_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 196608u) {
+  if (cached_has_bits & 983040u) {
     if (cached_has_bits & 0x00010000u) {
-      agree_ = from.agree_;
+      leader_ = from.leader_;
     }
     if (cached_has_bits & 0x00020000u) {
+      agree_ = from.agree_;
+    }
+    if (cached_has_bits & 0x00040000u) {
       pool_index_ = from.pool_index_;
+    }
+    if (cached_has_bits & 0x00080000u) {
+      leader_port_ = from.leader_port_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -6850,12 +6936,15 @@ void BftMessage::InternalSwap(BftMessage* other) {
     GetArenaNoVirtual());
   prepare_hash_.Swap(&other->prepare_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  leader_ip_.Swap(&other->leader_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(rand_, other->rand_);
   swap(bft_step_, other->bft_step_);
   swap(net_id_, other->net_id_);
   swap(leader_, other->leader_);
   swap(agree_, other->agree_);
   swap(pool_index_, other->pool_index_);
+  swap(leader_port_, other->leader_port_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
