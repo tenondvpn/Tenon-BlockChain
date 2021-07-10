@@ -85,10 +85,6 @@ public:
         return rand_num_;
     }
 
-    uint32_t member_count() {
-        return member_count_;
-    }
-
     uint32_t min_aggree_member_count() {
         return min_aggree_member_count_;
     }
