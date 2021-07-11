@@ -61,7 +61,9 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    BFT_DEBUG("HandleMessage %s, step: %d", common::Encode::HexEncode(bft_msg.gid()).c_str(), bft_msg.bft_step());
+    BFT_DEBUG("HandleMessage %s, step: %d, from: %s:%d",
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip(), header.from_port());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
