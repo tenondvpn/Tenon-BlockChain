@@ -127,6 +127,9 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (header.has_broadcast()) {
+        if (!header.debug().empty()) {
+            NETWORK_DEBUG("route call broadcast: %s", header.debug().c_str());
+        }
         Broadcast(header);
     }
 }

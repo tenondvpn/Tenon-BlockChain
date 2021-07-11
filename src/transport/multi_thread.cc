@@ -184,6 +184,9 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
+    if (!message_ptr->debug().empty()) {
+        TRANSPORT_DEBUG("message coming: %s", message_ptr->debug().c_str());
+    }
 #ifndef LEGO_TRACE_MESSAGE
     message_ptr->clear_debug();
 #endif
