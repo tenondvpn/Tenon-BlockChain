@@ -184,9 +184,6 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-    if (!message_ptr->debug().empty()) {
-        TRANSPORT_DEBUG("message coming: %s, has broadcast: %d", message_ptr->debug().c_str(), message_ptr->has_broadcast());
-    }
 #ifndef LEGO_TRACE_MESSAGE
     message_ptr->clear_debug();
 #endif
@@ -270,6 +267,9 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
     }
 
+    if (!message_ptr->debug().empty()) {
+        TRANSPORT_DEBUG("message coming: %s, has broadcast: %d", message_ptr->debug().c_str(), message_ptr->has_broadcast());
+    }
     uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
