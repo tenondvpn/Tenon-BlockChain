@@ -202,6 +202,7 @@ void FilterBroadcast::Send(
                 nodes[i]->local_port + 1,
                 0,
                 message);
+        BROAD_DEBUG("direct broadcast send to: %s: %d", nodes[i]->public_ip().c_str(), (nodes[i]->local_port + 1));
     }
 }
 
@@ -237,6 +238,7 @@ void FilterBroadcast::LayerSend(
             nodes[i]->local_port + 1,
             0,
             message);
+        BROAD_DEBUG("layer broadcast send to: %s: %d", nodes[i]->public_ip().c_str(), (nodes[i]->local_port + 1));
     }
 }
 
