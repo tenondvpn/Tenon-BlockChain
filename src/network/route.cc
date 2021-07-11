@@ -93,6 +93,10 @@ int Route::Send(transport::protobuf::Header& message) {
 }
 
 void Route::HandleMessage(transport::protobuf::Header& header) {
+    if (!header.debug().empty()) {
+        NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
+    }
+
     if (header.type() >= common::kLegoMaxMessageTypeCount) {
         return;
     }
