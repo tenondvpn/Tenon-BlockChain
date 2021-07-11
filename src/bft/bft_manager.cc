@@ -1084,7 +1084,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
-    LeaderBroadcastToAcc(bft_ptr->prpare_block());
+    LeaderBroadcastToAcc(bft_ptr);
     RemoveBft(bft_ptr->gid(), true);
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
