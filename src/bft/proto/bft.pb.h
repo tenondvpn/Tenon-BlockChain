@@ -2568,20 +2568,20 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_prepare_hash();
   void set_allocated_prepare_hash(::std::string* prepare_hash);
 
-  // optional bytes leader_ip = 20;
-  bool has_leader_ip() const;
-  void clear_leader_ip();
-  static const int kLeaderIpFieldNumber = 20;
-  const ::std::string& leader_ip() const;
-  void set_leader_ip(const ::std::string& value);
+  // optional bytes node_ip = 20;
+  bool has_node_ip() const;
+  void clear_node_ip();
+  static const int kNodeIpFieldNumber = 20;
+  const ::std::string& node_ip() const;
+  void set_node_ip(const ::std::string& value);
   #if LANG_CXX11
-  void set_leader_ip(::std::string&& value);
+  void set_node_ip(::std::string&& value);
   #endif
-  void set_leader_ip(const char* value);
-  void set_leader_ip(const void* value, size_t size);
-  ::std::string* mutable_leader_ip();
-  ::std::string* release_leader_ip();
-  void set_allocated_leader_ip(::std::string* leader_ip);
+  void set_node_ip(const char* value);
+  void set_node_ip(const void* value, size_t size);
+  ::std::string* mutable_node_ip();
+  ::std::string* release_node_ip();
+  void set_allocated_node_ip(::std::string* node_ip);
 
   // optional uint64 rand = 2;
   bool has_rand() const;
@@ -2625,12 +2625,12 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 pool_index() const;
   void set_pool_index(::google::protobuf::uint32 value);
 
-  // optional uint32 leader_port = 21;
-  bool has_leader_port() const;
-  void clear_leader_port();
-  static const int kLeaderPortFieldNumber = 21;
-  ::google::protobuf::uint32 leader_port() const;
-  void set_leader_port(::google::protobuf::uint32 value);
+  // optional uint32 node_port = 21;
+  bool has_node_port() const;
+  void clear_node_port();
+  static const int kNodePortFieldNumber = 21;
+  ::google::protobuf::uint32 node_port() const;
+  void set_node_port(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.BftMessage)
  private:
@@ -2670,10 +2670,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_data();
   void set_has_prepare_hash();
   void clear_has_prepare_hash();
-  void set_has_leader_ip();
-  void clear_has_leader_ip();
-  void set_has_leader_port();
-  void clear_has_leader_port();
+  void set_has_node_ip();
+  void clear_has_node_ip();
+  void set_has_node_port();
+  void clear_has_node_port();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2691,14 +2691,14 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr agg_sign_response_;
   ::google::protobuf::internal::ArenaStringPtr data_;
   ::google::protobuf::internal::ArenaStringPtr prepare_hash_;
-  ::google::protobuf::internal::ArenaStringPtr leader_ip_;
+  ::google::protobuf::internal::ArenaStringPtr node_ip_;
   ::google::protobuf::uint64 rand_;
   ::google::protobuf::int32 bft_step_;
   ::google::protobuf::uint32 net_id_;
   bool leader_;
   bool agree_;
   ::google::protobuf::uint32 pool_index_;
-  ::google::protobuf::uint32 leader_port_;
+  ::google::protobuf::uint32 node_port_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
 // ===================================================================
@@ -6328,94 +6328,94 @@ inline void BftMessage::set_allocated_prepare_hash(::std::string* prepare_hash) 
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.prepare_hash)
 }
 
-// optional bytes leader_ip = 20;
-inline bool BftMessage::has_leader_ip() const {
+// optional bytes node_ip = 20;
+inline bool BftMessage::has_node_ip() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
-inline void BftMessage::set_has_leader_ip() {
+inline void BftMessage::set_has_node_ip() {
   _has_bits_[0] |= 0x00001000u;
 }
-inline void BftMessage::clear_has_leader_ip() {
+inline void BftMessage::clear_has_node_ip() {
   _has_bits_[0] &= ~0x00001000u;
 }
-inline void BftMessage::clear_leader_ip() {
-  leader_ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_leader_ip();
+inline void BftMessage::clear_node_ip() {
+  node_ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_node_ip();
 }
-inline const ::std::string& BftMessage::leader_ip() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.leader_ip)
-  return leader_ip_.GetNoArena();
+inline const ::std::string& BftMessage::node_ip() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.node_ip)
+  return node_ip_.GetNoArena();
 }
-inline void BftMessage::set_leader_ip(const ::std::string& value) {
-  set_has_leader_ip();
-  leader_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.leader_ip)
+inline void BftMessage::set_node_ip(const ::std::string& value) {
+  set_has_node_ip();
+  node_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.node_ip)
 }
 #if LANG_CXX11
-inline void BftMessage::set_leader_ip(::std::string&& value) {
-  set_has_leader_ip();
-  leader_ip_.SetNoArena(
+inline void BftMessage::set_node_ip(::std::string&& value) {
+  set_has_node_ip();
+  node_ip_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.leader_ip)
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.node_ip)
 }
 #endif
-inline void BftMessage::set_leader_ip(const char* value) {
+inline void BftMessage::set_node_ip(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  set_has_leader_ip();
-  leader_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.leader_ip)
+  set_has_node_ip();
+  node_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.node_ip)
 }
-inline void BftMessage::set_leader_ip(const void* value, size_t size) {
-  set_has_leader_ip();
-  leader_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+inline void BftMessage::set_node_ip(const void* value, size_t size) {
+  set_has_node_ip();
+  node_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.leader_ip)
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.node_ip)
 }
-inline ::std::string* BftMessage::mutable_leader_ip() {
-  set_has_leader_ip();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.leader_ip)
-  return leader_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline ::std::string* BftMessage::mutable_node_ip() {
+  set_has_node_ip();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.node_ip)
+  return node_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* BftMessage::release_leader_ip() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.leader_ip)
-  if (!has_leader_ip()) {
+inline ::std::string* BftMessage::release_node_ip() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.node_ip)
+  if (!has_node_ip()) {
     return NULL;
   }
-  clear_has_leader_ip();
-  return leader_ip_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_node_ip();
+  return node_ip_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void BftMessage::set_allocated_leader_ip(::std::string* leader_ip) {
-  if (leader_ip != NULL) {
-    set_has_leader_ip();
+inline void BftMessage::set_allocated_node_ip(::std::string* node_ip) {
+  if (node_ip != NULL) {
+    set_has_node_ip();
   } else {
-    clear_has_leader_ip();
+    clear_has_node_ip();
   }
-  leader_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), leader_ip);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.leader_ip)
+  node_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), node_ip);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.node_ip)
 }
 
-// optional uint32 leader_port = 21;
-inline bool BftMessage::has_leader_port() const {
+// optional uint32 node_port = 21;
+inline bool BftMessage::has_node_port() const {
   return (_has_bits_[0] & 0x00080000u) != 0;
 }
-inline void BftMessage::set_has_leader_port() {
+inline void BftMessage::set_has_node_port() {
   _has_bits_[0] |= 0x00080000u;
 }
-inline void BftMessage::clear_has_leader_port() {
+inline void BftMessage::clear_has_node_port() {
   _has_bits_[0] &= ~0x00080000u;
 }
-inline void BftMessage::clear_leader_port() {
-  leader_port_ = 0u;
-  clear_has_leader_port();
+inline void BftMessage::clear_node_port() {
+  node_port_ = 0u;
+  clear_has_node_port();
 }
-inline ::google::protobuf::uint32 BftMessage::leader_port() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.leader_port)
-  return leader_port_;
+inline ::google::protobuf::uint32 BftMessage::node_port() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.node_port)
+  return node_port_;
 }
-inline void BftMessage::set_leader_port(::google::protobuf::uint32 value) {
-  set_has_leader_port();
-  leader_port_ = value;
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.leader_port)
+inline void BftMessage::set_node_port(::google::protobuf::uint32 value) {
+  set_has_node_port();
+  node_port_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.node_port)
 }
 
 #ifdef __GNUC__
