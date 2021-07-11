@@ -1233,7 +1233,8 @@ int BftManager::BackupCommit(
     return kBftSuccess;
 }
 
-void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
+    const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
     {
         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
         block_hash_added_.insert(block_ptr->hash());
@@ -1262,6 +1263,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
                 false,
                 block_ptr,
                 msg);
+            msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
+                common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
+                common::Encode::HexEncode(bft_ptr->gid()).c_str()));
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
             }
@@ -1284,6 +1288,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             true,
             block_ptr,
             msg);
+        msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
+            network::kNodeNetworkId,
+            common::Encode::HexEncode(bft_ptr->gid()).c_str()));
         if (msg.has_data()) {
             msg.set_version(block_ptr->tx_list(0).type());
             network::Route::Instance()->Send(msg);
@@ -1360,6 +1367,9 @@ void BftManager::LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block
             false,
             block_ptr,
             msg);
+        msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
+            *iter,
+            common::Encode::HexEncode(bft_ptr->gid()).c_str()));
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);

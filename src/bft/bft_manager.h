@@ -76,7 +76,7 @@ private:
     int VerifyAggSignature(
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg);
-    void LeaderBroadcastToAcc(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
+    void LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr);
     void HandleToAccountTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
