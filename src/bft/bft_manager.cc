@@ -522,7 +522,7 @@ void BftManager::HandleToAccountTxBlock(
     }
 
     if (just_broadcast) {
-        LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
+//         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
     }
 
     int32_t pool_mod_index = GetLeaderPoolIndex();
