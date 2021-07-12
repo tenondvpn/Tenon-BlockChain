@@ -6,6 +6,7 @@
 #include "network/shard_network.h"
 #include "subscript/subs_dht.h"
 #include "subscript/subs_utils.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 

@@ -5,6 +5,7 @@
 #include "common/config.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
 #include "block/proto/block.pb.h"

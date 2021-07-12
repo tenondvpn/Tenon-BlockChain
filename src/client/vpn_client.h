@@ -20,6 +20,7 @@ namespace transport {
     namespace protobuf {
         class Header;
     }
+    typedef std::shared_ptr<protobuf::Header> TransportMessagePtr;
 }  // namespace transport
 
 namespace common {

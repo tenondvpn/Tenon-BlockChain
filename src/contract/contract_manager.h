@@ -6,6 +6,7 @@
 #include "contract/contract_interface.h"
 #include "contract/contract_utils.h"
 #include "contract/proto/contract.pb.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
@@ -33,7 +34,7 @@ public:
 private:
     ContractManager();
     ~ContractManager();
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
 //     void HandleGetContractAttrRequest(
 //             transport::protobuf::Header& header,
 //             protobuf::ContractMessage& block_msg);
