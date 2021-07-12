@@ -2,6 +2,7 @@
 #include "transport/tcp/tcp_transport.h"
 
 #include "common/global_info.h"
+#include "common/time_utils.h"
 #include "transport/transport_utils.h"
 #include "transport/multi_thread.h"
 #include "transport/proto/transport.pb.h"
@@ -573,7 +574,8 @@ bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packe
 
 uint64_t TcpTransport::GetMessageHash(transport::protobuf::Header& message) {
     auto hash = common::Hash::Hash64(
-        "tcp" + message.src_node_id() + std::to_string(message.id()) + message.data());
+        "tcp" + message.src_node_id() + std::to_string(message.id()) +
+        std::to_string(common::TimeUtils::TimestampUs()));
     return hash;
 }
 
