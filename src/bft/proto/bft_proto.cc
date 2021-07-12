@@ -33,7 +33,7 @@ void BftProto::LeaderCreatePrepare(
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(bft_ptr->network_id(), 0);
     msg.set_des_dht_key(dht_key.StrKey());
-    msg.set_priority(transport::kTransportPriorityLow);
+    msg.set_priority(transport::kTransportPriorityHighest);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBftMessage);
     msg.set_client(false);
@@ -223,7 +223,7 @@ void BftProto::LeaderCreateCommit(
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(bft_ptr->network_id(), 0);
     msg.set_des_dht_key(dht_key.StrKey());
-    msg.set_priority(transport::kTransportPriorityHighest);
+    msg.set_priority(transport::kTransportPriorityLow);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBftMessage);
     msg.set_client(false);

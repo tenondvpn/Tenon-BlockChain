@@ -104,6 +104,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
+    // backup
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_msg.bft_step() == kBftPrepare) {
         bft_ptr = GetBft(bft_msg.gid());
@@ -133,9 +134,9 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             if (bft_ptr == nullptr) {
                 return;
             }
-
-            bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
         }
+
+        bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
     }
 
     if (bft_ptr->status() == kBftPreCommit) {
@@ -146,6 +147,11 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             if (bft_item_ptr == nullptr) {
                 return;
             }
+
+            BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
 
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
@@ -159,6 +165,11 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             if (bft_item_ptr == nullptr) {
                 return;
             }
+
+            BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
 
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
