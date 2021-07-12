@@ -48,10 +48,10 @@ void ThreadHandler::HandleMessage() {
             msg.set_hop_count(msg.hop_count() + 1);
             auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg);
-            if (!message_ptr->debug().empty()) {
+            if (!msg_ptr->debug().empty()) {
                 TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
-                    message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-                    message_ptr->from_ip().c_str(), message_ptr->from_port(),
+                    msg_ptr->id(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                    msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
                     (common::TimeUtils::TimestampUs() - btime));
             }
 
