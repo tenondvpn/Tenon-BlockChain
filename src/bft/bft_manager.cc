@@ -195,10 +195,6 @@ BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_ms
     bft_ptr->set_status(kBftPrepare);
     bft_ptr->set_member_count(
         elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
-    if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
-        return;
-    }
-
     AddBft(bft_ptr);
     return bft_ptr;
 }
@@ -748,19 +744,12 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-        BFT_ERROR("leader check failed!");
-        return kBftError;
-    }
-
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    auto data = header.mutable_data();
-    int prepare_res = bft_ptr->Prepare(false, -1, data);
-    if (prepare_res != kBftSuccess) {
-        BFT_ERROR("bft backup prepare failed!");
-        std::string res_data = std::to_string(prepare_res) + "," + *data;
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        BFT_ERROR("leader check failed!");
+        std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
         BftProto::BackupCreatePrepare(
             header,
             bft_msg,
@@ -769,21 +758,36 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             false,
             msg);
-        RemoveBft(bft_ptr->gid(), false);
-        BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
-            common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
-        BftProto::BackupCreatePrepare(
-            header,
-            bft_msg,
-            local_node,
-            *data,
-            bft_ptr->secret(),
-            true,
-            msg);
-        BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from£º %s:%d",
-            common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-            bft_msg.node_ip().c_str(), bft_msg.node_port());
+        auto data = header.mutable_data();
+        int prepare_res = bft_ptr->Prepare(false, -1, data);
+        if (prepare_res != kBftSuccess) {
+            BFT_ERROR("bft backup prepare failed!");
+            std::string res_data = std::to_string(prepare_res) + "," + *data;
+            BftProto::BackupCreatePrepare(
+                header,
+                bft_msg,
+                local_node,
+                res_data,
+                bft_ptr->secret(),
+                false,
+                msg);
+    //         RemoveBft(bft_ptr->gid(), false);
+            BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        } else {
+            BftProto::BackupCreatePrepare(
+                header,
+                bft_msg,
+                local_node,
+                *data,
+                bft_ptr->secret(),
+                true,
+                msg);
+            BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from£º %s:%d",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+                bft_msg.node_ip().c_str(), bft_msg.node_port());
+        }
     }
 
     if (!msg.has_data()) {
