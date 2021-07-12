@@ -662,6 +662,7 @@ BftInterfacePtr BftManager::GetBft(const std::string& gid) {
     if (iter == bft_hash_map_.end()) {
         return nullptr;
     }
+
     return iter->second;
 }
 
@@ -755,7 +756,7 @@ int BftManager::BackupPrepare(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+    if (!bft_ptr->CheckLeaderPrepare(bft_msg) || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
         BFT_ERROR("leader check failed!");
         std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
         BftProto::BackupCreatePrepare(
