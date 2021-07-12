@@ -45,10 +45,9 @@ void ThreadHandler::HandleMessage() {
                 break;
             }
 
-            transport::protobuf::Header& msg = *msg_ptr;
-            msg.set_hop_count(msg.hop_count() + 1);
+            msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
             auto btime = common::TimeUtils::TimestampUs();
-            Processor::Instance()->HandleMessage(msg);
+            Processor::Instance()->HandleMessage(msg_ptr);
             if (!msg_ptr->debug().empty()) {
                 TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
                     msg_ptr->id(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
@@ -265,14 +264,12 @@ void MultiThreadHandler::HandleRemoteMessage(
     message_ptr->set_hop_count(message_ptr->hop_count() + 1);
     if (message_ptr->client()) {
 		if (HandleClientMessage(message_ptr, from_ip, from_port) != kTransportSuccess) {
-			const auto& msg = *message_ptr;
 			return;
 		}
 	}
 
     if (common::GlobalInfo::Instance()->is_client()) {
-        transport::protobuf::Header& msg = *message_ptr;
-        Processor::Instance()->HandleMessage(msg);
+        Processor::Instance()->HandleMessage(message_ptr);
         return;
     }
 
