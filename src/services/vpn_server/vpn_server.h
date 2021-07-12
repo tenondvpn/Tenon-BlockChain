@@ -82,7 +82,7 @@ private:
     void CheckTransactions();
     void CheckAccountValid();
 
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     void HandleVpnLoginResponse(
             transport::protobuf::Header& header,
             block::protobuf::BlockMessage& block_msg);

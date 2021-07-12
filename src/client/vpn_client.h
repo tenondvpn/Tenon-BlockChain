@@ -199,7 +199,7 @@ private:
     VpnClient();
     ~VpnClient();
 
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     void HandleBlockMessage(transport::protobuf::Header& header);
     void HandleContractMessage(transport::protobuf::Header& header);
     void HandleUpdateVpnCountResponse(

@@ -327,7 +327,8 @@ void VssManager::BroadcastThirdPeriodRandom() {
     }
 }
 
-void VssManager::HandleMessage(transport::protobuf::Header& header) {
+void VssManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     assert(header.type() == common::kVssMessage);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         return;

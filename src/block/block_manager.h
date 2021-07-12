@@ -66,7 +66,7 @@ public:
 private:
     BlockManager();
     ~BlockManager();
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     int HandleGetBlockRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);

@@ -30,7 +30,7 @@ void Route::Init() {
             std::bind(&Route::HandleDhtMessage, this, std::placeholders::_1));
     RegisterMessage(
             common::kRelayMessage,
-            std::bind(&Route::RouteByUniversal, this, std::placeholders::_1));
+            std::bind(&Route::RegRouteByUniversal, this, std::placeholders::_1));
     broadcast_ = std::make_shared<broadcast::FilterBroadcast>();
 }
 
@@ -92,7 +92,8 @@ int Route::Send(transport::protobuf::Header& message) {
     return kNetworkSuccess;
 }
 
-void Route::HandleMessage(transport::protobuf::Header& header) {
+void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     if (!header.debug().empty()) {
         NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
     }
@@ -114,7 +115,7 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (uni_dht->local_node()->client_mode || uni_dht->local_node()->dht_key() == header.des_dht_key()) {
-        message_processor_[header.type()](header);
+        message_processor_[header.type()](header_ptr);
         return;
     }
 
@@ -127,7 +128,7 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
     }
 
     if (!header.handled()) {
-        message_processor_[header.type()](header);
+        message_processor_[header.type()](header_ptr);
     }
 
     if (header.has_broadcast()) {
@@ -138,7 +139,8 @@ void Route::HandleMessage(transport::protobuf::Header& header) {
     }
 }
 
-void Route::HandleDhtMessage(transport::protobuf::Header& header) {
+void Route::HandleDhtMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     auto dht = GetDht(header.des_dht_key(), header.universal());
     if (!dht) {
         return;
@@ -220,6 +222,10 @@ dht::BaseDhtPtr Route::GetDht(const std::string& dht_key, bool universal) {
     }
 
     return dht;
+}
+
+void Route::RegRouteByUniversal(transport::TransportMessagePtr& header_ptr) {
+    RouteByUniversal(*header_ptr);
 }
 
 void Route::RouteByUniversal(transport::protobuf::Header& header) {

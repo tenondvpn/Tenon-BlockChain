@@ -21,15 +21,15 @@ void Processor::UnRegisterProcessor(uint32_t type) {
     message_processor_[type] = nullptr;
 }
 
-void Processor::HandleMessage(tenon::transport::protobuf::Header& message) {
-    assert(message.type() < common::kLegoMaxMessageTypeCount);
-    if (message_processor_[message.type()] == nullptr) {
+void Processor::HandleMessage(TransportMessagePtr& message) {
+    assert(message->type() < common::kLegoMaxMessageTypeCount);
+    if (message_processor_[message->type()] == nullptr) {
         message_processor_[common::kRelayMessage](message);
         return;
     }
 
-    assert(message_processor_[message.type()] != nullptr);
-    message_processor_[message.type()](message);
+    assert(message_processor_[message->type()] != nullptr);
+    message_processor_[message->type()](message);
 }
 
 Processor::Processor() {

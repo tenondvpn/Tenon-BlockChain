@@ -207,7 +207,8 @@ uint64_t KeyValueSync::SendSyncRequest(
     return node->id_hash;
 }
 
-void KeyValueSync::HandleMessage(transport::protobuf::Header& header) {
+void KeyValueSync::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto header = *header_ptr;
     assert(header.type() == common::kSyncMessage);
     protobuf::SyncMessage sync_msg;
     if (!sync_msg.ParseFromString(header.data())) {

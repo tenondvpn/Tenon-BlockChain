@@ -108,7 +108,7 @@ private:
     ElectManager();
     ~ElectManager();
 
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     void WaitingNodeSendHeartbeat();
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
     void ClearExistsNetwork(uint32_t network_id);

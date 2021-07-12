@@ -186,7 +186,8 @@ std::string VpnClient::CheckVersion() {
 	return vpn_download_url_;
 }
 
-void VpnClient::HandleMessage(transport::protobuf::Header& header) {
+void VpnClient::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     if (header.type() == common::kBlockMessage) {
         HandleBlockMessage(header);
     }

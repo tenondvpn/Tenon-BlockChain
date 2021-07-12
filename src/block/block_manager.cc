@@ -228,7 +228,8 @@ int BlockManager::InitRootElectBlocks() {
     return kBlockSuccess;
 }
 
-void BlockManager::HandleMessage(transport::protobuf::Header& header) {
+void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     if (header.type() != common::kBlockMessage) {
         return;
     }

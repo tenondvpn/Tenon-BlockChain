@@ -25,7 +25,7 @@ private:
     SubsConsensus();
     ~SubsConsensus();
 
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     int StartSubscription();
 
     SubsDhtNodePtr subs_node_{ nullptr };

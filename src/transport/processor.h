@@ -12,7 +12,7 @@ public:
     static Processor* Instance();
     void RegisterProcessor(uint32_t type, MessageProcessor processor);
     void UnRegisterProcessor(uint32_t type);
-    void HandleMessage(tenon::transport::protobuf::Header& message);
+    void HandleMessage(TransportMessagePtr& message);
 
 private:
     Processor();

@@ -44,6 +44,7 @@ void ThreadHandler::HandleMessage() {
             if (!msg_ptr) {
                 break;
             }
+
             transport::protobuf::Header& msg = *msg_ptr;
             msg.set_hop_count(msg.hop_count() + 1);
             auto btime = common::TimeUtils::TimestampUs();
@@ -276,14 +277,14 @@ void MultiThreadHandler::HandleRemoteMessage(
     }
 
 
-    uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
+//     uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-// 		uint32_t priority = kTransportPriorityLowest;
-// 		if (message_ptr->has_priority() &&
-// 			(message_ptr->priority() < kTransportPriorityLowest)) {
-// 			priority = message_ptr->priority();
-// 		}
+		uint32_t priority = kTransportPriorityLowest;
+		if (message_ptr->has_priority() &&
+			    (message_ptr->priority() < kTransportPriorityLowest)) {
+			priority = message_ptr->priority();
+		}
 
         priority_queue_map_[priority].push(message_ptr);
         if (!message_ptr->debug().empty()) {
@@ -291,7 +292,6 @@ void MultiThreadHandler::HandleRemoteMessage(
                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
                 from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
         }
-
 	}
 }
 

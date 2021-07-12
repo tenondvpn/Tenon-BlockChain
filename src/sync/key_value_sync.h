@@ -40,7 +40,7 @@ public:
     int AddSync(uint32_t network_id, const std::string& key, uint32_t priority);
     void Init();
     void Destroy();
-    void HandleMessage(transport::protobuf::Header& msg);
+    void HandleMessage(transport::TransportMessagePtr& msg);
 
 private:
     struct PrioSyncQueue {

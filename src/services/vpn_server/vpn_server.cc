@@ -2242,7 +2242,8 @@ int VpnServer::Init(uint16_t min_port, uint16_t max_port) {
     return kVpnsvrSuccess;
 }
 
-void VpnServer::HandleMessage(transport::protobuf::Header& header) {
+void VpnServer::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     if (header.has_client() && header.client()) {
         if (header.type() == common::kBlockMessage) {
             block::protobuf::BlockMessage block_msg;

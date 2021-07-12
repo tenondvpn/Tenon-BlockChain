@@ -53,7 +53,8 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
     return elect::ElectManager::Instance()->GetMemberIndex(network_id, node_id);
 }
 
-void BftManager::HandleMessage(transport::protobuf::Header& header) {
+void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
     bft::protobuf::BftMessage bft_msg;
     if (!bft_msg.ParseFromString(header.data())) {

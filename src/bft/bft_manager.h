@@ -30,7 +30,7 @@ public:
 private:
     BftManager();
     ~BftManager();
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(transport::TransportMessagePtr& header);
     int InitBft(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
