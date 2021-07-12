@@ -268,7 +268,8 @@ void MultiThreadHandler::HandleRemoteMessage(
     }
 
     if (!message_ptr->debug().empty()) {
-        TRANSPORT_DEBUG("message coming: %s, has broadcast: %d", message_ptr->debug().c_str(), message_ptr->has_broadcast());
+        TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d",
+            message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast());
     }
     uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
