@@ -109,6 +109,9 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             bft_ptr = CreateBftPtr(bft_msg);
+            if (bft_ptr == nullptr) {
+                return;
+            }
         }
 
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
@@ -127,6 +130,10 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             }
 
             bft_ptr = CreateBftPtr(bft_msg);
+            if (bft_ptr == nullptr) {
+                return;
+            }
+
             bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
         }
     }
@@ -196,6 +203,10 @@ void BftManager::HandleBftMessage(
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        return nullptr;
+    }
+
     bft_ptr->set_gid(bft_msg.gid());
     bft_ptr->set_network_id(bft_msg.net_id());
     bft_ptr->set_randm_num(bft_msg.rand());
@@ -756,7 +767,7 @@ int BftManager::BackupPrepare(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    if (!bft_ptr->CheckLeaderPrepare(bft_msg) || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+    if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
         BFT_ERROR("leader check failed!");
         std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
         BftProto::BackupCreatePrepare(
@@ -767,6 +778,7 @@ int BftManager::BackupPrepare(
             bft_ptr->secret(),
             false,
             msg);
+        RemoveBft(bft_ptr->gid(), false);
     } else {
         auto data = header.mutable_data();
         int prepare_res = bft_ptr->Prepare(false, -1, data);
@@ -781,7 +793,7 @@ int BftManager::BackupPrepare(
                 bft_ptr->secret(),
                 false,
                 msg);
-    //         RemoveBft(bft_ptr->gid(), false);
+            RemoveBft(bft_ptr->gid(), false);
             BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
@@ -946,10 +958,6 @@ int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-        return kBftError;
-    }
-
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
@@ -1224,10 +1232,6 @@ int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-        return kBftError;
-    }
-
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;

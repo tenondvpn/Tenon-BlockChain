@@ -270,6 +270,14 @@ public:
         }
     }
 
+    bool aggree() {
+        return aggree_;
+    }
+
+    void not_aggree() {
+        aggree_ = false;
+    }
+
 protected:
     BftInterface() {
         bft_item_vec_.reserve(kBftOneConsensusMaxCount);
@@ -324,6 +332,7 @@ private:
     std::mutex invalid_tx_index_count_mutex_;
     BftItemPtr msg_step_ptr_[kBftCommited];
     std::mutex msg_step_ptr_mutex_;
+    std::atomic<bool> aggree_{ true };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
