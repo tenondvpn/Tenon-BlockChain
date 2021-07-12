@@ -132,21 +132,29 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     }
 
     if (bft_ptr->status() == kBftPreCommit) {
-        auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
-        if (bft_item_ptr == nullptr) {
-            return;
-        }
+        if (bft_msg.bft_step() == kBftPreCommit) {
+            HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        } else {
+            auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
+            if (bft_item_ptr == nullptr) {
+                return;
+            }
 
-        HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+            HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+        }
     }
 
     if (bft_ptr->status() == kBftCommit) {
-        auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
-        if (bft_item_ptr == nullptr) {
-            return;
-        }
+        if (bft_msg.bft_step() == kBftCommit) {
+            HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        } else {
+            auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
+            if (bft_item_ptr == nullptr) {
+                return;
+            }
 
-        HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+            HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+        }
     }
 }
 
