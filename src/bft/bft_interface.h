@@ -5,6 +5,9 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "bft/bft_utils.h"
+#include "bft/proto/bft.pb.h"
+#include "bft/proto/bft.pb.h"
 #include "common/utils.h"
 #include "common/bitmap.h"
 #include "security/signature.h"
@@ -14,9 +17,7 @@
 #include "security/challenge.h"
 #include "security/multi_sign.h"
 #include "security/response.h"
-#include "bft/bft_utils.h"
-#include "bft/proto/bft.pb.h"
-#include "bft/proto/bft.pb.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
@@ -251,6 +252,24 @@ public:
         invalid_tx_index_count_.clear();
     }
 
+    BftItemPtr GetMsgStepPtr(uint32_t step) {
+        std::lock_guard<std::mutex> guard(msg_step_ptr_mutex_);
+        if (step >= kBftPrepare && step <= kBftCommit) {
+            auto item_ptr = msg_step_ptr_[step];
+            msg_step_ptr_[step] = nullptr;
+            return item_ptr;
+        }
+
+        return nullptr;
+    }
+
+    void AddMsgStepPtr(uint32_t step, BftItemPtr& item_ptr) {
+        if (step >= kBftPrepare && step <= kBftCommit) {
+            std::lock_guard<std::mutex> guard(msg_step_ptr_mutex_);
+            msg_step_ptr_[step] = item_ptr;
+        }
+    }
+
 protected:
     BftInterface() {
         bft_item_vec_.reserve(kBftOneConsensusMaxCount);
@@ -303,6 +322,8 @@ private:
     std::unordered_set<std::string> commit_oppose_set_;
     std::unordered_map<int32_t, uint32_t> invalid_tx_index_count_;
     std::mutex invalid_tx_index_count_mutex_;
+    BftItemPtr msg_step_ptr_[kBftCommited];
+    std::mutex msg_step_ptr_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

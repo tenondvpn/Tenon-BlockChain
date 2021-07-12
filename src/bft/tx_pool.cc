@@ -190,7 +190,9 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
     auto contract_info = block::AccountManager::Instance()->GetAcountInfo(
         tx_ptr->tx.from());
     if (contract_info == nullptr) {
-        BFT_ERROR("account address not exists: %s", common::Encode::HexEncode(tx_ptr->tx.from()).c_str());
+        BFT_ERROR("account address not exists: %s, type: %d",
+            common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
+            tx_ptr->tx.type());
         assert(contract_info != nullptr);
         return false;
     }

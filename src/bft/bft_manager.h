@@ -96,6 +96,11 @@ private:
     int LeaderCallCommit(BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
     void HandleOpposeNodeMsg(bft::protobuf::BftMessage& bft_msg, BftInterfacePtr& bft_ptr);
+    BftInterfacePtr CreateBftPtr(const bft::protobuf::BftMessage& bft_msg);
+    void HandleBftMessage(
+        BftInterfacePtr& bft_ptr,
+        bft::protobuf::BftMessage& bft_msg,
+        transport::TransportMessagePtr& header_ptr);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;

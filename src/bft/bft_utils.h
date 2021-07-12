@@ -8,6 +8,7 @@
 #include "common/global_info.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
+#include "transport/transport_utils.h"
 
 #define BFT_DEBUG(fmt, ...) TENON_DEBUG("[bft]" fmt, ## __VA_ARGS__)
 #define BFT_INFO(fmt, ...) TENON_INFO("[bft]" fmt, ## __VA_ARGS__)
@@ -81,6 +82,13 @@ enum BftCheckTimeoutStatus {
     kTimeoutCallReChallenge = 3,
     kTimeoutWaitingBackup = 4,
 };
+
+struct BftItem {
+    transport::TransportMessagePtr header_ptr;
+    bft::protobuf::BftMessage bft_msg;
+};
+
+typedef std::shared_ptr<BftItem> BftItemPtr;
 
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;

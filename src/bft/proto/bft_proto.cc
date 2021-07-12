@@ -137,6 +137,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftPreCommit);
+    bft_msg.set_pool_index(bft_ptr->pool_index());
     auto challenge = bft_ptr->challenge();
     std::string challenge_str;
     challenge.Serialize(challenge_str);
@@ -237,6 +238,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftCommit);
+    bft_msg.set_pool_index(bft_ptr->pool_index());
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
     std::string msg_hash_src = bft_ptr->prepare_hash();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {

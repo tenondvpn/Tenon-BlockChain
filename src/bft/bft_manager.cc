@@ -56,7 +56,9 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
 void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
-    bft::protobuf::BftMessage bft_msg;
+    BftItemPtr bft_item_ptr = std::make_shared<BftItem>();
+    bft_item_ptr->header_ptr = header_ptr;
+    bft::protobuf::BftMessage& bft_msg = bft_item_ptr->bft_msg;
     if (!bft_msg.ParseFromString(header.data())) {
         BFT_ERROR("protobuf::BftMessage ParseFromString failed!");
         return;
@@ -81,7 +83,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     case kBftRootBlock:
         HandleRootTxBlock(header, bft_msg);
-        break;
+        return;
     case kBftSyncBlock:
         HandleSyncBlock(header, bft_msg);
         return;
@@ -89,42 +91,70 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         break;
     }
 
-    BftInterfacePtr bft_ptr = nullptr;
-    if (bft_msg.bft_step() == kBftPrepare && !bft_msg.leader()) {
-        bft_ptr = std::make_shared<TxBft>();
-        bft_ptr->set_gid(bft_msg.gid());
-        bft_ptr->set_network_id(bft_msg.net_id());
-        bft_ptr->set_randm_num(bft_msg.rand());
-        bft_ptr->set_pool_index(bft_msg.pool_index());
-        bft_ptr->set_status(kBftPrepare);
-        bft_ptr->set_member_count(
-            elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
-        if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
-            BFT_ERROR("BackupPrepare leader invalid", bft_ptr, header);
+    // leader 
+    if (bft_msg.leader()) {
+        auto bft_ptr = GetBft(bft_msg.gid());
+        if (bft_ptr == nullptr) {
+            BFT_DEBUG("leader get bft gid failed[%s]",
+                common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
-        AddBft(bft_ptr);
+        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        return;
+    }
+
+    BftInterfacePtr bft_ptr = nullptr;
+    if (bft_msg.bft_step() == kBftPrepare) {
+        bft_ptr = GetBft(bft_msg.gid());
+        if (bft_ptr == nullptr) {
+            bft_ptr = CreateBftPtr(bft_msg);
+        }
+
+        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
-            if (bft_msg.bft_step() == kBftCommit && !bft_msg.leader()) {
+            if (bft_msg.bft_step() > kBftCommit) {
+                return;
+            }
+
+            if (bft_msg.bft_step() == kBftCommit) {
                 sync::KeyValueSync::Instance()->AddSync(
                     bft_msg.net_id(),
                     bft_msg.prepare_hash(),
                     sync::kSyncHighest);
             }
 
-            BFT_ERROR("get bft failed[%s]!", common::Encode::HexEncode(bft_msg.gid()).c_str());
-            return;
+            bft_ptr = CreateBftPtr(bft_msg);
+            bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
         }
     }
 
-    if (!bft_ptr) {
-        assert(bft_ptr);
-        return;
+    if (bft_ptr->status() == kBftPreCommit) {
+        auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
+        if (bft_item_ptr == nullptr) {
+            return;
+        }
+
+        HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
     }
 
+    if (bft_ptr->status() == kBftCommit) {
+        auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
+        if (bft_item_ptr == nullptr) {
+            return;
+        }
+
+        HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+    }
+}
+
+void BftManager::HandleBftMessage(
+        BftInterfacePtr& bft_ptr,
+        bft::protobuf::BftMessage& bft_msg,
+        transport::TransportMessagePtr& header_ptr) {
+    auto& header = *header_ptr;
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
         if (!bft_msg.leader()) {
@@ -154,6 +184,23 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         assert(false);
         break;
     }
+}
+
+BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
+    BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
+    bft_ptr->set_gid(bft_msg.gid());
+    bft_ptr->set_network_id(bft_msg.net_id());
+    bft_ptr->set_randm_num(bft_msg.rand());
+    bft_ptr->set_pool_index(bft_msg.pool_index());
+    bft_ptr->set_status(kBftPrepare);
+    bft_ptr->set_member_count(
+        elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
+    if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
+        return;
+    }
+
+    AddBft(bft_ptr);
+    return bft_ptr;
 }
 
 int BftManager::CreateGenisisBlock(
