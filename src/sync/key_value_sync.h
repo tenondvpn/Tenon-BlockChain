@@ -9,9 +9,9 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
-#include "transport/proto/transport.pb.h"
 #include "sync/proto/sync.pb.h"
 #include "sync/sync_utils.h"
+#include "transport/proto/transport.pb.h"
 
 namespace tenon {
 
