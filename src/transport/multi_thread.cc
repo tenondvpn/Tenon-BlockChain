@@ -49,9 +49,9 @@ void ThreadHandler::HandleMessage() {
             auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg);
             if (!message_ptr->debug().empty()) {
-                TRANSPORT_DEBUG("msg id: %lu, use time: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+                TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
                     message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-                    message_ptr->from_ip().c_str(), message_ptr->from_port(), priority, priority_queue_map_[priority].size(),
+                    message_ptr->from_ip().c_str(), message_ptr->from_port(),
                     (common::TimeUtils::TimestampUs() - btime));
             }
 
