@@ -267,10 +267,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
     }
 
-    if (!message_ptr->debug().empty()) {
-        TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d",
-            message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast());
-    }
+
     uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
     {
 		std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
@@ -281,6 +278,12 @@ void MultiThreadHandler::HandleRemoteMessage(
 // 		}
 
         priority_queue_map_[priority].push(message_ptr);
+        if (!message_ptr->debug().empty()) {
+            TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+                message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+                from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
+        }
+
 	}
 }
 
