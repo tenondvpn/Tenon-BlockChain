@@ -8,6 +8,7 @@
 #include "common/utils.h"
 #include "common/tick.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 #include "network/shard_network.h"
 #include "election/elect_utils.h"
 #include "election/proto/elect.pb.h"

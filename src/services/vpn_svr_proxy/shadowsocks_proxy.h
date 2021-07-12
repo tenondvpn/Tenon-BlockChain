@@ -4,6 +4,7 @@
 #include "init/network_init.h"
 #include "network/shard_network.h"
 #include "services/vpn_svr_proxy/proxy_dht.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 

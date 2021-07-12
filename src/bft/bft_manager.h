@@ -7,6 +7,7 @@
 #include "common/tick.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 #include "election/member_manager.h"
 #include "bft/bft_interface.h"
 #include "election/proto/elect.pb.h"

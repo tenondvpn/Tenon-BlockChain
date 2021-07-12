@@ -8,6 +8,7 @@
 #include "election/elect_utils.h"
 #include "security/public_key.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 #include "vss/random_num.h"
 #include "vss/proto/vss.pb.h"
 
