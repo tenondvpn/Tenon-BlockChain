@@ -46,7 +46,15 @@ void ThreadHandler::HandleMessage() {
             }
             transport::protobuf::Header& msg = *msg_ptr;
             msg.set_hop_count(msg.hop_count() + 1);
+            auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg);
+            if (!message_ptr->debug().empty()) {
+                TRANSPORT_DEBUG("msg id: %lu, use time: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+                    message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+                    from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size(),
+                    (common::TimeUtils::TimestampUs() - btime));
+            }
+
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
