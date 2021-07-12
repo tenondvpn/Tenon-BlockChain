@@ -12,6 +12,7 @@
 #include "sync/proto/sync.pb.h"
 #include "sync/sync_utils.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
