@@ -61,9 +61,9 @@ void BftManager::HandleMessage(transport::protobuf::Header& header) {
         return;
     }
 
-    BFT_DEBUG("HandleMessage %s, step: %d, from: %s:%d",
+    BFT_DEBUG("HandleMessage %s, step: %d, from:%s:%d",
         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip(), header.from_port());
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft_msg.has_status() failed!");
         return;
@@ -924,7 +924,7 @@ int BftManager::BackupPrecommit(
     } else {
         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-            bft_msg.node_ip(), bft_msg.node_port());
+            bft_msg.node_ip().c_str(), bft_msg.node_port());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
     }
 
@@ -1265,8 +1265,8 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
                 false,
                 block_ptr,
                 msg);
-            msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
-                common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
+            msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
+                msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
                 common::Encode::HexEncode(bft_ptr->gid()).c_str()));
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
@@ -1290,8 +1290,8 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
             true,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
-            network::kNodeNetworkId,
+        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
+            msg.id(), network::kNodeNetworkId,
             common::Encode::HexEncode(bft_ptr->gid()).c_str()));
         if (msg.has_data()) {
             msg.set_version(block_ptr->tx_list(0).type());
@@ -1369,8 +1369,8 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
             false,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("broadcast to network: %d, bft gid: %s",
-            *iter,
+        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
+            msg.id(), *iter,
             common::Encode::HexEncode(bft_ptr->gid()).c_str()));
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);

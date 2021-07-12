@@ -78,14 +78,13 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
     uint32_t right = BinarySearch(hash_order_dht, layer_right);
     assert(right >= left);
     assert(right < hash_order_dht.size());
-
     std::vector<uint32_t> pos_vec;
     uint32_t idx = 0;
     for (uint32_t i = left; i <= right; ++i) {
         pos_vec.push_back(i);
     }
-    std::random_shuffle(pos_vec.begin(), pos_vec.end());
 
+    std::random_shuffle(pos_vec.begin(), pos_vec.end());
     std::vector<dht::NodePtr> nodes;
     uint32_t neighbor_count = GetNeighborCount(message);
     for (uint32_t i = 0; i < pos_vec.size(); ++i) {
@@ -100,10 +99,12 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
         if (bloomfilter->Contain(hash_order_dht[pos_vec[i]]->id_hash)) {
             continue;
         }
+
         nodes.push_back(hash_order_dht[pos_vec[i]]);
         if (message.broadcast().ign_bloomfilter_hop() <= message.hop_count() + 1) {
             bloomfilter->Add(hash_order_dht[pos_vec[i]]->id_hash);
         }
+
         if (nodes.size() >= neighbor_count) {
             break;
         }
@@ -113,6 +114,7 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
     for (uint32_t i = 0; i < data.size(); ++i) {
         broad_param->add_bloomfilter(data[i]);
     }
+
     std::sort(
             nodes.begin(),
             nodes.end(),
