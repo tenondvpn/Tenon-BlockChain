@@ -1329,12 +1329,18 @@ int BftManager::BackupCommit(
     bft_ptr->set_status(kBftCommited);
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    LeaderBroadcastToAcc(bft_ptr);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;
 }
 
 void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
+    // broadcast to this consensus shard and waiting pool shard
+    if (!elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
+        return;
+    }
+
     const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
     {
         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
@@ -1349,32 +1355,29 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
     }
 
     auto local_node = dht_ptr->local_node();
-    // broadcast to this consensus shard and waiting pool shard
-    if (elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
-        // consensus pool sync by pull in bft step commit
-        //
-        // waiting pool sync by push
-        {
-            transport::protobuf::Header msg;
-            BftProto::CreateLeaderBroadcastToAccount(
-                local_node,
-                common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
-                common::kBftMessage,
-                kBftSyncBlock,
-                false,
-                block_ptr,
-                msg);
+    // consensus pool sync by pull in bft step commit
+    //
+    // waiting pool sync by push
+    {
+        transport::protobuf::Header msg;
+        BftProto::CreateLeaderBroadcastToAccount(
+            local_node,
+            common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
+            common::kBftMessage,
+            kBftSyncBlock,
+            false,
+            block_ptr,
+            msg);
 //             msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
 //                 msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
 //                 common::Encode::HexEncode(bft_ptr->gid()).c_str()));
-            msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
-                msg.id(), network::kNodeNetworkId,
-                common::Encode::HexEncode(bft_ptr->gid()).c_str(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset, common::kBftMessage, kBftRootBlock, true,
-                common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
-            BFT_DEBUG("begin: %s", msg.debug().c_str());
-            if (msg.has_data()) {
-                network::Route::Instance()->Send(msg);
-            }
+        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
+            msg.id(), network::kNodeNetworkId,
+            common::Encode::HexEncode(bft_ptr->gid()).c_str(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset, common::kBftMessage, kBftRootBlock, true,
+            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
+        BFT_DEBUG("begin: %s", msg.debug().c_str());
+        if (msg.has_data()) {
+            network::Route::Instance()->Send(msg);
         }
     }
 
