@@ -112,6 +112,8 @@ private:
     std::unordered_set<std::string> block_hash_added_;
     std::mutex block_hash_added_mutex_;
 
+    std::mutex all_mutex_for_test_;
+
 #ifdef TENON_UNITTEST
     // just for test
     transport::protobuf::Header leader_prepare_msg_;

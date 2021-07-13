@@ -54,6 +54,7 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
 }
 
 void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    std::lock_guard<std::mutex> guard(all_mutex_for_test_);
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
     BftItemPtr bft_item_ptr = std::make_shared<BftItem>();
