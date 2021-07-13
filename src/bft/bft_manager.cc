@@ -356,18 +356,9 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         BFT_DEBUG("IsRootSingleBlockTx(tx_list[0].type()): %d", tx_list[0].type());
-        db::DbWriteBach db_batch;
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        if (block::BlockManager::Instance()->AddNewBlock(
-                block_ptr,
-                db_batch) != block::kBlockSuccess) {
+        if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
-            return;
-        }
-
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
         }
 
         return;
@@ -490,18 +481,10 @@ void BftManager::HandleSyncBlock(
     }
 
     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
-    db::DbWriteBach db_batch;
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    if (block::BlockManager::Instance()->AddNewBlock(
-            block_ptr,
-            db_batch) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
-    }
-
-    auto st = db::Db::Instance()->Put(db_batch);
-    if (!st.ok()) {
-        exit(0);
     }
 
     for (int32_t i = 0; i < tx_list.size(); ++i) {
@@ -1172,22 +1155,14 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         }
     }
 
-    db::DbWriteBach db_batch;
-    if (block::BlockManager::Instance()->AddNewBlock(
-            tenon_block,
-            db_batch) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(tenon_block) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
     }
 
-    auto st = db::Db::Instance()->Put(db_batch);
-    if (!st.ok()) {
-        exit(0);
-    }
-
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
-    LeaderBroadcastToAcc(bft_ptr);
+    LeaderBroadcastToAcc(bft_ptr, true);
     RemoveBft(bft_ptr->gid(), true);
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
@@ -1243,18 +1218,9 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
 
 // only genesis call once
 int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block) {
-    db::DbWriteBach db_batch;
-    if (block::BlockManager::Instance()->AddNewBlock(
-            genesis_block,
-            db_batch) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(genesis_block) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
-    }
-
-    auto st = db::Db::Instance()->Put(db_batch);
-    if (!st.ok()) {
-        std::cout << "write db failed!" << std::endl;
-        exit(0);
     }
 
     return kBftSuccess;
@@ -1312,32 +1278,23 @@ int BftManager::BackupCommit(
         }
     }
 
-    db::DbWriteBach db_batch;
-    if (block::BlockManager::Instance()->AddNewBlock(
-            bft_ptr->prpare_block(),
-            db_batch) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(bft_ptr->prpare_block()) != block::kBlockSuccess) {
         BFT_ERROR("backup add block to db failed!");
         return kBftError;
-    }
-
-    auto st = db::Db::Instance()->Put(db_batch);
-    if (!st.ok()) {
-        BFT_ERROR("batch put data failed[%s]", st.ToString().c_str());
-        exit(1);
     }
 
     bft_ptr->set_status(kBftCommited);
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    LeaderBroadcastToAcc(bft_ptr);
+    LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;
 }
 
-void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
+void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader) {
     // broadcast to this consensus shard and waiting pool shard
-    if (!elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
+    if (!is_bft_leader && !elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
         return;
     }
 

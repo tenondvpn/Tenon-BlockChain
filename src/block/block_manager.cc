@@ -601,17 +601,32 @@ void BlockManager::SendBlockResponse(
     }
 }
 
-int BlockManager::AddNewBlock(
-        const std::shared_ptr<bft::protobuf::Block>& block_item,
-        db::DbWriteBach& db_batch) {
+int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item) {
+    {
+        std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
+        if (!block_hash_limit_set_.Push(block_item->hash())) {
+            return kBlockError;
+        }
+    }
+    db::DbWriteBach db_batch;
     BLOCK_DEBUG("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     std::string height_db_key = common::GetHeightDbKey(
         block_item->network_id(),
         block_item->pool_index(),
         block_item->height());
     db_batch.Put(height_db_key, block_item->hash());
-    db_batch.Put(block_item->hash(), block_item->SerializeAsString());
+    std::string block_str;
+    if (!block_item->SerializeToString(&block_str)) {
+        return kBlockError;
+    }
+
+    db_batch.Put(block_item->hash(), block_str);
     AccountManager::Instance()->AddBlockItem(block_item, db_batch);
+    auto st = db::Db::Instance()->Put(db_batch);
+    if (!st.ok()) {
+        exit(0);
+    }
+
     return kBlockSuccess;
 }
 

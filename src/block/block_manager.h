@@ -3,6 +3,7 @@
 #include <deque>
 
 #include "common/config.h"
+#include "common/limit_hash_set.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -55,9 +56,7 @@ class BlockManager {
 public:
     static BlockManager* Instance();
     int Init(common::Config& conf);
-    int AddNewBlock(
-        const std::shared_ptr<bft::protobuf::Block>& block_item,
-        db::DbWriteBach& db_batch);
+    int AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item);
     int GetBlockWithHeight(
         uint32_t network_id,
         uint32_t pool_index,
@@ -92,6 +91,8 @@ private:
     std::mutex cache_height_block_mutex_;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
+    common::LimitHashSet<std::string> block_hash_limit_set_;
+    std::mutex block_hash_limit_set_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
 };
