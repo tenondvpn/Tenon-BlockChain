@@ -1364,9 +1364,14 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
                 false,
                 block_ptr,
                 msg);
-            msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
-                msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
-                common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+//             msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
+//                 msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
+//                 common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+            msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
+                msg.id(), network::kNodeNetworkId,
+                common::Encode::HexEncode(bft_ptr->gid()).c_str(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset, common::kBftMessage, kBftRootBlock, true,
+                common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
+            BFT_DEBUG("begin: %s", msg.debug().c_str());
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);
             }
@@ -1389,9 +1394,11 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
             true,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
+        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
             msg.id(), network::kNodeNetworkId,
-            common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+            common::Encode::HexEncode(bft_ptr->gid()).c_str(), network::kNodeNetworkId, common::kBftMessage, kBftRootBlock, true,
+            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
+        BFT_DEBUG("begin: %s", msg.debug().c_str());
         if (msg.has_data()) {
             msg.set_version(block_ptr->tx_list(0).type());
             network::Route::Instance()->Send(msg);
@@ -1468,9 +1475,11 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr) {
             false,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s",
-            msg.id(), *iter,
-            common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
+            msg.id(), network::kNodeNetworkId,
+            common::Encode::HexEncode(bft_ptr->gid()).c_str(), *iter, common::kBftMessage, kBftRootBlock, true,
+            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
+        BFT_DEBUG("begin: %s", msg.debug().c_str());
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);
