@@ -932,7 +932,7 @@ void BftManager::HandleOpposeNodeMsg(
     if (res == kBftBlockPreHashError) {
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
-            spliter[0],
+            spliter[1],
             sync::kSyncHighest);
         return;
     }
