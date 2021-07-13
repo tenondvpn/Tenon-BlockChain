@@ -139,6 +139,10 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
     }
 
+    if (!bft_ptr->prpare_block()) {
+        return;
+    }
+
     if (bft_ptr->status() == kBftPreCommit) {
         if (bft_msg.bft_step() == kBftPreCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);
@@ -1251,7 +1255,7 @@ int BftManager::BackupCommit(
 
     if (!bft_ptr->prpare_block()) {
         BFT_ERROR("bft_ptr->prpare_block failed!");
-        exit(1);
+        return kBftError;
     }
 
     auto tenon_block = bft_ptr->prpare_block();

@@ -52,9 +52,6 @@ class TxPool {
 public:
     TxPool();
     ~TxPool();
-
-//     bool GidValid(const std::string& gid);
-//     bool NewAddrValid(const std::string& new_addr);
     int AddTx(TxItemPtr account_ptr);
     void GetTx(std::vector<TxItemPtr>& res_vec);
     bool TxPoolEmpty();
@@ -64,9 +61,11 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
+
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;
     }
+
     void RemoveTx(
         bool add_to,
         uint32_t tx_type,
