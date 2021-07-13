@@ -283,14 +283,7 @@ int KeyValueSync::HandleExistsBlock(const std::string& key) {
 
     auto tenon_block = std::make_shared<bft::protobuf::Block>();
     if (tenon_block->ParseFromString(val) && tenon_block->hash() == key) {
-        db::DbWriteBach db_batch;
-        block::BlockManager::Instance()->AddNewBlock(tenon_block, db_batch);
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            assert(false);
-            exit(0);
-        }
-
+        block::BlockManager::Instance()->AddNewBlock(tenon_block);
         return kSyncSuccess;
     }
 
@@ -308,13 +301,7 @@ void KeyValueSync::ProcessSyncValueResponse(
         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
         if (block_item->ParseFromString(iter->value()) && block_item->hash() == iter->key()) {
-            db::DbWriteBach db_batch;
-            block::BlockManager::Instance()->AddNewBlock(block_item, db_batch);
-            auto st = db::Db::Instance()->Put(db_batch);
-            if (!st.ok()) {
-                assert(false);
-                exit(0);
-            }
+            block::BlockManager::Instance()->AddNewBlock(block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
         }
