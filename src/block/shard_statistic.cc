@@ -108,8 +108,6 @@ void ShardStatistic::AddShardPoolStatistic(
         if (valid_pool_.empty()) {
             dispatch_tx = true;
         }
-
-        latest_tm_height_ = block_item->timeblock_height();
     }
 
     std::string tmp_str;

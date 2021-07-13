@@ -101,7 +101,7 @@ static const uint32_t kBftBroadcastStopTimes = 2u;
 static const uint32_t kBftHopLimit = 5u;
 static const uint32_t kBftHopToLayer = 2u;
 static const uint32_t kBftNeighborCount = 7u;
-static const uint32_t kBftTimeout = 60u * 1000u * 1000u;  // bft timeout 6s
+static const uint32_t kBftTimeout = 6u * 1000u * 1000u;  // bft timeout 6s
 // tx pool timeout 3 * kTimeBlockCreatePeriodSeconds seconds
 static const uint32_t kTxPoolTimeoutSeconds = 30u;
 static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
