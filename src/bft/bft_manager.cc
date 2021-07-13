@@ -1286,7 +1286,7 @@ int BftManager::BackupCommit(
     bft_ptr->set_status(kBftCommited);
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    LeaderBroadcastToAcc(bft_ptr, false);
+//     LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;

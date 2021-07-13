@@ -135,6 +135,7 @@ private:
     int BackupCheckFinalStatistic(
         const TxItemPtr& local_tx_ptr,
         const protobuf::TxInfo& tx_info);
+    int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
 
     int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 

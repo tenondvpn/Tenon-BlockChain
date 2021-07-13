@@ -482,6 +482,36 @@ int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
     return kBftSuccess;
 }
 
+int TxBft::GetTimeBlockInfoFromTx(
+        const protobuf::TxInfo& tx_info,
+        uint64_t* tm_height,
+        uint64_t* tm) {
+    uint32_t valid_count = 0;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+            if (!common::StringUtil::ToUint64(tx_info.attr(i).value(), tm_height)) {
+                return kBftError;
+            }
+
+            ++valid_count;
+        }
+
+        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+            if (!common::StringUtil::ToUint64(tx_info.attr(i).value(), tm)) {
+                return kBftError;
+            }
+
+            ++valid_count;
+        }
+    }
+
+    if (valid_count != 2) {
+        return kBftError;
+    }
+
+    return kBftSuccess;
+}
+
 int TxBft::RootBackupCheckStatistic(const bft::protobuf::Block& block) {
     std::unordered_map<std::string, int64_t> acc_balance_map;
     int32_t i = 0;
@@ -2090,6 +2120,12 @@ void TxBft::RootLeaderCreateStatistic(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
+    uint64_t tx_tm_height = 0;
+    uint64_t tx_tm = 0;
+    if (GetTimeBlockInfoFromTx(tx_vec[0]->tx, &tx_tm_height, &tx_tm) != kBftSuccess) {
+        return;
+    }
+
     protobuf::TxInfo tx = tx_vec[0]->tx;
     tx.set_version(common::kTransactionVersion);
     tx.set_amount(0);
@@ -2130,7 +2166,7 @@ void TxBft::RootLeaderCreateStatistic(
     tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
     tenon_block.set_height(pool_height + 1);
     tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
+    tenon_block.set_timeblock_height(tx_tm_height);
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
