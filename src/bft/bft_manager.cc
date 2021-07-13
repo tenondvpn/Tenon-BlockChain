@@ -545,6 +545,7 @@ void BftManager::HandleToAccountTxBlock(
             bft::protobuf::TxInfo tx_info;
             if (elect::ElectManager::Instance()->CreateElectTransaction(
                     tx_list[i].network_id(),
+                    tx_bft.to_tx().block().height(),
                     tx_list[i],
                     tx_info) != elect::kElectSuccess) {
                 BFT_ERROR("create elect transaction error!");

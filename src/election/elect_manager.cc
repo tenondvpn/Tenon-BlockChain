@@ -318,13 +318,18 @@ int ElectManager::BackupCheckElectionBlockTx(
 
 int ElectManager::CreateElectTransaction(
         uint32_t shard_netid,
+        uint64_t final_statistic_block_height,
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
         return kElectError;
     }
 
-    return pool_manager_.CreateElectTransaction(shard_netid, src_tx_info, tx_info);
+    return pool_manager_.CreateElectTransaction(
+        shard_netid,
+        final_statistic_block_height,
+        src_tx_info,
+        tx_info);
 }
 
 int ElectManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {

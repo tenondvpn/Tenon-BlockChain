@@ -260,6 +260,7 @@ int AccountManager::HandleFinalStatisticBlock(
         BLOCK_ERROR("HandleFinalStatisticBlock CreateElectTransaction called.");
         if (elect::ElectManager::Instance()->CreateElectTransaction(
                 tx_info.network_id(),
+                height,
                 tx_info,
                 elect_tx) != elect::kElectSuccess) {
             BFT_ERROR("create elect transaction error!");

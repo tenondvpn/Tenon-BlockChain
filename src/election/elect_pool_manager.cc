@@ -28,6 +28,7 @@ ElectPoolManager::~ElectPoolManager() {}
 
 int ElectPoolManager::CreateElectTransaction(
         uint32_t shard_netid,
+        uint64_t final_statistic_block_height,
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
     block::protobuf::StatisticInfo statistic_info;
@@ -39,8 +40,7 @@ int ElectPoolManager::CreateElectTransaction(
                 "_" +
                 std::to_string(shard_netid) +
                 "_" +
-                std::to_string(elect::ElectManager::Instance()->latest_height(
-                    common::GlobalInfo::Instance()->network_id())) +
+                std::to_string(final_statistic_block_height) +
                 "_" +
                 src_tx_info.attr(i).value()));
         }

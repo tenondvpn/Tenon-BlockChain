@@ -29,6 +29,7 @@ public:
         const common::BloomFilter& nodes_filter);
     int CreateElectTransaction(
         uint32_t shard_netid,
+        uint64_t final_statistic_block_height,
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info);
     void OnTimeBlock(uint64_t tm_block_tm);
