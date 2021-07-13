@@ -816,7 +816,7 @@ int BftManager::BackupPrepare(
                 bft_ptr->secret(),
                 true,
                 msg);
-            BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from£º %s:%d",
+            BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
                 bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
