@@ -158,7 +158,6 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
     }
@@ -182,7 +181,6 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
     }

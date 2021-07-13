@@ -626,6 +626,11 @@ int TcpTransport::Send(
         return kTransportError;
     }
 
+    if (!message.debug().empty()) {
+        TRANSPORT_ERROR("send message id: %lu, to: %s:%d, debug: %s",
+            message.id(), des_ip.c_str(), des_port, message.debug().c_str());
+    }
+
     return kTransportSuccess;
 }
 
