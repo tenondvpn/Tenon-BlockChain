@@ -190,7 +190,7 @@ TxItemPtr TxPool::GetTx(
         call_contract_step,
         "",
         "",
-        common::Encode::HexEncode(gid).c_str(),`    
+        common::Encode::HexEncode(gid).c_str(),  
         common::Encode::HexEncode(uni_gid).c_str());
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);

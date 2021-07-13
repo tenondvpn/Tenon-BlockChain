@@ -574,7 +574,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         *invalid_tx_idx = i;
         const auto& tx_info = block.tx_list(i);
-        uint32_t call_contract_step = kConsensusInvalidType;
+        uint32_t call_contract_step = common::kConsensusInvalidType;
         if (tx_info.type() == common::kConsensusCallContract ||
             tx_info.type() == common::kConsensusCreateContract) {
             if (tx_info.call_contract_step() <= contract::kCallStepDefault) {
@@ -1792,11 +1792,10 @@ int TxBft::CheckTxInfo(
         TxItemPtr& local_tx_info) {
     if (local_tx_info == nullptr) {
         BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
-            "call_contract_step: %d not has tx[%s]to[%s][%s]!",
+            "not has tx[%s]to[%s][%s]!",
             tx_info.to_add(),
             pool_index(),
             tx_info.type(),
-            call_contract_step,
             common::Encode::HexEncode(tx_info.from()).c_str(),
             common::Encode::HexEncode(tx_info.to()).c_str(),
             common::Encode::HexEncode(tx_info.gid()).c_str());
