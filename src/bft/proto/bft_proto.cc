@@ -313,6 +313,9 @@ void BftProto::CreateLeaderBroadcastToAccount(
     sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
+    msg.set_debug(common::StringUtil::Format("CreateLeaderBroadcastToAccount msg id: %lu, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
+        msg.id(), net_id, message_type, bft_step, universal, common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
+    BFT_DEBUG("%s", msg.debug().c_str());
     msg.set_data(bft_msg.SerializeAsString());
 }
 
