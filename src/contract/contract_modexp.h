@@ -17,7 +17,7 @@ public:
             const bft::protobuf::TxInfo& tx_info,
             db::DbWriteBach& db_batch);
     virtual int GetAttrWithKey(const std::string& key, std::string& value);
-    virtual int Execute(bft::TxItemPtr& tx_item);
+    virtual int Execute(bft::TxItemPtr tx_item);
     virtual int call(
         const CallParameters& param,
         uint64_t gas,

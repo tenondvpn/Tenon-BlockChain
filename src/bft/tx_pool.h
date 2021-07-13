@@ -55,7 +55,7 @@ public:
 
 //     bool GidValid(const std::string& gid);
 //     bool NewAddrValid(const std::string& new_addr);
-    int AddTx(TxItemPtr& account_ptr);
+    int AddTx(TxItemPtr account_ptr);
     void GetTx(std::vector<TxItemPtr>& res_vec);
     bool TxPoolEmpty();
     TxItemPtr GetTx(
@@ -74,8 +74,8 @@ public:
         const std::string& gid);
 
 private:
-    bool IsTxContractLocked(TxItemPtr& tx_ptr);
-    bool IsTxValid(TxItemPtr& tx_ptr);
+    bool IsTxContractLocked(TxItemPtr tx_ptr);
+    bool IsTxValid(TxItemPtr tx_ptr);
 
     static const uint32_t kKeepCoverLoadCount = 1024u;
 

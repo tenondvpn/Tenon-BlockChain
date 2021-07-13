@@ -39,7 +39,7 @@ int VpnMining::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int VpnMining::Execute(bft::TxItemPtr& tx_item) {
+int VpnMining::Execute(bft::TxItemPtr tx_item) {
     if (tx_item->tx.type() != common::kConsensusVpnMining &&
             tx_item->tx.type() != common::kConsensusVpnMiningPayToNode) {
         return kContractError;

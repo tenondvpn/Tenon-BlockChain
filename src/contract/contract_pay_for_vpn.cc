@@ -41,7 +41,7 @@ int PayforVpn::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int PayforVpn::Execute(bft::TxItemPtr& tx_item) {
+int PayforVpn::Execute(bft::TxItemPtr tx_item) {
     if (tx_item->tx.type() != common::kConsensusPayForCommonVpn) {
         return kContractError;
     }

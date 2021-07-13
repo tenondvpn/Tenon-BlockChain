@@ -52,7 +52,7 @@ bool GidManager::NewGidTxValid(const std::string& gid, bft::protobuf::TxInfo& tx
     return true;
 }
 
-bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
+bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
     std::string tx_gid = GetUniversalGid(
         tx_ptr->tx.to_add(),
         tx_ptr->tx.type(),
@@ -119,7 +119,7 @@ TxItemPtr GidManager::GetTx(
     return tx_ptr;
 }
 
-std::string GidManager::CreateTxInfo(TxItemPtr& tx_ptr) {
+std::string GidManager::CreateTxInfo(TxItemPtr tx_ptr) {
     protobuf::TxInfo tx = tx_ptr->tx;
     tx.set_gas_limit(0);
     tx.set_gas_price(0);

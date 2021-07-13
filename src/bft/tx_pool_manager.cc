@@ -86,7 +86,7 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
     return true;
 }
 
-int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
+int TxPoolManager::AddTx(TxItemPtr tx_ptr) {
     if (tx_ptr->tx.from() == tx_ptr->tx.to()) {
         BFT_ERROR("add tx from is eq to to[%s][%s]",
             common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
@@ -197,7 +197,7 @@ bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_addres
     return true;
 }
 
-bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr& tx_ptr) {
+bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr tx_ptr) {
     if (!tx_ptr->tx.to_add()) {
         return CheckCallerAccountInfoValid(tx_ptr->tx.from());
     } else {

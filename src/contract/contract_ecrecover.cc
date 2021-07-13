@@ -22,7 +22,7 @@ int Ecrecover::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int Ecrecover::Execute(bft::TxItemPtr& tx_item) {
+int Ecrecover::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

@@ -22,7 +22,7 @@ int Ripemd160::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int Ripemd160::Execute(bft::TxItemPtr& tx_item) {
+int Ripemd160::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

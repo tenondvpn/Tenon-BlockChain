@@ -23,7 +23,7 @@ public:
             db::DbWriteBach& db_batch) = 0;
     virtual int GetAttrWithKey(const std::string& key, std::string& value) = 0;
     // attr map can change, and save to block chain
-    virtual int Execute(bft::TxItemPtr& tx_item) = 0;
+    virtual int Execute(bft::TxItemPtr tx_item) = 0;
     virtual int call(
         const CallParameters& param,
         uint64_t gas,

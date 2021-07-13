@@ -24,7 +24,7 @@ int ContractaltBn128PairingProduct::GetAttrWithKey(const std::string& key, std::
     return kContractSuccess;
 }
 
-int ContractaltBn128PairingProduct::Execute(bft::TxItemPtr& tx_item) {
+int ContractaltBn128PairingProduct::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

@@ -21,7 +21,7 @@ TxPool::TxPool() {}
 
 TxPool::~TxPool() {}
 
-int TxPool::AddTx(TxItemPtr& tx_ptr) {
+int TxPool::AddTx(TxItemPtr tx_ptr) {
     assert(tx_ptr != nullptr);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     std::string uni_gid = GidManager::Instance()->GetUniversalGid(
@@ -107,7 +107,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
     }
 }
 
-bool TxPool::IsTxValid(TxItemPtr& tx_ptr) {
+bool TxPool::IsTxValid(TxItemPtr tx_ptr) {
     auto now_time = std::chrono::steady_clock::now();
     if (tx_ptr->timeout <= now_time) {
         BFT_ERROR("timeout and remove tx: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
@@ -141,7 +141,7 @@ bool TxPool::IsTxValid(TxItemPtr& tx_ptr) {
     return true;
 }
 
-bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
+bool TxPool::IsTxContractLocked(TxItemPtr tx_ptr) {
     if (tx_ptr->tx.to_add()) {
         return false;
     }

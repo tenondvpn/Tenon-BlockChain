@@ -95,7 +95,7 @@ int VpnClientLogin::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int VpnClientLogin::Execute(bft::TxItemPtr& tx_item) {
+int VpnClientLogin::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

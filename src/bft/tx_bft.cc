@@ -670,7 +670,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
 }
 
 int TxBft::BackupCheckStatistic(
-        const TxItemPtr& local_tx_info,
+        TxItemPtr local_tx_info,
         const protobuf::TxInfo& tx_info) {
     if (tx_info.gas_limit() != 0) {
         BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
@@ -816,7 +816,7 @@ int TxBft::BackupCheckStatistic(
 }
 
 int TxBft::BackupCheckFinalStatistic(
-        const TxItemPtr& local_tx_info,
+        TxItemPtr local_tx_info,
         const protobuf::TxInfo& tx_info) {
     if (tx_info.gas_limit() != 0) {
         BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
@@ -941,7 +941,7 @@ int TxBft::BackupCheckFinalStatistic(
 }
 
 int TxBft::BackupCheckContractDefault(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
@@ -1054,7 +1054,7 @@ int TxBft::BackupCheckContractDefault(
 }
 
 int TxBft::BackupCheckContractExceute(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     if (tx_info.gas_price() != common::GlobalInfo::Instance()->gas_price()) {
@@ -1455,7 +1455,7 @@ int TxBft::BackupCheckContractExceute(
 }
 
 int TxBft::BackupCheckContractCalled(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
     // gas just consume by from
@@ -1545,7 +1545,7 @@ int TxBft::BackupCheckContractCalled(
 }
 
 int TxBft::BackupNormalCheck(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map) {
@@ -1789,7 +1789,7 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
 int TxBft::CheckTxInfo(
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info,
-        TxItemPtr& local_tx_info) {
+        TxItemPtr local_tx_info) {
     if (local_tx_info == nullptr) {
         BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
             "not has tx[%s]to[%s][%s]!",
@@ -2341,7 +2341,7 @@ int TxBft::LeaderCreateStatistic(protobuf::TxInfo& tx) {
 }
 
 int TxBft::LeaderAddNormalTransaction(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx) {
@@ -2440,7 +2440,7 @@ int TxBft::LeaderAddNormalTransaction(
 }
 
 int TxBft::LeaderAddCallContract(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& out_tx) {
@@ -2459,7 +2459,7 @@ int TxBft::LeaderAddCallContract(
 }
 
 int TxBft::LeaderCallContractDefault(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx) {
@@ -2560,7 +2560,7 @@ int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
 }
 
 int TxBft::LeaderCallContractExceute(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx) {
     uint64_t gas_used = 0;
@@ -2776,7 +2776,7 @@ int TxBft::LeaderCallContractExceute(
 }
 
 int TxBft::CreateContractCallExcute(
-        const TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         uint64_t gas_limit,
         const std::string& bytes_code,
         tvm::TenonHost* tenon_host,
@@ -2809,7 +2809,7 @@ int TxBft::CreateContractCallExcute(
 }
 
 int TxBft::CallContract(
-        const TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res) {
     std::string input;
@@ -2860,7 +2860,7 @@ int TxBft::CallContract(
 }
 
 int TxBft::LeaderCallContractCalled(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx) {
     // gas just consume by from

@@ -116,7 +116,7 @@ int VpnSvrBandwidth::GetAttrWithKey(const std::string& key, std::string& value) 
     return kContractError;
 }
 
-int VpnSvrBandwidth::Execute(bft::TxItemPtr& tx_item) {
+int VpnSvrBandwidth::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

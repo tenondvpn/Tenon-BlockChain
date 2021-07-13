@@ -33,7 +33,7 @@ private:
     int CheckTxInfo(
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info,
-        TxItemPtr& local_tx);
+        TxItemPtr local_tx);
     void LeaderCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
@@ -78,62 +78,62 @@ private:
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         uint64_t* balance);
     int CallContract(
-        const TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res);
     int LeaderAddNormalTransaction(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
     int LeaderAddCallContract(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
     int LeaderCallContractDefault(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         std::unordered_map<std::string, bool>& locked_account_map,
         protobuf::TxInfo& tx);
     int LeaderCallContractExceute(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
     int LeaderCallContractCalled(
-        TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
         protobuf::TxInfo& tx);
     int LeaderCreateStatistic(protobuf::TxInfo& tx);
     int CreateContractCallExcute(
-        const TxItemPtr& tx_info,
+        TxItemPtr tx_info,
         uint64_t gas_limit,
         const std::string& bytes_code,
         tvm::TenonHost* tenon_host,
         evmc::result* out_res);
     int BackupNormalCheck(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractDefault(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, bool>& locked_account_map,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractExceute(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckContractCalled(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
     int BackupCheckStatistic(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info);
     int BackupCheckFinalStatistic(
-        const TxItemPtr& local_tx_ptr,
+        TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info);
     int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
 

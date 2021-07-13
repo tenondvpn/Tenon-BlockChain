@@ -22,7 +22,7 @@ int Identity::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int Identity::Execute(bft::TxItemPtr& tx_item) {
+int Identity::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

@@ -24,7 +24,7 @@ int ContractAltBn128G1Mul::GetAttrWithKey(const std::string& key, std::string& v
     return kContractSuccess;
 }
 
-int ContractAltBn128G1Mul::Execute(bft::TxItemPtr& tx_item) {
+int ContractAltBn128G1Mul::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

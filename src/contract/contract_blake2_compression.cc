@@ -160,7 +160,7 @@ int Blake2Compression::GetAttrWithKey(const std::string& key, std::string& value
     return kContractSuccess;
 }
 
-int Blake2Compression::Execute(bft::TxItemPtr& tx_item) {
+int Blake2Compression::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 

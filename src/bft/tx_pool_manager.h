@@ -17,7 +17,7 @@ public:
     TxPoolManager();
     ~TxPoolManager();
     bool InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg);
-    int AddTx(TxItemPtr& tx_ptr);
+    int AddTx(TxItemPtr tx_ptr);
     void GetTx(uint32_t& pool_index, int32_t pool_mod_idx, std::vector<TxItemPtr>& res_vec);
     void BftOver(BftInterfacePtr& bft_ptr);
     TxItemPtr GetTx(
@@ -36,7 +36,7 @@ public:
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);
-    bool CheckDispatchNormalTransaction(TxItemPtr& tx_ptr);
+    bool CheckDispatchNormalTransaction(TxItemPtr tx_ptr);
     bool CheckCallerAccountInfoValid(const std::string& caller_address);
 
     TxPool* tx_pool_{ nullptr };

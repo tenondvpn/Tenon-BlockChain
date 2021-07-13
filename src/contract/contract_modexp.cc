@@ -28,7 +28,7 @@ int Modexp::GetAttrWithKey(const std::string& key, std::string& value) {
     return kContractSuccess;
 }
 
-int Modexp::Execute(bft::TxItemPtr& tx_item) {
+int Modexp::Execute(bft::TxItemPtr tx_item) {
     return kContractSuccess;
 }
 
