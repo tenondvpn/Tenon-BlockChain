@@ -142,16 +142,22 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     if (bft_ptr->status() == kBftPreCommit) {
         if (bft_msg.bft_step() == kBftPreCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+            BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
             if (bft_item_ptr == nullptr) {
                 return;
             }
 
-            BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d",
+            BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
                 header.id(),
                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
 
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
@@ -160,16 +166,22 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     if (bft_ptr->status() == kBftCommit) {
         if (bft_msg.bft_step() == kBftCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+            BFT_DEBUG("kBftCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
             if (bft_item_ptr == nullptr) {
                 return;
             }
 
-            BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d",
+            BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
                 header.id(),
                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
 
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
@@ -214,8 +226,10 @@ void BftManager::HandleBftMessage(
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-        return nullptr;
+    if (bft_msg.bft_step() == kBftPrepare) {
+        if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+            return nullptr;
+        }
     }
 
     bft_ptr->set_gid(bft_msg.gid());
@@ -916,6 +930,7 @@ void BftManager::HandleOpposeNodeMsg(
         return;
     }
 
+    // TODO: just use merkle-tree sync data, this will decrease performance
     if (res == kBftBlockPreHashError) {
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
@@ -1176,7 +1191,8 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-    BFT_DEBUG("LeaderCommit success waiting pool_index: %u", bft_ptr->pool_index());
+    BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -1310,7 +1326,8 @@ int BftManager::BackupCommit(
     }
 
     bft_ptr->set_status(kBftCommited);
-    BFT_DEBUG("BackupCommit success waiting pool_index: %u", bft_ptr->pool_index());
+    BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;
