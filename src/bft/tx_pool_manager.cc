@@ -394,8 +394,8 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     tx_pool_[bft_ptr->pool_index()].BftOver(bft_ptr);
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     if (bft_ptr->prpare_block()) {
-        if (bft_ptr->prpare_block()->height() ==
-                (waiting_pools_height_[bft_ptr->pool_index()] + 1)) {
+//         if (bft_ptr->prpare_block()->height() ==
+//                 (waiting_pools_height_[bft_ptr->pool_index()] + 1)) {
             if (bft_ptr->pool_index() == common::kRootChainPoolIndex) {
                 root_tx_pool_valid_ = true;
             } else {
@@ -403,7 +403,7 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
             }
 
             BFT_DEBUG("bft over pool index: %d", bft_ptr->pool_index());
-        }
+//         }
     }
 }
 
