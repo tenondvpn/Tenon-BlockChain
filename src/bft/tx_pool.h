@@ -31,7 +31,6 @@ struct TxItem {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
         time_valid = common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
-        BFT_DEBUG("00000002 create new tx and time valid: %llu", time_valid);
         timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();
@@ -83,12 +82,8 @@ private:
     static std::atomic<uint64_t> pool_index_gen_;
     std::map<uint64_t, TxItemPtr> tx_pool_;
     std::unordered_map<std::string, uint64_t> added_tx_map_;
-    std::unordered_set<std::string> gid_set_;
-    std::deque<std::string> gid_queue_;
-    std::unordered_set<std::string> new_addr_set_;
-    std::deque<std::string> new_addr_queue_;
     std::mutex tx_pool_mutex_;
-    uint32_t pool_index_;
+    volatile uint32_t pool_index_;
 
     DISALLOW_COPY_AND_ASSIGN(TxPool);
 };

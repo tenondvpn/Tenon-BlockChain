@@ -21,38 +21,6 @@ TxPool::TxPool() {}
 
 TxPool::~TxPool() {}
 
-// bool TxPool::GidValid(const std::string& gid) {
-//     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-//     if (gid_set_.find(gid) != gid_set_.end()) {
-//         return false;
-//     }
-// 
-//     gid_queue_.push_back(gid);
-//     if (gid_queue_.size() > kKeepCoverLoadCount) {
-//         gid_set_.erase(gid_queue_.front());
-//         gid_queue_.pop_front();
-//     }
-// 
-//     gid_set_.insert(gid);
-//     return true;
-// }
-// 
-// bool TxPool::NewAddrValid(const std::string& new_addr) {
-//     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-//     if (new_addr_set_.find(new_addr) != new_addr_set_.end()) {
-//         return false;
-//     }
-// 
-//     if (new_addr_queue_.size() > kKeepCoverLoadCount) {
-//         new_addr_set_.erase(new_addr_queue_.front());
-//         new_addr_queue_.pop_front();
-//     }
-// 
-//     BFT_DEBUG("insert new addr : %s", common::Encode::HexEncode(new_addr).c_str());
-//     new_addr_set_.insert(new_addr);
-//     return true;
-// }
-
 int TxPool::AddTx(TxItemPtr& tx_ptr) {
     assert(tx_ptr != nullptr);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);

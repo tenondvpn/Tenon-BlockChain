@@ -574,8 +574,23 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         *invalid_tx_idx = i;
         const auto& tx_info = block.tx_list(i);
-        TxItemPtr local_tx_info = nullptr;
-        int tmp_res = CheckTxInfo(block, tx_info, &local_tx_info);
+        uint32_t call_contract_step = kConsensusInvalidType;
+        if (tx_info.type() == common::kConsensusCallContract ||
+            tx_info.type() == common::kConsensusCreateContract) {
+            if (tx_info.call_contract_step() <= contract::kCallStepDefault) {
+                return kBftLeaderTxInfoInvalid;
+            }
+
+            call_contract_step = tx_info.call_contract_step() - 1;
+        }
+
+        TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
+            pool_index(),
+            tx_info.to_add(),
+            tx_info.type(),
+            call_contract_step,
+            tx_info.gid());
+        int tmp_res = CheckTxInfo(block, tx_info, local_tx_info);
         if (tmp_res != kBftSuccess || local_tx_info == nullptr) {
             BFT_ERROR("check transaction failed![%d]", tmp_res);
             return tmp_res;
@@ -1774,24 +1789,7 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
 int TxBft::CheckTxInfo(
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info,
-        TxItemPtr* local_tx) {
-    uint32_t call_contract_step = 0;
-    if (tx_info.type() == common::kConsensusCallContract ||
-            tx_info.type() == common::kConsensusCreateContract) {
-        if (tx_info.call_contract_step() <= contract::kCallStepDefault) {
-            return kBftLeaderTxInfoInvalid;
-        }
-
-        call_contract_step = tx_info.call_contract_step() - 1;
-    }
-
-    auto local_tx_info = DispatchPool::Instance()->GetTx(
-        pool_index(),
-        tx_info.to_add(),
-        tx_info.type(),
-        call_contract_step,
-        tx_info.gid());
-    *local_tx = local_tx_info;
+        TxItemPtr& local_tx_info) {
     if (local_tx_info == nullptr) {
         BFT_ERROR("prepare [to: %d] [pool idx: %d] type: %d,"
             "call_contract_step: %d not has tx[%s]to[%s][%s]!",

@@ -33,7 +33,7 @@ private:
     int CheckTxInfo(
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info,
-        TxItemPtr* local_tx);
+        TxItemPtr& local_tx);
     void LeaderCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
