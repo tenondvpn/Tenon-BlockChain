@@ -91,7 +91,7 @@ private:
     std::mutex cache_height_block_mutex_;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
-    common::LimitHashSet<std::string> block_hash_limit_set_;
+    common::LimitHashSet<std::string> block_hash_limit_set_{ 2048u };
     std::mutex block_hash_limit_set_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
