@@ -120,6 +120,10 @@ public:
     }
 
 private:
+    static void SetLocalPublicIpPort(
+        const dht::NodePtr& local_node,
+        bft::protobuf::BftMessage& bft_msg);
+
     DISALLOW_COPY_AND_ASSIGN(BftProto);
 };
 

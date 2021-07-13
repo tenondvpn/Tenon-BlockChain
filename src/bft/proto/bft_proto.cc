@@ -24,6 +24,26 @@ void BftProto::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* bro
     broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
 }
 
+void BftProto::SetLocalPublicIpPort(
+        const dht::NodePtr& local_node,
+        bft::protobuf::BftMessage& bft_msg) {
+    if (common::GlobalInfo::Instance()->config_first_node()) {
+        common::Split<> spliter(
+            common::GlobalInfo::Instance()->tcp_spec().c_str(),
+            ':',
+            common::GlobalInfo::Instance()->tcp_spec().size());
+        if (spliter.Count() == 2) {
+            bft_msg.set_node_ip(spliter[0]);
+            uint16_t port = 0;
+            common::StringUtil::ToUint16(spliter[1], &port);
+            bft_msg.set_node_port(port);
+        }
+    } else {
+        bft_msg.set_node_ip(local_node->public_ip());
+        bft_msg.set_node_port(local_node->public_port + 1);
+    }
+}
+
 void BftProto::LeaderCreatePrepare(
         const dht::NodePtr& local_node,
         const std::string& data,
@@ -56,22 +76,7 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
-    if (common::GlobalInfo::Instance()->config_first_node()) {
-        common::Split<> spliter(
-            common::GlobalInfo::Instance()->tcp_spec().c_str(),
-            ':',
-            common::GlobalInfo::Instance()->tcp_spec().size());
-        if (spliter.Count() == 2) {
-            bft_msg.set_node_ip(spliter[0]);
-            uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_node_port(port);
-        }
-    } else {
-        bft_msg.set_node_ip(local_node->public_ip());
-        bft_msg.set_node_port(local_node->public_port + 1);
-    }
-
+    SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
@@ -110,6 +115,7 @@ void BftProto::BackupCreatePrepare(
         return;
     }
 
+    SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
@@ -157,22 +163,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
-    if (common::GlobalInfo::Instance()->config_first_node()) {
-        common::Split<> spliter(
-            common::GlobalInfo::Instance()->tcp_spec().c_str(),
-            ':',
-            common::GlobalInfo::Instance()->tcp_spec().size());
-        if (spliter.Count() == 2) {
-            bft_msg.set_node_ip(spliter[0]);
-            uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_node_port(port);
-        }
-    } else {
-        bft_msg.set_node_ip(local_node->public_ip());
-        bft_msg.set_node_port(local_node->public_port + 1);
-    }
-
+    SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
@@ -211,6 +202,7 @@ void BftProto::BackupCreatePreCommit(
         return;
     }
 
+    SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
@@ -269,22 +261,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_agg_sign_challenge(agg_sign_challenge_str);
     bft_msg.set_agg_sign_response(agg_sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
-    if (common::GlobalInfo::Instance()->config_first_node()) {
-        common::Split<> spliter(
-            common::GlobalInfo::Instance()->tcp_spec().c_str(),
-            ':',
-            common::GlobalInfo::Instance()->tcp_spec().size());
-        if (spliter.Count() == 2) {
-            bft_msg.set_node_ip(spliter[0]);
-            uint16_t port = 0;
-            common::StringUtil::ToUint16(spliter[1], &port);
-            bft_msg.set_node_port(port);
-        }
-    } else {
-        bft_msg.set_node_ip(local_node->public_ip());
-        bft_msg.set_node_port(local_node->public_port + 1);
-    }
-
+    SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
