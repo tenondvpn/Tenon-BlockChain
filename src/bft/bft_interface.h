@@ -40,15 +40,17 @@ public:
 public:
     bool CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg);
     int LeaderPrecommitOk(
-            uint32_t index,
-            bool agree,
-            const security::CommitSecret& secret,
-            const std::string& id);
+        uint32_t index,
+        const std::string& bft_gid,
+        uint32_t msg_id,
+        bool agree,
+        const security::CommitSecret& secret,
+        const std::string& id);
     int LeaderCommitOk(
-            uint32_t index,
-            bool agree,
-            const security::Response& res,
-            const std::string& id);
+        uint32_t index,
+        bool agree,
+        const security::Response& res,
+        const std::string& id);
     int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
     int CheckTimeout();
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);

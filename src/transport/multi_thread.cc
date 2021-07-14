@@ -247,7 +247,8 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 
 		if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
-			message_ptr->set_handled(true);
+// 			message_ptr->set_handled(true);
+            return;
 		} else {
 			message_ptr->set_handled(false);
 		}

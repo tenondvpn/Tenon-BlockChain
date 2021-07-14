@@ -739,6 +739,8 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
 
     bft_ptr->LeaderPrecommitOk(
         member_idx,
+        bft_ptr->gid(),
+        0,
         true,
         bft_ptr->secret(),
         common::GlobalInfo::Instance()->id());
@@ -881,10 +883,12 @@ int BftManager::LeaderPrecommit(
     }
     security::CommitSecret backup_secret(bft_msg.secret());
     int res = bft_ptr->LeaderPrecommitOk(
-            mem_index,
-            bft_msg.agree(),
-            backup_secret,
-            security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+        mem_index,
+        bft_ptr->gid(),
+        header.id(),
+        bft_msg.agree(),
+        backup_secret,
+        security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
     if (!bft_msg.agree()) {
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
