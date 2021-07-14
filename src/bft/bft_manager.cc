@@ -918,12 +918,13 @@ void BftManager::HandleOpposeNodeMsg(
 
     // TODO: just use merkle-tree sync data, this will decrease performance
     if (res == kBftBlockPreHashError) {
+        std::string pre_hash(spliter[1], spliter.SubLen(1));
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
-            spliter[1],
+            pre_hash,
             sync::kSyncHighest);
         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-            common::Encode::HexEncode(spliter[1]).c_str(),
+            common::Encode::HexEncode(pre_hash).c_str(),
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
