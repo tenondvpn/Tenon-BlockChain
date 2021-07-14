@@ -64,12 +64,13 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    BFT_DEBUG("msg id: %lu, HandleMessage %s, step: %d, from:%s:%d",
+    BFT_DEBUG("msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
         header.id(),
         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port());
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     if (!bft_msg.has_bft_step()) {
-        BFT_ERROR("bft_msg.has_status() failed!");
+        BFT_ERROR("bft message not has bft step failed!");
         return;
     }
 
@@ -922,7 +923,7 @@ void BftManager::HandleOpposeNodeMsg(
 
     // TODO: just use merkle-tree sync data, this will decrease performance
     if (res == kBftBlockPreHashError) {
-        std::string pre_hash(spliter[1], 32);
+        std::string pre_hash(bft_msg.data().c_str() + spliter.SubLen(0) + 1, 32);
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
@@ -1140,6 +1141,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     std::string agg_sign_challenge_str;
     std::string agg_sign_response_str;
     bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
+    tenon_block->set_hash(bft_ptr->final_block_hash());
     tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
     tenon_block->set_agg_sign_response(agg_sign_response_str);
     tenon_block->set_pool_index(bft_ptr->pool_index());
@@ -1264,6 +1266,7 @@ int BftManager::BackupCommit(
     }
 
     auto tenon_block = bft_ptr->prpare_block();
+    tenon_block->set_hash(bft_ptr->final_block_hash());
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
@@ -1335,7 +1338,8 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             false,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
+        msg.set_debug(common::StringUtil::Format(
+            "msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %s, block height: %lu",
             msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
             common::Encode::HexEncode(bft_ptr->gid()).c_str(), common::GlobalInfo::Instance()->network_id(), common::kBftMessage, kBftRootBlock, true,
             common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
