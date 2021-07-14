@@ -285,7 +285,7 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
 void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
     if (block_ptr->bitmap_size() == 0) {
         BLOCK_ERROR("block bitmap size empty: height: %lu, hash: %s",
-            block_ptr->height(), common::Encode::HexEncode(block_ptr->hash).c_str());
+            block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
         return;
     }
 
@@ -381,8 +381,8 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
                 iter->second.succ_tx_count[i] = 0;
             }
 
-            BLOCK_DEBUG("failed add pool statistic succ count: %d, tm height: %lu, pool index: %d",
-                succ_count, block_item->timeblock_height(), (uint32_t)pool_index_);
+            BLOCK_DEBUG("failed add pool statistic tm height: %lu, pool index: %d",
+                block_item->timeblock_height(), (uint32_t)pool_index_);
             continue;
         }
 
