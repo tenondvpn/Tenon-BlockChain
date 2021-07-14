@@ -136,6 +136,9 @@ void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 
     if (header.has_broadcast()) {
         Broadcast(header);
+        if (!header.debug().empty()) {
+            NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
+        }
     }
 }
 
