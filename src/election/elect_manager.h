@@ -115,7 +115,7 @@ private:
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
     void ClearExistsNetwork(uint32_t network_id);
 
-    static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
+    static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;
