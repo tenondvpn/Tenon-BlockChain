@@ -1138,7 +1138,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         return kBftError;
     }
 
-    auto tenon_block = bft_ptr->prpare_block();
+    auto& tenon_block = bft_ptr->prpare_block();
     std::string agg_sign_challenge_str;
     std::string agg_sign_response_str;
     bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
@@ -1175,6 +1175,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr, true);
+    assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     RemoveBft(bft_ptr->gid(), true);
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
@@ -1265,7 +1266,7 @@ int BftManager::BackupCommit(
         return kBftError;
     }
 
-    auto tenon_block = bft_ptr->prpare_block();
+    auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
@@ -1296,6 +1297,7 @@ int BftManager::BackupCommit(
     }
 
     bft_ptr->set_status(kBftCommited);
+    assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
 //     LeaderBroadcastToAcc(bft_ptr, false);

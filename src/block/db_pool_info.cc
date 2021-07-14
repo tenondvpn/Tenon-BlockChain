@@ -293,8 +293,8 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     server_bandwidth_queue_.push(block_ptr);
-    BLOCK_DEBUG("add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
-        server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_);
+    BLOCK_DEBUG("add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d, bitmap size: %u",
+        server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_, block_ptr->bitmap_size());
 
 }
 
@@ -342,8 +342,8 @@ void DbPoolInfo::SatisticBlock() {
 
         if (block_ptr != nullptr) {
             AddStatistic(block_ptr);
-            BLOCK_DEBUG("SatisticBlock add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
-                server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_);
+            BLOCK_DEBUG("SatisticBlock add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d, bitmap size: %u",
+                server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_, block_ptr->bitmap_size());
         }
     }
 }
@@ -365,6 +365,8 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 
     auto ext_iter = iter->second.added_height.find(block_item->height());
     if (ext_iter != iter->second.added_height.end()) {
+        BLOCK_DEBUG("block_item->height() exists AddStatistic add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
+            server_bandwidth_queue_.size(), block_item->timeblock_height(), (uint32_t)pool_index_);
         return kBlockSuccess;
     }
 
@@ -378,7 +380,8 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     uint32_t member_count = elect::ElectManager::Instance()->GetMemberCount(
-        common::GlobalInfo::Instance()->network_id());
+        block_item->electblock_height(),
+        block_item->network_id());
     common::Bitmap final_bitmap(bitmap_data);
     uint32_t bit_size = final_bitmap.data().size() * 64;
     assert(member_count <= bit_size);
@@ -426,6 +429,8 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 
 int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
 //     SatisticBlock();
+//     update_statistic_tick_.Destroy();
+    SatisticBlock();
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     auto iter = statistic_for_tmblock_.find(max_time_block_height_);
     if (iter == statistic_for_tmblock_.end()) {
@@ -448,9 +453,13 @@ int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info)
 }
 
 void DbPoolInfo::TickSatisticBlock() {
+    if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressNetworkId &&
+            common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) {
+        update_statistic_tick_.Destroy();
+        return;
+    }
+
     SatisticBlock();
-    BLOCK_DEBUG("TickSatisticBlock add pool statistic server_bandwidth_queue_ count: %d, pool index: %d",
-        server_bandwidth_queue_.size(), (uint32_t)pool_index_);
     update_statistic_tick_.CutOff(
         kUpdateStatisticPeriod,
         std::bind(&DbPoolInfo::TickSatisticBlock, this));

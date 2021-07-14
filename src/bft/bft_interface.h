@@ -223,7 +223,7 @@ public:
         return bft_item_vec_.size();
     }
 
-    const std::shared_ptr<bft::protobuf::Block>& prpare_block() const {
+    std::shared_ptr<bft::protobuf::Block>& prpare_block() {
         return prpare_block_;
     }
 
