@@ -129,12 +129,12 @@ void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 
     if (!header.handled()) {
         message_processor_[header.type()](header_ptr);
+        if (!header.debug().empty()) {
+            NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
+        }
     }
 
     if (header.has_broadcast()) {
-        if (!header.debug().empty()) {
-            NETWORK_DEBUG("route call broadcast: %s", header.debug().c_str());
-        }
         Broadcast(header);
     }
 }
