@@ -283,7 +283,6 @@ void ElectManager::ProcessNewElectBlock(
             leaders.insert(tmp_leaders[*iter]->id);
             if (tmp_leaders[*iter]->id == common::GlobalInfo::Instance()->id()) {
                 local_node_is_super_leader_ = true;
-                std::cout << "this node is super leader: " << common::Encode::HexEncode(tmp_leaders[*iter]->id) << std::endl;
             }
         }
 
