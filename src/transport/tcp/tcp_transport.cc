@@ -6,6 +6,7 @@
 #include "transport/transport_utils.h"
 #include "transport/multi_thread.h"
 #include "transport/proto/transport.pb.h"
+#include "transport/message_filter.h"
 #include "init/update_vpn_init.h"
 
 namespace tenon {
@@ -636,6 +637,14 @@ int TcpTransport::Send(
 
 int TcpTransport::SendToLocal(transport::protobuf::Header& message) {
     message.clear_broadcast();
+    if (!message.has_hash() || message.hash() == 0) {
+        message.set_hash(GetMessageHash(message));
+    }
+
+    if (MessageFilter::Instance()->CheckUnique(message.hash())) {
+        return;
+    }
+
     MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;
 }
