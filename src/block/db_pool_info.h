@@ -3,6 +3,7 @@
 #include "common/utils.h"
 #include "common/string_utils.h"
 #include "common/thread_safe_queue.h"
+#include "common/tick.h"
 #include "db/dict.h"
 #include "db/db.h"
 #include "block/block_utils.h"
