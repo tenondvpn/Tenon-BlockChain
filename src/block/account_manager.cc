@@ -173,7 +173,6 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
     }
 
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d", i);
         bft::protobuf::TxInfo tx_info;
         tx_info.set_type(common::kConsensusStatistic);
         tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
@@ -188,8 +187,8 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
                 common::GlobalInfo::Instance()->network_id())) +
             std::to_string(tmblock_tm) + "_" +
             std::to_string(i)));
-        BLOCK_DEBUG("common::kConsensusStatistic set gid: %s",
-            common::Encode::HexEncode(tx_info.gid()).c_str());
+        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu",
+            i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm);
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());

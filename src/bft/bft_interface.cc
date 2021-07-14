@@ -146,8 +146,14 @@ int BftInterface::LeaderPrecommitOk(
         std::string sec_str;
         secret.Serialize(sec_str);
         prepare_bitmap_.Set(index);
+        BFT_DEBUG("agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u",
+            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_);
     } else {
         precommit_oppose_set_.insert(id);
+        BFT_DEBUG("not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u,"
+            "precommit_oppose_set_.size: %u, min_oppose_member_count_: %u",
+            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(),
+            min_aggree_member_count_, precommit_oppose_set_.size(), min_oppose_member_count_);
     }
 
     auto now_timestamp = std::chrono::steady_clock::now();
