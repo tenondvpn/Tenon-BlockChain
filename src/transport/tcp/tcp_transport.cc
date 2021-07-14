@@ -642,7 +642,7 @@ int TcpTransport::SendToLocal(transport::protobuf::Header& message) {
     }
 
     if (MessageFilter::Instance()->CheckUnique(message.hash())) {
-        return;
+        return kTransportSuccess;
     }
 
     MultiThreadHandler::Instance()->HandleMessage(message);
