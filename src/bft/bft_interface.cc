@@ -150,14 +150,14 @@ int BftInterface::LeaderPrecommitOk(
         prepare_bitmap_.Set(index);
         BFT_DEBUG("agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s, msg_id: %u",
             common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(bft_gid), msg_id);
+            common::Encode::HexEncode(bft_gid).c_str(), msg_id);
     } else {
         precommit_oppose_set_.insert(id);
         BFT_DEBUG("not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u,"
             "precommit_oppose_set_.size: %u, min_oppose_member_count_: %u, bft_gid: %s, msg_id: %u",
             common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(),
             min_aggree_member_count_, precommit_oppose_set_.size(), min_oppose_member_count_,
-            common::Encode::HexEncode(bft_gid), msg_id);
+            common::Encode::HexEncode(bft_gid).c_str(), msg_id);
     }
 
     auto now_timestamp = std::chrono::steady_clock::now();
