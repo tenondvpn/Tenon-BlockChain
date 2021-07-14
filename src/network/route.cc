@@ -76,7 +76,7 @@ int Route::Send(transport::protobuf::Header& message) {
         } else {
             if (message.has_to_ip() && message.has_to_port()) {
                 if (message.transport_type() == transport::kTcp) {
-                    transport::MultiThreadHandler::Instance()->transport()->Send(
+                    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                             message.to_ip(), message.to_port(), 0, message);
                 } else {
                     dht_ptr->transport()->Send(message.to_ip(), message.to_port(), 0, message);
@@ -234,7 +234,12 @@ void Route::RouteByUniversal(transport::protobuf::Header& header) {
         return;
     }
 
-    universal_dht->SendToClosestNode(header);
+    if (header.has_broadcast()) {
+        // choose limit nodes to broadcast from universal
+        universal_dht->SendToDesNetworkNodes(header);
+    } else {
+        universal_dht->SendToClosestNode(header);
+    }
 }
 
 }  // namespace network

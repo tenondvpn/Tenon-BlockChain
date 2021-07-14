@@ -237,6 +237,31 @@ int BaseDht::Bootstrap(
     return kDhtSuccess;
 }
 
+void BaseDht::SendToDesNetworkNodes(transport::protobuf::Header& message) {
+    std::vector<NodePtr> closest_nodes;
+    {
+        std::lock_guard<std::mutex> guard(dht_mutex_);
+        closest_nodes = DhtFunction::GetClosestNodes(
+            dht_,
+            message.des_dht_key(),
+            common::kDefaultBroadcastNeighborCount);
+    }
+
+    uint32_t des_net_id = DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
+    for (auto iter = closest_nodes.begin(); iter != closest_nodes.end(); ++iter) {
+        uint32_t net_id = DhtKeyManager::DhtKeyGetNetId((*iter)->dht_key());
+        if (net_id != des_net_id) {
+            continue;
+        }
+
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            (*iter)->public_ip(),
+            (*iter)->local_port + 1,
+            0,
+            message);
+    }
+}
+
 void BaseDht::SendToClosestNode(transport::protobuf::Header& message) {
     if (message.client_proxy() && message.client_handled()) {
         if (message.transport_type() == transport::kTcp) {

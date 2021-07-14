@@ -918,7 +918,7 @@ void BftManager::HandleOpposeNodeMsg(
 
     // TODO: just use merkle-tree sync data, this will decrease performance
     if (res == kBftBlockPreHashError) {
-        std::string pre_hash(spliter[1], spliter.SubLen(1));
+        std::string pre_hash(spliter[1], 32);
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
