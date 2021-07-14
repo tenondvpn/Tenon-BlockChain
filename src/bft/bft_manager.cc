@@ -923,7 +923,7 @@ void BftManager::HandleOpposeNodeMsg(
             spliter[1],
             sync::kSyncHighest);
         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-            common::Encode::HexEncode(spliter[1]),
+            common::Encode::HexEncode(spliter[1]).c_str(),
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
