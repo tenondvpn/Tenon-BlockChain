@@ -342,6 +342,8 @@ void DbPoolInfo::SatisticBlock() {
 
         if (block_ptr != nullptr) {
             AddStatistic(block_ptr);
+            BLOCK_DEBUG("SatisticBlock add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
+                server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_);
         }
     }
 }
@@ -423,7 +425,7 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 }
 
 int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
-    SatisticBlock();
+//     SatisticBlock();
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     auto iter = statistic_for_tmblock_.find(max_time_block_height_);
     if (iter == statistic_for_tmblock_.end()) {
@@ -447,6 +449,8 @@ int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info)
 
 void DbPoolInfo::TickSatisticBlock() {
     SatisticBlock();
+    BLOCK_DEBUG("TickSatisticBlock add pool statistic server_bandwidth_queue_ count: %d, pool index: %d",
+        server_bandwidth_queue_.size(), (uint32_t)pool_index_);
     update_statistic_tick_.CutOff(
         kUpdateStatisticPeriod,
         std::bind(&DbPoolInfo::TickSatisticBlock, this));
