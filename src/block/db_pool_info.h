@@ -39,7 +39,7 @@ private:
     int LoadBlocksUtilLatestStatisticBlock();
     void TickSatisticBlock();
 
-    static const uint32_t kUpdateStatisticPeriod = 3000000lu;
+    static const uint32_t kUpdateStatisticPeriod = 1000000lu;
 
     std::string dict_key_;
     std::string hash_;
