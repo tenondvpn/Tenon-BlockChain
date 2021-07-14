@@ -1141,7 +1141,6 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
     std::string agg_sign_challenge_str;
     std::string agg_sign_response_str;
     bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
-    tenon_block->set_hash(bft_ptr->final_block_hash());
     tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
     tenon_block->set_agg_sign_response(agg_sign_response_str);
     tenon_block->set_pool_index(bft_ptr->pool_index());
@@ -1266,7 +1265,6 @@ int BftManager::BackupCommit(
     }
 
     auto tenon_block = bft_ptr->prpare_block();
-    tenon_block->set_hash(bft_ptr->final_block_hash());
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());

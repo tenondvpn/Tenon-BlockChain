@@ -280,10 +280,6 @@ public:
         aggree_ = false;
     }
 
-    std::string final_block_hash() {
-        return final_block_hash_;
-    }
-
 protected:
     BftInterface() {
         bft_item_vec_.reserve(kBftOneConsensusMaxCount);
@@ -339,7 +335,6 @@ private:
     BftItemPtr msg_step_ptr_[kBftCommited];
     std::mutex msg_step_ptr_mutex_;
     std::atomic<bool> aggree_{ true };
-    std::string final_block_hash_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

@@ -352,15 +352,8 @@ int BftInterface::LeaderCreateCommitAggSign() {
     assert(agg_sign_ != nullptr);
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
     assert(agg_pubkey != nullptr);
-    std::string str_for_hash = prepare_hash();
-    auto& bitmap_data = precommit_bitmap_.data();
-    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
-        str_for_hash += std::to_string(bitmap_data[i]);
-    }
-
-    final_block_hash_ = common::Hash::Sha256(str_for_hash);
     if (!security::MultiSign::Instance()->MultiSigVerify(
-            final_block_hash_,
+            prepare_hash(),
             *agg_sign_,
             *agg_pubkey)) {
         BFT_ERROR("leader agg sign and check it failed!");
@@ -383,11 +376,9 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
         bft_msg.agg_sign_challenge(),
         bft_msg.agg_sign_response());
 
-    std::string str_for_hash = prepare_hash();
     std::vector<uint64_t> data;
     for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
         data.push_back(bft_msg.bitmap(i));
-        str_for_hash += std::to_string(bft_msg.bitmap(i));
     }
 
     common::Bitmap leader_agg_bitmap(data);
@@ -404,9 +395,8 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
     assert(agg_pubkey != nullptr);
-    final_block_hash_ = common::Hash::Sha256(str_for_hash);
     if (!security::MultiSign::Instance()->MultiSigVerify(
-            final_block_hash_,
+            prepare_hash(),
             sign,
             *agg_pubkey)) {
         return kBftError;
