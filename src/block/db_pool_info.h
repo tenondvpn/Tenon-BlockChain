@@ -36,6 +36,9 @@ public:
 private:
     int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
     int LoadBlocksUtilLatestStatisticBlock();
+    void TickSatisticBlock();
+
+    static const uint32_t kUpdateStatisticPeriod = 3000000lu;
 
     std::string dict_key_;
     std::string hash_;
@@ -52,6 +55,7 @@ private:
     std::mutex statistic_for_tmblock_mutex_;
     std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
     common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> server_bandwidth_queue_;
+    common::Tick update_statistic_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

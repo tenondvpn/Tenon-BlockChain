@@ -26,6 +26,9 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
     LoadBlocksUtilLatestStatisticBlock();
+    update_statistic_tick_.CutOff(
+        kUpdateStatisticPeriod,
+        std::bind(&DbPoolInfo::TickSatisticBlock, this));
 }
 
 DbPoolInfo::~DbPoolInfo() {}
@@ -437,6 +440,13 @@ int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info)
     }
 
     return kBlockSuccess;
+}
+
+void DbPoolInfo::TickSatisticBlock() {
+    SatisticBlock();
+    update_statistic_tick_.CutOff(
+        kUpdateStatisticPeriod,
+        std::bind(&DbPoolInfo::TickSatisticBlock, this));
 }
 
 }  // namespace block
