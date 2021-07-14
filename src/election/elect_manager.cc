@@ -185,11 +185,13 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
+    BFT_DEBUG("0 new ProcessNewElectBlock height: %lu", height);
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
     if (elect_members_.find(height) != elect_members_.end()) {
         return;
     }
 
+    BFT_DEBUG("1 new ProcessNewElectBlock height: %lu", height);
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();

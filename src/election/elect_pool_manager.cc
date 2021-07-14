@@ -33,6 +33,7 @@ int ElectPoolManager::CreateElectTransaction(
         bft::protobuf::TxInfo& tx_info) {
     block::protobuf::StatisticInfo statistic_info;
     bool statistic_valid = false;
+    std::string tm_str;
     for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
         if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
             tx_info.set_gid(common::Hash::Hash256(
@@ -43,6 +44,7 @@ int ElectPoolManager::CreateElectTransaction(
                 std::to_string(final_statistic_block_height) +
                 "_" +
                 src_tx_info.attr(i).value()));
+            tm_str = src_tx_info.attr(i).value();
         }
 
         if (src_tx_info.attr(i).key() == bft::kStatisticAttr) {
@@ -78,8 +80,8 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_gas_used(0);
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
-    ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u",
-        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid);
+    ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u, final_statistic_block_height: %lu, attr_tm: %s",
+        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, final_statistic_block_height, tm_str.c_str());
     return kElectSuccess;
 }
 

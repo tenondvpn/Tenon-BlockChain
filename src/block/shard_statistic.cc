@@ -187,6 +187,8 @@ void ShardStatistic::CreateStatisticTransaction() {
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
             BFT_ERROR("CreateStatisticTransaction dispatch pool failed!");
         }
+
+        break;
     }
 }
 
