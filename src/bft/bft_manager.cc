@@ -37,6 +37,7 @@ BftManager::BftManager() {
     network::Route::Instance()->RegisterMessage(
         common::kBftMessage,
         std::bind(&BftManager::HandleMessage, this, std::placeholders::_1));
+    BFT_DEBUG("common::kBftMessage regeistered to route.");
     timeout_tick_.CutOff(
         kBftTimeoutCheckPeriod,
         std::bind(&BftManager::CheckTimeout, this));

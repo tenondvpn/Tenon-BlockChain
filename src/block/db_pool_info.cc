@@ -293,6 +293,9 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     server_bandwidth_queue_.push(block_ptr);
+    BLOCK_DEBUG("add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
+        server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_);
+
 }
 
 int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {

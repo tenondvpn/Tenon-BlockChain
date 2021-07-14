@@ -167,6 +167,7 @@ void Route::RegisterMessage(uint32_t type, transport::MessageProcessor proc) {
     }
 
     message_processor_[type] = proc;
+    NETWORK_DEBUG("register message handler: %d", type);
     transport::Processor::Instance()->RegisterProcessor(
             type,
             std::bind(&Route::HandleMessage, this, std::placeholders::_1));
@@ -177,6 +178,7 @@ void Route::UnRegisterMessage(uint32_t type) {
         return;
     }
 
+    NETWORK_DEBUG("unregister message handler: %d", type);
     message_processor_[type] = nullptr;
 }
 
