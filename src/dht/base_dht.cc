@@ -247,18 +247,24 @@ void BaseDht::SendToDesNetworkNodes(transport::protobuf::Header& message) {
             common::kDefaultBroadcastNeighborCount);
     }
 
-//     uint32_t des_net_id = DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
+    uint32_t send_count = 0;
+    uint32_t des_net_id = DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
     for (auto iter = closest_nodes.begin(); iter != closest_nodes.end(); ++iter) {
-//         uint32_t net_id = DhtKeyManager::DhtKeyGetNetId((*iter)->dht_key());
-//         if (net_id != des_net_id) {
-//             continue;
-//         }
-// 
+        uint32_t net_id = DhtKeyManager::DhtKeyGetNetId((*iter)->dht_key());
+        if (net_id != des_net_id) {
+            continue;
+        }
+
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             (*iter)->public_ip(),
             (*iter)->local_port + 1,
             0,
             message);
+        ++send_count;
+    }
+
+    if (send_count == 0) {
+        SendToClosestNode(message);
     }
 }
 
