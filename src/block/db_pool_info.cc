@@ -293,9 +293,6 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
     }
 
     server_bandwidth_queue_.push(block_ptr);
-    BLOCK_DEBUG("add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d, bitmap size: %u",
-        server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_, block_ptr->bitmap_size());
-
 }
 
 int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
@@ -342,8 +339,6 @@ void DbPoolInfo::SatisticBlock() {
 
         if (block_ptr != nullptr) {
             AddStatistic(block_ptr);
-            BLOCK_DEBUG("SatisticBlock add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d, bitmap size: %u",
-                server_bandwidth_queue_.size(), block_ptr->timeblock_height(), (uint32_t)pool_index_, block_ptr->bitmap_size());
         }
     }
 }
@@ -365,8 +360,6 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 
     auto ext_iter = iter->second.added_height.find(block_item->height());
     if (ext_iter != iter->second.added_height.end()) {
-        BLOCK_DEBUG("block_item->height() exists AddStatistic add pool statistic server_bandwidth_queue_ count: %d, tm height: %lu, pool index: %d",
-            server_bandwidth_queue_.size(), block_item->timeblock_height(), (uint32_t)pool_index_);
         return kBlockSuccess;
     }
 
