@@ -23,7 +23,8 @@ ShardStatistic* ShardStatistic::Instance() {
 
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
-    BLOCK_DEBUG("AddShardPoolStatistic block_item->pool_index(): %d", block_item->pool_index());
+    BLOCK_DEBUG("AddShardPoolStatistic block_item->pool_index(): %d, network id: %d, hash: %s",
+        block_item->pool_index(), block_item->network_id(), common::Encode::HexEncode(block_item->hash()).c_str());
     if (block_item->tx_list_size() != 1) {
         BLOCK_ERROR("block_item->tx_list_size() != 1: %d", block_item->tx_list_size());
         return;
