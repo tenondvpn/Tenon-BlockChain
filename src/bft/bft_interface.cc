@@ -211,13 +211,13 @@ int BftInterface::LeaderCommitOk(
         BFT_DEBUG("LeaderCommitOk agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
             "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
             common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(bft_gid).c_str());
+            common::Encode::HexEncode(gid()).c_str());
     } else {
         commit_oppose_set_.insert(id);
         BFT_DEBUG("LeaderCommitOk not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
             "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
             common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(bft_gid).c_str());
+            common::Encode::HexEncode(gid()).c_str());
     }
 
     if (precommit_bitmap_ == prepare_bitmap_) {
