@@ -249,7 +249,9 @@ int BftInterface::LeaderCommitOk(
 }
 
 int BftInterface::CheckTimeout() {
-    if (timeout_ <= std::chrono::steady_clock::now()) {
+    auto now_timestamp = std::chrono::steady_clock::now();
+    if (timeout_ <= now_timestamp) {
+        BFT_ERROR("Timeout %s,", common::Encode::HexEncode(gid()).c_str());
         return kTimeout;
     }
 
@@ -259,12 +261,12 @@ int BftInterface::CheckTimeout() {
 
     std::lock_guard<std::mutex> guard(mutex_);
     if (!leader_handled_precommit_) {
-        auto now_timestamp = std::chrono::steady_clock::now();
         if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
                 (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
                 now_timestamp >= prepare_timeout_)) {
             LeaderCreatePreCommitAggChallenge();
             leader_handled_precommit_ = true;
+            BFT_ERROR("kTimeoutCallPrecommit %s,", common::Encode::HexEncode(gid()).c_str());
             return kTimeoutCallPrecommit;
         }
 
@@ -272,7 +274,6 @@ int BftInterface::CheckTimeout() {
     }
 
     if (!leader_handled_commit_) {
-        auto now_timestamp = std::chrono::steady_clock::now();
         if (now_timestamp >= precommit_timeout_) {
             if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
                 BFT_ERROR("precommit_bitmap_.valid_count() failed!");
@@ -282,6 +283,7 @@ int BftInterface::CheckTimeout() {
             prepare_bitmap_ = precommit_bitmap_;
             LeaderCreatePreCommitAggChallenge();
             RechallengePrecommitClear();
+            BFT_ERROR("kTimeoutCallReChallenge %s,", common::Encode::HexEncode(gid()).c_str());
             return kTimeoutCallReChallenge;
         }
 
