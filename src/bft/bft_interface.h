@@ -280,18 +280,6 @@ public:
         aggree_ = false;
     }
 
-protected:
-    BftInterface() {
-        bft_item_vec_.reserve(kBftOneConsensusMaxCount);
-        reset_timeout();
-    }
-
-    virtual ~BftInterface() {}
-
-    void SetBlock(std::shared_ptr<bft::protobuf::Block>& prpare_block) {
-        prpare_block_ = prpare_block;
-    }
-
     void AddBftEpoch() {
         ++bft_epoch_;
     }
@@ -302,6 +290,18 @@ protected:
 
     void SetEpoch(uint32_t epoch) {
         bft_epoch_ = epoch;
+    }
+
+protected:
+    BftInterface() {
+        bft_item_vec_.reserve(kBftOneConsensusMaxCount);
+        reset_timeout();
+    }
+
+    virtual ~BftInterface() {}
+
+    void SetBlock(std::shared_ptr<bft::protobuf::Block>& prpare_block) {
+        prpare_block_ = prpare_block;
     }
 
 private:

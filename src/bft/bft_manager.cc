@@ -1487,10 +1487,12 @@ void BftManager::CheckTimeout() {
                     break;
                 }
                 case kTimeoutCallPrecommit: {
+                    iter->second->AddBftEpoch();
                     LeaderCallPrecommit(iter->second);
                     break;
                 }
                 case kTimeoutCallReChallenge: {
+                    iter->second->AddBftEpoch();
                     LeaderReChallenge(iter->second);
                     break;
                 }
