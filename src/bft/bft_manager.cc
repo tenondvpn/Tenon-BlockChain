@@ -145,6 +145,16 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
+    if (bft_ptr->status() != bft_msg.bft_step()) {
+        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+            header.id(),
+            common::Encode::HexEncode(bft_msg.gid()).c_str(),
+            bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        return;
+    }
+
     if (bft_ptr->status() == kBftPreCommit) {
         if (bft_msg.bft_step() == kBftPreCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);

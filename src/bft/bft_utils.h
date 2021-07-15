@@ -105,7 +105,7 @@ static const uint32_t kBftTimeout = 14u * 1000u * 1000u;  // bft timeout 15s
 // tx pool timeout 3 * kTimeBlockCreatePeriodSeconds seconds
 static const uint32_t kTxPoolTimeoutSeconds = 30u;
 static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
-static const uint32_t kBftLeaderPrepareWaitPeriod = 3u * 1000u * 1000u;
+static const uint32_t kBftLeaderPrepareWaitPeriod = 5u * 1000u * 1000u;
 static const uint32_t kPrevTransportVersion = 0;
 static const uint32_t kTransportVersion = 1;
 
