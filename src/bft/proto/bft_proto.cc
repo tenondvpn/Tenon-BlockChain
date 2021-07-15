@@ -146,9 +146,8 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
-    auto challenge = bft_ptr->challenge();
     std::string challenge_str;
-    challenge.Serialize(challenge_str);
+    bft_ptr->challenge().Serialize(challenge_str);
     bft_msg.set_challenge(challenge_str);
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(

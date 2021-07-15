@@ -148,8 +148,8 @@ int BftInterface::LeaderPrecommitOk(
         std::string sec_str;
         secret.Serialize(sec_str);
         prepare_bitmap_.Set(index);
-        BFT_DEBUG("agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s, msg_id: %u",
-            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
+        BFT_DEBUG("agree id: %s, sec_str: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s, msg_id: %u",
+            common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(sec_str).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
             common::Encode::HexEncode(bft_gid).c_str(), msg_id);
     } else {
         precommit_oppose_set_.insert(id);
@@ -191,6 +191,8 @@ int BftInterface::LeaderCommitOk(
         return kBftWaitingBackup;
     }
 
+    std::string sec_str;
+    secret_.Serialize(sec_str);
     if (agree) {
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
         if (!security::MultiSign::Instance()->VerifyResponse(
@@ -199,9 +201,9 @@ int BftInterface::LeaderCommitOk(
                 mem_ptr->pubkey,
                 mem_ptr->commit_point)) {
             commit_oppose_set_.insert(id);
-            BFT_DEBUG("invalid backup response. not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
+            BFT_DEBUG("invalid backup response. not agree id: %s, sec_str: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
                 "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
-                common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
+                common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(sec_str).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
                 common::Encode::HexEncode(gid()).c_str());
         } else {
             commit_aggree_set_.insert(id);
