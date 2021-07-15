@@ -668,6 +668,11 @@ int BftManager::InitBft(
 
 int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
+    if (bft_ptr->Init() != kBftSuccess) {
+        BFT_ERROR("leader create bft failed!");
+        return kBftError;
+    }
+
     bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());

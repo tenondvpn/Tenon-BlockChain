@@ -292,10 +292,22 @@ public:
         bft_epoch_ = epoch;
     }
 
+    int Init();
+
 protected:
     BftInterface() {
         bft_item_vec_.reserve(kBftOneConsensusMaxCount);
         reset_timeout();
+        auto local_mem_ptr = elect::ElectManager::Instance()->GetMember(
+            bft_msg.net_id(),
+            common::GlobalInfo::Instance()->id());
+        if (local_mem_ptr == nullptr) {
+            BFT_ERROR("get local bft member failed!");
+            return false;
+        }
+
+        leader_index_ = leader_mem_ptr->index;
+        secret_ = local_mem_ptr->secret;
     }
 
     virtual ~BftInterface() {}

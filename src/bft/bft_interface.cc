@@ -10,6 +10,33 @@ namespace tenon {
 
 namespace bft {
 
+BftInterface::BftInterface() {
+    bft_item_vec_.reserve(kBftOneConsensusMaxCount);
+    reset_timeout();
+}
+
+int BftInterface::Init() {
+    auto local_mem_ptr = elect::ElectManager::Instance()->GetMember(
+        common::GlobalInfo::Instance()->network_id(),
+        common::GlobalInfo::Instance()->id());
+    if (local_mem_ptr == nullptr) {
+        BFT_ERROR("get local bft member failed!");
+        return kBftError;
+    }
+
+    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
+        common::GlobalInfo::Instance()->network_id(),
+        common::GlobalInfo::Instance()->id());
+    if (leader_mem_ptr == nullptr) {
+        BFT_ERROR("get leader bft member failed!");
+        return kBftError;
+    }
+
+    leader_index_ = leader_mem_ptr->index;
+    secret_ = local_mem_ptr->secret;
+    return kBftSuccess;
+}
+
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (!BackupCheckLeaderValid(bft_msg)) {
