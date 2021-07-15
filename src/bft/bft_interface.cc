@@ -216,11 +216,22 @@ int BftInterface::LeaderCommitOk(
                 common::Encode::HexEncode(gid()).c_str());
         }
     } else {
-        commit_oppose_set_.insert(id);
+//         commit_oppose_set_.insert(id);
         BFT_DEBUG("LeaderCommitOk not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
             "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
             common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
             common::Encode::HexEncode(gid()).c_str());
+
+        prepare_bitmap_.UnSet(index);
+        if (prepare_bitmap_.valid_count() < min_aggree_member_count_) {
+            BFT_ERROR("precommit_bitmap_.valid_count() failed!");
+            return kBftOppose;
+        }
+
+        LeaderCreatePreCommitAggChallenge();
+        RechallengePrecommitClear();
+        return kBftReChallenge;
+        
     }
 
     if (precommit_bitmap_ == prepare_bitmap_) {
@@ -232,9 +243,6 @@ int BftInterface::LeaderCommitOk(
 
         return kBftAgree;
     }
-
-    std::string res_str;
-    res.Serialize(res_str);
 
     auto now_timestamp = std::chrono::steady_clock::now();
     if (now_timestamp >= precommit_timeout_) {
@@ -248,12 +256,6 @@ int BftInterface::LeaderCommitOk(
         LeaderCreatePreCommitAggChallenge();
         RechallengePrecommitClear();
         return kBftReChallenge;
-    }
-
-    if (commit_oppose_set_.size() >= min_oppose_member_count_) {
-        leader_handled_commit_ = true;
-        BFT_ERROR("oppose count limited!");
-        return kBftOppose;
     }
 
     return kBftWaitingBackup;
