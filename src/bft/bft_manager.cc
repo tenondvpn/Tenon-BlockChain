@@ -987,6 +987,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+    BFT_DEBUG("LeaderCreatePreCommit success. %s", msg.debug().c_str());
     network::Route::Instance()->Send(msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
@@ -1485,11 +1486,17 @@ void BftManager::CheckTimeout() {
         bft_hash_map = bft_hash_map_;
     }
 
-    for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end();) {
+    for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end(); ++iter) {
         int timeout_res = iter->second->CheckTimeout();
         switch (timeout_res) {
         case kTimeout: {
-            timeout_vec.push_back(iter->second);
+            {
+                std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
+                auto riter = bft_hash_map_.find(iter->first);
+                if (riter != bft_hash_map_.end()) {
+                    bft_hash_map_.erase(riter);
+                }
+            }
             break;
         }
         case kTimeoutCallPrecommit: {
@@ -1508,25 +1515,6 @@ void BftManager::CheckTimeout() {
         default:
             break;
         }
-
-        if (timeout_res != kTimeout) {
-            ++iter;
-        }
-    }
-
-    for (uint32_t i = 0; i < timeout_vec.size(); ++i) {
-        timeout_vec[i]->set_status(kBftStepTimeout);
-        timeout_vec[i]->clear_item_index_vec();
-        DispatchPool::Instance()->BftOver(timeout_vec[i]);
-        {
-            std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
-            auto iter = bft_hash_map_.find(timeout_vec[i]->gid());
-            if (iter != bft_hash_map_.end()) {
-                bft_hash_map_.erase(iter);
-            }
-        }
-
-        BFT_ERROR("Timeout %s,", common::Encode::HexEncode(timeout_vec[i]->gid()).c_str());
     }
 
     timeout_tick_.CutOff(
