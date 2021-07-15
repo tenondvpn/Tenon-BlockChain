@@ -575,7 +575,7 @@ bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packe
 
 uint64_t TcpTransport::GetMessageHash(transport::protobuf::Header& message) {
     auto hash = common::Hash::Hash64(
-        "tcp" + message.src_node_id() + std::to_string(message.id()) +
+        "tcp" + common::GlobalInfo::Instance()->id() + std::to_string(message.id()) +
         std::to_string(common::TimeUtils::TimestampUs()));
     return hash;
 }

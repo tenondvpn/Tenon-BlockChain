@@ -257,11 +257,11 @@ void MultiThreadHandler::HandleRemoteMessage(
 		} else {
 			message_ptr->set_handled(false);
 		}
-	} else {
-        if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
-			const auto& msg = *message_ptr;
-			return;
-		}
+// 	} else {
+//         if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
+// 			const auto& msg = *message_ptr;
+// 			return;
+// 		}
 	}
 
     message_ptr->set_transport_type(transport_type);
