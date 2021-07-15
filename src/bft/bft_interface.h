@@ -295,11 +295,7 @@ public:
     int Init();
 
 protected:
-    BftInterface() {
-        bft_item_vec_.reserve(kBftOneConsensusMaxCount);
-        reset_timeout();
-    }
-
+    BftInterface();
     virtual ~BftInterface() {}
 
     void SetBlock(std::shared_ptr<bft::protobuf::Block>& prpare_block) {
