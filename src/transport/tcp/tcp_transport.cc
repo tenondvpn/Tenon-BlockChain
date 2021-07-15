@@ -607,6 +607,7 @@ int TcpTransport::Send(
     std::string msg;
     if (!message.has_hash() || message.hash() == 0) {
         message.set_hash(GetMessageHash(message));
+        MessageFilter::Instance()->CheckUnique(message.hash());
     }
 
     message.SerializeToString(&msg);
