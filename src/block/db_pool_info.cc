@@ -421,8 +421,6 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 }
 
 int DbPoolInfo::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
-//     SatisticBlock();
-//     update_statistic_tick_.Destroy();
     SatisticBlock();
     std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
     auto iter = statistic_for_tmblock_.find(max_time_block_height_);

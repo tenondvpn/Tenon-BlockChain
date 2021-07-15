@@ -1003,8 +1003,8 @@ int BftManager::BackupPrecommit(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    auto& data = *(header.mutable_data());
-    if (bft_ptr->PreCommit(false, data) != kBftSuccess) {
+    std::string precommit_data;
+    if (bft_ptr->PreCommit(false, &precommit_data) != kBftSuccess) {
         BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
@@ -1256,8 +1256,8 @@ int BftManager::BackupCommit(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    auto& data = *(header.mutable_data());
-    if (bft_ptr->Commit(false, data) != kBftSuccess) {
+    std::string commit_data;
+    if (bft_ptr->Commit(false, &commit_data) != kBftSuccess) {
         BFT_ERROR("bft backup commit failed!");
     }
 
