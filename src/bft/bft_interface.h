@@ -292,6 +292,18 @@ protected:
         prpare_block_ = prpare_block;
     }
 
+    void AddBftEpoch() {
+        ++bft_epoch_;
+    }
+
+    uint32_t GetEpoch() {
+        return bft_epoch_;
+    }
+
+    void SetEpoch(uint32_t epoch) {
+        bft_epoch_ = epoch;
+    }
+
 private:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
@@ -335,6 +347,7 @@ private:
     BftItemPtr msg_step_ptr_[kBftCommited];
     std::mutex msg_step_ptr_mutex_;
     std::atomic<bool> aggree_{ true };
+    std::atomic<uint32_t> bft_epoch_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

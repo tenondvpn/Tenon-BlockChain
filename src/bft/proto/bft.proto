@@ -122,4 +122,5 @@ message BftMessage {
 	optional bytes prepare_hash = 19;
 	optional bytes node_ip = 20;
 	optional uint32 node_port = 21;
+	optional uint32 epoch = 22;
 }

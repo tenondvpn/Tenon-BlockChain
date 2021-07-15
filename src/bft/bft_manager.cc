@@ -145,13 +145,15 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    if (bft_ptr->status() != bft_msg.bft_step()) {
+    assert(!bft_ptr->prepare_hash().empty());
+    if (bft_ptr->GetEpoch() < bft_msg.epoch()) {
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
         BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
             header.id(),
             common::Encode::HexEncode(bft_msg.gid()).c_str(),
             bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        bft_ptr->SetEpoch(bft_msg.epoch());
         return;
     }
 
@@ -959,8 +961,8 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
     uint32_t member_idx = GetMemberIndex(
-            bft_ptr->network_id(),
-            common::GlobalInfo::Instance()->id());
+        bft_ptr->network_id(),
+        common::GlobalInfo::Instance()->id());
     if (member_idx == elect::kInvalidMemberIndex) {
         return kBftError;
     }
@@ -1627,8 +1629,6 @@ int BftManager::VerifyLeaderSignature(
         hash_to_sign = common::Hash::Hash256(msg_hash_src);
     }
 
-    std::string pubkey_str;
-    mem_ptr->pubkey.Serialize(pubkey_str);
     if (!security::Schnorr::Instance()->Verify(
             hash_to_sign,
             sign,

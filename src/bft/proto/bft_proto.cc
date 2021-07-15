@@ -76,6 +76,7 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
@@ -108,6 +109,7 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    bft_msg.set_epoch(from_bft_msg.epoch());
     std::string secret_str;
     secret.Serialize(secret_str);
     bft_msg.set_secret(secret_str);
@@ -163,6 +165,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
@@ -195,6 +198,7 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    bft_msg.set_epoch(from_bft_msg.epoch());
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
@@ -261,6 +265,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_agg_sign_challenge(agg_sign_challenge_str);
     bft_msg.set_agg_sign_response(agg_sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
         msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
