@@ -65,8 +65,9 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    BFT_DEBUG("msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
         header.id(),
+        bft_msg.leader(),
         common::Encode::HexEncode(bft_msg.gid()).c_str(),
         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
         bft_msg.bft_step());
@@ -1119,7 +1120,7 @@ int BftManager::LeaderCommit(
         RemoveBft(bft_ptr->gid(), false);
     } else {
         // continue waiting, do nothing.
-        BFT_DEBUG("LeaderCommit from port: %d, waiting pool_index: %u"
+        BFT_DEBUG("LeaderCommit from port: %d, bft gid: %s, waiting pool_index: %u"
             ", member count: %u"
             ", min_aggree_member_count: %u"
             ", min_oppose_member_count: %u"
@@ -1127,6 +1128,7 @@ int BftManager::LeaderCommit(
             ", precommit_aggree_count: %u"
             ", commit_aggree_count: %u",
             header.from_port(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str(),
             bft_ptr->pool_index(),
             bft_ptr->member_count(),
             bft_ptr->min_aggree_member_count(),
