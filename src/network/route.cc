@@ -127,17 +127,17 @@ void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    if (!header.handled()) {
-        message_processor_[header.type()](header_ptr);
-        if (!header.debug().empty()) {
-            NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
-        }
-    }
-
     if (header.has_broadcast()) {
         Broadcast(header);
         if (!header.debug().empty()) {
             NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
+        }
+    }
+
+    if (!header.handled()) {
+        message_processor_[header.type()](header_ptr);
+        if (!header.debug().empty()) {
+            NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
         }
     }
 }
