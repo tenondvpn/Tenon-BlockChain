@@ -99,7 +99,6 @@ int TxBft::PreCommit(bool leader, std::string& pre_commit) {
         return kBftSuccess;
     }
 
-    pre_commit = "";
     return kBftSuccess;
 }
 
@@ -108,7 +107,7 @@ int TxBft::Commit(bool leader, std::string& commit) {
         LeaderCreateCommit(commit);
         return kBftSuccess;
     }
-    commit = "";
+
     return kBftSuccess;
 }
 

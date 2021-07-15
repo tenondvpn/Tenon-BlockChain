@@ -1021,7 +1021,7 @@ int BftManager::BackupPrecommit(
         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
             bft_msg.node_ip().c_str(), bft_msg.node_port());
-        BftProto::BackupCreatePreCommit(header, bft_msg, local_node, data, agg_res, true, msg);
+        BftProto::BackupCreatePreCommit(header, bft_msg, local_node, precommit_data, agg_res, true, msg);
     }
 
     if (!msg.has_data()) {
