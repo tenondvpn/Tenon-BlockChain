@@ -2632,6 +2632,13 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 node_port() const;
   void set_node_port(::google::protobuf::uint32 value);
 
+  // optional uint32 epoch = 22;
+  bool has_epoch() const;
+  void clear_epoch();
+  static const int kEpochFieldNumber = 22;
+  ::google::protobuf::uint32 epoch() const;
+  void set_epoch(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.BftMessage)
  private:
   void set_has_gid();
@@ -2674,6 +2681,8 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_node_ip();
   void set_has_node_port();
   void clear_has_node_port();
+  void set_has_epoch();
+  void clear_has_epoch();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2699,6 +2708,7 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   bool agree_;
   ::google::protobuf::uint32 pool_index_;
   ::google::protobuf::uint32 node_port_;
+  ::google::protobuf::uint32 epoch_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
 // ===================================================================
@@ -6416,6 +6426,30 @@ inline void BftMessage::set_node_port(::google::protobuf::uint32 value) {
   set_has_node_port();
   node_port_ = value;
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.node_port)
+}
+
+// optional uint32 epoch = 22;
+inline bool BftMessage::has_epoch() const {
+  return (_has_bits_[0] & 0x00100000u) != 0;
+}
+inline void BftMessage::set_has_epoch() {
+  _has_bits_[0] |= 0x00100000u;
+}
+inline void BftMessage::clear_has_epoch() {
+  _has_bits_[0] &= ~0x00100000u;
+}
+inline void BftMessage::clear_epoch() {
+  epoch_ = 0u;
+  clear_has_epoch();
+}
+inline ::google::protobuf::uint32 BftMessage::epoch() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.epoch)
+  return epoch_;
+}
+inline void BftMessage::set_epoch(::google::protobuf::uint32 value) {
+  set_has_epoch();
+  epoch_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.epoch)
 }
 
 #ifdef __GNUC__
