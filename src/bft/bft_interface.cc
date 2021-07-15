@@ -198,20 +198,23 @@ int BftInterface::LeaderCommitOk(
                 challenge_,
                 mem_ptr->pubkey,
                 mem_ptr->commit_point)) {
-            BFT_ERROR("invalid backup response.");
-            return kBftWaitingBackup;
+            commit_oppose_set_.insert(id);
+            BFT_DEBUG("invalid backup response. not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
+                "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
+                common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
+                common::Encode::HexEncode(gid()).c_str());
+        } else {
+            commit_aggree_set_.insert(id);
+            precommit_bitmap_.Set(index);
+            auto backup_res = std::make_shared<BackupResponse>();
+            backup_res->response = res;
+            backup_res->index = index;
+            backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
+            BFT_DEBUG("LeaderCommitOk agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
+                "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
+                common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
+                common::Encode::HexEncode(gid()).c_str());
         }
-
-        commit_aggree_set_.insert(id);
-        precommit_bitmap_.Set(index);
-        auto backup_res = std::make_shared<BackupResponse>();
-        backup_res->response = res;
-        backup_res->index = index;
-        backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
-        BFT_DEBUG("LeaderCommitOk agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
-            "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
-            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(gid()).c_str());
     } else {
         commit_oppose_set_.insert(id);
         BFT_DEBUG("LeaderCommitOk not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
