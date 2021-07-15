@@ -71,6 +71,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         common::Encode::HexEncode(bft_msg.gid()).c_str(),
         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
         bft_msg.bft_step());
+    assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
         return;
@@ -1478,36 +1479,38 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
 
 void BftManager::CheckTimeout() {
     std::vector<BftInterfacePtr> timeout_vec;
+    std::unordered_map<std::string, BftInterfacePtr> bft_hash_map;
     {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
-        for (auto iter = bft_hash_map_.begin(); iter != bft_hash_map_.end();) {
-            int timeout_res = iter->second->CheckTimeout();
-            switch (timeout_res) {
-                case kTimeout: {
-                    timeout_vec.push_back(iter->second);
-                    bft_hash_map_.erase(iter++);
-                    break;
-                }
-                case kTimeoutCallPrecommit: {
-                    iter->second->AddBftEpoch();
-                    LeaderCallPrecommit(iter->second);
-                    break;
-                }
-                case kTimeoutCallReChallenge: {
-                    iter->second->AddBftEpoch();
-                    LeaderReChallenge(iter->second);
-                    break;
-                }
-                case kTimeoutNormal:
-                case kTimeoutWaitingBackup:
-                    break;
-                default:
-                    break;
-            }
-            
-            if (timeout_res != kTimeout) {
-                ++iter;
-            }
+        bft_hash_map = bft_hash_map_;
+    }
+
+    for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end();) {
+        int timeout_res = iter->second->CheckTimeout();
+        switch (timeout_res) {
+        case kTimeout: {
+            timeout_vec.push_back(iter->second);
+            break;
+        }
+        case kTimeoutCallPrecommit: {
+            iter->second->AddBftEpoch();
+            LeaderCallPrecommit(iter->second);
+            break;
+        }
+        case kTimeoutCallReChallenge: {
+            iter->second->AddBftEpoch();
+            LeaderReChallenge(iter->second);
+            break;
+        }
+        case kTimeoutNormal:
+        case kTimeoutWaitingBackup:
+            break;
+        default:
+            break;
+        }
+
+        if (timeout_res != kTimeout) {
+            ++iter;
         }
     }
 
@@ -1515,6 +1518,14 @@ void BftManager::CheckTimeout() {
         timeout_vec[i]->set_status(kBftStepTimeout);
         timeout_vec[i]->clear_item_index_vec();
         DispatchPool::Instance()->BftOver(timeout_vec[i]);
+        {
+            std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
+            auto iter = bft_hash_map_.find(timeout_vec[i]->gid());
+            if (iter != bft_hash_map_.end()) {
+                bft_hash_map_.erase(iter);
+            }
+        }
+
         BFT_ERROR("Timeout %s,", common::Encode::HexEncode(timeout_vec[i]->gid()).c_str());
     }
 
