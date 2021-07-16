@@ -81,7 +81,7 @@ int32_t MemberManager::IsLeader(
         return -1;
     }
 
-    return member_ptr->pool_index_mod_num();
+    return member_ptr->pool_index_mod_num;
 }
 
 uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
