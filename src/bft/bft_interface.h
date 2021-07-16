@@ -18,6 +18,8 @@
 #include "security/multi_sign.h"
 #include "security/response.h"
 #include "transport/transport_utils.h"
+#include "election/elect_node_detail.h"
+#include "election/member_manager.h"
 
 namespace tenon {
 

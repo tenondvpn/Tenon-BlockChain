@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "common/utils.h"
+#include "common/bitmap.h"
 #include "block/block_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "block/proto/block.pb.h"
