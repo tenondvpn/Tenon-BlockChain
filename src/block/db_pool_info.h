@@ -32,7 +32,7 @@ public:
     std::string GetBaseAddr();
     void AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
     void SatisticBlock();
-    int GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info);
+    int GetSinglePoolStatisticInfo(block::protobuf::StatisticInfo* statistic_info);
 
 private:
     int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
@@ -54,7 +54,7 @@ private:
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
     uint64_t max_time_block_height_{ 0 };
     std::mutex statistic_for_tmblock_mutex_;
-    std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
+    std::map<uint64_t, std::shared_ptr<StatisticItem>> statistic_for_tmblock_;
     common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> server_bandwidth_queue_;
     std::mutex server_bandwidth_queue_mutex_;
     common::Tick update_statistic_tick_;

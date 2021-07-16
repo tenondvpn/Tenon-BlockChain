@@ -289,23 +289,22 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
         data.push_back(block.bitmap(i));
     }
 
+    auto members = elect::ElectManager::Instance()->GetNetworkMembers(
+        block.electblock_height(),
+        block.network_id());
     common::Bitmap leader_agg_bitmap(data);
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = leader_agg_bitmap.data().size() * 64;
-        for (uint32_t i = 0; i < bit_size; ++i) {
+    for (uint32_t i = 0; i < bit_size; ++i) {
         if (!leader_agg_bitmap.Valid(i)) {
             continue;
         }
 
-        auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-            block.electblock_height(),
-            block.network_id(),
-            i);
-        if (!mem_ptr) {
+        if (members->size() <= i) {
             return false;
         }
 
-        pubkeys.push_back(mem_ptr->pubkey);
+        pubkeys.push_back((*members)[i]->pubkey);
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -737,7 +736,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return res;
     }
 
-    uint32_t member_idx = GetMemberIndex(
+    uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
         bft_ptr->network_id(),
         common::GlobalInfo::Instance()->id());
     if (member_idx == elect::kInvalidMemberIndex) {
@@ -883,14 +882,20 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
+    uint32_t mem_index = bft_ptr->mem_manager_ptr()->GetMemberIndex(
+        bft_msg.net_id(),
+        bft_msg.node_id());
     if (mem_index == elect::kInvalidMemberIndex) {
+        return kBftError;
+    }
+
+    if (bft_ptr->members_ptr()->size() <= mem_index) {
         return kBftError;
     }
 
     security::Signature sign;
     if (VerifySignature(
-            mem_index,
+            (*bft_ptr->members_ptr())[mem_index],
             bft_msg,
             BftProto::GetPrepareSignHash(bft_msg),
             sign) != kBftSuccess) {
@@ -919,9 +924,6 @@ int BftManager::LeaderPrecommit(
     } else if (res == kBftOppose) {
         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
-    } else {
-        // continue waiting, do nothing.
-        BFT_DEBUG("LeaderPrecommit waiting pool_index: %u", bft_ptr->pool_index());
     }
 
     // broadcast pre-commit to backups
@@ -1061,16 +1063,6 @@ int BftManager::BackupPrecommit(
 #ifdef TENON_UNITTEST
     backup_precommit_msg_ = msg;
 #endif
-    std::string agg_res_str;
-    agg_res.Serialize(agg_res_str);
-    std::string agg_cha_str;
-    agg_challenge.Serialize(agg_cha_str);
-    std::string pri_key_str;
-    security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
-    std::string sec_key_str;
-    bft_ptr->secret().Serialize(sec_key_str);
-    std::string pub_key_str;
-    security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
     return kBftSuccess;
 }
 
@@ -1083,15 +1075,20 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
+    uint32_t mem_index = bft_ptr->mem_manager_ptr()->GetMemberIndex(
+        bft_msg.net_id(), bft_msg.node_id());
     if (mem_index == elect::kInvalidMemberIndex) {
         BFT_ERROR("mem_index == elect::kInvalidMemberIndex.");
         return kBftError;
     }
 
+    if (bft_ptr->members_ptr()->size() <= mem_index) {
+        return kBftError;
+    }
+
     security::Signature sign;
     if (VerifySignature(
-            mem_index,
+            (*bft_ptr->members_ptr())[mem_index],
             bft_msg,
             BftProto::GetPrecommitSignHash(bft_msg),
             sign) != kBftSuccess) {
@@ -1125,24 +1122,6 @@ int BftManager::LeaderCommit(
     } else if (res == kBftOppose) {
         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
-    } else {
-        // continue waiting, do nothing.
-        BFT_DEBUG("LeaderCommit from port: %d, bft gid: %s, waiting pool_index: %u"
-            ", member count: %u"
-            ", min_aggree_member_count: %u"
-            ", min_oppose_member_count: %u"
-            ", min_prepare_member_count: %u"
-            ", precommit_aggree_count: %u"
-            ", commit_aggree_count: %u",
-            header.from_port(),
-            common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-            bft_ptr->pool_index(),
-            bft_ptr->member_count(),
-            bft_ptr->min_aggree_member_count(),
-            bft_ptr->min_oppose_member_count(),
-            bft_ptr->min_prepare_member_count(),
-            bft_ptr->precommit_aggree_count(),
-            bft_ptr->commit_aggree_count());
     }
 
     return kBftSuccess;
@@ -1209,7 +1188,7 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
     transport::protobuf::Header msg;
     bft_ptr->init_precommit_timeout();
-    uint32_t member_idx = GetMemberIndex(
+    uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
         bft_ptr->network_id(),
         common::GlobalInfo::Instance()->id());
     if (member_idx == elect::kInvalidMemberIndex) {
@@ -1360,12 +1339,6 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             false,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format(
-            "msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %s, block height: %lu",
-            msg.id(), common::GlobalInfo::Instance()->network_id() + network::kConsensusWaitingShardOffset,
-            common::Encode::HexEncode(bft_ptr->gid()).c_str(), common::GlobalInfo::Instance()->network_id(), common::kBftMessage, kBftRootBlock, true,
-            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
-        BFT_DEBUG("begin: %s", msg.debug().c_str());
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
         }
@@ -1387,16 +1360,10 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             true,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
-            msg.id(), network::kNodeNetworkId,
-            common::Encode::HexEncode(bft_ptr->gid()).c_str(), network::kNodeNetworkId, common::kBftMessage, kBftRootBlock, true,
-            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
-        BFT_DEBUG("begin: %s", msg.debug().c_str());
         if (msg.has_data()) {
             msg.set_version(block_ptr->tx_list(0).type());
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);
-            BFT_ERROR("IsRootSingleBlockTx broadcast type: %d", block_ptr->tx_list(0).type());
         }
 #ifdef TENON_UNITTEST
         root_leader_broadcast_msg_ = msg;
@@ -1468,11 +1435,6 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             false,
             block_ptr,
             msg);
-        msg.set_debug(common::StringUtil::Format("msg id: %lu, broadcast to network: %d, bft gid: %s, net id: %d, message type: %d, bft_step: %d, universal: %d, block hash: %d, block height: %lu",
-            msg.id(), *iter,
-            common::Encode::HexEncode(bft_ptr->gid()).c_str(), *iter, common::kBftMessage, kBftRootBlock, true,
-            common::Encode::HexEncode(block_ptr->hash()).c_str(), block_ptr->height()));
-        BFT_DEBUG("begin: %s", msg.debug().c_str());
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
             network::Route::Instance()->SendToLocal(msg);
@@ -1559,7 +1521,7 @@ int BftManager::VerifySignatureWithBftMessage(
 }
 
 int BftManager::VerifySignature(
-        uint32_t mem_index,
+        elect::BftMemberPtr& mem_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         const std::string& sha128,
         security::Signature& sign) {
@@ -1569,11 +1531,6 @@ int BftManager::VerifySignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
-    if (!mem_ptr) {
-        return kBftError;
-    }
-
     if (!security::Schnorr::Instance()->Verify(sha128, sign, mem_ptr->pubkey)) {
         BFT_ERROR("check signature error!");
         return kBftError;
@@ -1620,14 +1577,6 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-        bft_msg.net_id(),
-        bft_ptr->leader_index());
-    if (!mem_ptr) {
-        return kBftError;
-    }
-
-
     std::string hash_to_sign = bft_ptr->prepare_hash();
     if (bft_msg.bft_step() == kBftCommit) {
         std::string msg_hash_src = bft_ptr->prepare_hash();
@@ -1641,7 +1590,7 @@ int BftManager::VerifyLeaderSignature(
     if (!security::Schnorr::Instance()->Verify(
             hash_to_sign,
             sign,
-            mem_ptr->pubkey)) {
+            bft_ptr->leader_mem_ptr()->pubkey)) {
         BFT_ERROR("check signature error!");
         return kBftError;
     }

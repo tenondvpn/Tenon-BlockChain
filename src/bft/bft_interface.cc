@@ -114,24 +114,20 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 }
 
 bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
-    int32_t leader_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
+    leader_mem_ptr_ = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
-    if (leader_pool_mod_idx < 0) {
+    if (leader_mem_ptr_->pool_index_mod_num < 0) {
         BFT_ERROR("prepare message not leader.[%u][%s][%u]",
             common::GlobalInfo::Instance()->network_id(),
             common::Encode::HexEncode(bft_msg.node_id()).c_str(),
-            leader_pool_mod_idx);
+            leader_mem_ptr_->pool_index_mod_num);
         return false;
     }
 
-    int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (local_pool_mod_idx == leader_pool_mod_idx) {
-        BFT_ERROR("this node is not backup.[%d][%d]", local_pool_mod_idx, leader_pool_mod_idx);
-        return false;
-    }
+//     int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
+//         common::GlobalInfo::Instance()->network_id(),
+//         common::GlobalInfo::Instance()->id());//     if (local_pool_mod_idx == leader_pool_mod_idx) {//         BFT_ERROR("this node is not backup.[%d][%d]", local_pool_mod_idx, leader_pool_mod_idx);//         return false;//     }
 
     return true;
 }
@@ -175,16 +171,8 @@ int BftInterface::LeaderPrecommitOk(
         std::string sec_str;
         secret.Serialize(sec_str);
         prepare_bitmap_.Set(index);
-        BFT_DEBUG("agree id: %s, sec_str: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s, msg_id: %u",
-            common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(sec_str).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(bft_gid).c_str(), msg_id);
     } else {
         precommit_oppose_set_.insert(id);
-        BFT_DEBUG("not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u, precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u,"
-            "precommit_oppose_set_.size: %u, min_oppose_member_count_: %u, bft_gid: %s, msg_id: %u",
-            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(),
-            min_aggree_member_count_, precommit_oppose_set_.size(), min_oppose_member_count_,
-            common::Encode::HexEncode(bft_gid).c_str(), msg_id);
     }
 
     auto now_timestamp = std::chrono::steady_clock::now();
@@ -200,6 +188,7 @@ int BftInterface::LeaderPrecommitOk(
         leader_handled_precommit_ = true;
         return kBftOppose;
     }
+
     return kBftWaitingBackup;
 }
 
@@ -214,7 +203,6 @@ int BftInterface::LeaderCommitOk(
     }
 
     if (!prepare_bitmap_.Valid(index)) {
-        BFT_DEBUG("node is not in prepare_bitmap_ id: %s", common::Encode::HexEncode(id).c_str());
         return kBftWaitingBackup;
     }
 
@@ -228,10 +216,6 @@ int BftInterface::LeaderCommitOk(
                 mem_ptr->pubkey,
                 mem_ptr->commit_point)) {
             commit_oppose_set_.insert(id);
-            BFT_DEBUG("invalid backup response. not agree id: %s, sec_str: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
-                "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
-                common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(sec_str).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-                common::Encode::HexEncode(gid()).c_str());
         } else {
             commit_aggree_set_.insert(id);
             precommit_bitmap_.Set(index);
@@ -239,18 +223,8 @@ int BftInterface::LeaderCommitOk(
             backup_res->response = res;
             backup_res->index = index;
             backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
-            BFT_DEBUG("LeaderCommitOk agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
-                "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
-                common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-                common::Encode::HexEncode(gid()).c_str());
         }
     } else {
-//         commit_oppose_set_.insert(id);
-        BFT_DEBUG("LeaderCommitOk not agree id: %s, index: %d, precommit_aggree_set_.size(): %u, min_prepare_member_count_: %u,"
-            "precommit_aggree_set_.size(): %u, min_aggree_member_count_: %u, bft_gid: %s",
-            common::Encode::HexEncode(id).c_str(), index, precommit_aggree_set_.size(), min_prepare_member_count_, precommit_aggree_set_.size(), min_aggree_member_count_,
-            common::Encode::HexEncode(gid()).c_str());
-
         prepare_bitmap_.UnSet(index);
         if (prepare_bitmap_.valid_count() < min_aggree_member_count_) {
             BFT_ERROR("precommit_bitmap_.valid_count() failed!");

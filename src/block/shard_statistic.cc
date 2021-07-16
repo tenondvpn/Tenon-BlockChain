@@ -23,8 +23,6 @@ ShardStatistic* ShardStatistic::Instance() {
 
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
-    BLOCK_DEBUG("AddShardPoolStatistic block_item->pool_index(): %d, network id: %d, hash: %s",
-        block_item->pool_index(), block_item->network_id(), common::Encode::HexEncode(block_item->hash()).c_str());
     if (block_item->tx_list_size() != 1) {
         BLOCK_ERROR("block_item->tx_list_size() != 1: %d", block_item->tx_list_size());
         return;
@@ -39,63 +37,35 @@ void ShardStatistic::AddShardPoolStatistic(
         return;
     }
 
-    bool dispatch_tx = false;
+    if (block_item->timeblock_height() < latest_tm_height_) {
+        BLOCK_ERROR("block_item->timeblock_height() < latest_tm_height_[%lu][%lu]",
+            block_item->timeblock_height(),
+            (uint64_t)latest_tm_height_);
+        return;
+    }
+
     {
-        std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
-        if (block_item->timeblock_height() < latest_tm_height_) {
-            BLOCK_ERROR("block_item->timeblock_height() < latest_tm_height_[%lu][%lu]",
-                block_item->timeblock_height(),
-                latest_tm_height_);
-            return;
-        }
-
         if (block_item->timeblock_height() > latest_tm_height_) {
-            pool_statistics_.clear();
-            g2_for_random_pool_ = std::make_shared<std::mt19937_64>(
-                vss::VssManager::Instance()->EpochRandom());
-            // avoid slow response transaction pool
-            uint32_t valid_pool_count = common::kImmutablePoolSize * 2 / 3;
-            valid_pool_.clear();
-            while (valid_pool_.size() < valid_pool_count) {
-                valid_pool_.insert((*g2_for_random_pool_)() % common::kImmutablePoolSize);
+            std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+            if (block_item->timeblock_height() > latest_tm_height_) {
+                memset(pool_statistics_, 0, sizeof(pool_statistics_));
+                valid_pool_.clear();
+                latest_tm_height_ = block_item->timeblock_height();
+                all_tx_count_ = 0;
             }
-
-            latest_tm_height_ = block_item->timeblock_height();
-            all_tx_count_ = 0;
         }
 
-        if (valid_pool_.empty()) {
-            BLOCK_ERROR("valid_pool_.empty()");
-            return;
-        }
-
-        if (valid_pool_.find(block_item->pool_index()) == valid_pool_.end()) {
-            return;
+        {
+            std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+            valid_pool_.Set(block_item->pool_index());
         }
 
         for (int32_t i = 0; i < block_item->tx_list(0).storages_size(); ++i) {
             if (block_item->tx_list(0).storages(i).key() == bft::kStatisticAttr) {
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
-                    if (statistic_info.elect_height() > latest_elect_height_) {
-                        latest_elect_height_ = statistic_info.elect_height();
-                        pool_statistics_.clear();
-                        for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
-                            pool_statistics_[i] = statistic_info.succ_tx_count(i);
-                        }
-
-                        elect_member_count_ = statistic_info.succ_tx_count_size();
-                    } else {
-                        if (elect_member_count_ != statistic_info.succ_tx_count_size()) {
-                            BLOCK_ERROR("invalid elect member count[%u][%u]",
-                                elect_member_count_, statistic_info.succ_tx_count_size());
-                            // assert(false); 
-                            return;
-                        }
-
-                        for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
-                            pool_statistics_[i] += statistic_info.succ_tx_count(i);
-                        }
+                    for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
+                        pool_statistics_[i] += statistic_info.succ_tx_count(i);
                     }
 
                     all_tx_count_ += statistic_info.all_tx_count();
@@ -104,26 +74,22 @@ void ShardStatistic::AddShardPoolStatistic(
                 break;
             }
         }
+    }
 
-        valid_pool_.erase(block_item->pool_index());
-        if (valid_pool_.empty()) {
-            dispatch_tx = true;
+    bool create_tx = false;
+    {
+        std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+        if (valid_pool_.valid_count() >= common::kImmutablePoolSize) {
+            create_tx = true;
         }
     }
 
-    std::string tmp_str;
-    for (auto iter = valid_pool_.begin(); iter != valid_pool_.end(); ++iter) {
-        tmp_str += std::to_string(*iter) + " ";
-    }
-
-    BLOCK_DEBUG("valid_pool_ size: %d, pools: %s", valid_pool_.size(), tmp_str.c_str());
-    if (dispatch_tx) {
+    if (create_tx) {
         CreateStatisticTransaction();
     }
 }
 
 void ShardStatistic::GetStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
-    std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
     statistic_info->set_all_tx_count(all_tx_count_);
     statistic_info->set_timeblock_height(latest_tm_height_);
     statistic_info->set_elect_height(latest_elect_height_);

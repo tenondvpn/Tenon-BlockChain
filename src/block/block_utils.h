@@ -44,11 +44,16 @@ struct HeightItem {
 };
 
 struct StatisticItem {
-    std::unordered_map<uint32_t, uint32_t> succ_tx_count;
-    uint32_t all_tx_count;
+    StatisticItem() {
+        memset(succ_tx_count, 0, sizeof(succ_tx_count));
+    }
+
+    uint32_t succ_tx_count[common::kEachShardMaxNodeCount];
+    uint32_t all_tx_count{ 0 };
     std::unordered_set<uint64_t> added_height;
-    uint64_t elect_height;
-    uint64_t tmblock_height;
+    std::mutex added_height_mutex;
+    uint64_t elect_height{ 0 };
+    uint64_t tmblock_height{ 0 };
 };
 
 static const uint32_t kUnicastAddressLength = 20u;

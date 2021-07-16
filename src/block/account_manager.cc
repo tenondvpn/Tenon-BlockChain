@@ -383,9 +383,6 @@ int AccountManager::AddBlockItem(
             block_item->network_id() + network::kConsensusWaitingShardOffset ==
             common::GlobalInfo::Instance()->network_id())) {
         assert(consistent_pool_index < common::kInvalidPoolIndex);
-        BLOCK_DEBUG("set pool: %u hash: %s",
-            consistent_pool_index,
-            common::Encode::HexEncode(block_item->hash()).c_str());
         SetPool(
             consistent_pool_index,
             block_item,
@@ -853,11 +850,6 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    BLOCK_DEBUG("2222 SetPool: %d, height: %lu, hash: %s, tm height: %lu",
-        pool_index,
-        block_item->height(),
-        common::Encode::HexEncode(block_item->hash()).c_str(),
-        block_item->timeblock_height());
     db_pool_info->AddNewBlock(block_item);
 }
 
@@ -869,8 +861,6 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         }
     }
 
-    BLOCK_DEBUG("GetPoolBaseAddr 0");
-//     return "";
     std::string pool_hash;
     uint64_t pool_height = 0;
     uint64_t tm_height;
@@ -887,10 +877,6 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
         return "";
     }
 
-    BLOCK_DEBUG("GetPoolBaseAddr 1");
-    BLOCK_DEBUG("GetPoolBaseAddr %d: %s",
-        pool_index,
-        common::Encode::HexEncode(network_block_[pool_index]->GetBaseAddr()).c_str());
     return network_block_[pool_index]->GetBaseAddr();
 }
 
@@ -911,11 +897,11 @@ int AccountManager::GetPoolStatistic(
         block::protobuf::StatisticInfo* statistic_info) {
     std::lock_guard<std::mutex> guard(network_block_mutex_);
     if (network_block_[pool_index] != nullptr) {
-        return network_block_[pool_index]->GetStatisticInfo(statistic_info);
+        return network_block_[pool_index]->GetSinglePoolStatisticInfo(statistic_info);
     }
 
     network_block_[pool_index] = new block::DbPoolInfo(pool_index);
-    return network_block_[pool_index]->GetStatisticInfo(statistic_info);
+    return network_block_[pool_index]->GetSinglePoolStatisticInfo(statistic_info);
 }
 
 

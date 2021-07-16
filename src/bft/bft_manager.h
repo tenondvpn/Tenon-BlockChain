@@ -59,7 +59,7 @@ private:
         bft::protobuf::BftMessage& bft_msg);
     void CheckTimeout();
     int VerifySignature(
-        uint32_t mem_index,
+        elect::BftMemberPtr& mem_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         const std::string& sha128,
         security::Signature& sign);

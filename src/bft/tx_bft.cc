@@ -152,6 +152,10 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         LeaderCreateTxBlock(tx_vec, ltx_prepare);
     }
 
+    members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
+        common::GlobalInfo::Instance()->network_id());
+    mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
+        common::GlobalInfo::Instance()->network_id());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
     SetBlock(block_ptr);
     *bft_str = tx_bft.SerializeAsString();

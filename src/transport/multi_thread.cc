@@ -191,15 +191,10 @@ void MultiThreadHandler::HandleRemoteMessage(
             from_ip.c_str(), from_port, len, transport_type);
         return;
 	}
-    if (!message_ptr->debug().empty()) {
-        TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, msg hash: %lu",
-            message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-            from_ip.c_str(), from_port, message_ptr->hash());
-    }
 
-// #ifndef LEGO_TRACE_MESSAGE
-//     message_ptr->clear_debug();
-// #endif
+#ifndef LEGO_TRACE_MESSAGE
+    message_ptr->clear_debug();
+#endif
 
     if (!common::GlobalInfo::Instance()->is_client() && message_ptr->client()) {
         if (!message_ptr->has_version()) {

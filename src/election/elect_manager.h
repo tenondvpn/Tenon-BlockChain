@@ -57,6 +57,7 @@ public:
     elect::BftMemberPtr GetMember(uint64_t elect_height, uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint64_t elect_height, uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id);
+    std::shared_ptr<MemberManager> GetMemberManager(uint64_t elect_height, uint32_t network_id);
     void SetNetworkMember(
         uint64_t elect_height,
         uint32_t network_id,
@@ -73,7 +74,7 @@ public:
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     bool IsValidShardLeaders(uint32_t network_id, const std::string& id);
-
+    std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
     std::unordered_set<std::string> leaders(uint32_t network_id) {
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
         auto iter = network_leaders_.find(network_id);

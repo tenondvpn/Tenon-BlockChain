@@ -293,6 +293,17 @@ public:
     }
 
     int Init();
+    elect::BftMemberPtr& leader_mem_ptr() {
+        return leader_mem_ptr_;
+    }
+
+    elect::MembersPtr& members_ptr() {
+        return members_ptr_;
+    }
+
+    std::shared_ptr<elect::MemberManager>& mem_manager_ptr() {
+        return mem_manager_ptr_;
+    }
 
 protected:
     BftInterface();
@@ -301,6 +312,9 @@ protected:
     void SetBlock(std::shared_ptr<bft::protobuf::Block>& prpare_block) {
         prpare_block_ = prpare_block;
     }
+
+    elect::MembersPtr members_ptr_{ nullptr };
+    std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };
 
 private:
     int LeaderCreatePreCommitAggChallenge();
@@ -346,6 +360,7 @@ private:
     std::mutex msg_step_ptr_mutex_;
     std::atomic<bool> aggree_{ true };
     std::atomic<uint32_t> bft_epoch_{ 0 };
+    elect::BftMemberPtr leader_mem_ptr_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

@@ -578,6 +578,30 @@ void ElectManager::SetNetworkMember(
     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
 }
 
+std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint64_t elect_height, uint32_t network_id) {
+    if (elect_height == common::kInvalidUint64) {
+        elect_height = latest_height(network_id);
+        if (elect_height == common::kInvalidUint64) {
+            return nullptr;
+        }
+    }
+
+    std::shared_ptr<MemberManager> mem_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(elect_members_mutex_);
+        auto iter = elect_members_.find(elect_height);
+        if (iter == elect_members_.end()) {
+            return nullptr;
+        }
+
+        return iter->second;
+    }
+}
+
+std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_id) {
+    return GetMemberManager(common::kInvalidUint64, network_id);
+}
+
 int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
     return IsLeader(common::kInvalidUint64, network_id, node_id);
 }
