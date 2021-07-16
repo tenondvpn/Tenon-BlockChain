@@ -1502,6 +1502,7 @@ void BftManager::CheckTimeout() {
                     bft_hash_map_.erase(riter);
                 }
             }
+            BFT_DEBUG("bft timeout remove: %s", common::Encode::HexEncode(iter->first).c_str());
             break;
         }
         case kTimeoutCallPrecommit: {

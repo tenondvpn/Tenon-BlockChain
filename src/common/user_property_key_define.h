@@ -129,7 +129,7 @@ static const uint32_t kDefaultBroadcastIgnBloomfilterHop = 1u;
 static const uint32_t kDefaultBroadcastStopTimes = 2u;
 static const uint32_t kDefaultBroadcastHopLimit = 5u;
 static const uint32_t kDefaultBroadcastHopToLayer = 2u;
-static const uint32_t kDefaultBroadcastNeighborCount = 7u;
+static const uint32_t kDefaultBroadcastNeighborCount = 3u;
 
 static inline bool IsBaseAddress(const std::string& address) {
     return (address.substr(2, kStatisticFromAddressMidllefixDecode.size()) ==
