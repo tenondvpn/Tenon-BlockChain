@@ -509,6 +509,7 @@ void ElectPoolManager::FtsGetNodes(
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
     SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
     std::set<void*> tmp_res_nodes;
+    uint32_t try_times = 0;
     while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
         for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
@@ -528,9 +529,14 @@ void ElectPoolManager::FtsGetNodes(
         fts_tree.CreateFtsTree();
         void* data = fts_tree.GetOneNode(g2);
         if (data == nullptr) {
+            ++try_times;
+            if (try_times > 5) {
+                return;
+            }
             continue;
         }
 
+        try_times = 0;
         tmp_res_nodes.insert(data);
         NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
         res_nodes.push_back(node_ptr);
