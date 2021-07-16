@@ -359,7 +359,7 @@ int TcpTransport::Init() {
             true,
             10 * 1024 * 1024,
             10 * 1024 * 1024,
-            4,
+            1,
             packet_handler,
             &encoder_factory_);
     }

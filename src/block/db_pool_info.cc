@@ -292,6 +292,7 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
         return;
     }
 
+    std::lock_guard<std::mutex> guard(server_bandwidth_queue_mutex_);
     server_bandwidth_queue_.push(block_ptr);
 }
 
@@ -331,6 +332,7 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
 }
 
 void DbPoolInfo::SatisticBlock() {
+    std::lock_guard<std::mutex> guard(server_bandwidth_queue_mutex_);
     while (server_bandwidth_queue_.size() > 0) {
         std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
         if (!server_bandwidth_queue_.pop(&block_ptr)) {

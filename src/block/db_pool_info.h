@@ -56,6 +56,7 @@ private:
     std::mutex statistic_for_tmblock_mutex_;
     std::map<uint64_t, StatisticItem> statistic_for_tmblock_;
     common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> server_bandwidth_queue_;
+    std::mutex server_bandwidth_queue_mutex_;
     common::Tick update_statistic_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);

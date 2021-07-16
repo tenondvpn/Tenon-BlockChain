@@ -114,10 +114,10 @@ int NetworkInit::Init(int argc, char** argv) {
     transport::MultiThreadHandler::Instance()->Init(
             transport_,
             tcp_transport_);
-    if (InitHttpTransport() != kInitSuccess) {
-        INIT_ERROR("init http transport failed!");
-        return kInitError;
-    }
+//     if (InitHttpTransport() != kInitSuccess) {
+//         INIT_ERROR("init http transport failed!");
+//         return kInitError;
+//     }
 
     if (InitNetworkSingleton() != kInitSuccess) {
         INIT_ERROR("InitNetworkSingleton failed!");

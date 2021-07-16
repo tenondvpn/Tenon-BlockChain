@@ -221,7 +221,6 @@ bool MultiSign::MultiSigVerify(
                 EC_POINT_new(curve.group_.get()),
                 EC_POINT_clear_free);
         std::unique_ptr<BN_CTX, void(*)(BN_CTX*)> ctx(BN_CTX_new(), BN_CTX_free);
-
         if ((challenge_built != nullptr) && (ctx != nullptr) && (Q != nullptr)) {
             err2 = (BN_is_zero(toverify.challenge().get()) ||
                     BN_is_negative(toverify.challenge().get()) ||
