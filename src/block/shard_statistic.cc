@@ -64,6 +64,13 @@ void ShardStatistic::AddShardPoolStatistic(
             if (block_item->tx_list(0).storages(i).key() == bft::kStatisticAttr) {
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
+                    if (statistic_info.elect_height() > latest_elect_height_) {
+                        std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+                        if (statistic_info.elect_height() > latest_elect_height_) {
+                            memset(pool_statistics_, 0, sizeof(pool_statistics_));
+                            latest_elect_height_ = statistic_info.elect_height();
+                        }
+                    }
                     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
                         pool_statistics_[i] += statistic_info.succ_tx_count(i);
                     }
