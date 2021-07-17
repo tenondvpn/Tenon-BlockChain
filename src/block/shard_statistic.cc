@@ -23,6 +23,10 @@ ShardStatistic* ShardStatistic::Instance() {
 
 void ShardStatistic::AddShardPoolStatistic(
         const std::shared_ptr<bft::protobuf::Block>& block_item) {
+    if (block_item->pool_index() >= common::kImmutablePoolSize) {
+        return;
+    }
+
     if (block_item->tx_list_size() != 1) {
         BLOCK_ERROR("block_item->tx_list_size() != 1: %d", block_item->tx_list_size());
         return;
@@ -87,12 +91,12 @@ void ShardStatistic::AddShardPoolStatistic(
     bool create_tx = false;
     {
         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
-        if (valid_pool_.valid_count() >= (common::kImmutablePoolSize + 1)) {
+        if (valid_pool_.valid_count() >= common::kImmutablePoolSize) {
             create_tx = true;
         }
     }
 
-    BLOCK_DEBUG("valid_pool_.valid_count(): %d, need: %d", valid_pool_.valid_count(), (common::kImmutablePoolSize + 1));
+    BLOCK_DEBUG("valid_pool_.valid_count(): %d, need: %d", valid_pool_.valid_count(), common::kImmutablePoolSize);
     if (create_tx) {
         CreateStatisticTransaction();
     }
