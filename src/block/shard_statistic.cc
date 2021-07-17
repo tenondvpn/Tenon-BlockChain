@@ -71,6 +71,7 @@ void ShardStatistic::AddShardPoolStatistic(
                             latest_elect_height_ = statistic_info.elect_height();
                         }
                     }
+
                     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
                         pool_statistics_[i] += statistic_info.succ_tx_count(i);
                     }
@@ -86,11 +87,12 @@ void ShardStatistic::AddShardPoolStatistic(
     bool create_tx = false;
     {
         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
-        if (valid_pool_.valid_count() >= common::kImmutablePoolSize) {
+        if (valid_pool_.valid_count() >= (common::kImmutablePoolSize + 1)) {
             create_tx = true;
         }
     }
 
+    BLOCK_DEBUG("valid_pool_.valid_count(): %d, need: %d", valid_pool_.valid_count(), (common::kImmutablePoolSize + 1));
     if (create_tx) {
         CreateStatisticTransaction();
     }
@@ -154,7 +156,7 @@ void ShardStatistic::CreateStatisticTransaction() {
             tmblock::TimeBlockManager::Instance()->LatestTimestamp()));
         block::protobuf::StatisticInfo statistic_info;
         GetStatisticInfo(&statistic_info);
-        auto statistic_attr = tx_info.add_attr();
+        auto statistic_attr = tx_info.add_storages();
         statistic_attr->set_key(bft::kStatisticAttr);
         statistic_attr->set_value(statistic_info.SerializeAsString());
         if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {

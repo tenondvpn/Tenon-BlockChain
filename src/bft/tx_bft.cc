@@ -1842,7 +1842,8 @@ int TxBft::CheckTxInfo(
             }
 
             if (iter->second != tx_info.attr(i).value()) {
-                BFT_ERROR("local tx bft value[%s] not equal to leader value[%s]!",
+                BFT_ERROR("key[%s], local tx bft value[%s] not equal to leader value[%s]!",
+                    tx_info.attr(i).key().c_str(),
                     iter->second.c_str(), tx_info.attr(i).value().c_str());
                 return kBftLeaderTxInfoInvalid;
             }
