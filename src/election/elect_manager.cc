@@ -190,6 +190,10 @@ void ElectManager::ProcessNewElectBlock(
         return;
     }
 
+    if (common::GlobalInfo::Instance()->network_id() == elect_block.shard_network_id()) {
+        local_node_pool_mod_num_ = -1;
+    }
+
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -246,7 +250,6 @@ void ElectManager::ProcessNewElectBlock(
 
     {
         local_node_is_super_leader_ = false;
-        local_node_pool_mod_num_ = -1;
         Members tmp_leaders;
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;

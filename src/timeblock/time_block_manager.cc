@@ -272,6 +272,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_num >= 0) {
+        TMBLOCK_ERROR("node start bft: %d", pool_mod_num);
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 
