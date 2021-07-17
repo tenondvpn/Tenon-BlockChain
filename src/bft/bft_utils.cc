@@ -78,12 +78,6 @@ std::string GetUniversalGid(bool to, const std::string& gid) {
         gid;
 }
 
-int32_t GetLeaderPoolIndex() {
-    return elect::ElectManager::Instance()->IsLeader(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-}
-
 bool IsRootSingleBlockTx(uint32_t tx_type) {
     if (tx_type == common::kConsensusRootElectShard ||
             tx_type == common::kConsensusRootTimeBlock) {

@@ -133,7 +133,6 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info);
 // prehash + network_id + height + random + elect version + txes's hash
 std::string GetBlockHash(const protobuf::Block& block);
 uint32_t NewAccountGetNetworkId(const std::string& addr);
-int32_t GetLeaderPoolIndex();
 bool IsRootSingleBlockTx(uint32_t tx_type);
 bool IsShardSingleBlockTx(uint32_t tx_type);
 bool IsShardSuperSingleBlockTx(uint32_t tx_type);

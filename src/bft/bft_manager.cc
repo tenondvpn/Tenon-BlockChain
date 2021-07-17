@@ -643,7 +643,7 @@ int BftManager::InitBft(
         BFT_ERROR("dispatch pool failed res[%d]!", res);
     }
 
-    int32_t pool_mod_index = GetLeaderPoolIndex();
+    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_index < 0) {
         return kBftSuccess;
     }
