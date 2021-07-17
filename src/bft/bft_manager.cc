@@ -64,12 +64,12 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-//     BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -149,11 +149,11 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     assert(!bft_ptr->prepare_hash().empty());
     if (bft_ptr->GetEpoch() < bft_msg.epoch()) {
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//         BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//             header.id(),
-//             common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//             bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+            header.id(),
+            common::Encode::HexEncode(bft_msg.gid()).c_str(),
+            bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         bft_ptr->SetEpoch(bft_msg.epoch());
         return;
     }
@@ -161,22 +161,22 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     if (bft_ptr->status() == kBftPreCommit) {
         if (bft_msg.bft_step() == kBftPreCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//             BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
             if (bft_item_ptr == nullptr) {
                 return;
             }
 
-//             BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
     }
@@ -184,22 +184,22 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     if (bft_ptr->status() == kBftCommit) {
         if (bft_msg.bft_step() == kBftCommit) {
             HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//             BFT_DEBUG("kBftCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_DEBUG("kBftCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
             if (bft_item_ptr == nullptr) {
                 return;
             }
 
-//             BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
+                header.id(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
         }
     }
@@ -682,9 +682,9 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-//     BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
-//         pool_mod_index, bft_ptr->pool_index(),
-//         common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
+        pool_mod_index, bft_ptr->pool_index(),
+        common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -828,8 +828,8 @@ int BftManager::BackupPrepare(
                 false,
                 msg);
             RemoveBft(bft_ptr->gid(), false);
-//             BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             BftProto::BackupCreatePrepare(
                 header,
@@ -839,9 +839,9 @@ int BftManager::BackupPrepare(
                 bft_ptr->secret(),
                 true,
                 msg);
-//             BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-//                 bft_msg.node_ip().c_str(), bft_msg.node_port());
+            BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+                bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
     }
 
@@ -923,7 +923,7 @@ int BftManager::LeaderPrecommit(
     if (res == kBftAgree) {
         return LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
-//         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
     }
 
@@ -951,9 +951,9 @@ void BftManager::HandleOpposeNodeMsg(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
             sync::kSyncHighest);
-//         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-//             common::Encode::HexEncode(pre_hash).c_str(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
+            common::Encode::HexEncode(pre_hash).c_str(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
 
@@ -995,7 +995,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
-//     BFT_DEBUG("LeaderCreatePreCommit success. %s", msg.debug().c_str());
+    BFT_DEBUG("LeaderCreatePreCommit success. %s", msg.debug().c_str());
     network::Route::Instance()->Send(msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
@@ -1028,8 +1028,8 @@ int BftManager::BackupPrecommit(
     transport::protobuf::Header msg;
     std::string precommit_data;
     if (bft_ptr->PreCommit(false, precommit_data) != kBftSuccess) {
-//         BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
         BftProto::BackupCreatePreCommit(
             header,
@@ -1041,9 +1041,9 @@ int BftManager::BackupPrecommit(
             msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
-//         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
-//             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-//             bft_msg.node_ip().c_str(), bft_msg.node_port());
+        BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
+            header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+            bft_msg.node_ip().c_str(), bft_msg.node_port());
         BftProto::BackupCreatePreCommit(header, bft_msg, local_node, precommit_data, agg_res, true, msg);
     }
 
@@ -1181,8 +1181,8 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-//     BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
-//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -1299,9 +1299,9 @@ int BftManager::BackupCommit(
 
     bft_ptr->set_status(kBftCommited);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
-//     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
-//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-//     LeaderBroadcastToAcc(bft_ptr, false);
+    BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;
@@ -1465,7 +1465,7 @@ void BftManager::CheckTimeout() {
                     bft_hash_map_.erase(riter);
                 }
             }
-//             BFT_DEBUG("bft timeout remove: %s", common::Encode::HexEncode(iter->first).c_str());
+            BFT_DEBUG("bft timeout remove: %s", common::Encode::HexEncode(iter->first).c_str());
             break;
         }
         case kTimeoutCallPrecommit: {
