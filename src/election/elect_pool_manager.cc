@@ -46,22 +46,6 @@ int ElectPoolManager::CreateElectTransaction(
                 src_tx_info.attr(i).value()));
             tm_str = src_tx_info.attr(i).value();
         }
-
-        if (src_tx_info.attr(i).key() == bft::kStatisticAttr) {
-            if (!statistic_info.ParseFromString(src_tx_info.attr(i).value())) {
-                return kElectError;
-            }
-
-            auto st_attr = tx_info.add_attr();
-            st_attr->set_key(bft::kStatisticAttr);
-            st_attr->set_value(src_tx_info.attr(i).value());
-            statistic_valid = true;
-        }
-    }
-
-    if (!statistic_valid) {
-        ELECT_ERROR("CreateElectTransaction get statistic error shard id: %u", shard_netid);
-        return kElectError;
     }
 
     if (tx_info.gid().empty()) {
@@ -69,6 +53,23 @@ int ElectPoolManager::CreateElectTransaction(
         return kElectError;
     }
 
+    if (tx_info.storages_size() != 1) {
+        BFT_ERROR("tx info storage error[%d]", tx_info.storages_size());
+        return kElectError;
+    }
+
+    if (tx_info.storages(0).key() != bft::kStatisticAttr) {
+        BFT_ERROR("tx info storage key error[%s]", bft::kStatisticAttr.c_str());
+        return kElectError;
+    }
+
+    if (!statistic_info.ParseFromString(src_tx_info.storages(0).value())) {
+        return kElectError;
+    }
+
+    auto st_attr = tx_info.add_attr();
+    st_attr->set_key(bft::kStatisticAttr);
+    st_attr->set_value(src_tx_info.storages(0).value());
     tx_info.set_type(common::kConsensusRootElectShard);
     tx_info.set_from(common::kRootChainSingleBlockTxAddress);
     tx_info.set_gas_limit(0llu);
