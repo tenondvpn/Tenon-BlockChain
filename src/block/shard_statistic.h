@@ -8,6 +8,7 @@
 #include "common/utils.h"
 #include "common/bitmap.h"
 #include "common/thread_safe_queue.h"
+#include "common/tick.h"
 #include "block/block_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "block/proto/block.pb.h"
