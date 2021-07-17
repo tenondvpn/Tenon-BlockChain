@@ -843,101 +843,72 @@ int TxBft::BackupCheckFinalStatistic(
         return kBftInvalidPackage;
     }
 
-    int32_t valid_count = 0;
-    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
-            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockHeight);
-            if (iter == local_tx_info->attr_map.end()) {
-                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
-                return kBftInvalidPackage;
-            }
-
-            if (iter->second != tx_info.attr(i).value()) {
-                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockHeight.c_str());
-                return kBftInvalidPackage;
-            }
-
-            ++valid_count;
-        }
-
-        if (tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
-            auto iter = local_tx_info->attr_map.find(tmblock::kAttrTimerBlockTm);
-            if (iter == local_tx_info->attr_map.end()) {
-                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
-                return kBftInvalidPackage;
-            }
-
-            if (iter->second != tx_info.attr(i).value()) {
-                BFT_ERROR("tx info attr error[%s]", tmblock::kAttrTimerBlockTm.c_str());
-                return kBftInvalidPackage;
-            }
-
-            ++valid_count;
-        }
-
-        if (tx_info.attr(i).key() == kStatisticAttr) {
-            auto iter = local_tx_info->attr_map.find(kStatisticAttr);
-            if (iter == local_tx_info->attr_map.end()) {
-                BFT_ERROR("tx info attr error[%s]", kStatisticAttr.c_str());
-                return kBftInvalidPackage;
-            }
-
-            block::protobuf::StatisticInfo leader_statistic_info;
-            if (!leader_statistic_info.ParseFromString(tx_info.attr(i).value())) {
-                BFT_ERROR("leader_statistic_info.ParseFromString error");
-                return kBftInvalidPackage;
-            }
-
-            block::protobuf::StatisticInfo local_statistic_info;
-            if (!local_statistic_info.ParseFromString(iter->second)) {
-                BFT_ERROR("local_statistic_info.ParseFromString error");
-                return kBftInvalidPackage;
-            }
-
-            if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
-                BFT_ERROR("leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()[%d][%d]",
-                    leader_statistic_info.all_tx_count(),
-                    local_statistic_info.all_tx_count());
-                return kBftInvalidPackage;
-            }
-
-            if (leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()) {
-                BFT_ERROR("leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()[%lu][%lu]",
-                    leader_statistic_info.timeblock_height(),
-                    local_statistic_info.timeblock_height());
-                return kBftInvalidPackage;
-            }
-
-            if (leader_statistic_info.elect_height() != local_statistic_info.elect_height()) {
-                BFT_ERROR("leader_statistic_info.elect_height() != local_statistic_info.elect_height()[%lu][%lu]",
-                    leader_statistic_info.elect_height(),
-                    local_statistic_info.elect_height());
-                return kBftInvalidPackage;
-            }
-
-            if (leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()) {
-                BFT_ERROR("leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()[%u][%u]",
-                    leader_statistic_info.succ_tx_count_size(),
-                    local_statistic_info.succ_tx_count_size());
-                return kBftInvalidPackage;
-            }
-
-            for (int32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
-                if (leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count(i)) {
-                    BFT_ERROR("leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count()[%u][%u]",
-                        leader_statistic_info.succ_tx_count(i),
-                        local_statistic_info.succ_tx_count(i));
-                    return kBftInvalidPackage;
-                }
-            }
-
-            ++valid_count;
-        }
+    if (tx_info.storages_size() != 0 || local_tx_info->tx.storages_size() != 0) {
+        BFT_ERROR("tx info storages_size error[%u][%u]",
+            tx_info.storages_size(),
+            local_tx_info->tx.storages_size());
+        return kBftInvalidPackage;
     }
 
-    if (valid_count != 3) {
-        BFT_ERROR("tx info attr error");
+    if (tx_info.storages(0).key() != local_tx_info->tx.storages(0).key()) {
+        BFT_ERROR("tx info storages key error[%s][%s]",
+            tx_info.storages(0).key().c_str(),
+            local_tx_info->tx.storages(0).key().c_str());
         return kBftInvalidPackage;
+    }
+
+    if (tx_info.storages(0).key() != kStatisticAttr) {
+        BFT_ERROR("tx info storages key error[%s]", tx_info.storages(0).key().c_str());
+        return kBftInvalidPackage;
+    }
+
+    block::protobuf::StatisticInfo leader_statistic_info;
+    if (!leader_statistic_info.ParseFromString(tx_info.storages(0).value())) {
+        BFT_ERROR("leader_statistic_info.ParseFromString error");
+        return kBftInvalidPackage;
+    }
+
+    block::protobuf::StatisticInfo local_statistic_info;
+    if (!local_statistic_info.ParseFromString(local_tx_info->tx.storages(0).value())) {
+        BFT_ERROR("local_statistic_info.ParseFromString error");
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
+        BFT_ERROR("leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()[%d][%d]",
+            leader_statistic_info.all_tx_count(),
+            local_statistic_info.all_tx_count());
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()) {
+        BFT_ERROR("leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()[%lu][%lu]",
+            leader_statistic_info.timeblock_height(),
+            local_statistic_info.timeblock_height());
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.elect_height() != local_statistic_info.elect_height()) {
+        BFT_ERROR("leader_statistic_info.elect_height() != local_statistic_info.elect_height()[%lu][%lu]",
+            leader_statistic_info.elect_height(),
+            local_statistic_info.elect_height());
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()) {
+        BFT_ERROR("leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()[%u][%u]",
+            leader_statistic_info.succ_tx_count_size(),
+            local_statistic_info.succ_tx_count_size());
+        return kBftInvalidPackage;
+    }
+
+    for (int32_t i = 0; i < leader_statistic_info.succ_tx_count_size(); ++i) {
+        if (leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count(i)) {
+            BFT_ERROR("leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count()[%u][%u]",
+                leader_statistic_info.succ_tx_count(i),
+                local_statistic_info.succ_tx_count(i));
+            return kBftInvalidPackage;
+        }
     }
 
     return kBftSuccess;
