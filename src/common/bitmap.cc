@@ -21,6 +21,10 @@ Bitmap::Bitmap(const std::vector<uint64_t>& data) : data_(data) {}
 Bitmap::~Bitmap() {}
 
 void Bitmap::Set(uint32_t index) {
+    if (Valid(index)) {
+        return;
+    }
+
     assert(index < (data_.size() * 64));
     uint32_t vec_index = (index % (64 * data_.size())) / 64;
     uint32_t bit_index = (index % (64 * data_.size())) % 64;
@@ -29,6 +33,10 @@ void Bitmap::Set(uint32_t index) {
 }
 
 void Bitmap::UnSet(uint32_t index) {
+    if (!Valid(index)) {
+        return;
+    }
+
     assert(index < (data_.size() * 64));
     uint32_t vec_index = (index % (64 * data_.size())) / 64;
     uint32_t bit_index = (index % (64 * data_.size())) % 64;
