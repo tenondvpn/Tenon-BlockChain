@@ -843,7 +843,7 @@ int TxBft::BackupCheckFinalStatistic(
         return kBftInvalidPackage;
     }
 
-    if (tx_info.storages_size() != 0 || local_tx_info->tx.storages_size() != 0) {
+    if (tx_info.storages_size() != 1 || local_tx_info->tx.storages_size() != 1) {
         BFT_ERROR("tx info storages_size error[%u][%u]",
             tx_info.storages_size(),
             local_tx_info->tx.storages_size());
