@@ -61,6 +61,10 @@ void ShardStatistic::AddShardPoolStatistic(
 
         {
             std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+            if (valid_pool_.Valid(block_item->pool_index())) {
+                return;
+            }
+
             valid_pool_.Set(block_item->pool_index());
         }
 
@@ -69,11 +73,11 @@ void ShardStatistic::AddShardPoolStatistic(
                 block::protobuf::StatisticInfo statistic_info;
                 if (statistic_info.ParseFromString(block_item->tx_list(0).storages(i).value())) {
                     if (statistic_info.elect_height() > latest_elect_height_) {
-                        std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
-                        if (statistic_info.elect_height() > latest_elect_height_) {
-                            memset(pool_statistics_, 0, sizeof(pool_statistics_));
+//                         std::lock_guard<std::mutex> guard(pool_statistics_mutex_);
+//                         if (statistic_info.elect_height() > latest_elect_height_) {
+//                             memset(pool_statistics_, 0, sizeof(pool_statistics_));
                             latest_elect_height_ = statistic_info.elect_height();
-                        }
+//                         }
                     }
 
                     for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
