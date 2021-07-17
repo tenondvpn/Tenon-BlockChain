@@ -256,6 +256,13 @@ void ElectManager::ProcessNewElectBlock(
                 node_index_vec.push_back(index++);
                 if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
                     local_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+                    std::cout << "1111 DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+                        << elect_block.shard_network_id()
+                        << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+                        << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                        << ", leader count: " << elect_block.leader_count()
+                        << std::endl;
+
                 }
             }
 
