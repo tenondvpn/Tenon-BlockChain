@@ -26,9 +26,9 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
     LoadBlocksUtilLatestStatisticBlock();
-    update_statistic_tick_.CutOff(
-        kUpdateStatisticPeriod,
-        std::bind(&DbPoolInfo::TickSatisticBlock, this));
+//     update_statistic_tick_.CutOff(
+//         kUpdateStatisticPeriod,
+//         std::bind(&DbPoolInfo::TickSatisticBlock, this));
 }
 
 DbPoolInfo::~DbPoolInfo() {}
@@ -254,17 +254,6 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
     return kBlockSuccess;
 }
 
-void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    if (block_ptr->bitmap_size() == 0) {
-        BLOCK_ERROR("block bitmap size empty: height: %lu, hash: %s",
-            block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
-        return;
-    }
-
-    std::lock_guard<std::mutex> guard(server_bandwidth_queue_mutex_);
-    server_bandwidth_queue_.push(block_ptr);
-}
-
 int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
     std::string prev_hash;
     {
@@ -300,10 +289,21 @@ int DbPoolInfo::LoadBlocksUtilLatestStatisticBlock() {
     return kBlockSuccess;
 }
 
+void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    if (block_ptr->bitmap_size() == 0) {
+        BLOCK_ERROR("block bitmap size empty: height: %lu, hash: %s",
+            block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
+        return;
+    }
+
+    std::lock_guard<std::mutex> guard(block_statistic_queue_mutex_);
+    block_statistic_queue_.push(block_ptr);
+}
+
 void DbPoolInfo::SatisticBlock() {
-    while (server_bandwidth_queue_.size() > 0) {
+    while (block_statistic_queue_.size() > 0) {
         std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
-        if (!server_bandwidth_queue_.pop(&block_ptr)) {
+        if (!block_statistic_queue_.pop(&block_ptr)) {
             break;
         }
 
