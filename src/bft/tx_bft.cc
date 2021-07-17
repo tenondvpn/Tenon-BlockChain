@@ -27,7 +27,7 @@ namespace tenon {
 
 namespace bft {
 
-TxBft::TxBft() {}
+TxBft::TxBft() : BftInterface() {}
 
 TxBft::~TxBft() {}
 

@@ -11,8 +11,8 @@ namespace tenon {
 namespace bft {
 
 BftInterface::BftInterface() {
-    bft_item_vec_.reserve(kBftOneConsensusMaxCount);
     reset_timeout();
+    bft_item_vec_.reserve(kBftOneConsensusMaxCount);
 }
 
 int BftInterface::Init() {
@@ -297,7 +297,7 @@ int BftInterface::CheckTimeout() {
         if (now_timestamp >= precommit_timeout_) {
             if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
                 BFT_ERROR("precommit_bitmap_.valid_count() failed!");
-                return kTimeout;
+                return kTimeoutWaitingBackup;
             }
 
             prepare_bitmap_ = precommit_bitmap_;
