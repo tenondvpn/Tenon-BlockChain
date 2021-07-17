@@ -127,13 +127,6 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
                 return;
             }
 
-            if (bft_msg.bft_step() == kBftCommit) {
-                sync::KeyValueSync::Instance()->AddSync(
-                    bft_msg.net_id(),
-                    bft_msg.prepare_hash(),
-                    sync::kSyncHighest);
-            }
-
             bft_ptr = CreateBftPtr(bft_msg);
             if (bft_ptr == nullptr) {
                 return;
@@ -141,6 +134,13 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         }
 
         bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
+    }
+
+    if (bft_msg.bft_step() == kBftCommit && bft_ptr->status() != kBftCommit) {
+        sync::KeyValueSync::Instance()->AddSync(
+            bft_msg.net_id(),
+            bft_msg.prepare_hash(),
+            sync::kSyncHighest);
     }
 
     if (!bft_ptr->prpare_block()) {
