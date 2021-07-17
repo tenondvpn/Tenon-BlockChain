@@ -192,9 +192,9 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-#ifndef LEGO_TRACE_MESSAGE
-    message_ptr->clear_debug();
-#endif
+// #ifndef LEGO_TRACE_MESSAGE
+//     message_ptr->clear_debug();
+// #endif
 
     if (!common::GlobalInfo::Instance()->is_client() && message_ptr->client()) {
         if (!message_ptr->has_version()) {
