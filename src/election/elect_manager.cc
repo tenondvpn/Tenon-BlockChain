@@ -246,6 +246,7 @@ void ElectManager::ProcessNewElectBlock(
 
     {
         local_node_is_super_leader_ = false;
+        local_node_pool_mod_num_ = -1;
         Members tmp_leaders;
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
