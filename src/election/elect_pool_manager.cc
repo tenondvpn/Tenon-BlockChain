@@ -48,17 +48,17 @@ int ElectPoolManager::CreateElectTransaction(
         }
     }
 
-    if (tx_info.gid().empty()) {
+    if (src_tx_info.gid().empty()) {
         ELECT_ERROR("CreateElectTransaction gid error shard id: %u", shard_netid);
         return kElectError;
     }
 
-    if (tx_info.storages_size() != 1) {
+    if (src_tx_info.storages_size() != 1) {
         BFT_ERROR("tx info storage error[%d]", tx_info.storages_size());
         return kElectError;
     }
 
-    if (tx_info.storages(0).key() != bft::kStatisticAttr) {
+    if (src_tx_info.storages(0).key() != bft::kStatisticAttr) {
         BFT_ERROR("tx info storage key error[%s]", bft::kStatisticAttr.c_str());
         return kElectError;
     }
