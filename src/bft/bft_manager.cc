@@ -406,7 +406,7 @@ void BftManager::HandleRootTxBlock(
         }
     }
 
-    int32_t pool_mod_index = GetLeaderPoolIndex();
+    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_index >= 0) {
         StartBft("", pool_mod_index);
     }
@@ -616,7 +616,7 @@ void BftManager::HandleToAccountTxBlock(
 //         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
     }
 
-    int32_t pool_mod_index = GetLeaderPoolIndex();
+    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_index >= 0) {
         StartBft("", pool_mod_index);
     }

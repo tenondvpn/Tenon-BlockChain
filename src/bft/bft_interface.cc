@@ -275,7 +275,7 @@ int BftInterface::CheckTimeout() {
         return kTimeout;
     }
 
-    if (GetLeaderPoolIndex() < 0) {
+    if (elect::ElectManager::Instance()->local_node_pool_mod_num() < 0) {
         return kBftSuccess;
     }
 
