@@ -244,23 +244,6 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     return false;
 }
 
-bool TimeBlockManager::ThisNodeIsLeader(int32_t* pool_mod_num) {
-    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
-        network::kRootCongressNetworkId);
-    int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (mem_ptr != nullptr && mem_ptr->pool_index_mod_num >= 0) {
-        *pool_mod_num = mem_ptr->pool_index_mod_num;
-        return true;
-    }
-    
-    return false;
-}
-
 void TimeBlockManager::CreateTimeBlockTx() {
     {
         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
@@ -271,25 +254,6 @@ void TimeBlockManager::CreateTimeBlockTx() {
                 if (elect::ElectManager::Instance()->IsSuperLeader(
                         common::GlobalInfo::Instance()->network_id(),
                         common::GlobalInfo::Instance()->id())) {
-                    int32_t pool_mod_num = -1;
-                    if (!ThisNodeIsLeader(&pool_mod_num)) {
-                        auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
-                            network::kRootCongressNetworkId);
-                        int32_t mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-                            common::GlobalInfo::Instance()->network_id(),
-                            common::GlobalInfo::Instance()->id());
-                        auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-                            common::GlobalInfo::Instance()->network_id(),
-                            common::GlobalInfo::Instance()->id());
-                        std::cout << "mem_index: " << mem_index
-                            << ", local id: " << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
-                            << ", des id: " << common::Encode::HexEncode(mem_ptr->id)
-                            << ", leader_count: " << leader_count
-                            << std::endl;
-                        
-                        delete& pool_mod_num;
-                    }
-
                     transport::protobuf::Header msg;
                     if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
                         network::Route::Instance()->Send(msg);
@@ -306,8 +270,8 @@ void TimeBlockManager::CreateTimeBlockTx() {
 }
 
 void TimeBlockManager::CheckBft() {
-    int32_t pool_mod_num = -1;
-    if (ThisNodeIsLeader(&pool_mod_num)) {
+    int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
+    if (pool_mod_num >= 0) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
 

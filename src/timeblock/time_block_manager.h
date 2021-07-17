@@ -34,7 +34,6 @@ private:
     ~TimeBlockManager();
 
     void CreateTimeBlockTx();
-    bool ThisNodeIsLeader(int32_t* pool_mod_num);
     void CheckBft();
     void BroadcastTimeBlock();
     void CreateTmBroadcastMessage(

@@ -253,6 +253,9 @@ void ElectManager::ProcessNewElectBlock(
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
+                if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+                    local_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+                }
             }
 
 //             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"

@@ -99,6 +99,10 @@ public:
         return local_node_is_super_leader_;
     }
 
+    int32_t local_node_pool_mod_num() {
+        return local_node_pool_mod_num_;
+    }
+
     std::unordered_set<uint32_t> valid_shard_networks() {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
         return valid_shard_networks_;
@@ -137,6 +141,7 @@ private:
     std::unordered_map < uint32_t, std::unordered_set<std::string>> added_net_ip_set_;
     std::mutex added_net_ip_set_mutex_;
     std::atomic<bool> local_node_is_super_leader_{ false };
+    std::atomic<int32_t> local_node_pool_mod_num_{ -1 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };
