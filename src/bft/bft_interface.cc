@@ -117,6 +117,10 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     leader_mem_ptr_ = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.node_id());
+    if (!leader_mem_ptr_) {
+        return false;
+    }
+
     if (leader_mem_ptr_->pool_index_mod_num < 0) {
         BFT_ERROR("prepare message not leader.[%u][%s][%u]",
             common::GlobalInfo::Instance()->network_id(),
