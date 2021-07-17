@@ -94,9 +94,9 @@ int Route::Send(transport::protobuf::Header& message) {
 
 void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
-    if (!header.debug().empty()) {
-        NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
-    }
+//     if (!header.debug().empty()) {
+//         NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
+//     }
 
     if (header.type() >= common::kLegoMaxMessageTypeCount) {
         return;
@@ -129,16 +129,16 @@ void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 
     if (header.has_broadcast()) {
         Broadcast(header);
-        if (!header.debug().empty()) {
-            NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
-        }
+//         if (!header.debug().empty()) {
+//             NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
+//         }
     }
 
     if (!header.handled()) {
         message_processor_[header.type()](header_ptr);
-        if (!header.debug().empty()) {
-            NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
-        }
+//         if (!header.debug().empty()) {
+//             NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
+//         }
     }
 }
 
@@ -167,7 +167,7 @@ void Route::RegisterMessage(uint32_t type, transport::MessageProcessor proc) {
     }
 
     message_processor_[type] = proc;
-    NETWORK_DEBUG("register message handler: %d", type);
+//     NETWORK_DEBUG("register message handler: %d", type);
     transport::Processor::Instance()->RegisterProcessor(
             type,
             std::bind(&Route::HandleMessage, this, std::placeholders::_1));
@@ -178,7 +178,7 @@ void Route::UnRegisterMessage(uint32_t type) {
         return;
     }
 
-    NETWORK_DEBUG("unregister message handler: %d", type);
+//     NETWORK_DEBUG("unregister message handler: %d", type);
     message_processor_[type] = nullptr;
 }
 

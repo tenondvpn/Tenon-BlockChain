@@ -81,8 +81,8 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_gas_used(0);
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
-    ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u, final_statistic_block_height: %lu, attr_tm: %s",
-        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, final_statistic_block_height, tm_str.c_str());
+//     ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u, final_statistic_block_height: %lu, attr_tm: %s",
+//         common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, final_statistic_block_height, tm_str.c_str());
     return kElectSuccess;
 }
 
@@ -165,18 +165,18 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
-    ELECT_DEBUG("dynamic get new election tx gid: %s, network: %d,"
-        "exists_shard_nodes: %d, weed_out_vec: %d,"
-        "pick_in_vec: %d, leader_count: %d, tm height: %lu, tm block tm: %lu, vss: %lu",
-        common::Encode::HexEncode(tx_info.gid()).c_str(),
-        tx_info.network_id(),
-        exists_shard_nodes.size(),
-        weed_out_vec.size(),
-        pick_in_vec.size(),
-        leader_count,
-        tmblock::TimeBlockManager::Instance()->LatestTimestampHeight(),
-        tmblock::TimeBlockManager::Instance()->LatestTimestamp(),
-        vss::VssManager::Instance()->EpochRandom());
+//     ELECT_DEBUG("dynamic get new election tx gid: %s, network: %d,"
+//         "exists_shard_nodes: %d, weed_out_vec: %d,"
+//         "pick_in_vec: %d, leader_count: %d, tm height: %lu, tm block tm: %lu, vss: %lu",
+//         common::Encode::HexEncode(tx_info.gid()).c_str(),
+//         tx_info.network_id(),
+//         exists_shard_nodes.size(),
+//         weed_out_vec.size(),
+//         pick_in_vec.size(),
+//         leader_count,
+//         tmblock::TimeBlockManager::Instance()->LatestTimestampHeight(),
+//         tmblock::TimeBlockManager::Instance()->LatestTimestamp(),
+//         vss::VssManager::Instance()->EpochRandom());
     return kElectSuccess;
 }
 
@@ -384,8 +384,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
         if (iter == waiting_pool_map_.end()) {
-            ELECT_DEBUG("find waiting shard network failed [%u]!",
-                shard_netid + network::kConsensusWaitingShardOffset);
+//             ELECT_DEBUG("find waiting shard network failed [%u]!",
+//                 shard_netid + network::kConsensusWaitingShardOffset);
         } else {
             waiting_pool_ptr = iter->second;
         }
@@ -657,8 +657,8 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(network_id + network::kConsensusWaitingShardOffset);
         if (iter == waiting_pool_map_.end()) {
-            ELECT_DEBUG("find waiting shard network failed [%u]!",
-                network_id + network::kConsensusWaitingShardOffset);
+//             ELECT_DEBUG("find waiting shard network failed [%u]!",
+//                 network_id + network::kConsensusWaitingShardOffset);
         } else {
             waiting_pool_ptr = iter->second;
         }

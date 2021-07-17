@@ -160,9 +160,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     SetBlock(block_ptr);
     *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
-    BFT_DEBUG("new block hash: %s, prehash: %s.",
-        common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),
-        common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
+//     BFT_DEBUG("new block hash: %s, prehash: %s.",
+//         common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),
+//         common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
     return kBftSuccess;
 }
 
@@ -1373,8 +1373,8 @@ int TxBft::BackupCheckContractExceute(
     bool caller_gas_used_valid = false;
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         if (tx_info.storages(i).key() == kContractCallerChangeAmount) {
-            BFT_DEBUG("caller_balance_add[%lu], tx_info.storages(i).value(): %s",
-                caller_balance_add, tx_info.storages(i).value().c_str());
+//             BFT_DEBUG("caller_balance_add[%lu], tx_info.storages(i).value(): %s",
+//                 caller_balance_add, tx_info.storages(i).value().c_str());
             int64_t st_val = -1;
             if (!common::StringUtil::ToInt64(tx_info.storages(i).value(), &st_val)) {
                 return kBftLeaderInfoInvalid;
@@ -1386,8 +1386,8 @@ int TxBft::BackupCheckContractExceute(
         }
 
         if (tx_info.storages(i).key() == kContractCallerGasUsed) {
-            BFT_DEBUG("gas_used[%lu], tx_info.storages(i).value(): %s",
-                gas_used, tx_info.storages(i).value().c_str());
+//             BFT_DEBUG("gas_used[%lu], tx_info.storages(i).value(): %s",
+//                 gas_used, tx_info.storages(i).value().c_str());
             uint64_t st_val = 0;
             if (!common::StringUtil::ToUint64(tx_info.storages(i).value(), &st_val)) {
                 return kBftLeaderInfoInvalid;
