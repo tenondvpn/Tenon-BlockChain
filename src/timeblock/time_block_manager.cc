@@ -102,11 +102,8 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     bft_msg.set_net_id(network::kRootCongressNetworkId);
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_gid("");
-    bft_msg.set_rand(0);
     bft_msg.set_bft_step(bft::kBftInit);
     bft_msg.set_leader(false);
-    bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     auto hash128 = bft::GetTxMessageHash(*tx_info);
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);

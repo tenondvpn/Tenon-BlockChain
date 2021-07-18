@@ -56,9 +56,8 @@ public:
     // create backup prepare signature: gid + rand + net_id + local_id + status + + secret + agree
     static std::string GetPrepareSignHash(const bft::protobuf::BftMessage& bft_msg) {
         std::string prepare_sign_data = bft_msg.gid() + "_" +
-            std::to_string(bft_msg.rand()) + "_" +
             std::to_string(bft_msg.net_id()) + "_" +
-            bft_msg.node_id() + "_" +
+            std::to_string(bft_msg.member_index()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_msg.secret() + "_" +
             std::to_string(bft_msg.agree());
@@ -89,9 +88,8 @@ public:
     // create backup prepare signature: gid + rand + net_id + local_id + status + + response + agree
     static std::string GetPrecommitSignHash(const bft::protobuf::BftMessage& bft_msg) {
         std::string prepare_sign_data = bft_msg.gid() + "_" +
-            std::to_string(bft_msg.rand()) + "_" +
             std::to_string(bft_msg.net_id()) + "_" +
-            bft_msg.node_id() + "_" +
+            std::to_string(bft_msg.member_index()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_msg.response() + "_" +
             std::to_string(bft_msg.agree());

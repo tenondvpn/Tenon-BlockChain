@@ -344,14 +344,16 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == elect::kInvalidMemberIndex) {
-        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
         return;
     }
 
     security::Signature sign;
-    if (VerifyBlockSignature(mem_index, bft_msg, tx_bft.to_tx().block(), sign) != kBftSuccess) {
+    if (VerifyBlockSignature(
+            bft_msg.member_index(),
+            bft_msg,
+            tx_bft.to_tx().block(), sign) != kBftSuccess) {
         BFT_ERROR("verify signature error!");
         return;
     }
@@ -449,9 +451,8 @@ void BftManager::RootCommitAddNewAccount(
 void BftManager::HandleSyncBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == elect::kInvalidMemberIndex) {
-        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
         return;
     }
 
@@ -479,7 +480,7 @@ void BftManager::HandleSyncBlock(
     auto src_block = tx_bft.to_tx().block();
     security::Signature sign;
     if (VerifyBlockSignature(
-            mem_index,
+            bft_msg.member_index(),
             bft_msg,
             tx_bft.mutable_to_tx()->block(),
             sign) != kBftSuccess) {
@@ -518,9 +519,8 @@ void BftManager::HandleSyncBlock(
 void BftManager::HandleToAccountTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    uint32_t mem_index = GetMemberIndex(bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == elect::kInvalidMemberIndex) {
-        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", mem_index);
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
         return;
     }
 
@@ -538,7 +538,7 @@ void BftManager::HandleToAccountTxBlock(
     auto src_block = tx_bft.to_tx().block();
     security::Signature sign;
     if (VerifyBlockSignature(
-            mem_index,
+            bft_msg.member_index(),
             bft_msg,
             tx_bft.mutable_to_tx()->block(),
             sign) != kBftSuccess) {
@@ -883,20 +883,17 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    uint32_t mem_index = bft_ptr->mem_manager_ptr()->GetMemberIndex(
-        bft_msg.net_id(),
-        bft_msg.node_id());
-    if (mem_index == elect::kInvalidMemberIndex) {
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         return kBftError;
     }
 
-    if (bft_ptr->members_ptr()->size() <= mem_index) {
+    if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
         return kBftError;
     }
 
     security::Signature sign;
     if (VerifySignature(
-            (*bft_ptr->members_ptr())[mem_index],
+            (*bft_ptr->members_ptr())[bft_msg.member_index()],
             bft_msg,
             BftProto::GetPrepareSignHash(bft_msg),
             sign) != kBftSuccess) {
@@ -910,7 +907,7 @@ int BftManager::LeaderPrecommit(
     }
     security::CommitSecret backup_secret(bft_msg.secret());
     int res = bft_ptr->LeaderPrecommitOk(
-        mem_index,
+        bft_msg.member_index(),
         bft_ptr->gid(),
         header.id(),
         bft_msg.agree(),
@@ -1076,20 +1073,18 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    uint32_t mem_index = bft_ptr->mem_manager_ptr()->GetMemberIndex(
-        bft_msg.net_id(), bft_msg.node_id());
-    if (mem_index == elect::kInvalidMemberIndex) {
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("mem_index == elect::kInvalidMemberIndex.");
         return kBftError;
     }
 
-    if (bft_ptr->members_ptr()->size() <= mem_index) {
+    if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
         return kBftError;
     }
 
     security::Signature sign;
     if (VerifySignature(
-            (*bft_ptr->members_ptr())[mem_index],
+            (*bft_ptr->members_ptr())[bft_msg.member_index()],
             bft_msg,
             BftProto::GetPrecommitSignHash(bft_msg),
             sign) != kBftSuccess) {
@@ -1112,7 +1107,7 @@ int BftManager::LeaderCommit(
     }
 
     int res = bft_ptr->LeaderCommitOk(
-        mem_index,
+        bft_msg.member_index(),
         bft_msg.agree(),
         agg_res,
         security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
