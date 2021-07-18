@@ -59,8 +59,6 @@ void VssManager::OnTimeBlock(
             local_random_.OnTimeBlock(tm_block_tm);
         }
 
-        member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-            common::GlobalInfo::Instance()->network_id());
         prev_tm_height_ = tm_height;
 //         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
 //             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
