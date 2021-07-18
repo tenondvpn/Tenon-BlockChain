@@ -77,8 +77,8 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
+        msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -115,8 +115,8 @@ void BftProto::BackupCreatePrepare(
     }
 
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
+    msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
+        msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -162,8 +162,8 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
+        msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -200,8 +200,8 @@ void BftProto::BackupCreatePreCommit(
     }
 
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
+    msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
+        msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -259,8 +259,8 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
+        msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 

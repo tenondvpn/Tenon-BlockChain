@@ -49,8 +49,8 @@ void ThreadHandler::HandleMessage() {
             auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg_ptr);
 //             if (!msg_ptr->debug().empty()) {
-                TRANSPORT_ERROR("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
-                    msg_ptr->id(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                TRANSPORT_ERROR("msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+                    msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
                     msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
                     (common::TimeUtils::TimestampUs() - btime));
 //             }
@@ -192,9 +192,9 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-#ifndef LEGO_TRACE_MESSAGE
-    message_ptr->clear_debug();
-#endif
+// #ifndef LEGO_TRACE_MESSAGE
+//     message_ptr->clear_debug();
+// #endif
 
     if (!common::GlobalInfo::Instance()->is_client() && message_ptr->client()) {
         if (!message_ptr->has_version()) {
