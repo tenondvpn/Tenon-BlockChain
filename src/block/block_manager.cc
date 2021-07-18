@@ -91,11 +91,9 @@ static std::string CreateAdRewardRequest(
     SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid(gid);
-    bft_msg.set_rand(0);
     bft_msg.set_bft_step(bft::kBftInit);
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
-    bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
