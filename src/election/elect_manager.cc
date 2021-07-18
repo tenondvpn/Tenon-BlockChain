@@ -644,6 +644,14 @@ elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, const std::stri
 }
 
 elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index) {
+    if (network_id >= network::kConsensusShardEndNetworkId) {
+        return nullptr;
+    }
+
+    if (index >= (*members_ptr_[network_id]).size()) {
+        return nullptr;
+    }
+
     return (*members_ptr_[network_id])[index];
 }
 
