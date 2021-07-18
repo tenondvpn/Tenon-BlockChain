@@ -888,6 +888,7 @@ int BftManager::LeaderPrecommit(
     uint64_t time3;
     uint64_t time4;
     uint64_t time5;
+    uint64_t time6;
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
         BFT_ERROR("check leader vaild failed!");
         return kBftError;
@@ -942,13 +943,16 @@ int BftManager::LeaderPrecommit(
 
     time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
-        return LeaderCallPrecommit(bft_ptr);
+        LeaderCallPrecommit(bft_ptr);
+        time5 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
+        time5 = common::TimeUtils::TimestampUs();
+    }else {
+        time5 = common::TimeUtils::TimestampUs();
     }
 
-    time5 = common::TimeUtils::TimestampUs();
     // broadcast pre-commit to backups
     BFT_ERROR("LeaderPrecommit time use: %lu, %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
@@ -1103,6 +1107,7 @@ int BftManager::LeaderCommit(
     uint64_t time3;
     uint64_t time4;
     uint64_t time5;
+    uint64_t time6;
 
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
         BFT_ERROR("check leader error.");
@@ -1160,15 +1165,17 @@ int BftManager::LeaderCommit(
         agg_res,
         member_ptr->id);
     if (res == kBftAgree) {
-        return LeaderCallCommit(bft_ptr);
+        time4 = common::TimeUtils::TimestampUs();
+        LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {
-        return LeaderReChallenge(bft_ptr);
+        time4 = common::TimeUtils::TimestampUs();
+        LeaderReChallenge(bft_ptr);
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
+        time4 = common::TimeUtils::TimestampUs();
     }
 
-    time4 = common::TimeUtils::TimestampUs();
     BFT_ERROR("LeaderCommit time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
     return kBftSuccess;
 }
