@@ -65,7 +65,6 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_data(data);
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());
-    bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_pool_index(bft_ptr->pool_index());
@@ -103,7 +102,6 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_data(data);
     bft_msg.set_leader(true);
     bft_msg.set_gid(from_bft_msg.gid());
-    bft_msg.set_rand(from_bft_msg.rand());
     bft_msg.set_net_id(from_bft_msg.net_id());
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPrepare);
@@ -140,7 +138,6 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_data(bft_ptr->prepare_hash());
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());
-    bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
@@ -190,7 +187,6 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_data(data);
     bft_msg.set_leader(true);
     bft_msg.set_gid(from_bft_msg.gid());
-    bft_msg.set_rand(from_bft_msg.rand());
     bft_msg.set_net_id(from_bft_msg.net_id());
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPreCommit);
@@ -227,7 +223,6 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_data(bft_ptr->prepare_hash());
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());
-    bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
