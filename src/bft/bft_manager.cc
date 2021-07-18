@@ -251,7 +251,6 @@ BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_ms
 
     bft_ptr->set_gid(bft_msg.gid());
     bft_ptr->set_network_id(bft_msg.net_id());
-    bft_ptr->set_randm_num(bft_msg.rand());
     bft_ptr->set_pool_index(bft_msg.pool_index());
     bft_ptr->set_status(kBftPrepare);
     bft_ptr->set_member_count(
@@ -651,10 +650,9 @@ int BftManager::InitBft(
     res = StartBft(bft_msg.gid(), pool_mod_index);
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
-            BFT_WARN("start [%s][%u][%llu] failed![%d]",
+            BFT_WARN("start [%s][%llu] failed![%d]",
                 bft_msg.gid().c_str(),
                 bft_msg.net_id(),
-                bft_msg.rand(),
                 res);
         }
 
