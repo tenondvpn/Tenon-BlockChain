@@ -54,7 +54,7 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
 }
 
 void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
-    header_ptr->add_timestamps(common::TimeUtils::TimestampUs());
+    uint64_t b_time = common::TimeUtils::TimestampUs();
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
     BftItemPtr bft_item_ptr = std::make_shared<BftItem>();
@@ -77,6 +77,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
+    uint64_t time1 = common::TimeUtils::TimestampUs();
     // TODO: check account address's network id valid. and this node is valid bft node
     switch (bft_msg.bft_step()) {
     case kBftInit:
@@ -104,7 +105,10 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             return;
         }
 
+        uint64_t time2 = common::TimeUtils::TimestampUs();
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        uint64_t time3 = common::TimeUtils::TimestampUs();
+        BFT_ERROR("leader HandleBftMessage time use: %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2);
         return;
     }
 
@@ -240,7 +244,6 @@ void BftManager::HandleBftMessage(
         assert(false);
         break;
     }
-    header_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 }
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
