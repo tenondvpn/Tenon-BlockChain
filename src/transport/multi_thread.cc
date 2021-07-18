@@ -192,9 +192,9 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-// #ifndef LEGO_TRACE_MESSAGE
-//     message_ptr->clear_debug();
-// #endif
+#ifndef LEGO_TRACE_MESSAGE
+    message_ptr->clear_debug();
+#endif
 
     if (!common::GlobalInfo::Instance()->is_client() && message_ptr->client()) {
         if (!message_ptr->has_version()) {
@@ -284,11 +284,11 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 
         priority_queue_map_[priority].push(message_ptr);
-        if (!message_ptr->debug().empty()) {
-            TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
-                message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-                from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
-        }
+//         if (!message_ptr->debug().empty()) {
+//             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+//                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//                 from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
+//         }
 	}
 }
 
