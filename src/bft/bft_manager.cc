@@ -889,9 +889,10 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
+    auto member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
     security::Signature sign;
     if (VerifySignature(
-            (*bft_ptr->members_ptr())[bft_msg.member_index()],
+            member_ptr,
             bft_msg,
             BftProto::GetPrepareSignHash(bft_msg),
             sign) != kBftSuccess) {
@@ -903,6 +904,7 @@ int BftManager::LeaderPrecommit(
         BFT_ERROR("backup prepare must has commit secret.");
         return kBftError;
     }
+    
     security::CommitSecret backup_secret(bft_msg.secret());
     int res = bft_ptr->LeaderPrecommitOk(
         bft_msg.member_index(),
@@ -910,7 +912,7 @@ int BftManager::LeaderPrecommit(
         header.id(),
         bft_msg.agree(),
         backup_secret,
-        security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+        member_ptr->id);
     if (!bft_msg.agree()) {
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
@@ -1104,11 +1106,20 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
+    if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        return kBftError;
+    }
+
+    if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
+        return kBftError;
+    }
+
+    auto member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
         bft_msg.agree(),
         agg_res,
-        security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey()));
+        member_ptr->id);
     if (res == kBftAgree) {
         return LeaderCallCommit(bft_ptr);
     }  else if (res == kBftReChallenge) {

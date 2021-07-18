@@ -103,6 +103,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_gid("");
     bft_msg.set_bft_step(bft::kBftInit);
+    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_leader(false);
     auto hash128 = bft::GetTxMessageHash(*tx_info);
     auto tx_data = tx_bft.SerializeAsString();

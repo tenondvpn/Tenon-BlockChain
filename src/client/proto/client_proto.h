@@ -75,6 +75,7 @@ public:
         bft_msg.set_bft_step(kBftInit);
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
+        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
@@ -128,6 +129,7 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
+        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;
@@ -187,6 +189,7 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
+        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;
@@ -249,6 +252,7 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
+        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;

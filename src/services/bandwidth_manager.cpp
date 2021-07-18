@@ -160,6 +160,7 @@ static void CreateMiningContract(
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid(gid);
     bft_msg.set_bft_step(bft::kBftInit);
+    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
     bft::protobuf::TxBft tx_bft;
