@@ -868,7 +868,7 @@ int BftManager::BackupPrepare(
     }
 
     time4 = common::TimeUtils::TimestampUs();
-    BFT_DEBUG("BackupPrepare time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
+    BFT_ERROR("BackupPrepare time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
 #ifdef TENON_UNITTEST
     backup_prepare_msg_ = msg;
 #endif
@@ -947,7 +947,7 @@ int BftManager::LeaderPrecommit(
 
     time5 = common::TimeUtils::TimestampUs();
     // broadcast pre-commit to backups
-    BFT_DEBUG("LeaderPrecommit time use: %lu, %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3, time5 - time4);
+    BFT_ERROR("LeaderPrecommit time use: %lu, %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
 }
 
@@ -1166,7 +1166,7 @@ int BftManager::LeaderCommit(
     }
 
     time4 = common::TimeUtils::TimestampUs();
-    BFT_DEBUG("LeaderCommit time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
+    BFT_ERROR("LeaderCommit time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
     return kBftSuccess;
 }
 
