@@ -102,26 +102,23 @@ message TxBft {
 
 message BftMessage {
 	optional bytes gid = 1;
-	optional uint64 rand = 2;
-	optional int32 bft_step = 3;
-	optional bool leader = 4;
-	optional uint32 net_id = 5;
-	optional bytes node_id = 6;
-	optional bytes pubkey = 7;
-	optional bytes sign_challenge = 8;
-	optional bytes sign_response = 9;
-	optional bytes secret = 10;
-	optional bytes challenge = 11;
-	optional bytes response = 12;
-	optional bytes agg_sign_challenge = 13;
-	optional bytes agg_sign_response = 14;
-	repeated uint64 bitmap = 15;
-	optional bool agree = 16;
-	optional uint32 pool_index = 17;
-	optional bytes data = 18;
-	optional bytes prepare_hash = 19;
-	optional bytes node_ip = 20;
-	optional uint32 node_port = 21;
-	optional uint32 epoch = 22;
-	optional uint32 member_index = 23;
+	optional int32 bft_step = 2;
+	optional bool leader = 3;
+	optional uint32 net_id = 4;
+	optional bytes sign_challenge = 5;
+	optional bytes sign_response = 6;
+	optional bytes secret = 7;
+	optional bytes challenge = 8;
+	optional bytes response = 9;
+	optional bytes agg_sign_challenge = 10;
+	optional bytes agg_sign_response = 11;
+	repeated uint64 bitmap = 12;
+	optional bool agree = 13;
+	optional uint32 pool_index = 14;
+	optional bytes data = 15;
+	optional bytes prepare_hash = 16;
+	optional bytes node_ip = 17;
+	optional uint32 node_port = 18;
+	optional uint32 epoch = 19;
+	optional uint32 member_index = 20;
 }

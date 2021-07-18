@@ -67,10 +67,8 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_pool_index(bft_ptr->pool_index());
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     std::string sign_challenge_str;
     std::string sign_response_str;
     sign.Serialize(sign_challenge_str, sign_response_str);
@@ -107,10 +105,8 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_gid(from_bft_msg.gid());
     bft_msg.set_rand(from_bft_msg.rand());
     bft_msg.set_net_id(from_bft_msg.net_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPrepare);
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string secret_str;
@@ -146,7 +142,6 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
     std::string challenge_str;
@@ -197,10 +192,8 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_gid(from_bft_msg.gid());
     bft_msg.set_rand(from_bft_msg.rand());
     bft_msg.set_net_id(from_bft_msg.net_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPreCommit);
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string agg_res_str;
@@ -236,7 +229,6 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_rand(bft_ptr->rand_num());
     bft_msg.set_net_id(bft_ptr->network_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
@@ -304,7 +296,6 @@ void BftProto::CreateLeaderBroadcastToAccount(
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_bft_step(bft_step);
     bft_msg.set_net_id(common::GlobalInfo::Instance()->network_id());
-    bft_msg.set_node_id(local_node->id());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     auto block_hash = GetBlockHash(*block);
     block->set_hash(block_hash);

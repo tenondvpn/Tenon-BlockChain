@@ -270,6 +270,10 @@ void ElectManager::ProcessNewElectBlock(
                 }
             }
 
+            if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+                local_mem_ptr_[elect_block.shard_network_id()] = *iter;
+            }
+
             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                 elect_block.shard_network_id(),
@@ -640,7 +644,7 @@ elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, const std::stri
 }
 
 elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index) {
-    return GetMember(common::kInvalidUint64, network_id, index);
+    return (*members_ptr_[network_id])[index];
 }
 
 uint32_t ElectManager::GetMemberCount(uint32_t network_id) {

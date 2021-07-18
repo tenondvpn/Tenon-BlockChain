@@ -43,11 +43,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if (!bft_msg.has_node_id()) {
-        BFT_ERROR("bft message has no node_id.");
-        return false;
-    }
-
     if (!bft_msg.has_net_id()) {
         BFT_ERROR("bft message has no net id.");
         return false;
@@ -60,29 +55,24 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    int32_t leader_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
+    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
-        bft_msg.node_id());
-    if ((int32_t)pool_index() % leader_count != leader_pool_mod_idx) {
+        bft_msg.member_index());
+    if (leader_mem_ptr == nullptr) {
+        BFT_ERROR("leader invalid[%d] index[%d].",
+            common::GlobalInfo::Instance()->network_id(), bft_msg.member_index());
+        return false;
+    }
+
+    if ((int32_t)pool_index() % leader_count != leader_mem_ptr->pool_index_mod_num) {
         BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]",
-            pool_index(), leader_count, leader_pool_mod_idx, (int32_t)pool_index() % leader_count,
-            common::GlobalInfo::Instance()->network_id());
-        printf("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]\n",
-            pool_index(), leader_count, leader_pool_mod_idx, (int32_t)pool_index() % leader_count,
+            pool_index(), leader_count, leader_mem_ptr->pool_index_mod_num, (int32_t)pool_index() % leader_count,
             common::GlobalInfo::Instance()->network_id());
         return false;
     }
 
     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
         BFT_ERROR("bft message has no sign challenge or sign response.");
-        return false;
-    }
-
-    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        bft_msg.node_id());
-    if (leader_mem_ptr == nullptr) {
-        BFT_ERROR("get leader bft member failed!");
         return false;
     }
 
@@ -100,9 +90,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto local_mem_ptr = elect::ElectManager::Instance()->GetMember(
-            bft_msg.net_id(),
-            common::GlobalInfo::Instance()->id());
+    auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
         BFT_ERROR("get local bft member failed!");
         return false;
@@ -116,22 +104,18 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
     leader_mem_ptr_ = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
-        bft_msg.node_id());
+        bft_msg.member_index());
     if (!leader_mem_ptr_) {
         return false;
     }
 
     if (leader_mem_ptr_->pool_index_mod_num < 0) {
-        BFT_ERROR("prepare message not leader.[%u][%s][%u]",
+        BFT_ERROR("prepare message not leader.[%u][%d][%u]",
             common::GlobalInfo::Instance()->network_id(),
-            common::Encode::HexEncode(bft_msg.node_id()).c_str(),
+            bft_msg.member_index(),
             leader_mem_ptr_->pool_index_mod_num);
         return false;
     }
-
-//     int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
-//         common::GlobalInfo::Instance()->network_id(),
-//         common::GlobalInfo::Instance()->id());//     if (local_pool_mod_idx == leader_pool_mod_idx) {//         BFT_ERROR("this node is not backup.[%d][%d]", local_pool_mod_idx, leader_pool_mod_idx);//         return false;//     }
 
     return true;
 }

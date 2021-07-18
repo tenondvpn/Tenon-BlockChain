@@ -105,6 +105,10 @@ public:
         return local_node_member_index_;
     }
 
+    elect::BftMemberPtr local_mem_ptr(uint32_t network_id) {
+        return local_mem_ptr_[network_id];
+    }
+
     std::unordered_set<uint32_t> valid_shard_networks() {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
         return valid_shard_networks_;
@@ -149,6 +153,7 @@ private:
     std::shared_ptr<MemberManager> mem_manager_ptr_[network::kConsensusShardEndNetworkId];
     int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
+    elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };
