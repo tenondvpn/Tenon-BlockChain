@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "bft/proto/bft_proto.h"
 
+#include "bft/bft_utils.h"
 #include "common/global_info.h"
 #include "common/split.h"
 #include "common/string_utils.h"
+#include "dht/dht_key.h"
+#include "election/elect_manager.h"
+#include "network/network_utils.h"
 #include "security/schnorr.h"
 #include "transport/transport_utils.h"
-#include "dht/dht_key.h"
-#include "network/network_utils.h"
-#include "bft/bft_utils.h"
 
 namespace tenon {
 
@@ -77,9 +78,10 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     SetLocalPublicIpPort(local_node, bft_msg);
-    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
-        msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
+//         msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -110,6 +112,7 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_epoch(from_bft_msg.epoch());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string secret_str;
     secret.Serialize(secret_str);
     bft_msg.set_secret(secret_str);
@@ -118,8 +121,8 @@ void BftProto::BackupCreatePrepare(
     }
 
     SetLocalPublicIpPort(local_node, bft_msg);
-    msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
-        msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
+//     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
+//         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -148,6 +151,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_pool_index(bft_ptr->pool_index());
     std::string challenge_str;
     bft_ptr->challenge().Serialize(challenge_str);
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     bft_msg.set_challenge(challenge_str);
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(
@@ -166,8 +170,8 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
-    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
-        msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
+//         msg.id(), bft_ptr->pool_index(), kBftPreCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -198,6 +202,7 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     bft_msg.set_epoch(from_bft_msg.epoch());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
@@ -206,8 +211,8 @@ void BftProto::BackupCreatePreCommit(
     }
 
     SetLocalPublicIpPort(local_node, bft_msg);
-    msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
-        msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
+//     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
+//         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -234,6 +239,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_node_id(local_node->id());
     bft_msg.set_bft_step(kBftCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
     std::string msg_hash_src = bft_ptr->prepare_hash();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
@@ -266,8 +272,8 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
-    msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
-        msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
+//     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",
+//         msg.id(), bft_ptr->pool_index(), kBftCommit, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 
@@ -299,6 +305,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
     bft_msg.set_bft_step(bft_step);
     bft_msg.set_net_id(common::GlobalInfo::Instance()->network_id());
     bft_msg.set_node_id(local_node->id());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     auto block_hash = GetBlockHash(*block);
     block->set_hash(block_hash);
     security::Signature sign;

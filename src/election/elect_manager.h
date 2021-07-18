@@ -64,7 +64,6 @@ public:
         elect::MembersPtr& members_ptr,
         elect::NodeIndexMapPtr& node_index_map,
         int32_t leader_count);
-    bool IsValidShardLeaders(uint64_t elect_height, uint32_t network_id, const std::string& id);
     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
@@ -73,7 +72,6 @@ public:
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
-    bool IsValidShardLeaders(uint32_t network_id, const std::string& id);
     std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
     std::unordered_set<std::string> leaders(uint32_t network_id) {
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
@@ -101,6 +99,10 @@ public:
 
     int32_t local_node_pool_mod_num() {
         return local_node_pool_mod_num_;
+    }
+
+    int32_t local_node_member_index() {
+        return local_node_member_index_;
     }
 
     std::unordered_set<uint32_t> valid_shard_networks() {
@@ -140,8 +142,13 @@ private:
     std::mutex added_net_id_set_mutex_;
     std::unordered_map < uint32_t, std::unordered_set<std::string>> added_net_ip_set_;
     std::mutex added_net_ip_set_mutex_;
-    std::atomic<bool> local_node_is_super_leader_{ false };
-    std::atomic<int32_t> local_node_pool_mod_num_{ -1 };
+    volatile bool local_node_is_super_leader_{ false };
+    volatile int32_t local_node_pool_mod_num_{ -1 };
+    volatile int32_t local_node_member_index_{ -1 };
+    MembersPtr members_ptr_[network::kConsensusShardEndNetworkId];
+    std::shared_ptr<MemberManager> mem_manager_ptr_[network::kConsensusShardEndNetworkId];
+    int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
+    int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

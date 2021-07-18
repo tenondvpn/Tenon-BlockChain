@@ -27,6 +27,9 @@ ElectManager::ElectManager() {
     network::Route::Instance()->RegisterMessage(
         common::kElectMessage,
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
+    memset(latest_leader_count_, 0, sizeof(latest_leader_count_));
+    memset(latest_member_count_, 0, sizeof(latest_member_count_));
+    
     waiting_hb_tick_.CutOff(
         kWaitingHeartbeatPeriod,
         std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
@@ -194,6 +197,9 @@ void ElectManager::ProcessNewElectBlock(
         local_node_pool_mod_num_ = -1;
     }
 
+    latest_member_count_[elect_block.shard_network_id()] = elect_block.in_size();
+    latest_leader_count_[elect_block.shard_network_id()] = elect_block.leader_count();
+
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto in = elect_block.in();
@@ -243,6 +249,8 @@ void ElectManager::ProcessNewElectBlock(
 
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
+
+            local_node_member_index_ = i;
         }
 
         ++member_index;
@@ -259,21 +267,14 @@ void ElectManager::ProcessNewElectBlock(
                 node_index_vec.push_back(index++);
                 if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
                     local_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
-                    std::cout << "1111 DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-                        << elect_block.shard_network_id()
-                        << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                        << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
-                        << ", leader count: " << elect_block.leader_count()
-                        << std::endl;
-
                 }
             }
 
-//             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
-//                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-//                 elect_block.shard_network_id(),
-//                 common::Encode::HexEncode((*iter)->id).c_str(),
-//                 (*iter)->pool_index_mod_num);
+            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+                "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                elect_block.shard_network_id(),
+                common::Encode::HexEncode((*iter)->id).c_str(),
+                (*iter)->pool_index_mod_num);
             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
                 << elect_block.shard_network_id()
                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
@@ -301,6 +302,7 @@ void ElectManager::ProcessNewElectBlock(
         network_leaders_[elect_block.shard_network_id()] = leaders;
     }
 
+    members_ptr_[elect_block.shard_network_id()] = shard_members_ptr;
     pool_manager_.NetworkMemberChange(elect_block.shard_network_id(), shard_members_ptr);
     auto member_ptr = std::make_shared<MemberManager>();
     member_ptr->SetNetworkMember(
@@ -308,6 +310,7 @@ void ElectManager::ProcessNewElectBlock(
         shard_members_ptr,
         shard_members_index_ptr,
         elect_block.leader_count());
+    mem_manager_ptr_[elect_block.shard_network_id()] = member_ptr;
     {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
         valid_shard_networks_.insert(elect_block.shard_network_id());
@@ -611,7 +614,7 @@ std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint64_t elect_hei
 }
 
 std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_id) {
-    return GetMemberManager(common::kInvalidUint64, network_id);
+    return mem_manager_ptr_[network_id];
 }
 
 int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
@@ -623,7 +626,7 @@ uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& no
 }
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
-    return GetNetworkMembers(common::kInvalidUint64, network_id);
+    return members_ptr_[network_id];
 }
 
 elect::BftMemberPtr ElectManager::GetMemberWithId(
@@ -641,24 +644,12 @@ elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index)
 }
 
 uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
-    return GetMemberCount(common::kInvalidUint64, network_id);
+    return latest_member_count_[network_id];
 }
 
 int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
-    return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
-}
-bool ElectManager::IsValidShardLeaders(uint32_t network_id, const std::string& id) {
-    // Each shard has a certain number of leaders
-    // for the generation of public transaction blocks
-    // if transaction create by this node, no balance change
-    // and backup also check leader valid.
-    std::lock_guard<std::mutex> guard(network_leaders_mutex_);
-    auto iter = network_leaders_.find(network_id);
-    if (iter == network_leaders_.end()) {
-        return false;
-    }
-
-    return iter->second.find(id) != iter->second.end();
+    return latest_leader_count_[network_id];
+//     return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
 }
 
 void ElectManager::WaitingNodeSendHeartbeat() {
