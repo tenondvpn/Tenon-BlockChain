@@ -426,6 +426,18 @@ class Header : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 
   // accessors -------------------------------------------------------
 
+  // repeated uint64 timestamps = 32;
+  int timestamps_size() const;
+  void clear_timestamps();
+  static const int kTimestampsFieldNumber = 32;
+  ::google::protobuf::uint64 timestamps(int index) const;
+  void set_timestamps(int index, ::google::protobuf::uint64 value);
+  void add_timestamps(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      timestamps() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_timestamps();
+
   // optional bytes src_dht_key = 1;
   bool has_src_dht_key() const;
   void clear_src_dht_key();
@@ -812,6 +824,7 @@ class Header : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > timestamps_;
   ::google::protobuf::internal::ArenaStringPtr src_dht_key_;
   ::google::protobuf::internal::ArenaStringPtr des_dht_key_;
   ::google::protobuf::internal::ArenaStringPtr src_node_id_;
@@ -2566,6 +2579,36 @@ inline void Header::set_version(::google::protobuf::int32 value) {
   set_has_version();
   version_ = value;
   // @@protoc_insertion_point(field_set:tenon.transport.protobuf.Header.version)
+}
+
+// repeated uint64 timestamps = 32;
+inline int Header::timestamps_size() const {
+  return timestamps_.size();
+}
+inline void Header::clear_timestamps() {
+  timestamps_.Clear();
+}
+inline ::google::protobuf::uint64 Header::timestamps(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.transport.protobuf.Header.timestamps)
+  return timestamps_.Get(index);
+}
+inline void Header::set_timestamps(int index, ::google::protobuf::uint64 value) {
+  timestamps_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.transport.protobuf.Header.timestamps)
+}
+inline void Header::add_timestamps(::google::protobuf::uint64 value) {
+  timestamps_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.transport.protobuf.Header.timestamps)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+Header::timestamps() const {
+  // @@protoc_insertion_point(field_list:tenon.transport.protobuf.Header.timestamps)
+  return timestamps_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+Header::mutable_timestamps() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.transport.protobuf.Header.timestamps)
+  return &timestamps_;
 }
 
 #ifdef __GNUC__

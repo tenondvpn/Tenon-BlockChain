@@ -145,6 +145,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, des_country_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, transport_type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, version_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, timestamps_),
   0,
   1,
   2,
@@ -176,10 +177,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   11,
   29,
   30,
+  ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 19, sizeof(::tenon::transport::protobuf::BroadcastParam)},
-  { 33, 69, sizeof(::tenon::transport::protobuf::Header)},
+  { 33, 70, sizeof(::tenon::transport::protobuf::Header)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -216,7 +218,7 @@ void AddDescriptorsImpl() {
       "\014hop_to_layer\030\010 \001(\r\022\016\n\006header\030\t \001(\014\022\014\n\004b"
       "ody\030\n \001(\014\022\023\n\013net_crossed\030\013 \001(\010\022\023\n\013bloomf"
       "ilter\030\014 \003(\004\022\021\n\tevil_rate\030\r \001(\002\022\033\n\023ign_bl"
-      "oomfilter_hop\030\016 \001(\r\"\363\004\n\006Header\022\023\n\013src_dh"
+      "oomfilter_hop\030\016 \001(\r\"\207\005\n\006Header\022\023\n\013src_dh"
       "t_key\030\001 \001(\014\022\023\n\013des_dht_key\030\002 \001(\014\022\023\n\013src_"
       "node_id\030\003 \001(\014\022\023\n\013des_node_id\030\004 \001(\014\022\021\n\tho"
       "p_count\030\005 \001(\r\022\014\n\004data\030\006 \001(\014\022\020\n\010priority\030"
@@ -232,10 +234,10 @@ void AddDescriptorsImpl() {
       "\004\022\016\n\006pubkey\030\031 \001(\014\022\014\n\004sign\030\032 \001(\014\022\r\n\005local"
       "\030\033 \001(\010\022\023\n\013des_network\030\034 \001(\005\022\023\n\013des_count"
       "ry\030\035 \001(\014\022\026\n\016transport_type\030\036 \001(\005\022\017\n\007vers"
-      "ion\030\037 \001(\005"
+      "ion\030\037 \001(\005\022\022\n\ntimestamps\030  \003(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 969);
+      descriptor, 989);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "transport.proto", &protobuf_RegisterTypes);
 }
@@ -1041,6 +1043,7 @@ const int Header::kDesNetworkFieldNumber;
 const int Header::kDesCountryFieldNumber;
 const int Header::kTransportTypeFieldNumber;
 const int Header::kVersionFieldNumber;
+const int Header::kTimestampsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Header::Header()
@@ -1053,7 +1056,8 @@ Header::Header()
 Header::Header(const Header& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_) {
+      _has_bits_(from._has_bits_),
+      timestamps_(from.timestamps_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   src_dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_src_dht_key()) {
@@ -1173,6 +1177,7 @@ void Header::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  timestamps_.Clear();
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
@@ -1655,6 +1660,25 @@ bool Header::MergePartialFromCodedStream(
         break;
       }
 
+      // repeated uint64 timestamps = 32;
+      case 32: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(0u /* 256 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 2, 256u, input, this->mutable_timestamps())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(2u /* 258 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_timestamps())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1848,6 +1872,12 @@ void Header::SerializeWithCachedSizes(
   // optional int32 version = 31;
   if (cached_has_bits & 0x40000000u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(31, this->version(), output);
+  }
+
+  // repeated uint64 timestamps = 32;
+  for (int i = 0, n = this->timestamps_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      32, this->timestamps(i), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2046,6 +2076,10 @@ void Header::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(31, this->version(), target);
   }
 
+  // repeated uint64 timestamps = 32;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(32, this->timestamps_, target);
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -2063,6 +2097,15 @@ size_t Header::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
+  // repeated uint64 timestamps = 32;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->timestamps_);
+    total_size += 2 *
+                  ::google::protobuf::internal::FromIntSize(this->timestamps_size());
+    total_size += data_size;
+  }
+
   if (_has_bits_[0 / 32] & 255u) {
     // optional bytes src_dht_key = 1;
     if (has_src_dht_key()) {
@@ -2301,6 +2344,7 @@ void Header::MergeFrom(const Header& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  timestamps_.MergeFrom(from.timestamps_);
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
@@ -2444,6 +2488,7 @@ void Header::Swap(Header* other) {
 }
 void Header::InternalSwap(Header* other) {
   using std::swap;
+  timestamps_.InternalSwap(&other->timestamps_);
   src_dht_key_.Swap(&other->src_dht_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   des_dht_key_.Swap(&other->des_dht_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
