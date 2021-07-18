@@ -45,16 +45,15 @@ void ThreadHandler::HandleMessage() {
                 break;
             }
 
+            msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
             msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
             auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg_ptr);
-//             if (!msg_ptr->debug().empty()) {
-                TRANSPORT_ERROR("msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
-                    msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
-                    msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
-                    (common::TimeUtils::TimestampUs() - btime));
-//             }
-
+            msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
+            TRANSPORT_ERROR("msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+                msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+                (common::TimeUtils::TimestampUs() - btime));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -192,6 +191,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
+    message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 // #ifndef LEGO_TRACE_MESSAGE
 //     message_ptr->clear_debug();
 // #endif

@@ -54,6 +54,7 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
 }
 
 void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+    header_ptr->add_timestamps(common::TimeUtils::TimestampUs());
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
     BftItemPtr bft_item_ptr = std::make_shared<BftItem>();
@@ -239,6 +240,7 @@ void BftManager::HandleBftMessage(
         assert(false);
         break;
     }
+    header_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 }
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
