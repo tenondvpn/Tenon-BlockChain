@@ -629,7 +629,7 @@ int TcpTransport::Send(
     }
 
     if (!message.debug().empty()) {
-        TRANSPORT_ERROR("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
+        TRANSPORT_DEBUG("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
             message.id(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash());
     }
 
