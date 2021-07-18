@@ -2639,6 +2639,13 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 epoch() const;
   void set_epoch(::google::protobuf::uint32 value);
 
+  // optional uint32 member_index = 23;
+  bool has_member_index() const;
+  void clear_member_index();
+  static const int kMemberIndexFieldNumber = 23;
+  ::google::protobuf::uint32 member_index() const;
+  void set_member_index(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.BftMessage)
  private:
   void set_has_gid();
@@ -2683,6 +2690,8 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_node_port();
   void set_has_epoch();
   void clear_has_epoch();
+  void set_has_member_index();
+  void clear_has_member_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2709,6 +2718,7 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 pool_index_;
   ::google::protobuf::uint32 node_port_;
   ::google::protobuf::uint32 epoch_;
+  ::google::protobuf::uint32 member_index_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
 // ===================================================================
@@ -6450,6 +6460,30 @@ inline void BftMessage::set_epoch(::google::protobuf::uint32 value) {
   set_has_epoch();
   epoch_ = value;
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.epoch)
+}
+
+// optional uint32 member_index = 23;
+inline bool BftMessage::has_member_index() const {
+  return (_has_bits_[0] & 0x00200000u) != 0;
+}
+inline void BftMessage::set_has_member_index() {
+  _has_bits_[0] |= 0x00200000u;
+}
+inline void BftMessage::clear_has_member_index() {
+  _has_bits_[0] &= ~0x00200000u;
+}
+inline void BftMessage::clear_member_index() {
+  member_index_ = 0u;
+  clear_has_member_index();
+}
+inline ::google::protobuf::uint32 BftMessage::member_index() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.member_index)
+  return member_index_;
+}
+inline void BftMessage::set_member_index(::google::protobuf::uint32 value) {
+  set_has_member_index();
+  member_index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.member_index)
 }
 
 #ifdef __GNUC__

@@ -550,6 +550,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, node_ip_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, node_port_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, epoch_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, member_index_),
   0,
   13,
   14,
@@ -572,6 +573,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   12,
   19,
   20,
+  21,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::tenon::bft::protobuf::AccountAttributes)},
@@ -587,7 +589,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 150, 156, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
   { 157, 163, sizeof(::tenon::bft::protobuf::ToAccountTx)},
   { 164, 176, sizeof(::tenon::bft::protobuf::TxBft)},
-  { 183, 210, sizeof(::tenon::bft::protobuf::BftMessage)},
+  { 183, 211, sizeof(::tenon::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -672,7 +674,7 @@ void AddDescriptorsImpl() {
       "mmit\022<\n\rbtx_precommit\030\006 \001(\0132%.tenon.bft."
       "protobuf.BackupTxPreCommit\0226\n\nltx_commit"
       "\030\007 \001(\0132\".tenon.bft.protobuf.LeaderTxComm"
-      "it\"\237\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014\n\004rand\030\002"
+      "it\"\265\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\014\n\004rand\030\002"
       " \001(\004\022\020\n\010bft_step\030\003 \001(\005\022\016\n\006leader\030\004 \001(\010\022\016"
       "\n\006net_id\030\005 \001(\r\022\017\n\007node_id\030\006 \001(\014\022\016\n\006pubke"
       "y\030\007 \001(\014\022\026\n\016sign_challenge\030\010 \001(\014\022\025\n\rsign_"
@@ -682,10 +684,11 @@ void AddDescriptorsImpl() {
       "(\014\022\016\n\006bitmap\030\017 \003(\004\022\r\n\005agree\030\020 \001(\010\022\022\n\npoo"
       "l_index\030\021 \001(\r\022\014\n\004data\030\022 \001(\014\022\024\n\014prepare_h"
       "ash\030\023 \001(\014\022\017\n\007node_ip\030\024 \001(\014\022\021\n\tnode_port\030"
-      "\025 \001(\r\022\r\n\005epoch\030\026 \001(\r"
+      "\025 \001(\r\022\r\n\005epoch\030\026 \001(\r\022\024\n\014member_index\030\027 \001"
+      "(\r"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2180);
+      descriptor, 2202);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft.proto", &protobuf_RegisterTypes);
 }
@@ -5844,6 +5847,7 @@ const int BftMessage::kPrepareHashFieldNumber;
 const int BftMessage::kNodeIpFieldNumber;
 const int BftMessage::kNodePortFieldNumber;
 const int BftMessage::kEpochFieldNumber;
+const int BftMessage::kMemberIndexFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BftMessage::BftMessage()
@@ -5912,8 +5916,8 @@ BftMessage::BftMessage(const BftMessage& from)
     node_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.node_ip_);
   }
   ::memcpy(&rand_, &from.rand_,
-    static_cast<size_t>(reinterpret_cast<char*>(&epoch_) -
-    reinterpret_cast<char*>(&rand_)) + sizeof(epoch_));
+    static_cast<size_t>(reinterpret_cast<char*>(&member_index_) -
+    reinterpret_cast<char*>(&rand_)) + sizeof(member_index_));
   // @@protoc_insertion_point(copy_constructor:tenon.bft.protobuf.BftMessage)
 }
 
@@ -5932,8 +5936,8 @@ void BftMessage::SharedCtor() {
   prepare_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   node_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&rand_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&epoch_) -
-      reinterpret_cast<char*>(&rand_)) + sizeof(epoch_));
+      reinterpret_cast<char*>(&member_index_) -
+      reinterpret_cast<char*>(&rand_)) + sizeof(member_index_));
 }
 
 BftMessage::~BftMessage() {
@@ -6027,10 +6031,10 @@ void BftMessage::Clear() {
         reinterpret_cast<char*>(&net_id_) -
         reinterpret_cast<char*>(&rand_)) + sizeof(net_id_));
   }
-  if (cached_has_bits & 2031616u) {
+  if (cached_has_bits & 4128768u) {
     ::memset(&leader_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&epoch_) -
-        reinterpret_cast<char*>(&leader_)) + sizeof(epoch_));
+        reinterpret_cast<char*>(&member_index_) -
+        reinterpret_cast<char*>(&leader_)) + sizeof(member_index_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -6333,6 +6337,20 @@ bool BftMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 member_index = 23;
+      case 23: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(184u /* 184 & 0xFF */)) {
+          set_has_member_index();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &member_index_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -6482,6 +6500,11 @@ void BftMessage::SerializeWithCachedSizes(
   // optional uint32 epoch = 22;
   if (cached_has_bits & 0x00100000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(22, this->epoch(), output);
+  }
+
+  // optional uint32 member_index = 23;
+  if (cached_has_bits & 0x00200000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(23, this->member_index(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6634,6 +6657,11 @@ void BftMessage::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(22, this->epoch(), target);
   }
 
+  // optional uint32 member_index = 23;
+  if (cached_has_bits & 0x00200000u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(23, this->member_index(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -6776,7 +6804,7 @@ size_t BftMessage::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[16 / 32] & 2031616u) {
+  if (_has_bits_[16 / 32] & 4128768u) {
     // optional bool leader = 4;
     if (has_leader()) {
       total_size += 1 + 1;
@@ -6806,6 +6834,13 @@ size_t BftMessage::ByteSizeLong() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->epoch());
+    }
+
+    // optional uint32 member_index = 23;
+    if (has_member_index()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->member_index());
     }
 
   }
@@ -6904,7 +6939,7 @@ void BftMessage::MergeFrom(const BftMessage& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 2031616u) {
+  if (cached_has_bits & 4128768u) {
     if (cached_has_bits & 0x00010000u) {
       leader_ = from.leader_;
     }
@@ -6919,6 +6954,9 @@ void BftMessage::MergeFrom(const BftMessage& from) {
     }
     if (cached_has_bits & 0x00100000u) {
       epoch_ = from.epoch_;
+    }
+    if (cached_has_bits & 0x00200000u) {
+      member_index_ = from.member_index_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -6983,6 +7021,7 @@ void BftMessage::InternalSwap(BftMessage* other) {
   swap(pool_index_, other->pool_index_);
   swap(node_port_, other->node_port_);
   swap(epoch_, other->epoch_);
+  swap(member_index_, other->member_index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
