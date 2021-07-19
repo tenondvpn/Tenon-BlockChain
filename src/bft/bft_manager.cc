@@ -817,7 +817,7 @@ int BftManager::BackupPrepare(
             bft_msg,
             local_node,
             res_data,
-            bft_ptr->secret(),
+            bft_ptr,
             false,
             msg);
         RemoveBft(bft_ptr->gid(), false);
@@ -833,7 +833,7 @@ int BftManager::BackupPrepare(
                 bft_msg,
                 local_node,
                 res_data,
-                bft_ptr->secret(),
+                bft_ptr,
                 false,
                 msg);
             RemoveBft(bft_ptr->gid(), false);
@@ -846,7 +846,7 @@ int BftManager::BackupPrepare(
                 bft_msg,
                 local_node,
                 *data,
-                bft_ptr->secret(),
+                bft_ptr,
                 true,
                 msg);
 //             BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
@@ -913,6 +913,11 @@ int BftManager::LeaderPrecommit(
             member_ptr->backup_ecdh_key,
             bft_msg.backup_enc_data(),
             &dec_data) != security::kSecuritySuccess) {
+        BFT_ERROR("verify encrypt prepare hash error!");
+        return kBftError;
+    }
+
+    if (backup_prepare_hash != dec_data) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
