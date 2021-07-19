@@ -912,7 +912,7 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    auto member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
     security::Signature sign;
     if (VerifySignature(
             member_ptr,
@@ -1158,18 +1158,18 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    auto member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
         bft_msg.agree(),
         agg_res,
         member_ptr->id);
     if (res == kBftAgree) {
-        time4 = common::TimeUtils::TimestampUs();
         LeaderCallCommit(bft_ptr);
-    }  else if (res == kBftReChallenge) {
         time4 = common::TimeUtils::TimestampUs();
+    }  else if (res == kBftReChallenge) {
         LeaderReChallenge(bft_ptr);
+        time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
@@ -1579,7 +1579,7 @@ int BftManager::VerifySignatureWithBftMessage(
 }
 
 int BftManager::VerifySignature(
-        elect::BftMemberPtr& mem_ptr,
+        const elect::BftMemberPtr& mem_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         const std::string& sha128,
         security::Signature& sign) {

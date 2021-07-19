@@ -195,6 +195,7 @@ void ElectManager::ProcessNewElectBlock(
 
     if (common::GlobalInfo::Instance()->network_id() == elect_block.shard_network_id()) {
         local_node_pool_mod_num_ = -1;
+        local_node_is_super_leader_ = false;
     }
 
     latest_member_count_[elect_block.shard_network_id()] = elect_block.in_size();
@@ -257,7 +258,6 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     {
-        local_node_is_super_leader_ = false;
         Members tmp_leaders;
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
@@ -267,6 +267,7 @@ void ElectManager::ProcessNewElectBlock(
                 node_index_vec.push_back(index++);
                 if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
                     local_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+                    // create ecdh key
                 }
             }
 
@@ -304,6 +305,15 @@ void ElectManager::ProcessNewElectBlock(
         }
 
         network_leaders_[elect_block.shard_network_id()] = leaders;
+    }
+
+    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id() &&
+            local_node_pool_mod_num_ >= 0) {
+        for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
+            if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
+                security::EcdhCreateKey::Instance()->CreateKey((*iter)->pubkey, (*iter)->ecdh_key);
+            }
+        }
     }
 
     members_ptr_[elect_block.shard_network_id()] = shard_members_ptr;
@@ -648,7 +658,7 @@ elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index)
         return nullptr;
     }
 
-    if (index >= (*members_ptr_[network_id]).size()) {
+    if (index >= members_ptr_[network_id]->size()) {
         return nullptr;
     }
 
@@ -661,7 +671,6 @@ uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
 
 int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
     return latest_leader_count_[network_id];
-//     return GetNetworkLeaderCount(common::kInvalidUint64, network_id);
 }
 
 void ElectManager::WaitingNodeSendHeartbeat() {
