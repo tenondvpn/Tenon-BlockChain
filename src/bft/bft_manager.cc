@@ -799,11 +799,6 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    auto b_time = common::TimeUtils::TimestampUs();
-    uint64_t time1;
-    uint64_t time2;
-    uint64_t time3;
-    uint64_t time4;
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
@@ -820,7 +815,6 @@ int BftManager::BackupPrepare(
             msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
-        time1 = common::TimeUtils::TimestampUs();
         auto data = header.mutable_data();
         int prepare_res = bft_ptr->Prepare(false, -1, data);
         if (prepare_res != kBftSuccess) {
@@ -838,7 +832,6 @@ int BftManager::BackupPrepare(
 //             BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
 //                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
-            time2 = common::TimeUtils::TimestampUs();
             BftProto::BackupCreatePrepare(
                 header,
                 bft_msg,
@@ -853,7 +846,6 @@ int BftManager::BackupPrepare(
         }
     }
 
-    time3 = common::TimeUtils::TimestampUs();
     if (!msg.has_data()) {
         BFT_ERROR("message set data failed!");
         return kBftError;
@@ -869,8 +861,6 @@ int BftManager::BackupPrepare(
             header.from_ip(), header.from_port(), 0, msg);
     }
 
-    time4 = common::TimeUtils::TimestampUs();
-    BFT_ERROR("BackupPrepare time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
 #ifdef TENON_UNITTEST
     backup_prepare_msg_ = msg;
 #endif
@@ -881,21 +871,6 @@ int BftManager::LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    auto b_time = common::TimeUtils::TimestampUs();
-    uint64_t time1;
-    uint64_t time2;
-    uint64_t time3;
-    uint64_t time4;
-    uint64_t time5;
-    uint64_t time6;
-    time1 = common::TimeUtils::TimestampUs();
-    std::string precommit_data;
-    if (bft_ptr->PreCommit(true, precommit_data) != kBftSuccess) {
-        BFT_ERROR("bft leader pre-commit failed!");
-        return kBftError;
-    }
-
-    time2 = common::TimeUtils::TimestampUs();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         return kBftError;
     }
@@ -915,27 +890,11 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    BFT_DEBUG("LeaderPrecommit create prepare hash: %s, %s, %s, dec: %s",
-        common::Encode::HexEncode(member_ptr->backup_ecdh_key).c_str(),
-        common::Encode::HexEncode(backup_prepare_hash).c_str(),
-        common::Encode::HexEncode(bft_msg.backup_enc_data()).c_str(),
-        common::Encode::HexEncode(dec_data).c_str());
-
     if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
-//     security::Signature sign;
-//     if (VerifySignature(
-//             member_ptr,
-//             bft_msg,
-//             BftProto::GetPrepareSignHash(bft_msg),
-//             sign) != kBftSuccess) {
-//         BFT_ERROR("verify signature error!");
-//         return kBftError;
-//     }
 
-    time3 = common::TimeUtils::TimestampUs();
     if (!bft_msg.has_secret()) {
         BFT_ERROR("backup prepare must has commit secret.");
         return kBftError;
@@ -953,20 +912,14 @@ int BftManager::LeaderPrecommit(
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
-    time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
-        time5 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
-        time5 = common::TimeUtils::TimestampUs();
-    }else {
-        time5 = common::TimeUtils::TimestampUs();
     }
 
     // broadcast pre-commit to backups
-    BFT_ERROR("LeaderPrecommit time use: %lu, %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
 }
 
@@ -1045,7 +998,6 @@ int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
@@ -1056,7 +1008,6 @@ int BftManager::BackupPrecommit(
         return false;
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     security::Challenge agg_challenge(bft_msg.challenge());
     security::Response agg_res(
             bft_ptr->secret(),
@@ -1100,7 +1051,6 @@ int BftManager::BackupPrecommit(
         return kBftError;
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     bft_ptr->set_status(kBftCommit);
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
@@ -1111,7 +1061,6 @@ int BftManager::BackupPrecommit(
             header.from_ip(), header.from_port(), 0, msg);
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
 #ifdef TENON_UNITTEST
     backup_precommit_msg_ = msg;
 #endif
@@ -1122,20 +1071,11 @@ int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    auto b_time = common::TimeUtils::TimestampUs();
-    uint64_t time1;
-    uint64_t time2;
-    uint64_t time3;
-    uint64_t time4;
-    uint64_t time5;
-    uint64_t time6;
-
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
         BFT_ERROR("check leader error.");
         return kBftError;
     }
 
-    time1 = common::TimeUtils::TimestampUs();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("mem_index == elect::kInvalidMemberIndex.");
         return kBftError;
@@ -1159,18 +1099,7 @@ int BftManager::LeaderCommit(
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
-// 
-//     security::Signature sign;
-//     if (VerifySignature(
-//             (*bft_ptr->members_ptr())[bft_msg.member_index()],
-//             bft_msg,
-//             BftProto::GetPrecommitSignHash(bft_msg),
-//             sign) != kBftSuccess) {
-//         BFT_ERROR("verify signature error!");
-//         return kBftError;
-//     }
 
-    time2 = common::TimeUtils::TimestampUs();
     if (!bft_msg.has_response()) {
         BFT_ERROR("backup pre commit message must have response.");
         return kBftError;
@@ -1179,13 +1108,6 @@ int BftManager::LeaderCommit(
     security::Response agg_res(bft_msg.response());
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    std::string commit_data;
-    if (bft_ptr->Commit(true, commit_data) != kBftSuccess) {
-        BFT_ERROR("bft leader commit failed!");
-        return kBftError;
-    }
-
-    time3 = common::TimeUtils::TimestampUs();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         return kBftError;
     }
@@ -1202,17 +1124,13 @@ int BftManager::LeaderCommit(
         member_ptr->id);
     if (res == kBftAgree) {
         LeaderCallCommit(bft_ptr);
-        time4 = common::TimeUtils::TimestampUs();
     }  else if (res == kBftReChallenge) {
         LeaderReChallenge(bft_ptr);
-        time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
-        time4 = common::TimeUtils::TimestampUs();
     }
 
-    BFT_ERROR("LeaderCommit time use: %lu, %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2, time4 - time3);
     return kBftSuccess;
 }
 
@@ -1644,7 +1562,10 @@ int BftManager::VerifyBlockSignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(bft_msg.net_id(), mem_index);
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+        tx_block.electblock_height(),
+        bft_msg.net_id(),
+        mem_index);
     if (!mem_ptr) {
         return kBftError;
     }
