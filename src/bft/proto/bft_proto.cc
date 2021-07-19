@@ -120,10 +120,6 @@ void BftProto::BackupCreatePrepare(
         return;
     }
 
-    BFT_DEBUG("BackupCreatePrepare create prepare hash: %s, %s, %s",
-        common::Encode::HexEncode(bft_ptr->leader_mem_ptr()->leader_ecdh_key).c_str(),
-        common::Encode::HexEncode(sha128).c_str(),
-        common::Encode::HexEncode(enc_data).c_str());
     bft_msg.set_backup_enc_data(enc_data);
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
@@ -165,6 +161,7 @@ void BftProto::LeaderCreatePreCommit(
         BFT_ERROR("leader pre commit signature failed!");
         return;
     }
+
     std::string sign_challenge_str;
     std::string sign_response_str;
     leader_sign.Serialize(sign_challenge_str, sign_response_str);
@@ -217,10 +214,6 @@ void BftProto::BackupCreatePreCommit(
     }
 
     bft_msg.set_backup_enc_data(enc_data);
-//     if (CreateBackupPrecommitSignature(bft_msg) != kBftSuccess) {
-//         return;
-//     }
-
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
 //         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));

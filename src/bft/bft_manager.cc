@@ -1255,13 +1255,11 @@ int BftManager::BackupCommit(
         return kBftError;
     }
     
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     if (VerifyAggSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check bft agg signature error!");
         return kBftError;
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
@@ -1275,7 +1273,6 @@ int BftManager::BackupCommit(
         return kBftError;
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
@@ -1301,7 +1298,6 @@ int BftManager::BackupCommit(
         }
     }
 
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     if (block::BlockManager::Instance()->AddNewBlock(bft_ptr->prpare_block()) != block::kBlockSuccess) {
         BFT_ERROR("backup add block to db failed!");
         return kBftError;
@@ -1313,7 +1309,6 @@ int BftManager::BackupCommit(
 //         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
-    header.add_timestamps(common::TimeUtils::TimestampUs());
     // start new bft
     return kBftSuccess;
 }
