@@ -923,7 +923,7 @@ int BftManager::LeaderPrecommit(
         common::Encode::HexEncode(bft_msg.backup_enc_data()).c_str(),
         common::Encode::HexEncode(dec_data).c_str());
 
-    if (backup_prepare_hash != dec_data) {
+    if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
