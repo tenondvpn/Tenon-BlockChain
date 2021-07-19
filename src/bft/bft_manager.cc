@@ -917,6 +917,12 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
+    BFT_DEBUG("LeaderPrecommit create prepare hash: %s, %s, %s, dec: %s",
+        common::Encode::HexEncode(member_ptr->backup_ecdh_key).c_str(),
+        common::Encode::HexEncode(backup_prepare_hash).c_str(),
+        common::Encode::HexEncode(bft_msg.backup_enc_data()).c_str(),
+        common::Encode::HexEncode(dec_data).c_str());
+
     if (backup_prepare_hash != dec_data) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
