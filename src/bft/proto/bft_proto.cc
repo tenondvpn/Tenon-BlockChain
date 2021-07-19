@@ -109,7 +109,7 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string secret_str;
-    bft_ptr->secret.Serialize(secret_str);
+    bft_ptr->secret().Serialize(secret_str);
     bft_msg.set_secret(secret_str);
     std::string sha128 = GetPrepareSignHash(bft_msg);
     std::string enc_data;
