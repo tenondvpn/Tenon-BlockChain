@@ -249,10 +249,8 @@ void BftManager::HandleBftMessage(
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
-    if (bft_msg.bft_step() == kBftPrepare) {
-        if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-            return nullptr;
-        }
+    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+        return nullptr;
     }
 
     bft_ptr->set_gid(bft_msg.gid());
