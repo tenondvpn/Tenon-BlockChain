@@ -122,4 +122,5 @@ message BftMessage {
 	optional uint32 epoch = 19;
 	optional uint32 member_index = 20;
 	optional bytes pubkey = 21;
+	optional bytes backup_enc_data = 22;
 }

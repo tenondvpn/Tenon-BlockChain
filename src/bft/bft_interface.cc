@@ -16,33 +16,20 @@ BftInterface::BftInterface() {
 }
 
 int BftInterface::Init() {
-    auto local_mem_ptr = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (local_mem_ptr == nullptr) {
-        BFT_ERROR("get local bft member failed!");
-        return kBftError;
-    }
-
-    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (leader_mem_ptr == nullptr) {
+    leader_mem_ptr_ = elect::ElectManager::Instance()->local_mem_ptr(
+        common::GlobalInfo::Instance()->network_id());
+    if (leader_mem_ptr_ == nullptr) {
         BFT_ERROR("get leader bft member failed!");
         return kBftError;
     }
 
-    leader_index_ = leader_mem_ptr->index;
-    secret_ = local_mem_ptr->secret;
+    leader_index_ = leader_mem_ptr_->index;
+    secret_ = leader_mem_ptr_->secret;
     return kBftSuccess;
 }
 
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
     std::lock_guard<std::mutex> guard(mutex_);
-    if (!BackupCheckLeaderValid(bft_msg)) {
-        return false;
-    }
-
     if (!bft_msg.has_net_id()) {
         BFT_ERROR("bft message has no net id.");
         return false;
@@ -55,18 +42,9 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        bft_msg.member_index());
-    if (leader_mem_ptr == nullptr) {
-        BFT_ERROR("leader invalid[%d] index[%d].",
-            common::GlobalInfo::Instance()->network_id(), bft_msg.member_index());
-        return false;
-    }
-
-    if ((int32_t)pool_index() % leader_count != leader_mem_ptr->pool_index_mod_num) {
+    if ((int32_t)pool_index() % leader_count != leader_mem_ptr_->pool_index_mod_num) {
         BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]",
-            pool_index(), leader_count, leader_mem_ptr->pool_index_mod_num, (int32_t)pool_index() % leader_count,
+            pool_index(), leader_count, leader_mem_ptr_->pool_index_mod_num, (int32_t)pool_index() % leader_count,
             common::GlobalInfo::Instance()->network_id());
         return false;
     }
@@ -84,8 +62,8 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
     std::string str_pubkey;
-    leader_mem_ptr->pubkey.Serialize(str_pubkey);
-    if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr->pubkey)) {
+    leader_mem_ptr_->pubkey.Serialize(str_pubkey);
+    if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
         BFT_ERROR("leader signature verify failed!");
         return false;
     }
@@ -96,7 +74,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    leader_index_ = leader_mem_ptr->index;
+    leader_index_ = leader_mem_ptr_->index;
     secret_ = local_mem_ptr->secret;
     return true;
 }
@@ -121,16 +99,13 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 }
 
 bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
-    int32_t local_pool_mod_idx = elect::ElectManager::Instance()->IsLeader(
-        common::GlobalInfo::Instance()->network_id(),
-        common::GlobalInfo::Instance()->id());
     int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
-    if ((int32_t)pool_index() % leader_count != local_pool_mod_idx) {
+    if ((int32_t)pool_index() % leader_count != leader_mem_ptr_->pool_index_mod_num) {
         BFT_ERROR("prepare message pool index invalid.[%u][%s][%d][%u]",
             common::GlobalInfo::Instance()->network_id(),
             common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
-            local_pool_mod_idx,
+            leader_mem_ptr_->pool_index_mod_num,
             (int32_t)pool_index() % leader_count);
         return false;
     }

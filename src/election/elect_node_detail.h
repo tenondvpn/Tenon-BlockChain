@@ -81,7 +81,8 @@ struct BftMember {
     security::CommitSecret secret;
     security::CommitPoint commit_point;
     volatile int32_t pool_index_mod_num;
-    std::string ecdh_key;
+    std::string backup_ecdh_key;
+    std::string leader_ecdh_key;
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;

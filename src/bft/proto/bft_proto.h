@@ -25,7 +25,7 @@ public:
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
-        const security::CommitSecret& secret,
+        const BftInterfacePtr& bft_ptr,
         bool agree,
         transport::protobuf::Header& msg);
     static void LeaderCreatePreCommit(
@@ -64,26 +64,26 @@ public:
         return common::Hash::Hash128(prepare_sign_data);
     }
 
-    static int CreateBackupPrepareSignature(bft::protobuf::BftMessage& bft_msg) {
-        security::Signature sign;
-        std::string sha128 = GetPrepareSignHash(bft_msg);
-        bool sign_res = security::Schnorr::Instance()->Sign(
-            sha128,
-            *(security::Schnorr::Instance()->prikey().get()),
-            *(security::Schnorr::Instance()->pubkey().get()),
-            sign);
-        if (!sign_res) {
-            BFT_ERROR("signature error.");
-            return kBftError;
-        }
-
-        std::string sign_challenge_str;
-        std::string sign_response_str;
-        sign.Serialize(sign_challenge_str, sign_response_str);
-        bft_msg.set_sign_challenge(sign_challenge_str);
-        bft_msg.set_sign_response(sign_response_str);
-        return kBftSuccess;
-    }
+//     static int CreateBackupPrepareSignature(bft::protobuf::BftMessage& bft_msg) {
+//         security::Signature sign;
+//         std::string sha128 = GetPrepareSignHash(bft_msg);
+//         bool sign_res = security::Schnorr::Instance()->Sign(
+//             sha128,
+//             *(security::Schnorr::Instance()->prikey().get()),
+//             *(security::Schnorr::Instance()->pubkey().get()),
+//             sign);
+//         if (!sign_res) {
+//             BFT_ERROR("signature error.");
+//             return kBftError;
+//         }
+// 
+//         std::string sign_challenge_str;
+//         std::string sign_response_str;
+//         sign.Serialize(sign_challenge_str, sign_response_str);
+//         bft_msg.set_sign_challenge(sign_challenge_str);
+//         bft_msg.set_sign_response(sign_response_str);
+//         return kBftSuccess;
+//     }
 
     // create backup prepare signature: gid + rand + net_id + local_id + status + + response + agree
     static std::string GetPrecommitSignHash(const bft::protobuf::BftMessage& bft_msg) {

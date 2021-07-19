@@ -9,6 +9,7 @@
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "security/schnorr.h"
+#include "security/crypto.h"
 #include "transport/transport_utils.h"
 
 namespace tenon {
@@ -87,7 +88,7 @@ void BftProto::BackupCreatePrepare(
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
-        const security::CommitSecret& secret,
+        const BftInterfacePtr& bft_ptr,
         bool agree,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
@@ -108,12 +109,18 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     std::string secret_str;
-    secret.Serialize(secret_str);
+    bft_ptr->secret.Serialize(secret_str);
     bft_msg.set_secret(secret_str);
-    if (CreateBackupPrepareSignature(bft_msg) != kBftSuccess) {
+    std::string sha128 = GetPrepareSignHash(bft_msg);
+    std::string enc_data;
+    if (security::Crypto::Instance()->GetEncryptData(
+            bft_ptr->leader_mem_ptr()->leader_ecdh_key,
+            sha128,
+            &enc_data) != security::kSecuritySuccess) {
         return;
     }
 
+    bft_msg.set_backup_enc_data(enc_data);
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
 //         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));

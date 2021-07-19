@@ -23,6 +23,7 @@
 #include "network/universal_manager.h"
 #include "security/schnorr.h"
 #include "security/secp256k1.h"
+#include "security/crypto.h"
 #include "sync/key_value_sync.h"
 #include "sync/sync_utils.h"
 #include "statistics/statistics.h"
@@ -889,14 +890,7 @@ int BftManager::LeaderPrecommit(
     uint64_t time4;
     uint64_t time5;
     uint64_t time6;
-    if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
-        BFT_ERROR("check leader vaild failed!");
-        return kBftError;
-    }
-
     time1 = common::TimeUtils::TimestampUs();
-    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-    auto local_node = dht_ptr->local_node();
     std::string precommit_data;
     if (bft_ptr->PreCommit(true, precommit_data) != kBftSuccess) {
         BFT_ERROR("bft leader pre-commit failed!");
@@ -913,15 +907,24 @@ int BftManager::LeaderPrecommit(
     }
 
     const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
-    security::Signature sign;
-    if (VerifySignature(
-            member_ptr,
-            bft_msg,
-            BftProto::GetPrepareSignHash(bft_msg),
-            sign) != kBftSuccess) {
-        BFT_ERROR("verify signature error!");
+    auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
+    std::string dec_data;
+    if (security::Crypto::Instance()->GetDecryptData(
+            member_ptr->backup_ecdh_key,
+            bft_msg.backup_enc_data(),
+            &dec_data) != security::kSecuritySuccess) {
+        BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
+//     security::Signature sign;
+//     if (VerifySignature(
+//             member_ptr,
+//             bft_msg,
+//             BftProto::GetPrepareSignHash(bft_msg),
+//             sign) != kBftSuccess) {
+//         BFT_ERROR("verify signature error!");
+//         return kBftError;
+//     }
 
     time3 = common::TimeUtils::TimestampUs();
     if (!bft_msg.has_secret()) {

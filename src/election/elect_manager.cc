@@ -307,11 +307,20 @@ void ElectManager::ProcessNewElectBlock(
         network_leaders_[elect_block.shard_network_id()] = leaders;
     }
 
-    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id() &&
-            local_node_pool_mod_num_ >= 0) {
-        for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
-            if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
-                security::EcdhCreateKey::Instance()->CreateKey((*iter)->pubkey, (*iter)->ecdh_key);
+    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
+        if (local_node_pool_mod_num_ >= 0) {
+            for (auto iter = shard_members_ptr->begin();
+                    iter != shard_members_ptr->end(); ++iter) {
+                if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
+                    security::EcdhCreateKey::Instance()->CreateKey(
+                        (*iter)->pubkey,
+                        (*iter)->backup_ecdh_key);
+                    if ((*iter)->pool_index_mod_num >= 0) {
+                        security::EcdhCreateKey::Instance()->CreateKey(
+                            (*iter)->pubkey,
+                            (*iter)->leader_ecdh_key);
+                    }
+                }
             }
         }
     }
