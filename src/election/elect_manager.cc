@@ -315,11 +315,17 @@ void ElectManager::ProcessNewElectBlock(
                     security::EcdhCreateKey::Instance()->CreateKey(
                         (*iter)->pubkey,
                         (*iter)->backup_ecdh_key);
-                    if ((*iter)->pool_index_mod_num >= 0) {
-                        security::EcdhCreateKey::Instance()->CreateKey(
-                            (*iter)->pubkey,
-                            (*iter)->leader_ecdh_key);
-                    }
+                }
+            }
+        }
+
+        for (auto iter = shard_members_ptr->begin();
+                iter != shard_members_ptr->end(); ++iter) {
+            if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
+                if ((*iter)->pool_index_mod_num >= 0) {
+                    security::EcdhCreateKey::Instance()->CreateKey(
+                        (*iter)->pubkey,
+                        (*iter)->leader_ecdh_key);
                 }
             }
         }
