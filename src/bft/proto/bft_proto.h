@@ -37,6 +37,7 @@ public:
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
+        const std::string& leader_ecdh_key,
         const security::Response& agg_res,
         bool agree,
         transport::protobuf::Header& msg);

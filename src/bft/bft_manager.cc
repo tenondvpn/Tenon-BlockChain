@@ -1078,6 +1078,7 @@ int BftManager::BackupPrecommit(
             bft_msg,
             local_node,
             rand_num_str,
+            bft_ptr->leader_mem_ptr()->leader_ecdh_key,
             agg_res,
             false,
             msg);
@@ -1086,7 +1087,15 @@ int BftManager::BackupPrecommit(
 //         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
 //             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
 //             bft_msg.node_ip().c_str(), bft_msg.node_port());
-        BftProto::BackupCreatePreCommit(header, bft_msg, local_node, precommit_data, agg_res, true, msg);
+        BftProto::BackupCreatePreCommit(
+            header,
+            bft_msg,
+            local_node,
+            precommit_data,
+            bft_ptr->leader_mem_ptr()->leader_ecdh_key,
+            agg_res,
+            true,
+            msg);
     }
 
     if (!msg.has_data()) {
@@ -1138,15 +1147,30 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    security::Signature sign;
-    if (VerifySignature(
-            (*bft_ptr->members_ptr())[bft_msg.member_index()],
-            bft_msg,
-            BftProto::GetPrecommitSignHash(bft_msg),
-            sign) != kBftSuccess) {
-        BFT_ERROR("verify signature error!");
+    auto backup_precommit_hash = BftProto::GetPrecommitSignHash(bft_msg);
+    std::string dec_data;
+    if (security::Crypto::Instance()->GetDecryptData(
+            (*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key,
+            bft_msg.backup_enc_data(),
+            &dec_data) != security::kSecuritySuccess) {
+        BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
+
+    if (memcmp(backup_precommit_hash.c_str(), dec_data.c_str(), backup_precommit_hash.size()) != 0) {
+        BFT_ERROR("verify encrypt prepare hash error!");
+        return kBftError;
+    }
+// 
+//     security::Signature sign;
+//     if (VerifySignature(
+//             (*bft_ptr->members_ptr())[bft_msg.member_index()],
+//             bft_msg,
+//             BftProto::GetPrecommitSignHash(bft_msg),
+//             sign) != kBftSuccess) {
+//         BFT_ERROR("verify signature error!");
+//         return kBftError;
+//     }
 
     time2 = common::TimeUtils::TimestampUs();
     if (!bft_msg.has_response()) {

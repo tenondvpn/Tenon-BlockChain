@@ -183,6 +183,7 @@ void BftProto::BackupCreatePreCommit(
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
+        const std::string& leader_ecdh_key,
         const security::Response& agg_res,
         bool agree,
         transport::protobuf::Header& msg) {
@@ -206,9 +207,19 @@ void BftProto::BackupCreatePreCommit(
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
-    if (CreateBackupPrecommitSignature(bft_msg) != kBftSuccess) {
+    std::string sha128 = GetPrecommitSignHash(bft_msg);
+    std::string enc_data;
+    if (security::Crypto::Instance()->GetEncryptData(
+            leader_ecdh_key,
+            sha128,
+            &enc_data) != security::kSecuritySuccess) {
         return;
     }
+
+    bft_msg.set_backup_enc_data(enc_data);
+//     if (CreateBackupPrecommitSignature(bft_msg) != kBftSuccess) {
+//         return;
+//     }
 
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
