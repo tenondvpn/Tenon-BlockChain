@@ -30,7 +30,13 @@ void FtsTree::CreateFtsTree() {
 
     valid_nodes_size_ = fts_nodes_.size();
     for (uint32_t i = valid_nodes_size_; i < base_node_index_; ++i) {
-        fts_nodes_.push_back({ 0, 0, 0, 0, nullptr });
+        auto fts_valid_idx = i % valid_nodes_size_;
+        fts_nodes_.push_back({
+            fts_nodes_[fts_valid_idx].fts_value,
+            0,
+            0,
+            0,
+            fts_nodes_[fts_valid_idx].data });
     }
 
     root_node_index_ = (uint32_t)pow(2.0f, (float)(base_count + 1)) - 2;

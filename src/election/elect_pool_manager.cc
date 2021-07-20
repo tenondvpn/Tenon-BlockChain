@@ -532,6 +532,7 @@ void ElectPoolManager::FtsGetNodes(
         if (data == nullptr) {
             ++try_times;
             if (try_times > 5) {
+                ELECT_ERROR("fts get bft nodes failed!");
                 return;
             }
             continue;
