@@ -821,7 +821,7 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
-        auto msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg);
         bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup1_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
@@ -832,8 +832,8 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
-        auto msg_ptr2 = std::make_shared<transport::protobuf::Header>(leader_prepare_msg2);
-        bft::BftManager::Instance()->HandleMessage(msg_ptr2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -845,7 +845,7 @@ public:
         // precommit
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
         msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_prepare_msg);
-        bft::BftManager::Instance()->HandleMessage(backup1_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_prepare_msg);
         bft::BftManager::Instance()->HandleMessage(msg_ptr);
 

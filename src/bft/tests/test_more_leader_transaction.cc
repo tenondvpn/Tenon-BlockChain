@@ -861,7 +861,8 @@ public:
             elect_msg.set_sign_res(sign_response_str);
             header.set_data(elect_msg.SerializeAsString());
             header.set_type(common::kElectMessage);
-            elect::ElectManager::Instance()->HandleMessage(header);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(header);
+            elect::ElectManager::Instance()->HandleMessage(msg_ptr);
             fiter.Add(common::Hash::Hash64(GetIdByPrikey(str_prikey)));
         }
 
@@ -898,7 +899,8 @@ public:
             elect_msg.set_sign_res(sign_response_str);
             header.set_data(elect_msg.SerializeAsString());
             header.set_type(common::kElectMessage);
-            elect::ElectManager::Instance()->HandleMessage(header);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(header);
+            elect::ElectManager::Instance()->HandleMessage(msg_ptr);
         }
     }
 
@@ -1117,7 +1119,7 @@ public:
         bft::protobuf::TxBft tx_bft;
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
         auto msg_ptr = std::make_shared<transport::protobuf::Header>(msg);
-        bft::BftManager::Instance()->HandleMessage(msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         usleep(bft::kBftStartDeltaTime);
         if (bft::BftManager::Instance()->StartBft("", leader_mem_ptr->pool_index_mod_num) != kBftSuccess) {
             std::cout << "start bft failed!" << std::endl;

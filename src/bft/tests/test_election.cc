@@ -1549,7 +1549,7 @@ public:
         elect::ElectManager::Instance()->pool_manager_.waiting_pool_map_[
             network::kConsensusShardBeginNetworkId +
             network::kConsensusWaitingShardOffset]->GetAllValidHeartbeatNodes(
-            0, pick_all, pick_all_vec);
+            true, 0, pick_all, pick_all_vec);
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
