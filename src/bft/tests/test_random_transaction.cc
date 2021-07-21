@@ -1197,7 +1197,7 @@ public:
         msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_precommit_msg);
         bft::BftManager::Instance()->HandleMessage(msg_ptr);
         msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_precommit_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
         auto leader_commit_msg2 = bft::BftManager::Instance()->leader_commit_msg_;
         ASSERT_TRUE(leader_commit_msg.has_data());
