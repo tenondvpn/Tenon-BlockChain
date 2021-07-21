@@ -815,7 +815,9 @@ public:
         EXPECT_TRUE(tx_bft.ParseFromString(bft_msg.data()));
         
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(msg);
+
+        auto msg_ptr = std::make_shared<transport::protobuf::Header>(msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         usleep(bft::kBftStartDeltaTime);
         if (bft::BftManager::Instance()->StartBft("", 0) != kBftSuccess) {
             return;
@@ -834,7 +836,8 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup1_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -844,7 +847,8 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -855,8 +859,10 @@ public:
 
         // precommit
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_prepare_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
 
         auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
         auto leader_precommit_msg2 = bft::BftManager::Instance()->leader_precommit_msg_;
@@ -871,7 +877,8 @@ public:
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup1_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -882,7 +889,8 @@ public:
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -897,8 +905,10 @@ public:
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_precommit_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
         auto leader_commit_msg2 = bft::BftManager::Instance()->leader_commit_msg_;
         ASSERT_TRUE(leader_commit_msg.has_data());
@@ -912,10 +922,12 @@ public:
         *broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
     }
 
     void CreateNewAccount(
@@ -930,7 +942,8 @@ public:
 
         // prepare
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
-        bft::BftManager::Instance()->HandleMessage(msg);
+        auto msg_ptr = std::make_shared<transport::protobuf::Header>(msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         usleep(bft::kBftStartDeltaTime);
         EXPECT_EQ(bft::BftManager::Instance()->StartBft("", 0), kBftSuccess);
 
@@ -942,7 +955,8 @@ public:
         auto leader_prepare_msg = bft::BftManager::Instance()->leader_prepare_msg_;
         auto leader_prepare_msg2 = bft::BftManager::Instance()->leader_prepare_msg_;
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kRootCongressNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
         auto backup1_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
@@ -952,7 +966,8 @@ public:
         }
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kRootCongressNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -962,8 +977,10 @@ public:
 
         // precommit
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_prepare_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
 
         auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
         auto leader_precommit_msg2 = bft::BftManager::Instance()->leader_precommit_msg_;
@@ -972,7 +989,8 @@ public:
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kRootCongressNetworkId);
         ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         AddNewTxToTxPool(tx_bft.to_tx().block().tx_list(0));
         auto backup1_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
@@ -983,7 +1001,8 @@ public:
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kRootCongressNetworkId);
         ResetBftSecret(bft_gid, network::kRootCongressNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -999,8 +1018,10 @@ public:
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kRootCongressNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_precommit_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
         auto leader_commit_msg2 = bft::BftManager::Instance()->leader_commit_msg_;
         ASSERT_TRUE(leader_commit_msg.has_data());
@@ -1010,10 +1031,12 @@ public:
 
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         SetGloableInfo("22345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kRootCongressNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
 
         // check broadcast msg
         auto leader_broadcast_msg = bft::BftManager::Instance()->root_leader_broadcast_msg_;
@@ -1047,7 +1070,8 @@ public:
         transport::protobuf::Header* leader_broadcast_msg) {
         // root create new account and add to consensus network
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(root_leader_msg);
+        auto msg_ptr = std::make_shared<transport::protobuf::Header>(root_leader_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         if (tx_type == common::kConsensusCreateContract) {
             protobuf::BftMessage bft_msg;
             ASSERT_TRUE(bft_msg.ParseFromString(root_leader_msg.data()));
@@ -1095,7 +1119,8 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup1_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -1105,7 +1130,8 @@ public:
         }
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(leader_prepare_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_prepare_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_prepare_msg = bft::BftManager::Instance()->backup_prepare_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -1116,8 +1142,10 @@ public:
 
         // precommit
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_prepare_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_prepare_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_prepare_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
 
         auto leader_precommit_msg = bft::BftManager::Instance()->leader_precommit_msg_;
         auto leader_precommit_msg2 = bft::BftManager::Instance()->leader_precommit_msg_;
@@ -1132,7 +1160,8 @@ public:
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup1_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -1143,7 +1172,8 @@ public:
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
         ResetBftSecret(bft_gid, network::kConsensusShardBeginNetworkId, common::GlobalInfo::Instance()->id());
-        bft::BftManager::Instance()->HandleMessage(leader_precommit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_precommit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto backup2_precommit_msg = bft::BftManager::Instance()->backup_precommit_msg_;
         {
             protobuf::BftMessage bft_msg;
@@ -1176,8 +1206,10 @@ public:
         auto bft_ptr = bft::BftManager::Instance()->bft_hash_map_[bft_gid];
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485164e", network::kConsensusShardBeginNetworkId);
-        bft::BftManager::Instance()->HandleMessage(backup1_precommit_msg);
-        bft::BftManager::Instance()->HandleMessage(backup2_precommit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup1_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(backup2_precommit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         auto leader_commit_msg = bft::BftManager::Instance()->leader_commit_msg_;
         auto leader_commit_msg2 = bft::BftManager::Instance()->leader_commit_msg_;
         ASSERT_TRUE(leader_commit_msg.has_data());
@@ -1199,7 +1231,8 @@ public:
         *leader_broadcast_msg = bft::BftManager::Instance()->to_leader_broadcast_msg_;
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485161e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
         {
             auto to_acc_info = block::AccountManager::Instance()->GetAcountInfo(to_id);
             db::DbWriteBach db_batch;
@@ -1209,7 +1242,8 @@ public:
 
         SetGloableInfo("12345f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485162e", network::kConsensusShardBeginNetworkId);
         bft::BftManager::Instance()->bft_hash_map_[bft_gid] = bft_ptr;
-        bft::BftManager::Instance()->HandleMessage(leader_commit_msg2);
+        msg_ptr = std::make_shared<transport::protobuf::Header>(leader_commit_msg2);
+        bft::BftManager::Instance()->HandleMessage(msg_ptr);
     }
 
     std::string GetIdByPrikey(const std::string& private_key) {
