@@ -441,7 +441,6 @@ public:
         SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(common::CreateGID(""));
-        bft_msg.set_rand(0);
         bft_msg.set_bft_step(bft::kBftInit);
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
@@ -458,7 +457,6 @@ public:
             ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
         }
         
-        bft_msg.set_node_id(id);
         bft_msg.set_pubkey(from_pubkey_str);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
@@ -538,7 +536,6 @@ public:
         SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(common::CreateGID(""));
-        bft_msg.set_rand(0);
         bft_msg.set_bft_step(bft_step);
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
@@ -556,7 +553,6 @@ public:
             ASSERT_EQ(from_net_id, common::GlobalInfo::Instance()->network_id());
         }
 
-        bft_msg.set_node_id(id);
         bft_msg.set_pubkey(from_pubkey_str);
         bft::protobuf::TxBft tx_bft;
         auto to_tx = tx_bft.mutable_to_tx();
@@ -1649,7 +1645,6 @@ TEST_F(TestBftManager, InitBft) {
     SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid("gid");
-    bft_msg.set_rand(0);
     bft_msg.set_bft_step(bft::kBftInit);
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
@@ -1658,7 +1653,6 @@ TEST_F(TestBftManager, InitBft) {
     std::string pubkey_str;
     ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
     std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-    bft_msg.set_node_id(id);
     bft_msg.set_pubkey(pubkey_str);
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
