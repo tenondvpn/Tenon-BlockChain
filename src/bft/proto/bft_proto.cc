@@ -309,22 +309,22 @@ void BftProto::CreateLeaderBroadcastToAccount(
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     auto block_hash = GetBlockHash(*block);
     block->set_hash(block_hash);
-    security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
-        block_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
-        sign);
-    if (!sign_res) {
-        BFT_ERROR("signature error.");
-        return;
-    }
-
-    std::string sign_challenge_str;
-    std::string sign_response_str;
-    sign.Serialize(sign_challenge_str, sign_response_str);
-    bft_msg.set_sign_challenge(sign_challenge_str);
-    bft_msg.set_sign_response(sign_response_str);
+//     security::Signature sign;
+//     bool sign_res = security::Schnorr::Instance()->Sign(
+//         block_hash,
+//         *(security::Schnorr::Instance()->prikey()),
+//         *(security::Schnorr::Instance()->pubkey()),
+//         sign);
+//     if (!sign_res) {
+//         BFT_ERROR("signature error.");
+//         return;
+//     }
+// 
+//     std::string sign_challenge_str;
+//     std::string sign_response_str;
+//     sign.Serialize(sign_challenge_str, sign_response_str);
+//     bft_msg.set_sign_challenge(sign_challenge_str);
+//     bft_msg.set_sign_response(sign_response_str);
     msg.set_data(bft_msg.SerializeAsString());
 }
 

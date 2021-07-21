@@ -358,14 +358,15 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-    security::Signature sign;
-    if (VerifyBlockSignature(
-            bft_msg.member_index(),
-            bft_msg,
-            tx_bft.to_tx().block(), sign) != kBftSuccess) {
-        BFT_ERROR("verify signature error!");
-        return;
-    }
+//     security::Signature sign;
+//     if (VerifyBlockSignature(
+//             bft_msg.member_index(),
+//             bft_msg,
+//             tx_bft.to_tx().block(),
+//             sign) != kBftSuccess) {
+//         BFT_ERROR("verify signature error!");
+//         return;
+//     }
 
     if (!AggSignValid(tx_bft.to_tx().block())) {
         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
@@ -486,15 +487,15 @@ void BftManager::HandleSyncBlock(
     }
 
     auto src_block = tx_bft.to_tx().block();
-    security::Signature sign;
-    if (VerifyBlockSignature(
-            bft_msg.member_index(),
-            bft_msg,
-            tx_bft.mutable_to_tx()->block(),
-            sign) != kBftSuccess) {
-        BFT_ERROR("verify signature error!");
-        return;
-    }
+//     security::Signature sign;
+//     if (VerifyBlockSignature(
+//             bft_msg.member_index(),
+//             bft_msg,
+//             tx_bft.mutable_to_tx()->block(),
+//             sign) != kBftSuccess) {
+//         BFT_ERROR("verify signature error!");
+//         return;
+//     }
 
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
@@ -544,15 +545,15 @@ void BftManager::HandleToAccountTxBlock(
     }
 
     auto src_block = tx_bft.to_tx().block();
-    security::Signature sign;
-    if (VerifyBlockSignature(
-            bft_msg.member_index(),
-            bft_msg,
-            tx_bft.mutable_to_tx()->block(),
-            sign) != kBftSuccess) {
-        BFT_ERROR("verify signature error!");
-        return;
-    }
+//     security::Signature sign;
+//     if (VerifyBlockSignature(
+//             bft_msg.member_index(),
+//             bft_msg,
+//             tx_bft.mutable_to_tx()->block(),
+//             sign) != kBftSuccess) {
+//         BFT_ERROR("verify signature error!");
+//         return;
+//     }
 
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
