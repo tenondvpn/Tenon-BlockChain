@@ -72,7 +72,7 @@ typedef std::function<void(TransportMessagePtr& message)> MessageProcessor;
 static const uint32_t kMaxHops = 20u;
 static const uint32_t kBroadcastMaxRelayTimes = 2u;
 static const uint32_t kBroadcastMaxMessageCount = 1024u * 1024u;
-static const uint32_t kUniqueMaxMessageCount = 1024u * 1024u;
+static const uint32_t kUniqueMaxMessageCount = 10u * 1024u;
 static const uint32_t kKcpRecvWindowSize = 128u;
 static const uint32_t kKcpSendWindowSize = 128u;
 static const uint32_t kMsgPacketMagicNum = 345234223;

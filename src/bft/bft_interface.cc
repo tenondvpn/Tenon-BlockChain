@@ -28,8 +28,24 @@ int BftInterface::Init() {
     return kBftSuccess;
 }
 
+bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
+    auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
+    if (local_mem_ptr == nullptr) {
+        BFT_ERROR("get local bft member failed!");
+        return false;
+    }
+
+    if (local_mem_ptr->pool_index_mod_num == leader_mem_ptr_->pool_index_mod_num) {
+        BFT_ERROR("this node is leader!");
+        return true;
+    }
+
+    return false;
+}
+
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
-    std::lock_guard<std::mutex> guard(mutex_);
+    
+
     if (!bft_msg.has_net_id()) {
         BFT_ERROR("bft message has no net id.");
         return false;
@@ -59,18 +75,13 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
+    std::lock_guard<std::mutex> guard(mutex_);
     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
     std::string str_pubkey;
     leader_mem_ptr_->pubkey.Serialize(str_pubkey);
     if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
         BFT_ERROR("leader signature verify failed!");
-        return false;
-    }
-
-    auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
-    if (local_mem_ptr == nullptr) {
-        BFT_ERROR("get local bft member failed!");
         return false;
     }
 

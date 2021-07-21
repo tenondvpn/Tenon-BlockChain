@@ -167,11 +167,15 @@ void TcpConnection::NotifyWriteable(bool need_release, bool lock) {
     if (lock) {
         std::lock_guard<std::mutex> guard(mutex_);
         writeable_handle_list_.swap(tmpList);
-    }
-    else {
+    } else {
         writeable_handle_list_.swap(tmpList);
     }
 
+//     while (!tmpList.empty()) {
+//         auto& item = tmpList.front();
+//         item();
+//         tmpList.pop_front();
+//     }
     for (WriteableHandlerListConstIter iter = tmpList.begin();
         iter != tmpList.end(); ++iter) {
         (*iter)();
@@ -278,12 +282,12 @@ void TcpConnection::OnWrite() {
 
     bool ioError = false;
     bool writeAble = true;
-    for (BufferListIter iter = out_buffer_list_.begin(); iter != out_buffer_list_.end(); ) {
-        ByteBufferPtr& bufferPtr = *iter;
+    while (!out_buffer_list_.empty()) {
+        ByteBufferPtr& bufferPtr = out_buffer_list_.front();
         while (true) {
             size_t len = bufferPtr->length();
             if (len == 0) {
-                iter = out_buffer_list_.erase(iter);
+                out_buffer_list_.pop_front();
                 break;
             }
 

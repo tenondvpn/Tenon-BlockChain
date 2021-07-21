@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "common/tick.h"
 #include "tnet/tnet_utils.h"
 #include "tnet/socket/socket.h"
@@ -80,10 +82,10 @@ public:
     }
 
 private:
-    typedef std::list<ByteBufferPtr> BufferList;
+    typedef std::deque<ByteBufferPtr> BufferList;
     typedef BufferList::const_iterator BufferListConstIter;
     typedef BufferList::iterator BufferListIter;
-    typedef std::list<WriteableHandler> WriteableHandlerList;
+    typedef std::vector<WriteableHandler> WriteableHandlerList;
     typedef WriteableHandlerList::const_iterator WriteableHandlerListConstIter;
     typedef WriteableHandlerList::iterator WriteableHandlerListIter;
 

@@ -10,7 +10,8 @@
 using namespace tenon;
 transport::TransportPtr tcp_ptr = nullptr;
 
-static void HandleMessage(tenon::transport::protobuf::Header& message) {
+static void HandleMessage(transport::TransportMessagePtr& message_ptr) {
+    auto& message = *message_ptr;
     static std::atomic<uint32_t> rcv_cnt(0);
     static auto b_time = tenon::common::TimeUtils::TimestampMs();
     if (message.id() == 0) {
@@ -18,16 +19,26 @@ static void HandleMessage(tenon::transport::protobuf::Header& message) {
         b_time = tenon::common::TimeUtils::TimestampMs();
     }
 
-    if (message.id() == 10) {
-        message.set_id(12);
-        tcp_ptr->Send(message.from_ip(), message.from_port(), 0, message);
-    }
+//     if (message.id() == 10) {
+//         message.set_id(12);
+//         tcp_ptr->Send(message.from_ip(), message.from_port(), 0, message);
+//     }
 
     ++rcv_cnt;
     if (rcv_cnt % 10000 == 0) {
         auto use_time_ms = double(tenon::common::TimeUtils::TimestampMs() - b_time) / 1000.0;
         std::cout << "receive rcv_cnt: " << rcv_cnt << " use time: " << use_time_ms << " ms" << std::endl;
     }
+}
+
+static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
+    broad_param->set_layer_left(0);
+    broad_param->set_layer_right(((std::numeric_limits<uint64_t>::max))());
+    broad_param->set_ign_bloomfilter_hop(1);
+    broad_param->set_stop_times(2);
+    broad_param->set_hop_limit(5);
+    broad_param->set_hop_to_layer(2);
+    broad_param->set_neighbor_count(7);
 }
 
 int main(int argc, char** argv) {
@@ -101,6 +112,8 @@ int main(int argc, char** argv) {
             msg.set_data("DDDDDDDDDDDDDDDDDDDDDDDDDDD" + std::to_string(common::TimeUtils::TimestampUs()));
             msg.set_client(false);
             msg.set_id(10);
+            auto broad_param = msg.mutable_broadcast();
+            SetDefaultBroadcastParam(broad_param);
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
         }
 

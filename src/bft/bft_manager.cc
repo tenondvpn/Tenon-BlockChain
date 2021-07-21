@@ -215,6 +215,12 @@ void BftManager::HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         transport::TransportMessagePtr& header_ptr) {
+    if (!bft_msg.leader()) {
+        if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
+            return;
+        }
+    }
+
     auto& header = *header_ptr;
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
