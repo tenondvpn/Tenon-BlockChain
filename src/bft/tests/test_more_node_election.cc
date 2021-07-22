@@ -1704,6 +1704,7 @@ public:
             }
 
             in_members[net_id]->push_back(std::make_shared<BftMember>(
+                0,
                 net_id,
                 GetIdByPrikey(prikey),
                 GetPubkeyByPrikey(prikey),

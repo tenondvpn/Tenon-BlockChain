@@ -14,6 +14,7 @@
 #include "election/proto/elect.pb.h"
 #include "election/elect_pool_manager.h"
 #include "election/member_manager.h"
+#include "election/height_with_elect_blocks.h"
 
 namespace tenon {
 
@@ -49,7 +50,7 @@ public:
 //         uint64_t elect_height,
 //         uint32_t network_id,
 //         const std::string& node_id);
-//     elect::MembersPtr GetNetworkMembers(uint64_t elect_height, uint32_t network_id);
+    elect::MembersPtr GetNetworkMembers(uint64_t elect_height);
 //     elect::BftMemberPtr GetMember(
 //         uint64_t elect_height,
 //         uint32_t network_id,
@@ -64,7 +65,7 @@ public:
 //         elect::MembersPtr& members_ptr,
 //         elect::NodeIndexMapPtr& node_index_map,
 //         int32_t leader_count);
-//     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
+    int32_t IsLeader(uint32_t network_id, const std::string& node_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
@@ -154,6 +155,7 @@ private:
     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
     elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
     elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
+    HeightWithElectBlock height_with_block_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

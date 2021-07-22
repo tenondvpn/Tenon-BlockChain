@@ -202,7 +202,7 @@ void ElectManager::ProcessNewElectBlock(
     latest_leader_count_[elect_block.shard_network_id()] = elect_block.leader_count();
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
-    auto in = elect_block.in();
+    auto& in = elect_block.in();
     auto shard_members_ptr = std::make_shared<Members>();
     auto shard_members_index_ptr = std::make_shared<
         std::unordered_map<std::string, uint32_t>>();
@@ -345,6 +345,7 @@ void ElectManager::ProcessNewElectBlock(
         valid_shard_networks_.insert(elect_block.shard_network_id());
     }
 
+    height_with_block_.AddNewHeightBlock(height, shard_members_ptr);
 //     elect_members_[height] = member_ptr;
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
@@ -444,27 +445,9 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 //     return mem_ptr->GetMemberIndex(network_id, node_id);
 // }
 // 
-// elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height, uint32_t network_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return nullptr;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return nullptr;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetNetworkMembers(network_id);
-// }
+elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height) {
+    return height_with_block_.GetMembersPtr(elect_height)
+}
 // 
 // elect::BftMemberPtr ElectManager::GetMember(
 //         uint64_t elect_height,
@@ -646,9 +629,14 @@ std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_i
     return mem_manager_ptr_[network_id];
 }
 
-// int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
-//     return IsLeader(common::kInvalidUint64, network_id, node_id);
-// }
+int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
+    auto mem_ptr = GetMemberWithId(network_id, node_id);
+    if (mem_ptr == nullptr) {
+        return -1;
+    }
+
+    return mem_ptr->pool_index_mod_num;
+}
 
 uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
     if (node_index_map_[network_id] == nullptr) {

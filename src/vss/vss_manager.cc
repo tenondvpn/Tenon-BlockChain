@@ -370,7 +370,6 @@ void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
 
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-        vss_msg.elect_height(),
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
@@ -402,7 +401,6 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
 
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-        vss_msg.elect_height(),
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
@@ -456,7 +454,6 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
 
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
-        vss_msg.elect_height(),
         network::kRootCongressNetworkId,
         id);
     if (mem_index == elect::kInvalidMemberIndex) {
