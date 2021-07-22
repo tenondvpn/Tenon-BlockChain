@@ -29,8 +29,8 @@ class HeightWithElectBlock {
     typedef std::shared_ptr<HeightMembersItem> HeightMembersItemPtr;
 
 public:
-    HeightWithElectBlock();
-    ~HeightWithElectBlock();
+    HeightWithElectBlock() {}
+    ~HeightWithElectBlock() {}
     // elect block is always coming in order or one time just one block, so no need to lock it
     void AddNewHeightBlock(uint64_t height, MembersPtr& members_ptr) {
         if (members_ptrs_[0] == nullptr) {
