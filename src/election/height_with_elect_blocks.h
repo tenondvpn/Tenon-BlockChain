@@ -167,7 +167,7 @@ private:
     static const uint32_t kMaxCacheElectBlockCount = 7u;
 
     std::map<uint64_t, MembersPtr> height_with_members_;
-    std::priority_queue<uint64_t, std::vector<uint64_t>, std::greater<uint64_t> > height_queue_;
+    std::priority_queue<uint64_t, std::vector<uint64_t>, std::greater<uint64_t>> height_queue_;
     std::mutex height_with_members_mutex_;
 
     HeightMembersItemPtr members_ptrs_[kMaxKeepElectBlockCount];

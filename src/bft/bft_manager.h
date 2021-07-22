@@ -63,11 +63,11 @@ private:
         const bft::protobuf::BftMessage& bft_msg,
         const std::string& sha128,
         security::Signature& sign);
-    int VerifyBlockSignature(
-        uint32_t mem_index,
-        const bft::protobuf::BftMessage& bft_msg,
-        const bft::protobuf::Block& tx_block,
-        security::Signature& sign);
+//     int VerifyBlockSignature(
+//         uint32_t mem_index,
+//         const bft::protobuf::BftMessage& bft_msg,
+//         const bft::protobuf::Block& tx_block,
+//         security::Signature& sign);
     int VerifySignatureWithBftMessage(
         const bft::protobuf::BftMessage& bft_msg,
         std::string* tx_hash);

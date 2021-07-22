@@ -1549,38 +1549,38 @@ int BftManager::VerifySignature(
 
     return kBftSuccess;
 }
-
-int BftManager::VerifyBlockSignature(
-        uint32_t mem_index,
-        const bft::protobuf::BftMessage& bft_msg,
-        const bft::protobuf::Block& tx_block,
-        security::Signature& sign) {
-    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
-        BFT_ERROR("backup has no sign");
-        return kBftError;
-    }
-
-    sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-        tx_block.electblock_height(),
-        bft_msg.net_id(),
-        mem_index);
-    if (!mem_ptr) {
-        return kBftError;
-    }
-
-    auto block_hash = GetBlockHash(tx_block);
-    if (block_hash != tx_block.hash()) {
-        return kBftError;
-    }
-
-    if (!security::Schnorr::Instance()->Verify(block_hash, sign, mem_ptr->pubkey)) {
-        BFT_ERROR("check signature error!");
-        return kBftError;
-    }
-
-    return kBftSuccess;
-}
+// 
+// int BftManager::VerifyBlockSignature(
+//         uint32_t mem_index,
+//         const bft::protobuf::BftMessage& bft_msg,
+//         const bft::protobuf::Block& tx_block,
+//         security::Signature& sign) {
+//     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
+//         BFT_ERROR("backup has no sign");
+//         return kBftError;
+//     }
+// 
+//     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
+//     auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+//         tx_block.electblock_height(),
+//         bft_msg.net_id(),
+//         mem_index);
+//     if (!mem_ptr) {
+//         return kBftError;
+//     }
+// 
+//     auto block_hash = GetBlockHash(tx_block);
+//     if (block_hash != tx_block.hash()) {
+//         return kBftError;
+//     }
+// 
+//     if (!security::Schnorr::Instance()->Verify(block_hash, sign, mem_ptr->pubkey)) {
+//         BFT_ERROR("check signature error!");
+//         return kBftError;
+//     }
+// 
+//     return kBftSuccess;
+// }
 
 int BftManager::VerifyLeaderSignature(
         BftInterfacePtr& bft_ptr,
