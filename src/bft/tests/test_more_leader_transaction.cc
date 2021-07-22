@@ -1940,7 +1940,7 @@ public:
             const std::string& leader_private_key,
             uint32_t network_id,
             transport::protobuf::Header* broadcast_msg) {
-        auto leader_mem_ptr = elect::ElectManager::Instance()->GetMember(network_id, GetIdByPrikey(leader_private_key));
+        auto leader_mem_ptr = elect::ElectManager::Instance()->GetMemberWithId(network_id, GetIdByPrikey(leader_private_key));
         ASSERT_TRUE(leader_mem_ptr != nullptr);
         auto leader_index = elect::ElectManager::Instance()->GetMemberIndex(network_id, GetIdByPrikey(leader_private_key));
         usleep(bft::kBftStartDeltaTime);
@@ -4344,7 +4344,7 @@ TEST_F(TestMoreLeaderTransaction, TestShardTimeVssStatisticElectConsensus) {
                 network::kRootCongressNetworkId);
             for (auto root_id_iter = root_leaders.begin();
                     root_id_iter != root_leaders.end(); ++root_id_iter) {
-                auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+                auto root_mem_ptr = elect::ElectManager::Instance()->GetMemberWithId(
                     network::kRootCongressNetworkId, *root_id_iter);
                 ASSERT_TRUE(root_mem_ptr != nullptr);
                 if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
@@ -4424,7 +4424,7 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
         transport::protobuf::Header broadcast_msg;
         auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
             network::kRootCongressNetworkId);
-        auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+        auto root_mem_ptr = elect::ElectManager::Instance()->GetMemberWithId(
             network::kRootCongressNetworkId, id);
         ASSERT_TRUE(root_mem_ptr != nullptr);
         if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
@@ -4447,7 +4447,7 @@ TEST_F(TestMoreLeaderTransaction, TestRootTimeVssStatisticElectConsensus) {
         transport::protobuf::Header broadcast_msg;
         auto root_leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
             network::kRootCongressNetworkId);
-        auto root_mem_ptr = elect::ElectManager::Instance()->GetMember(
+        auto root_mem_ptr = elect::ElectManager::Instance()->GetMemberWithId(
             network::kRootCongressNetworkId, id);
         ASSERT_TRUE(root_mem_ptr != nullptr);
         if ((int32_t)common::kRootChainPoolIndex % root_leader_count ==
