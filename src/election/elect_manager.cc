@@ -255,7 +255,7 @@ void ElectManager::ProcessNewElectBlock(
 
         ++member_index;
     }
-    return;
+
     {
         Members tmp_leaders;
         std::vector<uint32_t> node_index_vec;
