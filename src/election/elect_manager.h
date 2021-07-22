@@ -65,10 +65,9 @@ public:
 //         elect::NodeIndexMapPtr& node_index_map,
 //         int32_t leader_count);
 //     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
-//     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
+    uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
-//     elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
-//     elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
+    elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
@@ -154,6 +153,7 @@ private:
     int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
     elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
+    elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

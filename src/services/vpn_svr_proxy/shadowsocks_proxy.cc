@@ -217,23 +217,22 @@ int ShadowsocksProxy::InitTcpRelay(uint32_t vip_level) {
             break;
     }
 
-    vpn_route_ = std::make_shared<VpnProxyNode>(
-        route_network_id,
-        std::bind(
-            &elect::ElectManager::GetMemberWithId,
-            elect::ElectManager::Instance(),
-            std::placeholders::_1,
-            std::placeholders::_2));
-    int res = vpn_route_->Init();
-    if (res != dht::kDhtSuccess) {
-        vpn_route_ = nullptr;
-        PROXY_ERROR("node join network [%u] [%d] failed!", route_network_id, res);
-        return kProxyError;
-    }
+//     vpn_route_ = std::make_shared<VpnProxyNode>(
+//         route_network_id,
+//         std::bind(
+//             &elect::ElectManager::GetMemberWithId,
+//             elect::ElectManager::Instance(),
+//             std::placeholders::_1));
+//     int res = vpn_route_->Init();
+//     if (res != dht::kDhtSuccess) {
+//         vpn_route_ = nullptr;
+//         PROXY_ERROR("node join network [%u] [%d] failed!", route_network_id, res);
+//         return kProxyError;
+//     }
 
     uint16_t route_min_port = common::GlobalInfo::Instance()->min_route_port();
     uint16_t route_max_port = common::GlobalInfo::Instance()->max_route_port();
-    res = vpn::VpnRoute::Instance()->Init(vip_level, route_min_port, route_max_port);
+    int res = vpn::VpnRoute::Instance()->Init(vip_level, route_min_port, route_max_port);
     if (res != vpnroute::kVpnRouteSuccess) {
         return kProxyError;
     }
@@ -254,18 +253,18 @@ int ShadowsocksProxy::StartShadowsocks() {
         return kProxySuccess;
     }
 
-    vpn_proxy_ = std::make_shared<VpnProxyNode>(
-        network::kVpnNetworkId,
-        std::bind(
-            &elect::ElectManager::GetMemberWithId,
-            elect::ElectManager::Instance(),
-            std::placeholders::_1,
-            std::placeholders::_2));
-    if (vpn_proxy_->Init() != network::kNetworkSuccess) {
-        vpn_proxy_ = nullptr;
-        PROXY_ERROR("node join network [%u] failed!", network::kVpnNetworkId);
-        return kProxyError;
-    }
+//     vpn_proxy_ = std::make_shared<VpnProxyNode>(
+//         network::kVpnNetworkId,
+//         std::bind(
+//             &elect::ElectManager::GetMemberWithId,
+//             elect::ElectManager::Instance(),
+//             std::placeholders::_1,
+//             std::placeholders::_2));
+//     if (vpn_proxy_->Init() != network::kNetworkSuccess) {
+//         vpn_proxy_ = nullptr;
+//         PROXY_ERROR("node join network [%u] failed!", network::kVpnNetworkId);
+//         return kProxyError;
+//     }
 
     uint16_t vpn_min_port = common::GlobalInfo::Instance()->min_svr_port();
     uint16_t vpn_max_port = common::GlobalInfo::Instance()->max_svr_port();

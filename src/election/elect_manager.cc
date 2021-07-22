@@ -338,6 +338,7 @@ void ElectManager::ProcessNewElectBlock(
         shard_members_ptr,
         shard_members_index_ptr,
         elect_block.leader_count());
+    node_index_map_[elect_block.shard_network_id()] = shard_members_index_ptr;
     mem_manager_ptr_[elect_block.shard_network_id()] = member_ptr;
     {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
@@ -648,24 +649,34 @@ std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_i
 // int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
 //     return IsLeader(common::kInvalidUint64, network_id, node_id);
 // }
-// 
-// uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
-//     return GetMemberIndex(common::kInvalidUint64, network_id, node_id);
-// }
+
+uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
+    if (node_index_map_[network_id] == nullptr) {
+        return kInvalidMemberIndex;
+    }
+
+    auto iter = node_index_map_[network_id]->find(node_id);
+    if (iter != node_index_map_[network_id]->end()) {
+        return iter->second;
+    }
+
+    return kInvalidMemberIndex;
+}
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
     return members_ptr_[network_id];
 }
 
-// elect::BftMemberPtr ElectManager::GetMemberWithId(
-//         uint32_t network_id,
-//         const std::string& node_id) {
-//     return GetMember(common::kInvalidUint64, network_id, node_id);
-// }
-// 
-// elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, const std::string& node_id) {
-//     return GetMember(common::kInvalidUint64, network_id, node_id);
-// }
+elect::BftMemberPtr ElectManager::GetMemberWithId(
+        uint32_t network_id,
+        const std::string& node_id) {
+    auto mem_index = GetMemberIndex(network_id, node_id);
+    if (mem_index == kInvalidMemberIndex) {
+        return nullptr;
+    }
+
+    return GetMember(network_id, mem_index);
+}
 
 elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index) {
     if (network_id >= network::kConsensusShardEndNetworkId) {
