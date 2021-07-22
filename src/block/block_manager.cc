@@ -620,6 +620,12 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
 
     db_batch.Put(block_item->hash(), block_str);
     AccountManager::Instance()->AddBlockItem(block_item, db_batch);
+#ifdef TENON_UNITTEST
+    if (block_item->prehash() == "1") {
+        return kBlockSuccess;
+    }
+#endif
+
     auto st = db::Db::Instance()->Put(db_batch);
     if (!st.ok()) {
         exit(0);

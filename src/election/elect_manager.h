@@ -44,31 +44,31 @@ public:
     int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
 
     // get member
-    int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
-    uint32_t GetMemberIndex(
-        uint64_t elect_height,
-        uint32_t network_id,
-        const std::string& node_id);
-    elect::MembersPtr GetNetworkMembers(uint64_t elect_height, uint32_t network_id);
-    elect::BftMemberPtr GetMember(
-        uint64_t elect_height,
-        uint32_t network_id,
-        const std::string& node_id);
-    elect::BftMemberPtr GetMember(uint64_t elect_height, uint32_t network_id, uint32_t index);
-    uint32_t GetMemberCount(uint64_t elect_height, uint32_t network_id);
-    int32_t GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id);
-    std::shared_ptr<MemberManager> GetMemberManager(uint64_t elect_height, uint32_t network_id);
-    void SetNetworkMember(
-        uint64_t elect_height,
-        uint32_t network_id,
-        elect::MembersPtr& members_ptr,
-        elect::NodeIndexMapPtr& node_index_map,
-        int32_t leader_count);
-    int32_t IsLeader(uint32_t network_id, const std::string& node_id);
-    uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
+//     int32_t IsLeader(uint64_t elect_height, uint32_t network_id, const std::string& node_id);
+//     uint32_t GetMemberIndex(
+//         uint64_t elect_height,
+//         uint32_t network_id,
+//         const std::string& node_id);
+//     elect::MembersPtr GetNetworkMembers(uint64_t elect_height, uint32_t network_id);
+//     elect::BftMemberPtr GetMember(
+//         uint64_t elect_height,
+//         uint32_t network_id,
+//         const std::string& node_id);
+//     elect::BftMemberPtr GetMember(uint64_t elect_height, uint32_t network_id, uint32_t index);
+//     uint32_t GetMemberCount(uint64_t elect_height, uint32_t network_id);
+//     int32_t GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id);
+//     std::shared_ptr<MemberManager> GetMemberManager(uint64_t elect_height, uint32_t network_id);
+//     void SetNetworkMember(
+//         uint64_t elect_height,
+//         uint32_t network_id,
+//         elect::MembersPtr& members_ptr,
+//         elect::NodeIndexMapPtr& node_index_map,
+//         int32_t leader_count);
+//     int32_t IsLeader(uint32_t network_id, const std::string& node_id);
+//     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
-    elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
-    elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
+//     elect::BftMemberPtr GetMember(uint32_t network_id, const std::string& node_id);
+//     elect::BftMemberPtr GetMemberWithId(uint32_t network_id, const std::string& node_id);
     elect::BftMemberPtr GetMember(uint32_t network_id, uint32_t index);
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);

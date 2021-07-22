@@ -47,10 +47,7 @@ void VssManager::OnTimeBlock(
                 return;
             }
 
-            local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-                elect_height,
-                network::kRootCongressNetworkId,
-                common::GlobalInfo::Instance()->id());
+            local_index_ = elect::ElectManager::Instance()->local_node_member_index();
             if (local_index_ == elect::kInvalidMemberIndex) {
                 VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
                 return;
@@ -75,13 +72,9 @@ void VssManager::OnElectBlock(uint32_t network_id, uint64_t elect_height) {
     if (network_id == network::kRootCongressNetworkId &&
             common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         std::lock_guard<std::mutex> guard(mutex_);
-        local_index_ = elect::ElectManager::Instance()->GetMemberIndex(
-            elect_height,
-            network::kRootCongressNetworkId,
-            common::GlobalInfo::Instance()->id());
+        local_index_ = elect::ElectManager::Instance()->local_node_member_index();
         prev_elect_height_ = elect_height;
         member_count_ = elect::ElectManager::Instance()->GetMemberCount(
-            elect_height,
             network::kRootCongressNetworkId);
     }
 }

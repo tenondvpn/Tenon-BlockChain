@@ -66,12 +66,12 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-//     BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -217,6 +217,7 @@ void BftManager::HandleBftMessage(
         transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
+            BFT_DEBUG("this node is leader not handle backup message.");
             return;
         }
     }
@@ -879,10 +880,12 @@ int BftManager::LeaderPrecommit(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        BFT_ERROR("backup message member index invalid.");
         return kBftError;
     }
 
     if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
+        BFT_ERROR("backup message member index invalid. %d", bft_msg.member_index());
         return kBftError;
     }
 
@@ -922,8 +925,10 @@ int BftManager::LeaderPrecommit(
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
     } else if (res == kBftOppose) {
-//         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
+    } else {
+        BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u", bft_msg.agree(), bft_ptr->pool_index());
     }
 
     // broadcast pre-commit to backups
@@ -969,19 +974,12 @@ void BftManager::HandleOpposeNodeMsg(
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
-    uint32_t member_idx = GetMemberIndex(
-        bft_ptr->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (member_idx == elect::kInvalidMemberIndex) {
-        return kBftError;
-    }
-
     security::Response sec_res(
             bft_ptr->secret(),
             bft_ptr->challenge(),
             *(security::Schnorr::Instance()->prikey()));
     if (bft_ptr->LeaderCommitOk(
-            member_idx,
+            elect::ElectManager::Instance()->local_node_member_index(),
             true,
             sec_res,
             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {

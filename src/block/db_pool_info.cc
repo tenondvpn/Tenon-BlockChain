@@ -26,6 +26,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
     LoadBlocksUtilLatestStatisticBlock();
+    TickSatisticBlock();
 //     update_statistic_tick_.CutOff(
 //         kUpdateStatisticPeriod,
 //         std::bind(&DbPoolInfo::TickSatisticBlock, this));
