@@ -14,9 +14,9 @@ ElectPool::ElectPool(uint32_t netid) : network_id_(netid) {}
 
 ElectPool::~ElectPool() {}
 
-void ElectPool::ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes) {
+void ElectPool::ReplaceWithElectNodes(std::vector<NodeDetailPtr>& nodes) {
     std::lock_guard<std::mutex> guard(node_map_mutex_);
-    elect_nodes_ = nodes;
+    elect_nodes_.swap(nodes);
 }
 
 void ElectPool::GetAllValidNodes(

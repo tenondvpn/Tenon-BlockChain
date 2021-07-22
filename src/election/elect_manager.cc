@@ -222,23 +222,6 @@ void ElectManager::ProcessNewElectBlock(
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
-        if (load_from_db && in[i].has_public_ip()) {
-            dht::NodePtr node = std::make_shared<dht::Node>(
-                id,
-                in[i].dht_key(),
-                in[i].nat_type(),
-                false,
-                in[i].public_ip(),
-                in[i].public_port(),
-                in[i].local_ip(),
-                in[i].local_port(),
-                in[i].pubkey(),
-                "bft");
-            node->join_way = dht::kJoinFromElectBlock;
-            int join_res = elect_node_ptr_->GetDht()->Join(node);
-            network::UniversalManager::Instance()->AddNodeToUniversal(node);
-        }
-
         if (id == common::GlobalInfo::Instance()->id()) {
             if (common::GlobalInfo::Instance()->network_id() != elect_block.shard_network_id()) {
                 // TODO: delay to quit
@@ -274,17 +257,17 @@ void ElectManager::ProcessNewElectBlock(
                 local_mem_ptr_[elect_block.shard_network_id()] = *iter;
             }
 
-//             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
-//                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-//                 elect_block.shard_network_id(),
-//                 common::Encode::HexEncode((*iter)->id).c_str(),
-//                 (*iter)->pool_index_mod_num);
-//             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-//                 << elect_block.shard_network_id()
-//                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
-//                 << ", leader count: " << elect_block.leader_count()
-//                 << std::endl;
+            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+                "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                elect_block.shard_network_id(),
+                common::Encode::HexEncode((*iter)->id).c_str(),
+                (*iter)->pool_index_mod_num);
+            std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+                << elect_block.shard_network_id()
+                << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                << ", leader count: " << elect_block.leader_count()
+                << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
@@ -346,7 +329,6 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     height_with_block_.AddNewHeightBlock(height, shard_members_ptr);
-//     elect_members_[height] = member_ptr;
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;

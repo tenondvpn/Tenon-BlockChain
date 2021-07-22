@@ -15,7 +15,7 @@ class ElectPool {
 public:
     explicit ElectPool(uint32_t net_id);
     ~ElectPool();
-    void ReplaceWithElectNodes(const std::vector<NodeDetailPtr>& nodes);
+    void ReplaceWithElectNodes(std::vector<NodeDetailPtr>& nodes);
     // now shard min balance and max balance is 2/3 nodes middle balance
     void GetAllValidNodes(
         common::BloomFilter& nodes_filter,

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "common/utils.h"
 #include "common/string_utils.h"
 #include "common/thread_safe_queue.h"
@@ -55,7 +57,7 @@ private:
     uint64_t max_time_block_height_{ 0 };
     std::mutex statistic_for_tmblock_mutex_;
     std::map<uint64_t, std::shared_ptr<StatisticItem>> statistic_for_tmblock_;
-    common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> block_statistic_queue_;
+    std::queue<std::shared_ptr<bft::protobuf::Block>> block_statistic_queue_;
     std::mutex block_statistic_queue_mutex_;
     common::Tick update_statistic_tick_;
 

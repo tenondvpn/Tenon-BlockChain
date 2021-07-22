@@ -26,7 +26,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     GetHash(&block_latest_hash);
     //assert(!hash_.empty());
     LoadBlocksUtilLatestStatisticBlock();
-    TickSatisticBlock();
+//     TickSatisticBlock();
 //     update_statistic_tick_.CutOff(
 //         kUpdateStatisticPeriod,
 //         std::bind(&DbPoolInfo::TickSatisticBlock, this));
@@ -297,15 +297,16 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
         return;
     }
 
-    std::lock_guard<std::mutex> guard(block_statistic_queue_mutex_);
-    block_statistic_queue_.push(block_ptr);
+    AddStatistic(block_ptr);
 }
 
 void DbPoolInfo::SatisticBlock() {
     while (block_statistic_queue_.size() > 0) {
         std::shared_ptr<bft::protobuf::Block> block_ptr = nullptr;
-        if (!block_statistic_queue_.pop(&block_ptr)) {
-            break;
+        {
+            std::lock_guard<std::mutex> guard(block_statistic_queue_mutex_);
+            block_ptr = block_statistic_queue_.front();
+            block_statistic_queue_.pop();
         }
 
         if (block_ptr != nullptr) {

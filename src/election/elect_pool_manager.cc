@@ -655,10 +655,7 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
     {
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(network_id + network::kConsensusWaitingShardOffset);
-        if (iter == waiting_pool_map_.end()) {
-//             ELECT_DEBUG("find waiting shard network failed [%u]!",
-//                 network_id + network::kConsensusWaitingShardOffset);
-        } else {
+        if (iter != waiting_pool_map_.end()) {
             waiting_pool_ptr = iter->second;
         }
     }
@@ -674,13 +671,6 @@ void ElectPoolManager::NetworkMemberChange(uint32_t network_id, MembersPtr& memb
         (*iter)->pubkey.Serialize(pubkey_str);
         elect_node->public_key = pubkey_str;
         node_vec.push_back(elect_node);
-        {
-            std::lock_guard<std::mutex> guard(node_ip_set_mutex_);
-            node_ip_set_.insert(common::IpStringToUint32(elect_node->public_ip));
-        }
-
-        std::lock_guard<std::mutex> guard(all_node_map_mutex_);
-        all_node_map_[elect_node->id] = elect_node;
     }
 
     pool_ptr->ReplaceWithElectNodes(node_vec);

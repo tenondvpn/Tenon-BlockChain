@@ -805,6 +805,7 @@ std::map<uint32_t, std::string> TestBlockManager::pool_index_map_;
 std::map<uint32_t, std::vector<std::string>> TestBlockManager::network_with_private_keys_;
 
 TEST_F(TestBlockManager, TestAddMoreBlock) {
+    SetGloableInfo(common::Random::RandomString(32), network::kConsensusShardBeginNetworkId);
     for (uint32_t block_count = 0; block_count < 1000000; ++block_count) {
         {
             auto tenon_block = std::make_shared<bft::protobuf::Block>();
