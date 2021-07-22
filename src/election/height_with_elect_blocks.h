@@ -21,6 +21,7 @@ namespace elect {
 
 class HeightWithElectBlock {
     struct HeightMembersItem {
+        HeightMembersItem(MembersPtr& m, uint64_t h) : members_ptr(m), height(h) {}
         MembersPtr members_ptr;
         uint64_t height;
     };
