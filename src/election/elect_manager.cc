@@ -499,28 +499,15 @@ elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height) {
 //     return mem_ptr->GetMember(network_id, index);
 // }
 // 
-// uint32_t ElectManager::GetMemberCount(uint64_t elect_height, uint32_t network_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return 0;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return 0;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetMemberCount(network_id);
-// }
-// 
+uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height) {
+    auto members_ptr = GetNetworkMembers(elect_height);
+    if (members_ptr != nullptr) {
+        return members_ptr->size();
+    }
+
+    return 0;
+}
+
 // int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id) {
 //     if (elect_height == common::kInvalidUint64) {
 //         elect_height = latest_height(network_id);
