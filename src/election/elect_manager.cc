@@ -119,7 +119,7 @@ void ElectManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 
     if (ec_msg.has_waiting_nodes()) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
-        auto mem_ptr = GetMember(network::kRootCongressNetworkId, id);
+        auto mem_ptr = GetMemberWithId(network::kRootCongressNetworkId, id);
         if (mem_ptr) {
             std::vector<uint64_t> filter_vec;
             for (int32_t i = 0; i < ec_msg.waiting_nodes().nodes_filter_size(); ++i) {
@@ -446,7 +446,7 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 // }
 // 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height) {
-    return height_with_block_.GetMembersPtr(elect_height)
+    return height_with_block_.GetMembersPtr(elect_height);
 }
 // 
 // elect::BftMemberPtr ElectManager::GetMember(

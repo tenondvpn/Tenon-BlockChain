@@ -329,9 +329,7 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
         return;
     }
 
-    int32_t member_count = ElectManager::Instance()->GetMemberCount(
-        statistic_info.elect_height(),
-        network_id);
+    int32_t member_count = ElectManager::Instance()->GetMemberCount(network_id);
     if (statistic_info.succ_tx_count_size() != member_count) {
         return;
     }
