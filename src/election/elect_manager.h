@@ -50,7 +50,7 @@ public:
 //         uint64_t elect_height,
 //         uint32_t network_id,
 //         const std::string& node_id);
-    elect::MembersPtr GetNetworkMembers(uint64_t elect_height);
+    elect::MembersPtr GetNetworkMembersWithHeight(uint64_t elect_height);
 //     elect::BftMemberPtr GetMember(
 //         uint64_t elect_height,
 //         uint32_t network_id,

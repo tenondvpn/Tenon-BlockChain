@@ -427,7 +427,7 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 //     return mem_ptr->GetMemberIndex(network_id, node_id);
 // }
 // 
-elect::MembersPtr ElectManager::GetNetworkMembers(uint64_t elect_height) {
+elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(uint64_t elect_height) {
     return height_with_block_.GetMembersPtr(elect_height);
 }
 // 

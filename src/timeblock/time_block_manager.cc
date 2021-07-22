@@ -74,7 +74,6 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     tx_info->set_type(common::kConsensusRootTimeBlock);
     tx_info->set_from(common::kRootChainSingleBlockTxAddress);
     tx_info->set_gid(gid);
-
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
@@ -88,9 +87,11 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     }
 
     BFT_ERROR("LeaderCreateTimeBlockTx success gid exists[%s] %lu"
-        "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+        "latest_time_block_tm_[%lu] new_time_block_tm[%lu], vss value: %lu",
         common::Encode::HexEncode(gid).c_str(),
-        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_, new_time_block_tm);
+        (uint64_t)latest_time_block_height_,
+        (uint64_t)latest_time_block_tm_, new_time_block_tm,
+        vss::VssManager::Instance()->GetConsensusFinalRandom());
 
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);

@@ -81,6 +81,7 @@ void VssManager::OnElectBlock(uint32_t network_id, uint64_t elect_height) {
 
 uint64_t VssManager::GetConsensusFinalRandom() {
     std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
+    std::cout << "max_count_: " << max_count_ << std::endl;
     if ((max_count_ * 3 / 2 + 1) < member_count_) {
         return epoch_random_;
     }

@@ -298,7 +298,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
         data.push_back(block.bitmap(i));
     }
 
-    auto members = elect::ElectManager::Instance()->GetNetworkMembers(
+    auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
         block.electblock_height());
     common::Bitmap leader_agg_bitmap(data);
     std::vector<security::PublicKey> pubkeys;
