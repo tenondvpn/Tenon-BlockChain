@@ -779,12 +779,12 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            elect::ElectManager::Instance()->SetNetworkMember(
-                elect_height++,
-                iter->first,
-                iter->second,
-                index_map_iter->second,
-                1);
+//             elect::ElectManager::Instance()->SetNetworkMember(
+//                 elect_height++,
+//                 iter->first,
+//                 iter->second,
+//                 index_map_iter->second,
+//                 1);
         }
     }
 
@@ -1667,12 +1667,12 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            elect::ElectManager::Instance()->SetNetworkMember(
-                elect_height++,
-                iter->first,
-                iter->second,
-                index_map_iter->second,
-                1);
+//             elect::ElectManager::Instance()->SetNetworkMember(
+//                 elect_height++,
+//                 iter->first,
+//                 iter->second,
+//                 index_map_iter->second,
+//                 1);
         }
     }
 
@@ -1704,7 +1704,6 @@ public:
             }
 
             in_members[net_id]->push_back(std::make_shared<BftMember>(
-                0,
                 net_id,
                 GetIdByPrikey(prikey),
                 GetPubkeyByPrikey(prikey),

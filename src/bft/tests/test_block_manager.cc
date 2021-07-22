@@ -534,12 +534,12 @@ public:
             elect::ElectManager::Instance()->pool_manager_.NetworkMemberChange(
                 iter->first,
                 iter->second);
-            elect::ElectManager::Instance()->SetNetworkMember(
-                elect_height++,
-                iter->first,
-                iter->second,
-                index_map_iter->second,
-                expect_leader_count);
+//             elect::ElectManager::Instance()->SetNetworkMember(
+//                 elect_height++,
+//                 iter->first,
+//                 iter->second,
+//                 index_map_iter->second,
+//                 expect_leader_count);
         }
 
         network_with_private_keys_[network_id] = pri_vec;

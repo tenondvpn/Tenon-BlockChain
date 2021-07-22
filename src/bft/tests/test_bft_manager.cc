@@ -647,11 +647,11 @@ public:
 
         elect::ElectManager::Instance()->members_ptr_[network_id] = in_members[network_id];
         auto member_ptr = std::make_shared<elect::MemberManager>();
-        member_ptr->SetNetworkMember(
-            network_id,
-            in_members[network_id],
-            in_index_members[network_id],
-            1);
+//         member_ptr->SetNetworkMember(
+//             network_id,
+//             in_members[network_id],
+//             in_index_members[network_id],
+//             1);
         elect::ElectManager::Instance()->mem_manager_ptr_[network_id] = member_ptr;
         elect::ElectManager::Instance()->latest_leader_count_[network_id] = 1;
 
@@ -659,12 +659,12 @@ public:
         for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
             auto index_map_iter = in_index_members.find(iter->first);
             ASSERT_TRUE(index_map_iter != in_index_members.end());
-            elect::ElectManager::Instance()->SetNetworkMember(
-                elect_height++,
-                iter->first,
-                iter->second,
-                index_map_iter->second,
-                1);
+//             elect::ElectManager::Instance()->SetNetworkMember(
+//                 elect_height++,
+//                 iter->first,
+//                 iter->second,
+//                 index_map_iter->second,
+//                 1);
         }
     }
 

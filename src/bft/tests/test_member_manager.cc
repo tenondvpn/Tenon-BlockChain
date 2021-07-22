@@ -77,11 +77,11 @@ TEST_F(TestMemberManager, SetNetworkMember) {
     for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
         auto index_map_iter = in_index_members.find(iter->first);
         ASSERT_TRUE(index_map_iter != in_index_members.end());
-        mem_manager.SetNetworkMember(
-            iter->first,
-            iter->second,
-            index_map_iter->second,
-            1);
+//         mem_manager.SetNetworkMember(
+//             iter->first,
+//             iter->second,
+//             index_map_iter->second,
+//             1);
         auto members_ptr = mem_manager.GetNetworkMembers(iter->first);
         EXPECT_EQ(members_ptr->size(), iter->second->size());
         EXPECT_EQ(mem_manager.IsLeader(iter->first, iter->second->at(0)->id), 0);
