@@ -38,10 +38,10 @@ uint64_t TimeBlockManager::LatestTimestampHeight() {
 
 TimeBlockManager::TimeBlockManager() {
     create_tm_block_tick_.CutOff(
-        30 * kCheckTimeBlockPeriodUs,
+        10 * kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
     check_bft_tick_.CutOff(
-        30 * kCheckTimeBlockPeriodUs,
+        10 * kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CheckBft, this));
 }
 
