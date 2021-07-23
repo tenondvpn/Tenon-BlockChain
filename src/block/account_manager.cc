@@ -28,7 +28,10 @@ AccountManager* AccountManager::Instance() {
 }
 
 AccountManager::AccountManager() {
-    memset(network_block_,0, (common::kImmutablePoolSize + 1) * sizeof(network_block_[0]));
+    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
+        network_block_[i] = new block::DbPoolInfo(i);
+    }
+
     pool_statistci_tick_.CutOff(
         kStatisticPeriod,
         std::bind(&AccountManager::StatisticDpPool, this));
@@ -773,31 +776,6 @@ int AccountManager::GetBlockInfo(
         std::string* hash,
         uint64_t* tm_height,
         uint64_t* tm_with_block_height) {
-    if (network_block_[pool_idx] == nullptr) {
-        std::lock_guard<std::mutex> guard(network_block_mutex_);
-        if (network_block_[pool_idx] == nullptr) {
-            auto db_pool_info = new block::DbPoolInfo(pool_idx);
-            if (db_pool_info->GetHeight(height) != kBlockSuccess) {
-                BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
-                delete db_pool_info;
-                return kBlockError;
-            }
-
-            network_block_[pool_idx] = db_pool_info;
-            if (network_block_[pool_idx]->GetHash(hash) != kBlockSuccess) {
-                return kBlockError;
-            }
-
-            if (network_block_[pool_idx]->GetTimeBlockHeight(
-                tm_height,
-                tm_with_block_height) != kBlockSuccess) {
-                return kBlockError;
-            }
-
-            return kBlockSuccess;
-        }
-    }
-
     int res = network_block_[pool_idx]->GetHeight(height);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
@@ -822,25 +800,6 @@ void AccountManager::SetPool(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     block::DbPoolInfo* db_pool_info = nullptr;
-    if (network_block_[pool_index] != nullptr) {
-        uint64_t height = 0;
-        if (network_block_[pool_index]->GetHeight(&height) != block::kBlockSuccess) {
-            return;
-        }
-
-        if (height > block_item->height()) {
-            return;
-        }
-
-        db_pool_info = network_block_[pool_index];
-    } else {
-        std::lock_guard<std::mutex> guard(network_block_mutex_);
-        if (network_block_[pool_index] == nullptr) {
-            db_pool_info = new block::DbPoolInfo(pool_index);
-            network_block_[pool_index] = db_pool_info;
-        }
-    }
-
     uint64_t height = 0;
     if (db_pool_info->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
@@ -858,29 +817,9 @@ void AccountManager::SetPool(
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
-    {
-        if (network_block_[pool_index] != nullptr) {
-            return network_block_[pool_index]->GetBaseAddr();
-        }
+    if (network_block_[pool_index] != nullptr) {
+        return network_block_[pool_index]->GetBaseAddr();
     }
-
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = GetBlockInfo(
-        pool_index,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess || network_block_[pool_index] == nullptr) {
-        BFT_ERROR("GetBlockInfo failed!");
-        return "";
-    }
-
-    return network_block_[pool_index]->GetBaseAddr();
 }
 
 void AccountManager::StatisticDpPool() {
@@ -898,17 +837,6 @@ void AccountManager::StatisticDpPool() {
 int AccountManager::GetPoolStatistic(
         uint32_t pool_index,
         block::protobuf::StatisticInfo* statistic_info) {
-    if (network_block_[pool_index] != nullptr) {
-        return network_block_[pool_index]->GetSinglePoolStatisticInfo(statistic_info);
-    }
-
-    if (network_block_[pool_index] == nullptr) {
-        std::lock_guard<std::mutex> guard(network_block_mutex_);
-        if (network_block_[pool_index] == nullptr) {
-            network_block_[pool_index] = new block::DbPoolInfo(pool_index);
-        }
-    }
-
     return network_block_[pool_index]->GetSinglePoolStatisticInfo(statistic_info);
 }
 
