@@ -1043,7 +1043,7 @@ int BftManager::BackupPrecommit(
         if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
             BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
             assert(false);
-            return;
+            return kBftError;
         }
 
         BftProto::BackupCreatePreCommit(
@@ -1063,7 +1063,7 @@ int BftManager::BackupPrecommit(
         if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
             BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
             assert(false);
-            return;
+            return kBftError;
         }
 
         BftProto::BackupCreatePreCommit(
