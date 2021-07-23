@@ -134,7 +134,7 @@ private:
     std::shared_ptr<ElectNode> elect_node_ptr_{ nullptr };
     ElectPoolManager pool_manager_;
     common::Tick create_elect_block_tick_;
-    std::unordered_map<uint64_t, std::shared_ptr<MemberManager>> elect_members_;
+    std::unordered_set<uint64_t> added_height_;
     std::unordered_map<uint32_t, uint64_t> elect_net_heights_map_;
     std::mutex elect_members_mutex_;
     std::unordered_map<uint32_t, std::unordered_set<std::string>> network_leaders_;

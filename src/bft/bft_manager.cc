@@ -300,6 +300,12 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
 
     auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
         block.electblock_height());
+    if (members == nullptr) {
+        BFT_ERROR("get members failed height: %lu", block.electblock_height());
+        assert(false);
+        return false;
+    }
+
     common::Bitmap leader_agg_bitmap(data);
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = leader_agg_bitmap.data().size() * 64;

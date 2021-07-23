@@ -189,10 +189,11 @@ void ElectManager::ProcessNewElectBlock(
         protobuf::ElectBlock& elect_block,
         bool load_from_db) {
     std::lock_guard<std::mutex> guard(elect_members_mutex_);
-    if (elect_members_.find(height) != elect_members_.end()) {
+    if (added_height_.find(height) != added_height_.end()) {
         return;
     }
 
+    added_height_.insert(height);
     if (common::GlobalInfo::Instance()->network_id() == elect_block.shard_network_id()) {
         local_node_pool_mod_num_ = -1;
         local_node_is_super_leader_ = false;
