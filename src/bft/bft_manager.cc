@@ -697,9 +697,9 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-//     BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
-//         pool_mod_index, bft_ptr->pool_index(),
-//         common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
+        pool_mod_index, bft_ptr->pool_index(),
+        common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -711,6 +711,7 @@ int BftManager::AddBft(BftInterfacePtr& bft_ptr) {
     }
 
     bft_hash_map_[bft_ptr->gid()] = bft_ptr;
+    BFT_DEBUG("add bft and now size: %d", bft_hash_map_.size());
     return kBftSuccess;
 }
 
