@@ -898,6 +898,13 @@ int BftManager::LeaderPrecommit(
     const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
     std::string dec_data;
+    if (member_ptr->backup_ecdh_key.empty()) {
+        BFT_ERROR("get backup ecdh key failed! network id: %d, mem index: %d",
+            common::GlobalInfo::Instance()->network_id(), bft_msg.member_index());
+        assert(false);
+        return kBftError;
+    }
+
     if (security::Crypto::Instance()->GetDecryptData(
             member_ptr->backup_ecdh_key,
             bft_msg.backup_enc_data(),
