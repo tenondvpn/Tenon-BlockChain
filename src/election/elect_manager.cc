@@ -329,7 +329,10 @@ void ElectManager::ProcessNewElectBlock(
         valid_shard_networks_.insert(elect_block.shard_network_id());
     }
 
-    height_with_block_.AddNewHeightBlock(height, shard_members_ptr);
+    height_with_block_.AddNewHeightBlock(
+        height,
+        elect_block.shard_network_id(),
+        shard_members_ptr);
     auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
     if (net_heights_iter == elect_net_heights_map_.end()) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;
@@ -428,8 +431,10 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 //     return mem_ptr->GetMemberIndex(network_id, node_id);
 // }
 // 
-elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(uint64_t elect_height) {
-    return height_with_block_.GetMembersPtr(elect_height);
+elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(
+        uint64_t elect_height,
+        uint32_t network_id) {
+    return height_with_block_.GetMembersPtr(elect_height, network_id);
 }
 // 
 // elect::BftMemberPtr ElectManager::GetMember(

@@ -299,7 +299,8 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
     }
 
     auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
-        block.electblock_height());
+        block.electblock_height(),
+        block.network_id());
     if (members == nullptr) {
         BFT_ERROR("get members failed height: %lu", block.electblock_height());
         assert(false);

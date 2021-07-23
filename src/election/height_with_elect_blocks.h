@@ -32,54 +32,59 @@ public:
     HeightWithElectBlock() {}
     ~HeightWithElectBlock() {}
     // elect block is always coming in order or one time just one block, so no need to lock it
-    void AddNewHeightBlock(uint64_t height, MembersPtr& members_ptr) {
+    void AddNewHeightBlock(uint64_t height, uint32_t network_id, MembersPtr& members_ptr) {
         std::cout << "add elect block: " << height << std::endl;
-        if (members_ptrs_[0] == nullptr) {
-            members_ptrs_[0] = std::make_shared<HeightMembersItem>(members_ptr, height);
+        if (members_ptrs_[network_id][0] == nullptr) {
+            members_ptrs_[network_id][0] = std::make_shared<HeightMembersItem>(members_ptr, height);
             return;                
         }
 
-        if (members_ptrs_[1] == nullptr) {
-            members_ptrs_[1] = std::make_shared<HeightMembersItem>(members_ptr, height);
+        if (members_ptrs_[network_id][1] == nullptr) {
+            members_ptrs_[network_id][1] = std::make_shared<HeightMembersItem>(members_ptr, height);
             return;
         }
 
-        if (members_ptrs_[2] == nullptr) {
-            members_ptrs_[2] = std::make_shared<HeightMembersItem>(members_ptr, height);
+        if (members_ptrs_[network_id][2] == nullptr) {
+            members_ptrs_[network_id][2] = std::make_shared<HeightMembersItem>(members_ptr, height);
             return;
         }
 
         uint64_t min_height = common::kInvalidUint64;
         uint64_t min_index = 0;
-        if (members_ptrs_[0]->height < min_height) {
-            min_height = members_ptrs_[0]->height;
+        if (members_ptrs_[network_id][0]->height < min_height) {
+            min_height = members_ptrs_[network_id][0]->height;
             min_index = 0;
         }
 
-        if (members_ptrs_[1]->height < min_height) {
-            min_height = members_ptrs_[1]->height;
+        if (members_ptrs_[network_id][1]->height < min_height) {
+            min_height = members_ptrs_[network_id][1]->height;
             min_index = 1;
         }
 
-        if (members_ptrs_[2]->height < min_height) {
-            min_height = members_ptrs_[2]->height;
+        if (members_ptrs_[network_id][2]->height < min_height) {
+            min_height = members_ptrs_[network_id][2]->height;
             min_index = 2;
         }
 
-        members_ptrs_[min_index] = std::make_shared<HeightMembersItem>(members_ptr, height);
+        if (min_height >= height) {
+            return;
+        }
+
+        members_ptrs_[network_id][min_index] = std::make_shared<HeightMembersItem>(members_ptr, height);
     }
 
-    MembersPtr GetMembersPtr(uint64_t height) {
-        if (members_ptrs_[0] != nullptr && members_ptrs_[0]->height == height) {
-            return members_ptrs_[0]->members_ptr;
+    MembersPtr GetMembersPtr(uint64_t height, uint32_t network_id) {
+        std::cout << "get elect block: " << height << std::endl;
+        if (members_ptrs_[network_id][0] != nullptr && members_ptrs_[network_id][0]->height == height) {
+            return members_ptrs_[network_id][0]->members_ptr;
         }
 
-        if (members_ptrs_[1] != nullptr && members_ptrs_[1]->height == height) {
-            return members_ptrs_[1]->members_ptr;
+        if (members_ptrs_[network_id][1] != nullptr && members_ptrs_[network_id][1]->height == height) {
+            return members_ptrs_[network_id][1]->members_ptr;
         }
 
-        if (members_ptrs_[2] != nullptr && members_ptrs_[2]->height == height) {
-            return members_ptrs_[2]->members_ptr;
+        if (members_ptrs_[network_id][2] != nullptr && members_ptrs_[network_id][2]->height == height) {
+            return members_ptrs_[network_id][2]->members_ptr;
         }
 
         // get from cache map
@@ -171,7 +176,7 @@ private:
     std::priority_queue<uint64_t, std::vector<uint64_t>, std::greater<uint64_t>> height_queue_;
     std::mutex height_with_members_mutex_;
 
-    HeightMembersItemPtr members_ptrs_[kMaxKeepElectBlockCount];
+    HeightMembersItemPtr members_ptrs_[network::kConsensusShardEndNetworkId][kMaxKeepElectBlockCount];
 
     DISALLOW_COPY_AND_ASSIGN(HeightWithElectBlock);
 };
