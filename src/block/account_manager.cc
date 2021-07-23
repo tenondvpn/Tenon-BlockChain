@@ -190,6 +190,7 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
                 common::GlobalInfo::Instance()->network_id())) +
             std::to_string(tmblock_tm) + "_" +
             std::to_string(i)));
+
         BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, network id: %u",
             i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm, common::GlobalInfo::Instance()->network_id());
         tx_info.set_gas_limit(0llu);
