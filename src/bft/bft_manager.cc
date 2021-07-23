@@ -1040,6 +1040,12 @@ int BftManager::BackupPrecommit(
 //         BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
 //             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
+        if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
+            BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
+            assert(false);
+            return;
+        }
+
         BftProto::BackupCreatePreCommit(
             header,
             bft_msg,
@@ -1054,6 +1060,12 @@ int BftManager::BackupPrecommit(
 //         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
 //             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
 //             bft_msg.node_ip().c_str(), bft_msg.node_port());
+        if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
+            BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
+            assert(false);
+            return;
+        }
+
         BftProto::BackupCreatePreCommit(
             header,
             bft_msg,
