@@ -37,7 +37,6 @@ public:
             return;
         }
 
-        std::cout << "add elect block: " << height << std::endl;
         if (members_ptrs_[network_id][0] == nullptr) {
             members_ptrs_[network_id][0] = std::make_shared<HeightMembersItem>(members_ptr, height);
             return;                
@@ -82,7 +81,6 @@ public:
             return nullptr;
         }
 
-        std::cout << "get elect block: " << height << std::endl;
         if (members_ptrs_[network_id][0] != nullptr && members_ptrs_[network_id][0]->height == height) {
             return members_ptrs_[network_id][0]->members_ptr;
         }
