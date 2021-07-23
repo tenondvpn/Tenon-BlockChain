@@ -799,21 +799,20 @@ void AccountManager::SetPool(
         uint32_t pool_index,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    block::DbPoolInfo* db_pool_info = nullptr;
     uint64_t height = 0;
-    if (db_pool_info->GetHeight(&height) == block::kBlockSuccess) {
+    if (network_block_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
             return;
         }
     }
 
-    db_pool_info->SetHash(block_item->hash(), db_batch);
-    db_pool_info->SetHeight(block_item->height(), db_batch);
-    db_pool_info->SetTimeBlockHeight(
+    network_block_[pool_index]->SetHash(block_item->hash(), db_batch);
+    network_block_[pool_index]->SetHeight(block_item->height(), db_batch);
+    network_block_[pool_index]->SetTimeBlockHeight(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    db_pool_info->AddNewBlock(block_item);
+    network_block_[pool_index]->AddNewBlock(block_item);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
