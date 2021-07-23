@@ -900,9 +900,9 @@ int BftManager::LeaderPrecommit(
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
     std::string dec_data;
     if (member_ptr->backup_ecdh_key.empty()) {
-        BFT_ERROR("get backup ecdh key failed! network id: %d, mem index: %d",
-            common::GlobalInfo::Instance()->network_id(), bft_msg.member_index());
-        assert(false);
+        BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
+            common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
+//         assert(false);
         return kBftError;
     }
 
@@ -1043,7 +1043,7 @@ int BftManager::BackupPrecommit(
         std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
         if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
             BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
-            assert(false);
+//             assert(false);
             return kBftError;
         }
 
@@ -1063,7 +1063,7 @@ int BftManager::BackupPrecommit(
 //             bft_msg.node_ip().c_str(), bft_msg.node_port());
         if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
             BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
-            assert(false);
+//             assert(false);
             return kBftError;
         }
 

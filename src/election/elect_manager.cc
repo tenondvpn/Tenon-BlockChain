@@ -301,10 +301,11 @@ void ElectManager::ProcessNewElectBlock(
                     (*iter)->backup_ecdh_key);
                 ELECT_DEBUG("network id: %d, member index: %d, set backup ecdh key: %s, backup id: %s",
                     elect_block.shard_network_id(),
-                    index++,
+                    index,
                     common::Encode::HexEncode((*iter)->backup_ecdh_key).c_str(),
                     common::Encode::HexEncode((*iter)->id).c_str());
             }
+            ++index;
         }
 //         }
 
@@ -318,11 +319,13 @@ void ElectManager::ProcessNewElectBlock(
                         (*iter)->leader_ecdh_key);
                     ELECT_DEBUG("network id: %d, member index: %d, set leader ecdh key: %s, leader id: %s",
                         elect_block.shard_network_id(),
-                        index++,
+                        index,
                         common::Encode::HexEncode((*iter)->leader_ecdh_key).c_str(),
                         common::Encode::HexEncode((*iter)->id).c_str());
 //                 }
             }
+
+            ++index;
         }
     }
 
