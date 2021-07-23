@@ -386,7 +386,7 @@ int DbPoolInfo::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_
 }
 
 int DbPoolInfo::GetSinglePoolStatisticInfo(block::protobuf::StatisticInfo* statistic_info) {
-    SatisticBlock();
+//     SatisticBlock();
     std::shared_ptr<StatisticItem> st_item_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(statistic_for_tmblock_mutex_);
