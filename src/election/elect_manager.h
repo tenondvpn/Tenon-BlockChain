@@ -56,7 +56,7 @@ public:
 //         uint32_t network_id,
 //         const std::string& node_id);
 //     elect::BftMemberPtr GetMember(uint64_t elect_height, uint32_t network_id, uint32_t index);
-    uint32_t GetMemberCountWithHeight(uint64_t elect_height);
+    uint32_t GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id);
 //     int32_t GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id);
 //     std::shared_ptr<MemberManager> GetMemberManager(uint64_t elect_height, uint32_t network_id);
 //     void SetNetworkMember(

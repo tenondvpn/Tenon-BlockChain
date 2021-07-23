@@ -497,8 +497,8 @@ elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(
 //     return mem_ptr->GetMember(network_id, index);
 // }
 // 
-uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height) {
-    auto members_ptr = GetNetworkMembers(elect_height);
+uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id) {
+    auto members_ptr = GetNetworkMembersWithHeight(elect_height, network_id);
     if (members_ptr != nullptr) {
         return members_ptr->size();
     }

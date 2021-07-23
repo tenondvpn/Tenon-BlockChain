@@ -816,16 +816,12 @@ void AccountManager::SetPool(
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
-    if (network_block_[pool_index] != nullptr) {
-        return network_block_[pool_index]->GetBaseAddr();
-    }
+    return network_block_[pool_index]->GetBaseAddr();
 }
 
 void AccountManager::StatisticDpPool() {
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        if (network_block_[i] != nullptr) {
-            network_block_[i]->SatisticBlock();
-        }
+        network_block_[i]->SatisticBlock();
     }
 
     pool_statistci_tick_.CutOff(

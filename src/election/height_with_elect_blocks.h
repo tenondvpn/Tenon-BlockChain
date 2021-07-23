@@ -33,6 +33,10 @@ public:
     ~HeightWithElectBlock() {}
     // elect block is always coming in order or one time just one block, so no need to lock it
     void AddNewHeightBlock(uint64_t height, uint32_t network_id, MembersPtr& members_ptr) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return;
+        }
+
         std::cout << "add elect block: " << height << std::endl;
         if (members_ptrs_[network_id][0] == nullptr) {
             members_ptrs_[network_id][0] = std::make_shared<HeightMembersItem>(members_ptr, height);
@@ -74,6 +78,10 @@ public:
     }
 
     MembersPtr GetMembersPtr(uint64_t height, uint32_t network_id) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return nullptr;
+        }
+
         std::cout << "get elect block: " << height << std::endl;
         if (members_ptrs_[network_id][0] != nullptr && members_ptrs_[network_id][0]->height == height) {
             return members_ptrs_[network_id][0]->members_ptr;

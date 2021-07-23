@@ -85,7 +85,8 @@ int ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& bl
     }
 
     uint32_t member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-        block_item->electblock_height());
+        block_item->electblock_height(),
+        block_item->network_id());
     common::Bitmap final_bitmap(bitmap_data);
     uint32_t bit_size = final_bitmap.data().size() * 64;
     assert(member_count <= bit_size);
@@ -132,7 +133,8 @@ int ShardStatistic::GetSinglePoolStatisticInfo(block::protobuf::StatisticInfo* s
     statistic_info->set_elect_height(st_item_ptr->elect_height);
     statistic_info->set_all_tx_count(st_item_ptr->all_tx_count);
     uint32_t member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-        st_item_ptr->elect_height);
+        st_item_ptr->elect_height,
+        common::GlobalInfo::Instance()->network_id());
     for (uint32_t i = 0; i < member_count; ++i) {
         statistic_info->add_succ_tx_count(st_item_ptr->succ_tx_count[i]);
     }
