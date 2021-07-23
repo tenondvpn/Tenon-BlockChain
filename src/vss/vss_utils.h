@@ -31,7 +31,7 @@ static const int64_t kVssCheckPeriodTimeout = 3000000ll;
 static const uint32_t kVssTimePeriodOffsetSeconds = 3u;
 static const uint32_t kHandleMessageVssTimePeriodOffsetSeconds = 1u;
 // left 60 seconds for each nodes valid
-static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSeconds - 60;
+static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSeconds - 10;
 static const uint64_t kVssFirstPeriodTimeout = kVssAllPeriodSeconds / 3;
 static const uint64_t kVssSecondPeriodTimeout = 2 * kVssAllPeriodSeconds / 3;
 static const uint64_t kVssThirdPeriodTimeout = kVssAllPeriodSeconds;
