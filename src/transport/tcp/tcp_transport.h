@@ -102,11 +102,8 @@ private:
     int backlog_;
     std::mutex conn_map_mutex_;
     bool create_server_{ false };
-
-    std::unordered_map<std::string, int32_t> ip_socket_map_;
-    std::mutex ip_socket_map_mutex_;
-
 };
+
 }  // namespace transport
 
 }  // namespace tenon

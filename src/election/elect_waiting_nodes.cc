@@ -97,6 +97,7 @@ void ElectWaitingNodes::GetAllValidNodes(
         }
 
         all_nodes_waiting_map_.clear();
+        coming_root_nodes_.clear();
     }
 
     if (waiting_nodes.empty()) {
@@ -160,8 +161,8 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     for (auto iter = node_map.begin(); iter != node_map.end(); ++iter) {
         if (!no_delay) {
             if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
-                waiting_shard_id_ - network::kConsensusWaitingShardOffset,
-                iter->first)) {
+                    waiting_shard_id_ - network::kConsensusWaitingShardOffset,
+                    iter->first)) {
                 continue;
             }
 

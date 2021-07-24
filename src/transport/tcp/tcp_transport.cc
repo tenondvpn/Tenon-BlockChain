@@ -706,6 +706,7 @@ TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t port)
         }
 
         conn_map_[peer_spec] = tcp_conn;
+        TRANSPORT_DEBUG("MMMMMMMM now con map size: %u", conn_map_.size());
     }
     return tcp_conn;
 }
