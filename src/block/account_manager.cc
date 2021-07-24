@@ -186,13 +186,13 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
 
         tx_info.set_gid(common::Hash::Hash256(
             kPoolGidPrefixStr +
-            std::to_string(elect::ElectManager::Instance()->latest_height(
-                common::GlobalInfo::Instance()->network_id())) +
             std::to_string(tmblock_tm) + "_" +
             std::to_string(i)));
 
-        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, network id: %u",
-            i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm, common::GlobalInfo::Instance()->network_id());
+        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, latest height: %lu, network id: %u",
+            i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm,
+            elect::ElectManager::Instance()->latest_height(common::GlobalInfo::Instance()->network_id()),
+            common::GlobalInfo::Instance()->network_id());
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());

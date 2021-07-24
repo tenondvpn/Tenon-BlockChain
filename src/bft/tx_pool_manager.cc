@@ -402,7 +402,7 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
                 waiting_pools_.UnSet(bft_ptr->pool_index());
             }
 
-//             BFT_DEBUG("bft over pool index: %d", bft_ptr->pool_index());
+            BFT_DEBUG("bft over pool index: %d", bft_ptr->pool_index());
 //         }
 //     }
 }
