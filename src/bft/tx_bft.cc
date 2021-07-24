@@ -160,6 +160,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     SetBlock(block_ptr);
     *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
+    if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
+        return kBftError;
+    }
 //     BFT_DEBUG("new block hash: %s, prehash: %s.",
 //         common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),
 //         common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
