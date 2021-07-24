@@ -523,6 +523,7 @@ void ElectPoolManager::FtsGetNodes(
                 fts_value = common::kTenonMaxAmount - fts_value;
             }
 
+            ELECT_DEBUG("fts append node value: %lu, node id: %s", fts_value, common::Encode::HexEncode((*iter)->id).c_str());
             fts_tree.AppendFtsNode(fts_value, data);
         }
 
