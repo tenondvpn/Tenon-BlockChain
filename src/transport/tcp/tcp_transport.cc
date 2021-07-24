@@ -706,7 +706,7 @@ TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t port)
         }
 
         conn_map_[peer_spec] = tcp_conn;
-        TRANSPORT_DEBUG("MMMMMMMM now con map size: %u", conn_map_.size());
+        TRANSPORT_DEBUG("0 MMMMMMMM now con map size: %u", conn_map_.size());
     }
     return tcp_conn;
 }
@@ -745,6 +745,7 @@ void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
     }
 
     conn_map_[peer_spec] = conn;
+    TRANSPORT_DEBUG("1 MMMMMMMM now con map size: %u", conn_map_.size());
 }
 #endif // CLIENT_USE_UV
 
