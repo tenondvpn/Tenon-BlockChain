@@ -23,12 +23,13 @@ TxPool::~TxPool() {}
 
 int TxPool::AddTx(TxItemPtr tx_ptr) {
     assert(tx_ptr != nullptr);
-    std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     std::string uni_gid = GidManager::Instance()->GetUniversalGid(
         tx_ptr->tx.to_add(),
         tx_ptr->tx.type(),
         tx_ptr->tx.call_contract_step(),
         tx_ptr->tx.gid());
+    tx_ptr->uni_gid = uni_gid;
+    std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter != added_tx_map_.end()) {
         BFT_ERROR("gid exists: %s, tx_ptr->add_to_acc_addr: %d.",
@@ -267,6 +268,8 @@ void TxPool::RemoveTx(
             common::Encode::HexEncode(uni_gid).c_str());
         tx_pool_.erase(item_iter);
     }
+
+    added_tx_map_.erase(iter);
 }
 
 bool TxPool::TxPoolEmpty() {
@@ -292,6 +295,11 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
                 iter->second->tx.amount());
+            auto miter = added_tx_map_.find(iter->second->uni_gid);
+            if (miter != added_tx_map_.end()) {
+                added_tx_map_.erase(miter);
+            }
+
             tx_pool_.erase(iter);
         }
     }
