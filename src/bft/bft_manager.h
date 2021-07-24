@@ -114,8 +114,8 @@ private:
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
     std::mutex all_test_mutex_;
-    std::unordered_set<std::string> block_hash_added_;
-    std::mutex block_hash_added_mutex_;
+//     std::unordered_set<std::string> block_hash_added_;
+//     std::mutex block_hash_added_mutex_;
 
 #ifdef TENON_UNITTEST
     // just for test

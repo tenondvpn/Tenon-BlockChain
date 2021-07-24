@@ -62,6 +62,11 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
         std::lock_guard<std::mutex> guard(tx_pool_mutex_);
         for (auto iter = tx_pool_.begin(); iter != tx_pool_.end();) {
             if (!IsTxValid(iter->second)) {
+                auto miter = added_tx_map_.find(iter->second->uni_gid);
+                if (miter != added_tx_map_.end()) {
+                    added_tx_map_.erase(miter);
+                }
+
                 tx_pool_.erase(iter++);
                 BFT_ERROR("timeout and remove tx.");
                 continue;

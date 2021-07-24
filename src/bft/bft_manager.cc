@@ -478,15 +478,15 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-    {
-        std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
-        auto iter = block_hash_added_.find(tx_bft.to_tx().block().hash());
-        if (iter != block_hash_added_.end()) {
-            return;
-        }
-
-        block_hash_added_.insert(tx_bft.to_tx().block().hash());
-    }
+//     {
+//         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
+//         auto iter = block_hash_added_.find(tx_bft.to_tx().block().hash());
+//         if (iter != block_hash_added_.end()) {
+//             return;
+//         }
+// 
+//         block_hash_added_.insert(tx_bft.to_tx().block().hash());
+//     }
 
     auto src_block = tx_bft.to_tx().block();
 //     security::Signature sign;
@@ -1379,10 +1379,10 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
     }
 
     const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
-    {
-        std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
-        block_hash_added_.insert(block_ptr->hash());
-    }
+//     {
+//         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
+//         block_hash_added_.insert(block_ptr->hash());
+//     }
 
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
