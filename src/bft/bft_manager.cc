@@ -1117,6 +1117,14 @@ int BftManager::LeaderCommit(
     }
 
     auto backup_precommit_hash = BftProto::GetPrecommitSignHash(bft_msg);
+    if ((*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key.empty()) {
+        BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
+            common::GlobalInfo::Instance()->network_id(),
+            common::Encode::HexEncode((*bft_ptr->members_ptr())[bft_msg.member_index()]->id).c_str(),
+            bft_msg.member_index());
+        //         assert(false);
+        return kBftError;
+    }
     std::string dec_data;
     if (security::Crypto::Instance()->GetDecryptData(
             (*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key,
