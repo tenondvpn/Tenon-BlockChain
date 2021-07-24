@@ -315,10 +315,10 @@ int DbAccountInfo::SetMaxHeightHash(
     }
 
     max_height_ = tmp_height;
-    {
-        std::lock_guard<std::mutex> guard(max_hash_mutex_);
-        max_hash_ = hash;
-    }
+//     {
+//         std::lock_guard<std::mutex> guard(max_hash_mutex_);
+//         max_hash_ = hash;
+//     }
 
     return kBlockSuccess;
 }

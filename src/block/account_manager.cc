@@ -456,13 +456,13 @@ int AccountManager::AddNewAccount(
         account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
         account_info->NewHeight(tmp_now_height, db_batch);
         int res = account_info->SetBalance(0, db_batch);
-        res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
-        if (res != 0) {
-            BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
-                common::Encode::HexEncode(account_id).c_str());
-            res = kBlockError;
-            break;
-        }
+//         res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
+//         if (res != 0) {
+//             BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
+//                 common::Encode::HexEncode(account_id).c_str());
+//             res = kBlockError;
+//             break;
+//         }
 
         if (tx_info.type() == common::kConsensusCreateContract) {
             res += account_info->SetAddressType(kContractAddress, db_batch);
@@ -501,11 +501,11 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
-    uint64_t create_height = 0;
-    if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetCreateAccountHeight failed!");
-        return kBlockError;
-    }
+//     uint64_t create_height = 0;
+//     if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
+//         BLOCK_ERROR("GetCreateAccountHeight failed!");
+//         return kBlockError;
+//     }
 
     account_info->NewHeight(tmp_now_height, db_batch);
     if (SetAccountAttrs(
@@ -520,10 +520,10 @@ int AccountManager::AddNewAccount(
 
     if (exist_height <= tmp_now_height) {
         res += account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
-    } else {
-        if (create_height > tmp_now_height) {
-            res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
-        }
+//     } else {
+//         if (create_height > tmp_now_height) {
+//             res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
+//         }
     }
 
     if (res != 0) {
@@ -547,12 +547,12 @@ int AccountManager::GenesisAddAccountInfo(
     account_info->SetMaxHeightHash(0, "", db_batch);
     account_info->NewHeight(0, db_batch);
     int res = account_info->SetBalance(0, db_batch);
-    res += account_info->SetCreateAccountHeight(0, db_batch);
-    if (res != 0) {
-        BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
-            common::Encode::HexEncode(account_id).c_str());
-        return kBlockError;
-    }
+//     res += account_info->SetCreateAccountHeight(0, db_batch);
+//     if (res != 0) {
+//         BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
+//             common::Encode::HexEncode(account_id).c_str());
+//         return kBlockError;
+//     }
 
     if (res != kBlockSuccess) {
         BLOCK_ERROR("SetOutLego failed: %s, %llu",
@@ -628,16 +628,16 @@ int AccountManager::UpdateAccountInfo(
 
     if (exist_height <= block_item->height()) {
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
-    } else {
-        uint64_t create_height = 0;
-        if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
-            BLOCK_ERROR("GetCreateAccountHeight failed!");
-            return kBlockError;
-        }
-
-        if (create_height > block_item->height()) {
-            account_info->SetCreateAccountHeight(block_item->height(), db_batch);
-        }
+//     } else {
+//         uint64_t create_height = 0;
+//         if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
+//             BLOCK_ERROR("GetCreateAccountHeight failed!");
+//             return kBlockError;
+//         }
+// 
+//         if (create_height > block_item->height()) {
+//             account_info->SetCreateAccountHeight(block_item->height(), db_batch);
+//         }
     }
 
     uint32_t pool_idx = common::GetPoolIndex(account_id);
