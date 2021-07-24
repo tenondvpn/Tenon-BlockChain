@@ -32,7 +32,7 @@ public:
 //         const std::string& hash,
 //         const bft::protobuf::TxInfo& tx_info,
 //         db::DbWriteBach& db_batch);
-    void GetTxHeights(std::vector<uint64_t>* res);
+//     void GetTxHeights(std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
     int GetMaxHash(std::string* max_hash);

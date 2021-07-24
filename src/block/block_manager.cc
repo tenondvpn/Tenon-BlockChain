@@ -242,10 +242,10 @@ void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    if (block_msg.has_height_req()) {
-        HandleGetHeightRequest(header, block_msg);
-        return;
-    }
+//     if (block_msg.has_height_req()) {
+//         HandleGetHeightRequest(header, block_msg);
+//         return;
+//     }
 
     if (block_msg.has_account_init_res()) {
         init::UpdateVpnInit::Instance()->UpdateAccountBlockInfo(header.data());
@@ -449,41 +449,41 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
 //     }
 // }
 
-void BlockManager::HandleGetHeightRequest(
-        transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg) {
-    auto acc_ptr = AccountManager::Instance()->GetAcountInfo(
-            block_msg.height_req().account_addr());
-    if (acc_ptr == nullptr) {
-        return;
-    }
-    protobuf::BlockMessage block_msg_res;
-    auto height_res = block_msg_res.mutable_height_res();
-	height_res->set_account_addr(block_msg.height_req().account_addr());
-    uint64_t db_height = 0;
-    std::vector<uint64_t> res;
-    acc_ptr->GetTxHeights(&res);
-    for (uint32_t i = 0; i < res.size(); ++i) {
-        height_res->add_heights(res[i]);
-    }
-
-    transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-        network::kUniversalNetworkId);
-    assert(dht_ptr != nullptr);
-    BlockProto::CreateGetBlockResponse(
-            dht_ptr->local_node(),
-            header,
-            block_msg_res.SerializeAsString(),
-            msg);
-    if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    } else {
-        transport::MultiThreadHandler::Instance()->transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    }
-}
+// void BlockManager::HandleGetHeightRequest(
+//         transport::protobuf::Header& header,
+//         protobuf::BlockMessage& block_msg) {
+//     auto acc_ptr = AccountManager::Instance()->GetAcountInfo(
+//             block_msg.height_req().account_addr());
+//     if (acc_ptr == nullptr) {
+//         return;
+//     }
+//     protobuf::BlockMessage block_msg_res;
+//     auto height_res = block_msg_res.mutable_height_res();
+// 	height_res->set_account_addr(block_msg.height_req().account_addr());
+//     uint64_t db_height = 0;
+//     std::vector<uint64_t> res;
+//     acc_ptr->GetTxHeights(&res);
+//     for (uint32_t i = 0; i < res.size(); ++i) {
+//         height_res->add_heights(res[i]);
+//     }
+// 
+//     transport::protobuf::Header msg;
+//     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
+//         network::kUniversalNetworkId);
+//     assert(dht_ptr != nullptr);
+//     BlockProto::CreateGetBlockResponse(
+//             dht_ptr->local_node(),
+//             header,
+//             block_msg_res.SerializeAsString(),
+//             msg);
+//     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
+//         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+//                 header.from_ip(), header.from_port(), 0, msg);
+//     } else {
+//         transport::MultiThreadHandler::Instance()->transport()->Send(
+//                 header.from_ip(), header.from_port(), 0, msg);
+//     }
+// }
 
 void BlockManager::SendBlockNotExists(transport::protobuf::Header& header) {
     protobuf::BlockMessage block_msg_res;
