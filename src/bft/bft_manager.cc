@@ -950,15 +950,15 @@ int BftManager::LeaderPrecommit(
         LeaderCallPrecommit(bft_ptr);
         time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
-        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u, bft: %s", bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
         RemoveBft(bft_ptr->gid(), false);
         time4 = common::TimeUtils::TimestampUs();
     } else {
-        BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u", bft_msg.agree(), bft_ptr->pool_index());
+        BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u, bft: %s", bft_msg.agree(), bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
         time4 = common::TimeUtils::TimestampUs();
     }
 
-    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", time2 - time1, time3 - time2, time4 - time3);
+    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3);
     // broadcast pre-commit to backups
     return kBftSuccess;
 }
@@ -1197,7 +1197,7 @@ int BftManager::LeaderCommit(
         time5 = common::TimeUtils::TimestampUs();
     }
 
-    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu, %lu", time2 - time1, time3 - time2, time4 - time3, time5 - time4);
+    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
 }
 
