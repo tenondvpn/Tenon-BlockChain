@@ -482,6 +482,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes,
         leader_nodes);
     if (leader_nodes.empty()) {
+        BFT_ERROR("fts get leader nodes failed! elected_nodes size: %u", elected_nodes.size());
         return kElectError;
     }
 
