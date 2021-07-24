@@ -1538,6 +1538,10 @@ void BftManager::CheckTimeout() {
                     bft_hash_map_.erase(riter);
                 }
             }
+
+                // don't remove tx
+            iter->second->clear_item_index_vec();
+            DispatchPool::Instance()->BftOver(iter->second);
             BFT_DEBUG("bft timeout remove: %s", common::Encode::HexEncode(iter->first).c_str());
             break;
         }
