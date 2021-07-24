@@ -39,6 +39,7 @@ void Detection::AddTarget(dht::NodePtr& node) {
     node_map_.insert(std::make_pair(
             node->dht_key_hash,
             std::make_shared<DetectionItem>(node)));
+    NAT_DEBUG("MMMMMMM node_map_ size: %u", node_map_.size());
 }
 
 void Detection::Remove(uint64_t dht_key_hash) {
