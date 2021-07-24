@@ -22,7 +22,7 @@ namespace tenon {
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const block::DbAccountInfo* val) {
+uint64_t MinHeapUniqueVal(const block::DbAccountInfo& val) {
     return 0;
 }
 
