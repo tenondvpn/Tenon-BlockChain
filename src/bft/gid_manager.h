@@ -31,8 +31,8 @@ private:
     ~GidManager() {}
     std::string CreateTxInfo(TxItemPtr tx_ptr);
 
-    std::unordered_map<std::string, TxItemPtr> tx_map_;
-    std::mutex tx_map_mutex_;
+//     std::unordered_map<std::string, TxItemPtr> tx_map_;
+//     std::mutex tx_map_mutex_;
 };
 
 }  // namespace bft

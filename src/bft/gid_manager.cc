@@ -36,13 +36,13 @@ bool GidManager::NewGidTxValid(const std::string& gid, bft::protobuf::TxInfo& tx
         tx_info.type(),
         tx_info.call_contract_step(),
         tx_info.gid());
-    {
-        std::lock_guard<std::mutex> guard(tx_map_mutex_);
-        auto iter = tx_map_.find(tx_gid);
-        if (iter != tx_map_.end()) {
-            return false;
-        }
-    }
+//     {
+//         std::lock_guard<std::mutex> guard(tx_map_mutex_);
+//         auto iter = tx_map_.find(tx_gid);
+//         if (iter != tx_map_.end()) {
+//             return false;
+//         }
+//     }
 
     std::string db_for_gid = "db_for_gid_" + tx_gid;
     if (db::Db::Instance()->Exist(db_for_gid)) {
@@ -58,15 +58,15 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
         tx_ptr->tx.type(),
         tx_ptr->tx.call_contract_step(),
         tx_ptr->tx.gid());
-    {
-        std::lock_guard<std::mutex> guard(tx_map_mutex_);
-        auto iter = tx_map_.find(tx_gid);
-        if (iter != tx_map_.end()) {
-            return false;
-        }
-
-        tx_map_[tx_gid] = nullptr;
-    }
+//     {
+//         std::lock_guard<std::mutex> guard(tx_map_mutex_);
+//         auto iter = tx_map_.find(tx_gid);
+//         if (iter != tx_map_.end()) {
+//             return false;
+//         }
+// 
+//         tx_map_[tx_gid] = nullptr;
+//     }
 
     std::string db_for_gid = "db_for_gid_" + tx_gid;
     if (db::Db::Instance()->Exist(db_for_gid)) {
