@@ -24,7 +24,7 @@ public:
     int AddBlockItem(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
-    DbAccountInfo* GetAcountInfo(const std::string& acc_id);
+    DbAccountInfoPtr GetAcountInfo(const std::string& acc_id);
     bool AccountExists(const std::string& acc_id);
     int GetBlockInfo(
         uint32_t pool_idx,
@@ -38,7 +38,7 @@ public:
         const std::string& create_hash,
         db::DbWriteBach& db_batch);
     int GetAddressConsensusNetworkId(const std::string& address, uint32_t* network_id);
-    DbAccountInfo* GetContractInfoByAddress(const std::string& address);
+    DbAccountInfoPtr GetContractInfoByAddress(const std::string& address);
     std::string GetPoolBaseAddr(uint32_t pool_index);
     int GetPoolStatistic(uint32_t pool_index, block::protobuf::StatisticInfo* statistic_info);
     int ShardAddTimeBlockStatisticTransaction(
@@ -77,8 +77,8 @@ private:
 
     static const uint64_t kStatisticPeriod = 3000000llu;
 
-    std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
-    common::LimitHeap<block::DbAccountInfo*> acc_limit_heap_{ false, common::kInvalidUint32 };
+    std::unordered_map<std::string, block::DbAccountInfoPtr> acc_map_;
+    common::LimitHeap<block::DbAccountInfoPtr> acc_limit_heap_{ false, common::kInvalidUint32 };
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
     std::mutex network_block_mutex_;

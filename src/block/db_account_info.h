@@ -132,6 +132,7 @@ private:
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };
 
+typedef std::shared_ptr<DbAccountInfo> DbAccountInfoPtr;
 }  // namespace block
 
 }  // namespace tenon

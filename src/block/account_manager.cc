@@ -22,7 +22,7 @@ namespace tenon {
 namespace common {
 
 template<>
-uint64_t MinHeapUniqueVal(const block::DbAccountInfo& val) {
+uint64_t MinHeapUniqueVal(const block::DbAccountInfoPtr& val) {
     return 0;
 }
 
@@ -63,11 +63,6 @@ AccountManager::~AccountManager() {
 
     {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
-
-        for (auto iter = acc_map_.begin(); iter != acc_map_.end(); ++iter) {
-            delete iter->second;
-        }
-
         acc_map_.clear();
     }
 }
@@ -82,7 +77,7 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
     }
 
     if (DbAccountInfo::AccountExists(acc_id)) {
-        auto account_info = new block::DbAccountInfo(acc_id);
+        auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
         return true;
@@ -91,7 +86,7 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
     return false;
 }
 
-DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
+DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
     if (acc_id.size() != security::kTenonAddressSize) {
         return nullptr;
     }
@@ -105,7 +100,7 @@ DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
     }
 
     if (DbAccountInfo::AccountExists(acc_id)) {
-        auto account_info = new block::DbAccountInfo(acc_id);
+        auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
         return account_info;
@@ -114,7 +109,7 @@ DbAccountInfo* AccountManager::GetAcountInfo(const std::string& acc_id) {
     return nullptr;
 }
 
-DbAccountInfo* AccountManager::GetContractInfoByAddress(const std::string& address) {
+DbAccountInfoPtr AccountManager::GetContractInfoByAddress(const std::string& address) {
     auto account_info = GetAcountInfo(address);
     if (account_info == nullptr) {
         BLOCK_ERROR("get account failed[%s]", common::Encode::HexEncode(address).c_str());
@@ -422,7 +417,6 @@ int AccountManager::AddNewAccount(
 
     std::string account_id = tx_info.to();
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
-    block::DbAccountInfo* account_info = nullptr;
     auto iter = acc_map_.find(account_id);
     if (iter != acc_map_.end()) {
         return kBlockSuccess;
@@ -436,7 +430,7 @@ int AccountManager::AddNewAccount(
         return kBlockSuccess;
     }
 
-    account_info = new block::DbAccountInfo(account_id);
+    auto account_info = std::make_shared<block::DbAccountInfo>(account_id);
     int res = kBlockSuccess;
     do 
     {
@@ -481,7 +475,6 @@ int AccountManager::AddNewAccount(
     } while (0);
 
     if (res != kBlockSuccess) {
-        delete account_info;
         return kBlockError;
     }
 
@@ -504,7 +497,7 @@ int AccountManager::AddNewAccount(
             tx_info,
             exist_height,
             tmp_now_height,
-            account_info,
+            account_info.get(),
             db_batch) != kBlockSuccess) {
         return kBlockError;
     }
@@ -568,16 +561,15 @@ int AccountManager::UpdateAccountInfo(
     }
 
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
-    block::DbAccountInfo* account_info = nullptr;
+    block::DbAccountInfoPtr account_info = nullptr;
     auto iter = acc_map_.find(account_id);
     if (iter == acc_map_.end()) {
-        account_info = new block::DbAccountInfo(account_id);
+        account_info = std::make_shared<block::DbAccountInfo>(account_id);
         if (!block::DbAccountInfo::AccountExists(account_id)) {
             if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
                     bft::IsRootSingleBlockTx(tx_info.type()) ||
                     common::IsBaseAddress(account_id)) {
-                if (GenesisAddAccountInfo(account_id, db_batch, account_info) != kBlockSuccess) {
-                    delete account_info;
+                if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
                     return kBlockError;
                 }
             } else if (tx_info.type() == common::kConsensusCreateAcount &&
@@ -585,7 +577,6 @@ int AccountManager::UpdateAccountInfo(
             } else {
                 BLOCK_ERROR("account id not exists[%s]!",
                     common::Encode::HexEncode(account_id).c_str());
-                delete account_info;
                 return kBlockError;
             }
 
@@ -640,7 +631,7 @@ int AccountManager::UpdateAccountInfo(
             tx_info,
             exist_height,
             block_item->height(),
-            account_info,
+            account_info.get(),
             db_batch) != kBlockSuccess) {
         return kBlockError;
     }
