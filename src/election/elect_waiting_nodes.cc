@@ -70,6 +70,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     if (iter == all_nodes_waiting_map_.end()) {
         wait_ptr->added_nodes.insert(root_node_id);
         all_nodes_waiting_map_[wait_ptr->nodes_hash] = wait_ptr;
+        ELECT_DEBUG("MMMMMMM all_nodes_waiting_map_ size: %u", all_nodes_waiting_map_.size());
     } else {
         iter->second->added_nodes.insert(root_node_id);
     }

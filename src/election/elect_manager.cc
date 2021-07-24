@@ -722,12 +722,12 @@ bool ElectManager::IsIpExistsInAnyShard(uint32_t network_id, const std::string& 
 void ElectManager::ClearExistsNetwork(uint32_t network_id) {
     {
         std::lock_guard<std::mutex> guard(added_net_id_set_mutex_);
-        added_net_id_set_[network_id] = std::unordered_set<std::string>();
+        added_net_id_set_[network_id].clear();
     }
 
     {
         std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
-        added_net_ip_set_[network_id] = std::unordered_set<std::string>();
+        added_net_ip_set_[network_id].clear();
     }
 }
 

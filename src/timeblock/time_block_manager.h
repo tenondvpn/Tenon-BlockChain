@@ -35,14 +35,9 @@ private:
 
     void CreateTimeBlockTx();
     void CheckBft();
-    void BroadcastTimeBlock();
-    void CreateTmBroadcastMessage(
-        const dht::NodePtr& local_node,
-        transport::protobuf::Header& msg);
 
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
-    std::deque<uint64_t> latest_time_blocks_;
     std::mutex latest_time_blocks_mutex_;
     common::Tick create_tm_block_tick_;
     common::Tick check_bft_tick_;

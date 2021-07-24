@@ -24,14 +24,15 @@ void ElectPool::GetAllValidNodes(
         std::vector<NodeDetailPtr>& nodes) {
     std::unordered_map<std::string, NodeDetailPtr> node_map;
     {
-        std::lock_guard<std::mutex> guard(node_map_mutex_);
         if ((network_id_ >= network::kConsensusShardBeginNetworkId &&
                 network_id_ < network::kConsensusShardEndNetworkId) ||
                 network_id_ == network::kRootCongressNetworkId) {
+            std::lock_guard<std::mutex> guard(node_map_mutex_);
             nodes = elect_nodes_;
-            for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
-                nodes_filter.Add(common::Hash::Hash64((*iter)->id));
-            }
+        }
+
+        for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+            nodes_filter.Add(common::Hash::Hash64((*iter)->id));
         }
     }
 

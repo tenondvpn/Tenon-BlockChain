@@ -41,8 +41,6 @@ private:
 
     static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 
-    std::unordered_map<std::string, NodeDetailPtr> consensus_waiting_count_;
-    std::mutex consensus_waiting_count_mutex_;
     uint32_t waiting_shard_id_{ 0 };
     ElectPoolManager* pool_manager_{ nullptr };
     std::unordered_map<std::string, NodeDetailPtr> node_map_;

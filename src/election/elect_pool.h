@@ -24,7 +24,6 @@ public:
 private:
     void CreateFtsTree(const std::vector<NodeDetailPtr>& src_nodes);
 
-    std::unordered_map<std::string, NodeDetailPtr> node_map_;
     std::mutex node_map_mutex_;
     std::vector<NodeDetailPtr> elect_nodes_;
     uint32_t network_id_{ 0 };
