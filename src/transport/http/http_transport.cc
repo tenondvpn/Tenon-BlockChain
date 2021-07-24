@@ -624,9 +624,9 @@ void HttpTransport::HandleTxInfo(const httplib::Request &req, httplib::Response 
             }
 
             uint64_t create_account_height = 0;
-            if (acc_ptr->GetCreateAccountHeight(&create_account_height) != block::kBlockSuccess) {
-                return;
-            }
+//             if (acc_ptr->GetCreateAccountHeight(&create_account_height) != block::kBlockSuccess) {
+//                 return;
+//             }
 
             uint64_t height = 0;
             if (acc_ptr->GetMaxHeight(&height) != block::kBlockSuccess) {
