@@ -119,9 +119,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             bft_ptr = CreateBftPtr(bft_msg);
-            if (bft_ptr == nullptr) {
-                return;
-            }
+            bft_ptr->BackupCheckLeaderValid(bft_msg);
         }
 
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
@@ -259,10 +257,6 @@ void BftManager::HandleBftMessage(
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
-    if (!bft_ptr->BackupCheckLeaderValid(bft_msg)) {
-        return nullptr;
-    }
-
     bft_ptr->set_gid(bft_msg.gid());
     bft_ptr->set_network_id(bft_msg.net_id());
     bft_ptr->set_pool_index(bft_msg.pool_index());

@@ -101,6 +101,11 @@ private:
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         transport::TransportMessagePtr& header_ptr);
+    void BackupPrepareOppose(
+        transport::protobuf::Header& header,
+        BftInterfacePtr& bft_ptr,
+        bft::protobuf::BftMessage& bft_msg,
+        const std::string& res_data);
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;
