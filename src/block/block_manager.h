@@ -73,9 +73,9 @@ private:
     void HandleGetHeightRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
-    void HandleGetAccountInitRequest(
-        transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg);
+//     void HandleGetAccountInitRequest(
+//         transport::protobuf::Header& header,
+//         protobuf::BlockMessage& block_msg);
     void HandleAdRewardRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);

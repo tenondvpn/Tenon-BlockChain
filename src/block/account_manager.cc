@@ -617,14 +617,14 @@ int AccountManager::UpdateAccountInfo(
     }
 
     account_info->NewHeight(block_item->height(), db_batch);
-    if (!tx_info.to().empty() && tx_info.amount() > 0) {
-        account_info->NewTxHeight(
-            block_item->height(),
-            block_item->timestamp(),
-            block_item->hash(),
-            tx_info,
-            db_batch);
-    }
+//     if (!tx_info.to().empty() && tx_info.amount() > 0) {
+//         account_info->NewTxHeight(
+//             block_item->height(),
+//             block_item->timestamp(),
+//             block_item->hash(),
+//             tx_info,
+//             db_batch);
+//     }
 
     if (exist_height <= block_item->height()) {
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);

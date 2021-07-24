@@ -75,52 +75,51 @@ bool DbAccountInfo::AddNewAccountToDb(const std::string& uni_account_id, db::DbW
 }
 
 DbAccountInfo::DbAccountInfo(const std::string& account_id)
-        : account_id_(account_id),
-          tx_height_queue_(db::kGlobalDbAcountHeightPriQueue + "_tx_" + account_id) {
-    dict_key_ = db::kGlobalDickKeyAccountInfo + "_" + account_id_;
+        : account_id_(account_id) {
+    dict_key_ = db::kGlobalDickKeyAccountInfo + account_id_;
     pool_index_ = common::GetPoolIndex(account_id_);
-    uint64_t* height_data = tx_height_queue_.mem_data();
-    for (uint32_t hight_idx = 0; hight_idx < tx_height_queue_.size(); ++hight_idx) {
-        std::string block_str;
-        if (GetBlockWithHeight(height_data[hight_idx], &block_str) != kBlockSuccess) {
-            continue;
-        }
-
-        bft::protobuf::Block block;
-        if (!block.ParseFromString(block_str)) {
-            continue;
-        }
-
-        for (int32_t i = 0; i < block.tx_list_size(); ++i) {
-            if (block.tx_list(i).amount() <= 0) {
-                continue;
-            }
-
-            if (block.tx_list(i).from() == account_id_ ||
-                    block.tx_list(i).to() == account_id_) {
-                common::BlockItemPtr block_item;
-                block_item.item = new common::BlockItem();
-                block_item.item->height = height_data[hight_idx];
-                block_item.item->block_hash = block.hash();
-                block_item.item->gid = block.tx_list(i).gid();
-                block_item.item->from = block.tx_list(i).from();
-                block_item.item->to = block.tx_list(i).to();
-                block_item.item->amount = block.tx_list(i).amount();
-                block_item.item->balance = block.tx_list(i).balance();
-                block_item.item->type = block.tx_list(i).type();
-                block_item.item->status = block.tx_list(i).status();
-                block_item.item->timestamp = block.timestamp();
-                block_item.item->version = block.tx_list(i).version();
-                if (top_height_blocks_.size() >= kTopTxHeightBlocksCount) {
-                    auto item_ptr = top_height_blocks_.top().item;
-                    top_height_blocks_.pop();
-                    delete item_ptr;
-                }
-
-                auto res = top_height_blocks_.push(block_item);
-            }
-        }
-    }
+//     uint64_t* height_data = tx_height_queue_.mem_data();
+//     for (uint32_t hight_idx = 0; hight_idx < tx_height_queue_.size(); ++hight_idx) {
+//         std::string block_str;
+//         if (GetBlockWithHeight(height_data[hight_idx], &block_str) != kBlockSuccess) {
+//             continue;
+//         }
+// 
+//         bft::protobuf::Block block;
+//         if (!block.ParseFromString(block_str)) {
+//             continue;
+//         }
+// 
+//         for (int32_t i = 0; i < block.tx_list_size(); ++i) {
+//             if (block.tx_list(i).amount() <= 0) {
+//                 continue;
+//             }
+// 
+//             if (block.tx_list(i).from() == account_id_ ||
+//                     block.tx_list(i).to() == account_id_) {
+//                 common::BlockItemPtr block_item;
+//                 block_item.item = new common::BlockItem();
+//                 block_item.item->height = height_data[hight_idx];
+//                 block_item.item->block_hash = block.hash();
+//                 block_item.item->gid = block.tx_list(i).gid();
+//                 block_item.item->from = block.tx_list(i).from();
+//                 block_item.item->to = block.tx_list(i).to();
+//                 block_item.item->amount = block.tx_list(i).amount();
+//                 block_item.item->balance = block.tx_list(i).balance();
+//                 block_item.item->type = block.tx_list(i).type();
+//                 block_item.item->status = block.tx_list(i).status();
+//                 block_item.item->timestamp = block.timestamp();
+//                 block_item.item->version = block.tx_list(i).version();
+//                 if (top_height_blocks_.size() >= kTopTxHeightBlocksCount) {
+//                     auto item_ptr = top_height_blocks_.top().item;
+//                     top_height_blocks_.pop();
+//                     delete item_ptr;
+//                 }
+// 
+//                 auto res = top_height_blocks_.push(block_item);
+//             }
+//         }
+//     }
 }
 
 DbAccountInfo::~DbAccountInfo() {
@@ -237,101 +236,63 @@ void DbAccountInfo::GetHeights(std::vector<uint64_t>* res) {
 //     }
 }
 
-void DbAccountInfo::NewTxHeight(
-        uint64_t height,
-        uint64_t timestamp,
-        const std::string& hash,
-        const bft::protobuf::TxInfo& tx_info,
-        db::DbWriteBach& db_batch) {
-    if (tx_info.amount() <= 0) {
-        return;
-    }
+// void DbAccountInfo::NewTxHeight(
+//         uint64_t height,
+//         uint64_t timestamp,
+//         const std::string& hash,
+//         const bft::protobuf::TxInfo& tx_info,
+//         db::DbWriteBach& db_batch) {
+//     if (tx_info.amount() <= 0) {
+//         return;
+//     }
+// 
+//     {
+//         if (tx_info.from() == account_id_ || tx_info.to() == account_id_) {
+//             common::BlockItemPtr block_item;
+//             block_item.item = new common::BlockItem();
+//             block_item.item->height = height;
+//             block_item.item->timestamp = timestamp;
+//             block_item.item->block_hash = hash;
+//             block_item.item->gid = tx_info.gid();
+//             block_item.item->from = tx_info.from();
+//             block_item.item->to = tx_info.to();
+//             block_item.item->amount = tx_info.amount();
+//             block_item.item->balance = tx_info.balance();
+//             block_item.item->type = tx_info.type();
+//             block_item.item->status = tx_info.status();
+//             block_item.item->version = tx_info.version();
+//             std::lock_guard<std::mutex> guard(top_height_blocks_mutex_);
+//             if (top_height_blocks_.size() >= kTopTxHeightBlocksCount) {
+//                 auto item_ptr = top_height_blocks_.top().item;
+//                 top_height_blocks_.pop();
+//                 delete item_ptr;
+//             }
+// 
+//             top_height_blocks_.push(block_item);
+//         }
+//     }
+// 
+//     BLOCK_ERROR("acount new tx height, account id: %s, amount: %llu, balance: %llu",
+//             common::Encode::HexEncode(account_id_).c_str(),
+//             tx_info.amount(),
+//             tx_info.balance());
+//     {
+//         std::lock_guard<std::mutex> guard(tx_height_queue_mutex_);
+//         tx_height_queue_.push(height, db_batch);
+//     }
+// }
 
-    {
-        if (tx_info.from() == account_id_ || tx_info.to() == account_id_) {
-            common::BlockItemPtr block_item;
-            block_item.item = new common::BlockItem();
-            block_item.item->height = height;
-            block_item.item->timestamp = timestamp;
-            block_item.item->block_hash = hash;
-            block_item.item->gid = tx_info.gid();
-            block_item.item->from = tx_info.from();
-            block_item.item->to = tx_info.to();
-            block_item.item->amount = tx_info.amount();
-            block_item.item->balance = tx_info.balance();
-            block_item.item->type = tx_info.type();
-            block_item.item->status = tx_info.status();
-            block_item.item->version = tx_info.version();
-            std::lock_guard<std::mutex> guard(top_height_blocks_mutex_);
-            if (top_height_blocks_.size() >= kTopTxHeightBlocksCount) {
-                auto item_ptr = top_height_blocks_.top().item;
-                top_height_blocks_.pop();
-                delete item_ptr;
-            }
+// common::BlockItemPtr* DbAccountInfo::GetHeightBlockInfos(uint32_t* count) {
+//     *count = top_height_blocks_.size();
+//     return top_height_blocks_.data();
+// }
 
-            top_height_blocks_.push(block_item);
-        }
-    }
-
-    BLOCK_ERROR("acount new tx height, account id: %s, amount: %llu, balance: %llu",
-            common::Encode::HexEncode(account_id_).c_str(),
-            tx_info.amount(),
-            tx_info.balance());
-    {
-        std::lock_guard<std::mutex> guard(tx_height_queue_mutex_);
-        tx_height_queue_.push(height, db_batch);
-    }
-}
-
-common::BlockItemPtr* DbAccountInfo::GetHeightBlockInfos(uint32_t* count) {
-    *count = top_height_blocks_.size();
-    return top_height_blocks_.data();
-}
-
-void DbAccountInfo::GetTxHeights(std::vector<uint64_t>* res) {
-    uint64_t* height_data = tx_height_queue_.mem_data();
-    for (uint32_t i = 0; i < tx_height_queue_.size(); ++i) {
-        res->push_back(height_data[i]);
-    }
-}
-
-int DbAccountInfo::SetCreateAccountHeight(
-        uint64_t create_account_height,
-        db::DbWriteBach& db_batch) {
-    if (!db::Dict::Instance()->Hset(
-            dict_key_,
-            kFieldNewHeight,
-            std::to_string(create_account_height),
-            db_batch)) {
-        return kBlockError;
-    }
-
-    create_account_height_ = create_account_height;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetCreateAccountHeight(uint64_t* create_account_height) {
-    if (create_account_height_ != common::kInvalidUint64) {
-        *create_account_height = create_account_height_;
-        return kBlockSuccess;
-    }
-
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldNewHeight,
-            &tmp_str)) {
-        return kBlockError;
-
-    }
-
-    if (!common::StringUtil::ToUint64(tmp_str, create_account_height)) {
-        return kBlockError;
-    }
-
-    create_account_height_ = *create_account_height;
-    return kBlockSuccess;
-}
+// void DbAccountInfo::GetTxHeights(std::vector<uint64_t>* res) {
+//     uint64_t* height_data = tx_height_queue_.mem_data();
+//     for (uint32_t i = 0; i < tx_height_queue_.size(); ++i) {
+//         res->push_back(height_data[i]);
+//     }
+// }
 
 int DbAccountInfo::SetMaxHeightHash(
         uint64_t tmp_height,
@@ -381,31 +342,6 @@ int DbAccountInfo::GetMaxHeight(uint64_t* max_height) {
     }
 
     max_height_ = *max_height;
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetMaxHash(std::string* max_hash) {
-    {
-        std::lock_guard<std::mutex> guard(max_hash_mutex_);
-        if (!max_hash_.empty()) {
-            *max_hash = max_hash_;
-            return kBlockSuccess;
-        }
-    }
-    std::string tmp_str;
-    if (!db::Dict::Instance()->Hget(
-            dict_key_,
-            kFieldMaxHash,
-            &tmp_str)) {
-        return kBlockError;
-    }
-
-    *max_hash = tmp_str;
-    {
-        std::lock_guard<std::mutex> guard(max_hash_mutex_);
-        max_hash_ = tmp_str;
-    }
-
     return kBlockSuccess;
 }
 

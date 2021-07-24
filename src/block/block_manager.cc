@@ -253,7 +253,7 @@ void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     }
 
     if (block_msg.has_account_init_req()) {
-        HandleGetAccountInitRequest(header, block_msg);
+//         HandleGetAccountInitRequest(header, block_msg);
         return;
     }
 
@@ -381,73 +381,73 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
     return new_amount;
 }
 
-void BlockManager::HandleGetAccountInitRequest(
-        transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg) {
-    BLOCK_ERROR("get account init request coming: %s",
-        common::Encode::HexEncode(block_msg.account_init_req().id()).c_str());
-    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
-            block_msg.account_init_req().id());
-    if (account_ptr == nullptr) {
-        return;
-    }
-
-    protobuf::BlockMessage block_res;
-    auto account_init_res = block_res.mutable_account_init_res();
-    uint64_t balance = 0;
-    account_ptr->GetBalance(&balance);
-    account_init_res->set_balance(balance);
-    account_init_res->set_id(block_msg.account_init_req().id());
-    uint32_t count = 0;
-    auto height_blocks = account_ptr->GetHeightBlockInfos(&count);
-    for (uint32_t i = 0; i < count; ++i) {
-        if (height_blocks[i].item->height <= block_msg.account_init_req().height()) {
-            continue;
-        }
-
-        auto tx_info = account_init_res->add_tx_list();
-        tx_info->set_height(height_blocks[i].item->height);
-        tx_info->set_timestamp(height_blocks[i].item->timestamp);
-        tx_info->set_from(height_blocks[i].item->from);
-        tx_info->set_to(height_blocks[i].item->to);
-        if (header.version() <= transport::kTransportTxBignumVersionNum) {
-            tx_info->set_amount(height_blocks[i].item->amount);
-            tx_info->set_balance(height_blocks[i].item->balance);
-        } else {
-            tx_info->set_amount(height_blocks[i].item->amount);
-            tx_info->set_balance(height_blocks[i].item->balance);
-        }
-
-        tx_info->set_gid(height_blocks[i].item->gid);
-        tx_info->set_type(height_blocks[i].item->type);
-        tx_info->set_status(height_blocks[i].item->status);
-        tx_info->set_version(height_blocks[i].item->version);
-    }
-
-    DHT_ERROR("get account tx list size: %u", account_init_res->tx_list_size());
-    if (account_init_res->tx_list_size() <= 0) {
-        return;
-    }
-
-    transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
-    assert(dht_ptr != nullptr);
-    BlockProto::CreateGetBlockResponse(
-            dht_ptr->local_node(),
-            header,
-            block_res.SerializeAsString(),
-            msg);
-    DHT_ERROR("get account tx list size: %u, from: %s:%d",
-        account_init_res->tx_list_size(), header.from_ip().c_str(), header.from_port());
-    if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    } else {
-        transport::MultiThreadHandler::Instance()->transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    }
-}
+// void BlockManager::HandleGetAccountInitRequest(
+//         transport::protobuf::Header& header,
+//         protobuf::BlockMessage& block_msg) {
+//     BLOCK_ERROR("get account init request coming: %s",
+//         common::Encode::HexEncode(block_msg.account_init_req().id()).c_str());
+//     auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+//             block_msg.account_init_req().id());
+//     if (account_ptr == nullptr) {
+//         return;
+//     }
+// 
+//     protobuf::BlockMessage block_res;
+//     auto account_init_res = block_res.mutable_account_init_res();
+//     uint64_t balance = 0;
+//     account_ptr->GetBalance(&balance);
+//     account_init_res->set_balance(balance);
+//     account_init_res->set_id(block_msg.account_init_req().id());
+//     uint32_t count = 0;
+//     auto height_blocks = account_ptr->GetHeightBlockInfos(&count);
+//     for (uint32_t i = 0; i < count; ++i) {
+//         if (height_blocks[i].item->height <= block_msg.account_init_req().height()) {
+//             continue;
+//         }
+// 
+//         auto tx_info = account_init_res->add_tx_list();
+//         tx_info->set_height(height_blocks[i].item->height);
+//         tx_info->set_timestamp(height_blocks[i].item->timestamp);
+//         tx_info->set_from(height_blocks[i].item->from);
+//         tx_info->set_to(height_blocks[i].item->to);
+//         if (header.version() <= transport::kTransportTxBignumVersionNum) {
+//             tx_info->set_amount(height_blocks[i].item->amount);
+//             tx_info->set_balance(height_blocks[i].item->balance);
+//         } else {
+//             tx_info->set_amount(height_blocks[i].item->amount);
+//             tx_info->set_balance(height_blocks[i].item->balance);
+//         }
+// 
+//         tx_info->set_gid(height_blocks[i].item->gid);
+//         tx_info->set_type(height_blocks[i].item->type);
+//         tx_info->set_status(height_blocks[i].item->status);
+//         tx_info->set_version(height_blocks[i].item->version);
+//     }
+// 
+//     DHT_ERROR("get account tx list size: %u", account_init_res->tx_list_size());
+//     if (account_init_res->tx_list_size() <= 0) {
+//         return;
+//     }
+// 
+//     transport::protobuf::Header msg;
+//     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
+//             network::kUniversalNetworkId);
+//     assert(dht_ptr != nullptr);
+//     BlockProto::CreateGetBlockResponse(
+//             dht_ptr->local_node(),
+//             header,
+//             block_res.SerializeAsString(),
+//             msg);
+//     DHT_ERROR("get account tx list size: %u, from: %s:%d",
+//         account_init_res->tx_list_size(), header.from_ip().c_str(), header.from_port());
+//     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
+//         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+//                 header.from_ip(), header.from_port(), 0, msg);
+//     } else {
+//         transport::MultiThreadHandler::Instance()->transport()->Send(
+//                 header.from_ip(), header.from_port(), 0, msg);
+//     }
+// }
 
 void BlockManager::HandleGetHeightRequest(
         transport::protobuf::Header& header,
