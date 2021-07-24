@@ -147,7 +147,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             bft_msg.prepare_hash(),
             sync::kSyncHighest);
         BFT_DEBUG("kBftCommit add bft block pre hash sync: %s, bft gid: %s",
-            common::Encode::HexEncode(pre_hash).c_str(),
+            common::Encode::HexEncode(bft_msg.prepare_hash()).c_str(),
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
     }
 
