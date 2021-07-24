@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "common/random.h"
+#include "election/elect_node_detail.h"
 
 namespace tenon {
 
@@ -72,7 +73,12 @@ void FtsTree::PrintFtsTree() {
         int32_t count = (int32_t)pow(2.0, (float)level_count);
         std::cout << "count: " << count << std::endl;
         for (int32_t i = end_idx - count + 1; i <= end_idx; ++i) {
-            std::cout << fts_nodes_[i].fts_value << " ";
+            if (fts_nodes_[i].data != nullptr) {
+                elect::NodeDetailPtr* node_ptr = (elect::NodeDetailPtr*)fts_nodes_[i].data;
+                std::cout << fts_nodes_[i].fts_value << ":" << common::Encode::HexEncode((*node_ptr)->id) << " ";
+            } else {
+                std::cout << fts_nodes_[i].fts_value << " ";
+            }
         }
 
         std::cout << std::endl;
