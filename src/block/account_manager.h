@@ -6,6 +6,7 @@
 
 #include "common/config.h"
 #include "common/tick.h"
+#include "common/limit_heap.h"
 #include "bft/proto/bft.pb.h"
 #include "db/db.h"
 #include "block/block_utils.h"
@@ -77,6 +78,7 @@ private:
     static const uint64_t kStatisticPeriod = 3000000llu;
 
     std::unordered_map<std::string, block::DbAccountInfo*> acc_map_;
+    common::LimitHeap<block::DbAccountInfo*> acc_limit_heap_{ false, common::kInvalidUint32 };
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
     std::mutex network_block_mutex_;

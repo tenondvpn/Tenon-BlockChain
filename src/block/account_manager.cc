@@ -16,6 +16,20 @@
 #include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
 
+
+namespace tenon {
+
+namespace common {
+
+template<>
+uint64_t MinHeapUniqueVal(const block::DbAccountInfo* val) {
+    return 0;
+}
+
+}  // namespace common
+
+}  // namespace tenon
+
 namespace tenon {
 
 namespace block {

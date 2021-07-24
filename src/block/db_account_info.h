@@ -82,6 +82,14 @@ public:
         locked_ = false;
     }
 
+    uint64_t added_timeout() {
+        return added_timeout_;
+    }
+
+    void set_added_timeout(uint64_t added_time) {
+        added_timeout_ = added_time;
+    }
+
 private:
     static const uint32_t kTopTxHeightBlocksCount = 128;
 
@@ -119,6 +127,7 @@ private:
     std::atomic<uint64_t> latest_time_block_heigth_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_vss_random_{ common::kInvalidUint64 };
+    uint64_t added_timeout_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };
