@@ -3,6 +3,9 @@
 #include <memory>
 #include <atomic>
 #include <set>
+#include <mutex>
+#include <unordered_map>
+#include <cstdint>
 
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
