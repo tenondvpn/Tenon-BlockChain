@@ -131,9 +131,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             }
 
             bft_ptr = CreateBftPtr(bft_msg);
-            if (bft_ptr == nullptr) {
-                return;
-            }
+            bft_ptr->BackupCheckLeaderValid(bft_msg);
         }
 
         bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
