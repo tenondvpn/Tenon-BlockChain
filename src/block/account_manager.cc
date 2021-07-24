@@ -80,6 +80,7 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
         auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
+        BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return true;
     }
 
@@ -103,6 +104,7 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
+        BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return account_info;
     }
 
@@ -479,6 +481,7 @@ int AccountManager::AddNewAccount(
     }
 
     acc_map_[account_id] = account_info;
+    BLOCK_DEBUG("now account size: %u", acc_map_.size());
     uint64_t exist_height = 0;
     if (account_info->GetMaxHeight(&exist_height) != block::kBlockSuccess) {
         BLOCK_ERROR("GetMaxHeight failed!");
@@ -584,6 +587,7 @@ int AccountManager::UpdateAccountInfo(
         }
 
         acc_map_[account_id] = account_info;
+        BLOCK_DEBUG("now account size: %u", acc_map_.size());
     } else {
         account_info = iter->second;
     }
