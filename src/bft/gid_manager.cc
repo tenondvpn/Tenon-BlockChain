@@ -65,7 +65,7 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
             return false;
         }
 
-        tx_map_[tx_gid] = tx_ptr;
+        tx_map_[tx_gid] = nullptr;
     }
 
     std::string db_for_gid = "db_for_gid_" + tx_gid;
@@ -77,47 +77,47 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
     return true;
 }
 
-TxItemPtr GidManager::GetTx(
-        bool add_to,
-        uint32_t tx_type,
-        uint32_t call_contract_step,
-        const std::string& gid) {
-    TxItemPtr bft_msg_ptr = nullptr;
-    std::string tx_gid = GetUniversalGid(add_to, tx_type, call_contract_step, gid);
-    {
-        std::lock_guard<std::mutex> guard(tx_map_mutex_);
-        auto iter = tx_map_.find(tx_gid);
-        if (iter != tx_map_.end()) {
-            return iter->second;
-        }
-    }
-
-    std::string db_for_gid = "db_for_gid_" + tx_gid;
-    std::string bft_msg;
-    auto st = db::Db::Instance()->Get(db_for_gid, &bft_msg);
-    if (!st.ok()) {
-        // get from brother nodes
-        sync::KeyValueSync::Instance()->AddSync(
-            common::GlobalInfo::Instance()->network_id(),
-            db_for_gid,
-            sync::kSyncHighest);
-        return nullptr;
-    }
-
-    protobuf::TxInfo tx_bft;
-    if (!tx_bft.ParseFromString(bft_msg.data())) {
-        BFT_ERROR("protobuf::TxBft ParseFromString failed!");
-        return nullptr;
-    }
-
-    auto tx_ptr = std::make_shared<TxItem>(tx_bft);
-    {
-        std::lock_guard<std::mutex> guard(tx_map_mutex_);
-        tx_map_[tx_gid] = tx_ptr;
-    }
-
-    return tx_ptr;
-}
+// TxItemPtr GidManager::GetTx(
+//         bool add_to,
+//         uint32_t tx_type,
+//         uint32_t call_contract_step,
+//         const std::string& gid) {
+//     TxItemPtr bft_msg_ptr = nullptr;
+//     std::string tx_gid = GetUniversalGid(add_to, tx_type, call_contract_step, gid);
+//     {
+//         std::lock_guard<std::mutex> guard(tx_map_mutex_);
+//         auto iter = tx_map_.find(tx_gid);
+//         if (iter != tx_map_.end()) {
+//             return iter->second;
+//         }
+//     }
+// 
+//     std::string db_for_gid = "db_for_gid_" + tx_gid;
+//     std::string bft_msg;
+//     auto st = db::Db::Instance()->Get(db_for_gid, &bft_msg);
+//     if (!st.ok()) {
+//         // get from brother nodes
+//         sync::KeyValueSync::Instance()->AddSync(
+//             common::GlobalInfo::Instance()->network_id(),
+//             db_for_gid,
+//             sync::kSyncHighest);
+//         return nullptr;
+//     }
+// 
+//     protobuf::TxInfo tx_bft;
+//     if (!tx_bft.ParseFromString(bft_msg.data())) {
+//         BFT_ERROR("protobuf::TxBft ParseFromString failed!");
+//         return nullptr;
+//     }
+// 
+//     auto tx_ptr = std::make_shared<TxItem>(tx_bft);
+//     {
+//         std::lock_guard<std::mutex> guard(tx_map_mutex_);
+//         tx_map_[tx_gid] = tx_ptr;
+//     }
+// 
+//     return tx_ptr;
+// }
 
 std::string GidManager::CreateTxInfo(TxItemPtr tx_ptr) {
     protobuf::TxInfo tx = tx_ptr->tx;
