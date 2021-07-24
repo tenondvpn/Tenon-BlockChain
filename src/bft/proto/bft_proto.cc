@@ -113,6 +113,10 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_secret(secret_str);
     std::string sha128 = GetPrepareSignHash(bft_msg);
     std::string enc_data;
+    if (bft_ptr->leader_mem_ptr() == nullptr) {
+        return;
+    }
+
     if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
         BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
 //         assert(false);
