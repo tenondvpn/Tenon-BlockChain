@@ -627,10 +627,10 @@ int TcpTransport::Send(
         FreeConnection(des_ip, des_port);
         return kTransportError;
     }
-//     if (!message.debug().empty()) {
-//         TRANSPORT_DEBUG("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
-//             message.id(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash());
-//     }
+    if (!message.debug().empty()) {
+        TRANSPORT_DEBUG("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
+            message.id(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash());
+    }
 
     return kTransportSuccess;
 }

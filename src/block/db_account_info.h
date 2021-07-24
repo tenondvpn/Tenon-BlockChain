@@ -90,6 +90,14 @@ public:
         added_timeout_ = added_time;
     }
 
+    int32_t heap_index() {
+        return heap_index_;
+    }
+
+    void set_heap_index(int32_t heap_index) {
+        heap_index_ = heap_index;
+    }
+
 private:
     static const uint32_t kTopTxHeightBlocksCount = 128;
 
@@ -128,6 +136,7 @@ private:
     std::atomic<uint64_t> latest_time_block_tm_{ common::kInvalidUint64 };
     std::atomic<uint64_t> latest_time_block_vss_random_{ common::kInvalidUint64 };
     uint64_t added_timeout_{ 0 };
+    int32_t heap_index_{ -1 };
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

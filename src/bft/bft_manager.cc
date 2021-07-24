@@ -146,6 +146,9 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
             bft_msg.net_id(),
             bft_msg.prepare_hash(),
             sync::kSyncHighest);
+        BFT_DEBUG("kBftCommit add bft block pre hash sync: %s, bft gid: %s",
+            common::Encode::HexEncode(pre_hash).c_str(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
     }
 
     if (!bft_ptr->prpare_block()) {
@@ -886,6 +889,11 @@ int BftManager::LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    uint64_t time1 = common::TimeUtils::TimestampUs();
+    uint64_t time2;
+    uint64_t time3;
+    uint64_t time4;
+    uint64_t time5;
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("backup message member index invalid.");
         return kBftError;
@@ -914,6 +922,7 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
+    time2 = common::TimeUtils::TimestampUs();
     if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
@@ -932,19 +941,24 @@ int BftManager::LeaderPrecommit(
         bft_msg.agree(),
         backup_secret,
         member_ptr->id);
+    time3 = common::TimeUtils::TimestampUs();
     if (!bft_msg.agree()) {
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
+        time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
+        time4 = common::TimeUtils::TimestampUs();
     } else {
         BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u", bft_msg.agree(), bft_ptr->pool_index());
+        time4 = common::TimeUtils::TimestampUs();
     }
 
+    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", time2 - time1, time3 - time2, time4 - time3);
     // broadcast pre-commit to backups
     return kBftSuccess;
 }
@@ -1102,6 +1116,12 @@ int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    uint64_t time1 = common::TimeUtils::TimestampUs();
+    uint64_t time2;
+    uint64_t time3;
+    uint64_t time4;
+    uint64_t time5;
+
     if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
         BFT_ERROR("check leader error.");
         return kBftError;
@@ -1133,7 +1153,7 @@ int BftManager::LeaderCommit(
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
-
+    time2 = common::TimeUtils::TimestampUs();
     if (memcmp(backup_precommit_hash.c_str(), dec_data.c_str(), backup_precommit_hash.size()) != 0) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
@@ -1156,20 +1176,28 @@ int BftManager::LeaderCommit(
     }
 
     const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    time3 = common::TimeUtils::TimestampUs();
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
         bft_msg.agree(),
         agg_res,
         member_ptr->id);
+    time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
         LeaderCallCommit(bft_ptr);
-    }  else if (res == kBftReChallenge) {
+        time5 = common::TimeUtils::TimestampUs();
+    }
+    else if (res == kBftReChallenge) {
         LeaderReChallenge(bft_ptr);
-    } else if (res == kBftOppose) {
+        time5 = common::TimeUtils::TimestampUs();
+    }
+    else if (res == kBftOppose) {
         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         RemoveBft(bft_ptr->gid(), false);
+        time5 = common::TimeUtils::TimestampUs();
     }
 
+    BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu, %lu", time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
 }
 

@@ -72,6 +72,8 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         auto iter = acc_map_.find(acc_id);
         if (iter != acc_map_.end()) {
+            iter->second->set_added_timeout(common::TimeUtils::TimestampMs());
+            acc_limit_heap_.AdjustDown(iter->second->heap_index());
             return true;
         }
     }
@@ -80,6 +82,8 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
         auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
+        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+        account_info->set_heap_index(acc_limit_heap_.push(account_info));
         BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return true;
     }
@@ -96,6 +100,8 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         auto iter = acc_map_.find(acc_id);
         if (iter != acc_map_.end()) {
+            iter->second->set_added_timeout(common::TimeUtils::TimestampMs());
+            acc_limit_heap_.AdjustDown(iter->second->heap_index());
             return iter->second;
         }
     }
@@ -104,6 +110,8 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         auto account_info = std::make_shared<block::DbAccountInfo>(acc_id);
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_[acc_id] = account_info;
+        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+        account_info->set_heap_index(acc_limit_heap_.push(account_info));
         BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return account_info;
     }
@@ -421,6 +429,8 @@ int AccountManager::AddNewAccount(
     std::lock_guard<std::mutex> guard(acc_map_mutex_);
     auto iter = acc_map_.find(account_id);
     if (iter != acc_map_.end()) {
+        iter->second->set_added_timeout(common::TimeUtils::TimestampMs());
+        acc_limit_heap_.AdjustDown(iter->second->heap_index());
         return kBlockSuccess;
     }
 
@@ -481,6 +491,9 @@ int AccountManager::AddNewAccount(
     }
 
     acc_map_[account_id] = account_info;
+    account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+    account_info->set_heap_index(acc_limit_heap_.push(account_info));
+
     BLOCK_DEBUG("now account size: %u", acc_map_.size());
     uint64_t exist_height = 0;
     if (account_info->GetMaxHeight(&exist_height) != block::kBlockSuccess) {
@@ -587,9 +600,14 @@ int AccountManager::UpdateAccountInfo(
         }
 
         acc_map_[account_id] = account_info;
+        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+        account_info->set_heap_index(acc_limit_heap_.push(account_info));
+
         BLOCK_DEBUG("now account size: %u", acc_map_.size());
     } else {
         account_info = iter->second;
+        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+        acc_limit_heap_.AdjustDown(account_info->heap_index());
     }
 
     uint64_t exist_height = 0;

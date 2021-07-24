@@ -29,6 +29,10 @@ static const std::string kFieldTimeBlock("time_block");
 static const std::string kFieldTimeHeight("time_height");
 static const std::string kFieldTimeVssRandom("time_vss_random");
 
+bool operator<(DbAccountInfoPtr& lhs, DbAccountInfoPtr& rhs) {
+    return lhs->added_timeout() < rhs->added_timeout();
+}
+
 std::unordered_set<std::string> DbAccountInfo::account_id_set_;
 std::mutex DbAccountInfo::account_id_set_mutex_;
 
