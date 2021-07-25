@@ -42,7 +42,7 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
     BFT_DEBUG("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d!",
+        "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!",
         tx_index,
         tx_ptr->tx.to_add(),
         pool_index_,
@@ -52,7 +52,8 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
         common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
         common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(),
         common::Encode::HexEncode(uni_gid).c_str(),
-        tx_pool_.size());
+        tx_pool_.size(),
+        added_tx_map_.size());
     return kBftSuccess;
 }
 

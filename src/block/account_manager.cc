@@ -246,9 +246,9 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
 
     if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressNetworkId &&
             common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) {
-        block::AccountManager::Instance()->ShardAddTimeBlockStatisticTransaction(
-            height,
-            tx_info);
+//         ShardAddTimeBlockStatisticTransaction(
+//             height,
+//             tx_info);
     }
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
