@@ -40,9 +40,9 @@ TimeBlockManager::TimeBlockManager() {
     create_tm_block_tick_.CutOff(
         10 * kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
-    check_bft_tick_.CutOff(
-        10 * kCheckTimeBlockPeriodUs,
-        std::bind(&TimeBlockManager::CheckBft, this));
+//     check_bft_tick_.CutOff(
+//         10 * kCheckTimeBlockPeriodUs,
+//         std::bind(&TimeBlockManager::CheckBft, this));
 }
 
 TimeBlockManager::~TimeBlockManager() {}
