@@ -796,7 +796,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         leader_sig,
         msg);
 
-    return kBftSuccess;
     network::Route::Instance()->Send(msg);
     bft_ptr->init_prepare_timeout();
 
