@@ -675,6 +675,7 @@ int BftManager::InitBft(
 }
 
 int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
+    return kBftSuccess;
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
         BFT_ERROR("leader create bft failed!");
