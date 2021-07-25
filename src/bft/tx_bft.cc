@@ -425,7 +425,7 @@ int TxBft::RootBackupCheckPrepare(
 
     if (block.tx_list_size() == 1) {
         // MMMMMMM 
-        if (block.tx_list[0].type() == common::kConsensusStatistic) {
+        if (block.tx_list(0).type() == common::kConsensusStatistic) {
             return kBftLeaderTxInfoInvalid;
         }
 
