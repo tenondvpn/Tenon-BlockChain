@@ -1108,8 +1108,6 @@ int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    std::cout << "bft commit called!" << std::endl;
-    return kBftError;
     uint64_t time1 = common::TimeUtils::TimestampUs();
     uint64_t time2;
     uint64_t time3;

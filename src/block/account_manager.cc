@@ -314,6 +314,7 @@ int AccountManager::AddBlockItem(
                 return kBlockError;
             }
         }
+        return kBlockSuccess;
 
         if (tx_list[i].type() == common::kConsensusFinalStatistic &&
                 common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
