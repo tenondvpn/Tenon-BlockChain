@@ -424,6 +424,11 @@ int TxBft::RootBackupCheckPrepare(
     }
 
     if (block.tx_list_size() == 1) {
+        // MMMMMMM 
+        if (block.tx_list[0].type() == common::kConsensusStatistic) {
+            return kBftLeaderTxInfoInvalid;
+        }
+
         *invalid_tx_idx = 0;
         switch (block.tx_list(0).type())
         {
