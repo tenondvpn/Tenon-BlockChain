@@ -1374,6 +1374,7 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader) {
+    return;
     // broadcast to this consensus shard and waiting pool shard
     if (!is_bft_leader && !elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
         return;
