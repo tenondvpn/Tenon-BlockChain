@@ -313,8 +313,9 @@ int AccountManager::AddBlockItem(
                 BLOCK_ERROR("HandleRootSingleBlockTx failed!");
                 return kBlockError;
             }
+
+            return kBlockSuccess;
         }
-        return kBlockSuccess;
 
         if (tx_list[i].type() == common::kConsensusFinalStatistic &&
                 common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
