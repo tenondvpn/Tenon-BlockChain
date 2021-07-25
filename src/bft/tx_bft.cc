@@ -580,6 +580,11 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         *invalid_tx_idx = i;
         const auto& tx_info = block.tx_list(i);
+        // MMMMMMM 
+        if (tx_info.type() == common::kConsensusStatistic) {
+            return kBftLeaderTxInfoInvalid;
+        }
+
         uint32_t call_contract_step = common::kConsensusInvalidType;
         if (tx_info.type() == common::kConsensusCallContract ||
             tx_info.type() == common::kConsensusCreateContract) {
