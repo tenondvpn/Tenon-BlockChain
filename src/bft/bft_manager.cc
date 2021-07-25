@@ -675,7 +675,6 @@ int BftManager::InitBft(
 }
 
 int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
-    return kBftSuccess;
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
         BFT_ERROR("leader create bft failed!");
@@ -796,6 +795,8 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         bft_ptr,
         leader_sig,
         msg);
+
+    return kBftSuccess;
     network::Route::Instance()->Send(msg);
     bft_ptr->init_prepare_timeout();
 
