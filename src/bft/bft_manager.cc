@@ -1555,6 +1555,7 @@ void BftManager::CheckTimeout() {
         }
     }
 
+    DispatchPool::Instance()->CheckTimeoutTx();
     timeout_tick_.CutOff(
             kBftTimeoutCheckPeriod,
             std::bind(&BftManager::CheckTimeout, this));

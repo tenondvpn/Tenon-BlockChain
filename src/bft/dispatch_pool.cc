@@ -198,6 +198,10 @@ void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {
     tx_pool_.BftOver(bft_ptr);
 }
 
+void DispatchPool::CheckTimeoutTx() {
+    tx_pool_.CheckTimeoutTx();
+}
+
 }  // namespace bft
 
 }  // namespace tenon

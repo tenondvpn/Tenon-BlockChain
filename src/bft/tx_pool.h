@@ -72,6 +72,7 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    void CheckTimeoutTx();
 
 private:
     bool IsTxContractLocked(TxItemPtr tx_ptr);

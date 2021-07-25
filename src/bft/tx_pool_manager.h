@@ -33,6 +33,7 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    void CheckTimeoutTx();
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);

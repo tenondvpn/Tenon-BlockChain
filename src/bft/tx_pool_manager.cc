@@ -388,7 +388,6 @@ void TxPoolManager::RemoveTx(
     tx_pool_[pool_index].RemoveTx(add_to, tx_type, call_contract_step, gid);
 }
 
-
 void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     assert(bft_ptr->pool_index() < common::kInvalidPoolIndex);
     tx_pool_[bft_ptr->pool_index()].BftOver(bft_ptr);
@@ -405,6 +404,12 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
             BFT_DEBUG("bft over pool index: %d", bft_ptr->pool_index());
 //         }
 //     }
+}
+
+void TxPoolManager::CheckTimeoutTx() {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
+        tx_pool_[i].CheckTimeoutTx();
+    }
 }
 
 }  // namespace bft
