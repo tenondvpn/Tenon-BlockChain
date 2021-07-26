@@ -388,6 +388,7 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
+        block_ptr->set_version(9999);
         if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
         }
