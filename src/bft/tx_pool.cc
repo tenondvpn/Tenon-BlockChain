@@ -280,16 +280,16 @@ void TxPool::RemoveTx(
 
     auto item_iter = tx_pool_.find(iter->second);
     if (item_iter != tx_pool_.end()) {
-        BFT_ERROR("RemoveTx [to: %d] [pool idx: %d] type: %d,"
-            "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
-            add_to,
-            pool_index_,
-            tx_type,
-            call_contract_step,
-            "",
-            "",
-            common::Encode::HexEncode(gid).c_str(),
-            common::Encode::HexEncode(uni_gid).c_str());
+//         BFT_DEBUG("RemoveTx [to: %d] [pool idx: %d] type: %d,"
+//             "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
+//             add_to,
+//             pool_index_,
+//             tx_type,
+//             call_contract_step,
+//             "",
+//             "",
+//             common::Encode::HexEncode(gid).c_str(),
+//             common::Encode::HexEncode(uni_gid).c_str());
         tx_pool_.erase(item_iter);
     }
 

@@ -88,12 +88,12 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
         return kTimeBlockError;
     }
 
-    BFT_ERROR("LeaderCreateTimeBlockTx success gid exists[%s] %lu"
-        "latest_time_block_tm_[%lu] new_time_block_tm[%lu], vss value: %lu",
-        common::Encode::HexEncode(gid).c_str(),
-        (uint64_t)latest_time_block_height_,
-        (uint64_t)latest_time_block_tm_, new_time_block_tm,
-        vss::VssManager::Instance()->GetConsensusFinalRandom());
+//     BFT_DEBUG("LeaderCreateTimeBlockTx success gid exists[%s] %lu"
+//         "latest_time_block_tm_[%lu] new_time_block_tm[%lu], vss value: %lu",
+//         common::Encode::HexEncode(gid).c_str(),
+//         (uint64_t)latest_time_block_height_,
+//         (uint64_t)latest_time_block_tm_, new_time_block_tm,
+//         vss::VssManager::Instance()->GetConsensusFinalRandom());
 
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
@@ -126,7 +126,6 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     msg->set_data(bft_msg.SerializeAsString());
-    TMBLOCK_ERROR("leader create new time block transaction: %lu", new_time_block_tm);
     return kTimeBlockSuccess;
 }
 

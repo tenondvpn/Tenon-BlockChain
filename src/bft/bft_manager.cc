@@ -101,15 +101,15 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     if (bft_msg.leader()) {
         auto bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
-            BFT_ERROR("leader get bft gid failed[%s]",
-                common::Encode::HexEncode(bft_msg.gid()).c_str());
+//             BFT_DEBUG("leader get bft gid failed[%s]",
+//                 common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
-        uint64_t time2 = common::TimeUtils::TimestampUs();
+//         uint64_t time2 = common::TimeUtils::TimestampUs();
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-        uint64_t time3 = common::TimeUtils::TimestampUs();
-        BFT_ERROR("leader HandleBftMessage time use: %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2);
+//         uint64_t time3 = common::TimeUtils::TimestampUs();
+//         BFT_DEBUG("leader HandleBftMessage time use: %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2);
         return;
     }
 
