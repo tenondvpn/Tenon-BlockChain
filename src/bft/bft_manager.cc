@@ -392,6 +392,7 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
+        block_ptr->set_version(9999);
         if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
         }
@@ -491,6 +492,9 @@ void BftManager::HandleSyncBlock(
 // 
 //         block_hash_added_.insert(tx_bft.to_tx().block().hash());
 //     }
+    if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
+        return;
+    }
 
     auto src_block = tx_bft.to_tx().block();
 //     security::Signature sign;
@@ -516,6 +520,7 @@ void BftManager::HandleSyncBlock(
 
 //     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
+    block_ptr->set_version(9999);
     if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
