@@ -14,6 +14,15 @@ class LimitHashSet {
 public:
     LimitHashSet(uint32_t max_size) : max_size_(max_size) {}
     ~LimitHashSet() {}
+    bool DataExists(const Type& data) {
+        auto iter = item_set_.find(data);
+        if (iter != item_set_.end()) {
+            return true;
+        }
+
+        return false;
+    }
+
     bool Push(const Type& data) {
         auto iter = item_set_.find(data);
         if (iter != item_set_.end()) {

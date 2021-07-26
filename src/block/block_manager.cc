@@ -599,6 +599,11 @@ void BlockManager::SendBlockResponse(
     }
 }
 
+bool BlockManager::BlockExists(const std::string& hash) {
+    std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
+    return block_hash_limit_set_.DataExists(hash);
+}
+
 int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item) {
     {
         std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);

@@ -349,6 +349,10 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
+    if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
+        return;
+    }
+
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");

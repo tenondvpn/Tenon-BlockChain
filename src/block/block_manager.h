@@ -62,6 +62,7 @@ public:
         uint32_t pool_index,
         uint64_t height,
         bft::protobuf::Block& block_item);
+    bool BlockExists(const std::string& hash);
 
 private:
     BlockManager();
