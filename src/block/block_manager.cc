@@ -556,7 +556,7 @@ int BlockManager::HandleGetBlockRequest(
 
 //     BLOCK_ERROR("HandleGetBlockRequest with height OK[%s:%d] "
 //             "block_msg.block_req().has_block_hash(): %d, "
-//             "block_msg.block_req().has_tx_gid(): %d£¬ "
+//             "block_msg.block_req().has_tx_gid(): %dï¼Œ "
 //             "block_msg.block_req().has_height(): %d, "
 //             "%s: %llu, hash[%s]",
 //             header.from_ip().c_str(),
@@ -627,9 +627,6 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
     }
 
     db_batch.Put(block_item->hash(), block_str);
-//     if (block_item->version() == 9999) {
-//         return kBlockSuccess;
-//     }
     if (block_item->version() != 9999)
     AccountManager::Instance()->AddBlockItem(block_item, db_batch);
 #ifdef TENON_UNITTEST
