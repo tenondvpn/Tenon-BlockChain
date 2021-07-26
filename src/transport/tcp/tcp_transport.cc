@@ -527,7 +527,7 @@ void TcpTransport::Stop() {
 }
 
 bool TcpTransport::OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet) {
-    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<tnet::TcpConnection*>(conn));
+    auto tcp_conn = std::make_shared<tnet::TcpConnection>(conn);
     if (conn->GetSocket() == nullptr) {
         packet.Free();
         return false;
