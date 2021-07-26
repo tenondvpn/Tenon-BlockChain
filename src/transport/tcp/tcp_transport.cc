@@ -526,16 +526,16 @@ void TcpTransport::Stop() {
     }
 }
 
-bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packet) {
-    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<tnet::TcpConnection*>(&conn));
-    if (conn.GetSocket() == nullptr) {
+bool TcpTransport::OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet) {
+    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<tnet::TcpConnection*>(conn));
+    if (conn->GetSocket() == nullptr) {
         packet.Free();
         return false;
     }
 
     std::string from_ip;
     uint16_t from_port;
-    conn.GetSocket()->GetIpPort(&from_ip, &from_port);
+    conn->GetSocket()->GetIpPort(&from_ip, &from_port);
     if (packet.IsCmdPacket()) {
         if (raw_callback_ != nullptr) {
             raw_callback_(tcp_conn, nullptr, 0);
