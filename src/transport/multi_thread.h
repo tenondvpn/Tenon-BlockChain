@@ -44,7 +44,6 @@ public:
     static MultiThreadHandler* Instance();
     void Init(TransportPtr& transport_ptr, TransportPtr& tcp_transport_ptr);
     void HandleMessage(
-            void* tcp_conn,
             const std::string& from_ip,
             uint16_t from_port,
             const char* message,
@@ -52,7 +51,6 @@ public:
             int32_t transport_type);
     void HandleMessage(protobuf::Header& msg);
 	void HandleRemoteMessage(
-            void* tcp_conn,
             const std::string& from_ip,
 			uint16_t from_port,
 			const char* buf,

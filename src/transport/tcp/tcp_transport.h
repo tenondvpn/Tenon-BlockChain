@@ -87,13 +87,13 @@ private:
     };
 
     bool OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packet);
-    void AddClientConnection(tnet::TcpConnection* conn);
+    void AddClientConnection(std::shared_ptr<tnet::TcpConnection>& conn);
     std::shared_ptr<tnet::TnetTransport> transport_{ nullptr };
     tnet::TcpAcceptor* acceptor_{ nullptr };
     EncoderFactory encoder_factory_;
     tnet::ListenSocket* socket_{ nullptr };
     std::deque<RotationServer> rotation_servers_;
-    std::unordered_map<std::string, tnet::TcpConnection*> conn_map_;
+    std::unordered_map<std::string, std::shared_ptr<tnet::TcpConnection>> conn_map_;
     TcpRawPacketCallback raw_callback_{ nullptr };
 #endif
     void Run();

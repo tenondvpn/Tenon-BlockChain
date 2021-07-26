@@ -7,6 +7,8 @@
 #include <unistd.h>
 #endif
 
+#include <memory>
+
 #include "common/log.h"
 #include "transport/proto/transport.pb.h"
 #include "tnet/tcp_connection.h"
@@ -21,7 +23,7 @@ namespace tenon {
 namespace transport {
 
 typedef std::function<void(
-        tnet::TcpConnection* conn,
+        std::shared_ptr<tnet::TcpConnection>& conn,
         char* message,
         uint32_t)> TcpRawPacketCallback;
 

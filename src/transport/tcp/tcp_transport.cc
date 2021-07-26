@@ -527,7 +527,7 @@ void TcpTransport::Stop() {
 }
 
 bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packet) {
-    TcpConnection* tcp_conn = dynamic_cast<TcpConnection*>(&conn);
+    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<TcpConnection*>(&conn));
     if (conn.GetSocket() == nullptr) {
         packet.Free();
         return false;
@@ -563,7 +563,6 @@ bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packe
 
     AddClientConnection(tcp_conn);
     MultiThreadHandler::Instance()->HandleMessage(
-            tcp_conn,
             from_ip,
             from_port,
             data,
@@ -675,7 +674,7 @@ TcpConnection* TcpTransport::CreateConnection(const std::string& ip, uint16_t po
             300u * 1000u * 1000u);
 }
 
-TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
+std::shared_ptr<TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
@@ -685,14 +684,18 @@ TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t port)
         std::lock_guard<std::mutex> guard(conn_map_mutex_);
         auto iter = conn_map_.find(peer_spec);
         if (iter != conn_map_.end()) {
-            return iter->second;
+            if (iter->second->TcpState() == tnet::TcpConnection::kTcpClosed) {
+                conn_map_.erase(iter);
+            } else {
+                return iter->second;
+            }
         }
     }
 
-    TcpConnection* tcp_conn = transport_->CreateConnection(
+    auto tcp_conn = std::make_shared<TcpConnection>(transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
-            3u * 1000u * 1000u);
+            3u * 1000u * 1000u));
     if (tcp_conn == nullptr) {
         return nullptr;
     }
@@ -725,7 +728,7 @@ std::string TcpTransport::ClearAllConnection() {
     return res;
 }
 
-void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
+void TcpTransport::AddClientConnection(std::shared_ptr<tnet::TcpConnection>& conn) {
     std::string client_ip;
     uint16_t client_port;
     if (conn->GetSocket()->GetIpPort(&client_ip, &client_port) != 0) {
@@ -736,7 +739,7 @@ void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
     std::lock_guard<std::mutex> guard(conn_map_mutex_);
     auto iter = conn_map_.find(peer_spec);
     if (iter != conn_map_.end()) {
-        if (iter->second == conn) {
+        if (iter->second.get() == conn.get()) {
             return;
         }
 

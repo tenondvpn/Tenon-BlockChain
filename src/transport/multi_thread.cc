@@ -133,7 +133,6 @@ void MultiThreadHandler::HandleMessage(protobuf::Header& msg) {
 }
 
 void MultiThreadHandler::HandleMessage(
-        void* tcp_conn,
         const std::string& from_ip,
         uint16_t from_port,
         const char* message,
@@ -152,7 +151,6 @@ void MultiThreadHandler::HandleMessage(
 
     if (transport_type != kTcp) {
         HandleRemoteMessage(
-                nullptr,
                 from_ip,
                 from_port,
                 message + sizeof(TransportHeader),
@@ -160,7 +158,6 @@ void MultiThreadHandler::HandleMessage(
                 transport_type);
     } else {
         HandleRemoteMessage(
-                tcp_conn,
                 from_ip,
                 from_port,
                 message,
@@ -183,7 +180,6 @@ void AddInMessage(uint32_t type) {
 }
 
 void MultiThreadHandler::HandleRemoteMessage(
-        void* tcp_conn,
 		const std::string& from_ip,
 		uint16_t from_port,
 		const char* buf,

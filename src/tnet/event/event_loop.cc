@@ -88,25 +88,25 @@ void EventLoop::Wakeup() const {
 }
 
 void EventLoop::RunTask() {
-    std::lock_guard<std::mutex> guard(mutex_);
-    for (auto iter = task_list_.begin(); iter != task_list_.end(); ++iter) {
-        (*iter)();
-    }
-
-    task_list_.clear();
-//     std::deque<Task> task_list;
-//     {
-//         std::lock_guard<std::mutex> guard(mutex_);
-//         if (task_list_.empty()) {
-//             return;
-//         }
-// 
-//         task_list_.swap(task_list);
-//     }
-// 
-//     for (auto iter = task_list.begin(); iter != task_list.end(); ++iter) {
+//     std::lock_guard<std::mutex> guard(mutex_);
+//     for (auto iter = task_list_.begin(); iter != task_list_.end(); ++iter) {
 //         (*iter)();
 //     }
+// 
+//     task_list_.clear();
+    std::deque<Task> task_list;
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        if (task_list_.empty()) {
+            return;
+        }
+
+        task_list_.swap(task_list);
+    }
+
+    for (auto iter = task_list.begin(); iter != task_list.end(); ++iter) {
+        (*iter)();
+    }
 }
 
 }  // namespace tnet

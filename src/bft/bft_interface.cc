@@ -29,6 +29,7 @@ int BftInterface::Init() {
 }
 
 bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
+    std::lock_guard<std::mutex> guard(mutex_);
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
         BFT_ERROR("get local bft member failed!");
@@ -43,6 +44,7 @@ bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
+    std::lock_guard<std::mutex> guard(mutex_);
     if (!bft_msg.has_net_id()) {
         BFT_ERROR("bft message has no net id.");
         return false;
@@ -72,7 +74,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    std::lock_guard<std::mutex> guard(mutex_);
     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
     std::string str_pubkey;
@@ -94,6 +95,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 }
 
 bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
+    std::lock_guard<std::mutex> guard(mutex_);
     leader_mem_ptr_ = elect::ElectManager::Instance()->GetMember(
         common::GlobalInfo::Instance()->network_id(),
         bft_msg.member_index());
@@ -113,6 +115,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 }
 
 bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
+    std::lock_guard<std::mutex> guard(mutex_);
     int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     if ((int32_t)pool_index() % leader_count != leader_mem_ptr_->pool_index_mod_num) {

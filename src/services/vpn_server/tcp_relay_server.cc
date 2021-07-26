@@ -36,7 +36,7 @@ int TcpRelayServerManager::Init(
     return kVpnsvrSuccess;
 }
 
-int TcpRelayServerManager::Handshake(tnet::TcpConnection* tcp_conn) {
+int TcpRelayServerManager::Handshake(std::shared_ptr<tnet::TcpConnection>& tcp_conn) {
     transport::MsgPacket* reply_packet = new transport::MsgPacket(
             tnet::kRaw, tnet::kEncodeWithHeader, false);
     std::string msg(sizeof(TcpRelayHead) + 6, 0);
@@ -63,7 +63,7 @@ int TcpRelayServerManager::Handshake(tnet::TcpConnection* tcp_conn) {
 }
 
 void TcpRelayServerManager::HandleMessage(
-        tnet::TcpConnection* conn,
+        std::shared_ptr<tnet::TcpConnection>& conn,
         char* data,
         uint32_t len) {
     if (data == nullptr) {
@@ -85,7 +85,7 @@ void TcpRelayServerManager::HandleMessage(
 }
 
 int TcpRelayServerManager::VlanNodeHeartbeatDetail(
-        tnet::TcpConnection* conn,
+        std::shared_ptr<tnet::TcpConnection>& conn,
         char* data,
         uint32_t len) {
     service::protobuf::VlanNodeHeartbeat vlan_hb;

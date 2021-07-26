@@ -45,6 +45,10 @@ public:
         tcp_state_ = state;
     }
 
+    int32_t TcpState() {
+        return tcp_state_;
+    }
+
     void SetAction(int action) {
         action_ = action;
     }

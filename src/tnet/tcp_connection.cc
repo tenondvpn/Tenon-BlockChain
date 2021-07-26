@@ -410,8 +410,8 @@ void TcpConnection::NotifyCmdPacketAndClose(int type) {
 }
 
 void TcpConnection::ReleaseByIOThread() {
+    std::lock_guard<std::mutex> guard(mutex_);
     tcp_state_ = kTcpClosed;
-    delete this;
 }
 
 }  // namespace tnet
