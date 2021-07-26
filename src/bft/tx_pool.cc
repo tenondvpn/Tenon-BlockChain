@@ -87,7 +87,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
 
                 tx_pool_.erase(iter++);
-                BFT_ERROR("timeout and remove tx.");
+//                 BFT_ERROR("timeout and remove tx.");
                 continue;
             }
 
@@ -136,7 +136,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 bool TxPool::IsTxValid(TxItemPtr tx_ptr) {
     auto now_time = std::chrono::steady_clock::now();
     if (tx_ptr->timeout <= now_time) {
-        BFT_ERROR("timeout and remove tx: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
+//         BFT_ERROR("timeout and remove tx: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return false;
     }
 

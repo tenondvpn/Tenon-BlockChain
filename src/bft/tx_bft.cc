@@ -1743,10 +1743,10 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
         }
 
         if (pool_hash != block_info.prehash()) {
-//             BFT_ERROR("111 hash block missing pool[%d] now[%s], prev[%s]",
-//                     pool_index(),
-//                     common::Encode::HexEncode(pool_hash).c_str(),
-//                     common::Encode::HexEncode(block_info.prehash()).c_str());
+            BFT_ERROR("111 hash block missing pool[%d] now[%s], prev[%s]",
+                    pool_index(),
+                    common::Encode::HexEncode(pool_hash).c_str(),
+                    common::Encode::HexEncode(block_info.prehash()).c_str());
             return kBftBlockPreHashError;
         }
     }
