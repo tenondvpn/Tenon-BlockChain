@@ -658,6 +658,8 @@ void TcpTransport::FreeConnection(const std::string& ip, uint16_t port) {
     auto iter = conn_map_.find(peer_spec);
     if (iter != conn_map_.end()) {
         iter->second->Destroy(true);
+        std::lock_guard<std::mutex> guard(erase_conns_mutex_);
+        erase_conns_.push_back(iter->second);
         conn_map_.erase(iter);
     }
 }
@@ -685,6 +687,8 @@ tnet::TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t
         auto iter = conn_map_.find(peer_spec);
         if (iter != conn_map_.end()) {
             if (iter->second->GetTcpState() == tnet::TcpConnection::kTcpClosed) {
+                std::lock_guard<std::mutex> guard(erase_conns_mutex_);
+                erase_conns_.push_back(iter->second);
                 conn_map_.erase(iter);
             } else {
                 return iter->second;
@@ -704,6 +708,8 @@ tnet::TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t
         std::lock_guard<std::mutex> guard(conn_map_mutex_);
         auto iter = conn_map_.find(peer_spec);
         if (iter != conn_map_.end()) {
+            std::lock_guard<std::mutex> guard(erase_conns_mutex_);
+            erase_conns_.push_back(iter->second);
             iter->second->Destroy(true);
             conn_map_.erase(iter);
         }
@@ -739,17 +745,36 @@ void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
     std::lock_guard<std::mutex> guard(conn_map_mutex_);
     auto iter = conn_map_.find(peer_spec);
     if (iter != conn_map_.end()) {
-        if (iter->second.get() == conn) {
+        if (iter->second == conn) {
             return;
         }
 
         iter->second->Destroy(true);
+        std::lock_guard<std::mutex> guard(erase_conns_mutex_);
+        erase_conns_.push_back(iter->second);
         conn_map_.erase(iter);
     }
 
     conn_map_[peer_spec] = conn;
     TRANSPORT_DEBUG("1 MMMMMMMM now con map size: %u", conn_map_.size());
 }
+
+void TcpTransport::EraseConn() {
+    auto now_tm_ms = common::TimeUtils::TimestampMs();
+    // delay to release
+    std::lock_guard<std::mutex> guard(erase_conns_mutex_);
+    while (!erase_conns_.empty()) {
+        auto from_item = erase_conns_.front();
+        if (from_item->free_timeout_ms() <= now_tm_ms) {
+            delete from_item;
+            erase_conns_.pop_front();
+            continue;
+        }
+
+        break;
+    }
+}
+
 #endif // CLIENT_USE_UV
 
 }  // namespace transport

@@ -88,6 +88,8 @@ private:
 
     bool OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet);
     void AddClientConnection(tnet::TcpConnection* conn);
+    void EraseConn();
+
     std::shared_ptr<tnet::TnetTransport> transport_{ nullptr };
     tnet::TcpAcceptor* acceptor_{ nullptr };
     EncoderFactory encoder_factory_;
@@ -95,6 +97,9 @@ private:
     std::deque<RotationServer> rotation_servers_;
     std::unordered_map<std::string, tnet::TcpConnection*> conn_map_;
     TcpRawPacketCallback raw_callback_{ nullptr };
+    std::deque<tnet::TcpConnection*> erase_conns_;
+    std::mutex erase_conns_mutex_;
+    common::Tick erase_conn_tick_;
 #endif
     void Run();
 

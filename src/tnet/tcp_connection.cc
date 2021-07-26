@@ -1,5 +1,6 @@
 #include "tnet/tcp_connection.h"
 
+#include "common/time_utils.h"
 #include "tnet/utils/cmd_packet.h"
 #include "tnet/socket/client_socket.h"
 #include "transport/proto/transport.pb.h"
@@ -66,6 +67,8 @@ void TcpConnection::Destroy(bool closeSocketImmediately) {
 
         event_loop_.PostTask(std::bind(&TcpConnection::ReleaseByIOThread, this));
     }
+
+    free_timeout_ms_ = common::TimeUtils::TimestampMs() + 10000lu;;
 }
 
 bool TcpConnection::SendPacket(Packet& packet) {

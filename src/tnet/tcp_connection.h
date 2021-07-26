@@ -85,6 +85,10 @@ public:
         id_ = id;
     }
 
+    uint64_t free_timeout_ms() {
+        return free_timeout_ms_;
+    }
+
 private:
     typedef std::deque<ByteBufferPtr> BufferList;
     typedef BufferList::const_iterator BufferListConstIter;
@@ -120,6 +124,7 @@ private:
     std::string ip_;
     uint16_t port_{ 0 };
     uint32_t id_{ 0 };
+    uint64_t free_timeout_ms_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(TcpConnection);
 };
