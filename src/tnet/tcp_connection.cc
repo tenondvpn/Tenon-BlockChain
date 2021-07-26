@@ -405,7 +405,7 @@ void TcpConnection::OnConnectTimeout() {
 }
 
 void TcpConnection::NotifyCmdPacketAndClose(int type) {
-    packet_handler_(*this, CmdPacketFactory::Create(type));
+    packet_handler_(this, CmdPacketFactory::Create(type));
     Close();
 }
 
