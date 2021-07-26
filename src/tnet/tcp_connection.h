@@ -125,6 +125,7 @@ private:
     uint16_t port_{ 0 };
     uint32_t id_{ 0 };
     uint64_t free_timeout_ms_{ 0 };
+    uint32_t max_count_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(TcpConnection);
 };

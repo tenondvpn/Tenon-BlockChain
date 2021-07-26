@@ -99,7 +99,10 @@ bool TcpConnection::SendPacketWithoutLock(Packet& packet) {
 
     if (tcp_state_ != kTcpConnected || !out_buffer_list_.empty()) {
         out_buffer_list_.push_back(buf_ptr);
-        TNET_DEBUG("out_buffer_list_ size: %lu", out_buffer_list_.size());
+        if (max_count_ < out_buffer_list_.size()) {
+            max_count_ = out_buffer_list_.size();
+        }
+        TNET_DEBUG("out_buffer_list_ size: %lu, max_count_: %u", out_buffer_list_.size(), max_count_);
         return true;
     }
 
