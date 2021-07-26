@@ -691,10 +691,10 @@ std::shared_ptr<tnet::TcpConnection> TcpTransport::GetConnection(const std::stri
         }
     }
 
-    auto tcp_conn = std::make_shared<tnet::TcpConnection>(transport_->CreateConnection(
+    auto tcp_conn = transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
-            3u * 1000u * 1000u));
+            3u * 1000u * 1000u);
     if (tcp_conn == nullptr) {
         return nullptr;
     }
