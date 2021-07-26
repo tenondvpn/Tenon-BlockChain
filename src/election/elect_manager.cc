@@ -258,17 +258,17 @@ void ElectManager::ProcessNewElectBlock(
                 local_mem_ptr_[elect_block.shard_network_id()] = *iter;
             }
 
-            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
-                "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-                elect_block.shard_network_id(),
-                common::Encode::HexEncode((*iter)->id).c_str(),
-                (*iter)->pool_index_mod_num);
-            std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-                << elect_block.shard_network_id()
-                << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
-                << ", leader count: " << elect_block.leader_count()
-                << std::endl;
+//             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+//                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+//                 elect_block.shard_network_id(),
+//                 common::Encode::HexEncode((*iter)->id).c_str(),
+//                 (*iter)->pool_index_mod_num);
+//             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+//                 << elect_block.shard_network_id()
+//                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+//                 << ", leader count: " << elect_block.leader_count()
+//                 << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
@@ -299,11 +299,11 @@ void ElectManager::ProcessNewElectBlock(
                 security::EcdhCreateKey::Instance()->CreateKey(
                     (*iter)->pubkey,
                     (*iter)->backup_ecdh_key);
-                ELECT_DEBUG("network id: %d, member index: %d, set backup ecdh key: %s, backup id: %s",
-                    elect_block.shard_network_id(),
-                    index,
-                    common::Encode::HexEncode((*iter)->backup_ecdh_key).c_str(),
-                    common::Encode::HexEncode((*iter)->id).c_str());
+//                 ELECT_DEBUG("network id: %d, member index: %d, set backup ecdh key: %s, backup id: %s",
+//                     elect_block.shard_network_id(),
+//                     index,
+//                     common::Encode::HexEncode((*iter)->backup_ecdh_key).c_str(),
+//                     common::Encode::HexEncode((*iter)->id).c_str());
             }
             ++index;
         }
@@ -317,11 +317,11 @@ void ElectManager::ProcessNewElectBlock(
                     security::EcdhCreateKey::Instance()->CreateKey(
                         (*iter)->pubkey,
                         (*iter)->leader_ecdh_key);
-                    ELECT_DEBUG("network id: %d, member index: %d, set leader ecdh key: %s, leader id: %s",
-                        elect_block.shard_network_id(),
-                        index,
-                        common::Encode::HexEncode((*iter)->leader_ecdh_key).c_str(),
-                        common::Encode::HexEncode((*iter)->id).c_str());
+//                     ELECT_DEBUG("network id: %d, member index: %d, set leader ecdh key: %s, leader id: %s",
+//                         elect_block.shard_network_id(),
+//                         index,
+//                         common::Encode::HexEncode((*iter)->leader_ecdh_key).c_str(),
+//                         common::Encode::HexEncode((*iter)->id).c_str());
 //                 }
             }
 

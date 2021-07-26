@@ -84,7 +84,7 @@ bool AccountManager::AccountExists(const std::string& acc_id) {
         acc_map_[acc_id] = account_info;
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());
         account_info->set_heap_index(acc_limit_heap_.push(account_info));
-        BLOCK_DEBUG("now account size: %u", acc_map_.size());
+//         BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return true;
     }
 
@@ -112,7 +112,7 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         acc_map_[acc_id] = account_info;
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());
         account_info->set_heap_index(acc_limit_heap_.push(account_info));
-        BLOCK_DEBUG("now account size: %u", acc_map_.size());
+//         BLOCK_DEBUG("now account size: %u", acc_map_.size());
         return account_info;
     }
 
@@ -208,10 +208,10 @@ int AccountManager::ShardAddTimeBlockStatisticTransaction(
             std::to_string(tmblock_tm) + "_" +
             std::to_string(i)));
 
-        BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, latest height: %lu, network id: %u",
-            i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm,
-            elect::ElectManager::Instance()->latest_height(common::GlobalInfo::Instance()->network_id()),
-            common::GlobalInfo::Instance()->network_id());
+//         BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, latest height: %lu, network id: %u",
+//             i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm,
+//             elect::ElectManager::Instance()->latest_height(common::GlobalInfo::Instance()->network_id()),
+//             common::GlobalInfo::Instance()->network_id());
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -494,7 +494,7 @@ int AccountManager::AddNewAccount(
     account_info->set_added_timeout(common::TimeUtils::TimestampMs());
     account_info->set_heap_index(acc_limit_heap_.push(account_info));
 
-    BLOCK_DEBUG("now account size: %u", acc_map_.size());
+//     BLOCK_DEBUG("now account size: %u", acc_map_.size());
     uint64_t exist_height = 0;
     if (account_info->GetMaxHeight(&exist_height) != block::kBlockSuccess) {
         BLOCK_ERROR("GetMaxHeight failed!");
@@ -603,7 +603,7 @@ int AccountManager::UpdateAccountInfo(
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());
         account_info->set_heap_index(acc_limit_heap_.push(account_info));
 
-        BLOCK_DEBUG("now account size: %u", acc_map_.size());
+//         BLOCK_DEBUG("now account size: %u", acc_map_.size());
     } else {
         account_info = iter->second;
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());

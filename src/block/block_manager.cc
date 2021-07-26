@@ -607,6 +607,9 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
         }
     }
     db::DbWriteBach db_batch;
+    if (block_item->height() % 1000 == 0) {
+        BLOCK_DEBUG("add block hash: %s, now size: %lu", common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
+    }
 //     BLOCK_DEBUG("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     std::string height_db_key = common::GetHeightDbKey(
         block_item->network_id(),
@@ -619,8 +622,7 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
     }
 
     db_batch.Put(block_item->hash(), block_str);
-    if (block_item->version() != 9999)
-        AccountManager::Instance()->AddBlockItem(block_item, db_batch);
+    AccountManager::Instance()->AddBlockItem(block_item, db_batch);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {
         return kBlockSuccess;

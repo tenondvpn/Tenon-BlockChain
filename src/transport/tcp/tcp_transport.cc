@@ -628,10 +628,10 @@ int TcpTransport::Send(
         FreeConnection(des_ip, des_port);
         return kTransportError;
     }
-    if (!message.debug().empty()) {
-        TRANSPORT_DEBUG("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
-            message.id(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash());
-    }
+//     if (!message.debug().empty()) {
+//         TRANSPORT_DEBUG("send message id: %lu, to: %s:%d, debug: %s, msg hash: %lu",
+//             message.id(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash());
+//     }
 
     return kTransportSuccess;
 }
@@ -717,7 +717,7 @@ tnet::TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t
         }
 
         conn_map_[peer_spec] = tcp_conn;
-        TRANSPORT_DEBUG("0 MMMMMMMM now con map size: %u", conn_map_.size());
+//         TRANSPORT_DEBUG("0 MMMMMMMM now con map size: %u", conn_map_.size());
     }
     return tcp_conn;
 }
@@ -758,7 +758,7 @@ void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
     }
 
     conn_map_[peer_spec] = conn;
-    TRANSPORT_DEBUG("1 MMMMMMMM now con map size: %u", conn_map_.size());
+//     TRANSPORT_DEBUG("1 MMMMMMMM now con map size: %u", conn_map_.size());
 }
 
 void TcpTransport::EraseConn() {

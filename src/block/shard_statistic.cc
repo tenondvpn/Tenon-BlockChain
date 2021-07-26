@@ -234,14 +234,14 @@ void ShardStatistic::AddShardPoolStatistic(
         }
     }
 
-    std::string invalid_pools;
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        if (!valid_pool_.Valid(i)) {
-            invalid_pools += std::to_string(i) + " ";
-        }
-    }
+//     std::string invalid_pools;
+//     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+//         if (!valid_pool_.Valid(i)) {
+//             invalid_pools += std::to_string(i) + " ";
+//         }
+//     }
 
-    BLOCK_DEBUG("valid_pool_.valid_count(): %d, need: %d, invalid_pools: %s", valid_pool_.valid_count(), common::kImmutablePoolSize, invalid_pools.c_str());
+//     BLOCK_DEBUG("valid_pool_.valid_count(): %d, need: %d, invalid_pools: %s", valid_pool_.valid_count(), common::kImmutablePoolSize, invalid_pools.c_str());
     if (create_tx) {
         CreateStatisticTransaction();
     }
@@ -290,8 +290,8 @@ void ShardStatistic::CreateStatisticTransaction() {
             std::to_string(tmblock::TimeBlockManager::Instance()->LatestTimestamp())) +
             "_" +
             std::to_string(pool_idx));
-        BLOCK_DEBUG("create new final statistic time stamp: %lu",
-            tmblock::TimeBlockManager::Instance()->LatestTimestamp());
+//         BLOCK_DEBUG("create new final statistic time stamp: %lu",
+//             tmblock::TimeBlockManager::Instance()->LatestTimestamp());
         tx_info.set_gas_limit(0llu);
         tx_info.set_amount(0);
         tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());

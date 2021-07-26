@@ -41,19 +41,19 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
-    BFT_DEBUG("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!",
-        tx_index,
-        tx_ptr->tx.to_add(),
-        pool_index_,
-        tx_ptr->tx.type(),
-        tx_ptr->tx.call_contract_step(),
-        common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
-        common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
-        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(),
-        common::Encode::HexEncode(uni_gid).c_str(),
-        tx_pool_.size(),
-        added_tx_map_.size());
+//     BFT_DEBUG("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
+//         "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!",
+//         tx_index,
+//         tx_ptr->tx.to_add(),
+//         pool_index_,
+//         tx_ptr->tx.type(),
+//         tx_ptr->tx.call_contract_step(),
+//         common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
+//         common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
+//         common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(),
+//         common::Encode::HexEncode(uni_gid).c_str(),
+//         tx_pool_.size(),
+//         added_tx_map_.size());
     return kBftSuccess;
 }
 
@@ -104,16 +104,16 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
 
                 res_vec.push_back(iter->second);
-                BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
-                    "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
-                    iter->second->tx.to_add(),
-                    pool_index_,
-                    iter->second->tx.type(),
-                    iter->second->tx.call_contract_step(),
-                    common::Encode::HexEncode(iter->second->tx.from()).c_str(),
-                    common::Encode::HexEncode(iter->second->tx.to()).c_str(),
-                    common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
-                    res_vec.size());
+//                 BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
+//                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
+//                     iter->second->tx.to_add(),
+//                     pool_index_,
+//                     iter->second->tx.type(),
+//                     iter->second->tx.call_contract_step(),
+//                     common::Encode::HexEncode(iter->second->tx.from()).c_str(),
+//                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
+//                     common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+//                     res_vec.size());
                 if (IsShardSingleBlockTx(iter->second->tx.type())) {
                     break;
                 }
@@ -127,7 +127,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
         }
     }
 
-    BFT_DEBUG("get tx size[%u]", res_vec.size());
+//     BFT_DEBUG("get tx size[%u]", res_vec.size());
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }
@@ -208,16 +208,16 @@ TxItemPtr TxPool::GetTx(
         tx_type,
         call_contract_step,
         gid);
-    BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
-        "call_contract_step: %d get tx[%s]to[%s][%s], uni_gid[%s]!",
-        add_to,
-        pool_index_,
-        tx_type,
-        call_contract_step,
-        "",
-        "",
-        common::Encode::HexEncode(gid).c_str(),  
-        common::Encode::HexEncode(uni_gid).c_str());
+//     BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
+//         "call_contract_step: %d get tx[%s]to[%s][%s], uni_gid[%s]!",
+//         add_to,
+//         pool_index_,
+//         tx_type,
+//         call_contract_step,
+//         "",
+//         "",
+//         common::Encode::HexEncode(gid).c_str(),  
+//         common::Encode::HexEncode(uni_gid).c_str());
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {
@@ -236,16 +236,16 @@ TxItemPtr TxPool::GetTx(
 
     auto item_iter = tx_pool_.find(iter->second);
     if (item_iter != tx_pool_.end()) {
-        BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
-            "call_contract_step: %d got tx[%s]to[%s][%s], uni_gid[%s]!",
-            add_to,
-            pool_index_,
-            tx_type,
-            call_contract_step,
-            "",
-            "",
-            common::Encode::HexEncode(gid).c_str(),
-            common::Encode::HexEncode(uni_gid).c_str());
+//         BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
+//             "call_contract_step: %d got tx[%s]to[%s][%s], uni_gid[%s]!",
+//             add_to,
+//             pool_index_,
+//             tx_type,
+//             call_contract_step,
+//             "",
+//             "",
+//             common::Encode::HexEncode(gid).c_str(),
+//             common::Encode::HexEncode(uni_gid).c_str());
         return item_iter->second;
     }
 
@@ -303,8 +303,8 @@ bool TxPool::TxPoolEmpty() {
 
 void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     auto item_vec = bft_ptr->item_index_vec();
-    BFT_DEBUG("bft over called pool index: %d, status: %d., remove tx index size: %d",
-        pool_index_, bft_ptr->status(), item_vec.size());
+//     BFT_DEBUG("bft over called pool index: %d, status: %d., remove tx index size: %d",
+//         pool_index_, bft_ptr->status(), item_vec.size());
     if (bft_ptr->status() != kBftCommited && bft_ptr->status() != kBftStepTimeout) {
         return;
     }
@@ -313,12 +313,12 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
     for (uint32_t i = 0; i < item_vec.size(); ++i) {
         auto iter = tx_pool_.find(item_vec[i]);
         if (iter != tx_pool_.end()) {
-            BFT_DEBUG("remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
-                item_vec[i],
-                common::Encode::HexEncode(iter->second->tx.from()).c_str(),
-                common::Encode::HexEncode(iter->second->tx.to()).c_str(),
-                common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
-                iter->second->tx.amount());
+//             BFT_DEBUG("remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
+//                 item_vec[i],
+//                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
+//                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),
+//                 common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+//                 iter->second->tx.amount());
             auto miter = added_tx_map_.find(iter->second->uni_gid);
             if (miter != added_tx_map_.end()) {
                 added_tx_map_.erase(miter);

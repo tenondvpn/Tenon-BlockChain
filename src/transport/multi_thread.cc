@@ -287,9 +287,9 @@ void MultiThreadHandler::HandleRemoteMessage(
 
         priority_queue_map_[priority].push(message_ptr);
 //         if (!message_ptr->debug().empty()) {
-            TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
-                message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-                from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
+//             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+//                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//                 from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
 //         }
 	}
 }

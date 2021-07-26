@@ -81,8 +81,8 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_gas_used(0);
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
-    ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u, final_statistic_block_height: %lu, attr_tm: %s",
-        common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, final_statistic_block_height, tm_str.c_str());
+//     ELECT_DEBUG("CreateElectTransaction success gid: %s, shard id: %u, final_statistic_block_height: %lu, attr_tm: %s",
+//         common::Encode::HexEncode(tx_info.gid()).c_str(), shard_netid, final_statistic_block_height, tm_str.c_str());
     return kElectSuccess;
 }
 
@@ -523,7 +523,7 @@ void ElectPoolManager::FtsGetNodes(
                 fts_value = common::kTenonMaxAmount - fts_value;
             }
 
-            ELECT_DEBUG("fts append node value: %lu, node id: %s", fts_value, common::Encode::HexEncode((*iter)->id).c_str());
+//             ELECT_DEBUG("fts append node value: %lu, node id: %s", fts_value, common::Encode::HexEncode((*iter)->id).c_str());
             fts_tree.AppendFtsNode(fts_value, data);
         }
 

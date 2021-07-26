@@ -139,7 +139,7 @@ int BftInterface::LeaderPrecommitOk(
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_precommit_) {
-        BFT_DEBUG("leader_handled_precommit_: %d", leader_handled_precommit_);
+//         BFT_DEBUG("leader_handled_precommit_: %d", leader_handled_precommit_);
         return kBftHandled;
     }
 
@@ -156,8 +156,8 @@ int BftInterface::LeaderPrecommitOk(
         precommit_oppose_set_.insert(id);
     }
 
-    BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
-        precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
+//     BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
+//         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
     auto now_timestamp = std::chrono::steady_clock::now();
     if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
             (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
