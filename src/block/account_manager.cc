@@ -309,7 +309,6 @@ int AccountManager::AddBlockItem(
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
-            if (block_item->version() != 9999)
             if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
                 BLOCK_ERROR("HandleRootSingleBlockTx failed!");
                 return kBlockError;
