@@ -67,7 +67,6 @@ void TxPool::CheckTimeoutTx() {
             }
 
             tx_pool_.erase(iter++);
-            BFT_ERROR("timeout and remove tx.");
             continue;
         }
 
