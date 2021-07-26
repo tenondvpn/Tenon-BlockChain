@@ -526,15 +526,16 @@ void TcpTransport::Stop() {
     }
 }
 
-bool TcpTransport::OnClientPacket(std::shared_ptr<tnet::TcpConnection> tcp_conn, tnet::Packet& packet) {
-    if (tcp_conn->GetSocket() == nullptr) {
+bool TcpTransport::OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet) {
+    auto tcp_conn = dynamic_cast<tnet::TcpConnection*>(conn);
+    if (conn->GetSocket() == nullptr) {
         packet.Free();
         return false;
     }
 
     std::string from_ip;
     uint16_t from_port;
-    tcp_conn->GetSocket()->GetIpPort(&from_ip, &from_port);
+    conn->GetSocket()->GetIpPort(&from_ip, &from_port);
     if (packet.IsCmdPacket()) {
         if (raw_callback_ != nullptr) {
             raw_callback_(tcp_conn, nullptr, 0);
@@ -661,7 +662,7 @@ void TcpTransport::FreeConnection(const std::string& ip, uint16_t port) {
     }
 }
 
-std::shared_ptr<tnet::TcpConnection> TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
+tnet::TcpConnection* TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
@@ -673,7 +674,7 @@ std::shared_ptr<tnet::TcpConnection> TcpTransport::CreateConnection(const std::s
             300u * 1000u * 1000u);
 }
 
-std::shared_ptr<tnet::TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
+tnet::TcpConnection* TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
@@ -727,7 +728,7 @@ std::string TcpTransport::ClearAllConnection() {
     return res;
 }
 
-void TcpTransport::AddClientConnection(std::shared_ptr<tnet::TcpConnection>& conn) {
+void TcpTransport::AddClientConnection(tnet::TcpConnection* conn) {
     std::string client_ip;
     uint16_t client_port;
     if (conn->GetSocket()->GetIpPort(&client_ip, &client_port) != 0) {
@@ -738,7 +739,7 @@ void TcpTransport::AddClientConnection(std::shared_ptr<tnet::TcpConnection>& con
     std::lock_guard<std::mutex> guard(conn_map_mutex_);
     auto iter = conn_map_.find(peer_spec);
     if (iter != conn_map_.end()) {
-        if (iter->second.get() == conn.get()) {
+        if (iter->second.get() == conn) {
             return;
         }
 

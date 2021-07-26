@@ -23,7 +23,7 @@ namespace tenon {
 namespace transport {
 
 typedef std::function<void(
-        std::shared_ptr<tnet::TcpConnection>& conn,
+        tnet::TcpConnection* conn,
         char* message,
         uint32_t)> TcpRawPacketCallback;
 

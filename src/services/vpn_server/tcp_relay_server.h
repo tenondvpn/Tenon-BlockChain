@@ -65,11 +65,11 @@ private:
 
     ~TcpRelayServerManager() {}
 
-    void HandleMessage(std::shared_ptr<tnet::TcpConnection>& conn, char* msg, uint32_t len);
+    void HandleMessage(tnet::TcpConnection* conn, char* msg, uint32_t len);
     void RotationCreateServer();
-    int Handshake(std::shared_ptr<tnet::TcpConnection>& tcp_conn);
+    int Handshake(tnet::TcpConnection* tcp_conn);
     int VlanNodeHeartbeatDetail(
-        std::shared_ptr<tnet::TcpConnection>& conn,
+            tnet::TcpConnection* conn,
             char* msg,
             uint32_t len);
     void Rotation() {

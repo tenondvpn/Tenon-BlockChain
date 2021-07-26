@@ -19,7 +19,7 @@ public:
             PacketHandler packet_handler,
             PacketFactory* packet_factory);
     virtual ~TnetTransport();
-    virtual std::shared_ptr<TcpConnection> CreateConnection(
+    virtual TcpConnection* CreateConnection(
             const std::string& peerSpec,
             const std::string& localSpec,
             uint32_t timeout);
@@ -39,7 +39,7 @@ protected:
     virtual void ImplResourceDestroy();
 
 private:
-    virtual std::shared_ptr<TcpConnection> CreateTcpConnection(
+    virtual TcpConnection* CreateTcpConnection(
             EventLoop& event_loop,
             ClientSocket& socket);
     void ThreadProc(EventLoop* event_loop);

@@ -14,7 +14,7 @@ namespace tenon {
 
 namespace tnet {
 
-class TcpConnection : public EventHandler, std::enable_shared_from_this<TcpConnection> {
+class TcpConnection :public EventHandler {
 public:
     enum TcpState : int32_t {
         kTcpNone,

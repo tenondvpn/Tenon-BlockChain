@@ -230,7 +230,7 @@ bool TcpConnection::OnRead() {
             }
 
             mutex_.unlock();
-            if (!packet_handler_(shared_from_this(), *packet)) {
+            if (!packet_handler_(this, *packet)) {
                 userBreak = true;
             }
 
@@ -405,7 +405,7 @@ void TcpConnection::OnConnectTimeout() {
 }
 
 void TcpConnection::NotifyCmdPacketAndClose(int type) {
-    packet_handler_(shared_from_this(), CmdPacketFactory::Create(type));
+    packet_handler_(this, CmdPacketFactory::Create(type));
     Close();
 }
 

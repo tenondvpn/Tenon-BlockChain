@@ -57,8 +57,8 @@ public:
     void SetRawCallback(TcpRawPacketCallback raw_callback) {
         raw_callback_ = raw_callback;
     }
-    std::shared_ptr<tnet::TcpConnection> GetConnection(const std::string& ip, uint16_t port);
-    std::shared_ptr<tnet::TcpConnection> CreateConnection(const std::string& ip, uint16_t port);
+    tnet::TcpConnection* GetConnection(const std::string& ip, uint16_t port);
+    tnet::TcpConnection* CreateConnection(const std::string& ip, uint16_t port);
 #endif
 
     int CreateNewServer(
@@ -86,14 +86,14 @@ private:
         uint16_t port;
     };
 
-    bool OnClientPacket(std::shared_ptr<tnet::TcpConnection> conn, tnet::Packet& packet);
-    void AddClientConnection(std::shared_ptr<tnet::TcpConnection>& conn);
+    bool OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet);
+    void AddClientConnection(tnet::TcpConnection* conn);
     std::shared_ptr<tnet::TnetTransport> transport_{ nullptr };
     tnet::TcpAcceptor* acceptor_{ nullptr };
     EncoderFactory encoder_factory_;
     tnet::ListenSocket* socket_{ nullptr };
     std::deque<RotationServer> rotation_servers_;
-    std::unordered_map<std::string, std::shared_ptr<tnet::TcpConnection>> conn_map_;
+    std::unordered_map<std::string, tnet::TcpConnection*> conn_map_;
     TcpRawPacketCallback raw_callback_{ nullptr };
 #endif
     void Run();
