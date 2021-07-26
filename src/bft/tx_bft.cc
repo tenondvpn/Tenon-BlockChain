@@ -419,7 +419,7 @@ int TxBft::RootBackupCheckPrepare(
     const auto& block = tx_bft.ltx_prepare().block();
     int res = CheckBlockInfo(block);
     if (res != kBftSuccess) {
-        BFT_ERROR("bft check block info failed[%d]", res);
+//         BFT_ERROR("bft check block info failed[%d]", res);
         return res;
     }
 
@@ -1724,10 +1724,10 @@ int TxBft::CheckBlockInfo(const protobuf::Block& block_info) {
                 block_info.prehash(),
                 sync::kSyncHighest);
         if (res != sync::kSyncBlockReloaded) {
-            BFT_ERROR("000 hash block missing pool[%d] now[%s], prev[%s]",
-                pool_index(),
-                common::Encode::HexEncode(pool_hash).c_str(),
-                common::Encode::HexEncode(block_info.prehash()).c_str());
+//             BFT_ERROR("000 hash block missing pool[%d] now[%s], prev[%s]",
+//                 pool_index(),
+//                 common::Encode::HexEncode(pool_hash).c_str(),
+//                 common::Encode::HexEncode(block_info.prehash()).c_str());
             return kBftBlockPreHashError;
         }
 

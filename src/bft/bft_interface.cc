@@ -251,7 +251,7 @@ int BftInterface::LeaderCommitOk(
 int BftInterface::CheckTimeout() {
     auto now_timestamp = std::chrono::steady_clock::now();
     if (timeout_ <= now_timestamp) {
-        BFT_ERROR("Timeout %s,", common::Encode::HexEncode(gid()).c_str());
+//         BFT_ERROR("Timeout %s,", common::Encode::HexEncode(gid()).c_str());
         return kTimeout;
     }
 

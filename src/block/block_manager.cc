@@ -608,7 +608,7 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
     }
     db::DbWriteBach db_batch;
     if (block_item->height() % 1000 == 0) {
-        BLOCK_DEBUG("add block hash: %s, now size: %lu", common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
+        BLOCK_ERROR("add block hash: %s, now size: %lu", common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
     }
 //     BLOCK_DEBUG("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     std::string height_db_key = common::GetHeightDbKey(

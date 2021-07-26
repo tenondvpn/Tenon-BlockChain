@@ -814,7 +814,6 @@ int BftManager::BackupPrepare(
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
-        BFT_ERROR("leader check failed!");
         std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
         BftProto::BackupCreatePrepare(
             header,
@@ -829,7 +828,6 @@ int BftManager::BackupPrepare(
         auto data = header.mutable_data();
         int prepare_res = bft_ptr->Prepare(false, -1, data);
         if (prepare_res != kBftSuccess) {
-            BFT_ERROR("bft backup prepare failed!");
             std::string res_data = std::to_string(prepare_res) + "," + *data;
             BftProto::BackupCreatePrepare(
                 header,
