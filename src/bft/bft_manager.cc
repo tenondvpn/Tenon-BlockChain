@@ -88,6 +88,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         HandleToAccountTxBlock(header, bft_msg);
         return;
     case kBftRootBlock:
+        return;
         HandleRootTxBlock(header, bft_msg);
         return;
     case kBftSyncBlock:
@@ -333,6 +334,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
 void BftManager::HandleRootTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    return;
 //     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
 //         BFT_ERROR("root congress don't handle this message.");
 //         return;
@@ -512,6 +514,7 @@ void BftManager::HandleSyncBlock(
 
     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
+    block_ptr->set_version(9999);
     if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
@@ -1374,7 +1377,6 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader) {
-    return;
     // broadcast to this consensus shard and waiting pool shard
     if (!is_bft_leader && !elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
         return;
