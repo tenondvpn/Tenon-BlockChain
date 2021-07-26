@@ -86,7 +86,7 @@ private:
         uint16_t port;
     };
 
-    bool OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet);
+    bool OnClientPacket(std::shared_ptr<tnet::TcpConnection> conn, tnet::Packet& packet);
     void AddClientConnection(std::shared_ptr<tnet::TcpConnection>& conn);
     std::shared_ptr<tnet::TnetTransport> transport_{ nullptr };
     tnet::TcpAcceptor* acceptor_{ nullptr };
