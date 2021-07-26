@@ -603,7 +603,7 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
     {
         std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
         if (!block_hash_limit_set_.Push(block_item->hash())) {
-            return kBlockError;
+            return kBlockSuccess;
         }
     }
     db::DbWriteBach db_batch;
