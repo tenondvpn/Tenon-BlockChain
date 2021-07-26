@@ -55,7 +55,7 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
 }
 
 void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
-    uint64_t b_time = common::TimeUtils::TimestampUs();
+//     uint64_t b_time = common::TimeUtils::TimestampUs();
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
     BftItemPtr bft_item_ptr = std::make_shared<BftItem>();
@@ -66,19 +66,19 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-//     BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
         return;
     }
 
-    uint64_t time1 = common::TimeUtils::TimestampUs();
+//     uint64_t time1 = common::TimeUtils::TimestampUs();
     // TODO: check account address's network id valid. and this node is valid bft node
     switch (bft_msg.bft_step()) {
     case kBftInit:
@@ -701,9 +701,9 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-//     BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
-//         pool_mod_index, bft_ptr->pool_index(),
-//         common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
+        pool_mod_index, bft_ptr->pool_index(),
+        common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
