@@ -88,7 +88,6 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         HandleToAccountTxBlock(header, bft_msg);
         return;
     case kBftRootBlock:
-        return;
         HandleRootTxBlock(header, bft_msg);
         return;
     case kBftSyncBlock:
@@ -334,7 +333,6 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
 void BftManager::HandleRootTxBlock(
         transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    return;
 //     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
 //         BFT_ERROR("root congress don't handle this message.");
 //         return;
