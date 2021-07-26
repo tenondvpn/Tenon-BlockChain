@@ -66,12 +66,12 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-        header.id(),
-        bft_msg.leader(),
-        common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-        bft_msg.bft_step());
+//     BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+//         header.id(),
+//         bft_msg.leader(),
+//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
+//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+//         bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -833,6 +833,8 @@ int BftManager::BackupPrepare(
             false,
             msg);
         RemoveBft(bft_ptr->gid(), false);
+//         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
+//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
         auto data = header.mutable_data();
         int prepare_res = bft_ptr->Prepare(false, -1, data);
@@ -847,7 +849,7 @@ int BftManager::BackupPrepare(
                 false,
                 msg);
             RemoveBft(bft_ptr->gid(), false);
-//             BFT_DEBUG("bft backup prepare failed! not agree bft gid: %s",
+//             BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
 //                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             BftProto::BackupCreatePrepare(
@@ -858,7 +860,7 @@ int BftManager::BackupPrepare(
                 bft_ptr,
                 true,
                 msg);
-//             BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+//             BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
 //                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
 //                 bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
@@ -946,6 +948,7 @@ int BftManager::LeaderPrecommit(
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
+//     BFT_ERROR("LeaderPrecommit res: %d", res);
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
 //         time4 = common::TimeUtils::TimestampUs();

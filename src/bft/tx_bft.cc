@@ -419,7 +419,7 @@ int TxBft::RootBackupCheckPrepare(
     const auto& block = tx_bft.ltx_prepare().block();
     int res = CheckBlockInfo(block);
     if (res != kBftSuccess) {
-//         BFT_ERROR("bft check block info failed[%d]", res);
+        BFT_ERROR("bft check block info failed[%d]", res);
         return res;
     }
 
