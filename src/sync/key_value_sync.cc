@@ -42,7 +42,7 @@ int KeyValueSync::AddSync(uint32_t network_id, const std::string& key, uint32_t 
     }
 
     if (db::Db::Instance()->Exist(key)) {
-        SYNC_ERROR("::Db::Instance()->Exist [%d] [%s]", network_id, common::Encode::HexEncode(key).c_str());
+//         SYNC_DEBUG("::Db::Instance()->Exist [%d] [%s]", network_id, common::Encode::HexEncode(key).c_str());
         if (HandleExistsBlock(key) == kSyncSuccess) {
             return kSyncBlockReloaded;
         }
