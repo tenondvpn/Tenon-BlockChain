@@ -510,7 +510,7 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-    BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
+//     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
     if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");

@@ -185,8 +185,8 @@ void TimeBlockManager::UpdateTimeBlock(
         latest_time_block_tm_ = latest_time_block_tm;
     }
 
-    BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
-        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
+//     BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
+//         (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
     vss::VssManager::Instance()->OnTimeBlock(
         latest_time_block_tm,
         latest_time_block_height,
