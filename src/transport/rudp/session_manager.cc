@@ -39,7 +39,6 @@ void SessionManager::Recv(
 	if (kcp_recv > 0) {
 		// call message handler
 		MultiThreadHandler::Instance()->HandleRemoteMessage(
-                nullptr,
 				ip,
 				port,
 				recv_buf_,
