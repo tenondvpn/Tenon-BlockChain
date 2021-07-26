@@ -527,7 +527,7 @@ void TcpTransport::Stop() {
 }
 
 bool TcpTransport::OnClientPacket(tnet::TcpConnection& conn, tnet::Packet& packet) {
-    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<TcpConnection*>(&conn));
+    auto tcp_conn = std::make_shared<tnet::TcpConnection>(dynamic_cast<tnet::TcpConnection*>(&conn));
     if (conn.GetSocket() == nullptr) {
         packet.Free();
         return false;
@@ -662,19 +662,19 @@ void TcpTransport::FreeConnection(const std::string& ip, uint16_t port) {
     }
 }
 
-std::shared_ptr<TcpConnection> TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
+std::shared_ptr<tnet::TcpConnection> TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
 
     std::string peer_spec = ip + ":" + std::to_string(port);
-    return std::make_shared<TcpConnection>(transport_->CreateConnection(
+    return std::make_shared<tnet::TcpConnection>(transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
             300u * 1000u * 1000u));
 }
 
-std::shared_ptr<TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
+std::shared_ptr<tnet::TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
@@ -692,7 +692,7 @@ std::shared_ptr<TcpConnection> TcpTransport::GetConnection(const std::string& ip
         }
     }
 
-    auto tcp_conn = std::make_shared<TcpConnection>(transport_->CreateConnection(
+    auto tcp_conn = std::make_shared<tnet::TcpConnection>(transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
             3u * 1000u * 1000u));

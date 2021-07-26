@@ -57,8 +57,8 @@ public:
     void SetRawCallback(TcpRawPacketCallback raw_callback) {
         raw_callback_ = raw_callback;
     }
-    std::shared_ptr<TcpConnection> GetConnection(const std::string& ip, uint16_t port);
-    std::shared_ptr<TcpConnection> CreateConnection(const std::string& ip, uint16_t port);
+    std::shared_ptr<tnet::TcpConnection> GetConnection(const std::string& ip, uint16_t port);
+    std::shared_ptr<tnet::TcpConnection> CreateConnection(const std::string& ip, uint16_t port);
 #endif
 
     int CreateNewServer(
