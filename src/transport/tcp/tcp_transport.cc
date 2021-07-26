@@ -336,7 +336,9 @@ std::string TcpTransport::ClearAllConnection() {
 #else
 
 TcpTransport::TcpTransport(const std::string& ip_port, int backlog, bool create_server)
-        : ip_port_(ip_port), backlog_(backlog), create_server_(create_server) {}
+        : ip_port_(ip_port), backlog_(backlog), create_server_(create_server) {
+    EraseConn();
+}
 
 TcpTransport::~TcpTransport() {}
 
@@ -773,6 +775,8 @@ void TcpTransport::EraseConn() {
 
         break;
     }
+
+    erase_conn_tick_.CutOff(kEraseConnPeriod, std::bind(&TcpTransport::EraseConn, this));
 }
 
 #endif // CLIENT_USE_UV

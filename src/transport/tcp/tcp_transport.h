@@ -89,6 +89,8 @@ private:
     bool OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packet);
     void AddClientConnection(tnet::TcpConnection* conn);
     void EraseConn();
+    
+    static const uint64_t kEraseConnPeriod = 10000000lu;
 
     std::shared_ptr<tnet::TnetTransport> transport_{ nullptr };
     tnet::TcpAcceptor* acceptor_{ nullptr };
