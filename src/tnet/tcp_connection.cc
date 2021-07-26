@@ -230,7 +230,7 @@ bool TcpConnection::OnRead() {
             }
 
             mutex_.unlock();
-            if (!packet_handler_(this, *packet)) {
+            if (!packet_handler_(shared_from_this(), *packet)) {
                 userBreak = true;
             }
 
