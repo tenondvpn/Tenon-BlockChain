@@ -28,20 +28,20 @@ TnetTransport::TnetTransport(
 
 TnetTransport::~TnetTransport() {}
 
-TcpConnection* TnetTransport::CreateConnection(
+std::shared_ptr<TcpConnection> TnetTransport::CreateConnection(
         const std::string& peer_spec,
         const std::string& local_spec,
         uint32_t timeout) {
     ClientSocket* socket = SocketFactory::CreateTcpClientSocket(peer_spec, local_spec);
     if (socket == NULL) {
         TNET_ERROR("create tcp client socket failed");
-        return NULL;
+        return nullptr;
     }
 
     if (!socket->SetNonBlocking(true)) {
         TNET_ERROR("set non-blocking failed");
         socket->Free();
-        return NULL;
+        return nullptr;
     }
 
     if (!socket->SetCloseExec(true)) {
@@ -56,11 +56,11 @@ TcpConnection* TnetTransport::CreateConnection(
         TNET_ERROR("set recv buf failed");
     }
 
-    TcpConnection* conn = CreateTcpConnection(GetNextEventLoop(), *socket);
-    if (conn == NULL) {
+    auto conn = CreateTcpConnection(GetNextEventLoop(), *socket);
+    if (conn == nullptr) {
         TNET_ERROR("create tcp connection failed");
         socket->Free();
-        return NULL;
+        return nullptr;
     }
 
     conn->SetPacketHandler(packet_handler_);
@@ -70,7 +70,7 @@ TcpConnection* TnetTransport::CreateConnection(
         TNET_ERROR("connect peer [%s] failed[%d][%s]",
                 peer_spec.c_str(), errno, strerror(errno));
         conn->Destroy(true);
-        return NULL;
+        return nullptr;
     }
 
     return conn;
@@ -253,10 +253,10 @@ bool TnetTransport::ImplResourceInit() {
 void TnetTransport::ImplResourceDestroy() {
 }
 
-TcpConnection* TnetTransport::CreateTcpConnection(
+std::shared_ptr<TcpConnection> TnetTransport::CreateTcpConnection(
         EventLoop& event_loop,
         ClientSocket& socket) {
-    TcpConnection* conn = new TcpConnection(event_loop);
+    auto conn = std::make_shared<TcpConnection>(event_loop);
     conn->SetSocket(socket);
     return conn;
 }

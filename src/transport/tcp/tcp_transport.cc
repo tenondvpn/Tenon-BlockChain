@@ -667,10 +667,10 @@ std::shared_ptr<tnet::TcpConnection> TcpTransport::CreateConnection(const std::s
     }
 
     std::string peer_spec = ip + ":" + std::to_string(port);
-    return std::make_shared<tnet::TcpConnection>(transport_->CreateConnection(
+    return transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
-            300u * 1000u * 1000u));
+            300u * 1000u * 1000u);
 }
 
 std::shared_ptr<tnet::TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
