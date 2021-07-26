@@ -662,16 +662,16 @@ void TcpTransport::FreeConnection(const std::string& ip, uint16_t port) {
     }
 }
 
-TcpConnection* TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
+std::shared_ptr<TcpConnection> TcpTransport::CreateConnection(const std::string& ip, uint16_t port) {
     if (ip == "0.0.0.0") {
         return nullptr;
     }
 
     std::string peer_spec = ip + ":" + std::to_string(port);
-    return transport_->CreateConnection(
+    return std::make_shared<TcpConnection>(transport_->CreateConnection(
             peer_spec,
             common::GlobalInfo::Instance()->tcp_spec(),
-            300u * 1000u * 1000u);
+            300u * 1000u * 1000u));
 }
 
 std::shared_ptr<TcpConnection> TcpTransport::GetConnection(const std::string& ip, uint16_t port) {
