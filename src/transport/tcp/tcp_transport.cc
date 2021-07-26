@@ -613,7 +613,7 @@ int TcpTransport::Send(
     MsgPacket* reply_packet = new MsgPacket(0, tnet::kEncodeWithHeader, false);
     // local message is thread safe and don't free memory
     reply_packet->SetMessage(&msg);
-    tnet::TcpConnection* tcp_conn = GetConnection(des_ip, des_port);
+    auto tcp_conn = GetConnection(des_ip, des_port);
     if (tcp_conn == nullptr) {
         reply_packet->Free();
         TRANSPORT_ERROR("get tcp connection failed[%s][%d][id: %llu]",

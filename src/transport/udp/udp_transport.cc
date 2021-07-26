@@ -78,7 +78,6 @@ static void ReceiveCallback(
     inet_ntop(AF_INET, &sock->sin_addr, ip, sizeof(ip));
     int from_port = ntohs(sock->sin_port);
     MultiThreadHandler::Instance()->HandleMessage(
-            nullptr,
             std::string(ip),
             from_port,
             rcvbuf->base,
