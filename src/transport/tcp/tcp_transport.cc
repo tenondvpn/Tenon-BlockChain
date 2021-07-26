@@ -684,7 +684,7 @@ std::shared_ptr<TcpConnection> TcpTransport::GetConnection(const std::string& ip
         std::lock_guard<std::mutex> guard(conn_map_mutex_);
         auto iter = conn_map_.find(peer_spec);
         if (iter != conn_map_.end()) {
-            if (iter->second->TcpState() == tnet::TcpConnection::kTcpClosed) {
+            if (iter->second->GetTcpState() == tnet::TcpConnection::kTcpClosed) {
                 conn_map_.erase(iter);
             } else {
                 return iter->second;

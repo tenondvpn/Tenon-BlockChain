@@ -45,7 +45,7 @@ public:
         tcp_state_ = state;
     }
 
-    int32_t TcpState() {
+    int32_t GetTcpState() {
         return tcp_state_;
     }
 
