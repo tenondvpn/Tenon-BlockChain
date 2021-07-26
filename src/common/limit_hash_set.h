@@ -20,6 +20,7 @@ public:
             return false;
         }
 
+        item_set_.insert(data);
         item_queue_.push_back(data);
         while (item_queue_.size() > max_size_) {
             auto old_data = item_queue_.front();

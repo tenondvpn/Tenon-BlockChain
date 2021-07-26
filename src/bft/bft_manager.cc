@@ -370,12 +370,12 @@ void BftManager::HandleRootTxBlock(
 //         return;
 //     }
 
-//     if (!AggSignValid(tx_bft.to_tx().block())) {
-//         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
-//             tx_bft.to_tx().block().height(),
-//             tx_bft.to_tx().block().tx_list(0).type());
-//         return;
-//     }
+    if (!AggSignValid(tx_bft.to_tx().block())) {
+        BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
+            tx_bft.to_tx().block().height(),
+            tx_bft.to_tx().block().tx_list(0).type());
+        return;
+    }
 
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(
@@ -388,7 +388,6 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        block_ptr->set_version(9999);
         if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
         }
@@ -506,14 +505,13 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-//     if (!AggSignValid(tx_bft.to_tx().block())) {
-//         BFT_ERROR("sync block agg sign verify failed!");
-//         return;
-//     }
+    if (!AggSignValid(tx_bft.to_tx().block())) {
+        BFT_ERROR("sync block agg sign verify failed!");
+        return;
+    }
 
 //     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    block_ptr->set_version(9999);
     if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
