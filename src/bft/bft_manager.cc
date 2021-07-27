@@ -393,7 +393,7 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr, db::DbWriteBach());
+        auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
         if (block::AccountManager::Instance()->AddBlockItemToCache(
                 queue_item_ptr->block_ptr,
                 queue_item_ptr->db_batch) != block::kBlockSuccess) {
@@ -515,7 +515,7 @@ void BftManager::HandleSyncBlock(
 
 //     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr, db::DbWriteBach());
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,
             queue_item_ptr->db_batch) != block::kBlockSuccess) {
@@ -1239,7 +1239,7 @@ int BftManager::LeaderCallCommit(transport::protobuf::Header& header, BftInterfa
         }
     }
 
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block(), db::DbWriteBach());
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block());
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,
             queue_item_ptr->db_batch) != block::kBlockSuccess) {
@@ -1367,7 +1367,7 @@ int BftManager::BackupCommit(
         }
     }
 
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block(), db::DbWriteBach());
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block());
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,
             queue_item_ptr->db_batch) != block::kBlockSuccess) {

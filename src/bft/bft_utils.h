@@ -92,8 +92,8 @@ typedef std::shared_ptr<BftItem> BftItemPtr;
 
 
 struct BlockToDbItem {
-    BlockToDbItem(std::shared_ptr<bft::protobuf::Block>& bptr, db::DbWriteBach& batch)
-        : block_ptr(bptr), db_batch(batch) {}
+    BlockToDbItem(std::shared_ptr<bft::protobuf::Block>& bptr)
+        : block_ptr(bptr) {}
     std::shared_ptr<bft::protobuf::Block> block_ptr;
     db::DbWriteBach db_batch;
 };

@@ -15,8 +15,6 @@
 #include "common/encode.h"
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
-#include "db/db.h"
-#include "bft/proto/bft.pb.h"
 
 #define BLOCK_DEBUG(fmt, ...) TENON_DEBUG("[block]" fmt, ## __VA_ARGS__)
 #define BLOCK_INFO(fmt, ...) TENON_INFO("[block]" fmt, ## __VA_ARGS__)
@@ -58,12 +56,6 @@ struct StatisticItem {
     uint64_t tmblock_height{ 0 };
 };
 
-struct BlockToDbItem {
-    std::shared_ptr<bft::protobuf::Block> BlockPtr;
-    db::DbWriteBach db_batch;
-};
-
-typedef std::shared_ptr<BlockToDbItem> BlockToDbItemPtr;
 
 static const uint32_t kUnicastAddressLength = 20u;
 static const std::string kLastBlockHashPrefix("last_block_hash_pre_");
