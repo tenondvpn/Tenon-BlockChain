@@ -258,17 +258,17 @@ void ElectManager::ProcessNewElectBlock(
                 local_mem_ptr_[elect_block.shard_network_id()] = *iter;
             }
 
-//             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
-//                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-//                 elect_block.shard_network_id(),
-//                 common::Encode::HexEncode((*iter)->id).c_str(),
-//                 (*iter)->pool_index_mod_num);
-//             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-//                 << elect_block.shard_network_id()
-//                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
-//                 << ", leader count: " << elect_block.leader_count()
-//                 << std::endl;
+            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
+                "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+                elect_block.shard_network_id(),
+                common::Encode::HexEncode((*iter)->id).c_str(),
+                (*iter)->pool_index_mod_num);
+            std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+                << elect_block.shard_network_id()
+                << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                << ", leader count: " << elect_block.leader_count()
+                << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
