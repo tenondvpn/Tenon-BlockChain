@@ -57,14 +57,14 @@ void VssManager::OnTimeBlock(
         }
 
         prev_tm_height_ = tm_height;
-//         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-//             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
-//             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-//             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
-//         printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-//             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu\n",
-//             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-//             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+        VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
+            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
+            (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
+            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+        printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
+            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu\n",
+            (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
+            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
     }
 }
 
