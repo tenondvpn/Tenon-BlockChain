@@ -604,7 +604,7 @@ bool BlockManager::BlockExists(const std::string& hash) {
     return block_hash_limit_set_.DataExists(hash);
 }
 
-int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item) {
+int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item, bool to_cache) {
     {
         std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
         if (!block_hash_limit_set_.Push(block_item->hash())) {
@@ -627,6 +627,10 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
     }
 
     db_batch.Put(block_item->hash(), block_str);
+    if (to_cache) {
+        AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
+    }
+
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {

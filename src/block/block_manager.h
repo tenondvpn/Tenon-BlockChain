@@ -56,7 +56,7 @@ class BlockManager {
 public:
     static BlockManager* Instance();
     int Init(common::Config& conf);
-    int AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item);
+    int AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item, bool to_cache);
     int GetBlockWithHeight(
         uint32_t network_id,
         uint32_t pool_index,

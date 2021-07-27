@@ -1307,7 +1307,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
 
 // only genesis call once
 int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block) {
-    if (block::BlockManager::Instance()->AddNewBlock(genesis_block) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(genesis_block, true) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
     }
