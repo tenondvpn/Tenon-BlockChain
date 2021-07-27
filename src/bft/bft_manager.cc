@@ -822,8 +822,8 @@ int BftManager::BackupPrepare(
             false,
             msg);
         RemoveBft(bft_ptr->gid(), false);
-//         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
         auto data = header.mutable_data();
         int prepare_res = bft_ptr->Prepare(false, -1, data);
@@ -838,8 +838,8 @@ int BftManager::BackupPrepare(
                 false,
                 msg);
             RemoveBft(bft_ptr->gid(), false);
-//             BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
         } else {
             BftProto::BackupCreatePrepare(
                 header,
@@ -849,9 +849,9 @@ int BftManager::BackupPrepare(
                 bft_ptr,
                 true,
                 msg);
-//             BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-//                 bft_msg.node_ip().c_str(), bft_msg.node_port());
+            BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+                bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
     }
 
@@ -937,7 +937,7 @@ int BftManager::LeaderPrecommit(
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
-//     BFT_ERROR("LeaderPrecommit res: %d", res);
+    BFT_ERROR("LeaderPrecommit res: %d", res);
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
 //         time4 = common::TimeUtils::TimestampUs();

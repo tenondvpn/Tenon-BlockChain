@@ -67,6 +67,7 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare) {
     }
 
     if (res != kBftSuccess) {
+        BFT_ERROR("backup prepare failed: %d", res);
         if (res == kBftBlockPreHashError) {
             std::string pool_hash;
             uint64_t pool_height = 0;
@@ -90,6 +91,7 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare) {
     }
 
     *prepare = "";
+    BFT_ERROR("backup prepare success: %d", res);
     return kBftSuccess;
 }
 
@@ -424,7 +426,6 @@ int TxBft::RootBackupCheckPrepare(
     }
 
     if (block.tx_list_size() == 1) {
-        // MMMMMMM 
         *invalid_tx_idx = 0;
         switch (block.tx_list(0).type())
         {
@@ -581,11 +582,6 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
         *invalid_tx_idx = i;
         const auto& tx_info = block.tx_list(i);
-        // MMMMMMM 
-        if (tx_info.type() == common::kConsensusStatistic) {
-            return kBftLeaderTxInfoInvalid;
-        }
-
         uint32_t call_contract_step = common::kConsensusInvalidType;
         if (tx_info.type() == common::kConsensusCallContract ||
             tx_info.type() == common::kConsensusCreateContract) {
