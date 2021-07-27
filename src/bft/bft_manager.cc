@@ -66,12 +66,12 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-        header.id(),
-        bft_msg.leader(),
-        common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-        bft_msg.bft_step());
+//     BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+//         header.id(),
+//         bft_msg.leader(),
+//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
+//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+//         bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -690,9 +690,6 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-    BFT_INFO("this node is leader and start bft: %d, pool index: %d, bft gid: %s",
-        pool_mod_index, bft_ptr->pool_index(),
-        common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -849,9 +846,9 @@ int BftManager::BackupPrepare(
                 bft_ptr,
                 true,
                 msg);
-            BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
-                common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-                bft_msg.node_ip().c_str(), bft_msg.node_port());
+//             BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+//                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+//                 bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
     }
 
@@ -937,7 +934,7 @@ int BftManager::LeaderPrecommit(
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
-    BFT_ERROR("LeaderPrecommit res: %d", res);
+//     BFT_ERROR("LeaderPrecommit res: %d", res);
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
 //         time4 = common::TimeUtils::TimestampUs();
