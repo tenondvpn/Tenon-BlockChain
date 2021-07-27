@@ -405,6 +405,7 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
 int TxBft::RootBackupCheckPrepare(
         const bft::protobuf::BftMessage& bft_msg,
         int32_t* invalid_tx_idx) {
+    return kBftSuccess;
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");

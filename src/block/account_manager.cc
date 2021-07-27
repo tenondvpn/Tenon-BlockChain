@@ -306,7 +306,10 @@ int AccountManager::AddBlockItem(
     }
     
     // one block must be one consensus pool
-    uint32_t consistent_pool_index = common::kInvalidPoolIndex;
+    uint32_t consistent_pool_index = common::kRootChainPoolIndex;
+    if (block_item->version() != 9999)
+        consistent_pool_index = common::kInvalidPoolIndex;
+
     if (block_item->version() != 9999)
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
