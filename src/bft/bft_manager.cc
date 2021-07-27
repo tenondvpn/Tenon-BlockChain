@@ -66,12 +66,12 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-//     BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
