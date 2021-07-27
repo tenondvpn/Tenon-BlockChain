@@ -604,14 +604,14 @@ bool BlockManager::BlockExists(const std::string& hash) {
     return block_hash_limit_set_.DataExists(hash);
 }
 
-int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item, bool to_cache) {
+int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item, db::DbWriteBach& db_batch, bool to_cache) {
     {
         std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
         if (!block_hash_limit_set_.Push(block_item->hash())) {
             return kBlockSuccess;
         }
     }
-    db::DbWriteBach db_batch;
+
     if (block_item->height() % 100 == 0) {
         BLOCK_ERROR("add block hash: %s, now size: %lu", common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
     }

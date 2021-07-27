@@ -1307,7 +1307,8 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
 
 // only genesis call once
 int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block) {
-    if (block::BlockManager::Instance()->AddNewBlock(genesis_block, true) != block::kBlockSuccess) {
+    db::DbWriteBach db_batch;
+    if (block::BlockManager::Instance()->AddNewBlock(genesis_block, db_batch, true) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
     }
@@ -1696,6 +1697,7 @@ void BftManager::BlockToDb() {
             BlockToDbItemPtr db_item_ptr;
             if (block_queue_[i].pop(&db_item_ptr)) {
                 //
+                block::BlockManager::Instance()->AddNewBlock(db_item_ptr->block_ptr, db_item_ptr->db_batch, false);
             }
         }
     }
