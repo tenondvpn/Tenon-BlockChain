@@ -297,7 +297,7 @@ void DbPoolInfo::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_
         return;
     }
 
-//     AddStatistic(block_ptr);
+    AddStatistic(block_ptr);
 }
 
 void DbPoolInfo::SatisticBlock() {

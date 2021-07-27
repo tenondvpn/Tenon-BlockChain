@@ -261,7 +261,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
     }
 
     create_tm_block_tick_.CutOff(
-        kCheckTimeBlockPeriodUs / 10,
+        kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
 }
 

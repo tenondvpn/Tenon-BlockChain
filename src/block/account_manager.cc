@@ -246,9 +246,9 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
 
     if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressNetworkId &&
             common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) {
-//         ShardAddTimeBlockStatisticTransaction(
-//             height,
-//             tx_info);
+        ShardAddTimeBlockStatisticTransaction(
+            height,
+            tx_info);
     }
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(
@@ -279,7 +279,6 @@ int AccountManager::HandleFinalStatisticBlock(
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         // add elect root transaction
         bft::protobuf::TxInfo elect_tx;
-        BLOCK_ERROR("HandleFinalStatisticBlock CreateElectTransaction called.");
         if (elect::ElectManager::Instance()->CreateElectTransaction(
                 tx_info.network_id(),
                 height,
