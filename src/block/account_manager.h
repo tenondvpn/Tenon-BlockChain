@@ -21,7 +21,10 @@ namespace block {
 class AccountManager {
 public:
     static AccountManager* Instance();
-    int AddBlockItem(
+    int AddBlockItemToDb(
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
+        db::DbWriteBach& db_batch);
+    int AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
     DbAccountInfoPtr GetAcountInfo(const std::string& acc_id);

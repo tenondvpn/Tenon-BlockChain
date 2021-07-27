@@ -41,6 +41,7 @@ BftManager::BftManager() {
     timeout_tick_.CutOff(
         kBftTimeoutCheckPeriod,
         std::bind(&BftManager::CheckTimeout, this));
+    BlockToDb();
 }
 
 BftManager::~BftManager() {}
@@ -392,11 +393,14 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
+        auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr, db::DbWriteBach());
+        if (block::AccountManager::Instance()->AddBlockItemToCache(
+                queue_item_ptr->block_ptr,
+                queue_item_ptr->db_batch) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
         }
 
-        block_queue_[header.thread_idx()].push(block_ptr);
+        block_queue_[header.thread_idx()].push(queue_item_ptr);
         return;
     }
 
@@ -511,12 +515,15 @@ void BftManager::HandleSyncBlock(
 
 //     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr, db::DbWriteBach());
+    if (block::AccountManager::Instance()->AddBlockItemToCache(
+            queue_item_ptr->block_ptr,
+            queue_item_ptr->db_batch) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
     }
 
-    block_queue_[header.thread_idx()].push(block_ptr);
+    block_queue_[header.thread_idx()].push(queue_item_ptr);
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(
             block_ptr->pool_index(),
@@ -1175,9 +1182,7 @@ int BftManager::LeaderCommit(
         member_ptr->id);
 //     time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
-        if (LeaderCallCommit(bft_ptr) == kBftSuccess) {
-            block_queue_[header.thread_idx()].push(bft_ptr->prpare_block());
-        }
+        LeaderCallCommit(header, bft_ptr);
 //         time5 = common::TimeUtils::TimestampUs();
     }
     else if (res == kBftReChallenge) {
@@ -1194,7 +1199,7 @@ int BftManager::LeaderCommit(
     return kBftSuccess;
 }
 
-int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
+int BftManager::LeaderCallCommit(transport::protobuf::Header& header, BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign and leader commit
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1234,11 +1239,15 @@ int BftManager::LeaderCallCommit(BftInterfacePtr& bft_ptr) {
         }
     }
 
-    if (block::BlockManager::Instance()->AddNewBlock(tenon_block) != block::kBlockSuccess) {
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block(), db::DbWriteBach());
+    if (block::AccountManager::Instance()->AddBlockItemToCache(
+            queue_item_ptr->block_ptr,
+            queue_item_ptr->db_batch) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
     }
 
+    block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr, true);
@@ -1358,12 +1367,15 @@ int BftManager::BackupCommit(
         }
     }
 
-    if (block::BlockManager::Instance()->AddNewBlock(bft_ptr->prpare_block()) != block::kBlockSuccess) {
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block(), db::DbWriteBach());
+    if (block::AccountManager::Instance()->AddBlockItemToCache(
+            queue_item_ptr->block_ptr,
+            queue_item_ptr->db_batch) != block::kBlockSuccess) {
         BFT_ERROR("backup add block to db failed!");
         return kBftError;
     }
 
-    block_queue_[header.thread_idx()].push(bft_ptr->prpare_block());
+    block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
 //     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
@@ -1676,6 +1688,19 @@ int BftManager::VerifyAggSignature(
         return kBftError;
     }
     return kBftSuccess;
+}
+
+void BftManager::BlockToDb() {
+    for (uint32_t i = 0; i < transport::kMessageHandlerThreadCount; ++i) {
+        while (block_queue_[i].size() > 0) {
+            BlockToDbItemPtr db_item_ptr;
+            if (block_queue_[i].pop(&db_item_ptr)) {
+                //
+            }
+        }
+    }
+
+    block_to_db_tick_.CutOff(kBlockToDbPeriod, std::bind(&BftManager::BlockToDb, this));
 }
 
 }  // namespace bft

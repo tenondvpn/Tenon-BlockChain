@@ -94,7 +94,7 @@ private:
     bool AggSignValid(const bft::protobuf::Block& block);
     void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
-    int LeaderCallCommit(BftInterfacePtr& bft_ptr);
+    int LeaderCallCommit(transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
     void HandleOpposeNodeMsg(bft::protobuf::BftMessage& bft_msg, BftInterfacePtr& bft_ptr);
     BftInterfacePtr CreateBftPtr(const bft::protobuf::BftMessage& bft_msg);
@@ -107,6 +107,9 @@ private:
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         const std::string& res_data);
+    void BlockToDb();
+
+    static const uint32_t kBlockToDbPeriod = 10000llu;
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;
@@ -114,8 +117,9 @@ private:
     std::atomic<uint32_t> tps_{ 0 };
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
-    typedef common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> BlockQueue;
+    typedef common::ThreadSafeQueue<BlockToDbItemPtr> BlockQueue;
     BlockQueue block_queue_[transport::kMessageHandlerThreadCount];
+    common::Tick block_to_db_tick_;
 
 #ifdef TENON_UNITTEST
     // just for test

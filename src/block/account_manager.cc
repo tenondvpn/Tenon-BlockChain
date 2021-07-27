@@ -295,7 +295,7 @@ int AccountManager::HandleFinalStatisticBlock(
     return kBlockSuccess;
 }
 
-int AccountManager::AddBlockItem(
+int AccountManager::AddBlockItemToDb(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     const auto& tx_list = block_item->tx_list();
@@ -350,6 +350,68 @@ int AccountManager::AddBlockItem(
             }
         }
 
+        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+            std::string account_gid;
+            if (tx_list[i].type() != common::kConsensusCallContract &&
+                    tx_list[i].type() != common::kConsensusCreateContract) {
+                if (tx_list[i].to_add()) {
+                    account_gid = tx_list[i].to() + tx_list[i].gid();
+                } else {
+                    account_gid = tx_list[i].from() + tx_list[i].gid();
+                }
+            } else {
+                if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
+                    account_gid = tx_list[i].to() + tx_list[i].gid();
+                } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
+                    account_gid = tx_list[i].from() + tx_list[i].gid();
+                }
+            }
+            
+            if (!account_gid.empty()) {
+                db_batch.Put(account_gid, block_item->hash());
+            }
+        }
+    }
+
+    return kBlockSuccess;
+}
+
+int AccountManager::AddBlockItemToCache(
+        const std::shared_ptr<bft::protobuf::Block>& block_item,
+        db::DbWriteBach& db_batch) {
+    const auto& tx_list = block_item->tx_list();
+    if (tx_list.empty()) {
+        BLOCK_ERROR("tx block tx list is empty.");
+        return kBlockError;
+    }
+    
+    // one block must be one consensus pool
+    uint32_t consistent_pool_index = common::kInvalidPoolIndex;
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        std::string account_id;
+        if (tx_list[i].to_add()) {
+            account_id = tx_list[i].to();
+        } else {
+            account_id = tx_list[i].from();
+        }
+
+        if (tx_list[i].type() == common::kConsensusCallContract ||
+                tx_list[i].type() == common::kConsensusCreateContract) {
+            switch (tx_list[i].call_contract_step()) {
+            case contract::kCallStepCallerInited:
+                account_id = tx_list[i].from();
+                break;
+            case contract::kCallStepContractCalled:
+                account_id = tx_list[i].to();
+                break;
+            case contract::kCallStepContractFinal:
+                account_id = tx_list[i].from();
+                break;
+            default:
+                break;
+            }
+        }
+
         if (UpdateAccountInfo(
                 account_id,
                 tx_list[i],
@@ -373,28 +435,6 @@ int AccountManager::AddBlockItem(
                 common::Encode::HexEncode(account_id).c_str());
             assert(false);
             exit(0);
-        }
-
-        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            std::string account_gid;
-            if (tx_list[i].type() != common::kConsensusCallContract &&
-                    tx_list[i].type() != common::kConsensusCreateContract) {
-                if (tx_list[i].to_add()) {
-                    account_gid = tx_list[i].to() + tx_list[i].gid();
-                } else {
-                    account_gid = tx_list[i].from() + tx_list[i].gid();
-                }
-            } else {
-                if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
-                    account_gid = tx_list[i].to() + tx_list[i].gid();
-                } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
-                    account_gid = tx_list[i].from() + tx_list[i].gid();
-                }
-            }
-            
-            if (!account_gid.empty()) {
-                db_batch.Put(account_gid, block_item->hash());
-            }
         }
     }
 
@@ -839,7 +879,7 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    network_block_[pool_index]->AddNewBlock(block_item);
+//     network_block_[pool_index]->AddNewBlock(block_item);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

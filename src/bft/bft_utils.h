@@ -7,7 +7,7 @@
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "bft/proto/bft.pb.h"
-#include "bft/proto/bft.pb.h"
+#include "db/db.h"
 #include "transport/transport_utils.h"
 
 #define BFT_DEBUG(fmt, ...) TENON_DEBUG("[bft]" fmt, ## __VA_ARGS__)
@@ -89,6 +89,16 @@ struct BftItem {
 };
 
 typedef std::shared_ptr<BftItem> BftItemPtr;
+
+
+struct BlockToDbItem {
+    BlockToDbItem(std::shared_ptr<bft::protobuf::Block>& bptr, db::DbWriteBach& batch)
+        : block_ptr(bptr), db_batch(batch) {}
+    std::shared_ptr<bft::protobuf::Block> block_ptr;
+    db::DbWriteBach db_batch;
+};
+
+typedef std::shared_ptr<BlockToDbItem> BlockToDbItemPtr;
 
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;
