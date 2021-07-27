@@ -64,22 +64,22 @@ bool Db::Init(const std::string& db_path) {
     }
 
     rocksdb::Options options;
-    options.compaction_style = rocksdb::kCompactionStyleLevel;
-    options.write_buffer_size = 67108864; // 64MB
-    options.max_write_buffer_number = 3;
-    options.target_file_size_base = 67108864; // 64MB
-    options.max_background_compactions = 4;
-    options.level0_file_num_compaction_trigger = 8;
-    options.level0_slowdown_writes_trigger = 17;
-    options.level0_stop_writes_trigger = 24;
-    options.num_levels = 4;
-    options.max_bytes_for_level_base = 536870912; // 512MB
-    options.max_bytes_for_level_multiplier = 8;
-    options.create_if_missing = true;
-    options.keep_log_file_num = 1;
-    options.max_open_files = 10;
+//     options.compaction_style = rocksdb::kCompactionStyleLevel;
+//     options.write_buffer_size = 67108864; // 64MB
+//     options.max_write_buffer_number = 3;
+//     options.target_file_size_base = 67108864; // 64MB
+//     options.max_background_compactions = 4;
+//     options.level0_file_num_compaction_trigger = 8;
+//     options.level0_slowdown_writes_trigger = 17;
+//     options.level0_stop_writes_trigger = 24;
+//     options.num_levels = 4;
+//     options.max_bytes_for_level_base = 536870912; // 512MB
+//     options.max_bytes_for_level_multiplier = 8;
+//     options.create_if_missing = true;
+//     options.keep_log_file_num = 1;
+//     options.max_open_files = 10;
     rocksdb::DB* db = NULL;
-    rocksdb::Status status = rocksdb::DB::Open(options, db_path, &db);
+    rocksdb::Status status = rocksdb::DB::Open(*options.OptimizeForSmallDb(), db_path, &db);
     if (!status.ok()) {
         TENON_ERROR("open db[%s] failed, error[%s]", db_path.c_str(), status.ToString().c_str());
         return false;

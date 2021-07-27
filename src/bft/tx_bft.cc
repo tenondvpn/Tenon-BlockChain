@@ -405,7 +405,6 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
 int TxBft::RootBackupCheckPrepare(
         const bft::protobuf::BftMessage& bft_msg,
         int32_t* invalid_tx_idx) {
-    return kBftSuccess;
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
@@ -426,10 +425,6 @@ int TxBft::RootBackupCheckPrepare(
 
     if (block.tx_list_size() == 1) {
         // MMMMMMM 
-        if (block.tx_list(0).type() == common::kConsensusStatistic) {
-            return kBftLeaderTxInfoInvalid;
-        }
-
         *invalid_tx_idx = 0;
         switch (block.tx_list(0).type())
         {

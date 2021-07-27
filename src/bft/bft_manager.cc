@@ -392,7 +392,6 @@ void BftManager::HandleRootTxBlock(
 
     if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
         auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        block_ptr->set_version(9999);
         if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
             BFT_ERROR("leader add block to db failed!");
         }
@@ -483,15 +482,6 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-//     {
-//         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
-//         auto iter = block_hash_added_.find(tx_bft.to_tx().block().hash());
-//         if (iter != block_hash_added_.end()) {
-//             return;
-//         }
-// 
-//         block_hash_added_.insert(tx_bft.to_tx().block().hash());
-//     }
     if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
         return;
     }
@@ -520,7 +510,6 @@ void BftManager::HandleSyncBlock(
 
 //     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
     auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    block_ptr->set_version(9999);
     if (block::BlockManager::Instance()->AddNewBlock(block_ptr) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return;
@@ -1390,11 +1379,6 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
     }
 
     const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
-//     {
-//         std::lock_guard<std::mutex> guard(block_hash_added_mutex_);
-//         block_hash_added_.insert(block_ptr->hash());
-//     }
-
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
     if (!dht_ptr) {
