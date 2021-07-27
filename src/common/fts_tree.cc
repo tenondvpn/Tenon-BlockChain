@@ -120,14 +120,11 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
                 }
             }
         }
-
-        if (choose_idx < valid_nodes_size_) {
-            return fts_nodes_[choose_idx].data;
-        } else if (choose_idx < base_node_index_) {
-            return nullptr;
-        }
+        
+        return fts_nodes_[choose_idx].data;
     }
 
+    assert(false);  // full tree must not here
     return nullptr;
 }
 
