@@ -234,14 +234,14 @@ void ShardStatistic::AddShardPoolStatistic(
         }
     }
 
-    std::string invalid_pools;
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        if (!valid_pool_.Valid(i)) {
-            invalid_pools += std::to_string(i) + " ";
-        }
-    }
-
-    BLOCK_INFO("valid_pool_.valid_count(): %d, need: %d, invalid_pools: %s", valid_pool_.valid_count(), common::kImmutablePoolSize, invalid_pools.c_str());
+//     std::string invalid_pools;
+//     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
+//         if (!valid_pool_.Valid(i)) {
+//             invalid_pools += std::to_string(i) + " ";
+//         }
+//     }
+// 
+//     BLOCK_INFO("valid_pool_.valid_count(): %d, need: %d, invalid_pools: %s", valid_pool_.valid_count(), common::kImmutablePoolSize, invalid_pools.c_str());
     if (create_tx) {
         CreateStatisticTransaction();
     }
