@@ -114,7 +114,8 @@ private:
     std::atomic<uint32_t> tps_{ 0 };
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
-    common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> block_queue_[transport::kMessageHandlerThreadCount];
+    typedef common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> BlockQueue;
+    BlockQueue block_queue_[transport::kMessageHandlerThreadCount];
 
 #ifdef TENON_UNITTEST
     // just for test
