@@ -146,6 +146,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, transport_type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, version_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, timestamps_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::transport::protobuf::Header, thread_idx_),
   0,
   1,
   2,
@@ -178,10 +179,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   29,
   30,
   ~0u,
+  31,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 19, sizeof(::tenon::transport::protobuf::BroadcastParam)},
-  { 33, 70, sizeof(::tenon::transport::protobuf::Header)},
+  { 33, 71, sizeof(::tenon::transport::protobuf::Header)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -218,7 +220,7 @@ void AddDescriptorsImpl() {
       "\014hop_to_layer\030\010 \001(\r\022\016\n\006header\030\t \001(\014\022\014\n\004b"
       "ody\030\n \001(\014\022\023\n\013net_crossed\030\013 \001(\010\022\023\n\013bloomf"
       "ilter\030\014 \003(\004\022\021\n\tevil_rate\030\r \001(\002\022\033\n\023ign_bl"
-      "oomfilter_hop\030\016 \001(\r\"\207\005\n\006Header\022\023\n\013src_dh"
+      "oomfilter_hop\030\016 \001(\r\"\233\005\n\006Header\022\023\n\013src_dh"
       "t_key\030\001 \001(\014\022\023\n\013des_dht_key\030\002 \001(\014\022\023\n\013src_"
       "node_id\030\003 \001(\014\022\023\n\013des_node_id\030\004 \001(\014\022\021\n\tho"
       "p_count\030\005 \001(\r\022\014\n\004data\030\006 \001(\014\022\020\n\010priority\030"
@@ -234,10 +236,11 @@ void AddDescriptorsImpl() {
       "\004\022\016\n\006pubkey\030\031 \001(\014\022\014\n\004sign\030\032 \001(\014\022\r\n\005local"
       "\030\033 \001(\010\022\023\n\013des_network\030\034 \001(\005\022\023\n\013des_count"
       "ry\030\035 \001(\014\022\026\n\016transport_type\030\036 \001(\005\022\017\n\007vers"
-      "ion\030\037 \001(\005\022\022\n\ntimestamps\030  \003(\004"
+      "ion\030\037 \001(\005\022\022\n\ntimestamps\030  \003(\004\022\022\n\nthread_"
+      "idx\030! \001(\r"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 989);
+      descriptor, 1009);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "transport.proto", &protobuf_RegisterTypes);
 }
@@ -1044,6 +1047,7 @@ const int Header::kDesCountryFieldNumber;
 const int Header::kTransportTypeFieldNumber;
 const int Header::kVersionFieldNumber;
 const int Header::kTimestampsFieldNumber;
+const int Header::kThreadIdxFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Header::Header()
@@ -1113,8 +1117,8 @@ Header::Header(const Header& from)
     broadcast_ = NULL;
   }
   ::memcpy(&hop_count_, &from.hop_count_,
-    static_cast<size_t>(reinterpret_cast<char*>(&version_) -
-    reinterpret_cast<char*>(&hop_count_)) + sizeof(version_));
+    static_cast<size_t>(reinterpret_cast<char*>(&thread_idx_) -
+    reinterpret_cast<char*>(&hop_count_)) + sizeof(thread_idx_));
   // @@protoc_insertion_point(copy_constructor:tenon.transport.protobuf.Header)
 }
 
@@ -1132,8 +1136,8 @@ void Header::SharedCtor() {
   sign_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   des_country_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&broadcast_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&version_) -
-      reinterpret_cast<char*>(&broadcast_)) + sizeof(version_));
+      reinterpret_cast<char*>(&thread_idx_) -
+      reinterpret_cast<char*>(&broadcast_)) + sizeof(thread_idx_));
 }
 
 Header::~Header() {
@@ -1233,10 +1237,10 @@ void Header::Clear() {
         reinterpret_cast<char*>(&client_handled_) -
         reinterpret_cast<char*>(&to_port_)) + sizeof(client_handled_));
   }
-  if (cached_has_bits & 2130706432u) {
+  if (cached_has_bits & 4278190080u) {
     ::memset(&universal_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&version_) -
-        reinterpret_cast<char*>(&universal_)) + sizeof(version_));
+        reinterpret_cast<char*>(&thread_idx_) -
+        reinterpret_cast<char*>(&universal_)) + sizeof(thread_idx_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -1679,6 +1683,20 @@ bool Header::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 thread_idx = 33;
+      case 33: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 264 & 0xFF */)) {
+          set_has_thread_idx();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &thread_idx_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1878,6 +1896,11 @@ void Header::SerializeWithCachedSizes(
   for (int i = 0, n = this->timestamps_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(
       32, this->timestamps(i), output);
+  }
+
+  // optional uint32 thread_idx = 33;
+  if (cached_has_bits & 0x80000000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(33, this->thread_idx(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2080,6 +2103,11 @@ void Header::SerializeWithCachedSizes(
   target = ::google::protobuf::internal::WireFormatLite::
     WriteUInt64ToArray(32, this->timestamps_, target);
 
+  // optional uint32 thread_idx = 33;
+  if (cached_has_bits & 0x80000000u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(33, this->thread_idx(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -2272,7 +2300,7 @@ size_t Header::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[24 / 32] & 2130706432u) {
+  if (_has_bits_[24 / 32] & 4278190080u) {
     // optional bool universal = 21;
     if (has_universal()) {
       total_size += 2 + 1;
@@ -2314,6 +2342,13 @@ size_t Header::ByteSizeLong() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->version());
+    }
+
+    // optional uint32 thread_idx = 33;
+    if (has_thread_idx()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->thread_idx());
     }
 
   }
@@ -2438,7 +2473,7 @@ void Header::MergeFrom(const Header& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 2130706432u) {
+  if (cached_has_bits & 4278190080u) {
     if (cached_has_bits & 0x01000000u) {
       universal_ = from.universal_;
     }
@@ -2459,6 +2494,9 @@ void Header::MergeFrom(const Header& from) {
     }
     if (cached_has_bits & 0x40000000u) {
       version_ = from.version_;
+    }
+    if (cached_has_bits & 0x80000000u) {
+      thread_idx_ = from.thread_idx_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -2532,6 +2570,7 @@ void Header::InternalSwap(Header* other) {
   swap(des_network_, other->des_network_);
   swap(transport_type_, other->transport_type_);
   swap(version_, other->version_);
+  swap(thread_idx_, other->thread_idx_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }

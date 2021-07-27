@@ -756,6 +756,13 @@ class Header : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 version() const;
   void set_version(::google::protobuf::int32 value);
 
+  // optional uint32 thread_idx = 33;
+  bool has_thread_idx() const;
+  void clear_thread_idx();
+  static const int kThreadIdxFieldNumber = 33;
+  ::google::protobuf::uint32 thread_idx() const;
+  void set_thread_idx(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.transport.protobuf.Header)
  private:
   void set_has_src_dht_key();
@@ -820,6 +827,8 @@ class Header : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_transport_type();
   void set_has_version();
   void clear_has_version();
+  void set_has_thread_idx();
+  void clear_has_thread_idx();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -856,6 +865,7 @@ class Header : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 des_network_;
   ::google::protobuf::int32 transport_type_;
   ::google::protobuf::int32 version_;
+  ::google::protobuf::uint32 thread_idx_;
   friend struct ::protobuf_transport_2eproto::TableStruct;
 };
 // ===================================================================
@@ -2609,6 +2619,30 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 Header::mutable_timestamps() {
   // @@protoc_insertion_point(field_mutable_list:tenon.transport.protobuf.Header.timestamps)
   return &timestamps_;
+}
+
+// optional uint32 thread_idx = 33;
+inline bool Header::has_thread_idx() const {
+  return (_has_bits_[0] & 0x80000000u) != 0;
+}
+inline void Header::set_has_thread_idx() {
+  _has_bits_[0] |= 0x80000000u;
+}
+inline void Header::clear_has_thread_idx() {
+  _has_bits_[0] &= ~0x80000000u;
+}
+inline void Header::clear_thread_idx() {
+  thread_idx_ = 0u;
+  clear_has_thread_idx();
+}
+inline ::google::protobuf::uint32 Header::thread_idx() const {
+  // @@protoc_insertion_point(field_get:tenon.transport.protobuf.Header.thread_idx)
+  return thread_idx_;
+}
+inline void Header::set_thread_idx(::google::protobuf::uint32 value) {
+  set_has_thread_idx();
+  thread_idx_ = value;
+  // @@protoc_insertion_point(field_set:tenon.transport.protobuf.Header.thread_idx)
 }
 
 #ifdef __GNUC__
