@@ -396,6 +396,7 @@ void BftManager::HandleRootTxBlock(
             BFT_ERROR("leader add block to db failed!");
         }
 
+        block_queue_[header.thread_idx()].push(block_ptr);
         return;
     }
 
@@ -515,6 +516,7 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
+    block_queue_[header.thread_idx()].push(block_ptr);
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(
             block_ptr->pool_index(),
@@ -1361,6 +1363,7 @@ int BftManager::BackupCommit(
         return kBftError;
     }
 
+    block_queue_[header.thread_idx()].push(bft_ptr->prpare_block());
     bft_ptr->set_status(kBftCommited);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
 //     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
