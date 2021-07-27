@@ -47,7 +47,8 @@ void ThreadHandler::HandleMessage() {
 
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
             msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
-            auto btime = common::TimeUtils::TimestampUs();
+            msg_ptr->set_thread_idx(thread_idx_);
+//             auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg_ptr);
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 //             std::string tmp_str = std::to_string(msg_ptr->timestamps(0));

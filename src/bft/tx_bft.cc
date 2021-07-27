@@ -91,7 +91,6 @@ int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare) {
     }
 
     *prepare = "";
-    BFT_ERROR("backup prepare success: %d", res);
     return kBftSuccess;
 }
 

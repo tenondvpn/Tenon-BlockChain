@@ -5,6 +5,7 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
+#include "common/thread_safe_queue.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -113,9 +114,7 @@ private:
     std::atomic<uint32_t> tps_{ 0 };
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
-    std::mutex all_test_mutex_;
-//     std::unordered_set<std::string> block_hash_added_;
-//     std::mutex block_hash_added_mutex_;
+    common::ThreadSafeQueue<std::shared_ptr<bft::protobuf::Block>> block_queue_[transport::kMessageHandlerThreadCount];
 
 #ifdef TENON_UNITTEST
     // just for test

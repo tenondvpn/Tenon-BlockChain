@@ -48,11 +48,9 @@ TimeBlockManager::TimeBlockManager() {
 TimeBlockManager::~TimeBlockManager() {}
 
 int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) {
-    static uint64_t id_test = 0;
-
     auto gid = common::Hash::Hash256(kTimeBlockGidPrefix +
         std::to_string(elect::ElectManager::Instance()->latest_height(
-            common::GlobalInfo::Instance()->network_id())) + std::to_string(id_test++) +
+            common::GlobalInfo::Instance()->network_id())) +
         std::to_string(latest_time_block_tm_));
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
     dht::DhtKeyManager dht_key(des_net_id, 0);

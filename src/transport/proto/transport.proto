@@ -52,4 +52,5 @@ message Header {
 	optional int32 transport_type = 30;
 	optional int32 version = 31;
 	repeated uint64 timestamps = 32;
+	repeated uint32 thread_idx = 33;
 }

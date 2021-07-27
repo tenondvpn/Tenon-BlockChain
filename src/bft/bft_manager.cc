@@ -1173,7 +1173,9 @@ int BftManager::LeaderCommit(
         member_ptr->id);
 //     time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
-        LeaderCallCommit(bft_ptr);
+        if (LeaderCallCommit(bft_ptr) == kBftSuccess) {
+            block_queue_[header.thread_idx()].push(bft_ptr->prpare_block());
+        }
 //         time5 = common::TimeUtils::TimestampUs();
     }
     else if (res == kBftReChallenge) {

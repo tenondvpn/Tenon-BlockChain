@@ -78,7 +78,6 @@ private:
     void Join();
 
     static const int kQueueObjectCount = 1024 * 1024;
-    static const uint32_t kMessageHandlerThreadCount = 4u;
 
     std::map<uint32_t, std::queue<std::shared_ptr<protobuf::Header>>> priority_queue_map_;
     std::mutex priority_queue_map_mutex_;
