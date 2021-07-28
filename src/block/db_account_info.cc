@@ -411,12 +411,8 @@ int DbAccountInfo::SetAttrValue(
         const std::string& key,
         const std::string& value,
         db::DbWriteBach& db_batch) {
-    auto st = db_batch.Put(StorageDbKey(account_id_, key), value);
-    if (st.ok()) {
-        return kBlockSuccess;
-    }
-
-    return kBlockError;
+    db_batch.Put(StorageDbKey(account_id_, key), value);
+    return kBlockSuccess;
 }
 
 int DbAccountInfo::SetBytesCode(const std::string& bytes_code, db::DbWriteBach& db_batch) {

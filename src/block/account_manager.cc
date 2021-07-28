@@ -742,13 +742,16 @@ int AccountManager::SetAccountAttrs(
                 tx_info.to_add() &&
                 account_id == tx_info.to()) {
             res += account_info->SetAddressType(kContractAddress, db_batch);
+            std::cout << "0 res: " << res << std::endl;
             for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
                 if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
                     res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
+                    std::cout << i << " 0 res: " << res << std::endl;
                 }
             }
 
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
+            std::cout << "1 res: " << res << std::endl;
         }
 
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
@@ -792,10 +795,12 @@ int AccountManager::SetAccountAttrs(
                         tx_info.attr(attr_idx).key(),
                         tmp_now_height,
                         db_batch);
+                    std::cout << "2 res: " << res << std::endl;
                     res += account_info->SetAttrValue(
                         tx_info.attr(attr_idx).key(),
                         tx_info.attr(attr_idx).value(),
                         db_batch);
+                    std::cout << "3 res: " << res << std::endl;
                 }
 
                 if (tmblock_tm != common::kInvalidUint64) {
@@ -820,10 +825,12 @@ int AccountManager::SetAccountAttrs(
                         tx_info.storages(storage_idx).key(),
                         tmp_now_height,
                         db_batch);
+                    std::cout << "4 res: " << res << std::endl;
                     res += account_info->SetAttrValue(
                         tx_info.storages(storage_idx).key(),
                         tx_info.storages(storage_idx).value(),
                         db_batch);
+                    std::cout << "5 res: " << res << std::endl;
                 }
             }
         }
