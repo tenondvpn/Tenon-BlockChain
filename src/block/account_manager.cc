@@ -251,10 +251,6 @@ int AccountManager::AddBlockItemToDb(
             }
         }
 
-        if (tx_list[i].type() == common::kConsensusStatistic) {
-            block::ShardStatistic::Instance()->AddShardPoolStatistic(block_item);
-        }
-
         std::string account_id;
         if (tx_list[i].to_add()) {
             account_id = tx_list[i].to();
