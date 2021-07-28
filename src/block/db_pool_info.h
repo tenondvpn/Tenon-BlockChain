@@ -32,17 +32,8 @@ public:
     int GetTimeBlockHeight(uint64_t* height, uint64_t* block_height);
     int GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index);
     std::string GetBaseAddr();
-    void AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr);
-    void SatisticBlock();
-    int GetSinglePoolStatisticInfo(block::protobuf::StatisticInfo* statistic_info);
 
 private:
-    int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
-    int LoadBlocksUtilLatestStatisticBlock();
-    void TickSatisticBlock();
-
-    static const uint32_t kUpdateStatisticPeriod = 500000lu;
-
     std::string dict_key_;
     std::string hash_;
     std::string last_block_str_;
@@ -54,12 +45,6 @@ private:
     bft::protobuf::Block last_block_;
     std::atomic<uint64_t> prev_tmblock_height_{ common::kInvalidUint64 };
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
-    uint64_t max_time_block_height_{ 0 };
-    std::mutex statistic_for_tmblock_mutex_;
-    std::map<uint64_t, std::shared_ptr<StatisticItem>> statistic_for_tmblock_;
-    std::queue<std::shared_ptr<bft::protobuf::Block>> block_statistic_queue_;
-    std::mutex block_statistic_queue_mutex_;
-    common::Tick update_statistic_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

@@ -31,7 +31,11 @@ void ShardStatistic::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& bl
     AddStatistic(block_ptr);
 }
 
-int ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
+void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
+    if (block_item->network_id() != common::GlobalInfo::Instance()->network_id()) {
+        return;
+    }
+
     std::shared_ptr<StatisticItem> min_st_ptr = statistic_items_[0];
     std::shared_ptr<StatisticItem> match_st_ptr = nullptr;
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
@@ -68,7 +72,7 @@ int ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& bl
 
     auto ext_iter = match_st_ptr->added_height.find(block_item->height());
     if (ext_iter != match_st_ptr->added_height.end()) {
-        return kBlockSuccess;
+        return;
     }
 
     match_st_ptr->added_height.insert(block_item->height());
@@ -93,26 +97,35 @@ int ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& bl
 
         ++match_ec_ptr->succ_tx_count[i];
     }
-
-    return kBlockSuccess;
 }
 
 int ShardStatistic::GetStatisticInfo(
         uint64_t timeblock_height,
         block::protobuf::StatisticInfo* statistic_info) {
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
-        if (statistic_items_[i]->tmblock_height == timeblock_height) {
-            statistic_info->set_timeblock_height(statistic_items_[i]->tmblock_height);
-            statistic_info->set_all_tx_count(statistic_items_[i]->all_tx_count);
-            uint32_t member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-                st_item_ptr->elect_height,
+        if (statistic_items_[i]->tmblock_height != timeblock_height) {
+            continue;
+        }
+
+        statistic_info->set_timeblock_height(statistic_items_[i]->tmblock_height);
+        statistic_info->set_all_tx_count(statistic_items_[i]->all_tx_count);
+        for (uint32_t elect_idx = 0; elect_idx < kStatisticMaxCount; ++elect_idx) {
+            if (statistic_items_[i]->elect_items[elect_idx]->elect_height == 0) {
+                continue;
+            }
+
+            auto elect_st = statistic_info->add_elect_statistic();
+            elect_st->set_elect_height(
+                statistic_items_[i]->elect_items[elect_idx]->elect_height);
+            auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
+                elect_st->elect_height(),
                 common::GlobalInfo::Instance()->network_id());
             for (uint32_t i = 0; i < member_count; ++i) {
-                statistic_info->add_succ_tx_count(st_item_ptr->succ_tx_count[i]);
+                elect_st->add_succ_tx_count(
+                    statistic_items_[i]->elect_items[elect_idx]->succ_tx_count[i]);
             }
         }
     }
-    
 }
 
 }  // namespace block

@@ -31,7 +31,7 @@ private:
     }
 
     ~ShardStatistic() {}
-    int AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
+    void AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
     int LoadBlocksUtilLatestStatisticBlock();
 
     std::shared_ptr<StatisticItem> statistic_items_[kStatisticMaxCount];
