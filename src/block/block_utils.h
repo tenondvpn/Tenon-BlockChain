@@ -50,7 +50,12 @@ struct StatisticElectItem {
         memset(succ_tx_count, 0, sizeof(succ_tx_count));
     }
 
-    uint64_t elect_height;
+    void Clear() {
+        elect_height = 0;
+        memset(succ_tx_count, 0, sizeof(succ_tx_count));
+    }
+
+    uint64_t elect_height{ 0 };
     uint32_t succ_tx_count[common::kEachShardMaxNodeCount];
 };
 
@@ -61,6 +66,16 @@ struct StatisticItem {
         for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
             elect_items[i] = std::make_shared<StatisticElectItem>();
         }
+    }
+
+    void Clear() {
+        for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
+            elect_items[i]->Clear();
+        }
+
+        all_tx_count = 0;
+        tmblock_height = 0;
+        added_height.clear();
     }
 
     StatisticElectItemPtr elect_items[kStatisticMaxCount];

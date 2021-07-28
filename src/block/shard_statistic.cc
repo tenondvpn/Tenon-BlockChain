@@ -48,6 +48,7 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     }
 
     if (match_st_ptr == nullptr) {
+        min_st_ptr->Clear();
         match_st_ptr = min_st_ptr;
     }
 
