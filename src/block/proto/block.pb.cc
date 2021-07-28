@@ -25,6 +25,7 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::inter
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_AccountHeightRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_AccountHeightResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_AdRewardRequest;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_ElectStatisticInfo;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountInitInfoRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockResponse;
@@ -108,6 +109,11 @@ class AdRewardRequestDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<AdRewardRequest>
       _instance;
 } _AdRewardRequest_default_instance_;
+class ElectStatisticInfoDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<ElectStatisticInfo>
+      _instance;
+} _ElectStatisticInfo_default_instance_;
 class StatisticInfoDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<StatisticInfo>
@@ -320,6 +326,20 @@ static void InitDefaultsAdRewardRequest() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_AdRewardRequest =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsAdRewardRequest}, {}};
 
+static void InitDefaultsElectStatisticInfo() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::block::protobuf::_ElectStatisticInfo_default_instance_;
+    new (ptr) ::tenon::block::protobuf::ElectStatisticInfo();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::block::protobuf::ElectStatisticInfo::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_ElectStatisticInfo =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsElectStatisticInfo}, {}};
+
 static void InitDefaultsStatisticInfo() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -331,8 +351,9 @@ static void InitDefaultsStatisticInfo() {
   ::tenon::block::protobuf::StatisticInfo::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_StatisticInfo =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsStatisticInfo}, {}};
+::google::protobuf::internal::SCCInfo<1> scc_info_StatisticInfo =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsStatisticInfo}, {
+      &protobuf_block_2eproto::scc_info_ElectStatisticInfo.base,}};
 
 static void InitDefaultsBlockMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -375,11 +396,12 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_GetAccountInitInfoResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_UpdateVpnActiveRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_AdRewardRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_ElectStatisticInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_StatisticInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_BlockMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[16];
+::google::protobuf::Metadata file_level_metadata[17];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetTxBlockRequest, _has_bits_),
@@ -544,18 +566,25 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   0,
   1,
   2,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::ElectStatisticInfo, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::ElectStatisticInfo, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::ElectStatisticInfo, elect_height_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::ElectStatisticInfo, succ_tx_count_),
+  0,
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, timeblock_height_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, elect_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, all_tx_count_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, succ_tx_count_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::StatisticInfo, elect_statistic_),
   0,
   1,
-  2,
   ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _internal_metadata_),
@@ -602,8 +631,9 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 131, 139, sizeof(::tenon::block::protobuf::GetAccountInitInfoResponse)},
   { 142, 149, sizeof(::tenon::block::protobuf::UpdateVpnActiveRequest)},
   { 151, 159, sizeof(::tenon::block::protobuf::AdRewardRequest)},
-  { 162, 171, sizeof(::tenon::block::protobuf::StatisticInfo)},
-  { 175, 192, sizeof(::tenon::block::protobuf::BlockMessage)},
+  { 162, 169, sizeof(::tenon::block::protobuf::ElectStatisticInfo)},
+  { 171, 179, sizeof(::tenon::block::protobuf::StatisticInfo)},
+  { 182, 199, sizeof(::tenon::block::protobuf::BlockMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -621,6 +651,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_GetAccountInitInfoResponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_UpdateVpnActiveRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_AdRewardRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_ElectStatisticInfo_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_StatisticInfo_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_BlockMessage_default_instance_),
 };
@@ -640,7 +671,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 16);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 17);
 }
 
 void AddDescriptorsImpl() {
@@ -674,33 +705,36 @@ void AddDescriptorsImpl() {
       "\0132\034.tenon.block.protobuf.TxItem\022\n\n\002id\030\003 "
       "\001(\014\"0\n\026UpdateVpnActiveRequest\022\n\n\002id\030\001 \001("
       "\014\022\n\n\002ip\030\002 \001(\014\">\n\017AdRewardRequest\022\n\n\002id\030\001"
-      " \001(\014\022\022\n\nreward_key\030\002 \001(\014\022\013\n\003gid\030\003 \001(\014\"l\n"
-      "\rStatisticInfo\022\030\n\020timeblock_height\030\001 \001(\004"
-      "\022\024\n\014elect_height\030\002 \001(\004\022\024\n\014all_tx_count\030\003"
-      " \001(\r\022\025\n\rsucc_tx_count\030\004 \003(\r\"\247\006\n\014BlockMes"
-      "sage\022:\n\tblock_req\030\001 \001(\0132\'.tenon.block.pr"
-      "otobuf.GetTxBlockRequest\022;\n\tblock_res\030\002 "
-      "\001(\0132(.tenon.block.protobuf.GetTxBlockRes"
-      "ponse\022>\n\nheight_req\030\003 \001(\0132*.tenon.block."
-      "protobuf.AccountHeightRequest\022\?\n\nheight_"
-      "res\030\004 \001(\0132+.tenon.block.protobuf.Account"
-      "HeightResponse\022>\n\014acc_attr_req\030\005 \001(\0132(.t"
-      "enon.block.protobuf.AccountAttrRequest\022\?"
-      "\n\014acc_attr_res\030\006 \001(\0132).tenon.block.proto"
-      "buf.AccountAttrResponse\022\?\n\nup_vpn_req\030\007 "
-      "\001(\0132+.tenon.block.protobuf.UpdateVpnCoun"
-      "tRequest\022@\n\nup_vpn_res\030\010 \001(\0132,.tenon.blo"
-      "ck.protobuf.UpdateVpnCountResponse\022I\n\020ac"
-      "count_init_req\030\t \001(\0132/.tenon.block.proto"
-      "buf.GetAccountInitInfoRequest\022J\n\020account"
-      "_init_res\030\n \001(\01320.tenon.block.protobuf.G"
-      "etAccountInitInfoResponse\022D\n\016vpn_active_"
-      "req\030\013 \001(\0132,.tenon.block.protobuf.UpdateV"
-      "pnActiveRequest\022<\n\rad_reward_req\030\014 \001(\0132%"
-      ".tenon.block.protobuf.AdRewardRequest"
+      " \001(\014\022\022\n\nreward_key\030\002 \001(\014\022\013\n\003gid\030\003 \001(\014\"A\n"
+      "\022ElectStatisticInfo\022\024\n\014elect_height\030\001 \001("
+      "\004\022\025\n\rsucc_tx_count\030\002 \003(\r\"\202\001\n\rStatisticIn"
+      "fo\022\030\n\020timeblock_height\030\001 \001(\004\022\024\n\014all_tx_c"
+      "ount\030\002 \001(\r\022A\n\017elect_statistic\030\003 \003(\0132(.te"
+      "non.block.protobuf.ElectStatisticInfo\"\247\006"
+      "\n\014BlockMessage\022:\n\tblock_req\030\001 \001(\0132\'.teno"
+      "n.block.protobuf.GetTxBlockRequest\022;\n\tbl"
+      "ock_res\030\002 \001(\0132(.tenon.block.protobuf.Get"
+      "TxBlockResponse\022>\n\nheight_req\030\003 \001(\0132*.te"
+      "non.block.protobuf.AccountHeightRequest\022"
+      "\?\n\nheight_res\030\004 \001(\0132+.tenon.block.protob"
+      "uf.AccountHeightResponse\022>\n\014acc_attr_req"
+      "\030\005 \001(\0132(.tenon.block.protobuf.AccountAtt"
+      "rRequest\022\?\n\014acc_attr_res\030\006 \001(\0132).tenon.b"
+      "lock.protobuf.AccountAttrResponse\022\?\n\nup_"
+      "vpn_req\030\007 \001(\0132+.tenon.block.protobuf.Upd"
+      "ateVpnCountRequest\022@\n\nup_vpn_res\030\010 \001(\0132,"
+      ".tenon.block.protobuf.UpdateVpnCountResp"
+      "onse\022I\n\020account_init_req\030\t \001(\0132/.tenon.b"
+      "lock.protobuf.GetAccountInitInfoRequest\022"
+      "J\n\020account_init_res\030\n \001(\01320.tenon.block."
+      "protobuf.GetAccountInitInfoResponse\022D\n\016v"
+      "pn_active_req\030\013 \001(\0132,.tenon.block.protob"
+      "uf.UpdateVpnActiveRequest\022<\n\rad_reward_r"
+      "eq\030\014 \001(\0132%.tenon.block.protobuf.AdReward"
+      "Request"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2077);
+      descriptor, 2167);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "block.proto", &protobuf_RegisterTypes);
 }
@@ -5513,13 +5547,283 @@ void AdRewardRequest::InternalSwap(AdRewardRequest* other) {
 
 // ===================================================================
 
+void ElectStatisticInfo::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int ElectStatisticInfo::kElectHeightFieldNumber;
+const int ElectStatisticInfo::kSuccTxCountFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+ElectStatisticInfo::ElectStatisticInfo()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_block_2eproto::scc_info_ElectStatisticInfo.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.block.protobuf.ElectStatisticInfo)
+}
+ElectStatisticInfo::ElectStatisticInfo(const ElectStatisticInfo& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      succ_tx_count_(from.succ_tx_count_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  elect_height_ = from.elect_height_;
+  // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.ElectStatisticInfo)
+}
+
+void ElectStatisticInfo::SharedCtor() {
+  elect_height_ = GOOGLE_ULONGLONG(0);
+}
+
+ElectStatisticInfo::~ElectStatisticInfo() {
+  // @@protoc_insertion_point(destructor:tenon.block.protobuf.ElectStatisticInfo)
+  SharedDtor();
+}
+
+void ElectStatisticInfo::SharedDtor() {
+}
+
+void ElectStatisticInfo::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* ElectStatisticInfo::descriptor() {
+  ::protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const ElectStatisticInfo& ElectStatisticInfo::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_block_2eproto::scc_info_ElectStatisticInfo.base);
+  return *internal_default_instance();
+}
+
+
+void ElectStatisticInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.block.protobuf.ElectStatisticInfo)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  succ_tx_count_.Clear();
+  elect_height_ = GOOGLE_ULONGLONG(0);
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool ElectStatisticInfo::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.block.protobuf.ElectStatisticInfo)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint64 elect_height = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          set_has_elect_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &elect_height_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated uint32 succ_tx_count = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 1, 16u, input, this->mutable_succ_tx_count())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, this->mutable_succ_tx_count())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.block.protobuf.ElectStatisticInfo)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.block.protobuf.ElectStatisticInfo)
+  return false;
+#undef DO_
+}
+
+void ElectStatisticInfo::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.block.protobuf.ElectStatisticInfo)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint64 elect_height = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->elect_height(), output);
+  }
+
+  // repeated uint32 succ_tx_count = 2;
+  for (int i = 0, n = this->succ_tx_count_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(
+      2, this->succ_tx_count(i), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.block.protobuf.ElectStatisticInfo)
+}
+
+::google::protobuf::uint8* ElectStatisticInfo::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.block.protobuf.ElectStatisticInfo)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint64 elect_height = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->elect_height(), target);
+  }
+
+  // repeated uint32 succ_tx_count = 2;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt32ToArray(2, this->succ_tx_count_, target);
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.block.protobuf.ElectStatisticInfo)
+  return target;
+}
+
+size_t ElectStatisticInfo::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.block.protobuf.ElectStatisticInfo)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint32 succ_tx_count = 2;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt32Size(this->succ_tx_count_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->succ_tx_count_size());
+    total_size += data_size;
+  }
+
+  // optional uint64 elect_height = 1;
+  if (has_elect_height()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->elect_height());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void ElectStatisticInfo::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.block.protobuf.ElectStatisticInfo)
+  GOOGLE_DCHECK_NE(&from, this);
+  const ElectStatisticInfo* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const ElectStatisticInfo>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.block.protobuf.ElectStatisticInfo)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.block.protobuf.ElectStatisticInfo)
+    MergeFrom(*source);
+  }
+}
+
+void ElectStatisticInfo::MergeFrom(const ElectStatisticInfo& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.block.protobuf.ElectStatisticInfo)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  succ_tx_count_.MergeFrom(from.succ_tx_count_);
+  if (from.has_elect_height()) {
+    set_elect_height(from.elect_height());
+  }
+}
+
+void ElectStatisticInfo::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.block.protobuf.ElectStatisticInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ElectStatisticInfo::CopyFrom(const ElectStatisticInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.block.protobuf.ElectStatisticInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ElectStatisticInfo::IsInitialized() const {
+  return true;
+}
+
+void ElectStatisticInfo::Swap(ElectStatisticInfo* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void ElectStatisticInfo::InternalSwap(ElectStatisticInfo* other) {
+  using std::swap;
+  succ_tx_count_.InternalSwap(&other->succ_tx_count_);
+  swap(elect_height_, other->elect_height_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata ElectStatisticInfo::GetMetadata() const {
+  protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void StatisticInfo::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int StatisticInfo::kTimeblockHeightFieldNumber;
-const int StatisticInfo::kElectHeightFieldNumber;
 const int StatisticInfo::kAllTxCountFieldNumber;
-const int StatisticInfo::kSuccTxCountFieldNumber;
+const int StatisticInfo::kElectStatisticFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 StatisticInfo::StatisticInfo()
@@ -5533,7 +5837,7 @@ StatisticInfo::StatisticInfo(const StatisticInfo& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_),
-      succ_tx_count_(from.succ_tx_count_) {
+      elect_statistic_(from.elect_statistic_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&timeblock_height_, &from.timeblock_height_,
     static_cast<size_t>(reinterpret_cast<char*>(&all_tx_count_) -
@@ -5575,9 +5879,9 @@ void StatisticInfo::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  succ_tx_count_.Clear();
+  elect_statistic_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 3u) {
     ::memset(&timeblock_height_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&all_tx_count_) -
         reinterpret_cast<char*>(&timeblock_height_)) + sizeof(all_tx_count_));
@@ -5610,24 +5914,10 @@ bool StatisticInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 elect_height = 2;
+      // optional uint32 all_tx_count = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          set_has_elect_height();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &elect_height_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional uint32 all_tx_count = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
           set_has_all_tx_count();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
@@ -5638,19 +5928,12 @@ bool StatisticInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated uint32 succ_tx_count = 4;
-      case 4: {
+      // repeated .tenon.block.protobuf.ElectStatisticInfo elect_statistic = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 1, 32u, input, this->mutable_succ_tx_count())));
-        } else if (
-            static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, this->mutable_succ_tx_count())));
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_elect_statistic()));
         } else {
           goto handle_unusual;
         }
@@ -5689,20 +5972,18 @@ void StatisticInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->timeblock_height(), output);
   }
 
-  // optional uint64 elect_height = 2;
+  // optional uint32 all_tx_count = 2;
   if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->elect_height(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->all_tx_count(), output);
   }
 
-  // optional uint32 all_tx_count = 3;
-  if (cached_has_bits & 0x00000004u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->all_tx_count(), output);
-  }
-
-  // repeated uint32 succ_tx_count = 4;
-  for (int i = 0, n = this->succ_tx_count_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(
-      4, this->succ_tx_count(i), output);
+  // repeated .tenon.block.protobuf.ElectStatisticInfo elect_statistic = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->elect_statistic_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3,
+      this->elect_statistic(static_cast<int>(i)),
+      output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5725,19 +6006,18 @@ void StatisticInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->timeblock_height(), target);
   }
 
-  // optional uint64 elect_height = 2;
+  // optional uint32 all_tx_count = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->elect_height(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->all_tx_count(), target);
   }
 
-  // optional uint32 all_tx_count = 3;
-  if (cached_has_bits & 0x00000004u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->all_tx_count(), target);
+  // repeated .tenon.block.protobuf.ElectStatisticInfo elect_statistic = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->elect_statistic_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, this->elect_statistic(static_cast<int>(i)), deterministic, target);
   }
-
-  // repeated uint32 succ_tx_count = 4;
-  target = ::google::protobuf::internal::WireFormatLite::
-    WriteUInt32ToArray(4, this->succ_tx_count_, target);
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
@@ -5756,16 +6036,18 @@ size_t StatisticInfo::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated uint32 succ_tx_count = 4;
+  // repeated .tenon.block.protobuf.ElectStatisticInfo elect_statistic = 3;
   {
-    size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      UInt32Size(this->succ_tx_count_);
-    total_size += 1 *
-                  ::google::protobuf::internal::FromIntSize(this->succ_tx_count_size());
-    total_size += data_size;
+    unsigned int count = static_cast<unsigned int>(this->elect_statistic_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->elect_statistic(static_cast<int>(i)));
+    }
   }
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 3u) {
     // optional uint64 timeblock_height = 1;
     if (has_timeblock_height()) {
       total_size += 1 +
@@ -5773,14 +6055,7 @@ size_t StatisticInfo::ByteSizeLong() const {
           this->timeblock_height());
     }
 
-    // optional uint64 elect_height = 2;
-    if (has_elect_height()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->elect_height());
-    }
-
-    // optional uint32 all_tx_count = 3;
+    // optional uint32 all_tx_count = 2;
     if (has_all_tx_count()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
@@ -5815,16 +6090,13 @@ void StatisticInfo::MergeFrom(const StatisticInfo& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  succ_tx_count_.MergeFrom(from.succ_tx_count_);
+  elect_statistic_.MergeFrom(from.elect_statistic_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
       timeblock_height_ = from.timeblock_height_;
     }
     if (cached_has_bits & 0x00000002u) {
-      elect_height_ = from.elect_height_;
-    }
-    if (cached_has_bits & 0x00000004u) {
       all_tx_count_ = from.all_tx_count_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -5855,9 +6127,8 @@ void StatisticInfo::Swap(StatisticInfo* other) {
 }
 void StatisticInfo::InternalSwap(StatisticInfo* other) {
   using std::swap;
-  succ_tx_count_.InternalSwap(&other->succ_tx_count_);
+  CastToBase(&elect_statistic_)->InternalSwap(CastToBase(&other->elect_statistic_));
   swap(timeblock_height_, other->timeblock_height_);
-  swap(elect_height_, other->elect_height_);
   swap(all_tx_count_, other->all_tx_count_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -6710,6 +6981,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::UpdateVp
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::AdRewardRequest* Arena::CreateMaybeMessage< ::tenon::block::protobuf::AdRewardRequest >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::AdRewardRequest >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::ElectStatisticInfo* Arena::CreateMaybeMessage< ::tenon::block::protobuf::ElectStatisticInfo >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::block::protobuf::ElectStatisticInfo >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::StatisticInfo* Arena::CreateMaybeMessage< ::tenon::block::protobuf::StatisticInfo >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::StatisticInfo >(arena);
