@@ -21,16 +21,6 @@ ShardStatistic* ShardStatistic::Instance() {
     return &ins;
 }
 
-void ShardStatistic::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    if (block_ptr->bitmap_size() == 0) {
-        BLOCK_ERROR("block bitmap size empty: height: %lu, hash: %s",
-            block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
-        return;
-    }
-
-    AddStatistic(block_ptr);
-}
-
 void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
     if (block_item->network_id() == network::kRootCongressNetworkId) {
         if (block_item->tx_list_size() == 1 &&

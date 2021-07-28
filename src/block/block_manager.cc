@@ -18,6 +18,7 @@
 #include "block/account_manager.h"
 #include "block/proto/block.pb.h"
 #include "block/proto/block_proto.h"
+#include "block/shard_statistic.h"
 #include "bft/proto/bft_proto.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_manager.h"
@@ -631,6 +632,7 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
         AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
     }
 
+    ShardStatistic::Instance()->AddStatistic(block_item);
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {
