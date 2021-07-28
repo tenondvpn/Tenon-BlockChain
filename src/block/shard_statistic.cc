@@ -127,14 +127,6 @@ void ShardStatistic::GetStatisticInfo(
 }
 
 void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
-    auto super_leader_ids = elect::ElectManager::Instance()->leaders(
-        common::GlobalInfo::Instance()->network_id());
-    if (super_leader_ids.empty()) {
-        return;
-    }
-
-    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
-        common::GlobalInfo::Instance()->network_id());
     int32_t pool_idx = 0;
     bft::protobuf::TxInfo tx_info;
     tx_info.set_type(common::kConsensusFinalStatistic);
@@ -154,11 +146,6 @@ void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
     auto height_attr = tx_info.add_attr();
     height_attr->set_key(tmblock::kAttrTimerBlockHeight);
     height_attr->set_value(std::to_string(timeblock_height));
-//     block::protobuf::StatisticInfo statistic_info;
-//     GetStatisticInfo(timeblock_height, &statistic_info);
-//     auto statistic_attr = tx_info.add_storages();
-//     statistic_attr->set_key(bft::kStatisticAttr);
-//     statistic_attr->set_value(statistic_info.SerializeAsString());
     if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
         BFT_ERROR("CreateStatisticTransaction dispatch pool failed!");
     }

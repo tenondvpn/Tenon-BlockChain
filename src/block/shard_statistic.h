@@ -31,7 +31,6 @@ private:
     }
 
     ~ShardStatistic() {}
-    int LoadBlocksUtilLatestStatisticBlock();
     void CreateStatisticTransaction(uint64_t timeblock_height);
 
     std::shared_ptr<StatisticItem> statistic_items_[kStatisticMaxCount];
