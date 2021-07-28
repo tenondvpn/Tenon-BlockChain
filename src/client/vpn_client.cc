@@ -1129,7 +1129,7 @@ void VpnClient::GetTxBlocksFromBftNetwork() {
     message.set_src_dht_key(dht->local_node()->dht_key());
     message.set_id(common::GlobalInfo::Instance()->MessageId());
     auto dht_key_mgr = dht::DhtKeyManager(
-        common::GlobalInfo::Instance()->network_id(),
+        network::kConsensusShardBeginNetworkId,
         0,
         common::GlobalInfo::Instance()->id());
     message.set_des_dht_key(dht_key_mgr.StrKey());
