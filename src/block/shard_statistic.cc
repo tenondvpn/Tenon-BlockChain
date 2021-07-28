@@ -142,7 +142,8 @@ void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
     }
 
     tx_info.set_gid(common::Hash::Hash256(
-        kShardFinalStaticPrefix +
+        kShardFinalStaticPrefix + "_" +
+        std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" +
         std::to_string(tmblock::TimeBlockManager::Instance()->LatestTimestamp())));
     BLOCK_INFO("create new final statistic time stamp: %lu",
         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
