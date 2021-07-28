@@ -97,7 +97,7 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     }
 }
 
-int ShardStatistic::GetStatisticInfo(
+void ShardStatistic::GetStatisticInfo(
         uint64_t timeblock_height,
         block::protobuf::StatisticInfo* statistic_info) {
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {

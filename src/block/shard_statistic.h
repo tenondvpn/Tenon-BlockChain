@@ -21,7 +21,7 @@ class ShardStatistic {
 public:
     static ShardStatistic* Instance();
     void AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item);
-    int GetStatisticInfo(uint64_t timeblock_height, block::protobuf::StatisticInfo* statistic_info);
+    void GetStatisticInfo(uint64_t timeblock_height, block::protobuf::StatisticInfo* statistic_info);
 
 private:
     ShardStatistic() {
