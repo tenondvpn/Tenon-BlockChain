@@ -475,44 +475,6 @@ int TxBft::GetTimeBlockInfoFromTx(
     return kBftSuccess;
 }
 
-int TxBft::RootBackupCheckStatistic(const bft::protobuf::Block& block) {
-    std::unordered_map<std::string, int64_t> acc_balance_map;
-    int32_t i = 0;
-    const auto& tx_info = block.tx_list(i);
-    auto local_tx_info = DispatchPool::Instance()->GetTx(
-        pool_index(),
-        tx_info.to_add(),
-        tx_info.type(),
-        tx_info.call_contract_step(),
-        tx_info.gid());
-    if (local_tx_info == nullptr) {
-        BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
-            tx_info.to_add(),
-            pool_index(),
-            common::Encode::HexEncode(tx_info.from()).c_str(),
-            common::Encode::HexEncode(tx_info.to()).c_str(),
-            common::Encode::HexEncode(tx_info.gid()).c_str());
-        return kBftTxNotExists;
-    }
-
-    if (BackupCheckStatistic(local_tx_info, tx_info) != kBftSuccess) {
-        BFT_ERROR("BackupCheckStatistic error.");
-        return kBftError;
-    }
-
-    push_bft_item_vec(tx_info.gid());
-    add_item_index_vec(local_tx_info->index);
-    auto block_hash = GetBlockHash(block);
-    if (block_hash != block.hash()) {
-        BFT_ERROR("block hash error!");
-        return kBftError;
-    }
-
-    auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
-    SetBlock(block_ptr);
-    return kBftSuccess;
-}
-
 int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
@@ -1733,58 +1695,6 @@ void TxBft::RootLeaderCreateTxBlock(
     } else {
         RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, ltx_msg);
     }
-}
-
-void TxBft::RootLeaderCreateFinalStatistic(
-        uint32_t pool_idx,
-        std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg) {
-    protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
-    protobuf::TxInfo tx = tx_vec[0]->tx;
-    tx.set_version(common::kTransactionVersion);
-    tx.set_amount(0);
-    tx.set_gas_limit(0);
-    tx.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tx.set_gas_used(0);
-    tx.set_balance(0);
-    tx.set_status(kBftSuccess);
-    // (TODO): check elect is valid in the time block period,
-    // one time block, one elect block
-    // check after this shard statistic block coming
-    auto tx_list = tenon_block.mutable_tx_list();
-    auto add_tx = tx_list->Add();
-    *add_tx = tx;
-    if (tx_list->empty()) {
-        BFT_ERROR("leader has no tx to consensus.");
-        return;
-    }
-
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_idx,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
-        return;
-    }
-
-    tenon_block.set_prehash(pool_hash);
-    tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
-    tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
-        common::GlobalInfo::Instance()->network_id()));
-    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 void TxBft::RootLeaderCreateTimerBlock(
