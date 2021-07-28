@@ -49,7 +49,7 @@ private:
 
     dht::BaseDhtPtr universal_role_{ nullptr };
     dht::BaseDhtPtr elect_dht_{ nullptr };
-    uint32_t network_id_{ network::kNetworkMaxDhtCount };
+    uint32_t network_id_{ network::common::kNetworkMaxDhtCount };
     transport::TransportPtr transport_{ nullptr };
     NetworkMemberCallback member_callback_{ nullptr };
 

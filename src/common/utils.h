@@ -108,6 +108,7 @@ static const uint64_t kTimeBlockCreatePeriodSeconds = 30llu;
 static const uint32_t kEatchShardMaxSupperLeaderCount = 7u;
 static const uint32_t kEachShardMinNodeCount = 3u;
 static const uint32_t kEachShardMaxNodeCount = 1024u;
+static const uint32_t kNetworkMaxDhtCount = 10240u;
 
 static const int64_t kInvalidInt64 = (std::numeric_limits<int64_t>::max)();
 static const uint64_t kInvalidUint64 = (std::numeric_limits<uint64_t>::max)();

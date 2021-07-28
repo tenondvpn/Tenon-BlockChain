@@ -29,7 +29,6 @@ enum NetworkErrorCode {
 // universal 0
 // node network 1
 // root congress 2
-static const uint32_t kNetworkMaxDhtCount = 10240u;
 static const uint32_t kUniversalNetworkId = 0u;  // all network join(for find network)
 static const uint32_t kNodeNetworkId = 1u;  // just node id join(for broadcast)
 static const uint32_t kRootCongressNetworkId = 2u;

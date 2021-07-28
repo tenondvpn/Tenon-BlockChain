@@ -21,8 +21,8 @@ DhtManager* DhtManager::Instance() {
 }
 
 void DhtManager::Init() {
-    dhts_ = new dht::BaseDhtPtr[kNetworkMaxDhtCount];
-    std::fill(dhts_, dhts_ + kNetworkMaxDhtCount, nullptr);
+    dhts_ = new dht::BaseDhtPtr[common::kNetworkMaxDhtCount];
+    std::fill(dhts_, dhts_ + common::kNetworkMaxDhtCount, nullptr);
     tick_.CutOff(kNetworkDetectPeriod, std::bind(&DhtManager::NetworkDetection, this));
 }
 
@@ -33,7 +33,7 @@ void DhtManager::Destroy() {
     }
 
     if (dhts_ != nullptr) {
-        for (uint32_t i = 0; i < kNetworkMaxDhtCount; ++i) {
+        for (uint32_t i = 0; i < common::kNetworkMaxDhtCount; ++i) {
             if (dhts_[i] != nullptr) {
                 dhts_[i]->Destroy();
                 dhts_[i] = nullptr;
@@ -45,7 +45,7 @@ void DhtManager::Destroy() {
 }
 
 void DhtManager::RegisterDht(uint32_t net_id, dht::BaseDhtPtr& dht) {
-    assert(net_id < kNetworkMaxDhtCount);
+    assert(net_id < common::kNetworkMaxDhtCount);
     assert(dhts_[net_id] == nullptr);
     dhts_[net_id] = dht;
     {
@@ -59,7 +59,7 @@ void DhtManager::UnRegisterDht(uint32_t net_id) {
         return;
     }
 
-    assert(net_id < kNetworkMaxDhtCount);
+    assert(net_id < common::kNetworkMaxDhtCount);
     assert(dhts_[net_id] != nullptr);
     dhts_[net_id]->Destroy();
     dhts_[net_id] = nullptr;
@@ -73,7 +73,7 @@ void DhtManager::UnRegisterDht(uint32_t net_id) {
 }
 
 dht::BaseDhtPtr DhtManager::GetDht(uint32_t net_id) {
-    assert(net_id < kNetworkMaxDhtCount);
+    assert(net_id < common::kNetworkMaxDhtCount);
     return dhts_[net_id];
 }
 

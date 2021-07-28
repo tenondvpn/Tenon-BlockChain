@@ -28,13 +28,13 @@ void UniversalManager::Init() {
         return;
     }
 
-    dhts_ = new dht::BaseDhtPtr[kNetworkMaxDhtCount];
-    std::fill(dhts_, dhts_ + kNetworkMaxDhtCount, nullptr);
+    dhts_ = new dht::BaseDhtPtr[common::kNetworkMaxDhtCount];
+    std::fill(dhts_, dhts_ + common::kNetworkMaxDhtCount, nullptr);
 }
 
 void UniversalManager::Destroy() {
     if (dhts_ != nullptr) {
-        for (uint32_t i = 0; i < kNetworkMaxDhtCount; ++i) {
+        for (uint32_t i = 0; i < common::kNetworkMaxDhtCount; ++i) {
             if (dhts_[i] != nullptr) {
                 dhts_[i]->Destroy();
                 dhts_[i] = nullptr;
@@ -46,13 +46,13 @@ void UniversalManager::Destroy() {
 }
 
 void UniversalManager::RegisterUniversal(uint32_t network_id, dht::BaseDhtPtr& dht) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     assert(dhts_[network_id] == nullptr);
     dhts_[network_id] = dht;
 }
 
 void UniversalManager::UnRegisterUniversal(uint32_t network_id) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     if (dhts_[network_id] != nullptr) {
         dhts_[network_id]->Destroy();
         dhts_[network_id] = nullptr;
@@ -60,7 +60,7 @@ void UniversalManager::UnRegisterUniversal(uint32_t network_id) {
 }
 
 dht::BaseDhtPtr UniversalManager::GetUniversal(uint32_t network_id) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     return dhts_[network_id];
 }
 

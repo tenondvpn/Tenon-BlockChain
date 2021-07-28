@@ -308,7 +308,7 @@ int MultiThreadHandler::HandleClientMessage(
                 message_ptr->transport_type());
         dht::BaseDhtPtr dht = nullptr;
         uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(message_ptr->des_dht_key());
-        if (net_id >= kNetworkMaxDhtCount) {
+        if (net_id >= common::kNetworkMaxDhtCount) {
             return kTransportError;
         }
 

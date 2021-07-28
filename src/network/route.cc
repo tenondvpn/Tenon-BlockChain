@@ -201,7 +201,7 @@ void Route::Broadcast(transport::protobuf::Header& header) {
         return;
     }
 
-    uint32_t src_net_id = kNetworkMaxDhtCount;
+    uint32_t src_net_id = common::kNetworkMaxDhtCount;
     if (header.has_src_dht_key()) {
         src_net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.src_dht_key());
     }

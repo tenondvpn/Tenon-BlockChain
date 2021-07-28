@@ -35,8 +35,8 @@ int Universal::Init(
         return kNetworkError;
     }
 
-    universal_ids_ = new bool[kNetworkMaxDhtCount];
-    std::fill(universal_ids_, universal_ids_ + kNetworkMaxDhtCount, false);
+    universal_ids_ = new bool[common::kNetworkMaxDhtCount];
+    std::fill(universal_ids_, universal_ids_ + common::kNetworkMaxDhtCount, false);
 
     uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key());
     if (net_id == kUniversalNetworkId) {
@@ -266,17 +266,17 @@ void Universal::ProcessGetNetworkNodesResponse(
 }
 
 void Universal::AddNetworkId(uint32_t network_id) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     universal_ids_[network_id] = true;
 }
 
 void Universal::RemoveNetworkId(uint32_t network_id) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     universal_ids_[network_id] = false;
 }
 
 bool Universal::HasNetworkId(uint32_t network_id) {
-    assert(network_id < kNetworkMaxDhtCount);
+    assert(network_id < common::kNetworkMaxDhtCount);
     return universal_ids_[network_id];
 }
 
