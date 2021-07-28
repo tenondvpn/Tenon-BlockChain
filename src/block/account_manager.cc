@@ -533,6 +533,7 @@ int AccountManager::UpdateAccountInfo(
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
+    BLOCK_DEBUG("add new account: %s", common::Encode::HexEncode(account_id).c_str());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
                 tx_info.type() != common::kConsensusCreateContract) {

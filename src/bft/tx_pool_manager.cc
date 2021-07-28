@@ -153,7 +153,7 @@ bool TxPoolManager::CheckCallContractAddressValid(const std::string& contract_ad
 }
 
 bool TxPoolManager::CheckCallerAccountInfoValid(const std::string& caller_address) {
-    if (caller_address == common::kRootChainSingleBlockTxAddress) {
+    if (common::IsBaseAddress(caller_address)) {
         return true;
     }
 
