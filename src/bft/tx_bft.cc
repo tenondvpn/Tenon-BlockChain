@@ -3,10 +3,12 @@
 
 #include "common/global_info.h"
 #include "common/random.h"
+#include "common/string_utils.h"
 #include "contract/contract_manager.h"
 #include "contract/contract_utils.h"
 #include "block/account_manager.h"
 #include "block/proto/block.pb.h"
+#include "block/shard_statistic.h"
 #include "election/elect_manager.h"
 #include "election/elect_utils.h"
 #include "network/network_utils.h"
@@ -654,20 +656,6 @@ int TxBft::BackupCheckFinalStatistic(
         return kBftInvalidPackage;
     }
 
-    if (tx_info.storages_size() != 1 || local_tx_info->tx.storages_size() != 1) {
-        BFT_ERROR("tx info storages_size error[%u][%u]",
-            tx_info.storages_size(),
-            local_tx_info->tx.storages_size());
-        return kBftInvalidPackage;
-    }
-
-    if (tx_info.storages(0).key() != local_tx_info->tx.storages(0).key()) {
-        BFT_ERROR("tx info storages key error[%s][%s]",
-            tx_info.storages(0).key().c_str(),
-            local_tx_info->tx.storages(0).key().c_str());
-        return kBftInvalidPackage;
-    }
-
     if (tx_info.storages(0).key() != kStatisticAttr) {
         BFT_ERROR("tx info storages key error[%s]", tx_info.storages(0).key().c_str());
         return kBftInvalidPackage;
@@ -680,9 +668,15 @@ int TxBft::BackupCheckFinalStatistic(
     }
 
     block::protobuf::StatisticInfo local_statistic_info;
-    if (!local_statistic_info.ParseFromString(local_tx_info->tx.storages(0).value())) {
-        BFT_ERROR("local_statistic_info.ParseFromString error");
-        return kBftInvalidPackage;
+    for (int32_t i = 0; i < local_tx_info->tx.attr_size(); ++i) {
+        if (local_tx_info->tx.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+            uint64_t timeblock_height = 0;
+            if (common::StringUtil::ToUint64(local_tx_info->tx.attr(i).value(), &timeblock_height)) {
+                block::ShardStatistic::Instance()->GetStatisticInfo(
+                    timeblock_height,
+                    &local_statistic_info);
+            }
+        }
     }
 
     if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
@@ -1868,6 +1862,21 @@ void TxBft::RootLeaderCreateFinalStatistic(
     tx.set_gas_used(0);
     tx.set_balance(0);
     tx.set_status(kBftSuccess);
+    for (int32_t i = 0; i < tx.attr_size(); ++i) {
+        if (tx.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+            block::protobuf::StatisticInfo statistic_info;
+            uint64_t timeblock_height = 0;
+            if (common::StringUtil::ToUint64(tx.attr(i).value(), &timeblock_height)) {
+                block::ShardStatistic::Instance()->GetStatisticInfo(
+                    timeblock_height,
+                    &statistic_info);
+                auto statistic_attr = tx.add_storages();
+                statistic_attr->set_key(bft::kStatisticAttr);
+                statistic_attr->set_value(statistic_info.SerializeAsString());
+            }
+        }
+    }
+
     // (TODO): check elect is valid in the time block period,
     // one time block, one elect block
     // check after this shard statistic block coming
@@ -2008,7 +2017,21 @@ void TxBft::LeaderCreateTxBlock(
                 continue;
             }
         } else if (tx.type() == common::kConsensusFinalStatistic) {
-            // just use tx info
+            for (int32_t i = 0; i < tx.attr_size(); ++i) {
+                if (tx.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
+                    block::protobuf::StatisticInfo statistic_info;
+                    uint64_t timeblock_height = 0;
+                    if (common::StringUtil::ToUint64(tx.attr(i).value(), &timeblock_height)) {
+                        block::ShardStatistic::Instance()->GetStatisticInfo(
+                            timeblock_height,
+                            &statistic_info);
+                        auto statistic_attr = tx.add_storages();
+                        statistic_attr->set_key(bft::kStatisticAttr);
+                        statistic_attr->set_value(statistic_info.SerializeAsString());
+                    }
+                }
+            }
+
             tx.set_network_id(common::GlobalInfo::Instance()->network_id());
             tx.set_gas_used(0);
             tx.set_balance(0);

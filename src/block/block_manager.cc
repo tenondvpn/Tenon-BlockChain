@@ -632,8 +632,8 @@ int BlockManager::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block
         AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
     }
 
-    ShardStatistic::Instance()->AddStatistic(block_item);
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch);
+    ShardStatistic::Instance()->AddStatistic(block_item);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {
         return kBlockSuccess;

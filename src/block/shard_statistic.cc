@@ -153,17 +153,12 @@ void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
     tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
     auto height_attr = tx_info.add_attr();
     height_attr->set_key(tmblock::kAttrTimerBlockHeight);
-    height_attr->set_value(std::to_string(
-        tmblock::TimeBlockManager::Instance()->LatestTimestampHeight()));
-    auto tm_attr = tx_info.add_attr();
-    tm_attr->set_key(tmblock::kAttrTimerBlockTm);
-    tm_attr->set_value(std::to_string(
-        tmblock::TimeBlockManager::Instance()->LatestTimestamp()));
-    block::protobuf::StatisticInfo statistic_info;
-    GetStatisticInfo(timeblock_height, &statistic_info);
-    auto statistic_attr = tx_info.add_storages();
-    statistic_attr->set_key(bft::kStatisticAttr);
-    statistic_attr->set_value(statistic_info.SerializeAsString());
+    height_attr->set_value(std::to_string(timeblock_height));
+//     block::protobuf::StatisticInfo statistic_info;
+//     GetStatisticInfo(timeblock_height, &statistic_info);
+//     auto statistic_attr = tx_info.add_storages();
+//     statistic_attr->set_key(bft::kStatisticAttr);
+//     statistic_attr->set_value(statistic_info.SerializeAsString());
     if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
         BFT_ERROR("CreateStatisticTransaction dispatch pool failed!");
     }
