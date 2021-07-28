@@ -40,9 +40,17 @@ void FilterBroadcast::Broadcasting(
     if (message.broadcast().has_hop_to_layer() &&
             message.hop_count() >= message.broadcast().hop_to_layer()) {
         auto nodes = GetlayerNodes(dht_ptr, bloomfilter, message);
+        for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+            bloomfilter->Add((*iter)->id_hash);
+        }
+
         LayerSend(dht_ptr, message, nodes);
     } else {
         auto nodes = GetRandomFilterNodes(dht_ptr, bloomfilter, message);
+        for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+            bloomfilter->Add((*iter)->id_hash);
+        }
+
         Send(dht_ptr, message, nodes);
     }
 }

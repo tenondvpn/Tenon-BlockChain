@@ -571,7 +571,7 @@ std::string VpnClient::Init(
     config_path_ = path;
     std::string conf_path = path + "/tenon.conf";
     std::string log_conf_path = path + "/log4cpp.properties";
-    std::string log_path = path + "/tenon.log";
+    std::string log_path = "./log/tenon.log";
     WriteDefaultLogConf(log_conf_path, log_path);
     log4cpp::PropertyConfigurator::configure(log_conf_path);
     std::string private_key;

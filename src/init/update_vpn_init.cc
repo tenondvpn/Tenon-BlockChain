@@ -717,7 +717,7 @@ void UpdateVpnInit::GetNetworkNodes(
                         tmp_node->min_svr_port,
                         tmp_node->max_svr_port);
                     bool isReachable = false;
-                    common::RemoteReachable(tmp_node->public_ip(), svr_port, &isReachable);
+//                     common::RemoteReachable(tmp_node->public_ip(), svr_port, &isReachable);
                     if (!isReachable) {
                         INIT_ERROR("join new vpn node can't reachable [%s:%d], id[%s], dht_key[%s], min_port: %d, max_port: %d, port: %d, day tm[%u]",
                             tmp_node->public_ip().c_str(),
@@ -767,7 +767,7 @@ void UpdateVpnInit::GetNetworkNodes(
                         tmp_node->min_route_port,
                         tmp_node->max_route_port);
                     bool isReachable = false;
-                    common::RemoteReachable(tmp_node->public_ip(), route_port, &isReachable);
+//                     common::RemoteReachable(tmp_node->public_ip(), route_port, &isReachable);
                     if (!isReachable) {
                         INIT_ERROR("join new route node can't reachable [%s:%d], id[%s], dht_key[%s], min_port: %d, max_port: %d, port: %d, day tm[%u]",
                             tmp_node->public_ip().c_str(),
@@ -1272,7 +1272,7 @@ void UpdateVpnInit::CheckSeverValid() {
             int i = 0;
             for (; i < 3; ++i) {
                 bool reacheable = false;
-                common::RemoteReachable(node_ptr->ip, port, &reacheable);
+//                 common::RemoteReachable(node_ptr->ip, port, &reacheable);
                 if (reacheable) {
                     break;
                 }
@@ -1312,7 +1312,7 @@ void UpdateVpnInit::CheckSeverValid() {
             int i = 0;
             for (; i < 3; ++i) {
                 bool reacheable = false;
-                common::RemoteReachable(node_ptr->ip, port, &reacheable);
+//                 common::RemoteReachable(node_ptr->ip, port, &reacheable);
                 if (reacheable) {
                     break;
                 }
