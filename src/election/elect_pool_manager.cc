@@ -328,14 +328,14 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
         auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
             statistic_info.elect_statistic(i).elect_height(),
             network_id);
-        if (members->size() == statistic_info.elect_statistic(i).succ_tx_count_size()) {
+        if (members->size() == (uint32_t)statistic_info.elect_statistic(i).succ_tx_count_size()) {
             for (uint32_t cound_idx = 0; cound_idx < members->size(); ++cound_idx) {
                 auto& id = (*members)[cound_idx]->id;
                 auto iter = nodes->find(id);
                 if (iter != nodes->end()) {
-                    iter->second += statistic_info.elect_statistic(i).succ_tx_count[cound_idx];
+                    iter->second += statistic_info.elect_statistic(i).succ_tx_count(cound_idx);
                 } else {
-                    (*nodes)[id] = statistic_info.elect_statistic(i).succ_tx_count[cound_idx];
+                    (*nodes)[id] = statistic_info.elect_statistic(i).succ_tx_count(cound_idx);
                 }
             }
         }
