@@ -43,16 +43,29 @@ struct HeightItem {
     std::string hash;
 };
 
-struct StatisticItem {
-    StatisticItem() {
+static const uint32_t kStatisticMaxCount = 3u;
+
+struct StatisticElectItem {
+    StatisticElectItem() : elect_height(0) {
         memset(succ_tx_count, 0, sizeof(succ_tx_count));
     }
 
+    uint64_t elect_height;
     uint32_t succ_tx_count[common::kEachShardMaxNodeCount];
+};
+
+typedef std::shared_ptr<StatisticElectItem> StatisticElectItemPtr;
+
+struct StatisticItem {
+    StatisticItem() {
+        for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
+            elect_items[i] = std::make_shared<StatisticElectItem>();
+        }
+    }
+
+    StatisticElectItemPtr elect_items[kStatisticMaxCount];
     uint32_t all_tx_count{ 0 };
     std::unordered_set<uint64_t> added_height;
-    std::mutex added_height_mutex;
-    uint64_t elect_height{ 0 };
     uint64_t tmblock_height{ 0 };
 };
 

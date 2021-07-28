@@ -903,13 +903,6 @@ void AccountManager::StatisticDpPool() {
         std::bind(&AccountManager::StatisticDpPool, this));
 }
 
-int AccountManager::GetPoolStatistic(
-        uint32_t pool_index,
-        block::protobuf::StatisticInfo* statistic_info) {
-    return network_block_[pool_index]->GetSinglePoolStatisticInfo(statistic_info);
-}
-
-
 }  // namespace block
 
 }  //namespace tenon

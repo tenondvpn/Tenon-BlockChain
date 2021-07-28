@@ -90,11 +90,15 @@ message AdRewardRequest {
     optional bytes gid = 3;
 }
 
+message ElectStatisticInfo {
+    optional uint64 elect_height = 1;
+    repeated uint32 succ_tx_count = 2;
+}
+
 message StatisticInfo {
     optional uint64 timeblock_height = 1;
-    optional uint64 elect_height = 2;
-    optional uint32 all_tx_count = 3;
-    repeated uint32 succ_tx_count = 4;
+    optional uint32 all_tx_count = 2;
+    repeated ElectStatisticInfo elect_statistic = 3;
 }
 
 message BlockMessage {
