@@ -167,65 +167,6 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
     return kBlockSuccess;
 }
 
-int AccountManager::ShardAddTimeBlockStatisticTransaction(
-        uint64_t tmblock_height,
-        const bft::protobuf::TxInfo& tm_tx_info) {
-#ifdef TENON_UNITTEST
-    return kBlockSuccess;
-#endif
-    uint64_t tmblock_tm = 0;
-    for (int32_t i = 0; i < tm_tx_info.attr_size(); ++i) {
-        if (tm_tx_info.attr(i).key() == tmblock::kAttrTimerBlock) {
-            if (!common::StringUtil::ToUint64(tm_tx_info.attr(i).value(), &tmblock_tm)) {
-                return kBlockError;
-            }
-
-            break;
-        }
-    }
-
-    if (tmblock_tm == 0) {
-        BLOCK_ERROR("get tmblock timestamp error.");
-        return kBlockError;
-    }
-
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        bft::protobuf::TxInfo tx_info;
-        tx_info.set_type(common::kConsensusStatistic);
-        tx_info.set_from(block::AccountManager::Instance()->GetPoolBaseAddr(i));
-        if (tx_info.from().empty()) {
-            BLOCK_ERROR("get pool base addr failed pool index: %d", i);
-            continue;
-        }
-
-        tx_info.set_gid(common::Hash::Hash256(
-            kPoolGidPrefixStr +
-            std::to_string(tmblock_tm) + "_" +
-            std::to_string(i)));
-
-//         BLOCK_INFO("ShardAddTimeBlockStatisticTransaction 2 : %d, common::kConsensusStatistic set gid: %s, tmblock_height: %lu, tmblock_tm: %lu, latest height: %lu, network id: %u",
-//             i, common::Encode::HexEncode(tx_info.gid()).c_str(), tmblock_height, tmblock_tm,
-//             elect::ElectManager::Instance()->latest_height(common::GlobalInfo::Instance()->network_id()),
-//             common::GlobalInfo::Instance()->network_id());
-        tx_info.set_gas_limit(0llu);
-        tx_info.set_amount(0);
-        tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
-        auto height_attr = tx_info.add_attr();
-        height_attr->set_key(tmblock::kAttrTimerBlockHeight);
-        height_attr->set_value(std::to_string(tmblock_height));
-        auto tm_attr = tx_info.add_attr();
-        tm_attr->set_key(tmblock::kAttrTimerBlockTm);
-        tm_attr->set_value(std::to_string(tmblock_tm));
-        if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
-            BLOCK_ERROR("dispatch pool failed!pool index: %d", i);
-            return kBlockError;
-        }
-    }
-
-//     BLOCK_DEBUG("ShardAddTimeBlockStatisticTransaction success.");
-    return kBlockSuccess;
-}
-
 int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
     uint64_t tmblock_timestamp = 0;
     uint64_t vss_random = 0;
@@ -237,13 +178,6 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
         if (tx_info.attr(i).key() == tmblock::kVssRandomAttr) {
             common::StringUtil::ToUint64(tx_info.attr(i).value(), &vss_random);
         }
-    }
-
-    if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressNetworkId &&
-            common::GlobalInfo::Instance()->network_id() < network::kConsensusShardEndNetworkId) {
-        ShardAddTimeBlockStatisticTransaction(
-            height,
-            tx_info);
     }
 
     tmblock::TimeBlockManager::Instance()->UpdateTimeBlock(

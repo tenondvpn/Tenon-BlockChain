@@ -577,24 +577,6 @@ void BftManager::HandleToAccountTxBlock(
 
     bool just_broadcast = false;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].type() == common::kConsensusFinalStatistic) {
-            bft::protobuf::TxInfo tx_info;
-            if (elect::ElectManager::Instance()->CreateElectTransaction(
-                    tx_list[i].network_id(),
-                    tx_bft.to_tx().block().height(),
-                    tx_list[i],
-                    tx_info) != elect::kElectSuccess) {
-                BFT_ERROR("create elect transaction error!");
-                continue;
-            }
-
-            if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
-                BFT_ERROR("dispatch pool failed!");
-            }
-
-            continue;
-        }
-
         if (tx_list[i].to().empty()) {
             continue;
         }
@@ -1225,9 +1207,7 @@ int BftManager::LeaderCallCommit(transport::protobuf::Header& header, BftInterfa
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (tenon_block->tx_list_size() == 1 &&
-                (tenon_block->tx_list(0).type() == common::kConsensusFinalStatistic ||
-                tenon_block->tx_list(0).type() == common::kConsensusStatistic ||
-                tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
+                (tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
                 tenon_block->tx_list(0).type() == common::kConsensusRootTimeBlock)) {
         } else {
             db::DbWriteBach db_batch;
@@ -1354,9 +1334,7 @@ int BftManager::BackupCommit(
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (tenon_block->tx_list_size() == 1 &&
-                (tenon_block->tx_list(0).type() == common::kConsensusFinalStatistic ||
-                tenon_block->tx_list(0).type() == common::kConsensusStatistic ||
-                tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
+                (tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
                 tenon_block->tx_list(0).type() == common::kConsensusRootTimeBlock)) {
         } else {
             db::DbWriteBach db_batch;
@@ -1421,12 +1399,6 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
     }
 
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        if (block_ptr->tx_list_size() == 1 &&
-                (block_ptr->tx_list(0).type() == common::kConsensusFinalStatistic ||
-                block_ptr->tx_list(0).type() == common::kConsensusStatistic)) {
-            return;
-        }
-
         transport::protobuf::Header msg;
         BftProto::CreateLeaderBroadcastToAccount(
             local_node,
@@ -1449,12 +1421,6 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].status() == kBftSuccess &&
-                tx_list[i].type() == common::kConsensusFinalStatistic) {
-            broadcast_nets.insert(network::kRootCongressNetworkId);
-            continue;
-        }
-
         // contract must unlock caller
         if (tx_list[i].status() != kBftSuccess &&
                 (tx_list[i].type() != common::kConsensusCreateContract &&
