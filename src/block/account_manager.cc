@@ -45,15 +45,10 @@ AccountManager::AccountManager() {
     for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
         network_block_[i] = new block::DbPoolInfo(i);
     }
-
-    pool_statistci_tick_.CutOff(
-        kStatisticPeriod,
-        std::bind(&AccountManager::StatisticDpPool, this));
 }
 
 AccountManager::~AccountManager() {
     {
-        std::lock_guard<std::mutex> guard(network_block_mutex_);
         for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
             if (network_block_[i] != nullptr) {
                 delete network_block_[i];
@@ -742,7 +737,6 @@ int AccountManager::SetAccountAttrs(
                 tx_info.to_add() &&
                 account_id == tx_info.to()) {
             res += account_info->SetAddressType(kContractAddress, db_batch);
-            std::cout << "0 res: " << res << std::endl;
             for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
                 if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
                     res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
@@ -751,7 +745,6 @@ int AccountManager::SetAccountAttrs(
             }
 
             res += account_info->SetAttrValue(kFieldContractOwner, tx_info.from(), db_batch);
-            std::cout << "1 res: " << res << std::endl;
         }
 
         if ((tx_info.type() != common::kConsensusCallContract && !tx_info.to_add()) ||
@@ -795,12 +788,10 @@ int AccountManager::SetAccountAttrs(
                         tx_info.attr(attr_idx).key(),
                         tmp_now_height,
                         db_batch);
-                    std::cout << "2 res: " << res << std::endl;
                     res += account_info->SetAttrValue(
                         tx_info.attr(attr_idx).key(),
                         tx_info.attr(attr_idx).value(),
                         db_batch);
-                    std::cout << "3 res: " << res << std::endl;
                 }
 
                 if (tmblock_tm != common::kInvalidUint64) {
@@ -825,12 +816,10 @@ int AccountManager::SetAccountAttrs(
                         tx_info.storages(storage_idx).key(),
                         tmp_now_height,
                         db_batch);
-                    std::cout << "4 res: " << res << std::endl;
                     res += account_info->SetAttrValue(
                         tx_info.storages(storage_idx).key(),
                         tx_info.storages(storage_idx).value(),
                         db_batch);
-                    std::cout << "5 res: " << res << std::endl;
                 }
             }
         }
@@ -886,21 +875,10 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-//     network_block_[pool_index]->AddNewBlock(block_item);
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
     return network_block_[pool_index]->GetBaseAddr();
-}
-
-void AccountManager::StatisticDpPool() {
-    for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
-        network_block_[i]->SatisticBlock();
-    }
-
-    pool_statistci_tick_.CutOff(
-        kStatisticPeriod,
-        std::bind(&AccountManager::StatisticDpPool, this));
 }
 
 }  // namespace block

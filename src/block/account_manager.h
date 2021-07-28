@@ -75,7 +75,6 @@ private:
     int HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
     int HandleFinalStatisticBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
-    void StatisticDpPool();
 
     static const uint64_t kStatisticPeriod = 3000000llu;
     static const uint32_t kMaxCacheAccountCount = 10240u;
@@ -84,8 +83,6 @@ private:
     common::LimitHeap<block::DbAccountInfoPtr> acc_limit_heap_{ false, kMaxCacheAccountCount };
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
-    std::mutex network_block_mutex_;
-    common::Tick pool_statistci_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };
