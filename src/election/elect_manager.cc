@@ -231,6 +231,7 @@ void ElectManager::ProcessNewElectBlock(
                     BFT_ERROR("join elected network failed![%u]", elect_block.shard_network_id());
                 }
 
+                BFT_INFO("join new election shard network: %u", elect_block.shard_network_id());
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
 

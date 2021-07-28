@@ -128,6 +128,11 @@ void ShardStatistic::GetStatisticInfo(
 }
 
 void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
+    if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+            common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
+
     int32_t pool_idx = 0;
     bft::protobuf::TxInfo tx_info;
     tx_info.set_type(common::kConsensusFinalStatistic);
