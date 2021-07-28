@@ -57,12 +57,17 @@ private:
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
+    void RootLeaderCreateFinalStatistic(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
     int RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx);
     int RootBackupCheckCreateAccountAddressPrepare(
         const bft::protobuf::Block& block,
         int32_t* invalid_tx_idx);
     int RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block& block);
     int RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block);
+    int RootBackupCheckFinalStatistic(const bft::protobuf::Block& block);
     int GetTempAccountBalance(
         const std::string& id,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
@@ -118,6 +123,12 @@ private:
         TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
+    int BackupCheckStatistic(
+        TxItemPtr local_tx_ptr,
+        const protobuf::TxInfo& tx_info);
+    int BackupCheckFinalStatistic(
+        TxItemPtr local_tx_ptr,
+        const protobuf::TxInfo& tx_info);
     int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
 
     int InitTenonTvmContext(tvm::TenonHost& tenon_host);

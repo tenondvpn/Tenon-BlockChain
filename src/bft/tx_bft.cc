@@ -434,6 +434,9 @@ int TxBft::RootBackupCheckPrepare(
         case common::kConsensusRootTimeBlock:
             return RootBackupCheckTimerBlockPrepare(block);
             break;
+        case common::kConsensusFinalStatistic:
+            return RootBackupCheckFinalStatistic(block);
+            break;
         default:
             return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
             break;
@@ -443,6 +446,44 @@ int TxBft::RootBackupCheckPrepare(
     }
     
     return kBftInvalidPackage;
+}
+
+int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
+    std::unordered_map<std::string, int64_t> acc_balance_map;
+    int32_t i = 0;
+    const auto& tx_info = block.tx_list(i);
+    auto local_tx_info = DispatchPool::Instance()->GetTx(
+        pool_index(),
+        tx_info.to_add(),
+        tx_info.type(),
+        tx_info.call_contract_step(),
+        tx_info.gid());
+    if (local_tx_info == nullptr) {
+        BFT_ERROR("prepare [to: %d] [pool idx: %d] not has tx[%s]to[%s][%s]!",
+            tx_info.to_add(),
+            pool_index(),
+            common::Encode::HexEncode(tx_info.from()).c_str(),
+            common::Encode::HexEncode(tx_info.to()).c_str(),
+            common::Encode::HexEncode(tx_info.gid()).c_str());
+        return kBftTxNotExists;
+    }
+
+    if (BackupCheckFinalStatistic(local_tx_info, tx_info) != kBftSuccess) {
+        BFT_ERROR("BackupCheckStatistic error.");
+        return kBftError;
+    }
+
+    push_bft_item_vec(tx_info.gid());
+    add_item_index_vec(local_tx_info->index);
+    auto block_hash = GetBlockHash(block);
+    if (block_hash != block.hash()) {
+        BFT_ERROR("block hash error!");
+        return kBftError;
+    }
+
+    auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
+    SetBlock(block_ptr);
+    return kBftSuccess;
 }
 
 int TxBft::GetTimeBlockInfoFromTx(
@@ -521,7 +562,13 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
             return tmp_res;
         }
 
-        if (local_tx_info->tx.type() == common::kConsensusCallContract ||
+        if (local_tx_info->tx.type() == common::kConsensusFinalStatistic) {
+            int check_res = BackupCheckFinalStatistic(local_tx_info, tx_info);
+            if (check_res != kBftSuccess) {
+                BFT_ERROR("BackupCheckFinalStatistic transaction failed![%d]", tmp_res);
+                return check_res;
+            }
+        } else if (local_tx_info->tx.type() == common::kConsensusCallContract ||
                 local_tx_info->tx.type() == common::kConsensusCreateContract) {
             switch (local_tx_info->tx.call_contract_step()) {
             case contract::kCallStepDefault: {
@@ -579,6 +626,114 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
     SetBlock(block_ptr);
+    return kBftSuccess;
+}
+
+int TxBft::BackupCheckFinalStatistic(
+        TxItemPtr local_tx_info,
+        const protobuf::TxInfo& tx_info) {
+    if (tx_info.gas_limit() != 0) {
+        BFT_ERROR("tx info gas limit error[%llu]", tx_info.gas_limit());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.balance() != 0) {
+        BFT_ERROR("tx info balance error[%llu]", tx_info.balance());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.gas_used() != 0) {
+        BFT_ERROR("tx info gas_used error[%llu]", tx_info.gas_used());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.network_id() != common::GlobalInfo::Instance()->network_id()) {
+        BFT_ERROR("tx info network error[%u][%u]",
+            tx_info.network_id(),
+            common::GlobalInfo::Instance()->network_id());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.storages_size() != 1 || local_tx_info->tx.storages_size() != 1) {
+        BFT_ERROR("tx info storages_size error[%u][%u]",
+            tx_info.storages_size(),
+            local_tx_info->tx.storages_size());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.storages(0).key() != local_tx_info->tx.storages(0).key()) {
+        BFT_ERROR("tx info storages key error[%s][%s]",
+            tx_info.storages(0).key().c_str(),
+            local_tx_info->tx.storages(0).key().c_str());
+        return kBftInvalidPackage;
+    }
+
+    if (tx_info.storages(0).key() != kStatisticAttr) {
+        BFT_ERROR("tx info storages key error[%s]", tx_info.storages(0).key().c_str());
+        return kBftInvalidPackage;
+    }
+
+    block::protobuf::StatisticInfo leader_statistic_info;
+    if (!leader_statistic_info.ParseFromString(tx_info.storages(0).value())) {
+        BFT_ERROR("leader_statistic_info.ParseFromString error");
+        return kBftInvalidPackage;
+    }
+
+    block::protobuf::StatisticInfo local_statistic_info;
+    if (!local_statistic_info.ParseFromString(local_tx_info->tx.storages(0).value())) {
+        BFT_ERROR("local_statistic_info.ParseFromString error");
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()) {
+        BFT_ERROR("leader_statistic_info.all_tx_count() != local_statistic_info.all_tx_count()[%d][%d]",
+            leader_statistic_info.all_tx_count(),
+            local_statistic_info.all_tx_count());
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()) {
+        BFT_ERROR("leader_statistic_info.timeblock_height() != local_statistic_info.timeblock_height()[%lu][%lu]",
+            leader_statistic_info.timeblock_height(),
+            local_statistic_info.timeblock_height());
+        return kBftInvalidPackage;
+    }
+
+    if (leader_statistic_info.elect_statistic_size() != local_statistic_info.elect_statistic_size()) {
+        BFT_ERROR("leader_statistic_info.elect_statistic_size() != local_statistic_info.elect_statistic_size()[%lu][%lu]",
+            leader_statistic_info.elect_statistic_size(),
+            local_statistic_info.elect_statistic_size());
+        return kBftInvalidPackage;
+    }
+
+    for (int32_t i = 0; i < leader_statistic_info.elect_statistic_size(); ++i) {
+        if (leader_statistic_info.elect_statistic(i).elect_height() !=
+                local_statistic_info.elect_statistic(i).elect_height()) {
+            BFT_ERROR("leader_statistic_info.elect_height() != local_statistic_info.elect_height()[%lu][%lu]",
+                leader_statistic_info.elect_statistic(i).elect_height(),
+                local_statistic_info.elect_statistic(i).elect_height());
+            return kBftInvalidPackage;
+        }
+
+        if (leader_statistic_info.elect_statistic(i).succ_tx_count_size() !=
+                local_statistic_info.elect_statistic(i).succ_tx_count_size()) {
+            BFT_ERROR("leader_statistic_info.succ_tx_count_size() != local_statistic_info.succ_tx_count_size()[%u][%u]",
+                leader_statistic_info.elect_statistic(i).succ_tx_count_size(),
+                local_statistic_info.elect_statistic(i).succ_tx_count_size());
+            return kBftInvalidPackage;
+        }
+
+        for (int32_t j = 0; j < leader_statistic_info.elect_statistic(i).succ_tx_count_size(); ++j) {
+            if (leader_statistic_info.elect_statistic(i).succ_tx_count(j) !=
+                    local_statistic_info.elect_statistic(i).succ_tx_count(j)) {
+                BFT_ERROR("leader_statistic_info.succ_tx_count(i) != local_statistic_info.succ_tx_count()[%u][%u]",
+                    leader_statistic_info.elect_statistic(i).succ_tx_count(j),
+                    local_statistic_info.elect_statistic(i).succ_tx_count(j));
+                return kBftInvalidPackage;
+            }
+        }
+    }
+
     return kBftSuccess;
 }
 
@@ -1688,6 +1843,9 @@ void TxBft::RootLeaderCreateTxBlock(
         case common::kConsensusRootTimeBlock:
             RootLeaderCreateTimerBlock(pool_idx, tx_vec, ltx_msg);
             break;
+        case common::kConsensusFinalStatistic:
+            RootLeaderCreateFinalStatistic(pool_idx, tx_vec, ltx_msg);
+            break;
         default:
             RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, ltx_msg);
             break;
@@ -1695,6 +1853,58 @@ void TxBft::RootLeaderCreateTxBlock(
     } else {
         RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, ltx_msg);
     }
+}
+
+void TxBft::RootLeaderCreateFinalStatistic(
+        uint32_t pool_idx,
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& ltx_msg) {
+    protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
+    protobuf::TxInfo tx = tx_vec[0]->tx;
+    tx.set_version(common::kTransactionVersion);
+    tx.set_amount(0);
+    tx.set_gas_limit(0);
+    tx.set_network_id(common::GlobalInfo::Instance()->network_id());
+    tx.set_gas_used(0);
+    tx.set_balance(0);
+    tx.set_status(kBftSuccess);
+    // (TODO): check elect is valid in the time block period,
+    // one time block, one elect block
+    // check after this shard statistic block coming
+    auto tx_list = tenon_block.mutable_tx_list();
+    auto add_tx = tx_list->Add();
+    *add_tx = tx;
+    if (tx_list->empty()) {
+        BFT_ERROR("leader has no tx to consensus.");
+        return;
+    }
+
+    std::string pool_hash;
+    uint64_t pool_height = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_idx,
+        &pool_height,
+        &pool_hash,
+        &tm_height,
+        &tm_with_block_height);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return;
+    }
+
+    tenon_block.set_prehash(pool_hash);
+    tenon_block.set_version(common::kTransactionVersion);
+    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
+    tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
+    tenon_block.set_height(pool_height + 1);
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
+    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 void TxBft::RootLeaderCreateTimerBlock(
@@ -1797,6 +2007,11 @@ void TxBft::LeaderCreateTxBlock(
                 tx) != kBftSuccess) {
                 continue;
             }
+        } else if (tx.type() == common::kConsensusFinalStatistic) {
+            // just use tx info
+            tx.set_network_id(common::GlobalInfo::Instance()->network_id());
+            tx.set_gas_used(0);
+            tx.set_balance(0);
         } else {
             if (LeaderAddNormalTransaction(
                     tx_vec[i],

@@ -30,8 +30,21 @@ struct TxItem {
             : tx(in_tx) {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
-        time_valid = common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
-        timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
+        switch (tx.type()) {
+        case common::kConsensusFinalStatistic:
+            time_valid = common::TimeUtils::TimestampUs() + kBftFinalStatisticStartDeltaTime;
+            timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolFinalStatisticTimeoutSeconds);
+            break;
+        case common::kConsensusRootElectShard:
+            time_valid = common::TimeUtils::TimestampUs() + kBftElectionStartDeltaTime;
+            timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolElectionTimeoutSeconds);
+            break;
+        default:
+            time_valid = common::TimeUtils::TimestampUs() + kBftStartDeltaTime;
+            timeout = std::chrono::steady_clock::now() + std::chrono::seconds(kTxPoolTimeoutSeconds);
+            break;
+        }
+
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();
         }

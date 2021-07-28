@@ -27,6 +27,7 @@ enum ConsensusType {
     kConsensusVpnMiningPayToNode,
     kConsensusRootElectShard,  // shard consensus network election
     kConsensusRootTimeBlock,  // create time block
+    kConsensusFinalStatistic,  // create shard time block's final statistic block
 };
 
 enum ClientStatus {

@@ -104,6 +104,8 @@ static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;
 // bft will delay 500ms for all node ready
 static const uint32_t kBftStartDeltaTime = 500000u;
+static const uint32_t kBftFinalStatisticStartDeltaTime = 30000000u;
+static const uint32_t kBftElectionStartDeltaTime = 3000000u;
 
 // broadcast default param
 static const uint32_t kBftBroadcastIgnBloomfilterHop = 1u;
@@ -114,6 +116,8 @@ static const uint32_t kBftNeighborCount = 7u;
 static const uint32_t kBftTimeout = 14u * 1000u * 1000u;  // bft timeout 15s
 // tx pool timeout 3 * kTimeBlockCreatePeriodSeconds seconds
 static const uint32_t kTxPoolTimeoutSeconds = 30u;
+static const uint32_t kTxPoolFinalStatisticTimeoutSeconds = kBftFinalStatisticStartDeltaTime / 1000000u + 30u;
+static const uint32_t kTxPoolElectionTimeoutSeconds = kBftElectionStartDeltaTime / 1000000u + 30u;
 static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
 static const uint32_t kBftLeaderPrepareWaitPeriod = 5u * 1000u * 1000u;
 static const uint32_t kPrevTransportVersion = 0;
