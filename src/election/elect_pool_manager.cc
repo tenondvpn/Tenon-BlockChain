@@ -31,7 +31,6 @@ int ElectPoolManager::CreateElectTransaction(
         uint64_t final_statistic_block_height,
         const bft::protobuf::TxInfo& src_tx_info,
         bft::protobuf::TxInfo& tx_info) {
-    block::protobuf::StatisticInfo statistic_info;
     bool statistic_valid = false;
     std::string tm_str;
     for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
@@ -63,6 +62,7 @@ int ElectPoolManager::CreateElectTransaction(
         return kElectError;
     }
 
+    block::protobuf::StatisticInfo statistic_info;
     if (!statistic_info.ParseFromString(src_tx_info.storages(0).value())) {
         return kElectError;
     }
@@ -323,25 +323,45 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
         uint32_t network_id,
         const block::protobuf::StatisticInfo& statistic_info,
         uint32_t count,
-        std::map<uint32_t, uint32_t>* nodes) {
-    if (statistic_info.timeblock_height() !=
-            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight() - 1) {
-        return;
+        std::map<std::string, uint32_t>* nodes) {
+    for (int32_t i = 0; i < statistic_info.elect_statistic_size(); ++i) {
+        auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+            statistic_info.elect_statistic(i).elect_height(),
+            network_id);
+        if (members->size() == statistic_info.elect_statistic(i).succ_tx_count_size()) {
+            for (uint32_t cound_idx = 0; cound_idx < members->size(); ++cound_idx) {
+                auto& id = (*members)[cound_idx]->id;
+                auto iter = nodes->find(id);
+                if (iter != nodes->end()) {
+                    iter->second += statistic_info.elect_statistic(i).succ_tx_count[cound_idx];
+                } else {
+                    (*nodes)[id] = statistic_info.elect_statistic(i).succ_tx_count[cound_idx];
+                }
+            }
+        }
     }
 
-    int32_t member_count = ElectManager::Instance()->GetMemberCount(network_id);
-    if (statistic_info.succ_tx_count_size() != member_count) {
-        return;
+    struct Item {
+        std::string id;
+        uint32_t count;
+    };
+
+    struct ItemOperator {
+        bool operator() (const Item& lhs, const Item& rhs) {
+            return lhs.count > rhs.count;
+        }
+    };
+
+    typedef std::priority_queue<Item, std::vector<Item>, ItemOperator> PriQueue;
+    PriQueue item_queue;
+    for (auto iter = nodes->begin(); iter != nodes->end(); ++iter) {
+        item_queue.push({ iter->first, iter->second });
     }
 
-    common::LimitHeap<HeapItem> min_heap(false, count);
-    for (int32_t i = 0; i < statistic_info.succ_tx_count_size(); ++i) {
-        min_heap.push({ (uint32_t)i, statistic_info.succ_tx_count(i) });
-    }
-
-    while (!min_heap.empty()) {
-        nodes->insert(std::make_pair(min_heap.top().index, min_heap.top().succ_count));
-        min_heap.pop();
+    nodes->clear();
+    while (nodes->size() < count && !item_queue.empty()) {
+        nodes->insert(std::make_pair(item_queue.top().id, item_queue.top().count));
+        item_queue.pop();
     }
 }
 
@@ -376,6 +396,11 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         (*iter)->pool_index_mod_num = -1;
     }
 
+    std::unordered_map<std::string, NodeDetailPtr> id_node_map;
+    for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
+        id_node_map[(*iter)->id] = *iter;
+    }
+
     uint32_t weed_out_count = exists_shard_nodes.size() * kFtsWeedoutDividRate / 100;
     ElectWaitingNodesPtr waiting_pool_ptr = nullptr;
     {
@@ -402,7 +427,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             }
 
             uint32_t pick_in_count = weed_out_count;
-            if (statistic_info.succ_tx_count_size() < (int32_t)common::kEachShardMaxNodeCount) {
+            if (elect::ElectManager::Instance()->GetMemberCount(shard_netid) <
+                    (int32_t)common::kEachShardMaxNodeCount) {
                 pick_in_count += weed_out_count / 2;
                 if (pick_in_count <= 0) {
                     pick_in_count = 1;
@@ -418,24 +444,27 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
     
-    if ((int32_t)exists_shard_nodes.size() == statistic_info.succ_tx_count_size()) {
-        std::map<uint32_t, uint32_t> direct_weed_out;
-        GetMiniTopNInvalidNodes(
-            shard_netid,
-            statistic_info,
-            statistic_info.succ_tx_count_size() * kInvalidShardNodesRate / 100,
-            &direct_weed_out);
-        for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
-            if (pick_in_vec.size() >= weed_out_count) {
-                weed_out_vec.push_back(exists_shard_nodes[iter->first]);
-            } else if (iter->second == 0) {
-                weed_out_vec.push_back(exists_shard_nodes[iter->first]);
-            }
+    // Optimize a certain ratio of nodes with the smallest amount of sharing
+    std::map<std::string, uint32_t> direct_weed_out;
+    GetMiniTopNInvalidNodes(
+        shard_netid,
+        statistic_info,
+        exists_shard_nodes.size() * kInvalidShardNodesRate / 100,
+        &direct_weed_out);
+    for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
+        auto eiter = id_node_map.find(iter->first);
+        if (eiter == id_node_map.end()) {
+            continue;
         }
 
-        weed_out_count -= weed_out_vec.size();
+        if (pick_in_vec.size() >= weed_out_count) {
+            weed_out_vec.push_back(eiter->second);
+        } else if (iter->second == 0) {
+            weed_out_vec.push_back(eiter->second);
+        }
     }
 
+    weed_out_count -= weed_out_vec.size();
     if (pick_in_vec.size() < weed_out_count + weed_out_vec.size()) {
         if (pick_in_vec.size() < weed_out_vec.size()) {
             weed_out_count = 0;

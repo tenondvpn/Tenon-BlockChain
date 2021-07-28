@@ -68,7 +68,7 @@ private:
         uint32_t network_id,
         const block::protobuf::StatisticInfo& statistic_info,
         uint32_t count,
-        std::map<uint32_t, uint32_t>* nodes);
+        std::map<std::string, uint32_t>* nodes);
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;
