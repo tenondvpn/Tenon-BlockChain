@@ -34,7 +34,7 @@ int ElectPoolManager::CreateElectTransaction(
     bool statistic_valid = false;
     std::string tm_str;
     for (int32_t i = 0; i < src_tx_info.attr_size(); ++i) {
-        if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockTm) {
+        if (src_tx_info.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
             tx_info.set_gid(common::Hash::Hash256(
                 kElectGidPrefix +
                 "_" +
@@ -47,7 +47,7 @@ int ElectPoolManager::CreateElectTransaction(
         }
     }
 
-    if (src_tx_info.gid().empty()) {
+    if (tx_info.gid().empty()) {
         ELECT_ERROR("CreateElectTransaction gid error shard id: %u", shard_netid);
         return kElectError;
     }
