@@ -132,12 +132,23 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
 }
 
 void Route::Broadcasting() {
-    for (uint32_t i = 0; i < transport::kMessageHandlerThreadCount; ++i) {
-        while (broadcast_queue_[i].size() > 0) {
-            transport::TransportMessagePtr msg_ptr;
-            if (broadcast_queue_[i].pop(&msg_ptr)) {
-                Broadcast(*msg_ptr);
+    bool has_data = false;
+    while (true) {
+        for (uint32_t i = 0; i < transport::kMessageHandlerThreadCount; ++i) {
+            while (broadcast_queue_[i].size() > 0) {
+                transport::TransportMessagePtr msg_ptr;
+                if (broadcast_queue_[i].pop(&msg_ptr)) {
+                    Broadcast(*msg_ptr);
+
+                    if (!has_data) {
+                        has_data = true;
+                    }
+                }
             }
+        }
+
+        if (!has_data) {
+            break;
         }
     }
 

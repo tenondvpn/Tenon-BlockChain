@@ -30,6 +30,19 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    bool LockPool(int32_t pool_index) {
+        std::lock_guard<std::mutex> guard(pool_mutex_);
+        if (tx_pool_.IsPoolLocked(pool_index)) {
+            return false;
+        }
+
+        tx_pool_.LockPool(pool_index);
+        return true;
+    }
+
+    void UnlockPool(int32_t pool_index) {
+        tx_pool_.UnlockPool(pool_index);
+    }
 
 private:
     DispatchPool();
@@ -41,6 +54,7 @@ private:
     bool TxTypeValid(const bft::protobuf::TxInfo& new_tx);
 
     TxPoolManager tx_pool_;
+    std::mutex pool_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(DispatchPool);
 };
