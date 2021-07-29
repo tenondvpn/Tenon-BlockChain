@@ -831,10 +831,10 @@ int BftManager::BackupPrepare(
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
-        auto data = header.mutable_data();
-        int prepare_res = bft_ptr->Prepare(false, -1, data);
+        std::string data;
+        int prepare_res = bft_ptr->Prepare(false, -1, &data);
         if (prepare_res != kBftSuccess) {
-            std::string res_data = std::to_string(prepare_res) + "," + *data;
+            std::string res_data = std::to_string(prepare_res) + "," + data;
             BftProto::BackupCreatePrepare(
                 header,
                 bft_msg,
@@ -851,7 +851,7 @@ int BftManager::BackupPrepare(
                 header,
                 bft_msg,
                 local_node,
-                *data,
+                data,
                 bft_ptr,
                 true,
                 msg);
