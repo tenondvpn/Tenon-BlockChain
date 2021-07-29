@@ -29,7 +29,7 @@ public:
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
     int AddKeyValueSyncBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr);
 
 private:

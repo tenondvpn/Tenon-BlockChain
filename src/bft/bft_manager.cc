@@ -1690,7 +1690,7 @@ int BftManager::VerifyAggSignature(
 }
 
 int BftManager::AddKeyValueSyncBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr) {
     auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
     if (block::AccountManager::Instance()->AddBlockItemToCache(
