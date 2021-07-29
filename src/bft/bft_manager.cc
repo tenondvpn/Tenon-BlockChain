@@ -747,7 +747,7 @@ void BftManager::RemoveBft(const std::string& gid, bool remove_tx) {
 
 int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     std::string prepare_data;
-    int res = bft_ptr->Prepare(true, pool_mod_idx, &prepare_data);
+    int res = bft_ptr->Prepare(true, pool_mod_idx, prepare_data, &prepare_data);
     if (res != kBftSuccess || prepare_data.empty()) {
         return res;
     }
@@ -832,7 +832,7 @@ int BftManager::BackupPrepare(
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
         std::string data;
-        int prepare_res = bft_ptr->Prepare(false, -1, &data);
+        int prepare_res = bft_ptr->Prepare(false, -1, bft_msg.data(), &data);
         if (prepare_res != kBftSuccess) {
             std::string res_data = std::to_string(prepare_res) + "," + data;
             BftProto::BackupCreatePrepare(

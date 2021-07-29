@@ -44,13 +44,17 @@ int TxBft::Init(bool leader) {
     return kBftSuccess;
 }
 
-int TxBft::Prepare(bool leader, int32_t pool_mod_idx, std::string* prepare) {
+int TxBft::Prepare(
+        bool leader,
+        int32_t pool_mod_idx,
+        const std::string& leader_prepare,
+        std::string* prepare) {
     if (leader) {
         return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
     bft::protobuf::BftMessage bft_msg;
-    if (!bft_msg.ParseFromString(*prepare)) {
+    if (!bft_msg.ParseFromString(leader_prepare)) {
         BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
         return kBftInvalidPackage;
     }

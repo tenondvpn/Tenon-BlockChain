@@ -69,7 +69,7 @@ struct TransportHeader {
 };
 
 typedef std::shared_ptr<protobuf::Header> TransportMessagePtr;
-typedef std::function<void(TransportMessagePtr& message)> MessageProcessor;
+typedef std::function<void(const TransportMessagePtr& message)> MessageProcessor;
 
 static const uint32_t kMaxHops = 20u;
 static const uint32_t kBroadcastMaxRelayTimes = 2u;
