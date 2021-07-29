@@ -200,11 +200,11 @@ private:
     VpnClient();
     ~VpnClient();
 
-    void HandleMessage(transport::TransportMessagePtr& header);
-    void HandleBlockMessage(transport::protobuf::Header& header);
-    void HandleContractMessage(transport::protobuf::Header& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
+    void HandleBlockMessage(const transport::protobuf::Header& header);
+    void HandleContractMessage(const transport::protobuf::Header& header);
     void HandleUpdateVpnCountResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg);
     int InitUdpTransport();
     int InitTcpTransport();
@@ -233,7 +233,7 @@ private:
         const std::string& account,
         uint64_t height);
     void HandleGetAttrResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg);
     void SendGetBlockWithGid(const std::string& str, bool is_gid);
     void SendGetAccountAttrUsedBandwidth();

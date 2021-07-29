@@ -41,7 +41,7 @@ public:
     int AddSync(uint32_t network_id, const std::string& key, uint32_t priority);
     void Init();
     void Destroy();
-    void HandleMessage(transport::TransportMessagePtr& msg);
+    void HandleMessage(const transport::TransportMessagePtr& msg);
 
 private:
     struct PrioSyncQueue {
@@ -54,15 +54,15 @@ private:
     void CheckSyncItem();
     void CheckSyncTimeout();
     uint64_t SendSyncRequest(
-            uint32_t network_id,
-            const sync::protobuf::SyncMessage& sync_msg,
-            const std::set<uint64_t>& sended_neigbors);
+        uint32_t network_id,
+        const sync::protobuf::SyncMessage& sync_msg,
+        const std::set<uint64_t>& sended_neigbors);
     void ProcessSyncValueRequest(
-            transport::protobuf::Header& header,
-            protobuf::SyncMessage& sync_msg);
+        const transport::protobuf::Header& header,
+        protobuf::SyncMessage& sync_msg);
     void ProcessSyncValueResponse(
-            transport::protobuf::Header& header,
-            protobuf::SyncMessage& sync_msg);
+        const transport::protobuf::Header& header,
+        protobuf::SyncMessage& sync_msg);
     int HandleExistsBlock(const std::string& key);
 
     std::unordered_map<std::string, SyncItemPtr> synced_map_;

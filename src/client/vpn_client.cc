@@ -186,7 +186,7 @@ std::string VpnClient::CheckVersion() {
 	return vpn_download_url_;
 }
 
-void VpnClient::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void VpnClient::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.type() == common::kBlockMessage) {
         HandleBlockMessage(header);
@@ -197,7 +197,7 @@ void VpnClient::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     }
 }
 
-void VpnClient::HandleBlockMessage(transport::protobuf::Header& header) {
+void VpnClient::HandleBlockMessage(const transport::protobuf::Header& header) {
     block::protobuf::BlockMessage block_msg;
     if (!block_msg.ParseFromString(header.data())) {
         return;
@@ -262,7 +262,7 @@ void VpnClient::AdReward(const std::string& str) {
 }
 
 void VpnClient::HandleUpdateVpnCountResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg) {
     std::string vpn_nodes;
     for (int32_t i = 0; i < block_msg.up_vpn_res().vpn_nodes_size(); ++i) {
@@ -275,7 +275,7 @@ void VpnClient::HandleUpdateVpnCountResponse(
     vpn_node_info_con_.notify_all();
 }
 
-void VpnClient::HandleContractMessage(transport::protobuf::Header& header) {
+void VpnClient::HandleContractMessage(const transport::protobuf::Header& header) {
     contract::protobuf::ContractMessage contract_msg;
     if (!contract_msg.ParseFromString(header.data())) {
         return;
@@ -299,7 +299,7 @@ void VpnClient::HandleContractMessage(transport::protobuf::Header& header) {
 }
 
 void VpnClient::HandleGetAttrResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg) {
     if (paied_vip_info_[paied_vip_valid_idx_]->timestamp == 0) {
         paied_vip_info_[paied_vip_valid_idx_]->timestamp = kInvalidTimestamp;

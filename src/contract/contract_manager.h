@@ -34,7 +34,7 @@ public:
 private:
     ContractManager();
     ~ContractManager();
-    void HandleMessage(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
 //     void HandleGetContractAttrRequest(
 //             transport::protobuf::Header& header,
 //             protobuf::ContractMessage& block_msg);

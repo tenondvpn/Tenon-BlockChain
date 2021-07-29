@@ -50,7 +50,7 @@ private:
     void HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg);
     void HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg);
     void HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg);
-    void HandleMessage(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
     uint64_t GetAllVssValid();
     void SetConsensusFinalRandomNum(const std::string& id, uint64_t final_random_num);
 

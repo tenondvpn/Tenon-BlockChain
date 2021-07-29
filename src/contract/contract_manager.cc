@@ -70,7 +70,7 @@ int ContractManager::Init() {
     return kContractSuccess;
 }
 
-void ContractManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void ContractManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.type() != common::kContractMessage) {
         return;

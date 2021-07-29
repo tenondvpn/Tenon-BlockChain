@@ -2182,7 +2182,7 @@ int VpnServer::Init(uint16_t min_port, uint16_t max_port) {
     return kVpnsvrSuccess;
 }
 
-void VpnServer::HandleMessage(transport::protobuf::Header& header) {
+void VpnServer::HandleMessage(const transport::protobuf::Header& header) {
     if (header.has_client() && header.client()) {
         network::Route::Instance()->Send(header);
         return;
@@ -2345,7 +2345,7 @@ void VpnServer::CheckTransactions() {
 }
 
 void VpnServer::HandleClientBandwidthResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         contract::protobuf::ContractMessage& contract_msg) {
     auto client_bw_res = contract_msg.get_attr_res();
     std::string key = client_bw_res.attr_key();
@@ -2372,7 +2372,7 @@ void VpnServer::HandleClientBandwidthResponse(
 }
 
 void VpnServer::HandleVpnLoginResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg) try {
     auto& attr_res = block_msg.acc_attr_res();
     BandwidthInfoPtr bw_item_ptr = nullptr;

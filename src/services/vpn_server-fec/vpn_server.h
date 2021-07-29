@@ -73,12 +73,12 @@ private:
     void CheckTransactions();
     void CheckAccountValid();
 
-    void HandleMessage(transport::protobuf::Header& header);
+    void HandleMessage(const transport::protobuf::Header& header);
     void HandleVpnLoginResponse(
-            transport::protobuf::Header& header,
+            const transport::protobuf::Header& header,
             block::protobuf::BlockMessage& block_msg);
     void HandleClientBandwidthResponse(
-            transport::protobuf::Header& header,
+            const transport::protobuf::Header& header,
             contract::protobuf::ContractMessage& contract_msg);
     void RotationServer();
     void StartMoreServer();

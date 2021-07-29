@@ -25,7 +25,7 @@ SubsConsensus::SubsConsensus() {
 
 SubsConsensus::~SubsConsensus() {}
 
-void SubsConsensus::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void SubsConsensus::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.type() != common::kSubscriptionMessage) {
         return;

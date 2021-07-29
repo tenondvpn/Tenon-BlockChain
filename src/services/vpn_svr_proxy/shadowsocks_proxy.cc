@@ -41,7 +41,7 @@ void ShadowsocksProxy::Destroy() {
     network::DhtManager::Instance()->Destroy();
 }
 
-void ShadowsocksProxy::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void ShadowsocksProxy::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.type() != common::kServiceMessage) {
         return;

@@ -318,7 +318,7 @@ void VssManager::BroadcastThirdPeriodRandom() {
     }
 }
 
-void VssManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     assert(header.type() == common::kVssMessage);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
@@ -363,7 +363,7 @@ void VssManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     }
 }
 
-void VssManager::HandleFirstPeriodHash( const protobuf::VssMessage& vss_msg) {
+void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
     if (!IsVssFirstPeriodsHandleMessage()) {
         return;
     }

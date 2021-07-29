@@ -208,7 +208,7 @@ uint64_t KeyValueSync::SendSyncRequest(
     return node->id_hash;
 }
 
-void KeyValueSync::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void KeyValueSync::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto header = *header_ptr;
     assert(header.type() == common::kSyncMessage);
     protobuf::SyncMessage sync_msg;
@@ -227,7 +227,7 @@ void KeyValueSync::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 }
 
 void KeyValueSync::ProcessSyncValueRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::SyncMessage& sync_msg) {
     assert(sync_msg.has_sync_value_req());
     auto dht = network::DhtManager::Instance()->GetDht(
@@ -293,7 +293,7 @@ int KeyValueSync::HandleExistsBlock(const std::string& key) {
 }
 
 void KeyValueSync::ProcessSyncValueResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::SyncMessage& sync_msg) {
     assert(sync_msg.has_sync_value_res());
     auto& res_arr = sync_msg.sync_value_res().res();

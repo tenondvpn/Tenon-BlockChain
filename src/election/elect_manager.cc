@@ -95,7 +95,7 @@ void ElectManager::OnTimeBlock(uint64_t tm_block_tm) {
     pool_manager_.OnTimeBlock(tm_block_tm);
 }
 
-void ElectManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     assert(header.type() == common::kElectMessage);
     // TODO: verify message signature

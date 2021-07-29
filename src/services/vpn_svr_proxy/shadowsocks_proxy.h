@@ -32,7 +32,7 @@ private:
     ShadowsocksProxy();
     ~ShadowsocksProxy();
 
-    void HandleMessage(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
     int StartShadowsocks();
     int InitTcpRelay(uint32_t vip_level);
 

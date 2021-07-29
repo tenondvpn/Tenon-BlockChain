@@ -2242,7 +2242,7 @@ int VpnServer::Init(uint16_t min_port, uint16_t max_port) {
     return kVpnsvrSuccess;
 }
 
-void VpnServer::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void VpnServer::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.has_client() && header.client()) {
         if (header.type() == common::kBlockMessage) {
@@ -2357,7 +2357,7 @@ void VpnServer::SaveAccountInitBlocks(transport::protobuf::Header& header) {
 }
 
 void VpnServer::HandleUpdateVpnActiveRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg) {
     db::DbWriteBach db_batch;
     statis::Statistics::Instance()->inc_active_user_count(
@@ -2368,7 +2368,7 @@ void VpnServer::HandleUpdateVpnActiveRequest(
 }
 
 void VpnServer::HandleUpdateVpnCountRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         block::protobuf::BlockMessage& block_msg) {
     {
         std::string key = block_msg.up_vpn_req().ip() + "_" + block_msg.up_vpn_req().uid();
