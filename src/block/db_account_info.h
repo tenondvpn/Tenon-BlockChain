@@ -26,14 +26,13 @@ public:
     int SetBalance(uint64_t balance, db::DbWriteBach& db_batch);
     int GetBalance(uint64_t* balance);
     void NewHeight(uint64_t height, db::DbWriteBach& db_batch);
-    void GetHeights(std::vector<uint64_t>* res);
+    void GetHeights(int64_t index, int32_t count, std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
     int SetConsensuseNetid(uint32_t network_id, db::DbWriteBach& db_batch);
     int GetConsensuseNetId(uint32_t* network_id);
     int GetBlockHashWithHeight(uint64_t height, std::string* hash);
     int GetBlockWithHeight(uint64_t height, std::string* block_str);
-//     common::BlockItemPtr* GetHeightBlockInfos(uint32_t* count);
     int GetAttrValue(const std::string& key, std::string* value);
     int SetAttrValue(const std::string& key, const std::string& value, db::DbWriteBach& db_batch);
     int SetBytesCode(const std::string& bytes_code, db::DbWriteBach& db_batch);

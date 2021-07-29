@@ -62,7 +62,6 @@ public:
         uint32_t pool_index,
         uint64_t height,
         bft::protobuf::Block& block_item);
-//     bool BlockExists(const std::string& hash);
 
 private:
     BlockManager();
@@ -74,9 +73,6 @@ private:
     void HandleGetHeightRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
-//     void HandleGetAccountInitRequest(
-//         transport::protobuf::Header& header,
-//         protobuf::BlockMessage& block_msg);
     void HandleAdRewardRequest(
         transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);

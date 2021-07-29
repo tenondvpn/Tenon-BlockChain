@@ -190,11 +190,26 @@ void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
     tx_queue_.push(std::to_string(height), db_batch);
 }
 
-void DbAccountInfo::GetHeights(std::vector<uint64_t>* res) {
-//     uint64_t* height_data = height_queue_.mem_data();
-//     for (uint32_t i = 0; i < height_queue_.size(); ++i) {
-//         res->push_back(height_data[i]);
-//     }
+// get from end to begin, count's heights, one time max: 1024
+void DbAccountInfo::GetHeights(int64_t index, int32_t count, std::vector<uint64_t>* res) {
+    if (index == common::kInvalidUint64) {
+        index = tx_queue_.size();
+    }
+
+    static const int32_t kMaxCount = 1024;
+    if (count > kMaxCount) {
+        count = kMaxCount;
+    }
+
+    for (int64_t i = index; i >= 0 && count >= 0; --i, --count) {
+        std::string value;
+        if (tx_queue_.get(i, &value)) {
+            uint64_t height = 0;
+            if (common::StringUtil::ToUint64(value, &height)) {
+                res->push_back(height);
+            }
+        }
+    }
 }
 
 int DbAccountInfo::SetMaxHeightHash(
