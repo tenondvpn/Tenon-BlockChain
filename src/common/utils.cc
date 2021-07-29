@@ -69,7 +69,9 @@ namespace common {
 volatile bool global_stop = false;
 
 uint32_t GetPoolIndex(const std::string& acc_addr) {
-    if (acc_addr == common::kRootChainSingleBlockTxAddress) {
+    if (acc_addr == common::kRootChainSingleBlockTxAddress ||
+            acc_addr == common::kRootChainTimeBlockTxAddress ||
+            acc_addr == common::kRootChainElectionBlockTxAddress) {
         return kRootChainPoolIndex;
     }
 
