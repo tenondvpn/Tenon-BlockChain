@@ -139,6 +139,7 @@ void BftProto::BackupCreatePrepare(
 void BftProto::LeaderCreatePreCommit(
         const dht::NodePtr& local_node,
         const BftInterfacePtr& bft_ptr,
+        bool agree,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(bft_ptr->network_id(), 0);
@@ -157,6 +158,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
+    bft_msg.set_agree(agree);
     std::string challenge_str;
     bft_ptr->challenge().Serialize(challenge_str);
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
@@ -233,6 +235,7 @@ void BftProto::BackupCreatePreCommit(
 void BftProto::LeaderCreateCommit(
         const dht::NodePtr& local_node,
         const BftInterfacePtr& bft_ptr,
+        bool agree,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(bft_ptr->network_id(), 0);
@@ -252,6 +255,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_bft_step(kBftCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_agree(agree);
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
     std::string msg_hash_src = bft_ptr->prepare_hash();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {

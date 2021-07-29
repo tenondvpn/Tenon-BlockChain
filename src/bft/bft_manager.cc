@@ -127,6 +127,10 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
+            if (!bft_msg.agree()) {
+                return;
+            }
+
             if (bft_msg.bft_step() > kBftCommit) {
                 return;
             }
@@ -950,6 +954,7 @@ int BftManager::LeaderPrecommit(
 //         time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u, bft: %s", bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+        LeaderCallPrecommitOppose(bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
 //         time4 = common::TimeUtils::TimestampUs();
     } else {
@@ -998,6 +1003,19 @@ void BftManager::HandleOpposeNodeMsg(
     }
 }
 
+int BftManager::LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr) {
+    // check pre-commit multi sign
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    transport::protobuf::Header msg;
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, false, msg);
+    network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+    leader_precommit_msg_ = msg;
+#endif
+    return kBftSuccess;
+}
+
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
@@ -1018,7 +1036,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     transport::protobuf::Header msg;
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
     network::Route::Instance()->Send(msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
@@ -1035,9 +1053,14 @@ int BftManager::BackupPrecommit(
         return kBftError;
     }
 
+    if (!bft_msg.agree()) {
+        RemoveBft(bft_ptr->gid(), false);
+        return kBftSuccess;
+    }
+
     if (!bft_msg.has_challenge()) {
         BFT_ERROR("leader pre commit message must has challenge.");
-        return false;
+        return kBftError;
     }
 
     security::Challenge agg_challenge(bft_msg.challenge());
@@ -1200,6 +1223,30 @@ int BftManager::LeaderCommit(
     return kBftSuccess;
 }
 
+int BftManager::LeaderCallCommitOppose(
+        const transport::protobuf::Header& header,
+        BftInterfacePtr& bft_ptr) {
+auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    transport::protobuf::Header msg;
+    BftProto::LeaderCreateCommit(local_node, bft_ptr, false, msg);
+    if (!msg.has_data()) {
+        BFT_ERROR("leader create commit message failed!");
+        return kBftError;
+    }
+
+    bft_ptr->set_status(kBftCommited);
+    network::Route::Instance()->Send(msg);
+    LeaderBroadcastToAcc(bft_ptr, true);
+    assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
+    RemoveBft(bft_ptr->gid(), true);
+#ifdef TENON_UNITTEST
+    leader_commit_msg_ = msg;
+#endif
+//     BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
+//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    return kBftSuccess;}
+
 int BftManager::LeaderCallCommit(
         const transport::protobuf::Header& header,
         BftInterfacePtr& bft_ptr) {
@@ -1207,7 +1254,7 @@ int BftManager::LeaderCallCommit(
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
-    BftProto::LeaderCreateCommit(local_node, bft_ptr, msg);
+    BftProto::LeaderCreateCommit(local_node, bft_ptr, true, msg);
     if (!msg.has_data()) {
         BFT_ERROR("leader create commit message failed!");
         return kBftError;
@@ -1299,7 +1346,7 @@ int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, msg);
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
     network::Route::Instance()->Send(msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
@@ -1325,6 +1372,11 @@ int BftManager::BackupCommit(
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
+    }
+
+    if (!bft_msg.agree()) {
+        RemoveBft(bft_ptr->gid(), false);
+        return kBftSuccess;
     }
     
     if (VerifyAggSignature(bft_ptr, bft_msg) != kBftSuccess) {

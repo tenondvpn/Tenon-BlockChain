@@ -110,6 +110,8 @@ private:
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         const std::string& res_data);
+    int LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr);
+    int LeaderCallCommitOppose(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     void BlockToDb();
 
     static const uint32_t kBlockToDbPeriod = 10000llu;

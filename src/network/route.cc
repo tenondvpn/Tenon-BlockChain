@@ -139,7 +139,6 @@ void Route::Broadcasting() {
                 transport::TransportMessagePtr msg_ptr;
                 if (broadcast_queue_[i].pop(&msg_ptr)) {
                     Broadcast(*msg_ptr);
-
                     if (!has_data) {
                         has_data = true;
                     }
@@ -150,6 +149,8 @@ void Route::Broadcasting() {
         if (!has_data) {
             break;
         }
+
+        has_data = false;
     }
 
     broadcast_tick_.CutOff(kBroadcastPeriod, std::bind(&Route::Broadcasting, this));

@@ -31,6 +31,7 @@ public:
     static void LeaderCreatePreCommit(
         const dht::NodePtr& local_node,
         const BftInterfacePtr& bft_ptr,
+        bool oppose,
         transport::protobuf::Header& msg);
     static void BackupCreatePreCommit(
         const transport::protobuf::Header& from_header,
@@ -44,6 +45,7 @@ public:
     static void LeaderCreateCommit(
         const dht::NodePtr& local_node,
         const BftInterfacePtr& bft_ptr,
+        bool agree,
         transport::protobuf::Header& msg);
     static void CreateLeaderBroadcastToAccount(
         const dht::NodePtr& local_node,
