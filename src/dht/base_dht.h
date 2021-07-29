@@ -36,7 +36,7 @@ public:
             const std::vector<NodePtr>& boot_nodes,
             int32_t get_init_msg = 0,
             const std::string init_uid = "");
-    virtual void HandleMessage(transport::protobuf::Header& msg);
+    virtual void HandleMessage(const transport::protobuf::Header& msg);
     virtual bool CheckDestination(const std::string& des_dht_key, bool closest);
     virtual void SetFrequently(transport::protobuf::Header& msg);
     virtual bool IsUniversal() { return false; }
@@ -98,29 +98,29 @@ protected:
     bool NodeValid(NodePtr& node);
     bool NodeJoined(NodePtr& node);
     void DhtDispatchMessage(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessBootstrapRequest(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessBootstrapResponse(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessRefreshNeighborsRequest(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessRefreshNeighborsResponse(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessHeartbeatRequest(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessHeartbeatResponse(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void ProcessConnectRequest(
-            transport::protobuf::Header& header,
-            protobuf::DhtMessage& dht_msg);
+        const transport::protobuf::Header& header,
+        protobuf::DhtMessage& dht_msg);
     void RefreshNeighbors();
     void Heartbeat();
     void GetNetIdAndCountry(uint32_t& net_id, uint8_t& country);

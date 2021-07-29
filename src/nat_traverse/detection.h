@@ -39,15 +39,15 @@ public:
     void Destroy();
     void AddTarget(dht::NodePtr& node);
     void Remove(uint64_t dht_key_hash);
-    void HandleMessage(transport::protobuf::Header& msg);
+    void HandleMessage(const transport::protobuf::Header& msg);
 
 private:
     void Run();
     // set ttl to try nat
     void SendTtlPacket(DetectionItemPtr& item);
     void HandleDetectionRequest(
-            transport::protobuf::Header& header,
-            protobuf::NatMessage& nat_msg);
+        const transport::protobuf::Header& header,
+        protobuf::NatMessage& nat_msg);
 
     static const uint32_t kDetecionMaxTimes = 3u;
     static const uint32_t kDetectionPeriod = 600 * 1000;

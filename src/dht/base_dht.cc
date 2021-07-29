@@ -330,7 +330,7 @@ NodePtr BaseDht::FindNodeDirect(transport::protobuf::Header& message) {
     return iter->second;
 }
 
-void BaseDht::HandleMessage(transport::protobuf::Header& header) {
+void BaseDht::HandleMessage(const transport::protobuf::Header& header) {
     if (header.type() == common::kNatMessage) {
         return nat_detection_->HandleMessage(header);
     }
@@ -350,7 +350,7 @@ void BaseDht::HandleMessage(transport::protobuf::Header& header) {
 }
 
 void BaseDht::DhtDispatchMessage(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (dht_msg.has_bootstrap_req()) {
         ProcessBootstrapRequest(header, dht_msg);
@@ -382,7 +382,7 @@ void BaseDht::DhtDispatchMessage(
 }
 
 void BaseDht::ProcessBootstrapRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!dht_msg.has_bootstrap_req()) {
         DHT_WARN("dht message has no bootstrap request.");
@@ -463,7 +463,7 @@ void BaseDht::ProcessBootstrapRequest(
 }
 
 void BaseDht::ProcessBootstrapResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("bootstrap request destination error[%s][%s]!",
@@ -543,7 +543,7 @@ void BaseDht::ProcessBootstrapResponse(
 }
 
 void BaseDht::ProcessRefreshNeighborsRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
 //         DHT_WARN("refresh neighbors request destnation error[%s][%s]"
@@ -612,7 +612,7 @@ void BaseDht::ProcessRefreshNeighborsRequest(
 }
 
 void BaseDht::ProcessRefreshNeighborsResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
 //         DHT_WARN("refresh neighbors request destnation error[%s][%s]",
@@ -679,7 +679,7 @@ void BaseDht::AddDetectionTarget(NodePtr& node) {
 }
 
 void BaseDht::ProcessHeartbeatRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("ProcessHeartbeatRequest destnation error[%s][%s]",
@@ -716,7 +716,7 @@ void BaseDht::ProcessHeartbeatRequest(
 }
 
 void BaseDht::ProcessHeartbeatResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (!CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("ProcessHeartbeatResponse destnation error[%s][%s]",
@@ -740,7 +740,7 @@ void BaseDht::ProcessHeartbeatResponse(
 }
 
 void BaseDht::ProcessConnectRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
     if (header.des_dht_key() != local_node_->dht_key()) {
         if (dht_msg.connect_req().direct()) {

@@ -96,7 +96,7 @@ void Detection::SendTtlPacket(DetectionItemPtr& item) {
 
 }
 
-void Detection::HandleMessage(transport::protobuf::Header& header) {
+void Detection::HandleMessage(const transport::protobuf::Header& header) {
     if (header.type() != common::kNatMessage) {
         NAT_ERROR("invalid message type[%d]", header.type());
         return;
@@ -114,7 +114,7 @@ void Detection::HandleMessage(transport::protobuf::Header& header) {
 }
 
 void Detection::HandleDetectionRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::NatMessage& nat_msg) {
     if (!base_dht_->CheckDestination(header.des_dht_key(), false)) {
         DHT_WARN("bootstrap request destination error[%s][%s]!",
