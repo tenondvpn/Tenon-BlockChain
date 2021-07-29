@@ -487,7 +487,7 @@ void BlockManager::HandleGetHeightRequest(
     }
 }
 
-void BlockManager::SendBlockNotExists(transport::protobuf::Header& header) {
+void BlockManager::SendBlockNotExists(const transport::protobuf::Header& header) {
     protobuf::BlockMessage block_msg_res;
     auto block_res = block_msg_res.mutable_block_res();
     block_res->set_block("");
@@ -562,7 +562,7 @@ int BlockManager::HandleGetBlockRequest(
 }
 
 void BlockManager::SendBlockResponse(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         const std::string& block_data) {
     protobuf::BlockMessage block_msg_res;
     auto block_res = block_msg_res.mutable_block_res();
