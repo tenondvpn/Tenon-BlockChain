@@ -883,12 +883,12 @@ int HttpTransport::Send(
     const std::string& ip,
     uint16_t port,
     uint32_t ttl,
-    transport::protobuf::Header& message) {
+    const transport::protobuf::Header& message) {
     assert(false);
     return kTransportSuccess;
 }
 
-int HttpTransport::SendToLocal(transport::protobuf::Header& message) {
+int HttpTransport::SendToLocal(const transport::protobuf::Header& message) {
     assert(false);
     return kTransportSuccess;
 }

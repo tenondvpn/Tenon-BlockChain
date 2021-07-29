@@ -28,8 +28,8 @@ public:
             const std::string& ip,
             uint16_t port,
             uint32_t ttl,
-            transport::protobuf::Header& message);
-    virtual int SendToLocal(transport::protobuf::Header& message);
+            const transport::protobuf::Header& message);
+    virtual int SendToLocal(const transport::protobuf::Header& message);
     virtual int GetSocket();
     virtual void FreeConnection(const std::string& ip, uint16_t port) {}
 
