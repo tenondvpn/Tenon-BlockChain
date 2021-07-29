@@ -350,9 +350,9 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-    if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
-        return;
-    }
+//     if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
+//         return;
+//     }
 
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
@@ -487,9 +487,9 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-    if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
-        return;
-    }
+//     if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
+//         return;
+//     }
 
     auto src_block = tx_bft.to_tx().block();
 //     security::Signature sign;

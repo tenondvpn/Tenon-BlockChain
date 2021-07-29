@@ -62,7 +62,7 @@ public:
         uint32_t pool_index,
         uint64_t height,
         bft::protobuf::Block& block_item);
-    bool BlockExists(const std::string& hash);
+//     bool BlockExists(const std::string& hash);
 
 private:
     BlockManager();
@@ -88,12 +88,9 @@ private:
     int InitRootTimeBlocks();
 
     static const uint32_t kCacheBlockSize = 1024;
-    std::unordered_map<uint64_t, std::pair<std::string*, int32_t>> height_chain_map_;
-    std::mutex cache_height_block_mutex_;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
     common::LimitHashSet<std::string> block_hash_limit_set_{ 2048u };
-    std::mutex block_hash_limit_set_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
 };

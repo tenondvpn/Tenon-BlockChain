@@ -600,19 +600,16 @@ void BlockManager::SendBlockResponse(
     }
 }
 
-bool BlockManager::BlockExists(const std::string& hash) {
-    std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
-    return block_hash_limit_set_.DataExists(hash);
-}
+// bool BlockManager::BlockExists(const std::string& hash) {
+//     std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
+//     return block_hash_limit_set_.DataExists(hash);
+// }
 
 int BlockManager::AddNewBlock(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch, bool to_cache) {
-    {
-        std::lock_guard<std::mutex> guard(block_hash_limit_set_mutex_);
-        if (!block_hash_limit_set_.Push(block_item->hash())) {
-            return kBlockSuccess;
-        }
+    if (!block_hash_limit_set_.Push(block_item->hash())) {
+        return kBlockSuccess;
     }
 
 //     BLOCK_DEBUG("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
