@@ -369,16 +369,17 @@ void TxPoolManager::GetTx(
 }
 
 bool TxPoolManager::IsPoolLocked(int32_t pool_index) {
-    assert(pool_index < common::kImmutablePoolSize);
+    assert(pool_index < common::kInvalidPoolIndex);
     return waiting_pools_.Valid(pool_index);
 }
 
 void TxPoolManager::LockPool(int32_t pool_index) {
-    assert(pool_index < common::kImmutablePoolSize);
+    assert(pool_index < common::kInvalidPoolIndex);
     waiting_pools_.Set(pool_index);
 }
 
 void TxPoolManager::UnlockPool(int32_t pool_index) {
+    assert(pool_index < common::kInvalidPoolIndex);
     waiting_pools_.UnSet(pool_index);
 }
 
