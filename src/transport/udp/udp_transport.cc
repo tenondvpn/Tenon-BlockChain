@@ -232,9 +232,9 @@ void UdpTransport::Run() {
     }
 }
 
-int UdpTransport::SendToLocal(transport::protobuf::Header& message) {
-    message.clear_broadcast();
-    MultiThreadHandler::Instance()->HandleMessage(message);
+int UdpTransport::SendToLocal(const transport::protobuf::Header& message) {
+//     message.clear_broadcast();
+//     MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;
 }
 
@@ -269,7 +269,7 @@ int UdpTransport::Send(
         const std::string& ip,
         uint16_t port,
         uint32_t ttl,
-        transport::protobuf::Header& proto) {
+        const transport::protobuf::Header& proto) {
     return kTransportSuccess;
     struct sockaddr_in addr;
     if (uv_ip4_addr(ip.c_str(), port, &addr) != 0) {
@@ -278,13 +278,13 @@ int UdpTransport::Send(
     }
 
     // must clear
-    proto.clear_from_ip();
-    proto.clear_from_port();
-    proto.clear_to_ip();
-    proto.clear_to_port();
-    proto.clear_handled();
-    proto.clear_client_proxy();
-    proto.set_hash(GetMessageHash(proto));
+//     proto.clear_from_ip();
+//     proto.clear_from_port();
+//     proto.clear_to_ip();
+//     proto.clear_to_port();
+//     proto.clear_handled();
+//     proto.clear_client_proxy();
+//     proto.set_hash(GetMessageHash(proto));
 
     auto message = proto.SerializeAsString();
     if (message.size() > 65000) {

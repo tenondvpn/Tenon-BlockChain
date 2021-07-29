@@ -38,8 +38,8 @@ public:
         const std::string& ip,
         uint16_t port,
         uint32_t ttl,
-        transport::protobuf::Header& message);
-    virtual int SendToLocal(transport::protobuf::Header& message);
+        const transport::protobuf::Header& message);
+    virtual int SendToLocal(const transport::protobuf::Header& message);
     virtual int GetSocket();
     virtual void FreeConnection(const std::string& ip, uint16_t port);
 #ifdef CLIENT_USE_UV
@@ -72,7 +72,7 @@ public:
     std::string ClearAllConnection();
 
 private:
-    uint64_t GetMessageHash(transport::protobuf::Header& message);
+    uint64_t GetMessageHash(const transport::protobuf::Header& message);
 #ifdef CLIENT_USE_UV
     uv_stream_t* GetConnection(const std::string& ip, uint16_t port);
     std::shared_ptr<std::thread> run_thread_{ nullptr };

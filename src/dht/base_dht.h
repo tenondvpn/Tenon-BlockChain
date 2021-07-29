@@ -42,7 +42,7 @@ public:
     virtual bool IsUniversal() { return false; }
 
     void AddDetectionTarget(NodePtr& node);
-    void SendToClosestNode(transport::protobuf::Header& msg);
+    void SendToClosestNode(const transport::protobuf::Header& msg);
     void SendToDesNetworkNodes(transport::protobuf::Header& msg);
     int CheckJoin(NodePtr& node);
     DhtPtr readonly_dht() {

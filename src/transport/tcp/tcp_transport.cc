@@ -196,7 +196,7 @@ int TcpTransport::Send(
         const std::string& ip,
         uint16_t port,
         uint32_t ttl,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     std::string des_ip = ip;
     uint16_t des_port = port;
     if (common::GlobalInfo::Instance()->is_client() && (
@@ -255,7 +255,7 @@ int TcpTransport::Send(
     return kTransportSuccess;
 }
 
-int TcpTransport::SendToLocal(transport::protobuf::Header& message) {
+int TcpTransport::SendToLocal(const transport::protobuf::Header& message) {
     message.clear_broadcast();
     MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;
@@ -574,7 +574,7 @@ bool TcpTransport::OnClientPacket(tnet::TcpConnection* conn, tnet::Packet& packe
     return true;
 }
 
-uint64_t TcpTransport::GetMessageHash(transport::protobuf::Header& message) {
+uint64_t TcpTransport::GetMessageHash(const transport::protobuf::Header& message) {
     auto hash = common::Hash::Hash64(
         "tcp" + common::GlobalInfo::Instance()->id() + std::to_string(message.id()) +
         std::to_string(common::TimeUtils::TimestampUs()));
@@ -585,7 +585,7 @@ int TcpTransport::Send(
         const std::string& ip,
         uint16_t port,
         uint32_t ttl,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     std::string des_ip = ip;
     uint16_t des_port = port;
     if (common::GlobalInfo::Instance()->is_client() && (
@@ -601,13 +601,10 @@ int TcpTransport::Send(
         }
     }
 
-    if (!message.has_version()) {
-        message.set_version(kTransportVersionNum);
-    }
-
     std::string msg;
     if (!message.has_hash() || message.hash() == 0) {
-        message.set_hash(GetMessageHash(message));
+        auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
+        cast_msg->set_hash(GetMessageHash(message));
         MessageFilter::Instance()->CheckUnique(message.hash());
     }
 
@@ -635,10 +632,11 @@ int TcpTransport::Send(
     return kTransportSuccess;
 }
 
-int TcpTransport::SendToLocal(transport::protobuf::Header& message) {
-    message.clear_broadcast();
+int TcpTransport::SendToLocal(const transport::protobuf::Header& message) {
+    auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
+    cast_msg->clear_broadcast();
     if (!message.has_hash() || message.hash() == 0) {
-        message.set_hash(GetMessageHash(message));
+        cast_msg->set_hash(GetMessageHash(message));
     }
 
     if (MessageFilter::Instance()->CheckUnique(message.hash())) {

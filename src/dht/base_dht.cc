@@ -269,7 +269,7 @@ void BaseDht::SendToDesNetworkNodes(transport::protobuf::Header& message) {
     }
 }
 
-void BaseDht::SendToClosestNode(transport::protobuf::Header& message) {
+void BaseDht::SendToClosestNode(const transport::protobuf::Header& message) {
     if (message.client_proxy() && message.client_handled()) {
         if (message.transport_type() == transport::kTcp) {
             transport::MultiThreadHandler::Instance()->tcp_transport()->Send(

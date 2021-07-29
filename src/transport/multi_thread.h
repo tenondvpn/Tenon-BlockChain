@@ -49,7 +49,7 @@ public:
             const char* message,
             uint32_t len,
             int32_t transport_type);
-    void HandleMessage(protobuf::Header& msg);
+    void HandleMessage(const protobuf::Header& msg);
 	void HandleRemoteMessage(
             const std::string& from_ip,
 			uint16_t from_port,

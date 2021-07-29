@@ -120,7 +120,7 @@ void MultiThreadHandler::Destroy() {
     inited_ = false;
 }
 
-void MultiThreadHandler::HandleMessage(protobuf::Header& msg) {
+void MultiThreadHandler::HandleMessage(const protobuf::Header& msg) {
     // just local message
     auto message_ptr = std::make_shared<transport::protobuf::Header>(msg);
     {

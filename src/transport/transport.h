@@ -16,8 +16,8 @@ public:
             const std::string& ip,
             uint16_t port,
             uint32_t ttl,
-            transport::protobuf::Header& message) = 0;
-    virtual int SendToLocal(transport::protobuf::Header& message) = 0;
+            const transport::protobuf::Header& message) = 0;
+    virtual int SendToLocal(const transport::protobuf::Header& message) = 0;
     virtual int GetSocket() = 0;
     virtual void FreeConnection(const std::string& ip, uint16_t port) = 0;
 
