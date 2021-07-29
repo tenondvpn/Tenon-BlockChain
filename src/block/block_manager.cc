@@ -522,6 +522,7 @@ int BlockManager::HandleGetBlockRequest(
         } else {
             tx_gid = common::GetTxDbKey(false, block_msg.block_req().tx_gid());
         }
+
         auto st = db::Db::Instance()->Get(tx_gid, &block_hash);
         if (!st.ok()) {
             SendBlockNotExists(header);
@@ -555,23 +556,6 @@ int BlockManager::HandleGetBlockRequest(
         SendBlockNotExists(header);
         return kBlockError;
     }
-
-//     BLOCK_ERROR("HandleGetBlockRequest with height OK[%s:%d] "
-//             "block_msg.block_req().has_block_hash(): %d, "
-//             "block_msg.block_req().has_tx_gid(): %d， "
-//             "block_msg.block_req().has_height(): %d, "
-//             "%s: %llu, hash[%s]",
-//             header.from_ip().c_str(),
-//             header.from_port(),
-//             block_msg.block_req().has_block_hash(),
-//             block_msg.block_req().has_tx_gid(),
-//             block_msg.block_req().has_height(),
-//             common::Encode::HexEncode(block_msg.block_req().account_address()).c_str(),
-//             block_msg.block_req().height(),
-//             common::Encode::HexEncode(block_hash).c_str());
-//     if (block_msg.block_req().has_height()) {
-//         SaveHeightBlockWithCache(block_msg.block_req().height(), block_data);
-//     }
 
     SendBlockResponse(header, *block_data);
     return kBlockSuccess;
