@@ -220,7 +220,7 @@ void Route::RegRouteByUniversal(transport::TransportMessagePtr& header_ptr) {
     RouteByUniversal(*header_ptr);
 }
 
-void Route::RouteByUniversal(transport::protobuf::Header& header) {
+void Route::RouteByUniversal(const transport::protobuf::Header& header) {
     auto universal_dht = UniversalManager::Instance()->GetUniversal(kUniversalNetworkId);
     if (!universal_dht) {
         return;

@@ -43,7 +43,7 @@ public:
 
     void AddDetectionTarget(NodePtr& node);
     void SendToClosestNode(const transport::protobuf::Header& msg);
-    void SendToDesNetworkNodes(transport::protobuf::Header& msg);
+    void SendToDesNetworkNodes(const transport::protobuf::Header& msg);
     int CheckJoin(NodePtr& node);
     DhtPtr readonly_dht() {
         std::lock_guard<std::mutex> guard(dht_mutex_);

@@ -28,7 +28,7 @@ public:
     void Init();
     void Destroy();
     dht::BaseDhtPtr GetDht(const std::string& dht_key, bool universal);
-    void RouteByUniversal(transport::protobuf::Header& header);
+    void RouteByUniversal(const transport::protobuf::Header& header);
 
 private:
     Route();

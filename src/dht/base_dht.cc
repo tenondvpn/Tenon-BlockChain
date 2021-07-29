@@ -238,7 +238,7 @@ int BaseDht::Bootstrap(
     return kDhtSuccess;
 }
 
-void BaseDht::SendToDesNetworkNodes(transport::protobuf::Header& message) {
+void BaseDht::SendToDesNetworkNodes(const transport::protobuf::Header& message) {
     std::vector<NodePtr> closest_nodes;
     {
         std::lock_guard<std::mutex> guard(dht_mutex_);
