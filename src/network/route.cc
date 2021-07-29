@@ -32,6 +32,7 @@ void Route::Init() {
             common::kRelayMessage,
             std::bind(&Route::RegRouteByUniversal, this, std::placeholders::_1));
     broadcast_ = std::make_shared<broadcast::FilterBroadcast>();
+    Broadcasting();
 }
 
 void Route::Destroy() {
@@ -114,19 +115,33 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    if (header.has_broadcast()) {
-        Broadcast(header);
-//         if (!header.debug().empty()) {
-//             NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
-//         }
-    }
-
     if (!header.handled()) {
         message_processor_[header.type()](header_ptr);
 //         if (!header.debug().empty()) {
 //             NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
 //         }
     }
+
+    if (header.has_broadcast()) {
+        broadcast_queue_[header.thread_idx()].push(header_ptr);
+//         Broadcast(header);
+        //         if (!header.debug().empty()) {
+        //             NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
+        //         }
+    }
+}
+
+void Route::Broadcasting() {
+    for (uint32_t i = 0; i < transport::kMessageHandlerThreadCount; ++i) {
+        while (broadcast_queue_[i].size() > 0) {
+            transport::TransportMessagePtr msg_ptr;
+            if (broadcast_queue_[i].pop(&msg_ptr)) {
+                Broadcast(*msg_ptr);
+            }
+        }
+    }
+
+    broadcast_tick_.CutOff(kBroadcastPeriod, std::bind(&Route::Broadcasting, this));
 }
 
 void Route::HandleDhtMessage(const transport::TransportMessagePtr& header_ptr) {
