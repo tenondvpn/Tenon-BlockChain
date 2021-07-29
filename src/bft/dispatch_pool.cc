@@ -197,7 +197,6 @@ void DispatchPool::RemoveTx(
 }
 
 void DispatchPool::BftOver(BftInterfacePtr& bft_ptr) {
-    UnlockPool(bft_ptr->pool_index());
     tx_pool_.BftOver(bft_ptr);
 }
 

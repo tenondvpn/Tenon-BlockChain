@@ -370,17 +370,21 @@ void TxPoolManager::GetTx(
 
 bool TxPoolManager::IsPoolLocked(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
+    if (pool_index == common::kRootChainPoolIndex) {
+        return root_tx_pool_valid_;
+    }
+
     return waiting_pools_.Valid(pool_index);
 }
 
 void TxPoolManager::LockPool(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
-    waiting_pools_.Set(pool_index);
-}
+    if (pool_index == common::kRootChainPoolIndex) {
+        root_tx_pool_valid_ = false;
+        return;
+    }
 
-void TxPoolManager::UnlockPool(uint32_t pool_index) {
-    assert(pool_index < common::kInvalidPoolIndex);
-    waiting_pools_.UnSet(pool_index);
+    waiting_pools_.Set(pool_index);
 }
 
 TxItemPtr TxPoolManager::GetTx(

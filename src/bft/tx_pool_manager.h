@@ -36,7 +36,6 @@ public:
     void CheckTimeoutTx();
     bool IsPoolLocked(uint32_t pool_index);
     void LockPool(uint32_t pool_index);
-    void UnlockPool(uint32_t pool_index);
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);

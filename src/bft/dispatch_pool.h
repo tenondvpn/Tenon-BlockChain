@@ -40,10 +40,6 @@ public:
         return true;
     }
 
-    void UnlockPool(uint32_t pool_index) {
-        tx_pool_.UnlockPool(pool_index);
-    }
-
 private:
     DispatchPool();
     ~DispatchPool();
