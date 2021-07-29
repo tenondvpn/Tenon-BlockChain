@@ -538,15 +538,35 @@ class AccountHeightRequest : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_account_addr();
   void set_allocated_account_addr(::std::string* account_addr);
 
+  // optional int64 index = 2;
+  bool has_index() const;
+  void clear_index();
+  static const int kIndexFieldNumber = 2;
+  ::google::protobuf::int64 index() const;
+  void set_index(::google::protobuf::int64 value);
+
+  // optional int32 count = 3;
+  bool has_count() const;
+  void clear_count();
+  static const int kCountFieldNumber = 3;
+  ::google::protobuf::int32 count() const;
+  void set_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.block.protobuf.AccountHeightRequest)
  private:
   void set_has_account_addr();
   void clear_has_account_addr();
+  void set_has_index();
+  void clear_has_index();
+  void set_has_count();
+  void clear_has_count();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr account_addr_;
+  ::google::protobuf::int64 index_;
+  ::google::protobuf::int32 count_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -3203,6 +3223,54 @@ inline void AccountHeightRequest::set_allocated_account_addr(::std::string* acco
   }
   account_addr_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), account_addr);
   // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.AccountHeightRequest.account_addr)
+}
+
+// optional int64 index = 2;
+inline bool AccountHeightRequest::has_index() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void AccountHeightRequest::set_has_index() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void AccountHeightRequest::clear_has_index() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void AccountHeightRequest::clear_index() {
+  index_ = GOOGLE_LONGLONG(0);
+  clear_has_index();
+}
+inline ::google::protobuf::int64 AccountHeightRequest::index() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightRequest.index)
+  return index_;
+}
+inline void AccountHeightRequest::set_index(::google::protobuf::int64 value) {
+  set_has_index();
+  index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightRequest.index)
+}
+
+// optional int32 count = 3;
+inline bool AccountHeightRequest::has_count() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void AccountHeightRequest::set_has_count() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void AccountHeightRequest::clear_has_count() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void AccountHeightRequest::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 AccountHeightRequest::count() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.AccountHeightRequest.count)
+  return count_;
+}
+inline void AccountHeightRequest::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.AccountHeightRequest.count)
 }
 
 // -------------------------------------------------------------------
