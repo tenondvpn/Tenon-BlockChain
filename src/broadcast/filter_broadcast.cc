@@ -19,7 +19,7 @@ FilterBroadcast::~FilterBroadcast() {}
 
 void FilterBroadcast::Broadcasting(
         dht::BaseDhtPtr& dht_ptr,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     assert(dht_ptr);
     if (message.broadcast().hop_limit() <= message.hop_count()) {
         return;
@@ -56,7 +56,7 @@ void FilterBroadcast::Broadcasting(
 }
 
 std::shared_ptr<common::BloomFilter> FilterBroadcast::GetBloomfilter(
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     if (message.broadcast().bloomfilter_size() <= 0) {
         return std::make_shared<common::BloomFilter>(
                 kBloomfilterBitSize,
@@ -73,8 +73,9 @@ std::shared_ptr<common::BloomFilter> FilterBroadcast::GetBloomfilter(
 std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
         dht::BaseDhtPtr& dht_ptr,
         std::shared_ptr<common::BloomFilter>& bloomfilter,
-        transport::protobuf::Header& message) {
-    auto broad_param = message.mutable_broadcast();
+        const transport::protobuf::Header& message) {
+    auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
+    auto broad_param = cast_msg->mutable_broadcast();
     auto hash_order_dht = dht_ptr->readonly_hash_sort_dht();
     if (hash_order_dht.empty()) {
         return std::vector<dht::NodePtr>();
@@ -135,7 +136,7 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
 std::vector<dht::NodePtr> FilterBroadcast::GetRandomFilterNodes(
         dht::BaseDhtPtr& dht_ptr,
         std::shared_ptr<common::BloomFilter>& bloomfilter,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     dht::DhtPtr readobly_dht = dht_ptr->readonly_dht();
     std::vector<uint32_t> pos_vec;
     uint32_t idx = 0;
@@ -168,7 +169,8 @@ std::vector<dht::NodePtr> FilterBroadcast::GetRandomFilterNodes(
     }
 
     auto& data = bloomfilter->data();
-    auto broad_param = message.mutable_broadcast();
+    auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
+    auto broad_param = cast_msg->mutable_broadcast();
     for (uint32_t i = 0; i < data.size(); ++i) {
         broad_param->add_bloomfilter(data[i]);
     }
@@ -199,7 +201,7 @@ uint32_t FilterBroadcast::BinarySearch(dht::Dht& dht, uint64_t val) {
 
 void FilterBroadcast::Send(
         dht::BaseDhtPtr& dht_ptr,
-        transport::protobuf::Header& message,
+        const transport::protobuf::Header& message,
         const std::vector<dht::NodePtr>& nodes) {
     for (uint32_t i = 0; i < nodes.size(); ++i) {
 //         transport::MultiThreadHandler::Instance()->transport()->Send(
@@ -217,9 +219,10 @@ void FilterBroadcast::Send(
 
 void FilterBroadcast::LayerSend(
         dht::BaseDhtPtr& dht_ptr,
-        transport::protobuf::Header& message,
+        const transport::protobuf::Header& message,
         std::vector<dht::NodePtr>& nodes) {
-    auto broad_param = message.mutable_broadcast();
+    auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
+    auto broad_param = cast_msg->mutable_broadcast();
     uint64_t src_left = broad_param->layer_left();
     uint64_t src_right = broad_param->layer_right();
     for (uint32_t i = 0; i < nodes.size(); ++i) {
@@ -252,7 +255,7 @@ void FilterBroadcast::LayerSend(
 
 uint64_t FilterBroadcast::GetLayerLeft(
         uint64_t layer_left,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     uint64_t tmp_left = layer_left;
     if (message.broadcast().has_overlap() &&
             fabs(message.broadcast().overlap()) > std::numeric_limits<float>::epsilon()) {
@@ -264,7 +267,7 @@ uint64_t FilterBroadcast::GetLayerLeft(
 
 uint64_t FilterBroadcast::GetLayerRight(
         uint64_t layer_right,
-        transport::protobuf::Header& message) {
+        const transport::protobuf::Header& message) {
     uint64_t tmp_right = layer_right;
     if (message.broadcast().has_overlap() &&
             fabs(message.broadcast().overlap()) > std::numeric_limits<float>::epsilon()) {

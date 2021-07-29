@@ -36,7 +36,7 @@ bool Broadcast::TestForEvilNode(float evil_rate) {
 
 void Broadcast::Send(
     dht::BaseDhtPtr& dht_ptr,
-    transport::protobuf::Header& message,
+    const transport::protobuf::Header& message,
     const std::vector<dht::NodePtr>& nodes) {
     for (uint32_t i = 0; i < nodes.size(); ++i) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(

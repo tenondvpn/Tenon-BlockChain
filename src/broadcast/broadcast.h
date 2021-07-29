@@ -22,7 +22,7 @@ class Broadcast {
 public:
     virtual void Broadcasting(
             dht::BaseDhtPtr& dht_ptr,
-            transport::protobuf::Header& message) = 0;
+            const transport::protobuf::Header& message) = 0;
 
 protected:
     Broadcast();
@@ -30,9 +30,9 @@ protected:
     bool TestForEvilNode(float evil_rate);
     void Send(
             dht::BaseDhtPtr& dht_ptr,
-            transport::protobuf::Header& message,
+            const transport::protobuf::Header& message,
             const std::vector<dht::NodePtr>& nodes);
-    inline uint32_t GetNeighborCount(transport::protobuf::Header& message) {
+    inline uint32_t GetNeighborCount(const transport::protobuf::Header& message) {
         if (message.broadcast().has_neighbor_count()) {
             return message.broadcast().neighbor_count();
         }

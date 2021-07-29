@@ -46,7 +46,7 @@ int Route::SendToLocal(const transport::protobuf::Header& message) {
     return kNetworkSuccess;
 }
 
-int Route::Send(transport::protobuf::Header& message) {
+int Route::Send(const transport::protobuf::Header& message) {
     uint32_t des_net_id = dht::DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
     dht::BaseDhtPtr dht_ptr{ nullptr };
     if (message.universal() ||
