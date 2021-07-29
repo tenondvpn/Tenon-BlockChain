@@ -55,7 +55,7 @@ uint32_t BftManager::GetMemberIndex(uint32_t network_id, const std::string& node
     return elect::ElectManager::Instance()->GetMemberIndex(network_id, node_id);
 }
 
-void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
 //     uint64_t b_time = common::TimeUtils::TimestampUs();
     auto& header = *header_ptr;
     assert(header.type() == common::kBftMessage);
@@ -214,7 +214,7 @@ void BftManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 void BftManager::HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
-        transport::TransportMessagePtr& header_ptr) {
+        const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
 //             BFT_DEBUG("this node is leader not handle backup message.");
@@ -267,7 +267,7 @@ BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_ms
 }
 
 int BftManager::CreateGenisisBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
 //     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
 //         CreateRootGenisisBlock();
@@ -332,7 +332,7 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
 }
 
 void BftManager::HandleRootTxBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
 //     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
 //         BFT_ERROR("root congress don't handle this message.");
@@ -469,7 +469,7 @@ void BftManager::RootCommitAddNewAccount(
 }
 
 void BftManager::HandleSyncBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
@@ -535,7 +535,7 @@ void BftManager::HandleSyncBlock(
 }
 
 void BftManager::HandleToAccountTxBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
@@ -641,7 +641,7 @@ void BftManager::HandleToAccountTxBlock(
 }
 
 int BftManager::InitBft(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     uint32_t network_id = 0;
     if (!DispatchPool::Instance()->InitCheckTxValid(bft_msg)) {
@@ -812,7 +812,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
 
 int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -884,7 +884,7 @@ int BftManager::BackupPrepare(
 
 int BftManager::LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
 //     uint64_t time1 = common::TimeUtils::TimestampUs();
 //     uint64_t time2;
@@ -1027,7 +1027,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
 
 int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
@@ -1112,7 +1112,7 @@ int BftManager::BackupPrecommit(
 
 int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
 //     uint64_t time1 = common::TimeUtils::TimestampUs();
 //     uint64_t time2;
@@ -1199,7 +1199,9 @@ int BftManager::LeaderCommit(
     return kBftSuccess;
 }
 
-int BftManager::LeaderCallCommit(transport::protobuf::Header& header, BftInterfacePtr& bft_ptr) {
+int BftManager::LeaderCallCommit(
+        const transport::protobuf::Header& header,
+        BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign and leader commit
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1317,7 +1319,7 @@ int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& gen
 
 int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");

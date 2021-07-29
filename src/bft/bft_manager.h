@@ -35,31 +35,31 @@ public:
 private:
     BftManager();
     ~BftManager();
-    void HandleMessage(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
     int InitBft(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     void RemoveBft(const std::string& gid, bool remove_tx);
     int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx);
     int BackupPrepare(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     int LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     int BackupPrecommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     int LeaderCommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     int BackupCommit(
         BftInterfacePtr& bft_ptr,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     void CheckTimeout();
     int VerifySignature(
@@ -83,30 +83,30 @@ private:
         const bft::protobuf::BftMessage& bft_msg);
     void LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader);
     void HandleToAccountTxBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     void HandleRootTxBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     void HandleSyncBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     int CreateGenisisBlock(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     bool AggSignValid(const bft::protobuf::Block& block);
     void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
-    int LeaderCallCommit(transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
+    int LeaderCallCommit(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     int LeaderReChallenge(BftInterfacePtr& bft_ptr);
     void HandleOpposeNodeMsg(bft::protobuf::BftMessage& bft_msg, BftInterfacePtr& bft_ptr);
     BftInterfacePtr CreateBftPtr(const bft::protobuf::BftMessage& bft_msg);
     void HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
-        transport::TransportMessagePtr& header_ptr);
+        const transport::TransportMessagePtr& header_ptr);
     void BackupPrepareOppose(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         const std::string& res_data);
