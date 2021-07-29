@@ -289,12 +289,12 @@ int AccountManager::AddBlockItemToDb(
                 return kBlockError;
             }
 
-            for (int32_t i = 0; i < tx_list[i].attr_size(); ++i) {
-                account_info->ClearAttr(tx_list[i].attr(i).key());
+            for (int32_t attr_idx = 0; attr_idx < tx_list[i].attr_size(); ++attr_idx) {
+                account_info->ClearAttr(tx_list[i].attr(attr_idx).key());
             }
 
-            for (int32_t i = 0; i < tx_list[i].storages_size(); ++i) {
-                account_info->ClearAttr(tx_list[i].storages(i).key());
+            for (int32_t attr_idx = 0; attr_idx < tx_list[i].storages_size(); ++attr_idx) {
+                account_info->ClearAttr(tx_list[i].storages(attr_idx).key());
             }
         }
         
