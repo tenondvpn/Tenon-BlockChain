@@ -75,11 +75,20 @@ bool Db::Init(const std::string& db_path) {
     options.level0_slowdown_writes_trigger = 17;
     options.level0_stop_writes_trigger = 24;
     options.num_levels = 4;
-    options.max_bytes_for_level_base = 536870912/64; // 512MB
+    options.max_bytes_for_level_base = 536870912 / 64; // 512MB
     options.max_bytes_for_level_multiplier = 8 / 2;
     options.create_if_missing = true;
     options.keep_log_file_num = 1;
     options.max_open_files = 10 / 5;
+//     options.prefix_extractor.reset(rocksdb::NewFixedPrefixTransform(3));
+//     options.memtable_prefix_bloom_bits = 100000000;
+//     options.memtable_prefix_bloom_probes = 6;
+// 
+//     // Enable prefix bloom for SST files
+//     rocksdb::BlockBasedTableOptions table_options;
+//     table_options.filter_policy.reset(rocksdb::NewBloomFilterPolicy(10, true));
+//     options.table_factory.reset(rocksdb::NewBlockBasedTableFactory(table_options)
+
     rocksdb::DB* db = NULL;
     rocksdb::Status status = rocksdb::DB::Open(options, db_path, &db);
     if (!status.ok()) {

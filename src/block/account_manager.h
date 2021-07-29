@@ -8,11 +8,12 @@
 #include "common/tick.h"
 #include "common/limit_heap.h"
 #include "bft/proto/bft.pb.h"
-#include "db/db.h"
 #include "block/block_utils.h"
 #include "block/db_account_info.h"
 #include "block/db_pool_info.h"
 #include "block/proto/block.pb.h"
+#include "db/db.h"
+#include "db/db_queue.h"
 
 namespace tenon {
 

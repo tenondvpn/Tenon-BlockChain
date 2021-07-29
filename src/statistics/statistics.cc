@@ -513,15 +513,15 @@ void Statistics::inc_period_tx_count(uint32_t count) {
 
 void Statistics::StatisUpdate() {
     tps_ = (float)period_tx_count_ / ((float)kTpsUpdatePeriod / (1000.0f * 1000.0f));
-    tps_queue_.push(std::to_string(tps_));
+//     tps_queue_.push(std::to_string(tps_));
     period_tx_count_ = 0;
     auto tick_now = std::chrono::steady_clock::now();
     auto period_tick = period_begin_ + std::chrono::minutes(60);
     if (tick_now >= period_tick) {
         period_begin_ = tick_now;
-        tx_count_q_.push(std::to_string(tx_count_));
+//         tx_count_q_.push(std::to_string(tx_count_));
         tx_count_ = 0;
-        tx_amount_q_.push(std::to_string(tx_amount_));
+//         tx_amount_q_.push(std::to_string(tx_amount_));
         tx_amount_ = 0;
     }
 

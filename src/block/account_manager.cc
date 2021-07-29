@@ -275,6 +275,29 @@ int AccountManager::AddBlockItemToDb(
             }
         }
 
+        if (tx_list[i].attr_size() > 0 || tx_list[i].storages_size() > 0) {
+            block::DbAccountInfoPtr account_info = nullptr;
+            {
+                std::lock_guard<std::mutex> guard(acc_map_mutex_);
+                auto iter = acc_map_.find(account_id);
+                if (iter != acc_map_.end()) {
+                    account_info = iter->second;
+                }
+            }
+            
+            if (account_info == nullptr) {
+                return kBlockError;
+            }
+
+            for (int32_t i = 0; i < tx_list[i].attr_size(); ++i) {
+                account_info->ClearAttr(tx_list[i].attr(i).key());
+            }
+
+            for (int32_t i = 0; i < tx_list[i].storages_size(); ++i) {
+                account_info->ClearAttr(tx_list[i].storages(i).key());
+            }
+        }
+        
         if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
             std::string account_gid;
             if (tx_list[i].type() != common::kConsensusCallContract &&
@@ -536,43 +559,43 @@ int AccountManager::UpdateAccountInfo(
     BLOCK_DEBUG("add new account: %s", common::Encode::HexEncode(account_id).c_str());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
-                tx_info.type() != common::kConsensusCreateContract) {
+            tx_info.type() != common::kConsensusCreateContract) {
             return kBlockSuccess;
         }
     }
 
-    std::lock_guard<std::mutex> guard(acc_map_mutex_);
     block::DbAccountInfoPtr account_info = nullptr;
-    auto iter = acc_map_.find(account_id);
-    if (iter == acc_map_.end()) {
-        account_info = std::make_shared<block::DbAccountInfo>(account_id);
-        if (!block::DbAccountInfo::AccountExists(account_id)) {
-            if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
+    {
+        std::lock_guard<std::mutex> guard(acc_map_mutex_);
+        auto iter = acc_map_.find(account_id);
+        if (iter == acc_map_.end()) {
+            account_info = std::make_shared<block::DbAccountInfo>(account_id);
+            if (!block::DbAccountInfo::AccountExists(account_id)) {
+                if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
                     bft::IsRootSingleBlockTx(tx_info.type()) ||
                     common::IsBaseAddress(account_id)) {
-                if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
+                    if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
+                        return kBlockError;
+                    }
+                } else if (tx_info.type() == common::kConsensusCreateAcount &&
+                    tx_info.network_id() != 0) {
+                } else {
+                    BLOCK_ERROR("account id not exists[%s]!",
+                        common::Encode::HexEncode(account_id).c_str());
                     return kBlockError;
                 }
-            } else if (tx_info.type() == common::kConsensusCreateAcount &&
-                    tx_info.network_id() != 0) {
-            } else {
-                BLOCK_ERROR("account id not exists[%s]!",
-                    common::Encode::HexEncode(account_id).c_str());
-                return kBlockError;
+
+                account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
             }
 
-            account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
+            acc_map_[account_id] = account_info;
+            account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+            account_info->set_heap_index(acc_limit_heap_.push(account_info));
+        } else {
+            account_info = iter->second;
+            account_info->set_added_timeout(common::TimeUtils::TimestampMs());
+            acc_limit_heap_.AdjustDown(account_info->heap_index());
         }
-
-        acc_map_[account_id] = account_info;
-        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
-        account_info->set_heap_index(acc_limit_heap_.push(account_info));
-
-//         BLOCK_DEBUG("now account size: %u", acc_map_.size());
-    } else {
-        account_info = iter->second;
-        account_info->set_added_timeout(common::TimeUtils::TimestampMs());
-        acc_limit_heap_.AdjustDown(account_info->heap_index());
     }
 
     uint64_t exist_height = 0;
@@ -582,27 +605,8 @@ int AccountManager::UpdateAccountInfo(
     }
 
     account_info->NewHeight(block_item->height(), db_batch);
-//     if (!tx_info.to().empty() && tx_info.amount() > 0) {
-//         account_info->NewTxHeight(
-//             block_item->height(),
-//             block_item->timestamp(),
-//             block_item->hash(),
-//             tx_info,
-//             db_batch);
-//     }
-
     if (exist_height <= block_item->height()) {
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
-//     } else {
-//         uint64_t create_height = 0;
-//         if (account_info->GetCreateAccountHeight(&create_height) != block::kBlockSuccess) {
-//             BLOCK_ERROR("GetCreateAccountHeight failed!");
-//             return kBlockError;
-//         }
-// 
-//         if (create_height > block_item->height()) {
-//             account_info->SetCreateAccountHeight(block_item->height(), db_batch);
-//         }
     }
 
     uint32_t pool_idx = common::GetPoolIndex(account_id);
@@ -623,11 +627,6 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
-//     if (IsPoolBaseAddress(account_id)) {
-//         if (account_info->AddStatistic(block_item) != kBlockSuccess) {
-//             return kBlockError;
-//         }
-//     }
     if (tx_info.status() == bft::kBftSuccess &&
             (tx_info.type() == common::kConsensusCallContract ||
             tx_info.type() == common::kConsensusCreateContract)) {
@@ -671,7 +670,6 @@ int AccountManager::SetAccountAttrs(
             for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
                 if (tx_info.storages(i).key() == bft::kContractCreatedBytesCode) {
                     res += account_info->SetBytesCode(tx_info.storages(i).value(), db_batch);
-                    std::cout << i << " 0 res: " << res << std::endl;
                 }
             }
 
@@ -715,10 +713,6 @@ int AccountManager::SetAccountAttrs(
                         continue;
                     }
 
-                    res += account_info->SetAttrWithHeight(
-                        tx_info.attr(attr_idx).key(),
-                        tmp_now_height,
-                        db_batch);
                     res += account_info->SetAttrValue(
                         tx_info.attr(attr_idx).key(),
                         tx_info.attr(attr_idx).value(),
@@ -743,10 +737,6 @@ int AccountManager::SetAccountAttrs(
                         continue;
                     }
 
-                    res += account_info->SetAttrWithHeight(
-                        tx_info.storages(storage_idx).key(),
-                        tmp_now_height,
-                        db_batch);
                     res += account_info->SetAttrValue(
                         tx_info.storages(storage_idx).key(),
                         tx_info.storages(storage_idx).value(),
