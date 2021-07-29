@@ -48,7 +48,7 @@ public:
         transport::protobuf::Header& msg);
     static void CreateHeatbeatResponse(
         const NodePtr& local_node,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         transport::protobuf::Header& msg);
     static int32_t CreateConnectRequest(
         const NodePtr& local_node,

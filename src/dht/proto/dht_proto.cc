@@ -273,7 +273,7 @@ void DhtProto::CreateHeatbeatRequest(
 
 void DhtProto::CreateHeatbeatResponse(
         const NodePtr& local_node,
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(header.src_dht_key());
