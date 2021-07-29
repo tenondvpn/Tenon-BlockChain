@@ -371,7 +371,7 @@ void TxPoolManager::GetTx(
 bool TxPoolManager::IsPoolLocked(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
     if (pool_index == common::kRootChainPoolIndex) {
-        return root_tx_pool_valid_;
+        return !root_tx_pool_valid_;
     }
 
     return waiting_pools_.Valid(pool_index);
