@@ -47,19 +47,13 @@ int TxBft::Init(bool leader) {
 int TxBft::Prepare(
         bool leader,
         int32_t pool_mod_idx,
-        const std::string& leader_prepare,
+        const bft::protobuf::BftMessage& leaser_bft_msg,
         std::string* prepare) {
     if (leader) {
         return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
-    bft::protobuf::BftMessage bft_msg;
-    if (!bft_msg.ParseFromString(leader_prepare)) {
-        BFT_ERROR("bft::protobuf::BftMessage ParseFromString failed!");
-        return kBftInvalidPackage;
-    }
-
-    if (!bft_msg.has_data()) {
+    if (!leaser_bft_msg.has_data()) {
         BFT_ERROR("bft::protobuf::BftMessage has no data!");
         return kBftInvalidPackage;
     }
@@ -67,9 +61,9 @@ int TxBft::Prepare(
     int32_t invalid_tx_idx = -1;
     int res = kBftSuccess;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        res = RootBackupCheckPrepare(bft_msg, &invalid_tx_idx);
+        res = RootBackupCheckPrepare(leaser_bft_msg, &invalid_tx_idx);
     } else {
-        res = BackupCheckPrepare(bft_msg, &invalid_tx_idx);
+        res = BackupCheckPrepare(leaser_bft_msg, &invalid_tx_idx);
     }
 
     if (res != kBftSuccess) {
