@@ -1,15 +1,16 @@
 #include "stdafx.h"
 #include "sync/key_value_sync.h"
 
+#include "bft/proto/bft.pb.h"
+#include "bft/bft_manager.h"
+#include "block/block_manager.h"
 #include "db/db.h"
-#include "transport/proto/transport.pb.h"
 #include "dht/base_dht.h"
 #include "network/dht_manager.h"
 #include "network/route.h"
-#include "bft/proto/bft.pb.h"
-#include "block/block_manager.h"
 #include "sync/sync_utils.h"
 #include "sync/proto/sync_proto.h"
+#include "transport/proto/transport.pb.h"
 
 namespace tenon {
 
@@ -43,9 +44,9 @@ int KeyValueSync::AddSync(uint32_t network_id, const std::string& key, uint32_t 
 
     if (db::Db::Instance()->Exist(key)) {
 //         SYNC_DEBUG("::Db::Instance()->Exist [%d] [%s]", network_id, common::Encode::HexEncode(key).c_str());
-        if (HandleExistsBlock(key) == kSyncSuccess) {
-            return kSyncBlockReloaded;
-        }
+//         if (HandleExistsBlock(key) == kSyncSuccess) {
+//             return kSyncBlockReloaded;
+//         }
         return kSyncKeyExsits;
     }
 
@@ -302,8 +303,7 @@ void KeyValueSync::ProcessSyncValueResponse(
 //         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
         if (block_item->ParseFromString(iter->value()) && block_item->hash() == iter->key()) {
-            db::DbWriteBach db_batch;
-            block::BlockManager::Instance()->AddNewBlock(block_item, db_batch, true);
+            bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
         }

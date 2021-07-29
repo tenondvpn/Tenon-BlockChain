@@ -28,6 +28,9 @@ public:
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
+    int AddKeyValueSyncBlock(
+        transport::protobuf::Header& header,
+        std::shared_ptr<bft::protobuf::Block>& block_ptr);
 
 private:
     BftManager();

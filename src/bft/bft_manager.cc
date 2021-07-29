@@ -1685,6 +1685,22 @@ int BftManager::VerifyAggSignature(
         BFT_ERROR("check agg sign failed!");
         return kBftError;
     }
+
+    return kBftSuccess;
+}
+
+int BftManager::AddKeyValueSyncBlock(
+        transport::protobuf::Header& header,
+        std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
+    if (block::AccountManager::Instance()->AddBlockItemToCache(
+            queue_item_ptr->block_ptr,
+            queue_item_ptr->db_batch) != block::kBlockSuccess) {
+        BFT_ERROR("leader add block to db failed!");
+        return kBftError;
+    }
+
+    block_queue_[header.thread_idx()].push(queue_item_ptr);
     return kBftSuccess;
 }
 
@@ -1694,7 +1710,10 @@ void BftManager::BlockToDb() {
             BlockToDbItemPtr db_item_ptr;
             if (block_queue_[i].pop(&db_item_ptr)) {
                 //
-                block::BlockManager::Instance()->AddNewBlock(db_item_ptr->block_ptr, db_item_ptr->db_batch, false);
+                block::BlockManager::Instance()->AddNewBlock(
+                    db_item_ptr->block_ptr,
+                    db_item_ptr->db_batch,
+                    false);
             }
         }
     }
