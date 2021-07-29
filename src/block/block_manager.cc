@@ -243,10 +243,10 @@ void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-//     if (block_msg.has_height_req()) {
-//         HandleGetHeightRequest(header, block_msg);
-//         return;
-//     }
+    if (block_msg.has_height_req()) {
+        HandleGetHeightRequest(header, block_msg);
+        return;
+    }
 
     if (block_msg.has_account_init_res()) {
         init::UpdateVpnInit::Instance()->UpdateAccountBlockInfo(header.data());

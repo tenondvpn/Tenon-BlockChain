@@ -71,7 +71,7 @@ int ElectPoolManager::CreateElectTransaction(
     st_attr->set_key(bft::kStatisticAttr);
     st_attr->set_value(src_tx_info.storages(0).value());
     tx_info.set_type(common::kConsensusRootElectShard);
-    tx_info.set_from(common::kRootChainSingleBlockTxAddress);
+    tx_info.set_from(common::kRootChainElectionBlockTxAddress);
     tx_info.set_gas_limit(0llu);
     tx_info.set_amount(0);
     tx_info.set_network_id(shard_netid);

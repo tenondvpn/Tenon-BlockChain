@@ -72,7 +72,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     bft::protobuf::TxBft tx_bft;
     auto tx_info = tx_bft.mutable_new_tx();
     tx_info->set_type(common::kConsensusRootTimeBlock);
-    tx_info->set_from(common::kRootChainSingleBlockTxAddress);
+    tx_info->set_from(common::kRootChainTimeBlockTxAddress);
     tx_info->set_gid(gid);
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
