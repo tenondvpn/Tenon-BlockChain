@@ -69,15 +69,15 @@ public:
 private:
     BlockManager();
     ~BlockManager();
-    void HandleMessage(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
     int HandleGetBlockRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void HandleGetHeightRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void HandleAdRewardRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(transport::protobuf::Header& header);
     void SendBlockResponse(transport::protobuf::Header& header, const std::string& block_str);

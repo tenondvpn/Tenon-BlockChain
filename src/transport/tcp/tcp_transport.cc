@@ -626,8 +626,8 @@ int TcpTransport::Send(
         return kTransportError;
     }
 
-    TRANSPORT_ERROR("send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
-        message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
+//     TRANSPORT_ERROR("send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
+//         message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
 
     return kTransportSuccess;
 }
@@ -639,10 +639,7 @@ int TcpTransport::SendToLocal(const transport::protobuf::Header& message) {
         cast_msg->set_hash(GetMessageHash(message));
     }
 
-    if (MessageFilter::Instance()->CheckUnique(message.hash())) {
-        return kTransportSuccess;
-    }
-
+    MessageFilter::Instance()->CheckUnique(message.hash());
     MultiThreadHandler::Instance()->HandleMessage(message);
     return kTransportSuccess;
 }

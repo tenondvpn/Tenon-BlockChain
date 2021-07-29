@@ -227,7 +227,7 @@ int BlockManager::InitRootElectBlocks() {
     return kBlockSuccess;
 }
 
-void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void BlockManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     if (header.type() != common::kBlockMessage) {
         return;
@@ -267,7 +267,7 @@ void BlockManager::HandleMessage(transport::TransportMessagePtr& header_ptr) {
 }
 
 void BlockManager::HandleAdRewardRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
     auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
             block_msg.ad_reward_req().id());
@@ -451,7 +451,7 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
 // }
 
 void BlockManager::HandleGetHeightRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
     auto acc_ptr = AccountManager::Instance()->GetAcountInfo(
             block_msg.height_req().account_addr());
@@ -510,7 +510,7 @@ void BlockManager::SendBlockNotExists(transport::protobuf::Header& header) {
 }
 
 int BlockManager::HandleGetBlockRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
     std::string block_hash;
     if (block_msg.block_req().has_block_hash()) {

@@ -41,21 +41,8 @@ void Route::Destroy() {
     broadcast_.reset();
 }
 
-int Route::SendToLocal(transport::protobuf::Header& message) {
-    uint32_t des_net_id = dht::DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
-    dht::BaseDhtPtr dht_ptr{ nullptr };
-    if (message.universal()) {
-        dht_ptr = UniversalManager::Instance()->GetUniversal(des_net_id);
-    } else {
-        dht_ptr = DhtManager::Instance()->GetDht(des_net_id);
-    }
-
-    if (!dht_ptr) {
-        NETWORK_ERROR("get dht failed[%d]", des_net_id);
-        return kNetworkError;
-    }
-
-    dht_ptr->transport()->SendToLocal(message);
+int Route::SendToLocal(const transport::protobuf::Header& message) {
+    transport::MultiThreadHandler::Instance()->tcp_transport()->SendToLocal(message);
     return kNetworkSuccess;
 }
 

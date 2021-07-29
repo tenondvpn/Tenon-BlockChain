@@ -22,7 +22,7 @@ class Route {
 public:
     static Route* Instance();
     int Send(transport::protobuf::Header& message);
-    int SendToLocal(transport::protobuf::Header& message);
+    int SendToLocal(const transport::protobuf::Header& message);
     void RegisterMessage(uint32_t type, transport::MessageProcessor proc);
     void UnRegisterMessage(uint32_t type);
     void Init();
