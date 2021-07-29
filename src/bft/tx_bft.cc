@@ -47,13 +47,18 @@ int TxBft::Init(bool leader) {
 int TxBft::Prepare(
         bool leader,
         int32_t pool_mod_idx,
-        const bft::protobuf::BftMessage& leaser_bft_msg,
+        const bft::protobuf::BftMessage& leader_bft_msg,
         std::string* prepare) {
     if (leader) {
         return LeaderCreatePrepare(pool_mod_idx, prepare);
     }
 
-    if (!leaser_bft_msg.has_data()) {
+    if (pool_index() >= common::kInvalidPoolIndex) {
+        BFT_ERROR("pool index has locked by other leader[%d]!", pool_index());
+        return kBftInvalidPackage;
+    }
+
+    if (!leader_bft_msg.has_data()) {
         BFT_ERROR("bft::protobuf::BftMessage has no data!");
         return kBftInvalidPackage;
     }
@@ -66,9 +71,9 @@ int TxBft::Prepare(
     int32_t invalid_tx_idx = -1;
     int res = kBftSuccess;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        res = RootBackupCheckPrepare(leaser_bft_msg, &invalid_tx_idx);
+        res = RootBackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
     } else {
-        res = BackupCheckPrepare(leaser_bft_msg, &invalid_tx_idx);
+        res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
     }
 
     if (res != kBftSuccess) {
