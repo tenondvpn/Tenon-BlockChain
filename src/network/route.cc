@@ -79,7 +79,7 @@ int Route::Send(const transport::protobuf::Header& message) {
     return kNetworkSuccess;
 }
 
-void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
+void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
 //     if (!header.debug().empty()) {
 //         NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
@@ -129,7 +129,7 @@ void Route::HandleMessage(transport::TransportMessagePtr& header_ptr) {
     }
 }
 
-void Route::HandleDhtMessage(transport::TransportMessagePtr& header_ptr) {
+void Route::HandleDhtMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     auto dht = GetDht(header.des_dht_key(), header.universal());
     if (!dht) {
@@ -177,7 +177,7 @@ Route::~Route() {
     Destroy();
 }
 
-void Route::Broadcast(transport::protobuf::Header& header) {
+void Route::Broadcast(const transport::protobuf::Header& header) {
     if (!header.has_broadcast() || !header.has_des_dht_key()) {
         return;
     }
@@ -193,12 +193,13 @@ void Route::Broadcast(transport::protobuf::Header& header) {
         src_net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.src_dht_key());
     }
 
-    auto broad_param = header.mutable_broadcast();
     if (src_net_id != des_net_id) {
+        auto* cast_msg = const_cast<transport::protobuf::Header*>(&header);
+        auto broad_param = cast_msg->mutable_broadcast();
         if (!broad_param->net_crossed()) {
             broad_param->set_net_crossed(true);
             broad_param->clear_bloomfilter();
-            header.set_hop_count(0);
+            cast_msg->set_hop_count(0);
         }
     }
     broadcast_->Broadcasting(des_dht, header);
@@ -216,7 +217,7 @@ dht::BaseDhtPtr Route::GetDht(const std::string& dht_key, bool universal) {
     return dht;
 }
 
-void Route::RegRouteByUniversal(transport::TransportMessagePtr& header_ptr) {
+void Route::RegRouteByUniversal(const transport::TransportMessagePtr& header_ptr) {
     RouteByUniversal(*header_ptr);
 }
 

@@ -33,10 +33,10 @@ public:
 private:
     Route();
     ~Route();
-    void HandleMessage(transport::TransportMessagePtr& header);
-    void HandleDhtMessage(transport::TransportMessagePtr& header);
-    void Broadcast(transport::protobuf::Header& header);
-    void RegRouteByUniversal(transport::TransportMessagePtr& header);
+    void HandleMessage(const transport::TransportMessagePtr& header);
+    void HandleDhtMessage(const transport::TransportMessagePtr& header);
+    void Broadcast(const transport::protobuf::Header& header);
+    void RegRouteByUniversal(const transport::TransportMessagePtr& header);
 
     transport::MessageProcessor message_processor_[common::kLegoMaxMessageTypeCount];
     broadcast::BroadcastPtr broadcast_{ nullptr };
