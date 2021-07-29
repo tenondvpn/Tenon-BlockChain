@@ -159,10 +159,13 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_agree(agree);
-    std::string challenge_str;
-    bft_ptr->challenge().Serialize(challenge_str);
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    bft_msg.set_challenge(challenge_str);
+    if (agree) {
+        std::string challenge_str;
+        bft_ptr->challenge().Serialize(challenge_str);
+        bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+        bft_msg.set_challenge(challenge_str);
+    }
+
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(
             bft_ptr->prepare_hash(),

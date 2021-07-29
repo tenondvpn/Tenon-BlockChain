@@ -67,12 +67,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-        header.id(),
-        bft_msg.leader(),
-        common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-        bft_msg.bft_step());
+//     BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+//         header.id(),
+//         bft_msg.leader(),
+//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
+//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+//         bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -128,6 +128,7 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             if (!bft_msg.agree()) {
+                BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_msg.gid()).c_str());
                 return;
             }
 
@@ -819,9 +820,15 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    if (bft_ptr->backup_prepare_msg() != nullptr) {
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            bft_msg.node_ip(), bft_msg.node_port(), 0, *bft_ptr->backup_prepare_msg());
+        return kBftSuccess;
+    }
+
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    transport::protobuf::Header msg;
+    auto msg = std::make_shared<transport::protobuf::Header>();
     if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
         std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
         BftProto::BackupCreatePrepare(
@@ -831,7 +838,7 @@ int BftManager::BackupPrepare(
             res_data,
             bft_ptr,
             false,
-            msg);
+            *msg);
         RemoveBft(bft_ptr->gid(), false);
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
@@ -847,7 +854,7 @@ int BftManager::BackupPrepare(
                 res_data,
                 bft_ptr,
                 false,
-                msg);
+                *msg);
             RemoveBft(bft_ptr->gid(), false);
             BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
@@ -859,26 +866,27 @@ int BftManager::BackupPrepare(
                 data,
                 bft_ptr,
                 true,
-                msg);
+                *msg);
             BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
                 common::Encode::HexEncode(bft_ptr->gid()).c_str(),
                 bft_msg.node_ip().c_str(), bft_msg.node_port());
         }
     }
 
-    if (!msg.has_data()) {
+    if (!msg->has_data()) {
         BFT_ERROR("message set data failed!");
         return kBftError;
     }
 
     bft_ptr->set_status(kBftPreCommit);
+    bft_ptr->set_backup_prepare_msg(msg);
     // send prepare to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, msg);
+            bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
-            header.from_ip(), header.from_port(), 0, msg);
+            header.from_ip(), header.from_port(), 0, *msg);
     }
 
 #ifdef TENON_UNITTEST
@@ -1010,6 +1018,7 @@ int BftManager::LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr) {
     transport::protobuf::Header msg;
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, false, msg);
     network::Route::Instance()->Send(msg);
+    BFT_ERROR("LeaderCallPrecommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
 #endif
@@ -1048,12 +1057,19 @@ int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    if (bft_ptr->backup_precommit_msg() != nullptr) {
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            bft_msg.node_ip(), bft_msg.node_port(), 0, *bft_ptr->backup_precommit_msg());
+        return kBftSuccess;
+    }
+
     if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
 
     if (!bft_msg.agree()) {
+        BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
         RemoveBft(bft_ptr->gid(), false);
         return kBftSuccess;
     }
@@ -1071,7 +1087,7 @@ int BftManager::BackupPrecommit(
     // check prepare multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    transport::protobuf::Header msg;
+    auto msg = std::make_shared<transport::protobuf::Header>();
     std::string precommit_data;
     if (bft_ptr->PreCommit(false, precommit_data) != kBftSuccess) {
 //         BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
@@ -1091,7 +1107,7 @@ int BftManager::BackupPrecommit(
             bft_ptr->leader_mem_ptr()->leader_ecdh_key,
             agg_res,
             false,
-            msg);
+            *msg);
         RemoveBft(bft_ptr->gid(), false);
     } else {
 //         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
@@ -1111,21 +1127,22 @@ int BftManager::BackupPrecommit(
             bft_ptr->leader_mem_ptr()->leader_ecdh_key,
             agg_res,
             true,
-            msg);
+            *msg);
     }
 
-    if (!msg.has_data()) {
+    if (!msg->has_data()) {
         return kBftError;
     }
 
     bft_ptr->set_status(kBftCommit);
+    bft_ptr->set_backup_precommit_msg(msg);
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, msg);
+            bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
     } else {
         transport::MultiThreadHandler::Instance()->transport()->Send(
-            header.from_ip(), header.from_port(), 0, msg);
+            header.from_ip(), header.from_port(), 0, *msg);
     }
 
 #ifdef TENON_UNITTEST
@@ -1215,6 +1232,7 @@ int BftManager::LeaderCommit(
     }
     else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
+        LeaderCallCommitOppose(header, bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
 //         time5 = common::TimeUtils::TimestampUs();
     }
@@ -1238,8 +1256,7 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr, true);
-    assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
-    RemoveBft(bft_ptr->gid(), true);
+    BFT_ERROR("LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
@@ -1375,6 +1392,7 @@ int BftManager::BackupCommit(
     }
 
     if (!bft_msg.agree()) {
+        BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
         RemoveBft(bft_ptr->gid(), false);
         return kBftSuccess;
     }

@@ -312,6 +312,24 @@ public:
         return mem_manager_ptr_;
     }
 
+    void set_backup_prepare_msg(
+            std::shared_ptr<transport::protobuf::Header>& bacup_prepare_ptr) {
+        backup_prepare_msg_ = bacup_prepare_ptr;
+    }
+
+    std::shared_ptr<transport::protobuf::Header> backup_prepare_msg() {
+        return backup_prepare_msg_;
+    }
+
+    void set_backup_precommit_msg(
+            std::shared_ptr<transport::protobuf::Header>& bacup_precommit_ptr) {
+        backup_precommit_msg_ = bacup_precommit_ptr;
+    }
+
+    std::shared_ptr<transport::protobuf::Header> backup_precommit_msg() {
+        return backup_precommit_msg_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -368,6 +386,8 @@ private:
     std::atomic<bool> aggree_{ true };
     std::atomic<uint32_t> bft_epoch_{ 0 };
     elect::BftMemberPtr leader_mem_ptr_{ nullptr };
+    std::shared_ptr<transport::protobuf::Header> backup_prepare_msg_{ nullptr };
+    std::shared_ptr<transport::protobuf::Header> backup_precommit_msg_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
