@@ -96,10 +96,10 @@ private:
     void ChooseRelayRouteNodes();
     void RoutingNodesHeartbeat();
     void HandleUpdateVpnCountRequest(
-            transport::protobuf::Header& header,
+            const transport::protobuf::Header& header,
             block::protobuf::BlockMessage& block_msg);
     void HandleUpdateVpnActiveRequest(
-            transport::protobuf::Header& header,
+            const transport::protobuf::Header& header,
             block::protobuf::BlockMessage& block_msg);
     void CheckVpnNodeTimeout();
     void SaveAccountInitBlocks(transport::protobuf::Header& header);
