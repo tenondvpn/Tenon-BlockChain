@@ -55,7 +55,7 @@ public:
 private:
     void Run();
     void SetSocketOption();
-    uint64_t GetMessageHash(transport::protobuf::Header& message);
+    uint64_t GetMessageHash(const transport::protobuf::Header& message);
 
     static const uint32_t kDefaultTtl = 99u;
 

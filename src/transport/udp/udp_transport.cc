@@ -331,7 +331,7 @@ void UdpTransport::SetSocketOption() {
             sizeof(send_buf_size_));
 }
 
-uint64_t UdpTransport::GetMessageHash(transport::protobuf::Header& message) {
+uint64_t UdpTransport::GetMessageHash(const transport::protobuf::Header& message) {
     auto hash = common::Hash::Hash64(
            "udp" + message.src_node_id() + std::to_string(message.id()) + message.data());
     return hash;

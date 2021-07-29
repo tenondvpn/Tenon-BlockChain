@@ -152,7 +152,7 @@ void EvUdpTransport::Run() {
     }
 }
 
-int EvUdpTransport::SendToLocal(transport::protobuf::Header& message) {
+int EvUdpTransport::SendToLocal(const transport::protobuf::Header& message) {
     
     return kTransportSuccess;
 }
@@ -169,14 +169,14 @@ int EvUdpTransport::Send(
         const std::string& ip,
         uint16_t port,
         uint32_t ttl,
-        transport::protobuf::Header& proto) {
+        const transport::protobuf::Header& proto) {
     return kTransportSuccess;
 }
 
 void EvUdpTransport::SetSocketOption() {
 }
 
-uint64_t EvUdpTransport::GetMessageHash(transport::protobuf::Header& message) {
+uint64_t EvUdpTransport::GetMessageHash(const transport::protobuf::Header& message) {
     auto hash = common::Hash::Hash64(
            "udp" + message.src_node_id() + std::to_string(message.id()) + message.data());
     return hash;

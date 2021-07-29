@@ -39,8 +39,8 @@ public:
             const std::string& ip,
             uint16_t port,
             uint32_t ttl,
-            transport::protobuf::Header& message);
-    virtual int SendToLocal(transport::protobuf::Header& message);
+            const transport::protobuf::Header& message);
+    virtual int SendToLocal(const transport::protobuf::Header& message);
     virtual int GetSocket() {
         return 0;
     }
@@ -56,7 +56,7 @@ public:
 private:
     void Run();
     void SetSocketOption();
-    uint64_t GetMessageHash(transport::protobuf::Header& message);
+    uint64_t GetMessageHash(const transport::protobuf::Header& message);
 
     static const uint32_t kDefaultTtl = 99u;
 
