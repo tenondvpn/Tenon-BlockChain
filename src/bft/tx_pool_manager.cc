@@ -368,17 +368,17 @@ void TxPoolManager::GetTx(
     prev_pool_index_ = (valid_pool + 1) % common::kInvalidPoolIndex;
 }
 
-bool TxPoolManager::IsPoolLocked(int32_t pool_index) {
+bool TxPoolManager::IsPoolLocked(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
     return waiting_pools_.Valid(pool_index);
 }
 
-void TxPoolManager::LockPool(int32_t pool_index) {
+void TxPoolManager::LockPool(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
     waiting_pools_.Set(pool_index);
 }
 
-void TxPoolManager::UnlockPool(int32_t pool_index) {
+void TxPoolManager::UnlockPool(uint32_t pool_index) {
     assert(pool_index < common::kInvalidPoolIndex);
     waiting_pools_.UnSet(pool_index);
 }

@@ -30,7 +30,7 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
-    bool LockPool(int32_t pool_index) {
+    bool LockPool(uint32_t pool_index) {
         std::lock_guard<std::mutex> guard(pool_mutex_);
         if (tx_pool_.IsPoolLocked(pool_index)) {
             return false;
@@ -40,7 +40,7 @@ public:
         return true;
     }
 
-    void UnlockPool(int32_t pool_index) {
+    void UnlockPool(uint32_t pool_index) {
         tx_pool_.UnlockPool(pool_index);
     }
 

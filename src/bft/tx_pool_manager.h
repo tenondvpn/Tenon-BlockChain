@@ -34,9 +34,9 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     void CheckTimeoutTx();
-    bool IsPoolLocked(int32_t pool_index);
-    void LockPool(int32_t pool_index);
-    void UnlockPool(int32_t pool_index);
+    bool IsPoolLocked(uint32_t pool_index);
+    void LockPool(uint32_t pool_index);
+    void UnlockPool(uint32_t pool_index);
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);
