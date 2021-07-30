@@ -432,6 +432,10 @@ void BftInterface::CheckCommitRecallBackup() {
     if (precommit_bitmap_.valid_count() <= prepare_bitmap_.valid_count() * 9 / 10) {
         uint32_t bit_size = prepare_bitmap_.data().size() * 64;
         for (uint32_t i = 0; i < bit_size; ++i) {
+            if (!prepare_bitmap_.Valid(i)) {
+                continue;
+            }
+
             if (precommit_bitmap_.Valid(i)) {
                 continue;
             }
