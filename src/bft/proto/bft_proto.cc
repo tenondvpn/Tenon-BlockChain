@@ -77,6 +77,7 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_elect_height(bft_ptr->elect_height());
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
 //         msg.id(), bft_ptr->pool_index(), kBftPrepare, common::Encode::HexEncode(bft_ptr->gid()).c_str()));
@@ -159,6 +160,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_agree(agree);
+    bft_msg.set_elect_height(bft_ptr->elect_height());
     if (agree) {
         std::string challenge_str;
         bft_ptr->challenge().Serialize(challenge_str);

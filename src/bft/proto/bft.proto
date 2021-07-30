@@ -123,4 +123,5 @@ message BftMessage {
 	optional uint32 member_index = 20;
 	optional bytes pubkey = 21;
 	optional bytes backup_enc_data = 22;
+	optional uint64 elect_height = 23;
 }

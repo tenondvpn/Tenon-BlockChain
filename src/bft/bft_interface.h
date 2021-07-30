@@ -346,6 +346,10 @@ public:
         prepare_enc_failed_nodes_.insert(index);
     }
 
+    uint64_t elect_height() {
+        return elect_height_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -357,7 +361,7 @@ protected:
     elect::MembersPtr members_ptr_{ nullptr };
     std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };
 
-private:
+// private:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
     void RechallengePrecommitClear();
@@ -409,6 +413,7 @@ private:
     std::set<uint32_t> prepare_enc_failed_nodes_;
     std::mutex prepare_enc_failed_nodes_mutex_;
     bool this_node_is_leader_{ false };
+    uint64_t elect_height_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

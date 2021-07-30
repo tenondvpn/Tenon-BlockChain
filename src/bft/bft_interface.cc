@@ -16,6 +16,8 @@ BftInterface::BftInterface() {
 }
 
 int BftInterface::Init() {
+    elect_height_ = elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id());
     leader_mem_ptr_ = elect::ElectManager::Instance()->local_mem_ptr(
         common::GlobalInfo::Instance()->network_id());
     if (leader_mem_ptr_ == nullptr) {
@@ -27,6 +29,15 @@ int BftInterface::Init() {
     secret_ = leader_mem_ptr_->secret;
     // just leader call init
     this_node_is_leader_ = true;
+    if (elect_height_ != elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id())) {
+        BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
+            elect_height_,
+            elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id()));
+        return kBftError;
+    }
+
     return kBftSuccess;
 }
 
@@ -47,6 +58,10 @@ bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
 
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
     std::lock_guard<std::mutex> guard(mutex_);
+    if (leader_mem_ptr_ == nullptr) {
+        return false;
+    }
+
     if (!bft_msg.has_net_id()) {
         BFT_ERROR("bft message has no net id.");
         return false;
@@ -93,18 +108,51 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     }
 
     secret_ = local_mem_ptr->secret;
+    if (elect_height_ != elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id())) {
+        BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
+            elect_height_,
+            elect::ElectManager::Instance()->latest_height(
+                common::GlobalInfo::Instance()->network_id()));
+        return false;
+    }
+
+    // keep the latest election
+    if (elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id()) != bft_msg.elect_height()) {
+        BFT_ERROR("leader elect height not equal to local.");
+        return false;
+    }
+
     return true;
 }
 
 bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
+    auto local_elect_height = elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(mutex_);
-    leader_mem_ptr_ = elect::ElectManager::Instance()->GetMember(
-        common::GlobalInfo::Instance()->network_id(),
-        bft_msg.member_index());
+    if (local_elect_height < bft_msg.elect_height()) {
+        return false;
+    }
+
+    auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+        bft_msg.elect_height(),
+        common::GlobalInfo::Instance()->network_id());
+    if (members == nullptr || bft_msg.member_index() >= members->size()) {
+        return false;
+    }
+
+    leader_mem_ptr_ = (*members)[bft_msg.member_index()];
     if (!leader_mem_ptr_) {
         return false;
     }
 
+    if (local_elect_height != bft_msg.elect_height()) {
+        BFT_ERROR("leader elect height not equal to local.");
+        return false;
+    }
+
+    elect_height_ = local_elect_height;
     if (leader_mem_ptr_->pool_index_mod_num < 0) {
         BFT_ERROR("prepare message not leader.[%u][%d][%u]",
             common::GlobalInfo::Instance()->network_id(),
@@ -437,6 +485,10 @@ void BftInterface::CheckCommitRecallBackup() {
         return;
     }
 
+    if (members_ptr_ == nullptr) {
+        return;
+    }
+
     if (leader_precommit_msg_ == nullptr) {
         return;
     }
@@ -459,7 +511,11 @@ void BftInterface::CheckCommitRecallBackup() {
                 continue;
             }
 
-            auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), i);
+            if (i >= members_ptr_->size()) {
+                return;
+            }
+
+            auto mem_ptr = (*members_ptr_)[i];
             if (mem_ptr->public_ip == 0) {
                 assert(false);
                 continue;
