@@ -222,7 +222,9 @@ void BftManager::HandleBftMessage(
         const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-//             BFT_DEBUG("this node is leader not handle backup message.");
+            BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            RemoveBft(bft_ptr->gid(), false);
+            BFT_DEBUG("this node is leader not handle backup message.");
             return;
         }
     }
@@ -1672,7 +1674,7 @@ void BftManager::HandleSyncWaitingBlock(
     auto& tx_list = block.tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(
-            block_ptr->pool_index(),
+            block.pool_index(),
             tx_list[i].to_add(),
             tx_list[i].type(),
             tx_list[i].call_contract_step(),

@@ -217,8 +217,6 @@ void ElectManager::ProcessNewElectBlock(
             id,
             in[i].pubkey(),
             member_index,
-            in[i].public_ip(),
-            in[i].public_port(),
             in[i].dht_key(),
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
