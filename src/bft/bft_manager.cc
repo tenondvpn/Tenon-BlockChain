@@ -337,9 +337,9 @@ bool BftManager::AggSignValid(uint32_t thread_idx, uint32_t type, const bft::pro
         // causing the aggregate signature verification to fail
         // add to waiting verify pool.
         BFT_ERROR("get members failed height: %lu", block.electblock_height());
+        auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
         waiting_verify_block_queue_[thread_idx].push(
-            std::make_shared<WaitingBlockItem>(
-                std::make_shared<bft::protobuf::Block>(block), type));
+            std::make_shared<WaitingBlockItem>(block_ptr, type));
         return false;
     }
 
