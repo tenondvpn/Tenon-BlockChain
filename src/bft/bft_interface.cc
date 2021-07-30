@@ -422,6 +422,13 @@ void BftInterface::CheckCommitRecallBackup() {
         return;
     }
 
+    auto now_timestamp = std::chrono::steady_clock::now();
+    if (now_timestamp < (precommit_timeout_ -
+            std::chrono::microseconds(kBftLeaderPrepareWaitPeriod / 2)) ||
+            now_timestamp >= (precommit_timeout_ - std::chrono::microseconds(50000))) {
+        return;
+    }
+
     if (precommit_bitmap_.valid_count() <= prepare_bitmap_.valid_count() * 9 / 10) {
         uint32_t bit_size = prepare_bitmap_.data().size() * 64;
         for (uint32_t i = 0; i < bit_size; ++i) {
