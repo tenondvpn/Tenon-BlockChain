@@ -62,6 +62,7 @@ public:
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg);
+    void CheckCommitRecallBackup();
 
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;
@@ -330,6 +331,11 @@ public:
         return backup_precommit_msg_;
     }
 
+    void set_leader_precommit_msg(
+            std::shared_ptr<transport::protobuf::Header>& leader_precommit_msg) {
+        leader_precommit_msg_ = leader_precommit_msg;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -388,6 +394,8 @@ private:
     elect::BftMemberPtr leader_mem_ptr_{ nullptr };
     std::shared_ptr<transport::protobuf::Header> backup_prepare_msg_{ nullptr };
     std::shared_ptr<transport::protobuf::Header> backup_precommit_msg_{ nullptr };
+    std::shared_ptr<transport::protobuf::Header> leader_precommit_msg_{ nullptr };
+    bool this_node_is_leader_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

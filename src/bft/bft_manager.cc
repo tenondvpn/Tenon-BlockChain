@@ -42,6 +42,7 @@ BftManager::BftManager() {
         kBftTimeoutCheckPeriod,
         std::bind(&BftManager::CheckTimeout, this));
     BlockToDb();
+    CheckCommitBackupRecall();
 }
 
 BftManager::~BftManager() {}
@@ -765,7 +766,12 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    const auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    if (member_ptr->public_ip == 0) {
+        member_ptr->public_ip = common::IpStringToUint32(bft_msg.node_ip());
+        member_ptr->public_port = bft_msg.node_port();
+    }
+
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
     std::string dec_data;
     if (member_ptr->backup_ecdh_key.empty()) {
@@ -893,11 +899,13 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
         return kBftError;
     }
 
-    transport::protobuf::Header msg;
+    bft_ptr->set_status(kBftCommit);
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
-    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
-    network::Route::Instance()->Send(msg);
+    auto precommit_msg = std::make_shared<transport::protobuf::Header>();  // msg;
+    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, *precommit_msg);
+    bft_ptr->set_leader_precommit_msg(precommit_msg);
+    network::Route::Instance()->Send(*precommit_msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = msg;
 #endif
@@ -1869,6 +1877,22 @@ void BftManager::VerifyWaitingBlock() {
     verify_block_tick_.CutOff(
         kBlockToDbPeriod,
         std::bind(&BftManager::VerifyWaitingBlock, this));
+}
+
+void BftManager::CheckCommitBackupRecall() {
+    std::unordered_map<std::string, BftInterfacePtr> bft_hash_map;
+    {
+        std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
+        bft_hash_map = bft_hash_map_;
+    }
+
+    for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end(); ++iter) {
+        iter->second->CheckCommitRecallBackup();
+    }
+
+    leader_resend_tick_.CutOff(
+        300000,
+        std::bind(&BftManager::CheckCommitBackupRecall, this));
 }
 
 }  // namespace bft

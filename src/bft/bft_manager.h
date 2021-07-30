@@ -133,6 +133,7 @@ private:
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr);
+    void CheckCommitBackupRecall();
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 
@@ -147,6 +148,7 @@ private:
     WaitingBlockQueue waiting_verify_block_queue_[transport::kMessageHandlerThreadCount];
     common::Tick verify_block_tick_;
     std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
+    common::Tick leader_resend_tick_;
 
 #ifdef TENON_UNITTEST
     // just for test

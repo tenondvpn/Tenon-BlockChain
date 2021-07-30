@@ -25,6 +25,8 @@ int BftInterface::Init() {
 
     leader_index_ = leader_mem_ptr_->index;
     secret_ = leader_mem_ptr_->secret;
+    // just leader call init
+    this_node_is_leader_ = true;
     return kBftSuccess;
 }
 
@@ -255,7 +257,7 @@ int BftInterface::CheckTimeout() {
         return kTimeout;
     }
 
-    if (elect::ElectManager::Instance()->local_node_pool_mod_num() < 0) {
+    if (!this_node_is_leader_) {
         return kBftSuccess;
     }
 
@@ -405,6 +407,40 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
     }
 
     return kBftSuccess;
+}
+
+void BftInterface::CheckCommitRecallBackup() {
+    if (!this_node_is_leader_) {
+        return;
+    }
+
+    if (status_ != kBftCommit) {
+        return;
+    }
+
+    if (leader_precommit_msg_ == nullptr) {
+        return;
+    }
+
+    if (precommit_bitmap_.valid_count() <= prepare_bitmap_.valid_count() * 9 / 10) {
+        uint32_t bit_size = prepare_bitmap_.data().size() * 64;
+        for (uint32_t i = 0; i < bit_size; ++i) {
+            if (precommit_bitmap_.Valid(i)) {
+                continue;
+            }
+
+            auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), i);
+            if (mem_ptr->public_ip == 0) {
+                assert(false);
+                continue;
+            }
+
+            // send precommit to backup and get response again
+            std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
+            transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+                ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
+        }
+    }
 }
 
 }  // namespace bft
