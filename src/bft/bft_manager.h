@@ -5,7 +5,6 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
-#include "common/thread_safe_queue.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"

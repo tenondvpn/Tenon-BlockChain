@@ -6,6 +6,7 @@
 #include "common/log.h"
 #include "common/hash.h"
 #include "common/global_info.h"
+#include "common/thread_safe_queue.h"
 #include "bft/proto/bft.pb.h"
 #include "db/db.h"
 #include "transport/transport_utils.h"
