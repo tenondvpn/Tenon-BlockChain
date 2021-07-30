@@ -83,22 +83,37 @@ enum BftCheckTimeoutStatus {
     kTimeoutWaitingBackup = 4,
 };
 
+enum WaitingBlockType {
+    kRootBlock,
+    kSyncBlock,
+    kToBlock,
+};
+
 struct BftItem {
     transport::TransportMessagePtr header_ptr;
     bft::protobuf::BftMessage bft_msg;
 };
 
 typedef std::shared_ptr<BftItem> BftItemPtr;
-
+typedef std::shared_ptr<bft::protobuf::Block> BlockPtr;
 
 struct BlockToDbItem {
-    BlockToDbItem(std::shared_ptr<bft::protobuf::Block>& bptr)
+    BlockToDbItem(BlockPtr& bptr)
         : block_ptr(bptr) {}
-    std::shared_ptr<bft::protobuf::Block> block_ptr;
+    BlockPtr block_ptr;
     db::DbWriteBach db_batch;
 };
 
+struct WaitingBlockItem {
+    WaitingBlockItem(BlockPtr& bptr, uint32_t t) : block_ptr(bptr), type(t) {}
+    BlockPtr block_ptr;
+    uint32_t type;
+};
+
 typedef std::shared_ptr<BlockToDbItem> BlockToDbItemPtr;
+typedef std::shared_ptr<WaitingBlockItem> WaitingBlockItemPtr;
+typedef common::ThreadSafeQueue<BlockToDbItemPtr> BlockQueue;
+typedef common::ThreadSafeQueue<WaitingBlockItemPtr> WaitingBlockQueue;
 
 static const uint32_t kBftOneConsensusMaxCount = 32u;  // every consensus
 static const uint32_t kBftOneConsensusMinCount = 1u;

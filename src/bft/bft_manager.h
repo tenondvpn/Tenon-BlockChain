@@ -94,7 +94,7 @@ private:
     int CreateGenisisBlock(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
-    bool AggSignValid(const bft::protobuf::Block& block);
+    bool AggSignValid(uint32_t thread_idx, uint32_t type, const bft::protobuf::Block& block);
     void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
@@ -113,6 +113,27 @@ private:
     int LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr);
     int LeaderCallCommitOppose(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     void BlockToDb();
+    void VerifyWaitingBlock();
+    bool VerifyAggSignWithMembers(
+        const elect::MembersPtr& members,
+        const bft::protobuf::Block& block);
+    void HandleVerifiedBlock(
+        uint32_t thread_idx,
+        uint32_t type,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr);
+    void HandleSyncWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr);
+    void HandleToWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr);
+    void HandleRootWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr);
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 
@@ -122,9 +143,11 @@ private:
     std::atomic<uint32_t> tps_{ 0 };
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
-    typedef common::ThreadSafeQueue<BlockToDbItemPtr> BlockQueue;
     BlockQueue block_queue_[transport::kMessageHandlerThreadCount];
     common::Tick block_to_db_tick_;
+    WaitingBlockQueue waiting_verify_block_queue_[transport::kMessageHandlerThreadCount];
+    common::Tick verify_block_tick_;
+    std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
 
 #ifdef TENON_UNITTEST
     // just for test

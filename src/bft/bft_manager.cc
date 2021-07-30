@@ -283,29 +283,11 @@ int BftManager::CreateGenisisBlock(
     return kBftSuccess;
 }
 
-bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
-    if (!block.has_agg_sign_challenge() ||
-            !block.has_agg_sign_response() ||
-            block.bitmap_size() <= 0) {
-        BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
-            "block.has_agg_sign_response(): %d, block.bitmap_size(): %u",
-            block.has_agg_sign_challenge(), block.has_agg_sign_response(), block.bitmap_size());
-        return false;
-    }
-
+bool BftManager::VerifyAggSignWithMembers(const elect::MembersPtr& members, const bft::protobuf::Block& block) {
     auto sign = security::Signature(block.agg_sign_challenge(), block.agg_sign_response());
     std::vector<uint64_t> data;
     for (int32_t i = 0; i < block.bitmap_size(); ++i) {
         data.push_back(block.bitmap(i));
-    }
-
-    auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
-        block.electblock_height(),
-        block.network_id());
-    if (members == nullptr) {
-        BFT_ERROR("get members failed height: %lu", block.electblock_height());
-        assert(false);
-        return false;
     }
 
     common::Bitmap leader_agg_bitmap(data);
@@ -334,6 +316,34 @@ bool BftManager::AggSignValid(const bft::protobuf::Block& block) {
     }
 
     return true;
+}
+
+bool BftManager::AggSignValid(uint32_t thread_idx, uint32_t type, const bft::protobuf::Block& block) {
+    assert(thread_idx < transport::kMessageHandlerThreadCount);
+    if (!block.has_agg_sign_challenge() ||
+            !block.has_agg_sign_response() ||
+            block.bitmap_size() <= 0) {
+        BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
+            "block.has_agg_sign_response(): %d, block.bitmap_size(): %u",
+            block.has_agg_sign_challenge(), block.has_agg_sign_response(), block.bitmap_size());
+        return false;
+    }
+
+    auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+        block.electblock_height(),
+        block.network_id());
+    if (members == nullptr) {
+        // The election block arrives later than the consensus block,
+        // causing the aggregate signature verification to fail
+        // add to waiting verify pool.
+        BFT_ERROR("get members failed height: %lu", block.electblock_height());
+        waiting_verify_block_queue_[thread_idx].push(
+            std::make_shared<WaitingBlockItem>(
+                std::make_shared<bft::protobuf::Block>(block), type));
+        return false;
+    }
+
+    return VerifyAggSignWithMembers(members, block);
 }
 
 void BftManager::HandleRootTxBlock(
@@ -380,63 +390,15 @@ void BftManager::HandleRootTxBlock(
 //         return;
 //     }
 
-    if (!AggSignValid(tx_bft.to_tx().block())) {
+    if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
             tx_bft.to_tx().block().height(),
             tx_bft.to_tx().block().tx_list(0).type());
         return;
     }
-
-    for (int32_t i = 0; i < tx_list.size(); ++i) {
-        DispatchPool::Instance()->RemoveTx(
-            tx_bft.to_tx().block().pool_index(),
-            tx_list[i].to_add(),
-            tx_list[i].type(),
-            tx_list[i].call_contract_step(),
-            tx_list[i].gid());
-    }
-
-    if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
-        auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-        auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
-        if (block::AccountManager::Instance()->AddBlockItemToCache(
-                queue_item_ptr->block_ptr,
-                queue_item_ptr->db_batch) != block::kBlockSuccess) {
-            BFT_ERROR("leader add block to db failed!");
-        }
-
-        block_queue_[header.thread_idx()].push(queue_item_ptr);
-        return;
-    }
-
-    for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].status() != 0) {
-            continue;
-        }
-
-        db::DbWriteBach db_batch;
-        if (block::AccountManager::Instance()->AddNewAccount(
-                tx_list[i],
-                tx_bft.to_tx().block().height(),
-                tx_bft.to_tx().block().hash(),
-                db_batch) != block::kBlockSuccess) {
-            continue;
-        }
-
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
-        }
-
-        if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
-            BFT_ERROR("dispatch pool failed!");
-        }
-    }
-
-    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
-    if (pool_mod_index >= 0) {
-        StartBft("", pool_mod_index);
-    }
+ 
+    BlockPtr block_ptr = nullptr;
+    HandleVerifiedBlock(header.thread_idx(), kRootBlock, tx_bft.to_tx().block(), block_ptr);
 }
 
 elect::MembersPtr BftManager::GetNetworkMembers(uint32_t network_id) {
@@ -492,51 +454,20 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-//     if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
-//         return;
-//     }
-
     auto src_block = tx_bft.to_tx().block();
-//     security::Signature sign;
-//     if (VerifyBlockSignature(
-//             bft_msg.member_index(),
-//             bft_msg,
-//             tx_bft.mutable_to_tx()->block(),
-//             sign) != kBftSuccess) {
-//         BFT_ERROR("verify signature error!");
-//         return;
-//     }
-
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");
         return;
     }
 
-    if (!AggSignValid(tx_bft.to_tx().block())) {
+    if (!AggSignValid(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("sync block agg sign verify failed!");
         return;
     }
 
-//     BFT_ERROR("HandleSyncBlock: %s", common::Encode::HexEncode(tx_bft.to_tx().block().hash()).c_str());
-    auto block_ptr = std::make_shared<bft::protobuf::Block>(tx_bft.to_tx().block());
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
-    if (block::AccountManager::Instance()->AddBlockItemToCache(
-            queue_item_ptr->block_ptr,
-            queue_item_ptr->db_batch) != block::kBlockSuccess) {
-        BFT_ERROR("leader add block to db failed!");
-        return;
-    }
-
-    block_queue_[header.thread_idx()].push(queue_item_ptr);
-    for (int32_t i = 0; i < tx_list.size(); ++i) {
-        DispatchPool::Instance()->RemoveTx(
-            block_ptr->pool_index(),
-            tx_list[i].to_add(),
-            tx_list[i].type(),
-            tx_list[i].call_contract_step(),
-            tx_list[i].gid());
-    }
+    BlockPtr block_ptr = nullptr;
+    HandleVerifiedBlock(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block(), block_ptr);
 }
 
 void BftManager::HandleToAccountTxBlock(
@@ -559,90 +490,19 @@ void BftManager::HandleToAccountTxBlock(
     }
 
     auto src_block = tx_bft.to_tx().block();
-//     security::Signature sign;
-//     if (VerifyBlockSignature(
-//             bft_msg.member_index(),
-//             bft_msg,
-//             tx_bft.mutable_to_tx()->block(),
-//             sign) != kBftSuccess) {
-//         BFT_ERROR("verify signature error!");
-//         return;
-//     }
-
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");
         return;
     }
 
-    if (!AggSignValid(tx_bft.to_tx().block())) {
+    if (!AggSignValid(header.thread_idx(), kToBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("ts block agg sign verify failed!");
         return;
     }
 
-    bool just_broadcast = false;
-    for (int32_t i = 0; i < tx_list.size(); ++i) {
-        if (tx_list[i].type() == common::kConsensusFinalStatistic) {
-            bft::protobuf::TxInfo tx_info;
-            if (elect::ElectManager::Instance()->CreateElectTransaction(
-                    tx_list[i].network_id(),
-                    tx_bft.to_tx().block().height(),
-                    tx_list[i],
-                    tx_info) != elect::kElectSuccess) {
-                BFT_ERROR("create elect transaction error!");
-                continue;
-            }
-
-            if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
-                BFT_ERROR("dispatch pool failed!");
-            }
-
-            continue;
-        }
-
-        if (tx_list[i].to().empty()) {
-            continue;
-        }
-
-        if (tx_list[i].status() != 0 &&
-                tx_list[i].type() != common::kConsensusCreateContract &&
-                tx_list[i].type() != common::kConsensusCallContract) {
-            BFT_ERROR("status error!");
-            continue;
-        }
-
-        tx_list[i].set_to_add(true);
-        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(tx_list[i].to());
-            if (account_ptr != nullptr) {
-                // root just create account address and assignment consensus network id
-                just_broadcast = true;
-                BFT_ERROR("account address exists error and broadcast it from [%s] to [%s]!",
-                    common::Encode::HexEncode(tx_list[i].from()).c_str(),
-                    common::Encode::HexEncode(tx_list[i].to()).c_str());
-                continue;
-            }
-
-            if (tx_list[i].amount() <= 0 &&
-                    tx_list[i].type() != common::kConsensusCreateContract) {
-                BFT_ERROR("transfer amount error!");
-                continue;
-            }
-        }
-
-        if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
-            BFT_ERROR("dispatch pool failed!");
-        }
-    }
-
-    if (just_broadcast) {
-//         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
-    }
-
-    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
-    if (pool_mod_index >= 0) {
-        StartBft("", pool_mod_index);
-    }
+    BlockPtr block_ptr = nullptr;
+    HandleVerifiedBlock(header.thread_idx(), kToBlock, tx_bft.to_tx().block(), block_ptr);
 }
 
 int BftManager::InitBft(
@@ -1792,6 +1652,232 @@ void BftManager::BlockToDb() {
     }
 
     block_to_db_tick_.CutOff(kBlockToDbPeriod, std::bind(&BftManager::BlockToDb, this));
+}
+
+void BftManager::HandleSyncWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr) {
+    auto tmp_block_ptr = block_ptr;
+    if (tmp_block_ptr == nullptr) {
+        tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);
+    }
+
+    if (thread_idx < transport::kMessageHandlerThreadCount) {
+        auto queue_item_ptr = std::make_shared<BlockToDbItem>(tmp_block_ptr);
+        if (block::AccountManager::Instance()->AddBlockItemToCache(
+            queue_item_ptr->block_ptr,
+            queue_item_ptr->db_batch) != block::kBlockSuccess) {
+            BFT_ERROR("leader add block to db failed!");
+            return;
+        }
+
+        block_queue_[thread_idx].push(queue_item_ptr);
+    } else {
+        db::DbWriteBach db_batch;
+        block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
+        block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch);
+        db::Db::Instance()->Put(db_batch);
+    }
+    
+    auto& tx_list = block.tx_list();
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            block_ptr->pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
+    }
+}
+
+void BftManager::HandleToWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr) {
+    bool just_broadcast = false;
+    auto& tx_list = block.tx_list();
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        if (tx_list[i].type() == common::kConsensusFinalStatistic) {
+            bft::protobuf::TxInfo tx_info;
+            if (elect::ElectManager::Instance()->CreateElectTransaction(
+                    tx_list[i].network_id(),
+                    block.height(),
+                    tx_list[i],
+                    tx_info) != elect::kElectSuccess) {
+                BFT_ERROR("create elect transaction error!");
+                continue;
+            }
+
+            if (DispatchPool::Instance()->Dispatch(tx_info) != kBftSuccess) {
+                BFT_ERROR("dispatch pool failed!");
+            }
+
+            continue;
+        }
+
+        if (tx_list[i].to().empty()) {
+            continue;
+        }
+
+        if (tx_list[i].status() != 0 &&
+                tx_list[i].type() != common::kConsensusCreateContract &&
+                tx_list[i].type() != common::kConsensusCallContract) {
+            BFT_ERROR("status error!");
+            continue;
+        }
+
+        auto new_tx = tx_list[i];
+        new_tx.set_to_add(true);
+        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(new_tx.to());
+            if (account_ptr != nullptr) {
+                // root just create account address and assignment consensus network id
+                just_broadcast = true;
+                BFT_ERROR("account address exists error and broadcast it from [%s] to [%s]!",
+                    common::Encode::HexEncode(new_tx.from()).c_str(),
+                    common::Encode::HexEncode(new_tx.to()).c_str());
+                continue;
+            }
+
+            if (new_tx.amount() <= 0 &&
+                    new_tx.type() != common::kConsensusCreateContract) {
+                BFT_ERROR("transfer amount error!");
+                continue;
+            }
+        }
+
+        if (DispatchPool::Instance()->Dispatch(new_tx) != kBftSuccess) {
+            BFT_ERROR("dispatch pool failed!");
+        }
+    }
+
+    if (just_broadcast) {
+//         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
+    }
+
+    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
+    if (pool_mod_index >= 0) {
+        StartBft("", pool_mod_index);
+    }
+}
+
+void BftManager::HandleRootWaitingBlock(
+        uint32_t thread_idx,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr) {
+    auto& tx_list = block.tx_list();
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            block.pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
+    }
+
+    if (tx_list.size() == 1 && IsRootSingleBlockTx(tx_list[0].type())) {
+        auto tmp_block_ptr = block_ptr;
+        if (tmp_block_ptr == nullptr) {
+            tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);
+        }
+
+        if (thread_idx < transport::kMessageHandlerThreadCount) {
+            auto queue_item_ptr = std::make_shared<BlockToDbItem>(tmp_block_ptr);
+            if (block::AccountManager::Instance()->AddBlockItemToCache(
+                queue_item_ptr->block_ptr,
+                queue_item_ptr->db_batch) != block::kBlockSuccess) {
+                BFT_ERROR("leader add block to db failed!");
+            }
+
+            block_queue_[thread_idx].push(queue_item_ptr);
+        } else {
+            db::DbWriteBach db_batch;
+            block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
+            block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch);
+            db::Db::Instance()->Put(db_batch);
+        }
+        
+        return;
+    }
+
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        if (tx_list[i].status() != 0) {
+            continue;
+        }
+
+        db::DbWriteBach db_batch;
+        if (block::AccountManager::Instance()->AddNewAccount(
+                tx_list[i],
+                block.height(),
+                block.hash(),
+                db_batch) != block::kBlockSuccess) {
+            continue;
+        }
+
+        auto st = db::Db::Instance()->Put(db_batch);
+        if (!st.ok()) {
+            exit(0);
+        }
+
+        if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
+            BFT_ERROR("dispatch pool failed!");
+        }
+    }
+
+    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
+    if (pool_mod_index >= 0) {
+        StartBft("", pool_mod_index);
+    }
+}
+
+void BftManager::HandleVerifiedBlock(
+        uint32_t thread_idx,
+        uint32_t type,
+        const bft::protobuf::Block& block,
+        BlockPtr& block_ptr) {
+    switch (type) {
+    case kRootBlock:
+        HandleRootWaitingBlock(thread_idx, block, block_ptr);
+        break;
+    case kSyncBlock:
+        HandleSyncWaitingBlock(thread_idx, block, block_ptr);
+        break;
+    case kToBlock:
+        HandleToWaitingBlock(thread_idx, block, block_ptr);
+        break;
+    default:
+        break;
+    }
+}
+
+void BftManager::VerifyWaitingBlock() {
+    for (uint32_t i = 0; i < transport::kMessageHandlerThreadCount; ++i) {
+        while (waiting_verify_block_queue_[i].size() > 0) {
+            WaitingBlockItemPtr waiting_ptr;
+            if (waiting_verify_block_queue_[i].pop(&waiting_ptr)) {
+                auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+                    waiting_ptr->block_ptr->electblock_height(),
+                    waiting_ptr->block_ptr->network_id());
+                if (members == nullptr) {
+                    waiting_block_set_.insert(waiting_ptr);
+                    continue;
+                }
+
+                if (VerifyAggSignWithMembers(members, *waiting_ptr->block_ptr)) {
+                    HandleVerifiedBlock(
+                        common::kInvalidUint32,
+                        waiting_ptr->type,
+                        *waiting_ptr->block_ptr,
+                        waiting_ptr->block_ptr);
+                }
+            }
+        }
+    }
+
+    verify_block_tick_.CutOff(
+        kBlockToDbPeriod,
+        std::bind(&BftManager::VerifyWaitingBlock, this));
 }
 
 }  // namespace bft
