@@ -410,6 +410,7 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 void BftInterface::CheckCommitRecallBackup() {
+    return;
     if (!this_node_is_leader_) {
         return;
     }
