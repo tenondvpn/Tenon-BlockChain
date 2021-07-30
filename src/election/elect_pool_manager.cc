@@ -151,7 +151,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
 
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
-        in->set_pool_idx_mod_num((*iter)->pool_index_mod_num);
+        in->set_pool_idx_mod_num((*iter)->init_pool_index_mod_num);
     }
 
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
@@ -393,7 +393,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     uint64_t max_balance = 0;
     consensus_pool_ptr->GetAllValidNodes(*cons_all, exists_shard_nodes);
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
-        (*iter)->pool_index_mod_num = -1;
+        (*iter)->init_pool_index_mod_num = -1;
     }
 
     std::unordered_map<std::string, NodeDetailPtr> id_node_map;
@@ -419,7 +419,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         waiting_pool_ptr->GetAllValidNodes(*pick_all, pick_all_vec);
         if (!pick_all_vec.empty()) {
             for (auto iter = pick_all_vec.begin(); iter != pick_all_vec.end(); ++iter) {
-                (*iter)->pool_index_mod_num = -1;
+                (*iter)->init_pool_index_mod_num = -1;
             }
 
             if (statistic_info.all_tx_count() / 2 * 3 >= kEachShardMaxTps) {
@@ -518,7 +518,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     *leader_count = leader_nodes.size();
     int32_t mode_idx = 0;
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
-        (*iter)->pool_index_mod_num = mode_idx++;
+        (*iter)->init_pool_index_mod_num = mode_idx++;
     }
 
     for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {

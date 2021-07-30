@@ -244,11 +244,11 @@ void ElectManager::ProcessNewElectBlock(
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
         for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
-            if ((*iter)->pool_index_mod_num >= 0) {
+            if ((*iter)->pool_index_mod_num[0] >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
                 if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
-                    local_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+                    local_node_pool_mod_num_ = (*iter)->pool_index_mod_num[0];
                     // create ecdh key
                 }
             }
@@ -261,11 +261,11 @@ void ElectManager::ProcessNewElectBlock(
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                 elect_block.shard_network_id(),
                 common::Encode::HexEncode((*iter)->id).c_str(),
-                (*iter)->pool_index_mod_num);
+                (*iter)->pool_index_mod_num[0]);
             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
                 << elect_block.shard_network_id()
                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
+                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num[0]
                 << ", leader count: " << elect_block.leader_count()
                 << std::endl;
         }
@@ -312,17 +312,15 @@ void ElectManager::ProcessNewElectBlock(
         for (auto iter = shard_members_ptr->begin();
                 iter != shard_members_ptr->end(); ++iter) {
             if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
-//                 if ((*iter)->pool_index_mod_num >= 0) {
-                    security::EcdhCreateKey::Instance()->CreateKey(
-                        (*iter)->pubkey,
-                        (*iter)->leader_ecdh_key);
+                security::EcdhCreateKey::Instance()->CreateKey(
+                    (*iter)->pubkey,
+                    (*iter)->leader_ecdh_key);
 //                     ELECT_DEBUG("network id: %d, member index: %d, set leader ecdh key: %s, leader id: %s",
 //                         elect_block.shard_network_id(),
 //                         index,
 //                         common::Encode::HexEncode((*iter)->leader_ecdh_key).c_str(),
 //                         common::Encode::HexEncode((*iter)->id).c_str());
-//                 }
-            }
+        }
 
             ++index;
         }
@@ -392,115 +390,13 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 
     return net_heights_iter->second;
 }
-// 
-// int32_t ElectManager::IsLeader(
-//         uint64_t elect_height,
-//         uint32_t network_id,
-//         const std::string& node_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             ELECT_ERROR("elect_height == common::kInvalidUint64");
-//             return -1;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {    
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             ELECT_ERROR("iter == elect_members_.end()[%lu]", elect_height);
-//             return -1;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->IsLeader(network_id, node_id);
-// }
-// 
-// uint32_t ElectManager::GetMemberIndex(
-//         uint64_t elect_height,
-//         uint32_t network_id,
-//         const std::string& node_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return kInvalidMemberIndex;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return kInvalidMemberIndex;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetMemberIndex(network_id, node_id);
-// }
-// 
+
 elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(
         uint64_t elect_height,
         uint32_t network_id) {
     return height_with_block_.GetMembersPtr(elect_height, network_id);
 }
-// 
-// elect::BftMemberPtr ElectManager::GetMember(
-//         uint64_t elect_height,
-//         uint32_t network_id,
-//         const std::string& node_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return nullptr;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return nullptr;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetMember(network_id, node_id);
-// }
-// 
-// elect::BftMemberPtr ElectManager::GetMember(
-//         uint64_t elect_height,
-//         uint32_t network_id,
-//         uint32_t index) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return nullptr;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return nullptr;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetMember(network_id, index);
-// }
-// 
+
 uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id) {
     auto members_ptr = GetNetworkMembersWithHeight(elect_height, network_id);
     if (members_ptr != nullptr) {
@@ -510,121 +406,8 @@ uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height, uint32_t 
     return 0;
 }
 
-// int32_t ElectManager::GetNetworkLeaderCount(uint64_t elect_height, uint32_t network_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return 0;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return 0;
-//         }
-// 
-//         mem_ptr = iter->second;
-//     }
-// 
-//     return mem_ptr->GetNetworkLeaderCount(network_id);
-// }
-// 
-// void ElectManager::SetNetworkMember(
-//         uint64_t elect_height,
-//         uint32_t network_id,
-//         elect::MembersPtr& members_ptr,
-//         elect::NodeIndexMapPtr& node_index_map,
-//         int32_t leader_count) {
-//     if (elect_height == common::kInvalidUint64) {
-//         return;
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter != elect_members_.end()) {
-//             return;
-//         }
-// 
-//         mem_ptr = std::make_shared<elect::MemberManager>();
-//         elect_members_[elect_height] = mem_ptr;
-//         auto net_heights_iter = elect_net_heights_map_.find(network_id);
-//         if (net_heights_iter == elect_net_heights_map_.end()) {
-//             elect_net_heights_map_[network_id] = elect_height;
-//         } else {
-//             if (elect_height > net_heights_iter->second) {
-//                 net_heights_iter->second = elect_height;
-//             }
-//         }
-//     }
-// 
-//     {
-//         Members tmp_leaders;
-//         uint32_t leader_count = GetNetworkLeaderCount(
-//             common::GlobalInfo::Instance()->network_id());
-//         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
-//         std::vector<uint32_t> node_index_vec;
-//         uint32_t index = 0;
-//         for (auto iter = members_ptr->begin(); iter != members_ptr->end(); ++iter) {
-//             if ((*iter)->pool_index_mod_num >= 0) {
-//                 tmp_leaders.push_back(*iter);
-//                 node_index_vec.push_back(index++);
-//             }
-//         }
-// 
-//         auto RandFunc = [&g2](int i) -> int {
-//             return g2() % i;
-//         };
-//         std::random_shuffle(node_index_vec.begin(), node_index_vec.end(), RandFunc);
-//         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
-//         std::unordered_set<std::string> leaders;
-//         for (auto iter = node_index_vec.begin();
-//                 iter != node_index_vec.end() &&
-//                 leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
-//             leaders.insert(tmp_leaders[*iter]->id);
-//         }
-// 
-//         network_leaders_[network_id] = leaders;
-//     }
-// 
-//     return mem_ptr->SetNetworkMember(network_id, members_ptr, node_index_map, leader_count);
-// }
-// 
-// std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint64_t elect_height, uint32_t network_id) {
-//     if (elect_height == common::kInvalidUint64) {
-//         elect_height = latest_height(network_id);
-//         if (elect_height == common::kInvalidUint64) {
-//             return nullptr;
-//         }
-//     }
-// 
-//     std::shared_ptr<MemberManager> mem_ptr = nullptr;
-//     {
-//         std::lock_guard<std::mutex> guard(elect_members_mutex_);
-//         auto iter = elect_members_.find(elect_height);
-//         if (iter == elect_members_.end()) {
-//             return nullptr;
-//         }
-// 
-//         return iter->second;
-//     }
-// }
-
 std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_id) {
     return mem_manager_ptr_[network_id];
-}
-
-int32_t ElectManager::IsLeader(uint32_t network_id, const std::string& node_id) {
-    auto mem_ptr = GetMemberWithId(network_id, node_id);
-    if (mem_ptr == nullptr) {
-        return -1;
-    }
-
-    return mem_ptr->pool_index_mod_num;
 }
 
 uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {

@@ -77,28 +77,10 @@ int DispatchPool::CheckFromAddressValid(
                     common::Encode::HexEncode(new_tx.from()).c_str());
                 return kBftError;
             }
-            
-            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
-            if (id.empty() || elect::ElectManager::Instance()->IsLeader(
-                    network::kRootCongressNetworkId,
-                    id) < 0) {
-                BFT_ERROR("id is valid elected member error.[%s]",
-                    common::Encode::HexEncode(id).c_str());
-                return kBftError;
-            }
         } else if (IsShardSingleBlockTx(new_tx.type())) {
             if (!block::IsPoolBaseAddress(new_tx.from())) {
                 BFT_ERROR("from is not valid shard base address[%s]",
                     common::Encode::HexEncode(new_tx.from()).c_str());
-                return kBftError;
-            }
-
-            auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(bft_msg.pubkey());
-            if (id.empty() || elect::ElectManager::Instance()->IsLeader(
-                    common::GlobalInfo::Instance()->network_id(),
-                    id) < 0) {
-                BFT_ERROR("id is valid elected member error.[%s]",
-                    common::Encode::HexEncode(id).c_str());
                 return kBftError;
             }
         } else {

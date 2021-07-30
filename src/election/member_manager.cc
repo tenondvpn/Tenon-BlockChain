@@ -71,19 +71,6 @@ uint32_t MemberManager::GetMemberCount(uint32_t network_id) {
     return network_members_[network_id]->size();
 }
 
-int32_t MemberManager::IsLeader(
-        uint32_t network_id,
-        const std::string& node_id) {
-    auto member_ptr = GetMember(network_id, node_id);
-    if (member_ptr == nullptr) {
-        ELECT_ERROR("member_ptr == nullptr network_id: %lu, id: %s",
-            network_id, common::Encode::HexDecode(node_id));
-        return -1;
-    }
-
-    return member_ptr->pool_index_mod_num;
-}
-
 uint32_t MemberManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
     std::lock_guard<std::mutex> guard(all_mutex_);
     assert(network_id < network::kConsensusShardEndNetworkId);  // just shard

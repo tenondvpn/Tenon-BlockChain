@@ -60,7 +60,6 @@ public:
     int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
     int CheckTimeout();
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
-    bool LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg);
     void CheckCommitRecallBackup();
 
@@ -348,6 +347,10 @@ public:
 
     uint64_t elect_height() {
         return elect_height_;
+    }
+
+    bool this_node_is_leader() {
+        return this_node_is_leader_;
     }
 
 protected:

@@ -1021,7 +1021,7 @@ int BftManager::LeaderCommit(
 //     uint64_t time4;
 //     uint64_t time5;
 
-    if (!bft_ptr->LeaderCheckLeaderValid(bft_msg)) {
+    if (!bft_ptr->this_node_is_leader()) {
         BFT_ERROR("check leader error.");
         return kBftError;
     }

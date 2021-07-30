@@ -38,7 +38,7 @@ struct ElectNodeDetail {
     uint64_t fts_value;
     std::unordered_set<std::string> valid_node_set;
     std::mutex valid_node_set_mutex;
-    int32_t pool_index_mod_num{ -1 };
+    int32_t init_pool_index_mod_num{ -1 };
 
     bool operator() (const ElectNodeDetail& left, const ElectNodeDetail& right) {
         return left.id < right.id;
@@ -69,8 +69,13 @@ struct BftMember {
             index(idx),
             public_ip(0),
             public_port(0),
-            dht_key(dhtkey),
-            pool_index_mod_num(pool_mode_num) {}
+            dht_key(dhtkey) {
+        for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
+            pool_index_mod_num[i] = -1;
+        }
+
+        pool_index_mod_num[0] = pool_mode_num;
+    }
 
     uint32_t net_id;
     std::string id;
@@ -81,9 +86,7 @@ struct BftMember {
     std::string dht_key;
     security::CommitSecret secret;
     security::CommitPoint commit_point;
-    int32_t pool_index_mod_num;
-    // Proxy other leaders that cannot work, initiate consensus
-    int32_t pool_index_agents[64];
+    int32_t pool_index_mod_num[common::kNodeModIndexMaxCount];
     std::string backup_ecdh_key;
     std::string leader_ecdh_key;
 };

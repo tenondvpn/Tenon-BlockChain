@@ -54,7 +54,7 @@ bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
         return false;
     }
 
-    if (local_mem_ptr->pool_index_mod_num == leader_mem_ptr_->pool_index_mod_num) {
+    if (local_mem_ptr == leader_mem_ptr_) {
         return true;
     }
 
@@ -79,9 +79,24 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if ((int32_t)pool_index() % leader_count != leader_mem_ptr_->pool_index_mod_num) {
+    bool leader_valid = false;
+    auto need_mod_index = (int32_t)pool_index() % leader_count;
+    for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
+        if (leader_mem_ptr_->pool_index_mod_num[i] < 0) {
+            return false;
+        }
+
+        if (need_mod_index == leader_mem_ptr_->pool_index_mod_num[i]) {
+            leader_valid = true;
+            break;
+        }
+    }
+
+    if (!leader_valid) {
         BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]",
-            pool_index(), leader_count, leader_mem_ptr_->pool_index_mod_num, (int32_t)pool_index() % leader_count,
+            pool_index(), leader_count,
+            leader_mem_ptr_->pool_index_mod_num[0],
+            (int32_t)pool_index() % leader_count,
             common::GlobalInfo::Instance()->network_id());
         return false;
     }
@@ -161,30 +176,6 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     }
 
     elect_height_ = local_elect_height;
-    if (leader_mem_ptr_->pool_index_mod_num < 0) {
-        BFT_ERROR("prepare message not leader.[%u][%d][%u]",
-            common::GlobalInfo::Instance()->network_id(),
-            bft_msg.member_index(),
-            leader_mem_ptr_->pool_index_mod_num);
-        return false;
-    }
-
-    return true;
-}
-
-bool BftInterface::LeaderCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg) {
-    std::lock_guard<std::mutex> guard(mutex_);
-    int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
-        common::GlobalInfo::Instance()->network_id());
-    if ((int32_t)pool_index() % leader_count != leader_mem_ptr_->pool_index_mod_num) {
-        BFT_ERROR("prepare message pool index invalid.[%u][%s][%d][%u]",
-            common::GlobalInfo::Instance()->network_id(),
-            common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
-            leader_mem_ptr_->pool_index_mod_num,
-            (int32_t)pool_index() % leader_count);
-        return false;
-    }
-
     return true;
 }
 
