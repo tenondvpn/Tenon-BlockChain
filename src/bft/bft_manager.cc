@@ -318,7 +318,10 @@ bool BftManager::VerifyAggSignWithMembers(const elect::MembersPtr& members, cons
     return true;
 }
 
-bool BftManager::AggSignValid(uint32_t thread_idx, uint32_t type, const bft::protobuf::Block& block) {
+bool BftManager::AggSignValid(
+        uint32_t thread_idx,
+        uint32_t type,
+        const bft::protobuf::Block& block) {
     assert(thread_idx < transport::kMessageHandlerThreadCount);
     if (!block.has_agg_sign_challenge() ||
             !block.has_agg_sign_response() ||
@@ -365,10 +368,6 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-//     if (block::BlockManager::Instance()->BlockExists(tx_bft.to_tx().block().hash())) {
-//         return;
-//     }
-
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");
@@ -379,16 +378,6 @@ void BftManager::HandleRootTxBlock(
         BFT_ERROR("HandleToAccountTxBlock failed mem index invalid: %u", bft_msg.member_index());
         return;
     }
-
-//     security::Signature sign;
-//     if (VerifyBlockSignature(
-//             bft_msg.member_index(),
-//             bft_msg,
-//             tx_bft.to_tx().block(),
-//             sign) != kBftSuccess) {
-//         BFT_ERROR("verify signature error!");
-//         return;
-//     }
 
     if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
