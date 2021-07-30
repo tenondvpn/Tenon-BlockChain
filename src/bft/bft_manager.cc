@@ -1182,8 +1182,8 @@ int BftManager::LeaderCallCommit(
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-//     BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
-//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 

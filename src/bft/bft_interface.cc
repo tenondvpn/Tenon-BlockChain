@@ -43,6 +43,11 @@ int BftInterface::Init() {
 
 bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
     std::lock_guard<std::mutex> guard(mutex_);
+    if (!leader_mem_ptr_) {
+        BFT_ERROR("get leader failed!.");
+        return false;
+    }
+
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
         BFT_ERROR("get local bft member failed!");
@@ -132,6 +137,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(mutex_);
     if (local_elect_height < bft_msg.elect_height()) {
+        BFT_ERROR("leader elect height not equal to local.");
         return false;
     }
 
@@ -139,11 +145,13 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         bft_msg.elect_height(),
         common::GlobalInfo::Instance()->network_id());
     if (members == nullptr || bft_msg.member_index() >= members->size()) {
+        BFT_ERROR("get members failed!.");
         return false;
     }
 
     leader_mem_ptr_ = (*members)[bft_msg.member_index()];
     if (!leader_mem_ptr_) {
+        BFT_ERROR("get leader failed!.");
         return false;
     }
 
