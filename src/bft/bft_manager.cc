@@ -771,6 +771,7 @@ int BftManager::LeaderPrecommit(
     if (member_ptr->public_ip == 0) {
         member_ptr->public_ip = common::IpStringToUint32(bft_msg.node_ip());
         member_ptr->public_port = bft_msg.node_port();
+        BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
     }
 
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);

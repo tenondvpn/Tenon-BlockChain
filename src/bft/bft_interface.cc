@@ -516,6 +516,7 @@ void BftInterface::CheckCommitRecallBackup() {
 
             auto mem_ptr = (*members_ptr_)[i];
             if (mem_ptr->public_ip == 0) {
+                BFT_DEBUG("prepared member public ip is 0, index: %d", i);
                 assert(false);
                 continue;
             }
