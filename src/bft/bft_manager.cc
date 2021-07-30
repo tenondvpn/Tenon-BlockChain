@@ -650,15 +650,15 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     }
 
     auto local_node = dht_ptr->local_node();
-    transport::protobuf::Header msg;
+    auto prepare_msg = std::make_shared<transport::protobuf::Header>();
     BftProto::LeaderCreatePrepare(
         local_node,
         prepare_data,
         bft_ptr,
         leader_sig,
-        msg);
-
-    network::Route::Instance()->Send(msg);
+        *prepare_msg);
+    bft_ptr->set_leader_precommit_msg(prepare_msg);
+    network::Route::Instance()->Send(*prepare_msg);
     bft_ptr->init_prepare_timeout();
 
     // (TODO): just for test
@@ -785,6 +785,7 @@ int BftManager::LeaderPrecommit(
             member_ptr->backup_ecdh_key,
             bft_msg.backup_enc_data(),
             &dec_data) != security::kSecuritySuccess) {
+        bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }

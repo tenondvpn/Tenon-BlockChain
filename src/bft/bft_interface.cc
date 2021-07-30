@@ -410,9 +410,27 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 void BftInterface::CheckCommitRecallBackup() {
-    return;
     if (!this_node_is_leader_) {
         return;
+    }
+
+    std::set<uint32_t> prepare_enc_failed_nodes;
+    {
+        std::lock_guard<std::mutex> guard(prepare_enc_failed_nodes_mutex_);
+        prepare_enc_failed_nodes.swap(prepare_enc_failed_nodes_);
+    }
+
+    for (auto iter = prepare_enc_failed_nodes.begin();
+            iter != prepare_enc_failed_nodes.end(); ++iter) {
+        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), *iter);
+        if (mem_ptr->public_ip == 0) {
+            continue;
+        }
+
+        // send precommit to backup and get response again
+        std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
     }
 
     if (status_ != kBftCommit) {

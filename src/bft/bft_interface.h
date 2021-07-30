@@ -335,6 +335,16 @@ public:
             std::shared_ptr<transport::protobuf::Header>& leader_precommit_msg) {
         leader_precommit_msg_ = leader_precommit_msg;
     }
+    
+    void set_leader_prepare_msg(
+            std::shared_ptr<transport::protobuf::Header>& leader_prepare_msg) {
+        leader_prepare_msg_ = leader_prepare_msg;
+    }
+
+    void add_prepair_failed_node_index(uint32_t index) {
+        std::lock_guard<std::mutex> guard(prepare_enc_failed_nodes_mutex_);
+        prepare_enc_failed_nodes_.insert(index);
+    }
 
 protected:
     BftInterface();
@@ -394,7 +404,10 @@ private:
     elect::BftMemberPtr leader_mem_ptr_{ nullptr };
     std::shared_ptr<transport::protobuf::Header> backup_prepare_msg_{ nullptr };
     std::shared_ptr<transport::protobuf::Header> backup_precommit_msg_{ nullptr };
+    std::shared_ptr<transport::protobuf::Header> leader_prepare_msg_{ nullptr };
     std::shared_ptr<transport::protobuf::Header> leader_precommit_msg_{ nullptr };
+    std::set<uint32_t> prepare_enc_failed_nodes_;
+    std::mutex prepare_enc_failed_nodes_mutex_;
     bool this_node_is_leader_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
