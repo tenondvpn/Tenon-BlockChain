@@ -81,7 +81,9 @@ struct BftMember {
     std::string dht_key;
     security::CommitSecret secret;
     security::CommitPoint commit_point;
-    volatile int32_t pool_index_mod_num;
+    int32_t pool_index_mod_num;
+    // Proxy other leaders that cannot work, initiate consensus
+    int32_t pool_index_agents[64];
     std::string backup_ecdh_key;
     std::string leader_ecdh_key;
 };

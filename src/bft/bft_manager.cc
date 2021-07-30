@@ -68,12 +68,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-//     BFT_ERROR("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -103,8 +103,8 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     if (bft_msg.leader()) {
         auto bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
-//             BFT_DEBUG("leader get bft gid failed[%s]",
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str());
+            BFT_DEBUG("leader get bft gid failed[%s]",
+                common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
@@ -556,6 +556,7 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
+    BFT_DEBUG("this node is leader and start bft: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
@@ -819,13 +820,12 @@ int BftManager::LeaderPrecommit(
         LeaderCallPrecommit(bft_ptr);
 //         time4 = common::TimeUtils::TimestampUs();
     } else if (res == kBftOppose) {
-//         BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u, bft: %s", bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u, bft: %s", bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
         LeaderCallPrecommitOppose(bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
 //         time4 = common::TimeUtils::TimestampUs();
     } else {
-//         BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u, bft: %s", bft_msg.agree(), bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
-//         time4 = common::TimeUtils::TimestampUs();
+        BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u, bft: %s", bft_msg.agree(), bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
     }
 
 //     BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3);

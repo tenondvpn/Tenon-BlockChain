@@ -358,14 +358,12 @@ protected:
         prpare_block_ = prpare_block;
     }
 
-    elect::MembersPtr members_ptr_{ nullptr };
-    std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };
-
-// private:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
     void RechallengePrecommitClear();
 
+    elect::MembersPtr members_ptr_{ nullptr };
+    std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };
     uint32_t pool_index_{ (std::numeric_limits<uint32_t>::max)() };
     std::string gid_;
     uint32_t network_id_{ 0 };
