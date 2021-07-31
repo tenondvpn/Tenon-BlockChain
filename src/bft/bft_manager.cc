@@ -553,7 +553,7 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
     std::string prepare_data;
     int leader_pre = LeaderPrepare(bft_ptr, pool_mod_index);
     if (leader_pre != kBftSuccess) {
-        if (!bft_ptr->pool_index() != common::kInvalidPoolIndex) {
+        if (bft_ptr->pool_index() != common::kInvalidPoolIndex) {
             bft_ptr->clear_item_index_vec();
             DispatchPool::Instance()->BftOver(bft_ptr);
         }
