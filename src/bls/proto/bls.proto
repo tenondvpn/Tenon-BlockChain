@@ -13,20 +13,21 @@ message VerifyVecItem {
 
 message VerifyVecBrdReq {
     repeated VerifyVecItem verify_vec = 1;
-    optional uint32 index = 2;
 }
 
 message SwapSecKeyReq {
     optional bytes sec_key = 1;
-    optional uint32 index = 2;
 }
 
 message AgainstParticipant {
-    optional uint32 index = 1;
+    optional uint32 against_index = 1;
 }
 
 message BlsMessage {
     optional VerifyVecBrdReq verify_brd = 1;
     optional SwapSecKeyReq swap_req = 2;
     optional AgainstParticipant against_req = 3;
+    optional uint32 index = 4;
+    optional bytes sign_ch = 5;
+	optional bytes sign_res = 6;
 }

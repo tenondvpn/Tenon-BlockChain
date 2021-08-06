@@ -399,23 +399,13 @@ class VerifyVecBrdReq : public ::google::protobuf::Message /* @@protoc_insertion
   const ::google::protobuf::RepeatedPtrField< ::bls::block::protobuf::VerifyVecItem >&
       verify_vec() const;
 
-  // optional uint32 index = 2;
-  bool has_index() const;
-  void clear_index();
-  static const int kIndexFieldNumber = 2;
-  ::google::protobuf::uint32 index() const;
-  void set_index(::google::protobuf::uint32 value);
-
   // @@protoc_insertion_point(class_scope:bls.block.protobuf.VerifyVecBrdReq)
  private:
-  void set_has_index();
-  void clear_has_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::bls::block::protobuf::VerifyVecItem > verify_vec_;
-  ::google::protobuf::uint32 index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -529,25 +519,15 @@ class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::std::string* release_sec_key();
   void set_allocated_sec_key(::std::string* sec_key);
 
-  // optional uint32 index = 2;
-  bool has_index() const;
-  void clear_index();
-  static const int kIndexFieldNumber = 2;
-  ::google::protobuf::uint32 index() const;
-  void set_index(::google::protobuf::uint32 value);
-
   // @@protoc_insertion_point(class_scope:bls.block.protobuf.SwapSecKeyReq)
  private:
   void set_has_sec_key();
   void clear_has_sec_key();
-  void set_has_index();
-  void clear_has_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr sec_key_;
-  ::google::protobuf::uint32 index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -646,22 +626,22 @@ class AgainstParticipant : public ::google::protobuf::Message /* @@protoc_insert
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 index = 1;
-  bool has_index() const;
-  void clear_index();
-  static const int kIndexFieldNumber = 1;
-  ::google::protobuf::uint32 index() const;
-  void set_index(::google::protobuf::uint32 value);
+  // optional uint32 against_index = 1;
+  bool has_against_index() const;
+  void clear_against_index();
+  static const int kAgainstIndexFieldNumber = 1;
+  ::google::protobuf::uint32 against_index() const;
+  void set_against_index(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:bls.block.protobuf.AgainstParticipant)
  private:
-  void set_has_index();
-  void clear_has_index();
+  void set_has_against_index();
+  void clear_has_against_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::uint32 index_;
+  ::google::protobuf::uint32 against_index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -760,6 +740,36 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
+  // optional bytes sign_ch = 5;
+  bool has_sign_ch() const;
+  void clear_sign_ch();
+  static const int kSignChFieldNumber = 5;
+  const ::std::string& sign_ch() const;
+  void set_sign_ch(const ::std::string& value);
+  #if LANG_CXX11
+  void set_sign_ch(::std::string&& value);
+  #endif
+  void set_sign_ch(const char* value);
+  void set_sign_ch(const void* value, size_t size);
+  ::std::string* mutable_sign_ch();
+  ::std::string* release_sign_ch();
+  void set_allocated_sign_ch(::std::string* sign_ch);
+
+  // optional bytes sign_res = 6;
+  bool has_sign_res() const;
+  void clear_sign_res();
+  static const int kSignResFieldNumber = 6;
+  const ::std::string& sign_res() const;
+  void set_sign_res(const ::std::string& value);
+  #if LANG_CXX11
+  void set_sign_res(::std::string&& value);
+  #endif
+  void set_sign_res(const char* value);
+  void set_sign_res(const void* value, size_t size);
+  ::std::string* mutable_sign_res();
+  ::std::string* release_sign_res();
+  void set_allocated_sign_res(::std::string* sign_res);
+
   // optional .bls.block.protobuf.VerifyVecBrdReq verify_brd = 1;
   bool has_verify_brd() const;
   void clear_verify_brd();
@@ -796,6 +806,13 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::bls::block::protobuf::AgainstParticipant* mutable_against_req();
   void set_allocated_against_req(::bls::block::protobuf::AgainstParticipant* against_req);
 
+  // optional uint32 index = 4;
+  bool has_index() const;
+  void clear_index();
+  static const int kIndexFieldNumber = 4;
+  ::google::protobuf::uint32 index() const;
+  void set_index(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:bls.block.protobuf.BlsMessage)
  private:
   void set_has_verify_brd();
@@ -804,13 +821,22 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_swap_req();
   void set_has_against_req();
   void clear_has_against_req();
+  void set_has_index();
+  void clear_has_index();
+  void set_has_sign_ch();
+  void clear_has_sign_ch();
+  void set_has_sign_res();
+  void clear_has_sign_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr sign_ch_;
+  ::google::protobuf::internal::ArenaStringPtr sign_res_;
   ::bls::block::protobuf::VerifyVecBrdReq* verify_brd_;
   ::bls::block::protobuf::SwapSecKeyReq* swap_req_;
   ::bls::block::protobuf::AgainstParticipant* against_req_;
+  ::google::protobuf::uint32 index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // ===================================================================
@@ -1254,30 +1280,6 @@ VerifyVecBrdReq::verify_vec() const {
   return verify_vec_;
 }
 
-// optional uint32 index = 2;
-inline bool VerifyVecBrdReq::has_index() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void VerifyVecBrdReq::set_has_index() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void VerifyVecBrdReq::clear_has_index() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void VerifyVecBrdReq::clear_index() {
-  index_ = 0u;
-  clear_has_index();
-}
-inline ::google::protobuf::uint32 VerifyVecBrdReq::index() const {
-  // @@protoc_insertion_point(field_get:bls.block.protobuf.VerifyVecBrdReq.index)
-  return index_;
-}
-inline void VerifyVecBrdReq::set_index(::google::protobuf::uint32 value) {
-  set_has_index();
-  index_ = value;
-  // @@protoc_insertion_point(field_set:bls.block.protobuf.VerifyVecBrdReq.index)
-}
-
 // -------------------------------------------------------------------
 
 // SwapSecKeyReq
@@ -1348,56 +1350,32 @@ inline void SwapSecKeyReq::set_allocated_sec_key(::std::string* sec_key) {
   // @@protoc_insertion_point(field_set_allocated:bls.block.protobuf.SwapSecKeyReq.sec_key)
 }
 
-// optional uint32 index = 2;
-inline bool SwapSecKeyReq::has_index() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SwapSecKeyReq::set_has_index() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SwapSecKeyReq::clear_has_index() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SwapSecKeyReq::clear_index() {
-  index_ = 0u;
-  clear_has_index();
-}
-inline ::google::protobuf::uint32 SwapSecKeyReq::index() const {
-  // @@protoc_insertion_point(field_get:bls.block.protobuf.SwapSecKeyReq.index)
-  return index_;
-}
-inline void SwapSecKeyReq::set_index(::google::protobuf::uint32 value) {
-  set_has_index();
-  index_ = value;
-  // @@protoc_insertion_point(field_set:bls.block.protobuf.SwapSecKeyReq.index)
-}
-
 // -------------------------------------------------------------------
 
 // AgainstParticipant
 
-// optional uint32 index = 1;
-inline bool AgainstParticipant::has_index() const {
+// optional uint32 against_index = 1;
+inline bool AgainstParticipant::has_against_index() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void AgainstParticipant::set_has_index() {
+inline void AgainstParticipant::set_has_against_index() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void AgainstParticipant::clear_has_index() {
+inline void AgainstParticipant::clear_has_against_index() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void AgainstParticipant::clear_index() {
-  index_ = 0u;
-  clear_has_index();
+inline void AgainstParticipant::clear_against_index() {
+  against_index_ = 0u;
+  clear_has_against_index();
 }
-inline ::google::protobuf::uint32 AgainstParticipant::index() const {
-  // @@protoc_insertion_point(field_get:bls.block.protobuf.AgainstParticipant.index)
-  return index_;
+inline ::google::protobuf::uint32 AgainstParticipant::against_index() const {
+  // @@protoc_insertion_point(field_get:bls.block.protobuf.AgainstParticipant.against_index)
+  return against_index_;
 }
-inline void AgainstParticipant::set_index(::google::protobuf::uint32 value) {
-  set_has_index();
-  index_ = value;
-  // @@protoc_insertion_point(field_set:bls.block.protobuf.AgainstParticipant.index)
+inline void AgainstParticipant::set_against_index(::google::protobuf::uint32 value) {
+  set_has_against_index();
+  against_index_ = value;
+  // @@protoc_insertion_point(field_set:bls.block.protobuf.AgainstParticipant.against_index)
 }
 
 // -------------------------------------------------------------------
@@ -1406,13 +1384,13 @@ inline void AgainstParticipant::set_index(::google::protobuf::uint32 value) {
 
 // optional .bls.block.protobuf.VerifyVecBrdReq verify_brd = 1;
 inline bool BlsMessage::has_verify_brd() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void BlsMessage::set_has_verify_brd() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void BlsMessage::clear_has_verify_brd() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void BlsMessage::clear_verify_brd() {
   if (verify_brd_ != NULL) verify_brd_->Clear();
@@ -1464,13 +1442,13 @@ inline void BlsMessage::set_allocated_verify_brd(::bls::block::protobuf::VerifyV
 
 // optional .bls.block.protobuf.SwapSecKeyReq swap_req = 2;
 inline bool BlsMessage::has_swap_req() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void BlsMessage::set_has_swap_req() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void BlsMessage::clear_has_swap_req() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void BlsMessage::clear_swap_req() {
   if (swap_req_ != NULL) swap_req_->Clear();
@@ -1522,13 +1500,13 @@ inline void BlsMessage::set_allocated_swap_req(::bls::block::protobuf::SwapSecKe
 
 // optional .bls.block.protobuf.AgainstParticipant against_req = 3;
 inline bool BlsMessage::has_against_req() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void BlsMessage::set_has_against_req() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void BlsMessage::clear_has_against_req() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void BlsMessage::clear_against_req() {
   if (against_req_ != NULL) against_req_->Clear();
@@ -1576,6 +1554,162 @@ inline void BlsMessage::set_allocated_against_req(::bls::block::protobuf::Agains
   }
   against_req_ = against_req;
   // @@protoc_insertion_point(field_set_allocated:bls.block.protobuf.BlsMessage.against_req)
+}
+
+// optional uint32 index = 4;
+inline bool BlsMessage::has_index() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void BlsMessage::set_has_index() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void BlsMessage::clear_has_index() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void BlsMessage::clear_index() {
+  index_ = 0u;
+  clear_has_index();
+}
+inline ::google::protobuf::uint32 BlsMessage::index() const {
+  // @@protoc_insertion_point(field_get:bls.block.protobuf.BlsMessage.index)
+  return index_;
+}
+inline void BlsMessage::set_index(::google::protobuf::uint32 value) {
+  set_has_index();
+  index_ = value;
+  // @@protoc_insertion_point(field_set:bls.block.protobuf.BlsMessage.index)
+}
+
+// optional bytes sign_ch = 5;
+inline bool BlsMessage::has_sign_ch() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BlsMessage::set_has_sign_ch() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BlsMessage::clear_has_sign_ch() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BlsMessage::clear_sign_ch() {
+  sign_ch_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_sign_ch();
+}
+inline const ::std::string& BlsMessage::sign_ch() const {
+  // @@protoc_insertion_point(field_get:bls.block.protobuf.BlsMessage.sign_ch)
+  return sign_ch_.GetNoArena();
+}
+inline void BlsMessage::set_sign_ch(const ::std::string& value) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:bls.block.protobuf.BlsMessage.sign_ch)
+}
+#if LANG_CXX11
+inline void BlsMessage::set_sign_ch(::std::string&& value) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:bls.block.protobuf.BlsMessage.sign_ch)
+}
+#endif
+inline void BlsMessage::set_sign_ch(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:bls.block.protobuf.BlsMessage.sign_ch)
+}
+inline void BlsMessage::set_sign_ch(const void* value, size_t size) {
+  set_has_sign_ch();
+  sign_ch_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:bls.block.protobuf.BlsMessage.sign_ch)
+}
+inline ::std::string* BlsMessage::mutable_sign_ch() {
+  set_has_sign_ch();
+  // @@protoc_insertion_point(field_mutable:bls.block.protobuf.BlsMessage.sign_ch)
+  return sign_ch_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsMessage::release_sign_ch() {
+  // @@protoc_insertion_point(field_release:bls.block.protobuf.BlsMessage.sign_ch)
+  if (!has_sign_ch()) {
+    return NULL;
+  }
+  clear_has_sign_ch();
+  return sign_ch_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsMessage::set_allocated_sign_ch(::std::string* sign_ch) {
+  if (sign_ch != NULL) {
+    set_has_sign_ch();
+  } else {
+    clear_has_sign_ch();
+  }
+  sign_ch_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sign_ch);
+  // @@protoc_insertion_point(field_set_allocated:bls.block.protobuf.BlsMessage.sign_ch)
+}
+
+// optional bytes sign_res = 6;
+inline bool BlsMessage::has_sign_res() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BlsMessage::set_has_sign_res() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BlsMessage::clear_has_sign_res() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BlsMessage::clear_sign_res() {
+  sign_res_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_sign_res();
+}
+inline const ::std::string& BlsMessage::sign_res() const {
+  // @@protoc_insertion_point(field_get:bls.block.protobuf.BlsMessage.sign_res)
+  return sign_res_.GetNoArena();
+}
+inline void BlsMessage::set_sign_res(const ::std::string& value) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:bls.block.protobuf.BlsMessage.sign_res)
+}
+#if LANG_CXX11
+inline void BlsMessage::set_sign_res(::std::string&& value) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:bls.block.protobuf.BlsMessage.sign_res)
+}
+#endif
+inline void BlsMessage::set_sign_res(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:bls.block.protobuf.BlsMessage.sign_res)
+}
+inline void BlsMessage::set_sign_res(const void* value, size_t size) {
+  set_has_sign_res();
+  sign_res_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:bls.block.protobuf.BlsMessage.sign_res)
+}
+inline ::std::string* BlsMessage::mutable_sign_res() {
+  set_has_sign_res();
+  // @@protoc_insertion_point(field_mutable:bls.block.protobuf.BlsMessage.sign_res)
+  return sign_res_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsMessage::release_sign_res() {
+  // @@protoc_insertion_point(field_release:bls.block.protobuf.BlsMessage.sign_res)
+  if (!has_sign_res()) {
+    return NULL;
+  }
+  clear_has_sign_res();
+  return sign_res_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsMessage::set_allocated_sign_res(::std::string* sign_res) {
+  if (sign_res != NULL) {
+    set_has_sign_res();
+  } else {
+    clear_has_sign_res();
+  }
+  sign_res_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sign_res);
+  // @@protoc_insertion_point(field_set_allocated:bls.block.protobuf.BlsMessage.sign_res)
 }
 
 #ifdef __GNUC__

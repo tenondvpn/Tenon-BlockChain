@@ -165,24 +165,20 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::VerifyVecBrdReq, verify_vec_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::VerifyVecBrdReq, index_),
   ~0u,
-  0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::SwapSecKeyReq, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::SwapSecKeyReq, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::SwapSecKeyReq, sec_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::SwapSecKeyReq, index_),
   0,
-  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::AgainstParticipant, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::AgainstParticipant, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::AgainstParticipant, index_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::AgainstParticipant, against_index_),
   0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, _internal_metadata_),
@@ -192,16 +188,22 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, verify_brd_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, swap_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, against_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, index_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, sign_ch_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::bls::block::protobuf::BlsMessage, sign_res_),
+  2,
+  3,
+  4,
+  5,
   0,
   1,
-  2,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 11, sizeof(::bls::block::protobuf::VerifyVecItem)},
-  { 17, 24, sizeof(::bls::block::protobuf::VerifyVecBrdReq)},
-  { 26, 33, sizeof(::bls::block::protobuf::SwapSecKeyReq)},
-  { 35, 41, sizeof(::bls::block::protobuf::AgainstParticipant)},
-  { 42, 50, sizeof(::bls::block::protobuf::BlsMessage)},
+  { 17, 23, sizeof(::bls::block::protobuf::VerifyVecBrdReq)},
+  { 24, 30, sizeof(::bls::block::protobuf::SwapSecKeyReq)},
+  { 31, 37, sizeof(::bls::block::protobuf::AgainstParticipant)},
+  { 38, 49, sizeof(::bls::block::protobuf::BlsMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -236,19 +238,20 @@ void AddDescriptorsImpl() {
       "\n\tbls.proto\022\022bls.block.protobuf\"c\n\rVerif"
       "yVecItem\022\014\n\004x_c0\030\001 \001(\014\022\014\n\004x_c1\030\002 \001(\014\022\014\n\004"
       "y_c0\030\003 \001(\014\022\014\n\004y_c1\030\004 \001(\014\022\014\n\004z_c0\030\005 \001(\014\022\014"
-      "\n\004z_c1\030\006 \001(\014\"W\n\017VerifyVecBrdReq\0225\n\nverif"
+      "\n\004z_c1\030\006 \001(\014\"H\n\017VerifyVecBrdReq\0225\n\nverif"
       "y_vec\030\001 \003(\0132!.bls.block.protobuf.VerifyV"
-      "ecItem\022\r\n\005index\030\002 \001(\r\"/\n\rSwapSecKeyReq\022\017"
-      "\n\007sec_key\030\001 \001(\014\022\r\n\005index\030\002 \001(\r\"#\n\022Agains"
-      "tParticipant\022\r\n\005index\030\001 \001(\r\"\267\001\n\nBlsMessa"
-      "ge\0227\n\nverify_brd\030\001 \001(\0132#.bls.block.proto"
-      "buf.VerifyVecBrdReq\0223\n\010swap_req\030\002 \001(\0132!."
-      "bls.block.protobuf.SwapSecKeyReq\022;\n\013agai"
-      "nst_req\030\003 \001(\0132&.bls.block.protobuf.Again"
-      "stParticipant"
+      "ecItem\" \n\rSwapSecKeyReq\022\017\n\007sec_key\030\001 \001(\014"
+      "\"+\n\022AgainstParticipant\022\025\n\ragainst_index\030"
+      "\001 \001(\r\"\351\001\n\nBlsMessage\0227\n\nverify_brd\030\001 \001(\013"
+      "2#.bls.block.protobuf.VerifyVecBrdReq\0223\n"
+      "\010swap_req\030\002 \001(\0132!.bls.block.protobuf.Swa"
+      "pSecKeyReq\022;\n\013against_req\030\003 \001(\0132&.bls.bl"
+      "ock.protobuf.AgainstParticipant\022\r\n\005index"
+      "\030\004 \001(\r\022\017\n\007sign_ch\030\005 \001(\014\022\020\n\010sign_res\030\006 \001("
+      "\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 493);
+      descriptor, 521);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bls.proto", &protobuf_RegisterTypes);
 }
@@ -759,7 +762,6 @@ void VerifyVecBrdReq::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int VerifyVecBrdReq::kVerifyVecFieldNumber;
-const int VerifyVecBrdReq::kIndexFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 VerifyVecBrdReq::VerifyVecBrdReq()
@@ -775,12 +777,10 @@ VerifyVecBrdReq::VerifyVecBrdReq(const VerifyVecBrdReq& from)
       _has_bits_(from._has_bits_),
       verify_vec_(from.verify_vec_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  index_ = from.index_;
   // @@protoc_insertion_point(copy_constructor:bls.block.protobuf.VerifyVecBrdReq)
 }
 
 void VerifyVecBrdReq::SharedCtor() {
-  index_ = 0u;
 }
 
 VerifyVecBrdReq::~VerifyVecBrdReq() {
@@ -812,7 +812,6 @@ void VerifyVecBrdReq::Clear() {
   (void) cached_has_bits;
 
   verify_vec_.Clear();
-  index_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -833,20 +832,6 @@ bool VerifyVecBrdReq::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                 input, add_verify_vec()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional uint32 index = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          set_has_index();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &index_)));
         } else {
           goto handle_unusual;
         }
@@ -888,12 +873,6 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
       output);
   }
 
-  cached_has_bits = _has_bits_[0];
-  // optional uint32 index = 2;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->index(), output);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -914,12 +893,6 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->verify_vec(static_cast<int>(i)), deterministic, target);
-  }
-
-  cached_has_bits = _has_bits_[0];
-  // optional uint32 index = 2;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->index(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -950,13 +923,6 @@ size_t VerifyVecBrdReq::ByteSizeLong() const {
     }
   }
 
-  // optional uint32 index = 2;
-  if (has_index()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->index());
-  }
-
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -985,9 +951,6 @@ void VerifyVecBrdReq::MergeFrom(const VerifyVecBrdReq& from) {
   (void) cached_has_bits;
 
   verify_vec_.MergeFrom(from.verify_vec_);
-  if (from.has_index()) {
-    set_index(from.index());
-  }
 }
 
 void VerifyVecBrdReq::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1015,7 +978,6 @@ void VerifyVecBrdReq::Swap(VerifyVecBrdReq* other) {
 void VerifyVecBrdReq::InternalSwap(VerifyVecBrdReq* other) {
   using std::swap;
   CastToBase(&verify_vec_)->InternalSwap(CastToBase(&other->verify_vec_));
-  swap(index_, other->index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -1032,7 +994,6 @@ void SwapSecKeyReq::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int SwapSecKeyReq::kSecKeyFieldNumber;
-const int SwapSecKeyReq::kIndexFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 SwapSecKeyReq::SwapSecKeyReq()
@@ -1051,13 +1012,11 @@ SwapSecKeyReq::SwapSecKeyReq(const SwapSecKeyReq& from)
   if (from.has_sec_key()) {
     sec_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sec_key_);
   }
-  index_ = from.index_;
   // @@protoc_insertion_point(copy_constructor:bls.block.protobuf.SwapSecKeyReq)
 }
 
 void SwapSecKeyReq::SharedCtor() {
   sec_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  index_ = 0u;
 }
 
 SwapSecKeyReq::~SwapSecKeyReq() {
@@ -1093,7 +1052,6 @@ void SwapSecKeyReq::Clear() {
   if (cached_has_bits & 0x00000001u) {
     sec_key_.ClearNonDefaultToEmptyNoArena();
   }
-  index_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1114,20 +1072,6 @@ bool SwapSecKeyReq::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_sec_key()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional uint32 index = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          set_has_index();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &index_)));
         } else {
           goto handle_unusual;
         }
@@ -1167,11 +1111,6 @@ void SwapSecKeyReq::SerializeWithCachedSizes(
       1, this->sec_key(), output);
   }
 
-  // optional uint32 index = 2;
-  if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->index(), output);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -1194,11 +1133,6 @@ void SwapSecKeyReq::SerializeWithCachedSizes(
         1, this->sec_key(), target);
   }
 
-  // optional uint32 index = 2;
-  if (cached_has_bits & 0x00000002u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->index(), target);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -1216,22 +1150,13 @@ size_t SwapSecKeyReq::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 3u) {
-    // optional bytes sec_key = 1;
-    if (has_sec_key()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->sec_key());
-    }
-
-    // optional uint32 index = 2;
-    if (has_index()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->index());
-    }
-
+  // optional bytes sec_key = 1;
+  if (has_sec_key()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->sec_key());
   }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -1259,16 +1184,9 @@ void SwapSecKeyReq::MergeFrom(const SwapSecKeyReq& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      set_has_sec_key();
-      sec_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sec_key_);
-    }
-    if (cached_has_bits & 0x00000002u) {
-      index_ = from.index_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  if (from.has_sec_key()) {
+    set_has_sec_key();
+    sec_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sec_key_);
   }
 }
 
@@ -1298,7 +1216,6 @@ void SwapSecKeyReq::InternalSwap(SwapSecKeyReq* other) {
   using std::swap;
   sec_key_.Swap(&other->sec_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  swap(index_, other->index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -1314,7 +1231,7 @@ void SwapSecKeyReq::InternalSwap(SwapSecKeyReq* other) {
 void AgainstParticipant::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int AgainstParticipant::kIndexFieldNumber;
+const int AgainstParticipant::kAgainstIndexFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 AgainstParticipant::AgainstParticipant()
@@ -1329,12 +1246,12 @@ AgainstParticipant::AgainstParticipant(const AgainstParticipant& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  index_ = from.index_;
+  against_index_ = from.against_index_;
   // @@protoc_insertion_point(copy_constructor:bls.block.protobuf.AgainstParticipant)
 }
 
 void AgainstParticipant::SharedCtor() {
-  index_ = 0u;
+  against_index_ = 0u;
 }
 
 AgainstParticipant::~AgainstParticipant() {
@@ -1365,7 +1282,7 @@ void AgainstParticipant::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  index_ = 0u;
+  against_index_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1380,14 +1297,14 @@ bool AgainstParticipant::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 index = 1;
+      // optional uint32 against_index = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          set_has_index();
+          set_has_against_index();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &index_)));
+                 input, &against_index_)));
         } else {
           goto handle_unusual;
         }
@@ -1421,9 +1338,9 @@ void AgainstParticipant::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 index = 1;
+  // optional uint32 against_index = 1;
   if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->against_index(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1441,9 +1358,9 @@ void AgainstParticipant::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 index = 1;
+  // optional uint32 against_index = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->against_index(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1463,11 +1380,11 @@ size_t AgainstParticipant::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // optional uint32 index = 1;
-  if (has_index()) {
+  // optional uint32 against_index = 1;
+  if (has_against_index()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->index());
+        this->against_index());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1497,8 +1414,8 @@ void AgainstParticipant::MergeFrom(const AgainstParticipant& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_index()) {
-    set_index(from.index());
+  if (from.has_against_index()) {
+    set_against_index(from.against_index());
   }
 }
 
@@ -1526,7 +1443,7 @@ void AgainstParticipant::Swap(AgainstParticipant* other) {
 }
 void AgainstParticipant::InternalSwap(AgainstParticipant* other) {
   using std::swap;
-  swap(index_, other->index_);
+  swap(against_index_, other->against_index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -1551,6 +1468,9 @@ void BlsMessage::InitAsDefaultInstance() {
 const int BlsMessage::kVerifyBrdFieldNumber;
 const int BlsMessage::kSwapReqFieldNumber;
 const int BlsMessage::kAgainstReqFieldNumber;
+const int BlsMessage::kIndexFieldNumber;
+const int BlsMessage::kSignChFieldNumber;
+const int BlsMessage::kSignResFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BlsMessage::BlsMessage()
@@ -1565,6 +1485,14 @@ BlsMessage::BlsMessage(const BlsMessage& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_ch()) {
+    sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
+  }
+  sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_sign_res()) {
+    sign_res_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_res_);
+  }
   if (from.has_verify_brd()) {
     verify_brd_ = new ::bls::block::protobuf::VerifyVecBrdReq(*from.verify_brd_);
   } else {
@@ -1580,13 +1508,16 @@ BlsMessage::BlsMessage(const BlsMessage& from)
   } else {
     against_req_ = NULL;
   }
+  index_ = from.index_;
   // @@protoc_insertion_point(copy_constructor:bls.block.protobuf.BlsMessage)
 }
 
 void BlsMessage::SharedCtor() {
+  sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&verify_brd_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&against_req_) -
-      reinterpret_cast<char*>(&verify_brd_)) + sizeof(against_req_));
+      reinterpret_cast<char*>(&index_) -
+      reinterpret_cast<char*>(&verify_brd_)) + sizeof(index_));
 }
 
 BlsMessage::~BlsMessage() {
@@ -1595,6 +1526,8 @@ BlsMessage::~BlsMessage() {
 }
 
 void BlsMessage::SharedDtor() {
+  sign_ch_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  sign_res_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete verify_brd_;
   if (this != internal_default_instance()) delete swap_req_;
   if (this != internal_default_instance()) delete against_req_;
@@ -1621,20 +1554,27 @@ void BlsMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
+      sign_ch_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      sign_res_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000004u) {
       GOOGLE_DCHECK(verify_brd_ != NULL);
       verify_brd_->Clear();
     }
-    if (cached_has_bits & 0x00000002u) {
+    if (cached_has_bits & 0x00000008u) {
       GOOGLE_DCHECK(swap_req_ != NULL);
       swap_req_->Clear();
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000010u) {
       GOOGLE_DCHECK(against_req_ != NULL);
       against_req_->Clear();
     }
   }
+  index_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1685,6 +1625,44 @@ bool BlsMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 index = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          set_has_index();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &index_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_ch = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_ch()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes sign_res = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_sign_res()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1713,21 +1691,38 @@ void BlsMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .bls.block.protobuf.VerifyVecBrdReq verify_brd = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_verify_brd(), output);
   }
 
   // optional .bls.block.protobuf.SwapSecKeyReq swap_req = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_swap_req(), output);
   }
 
   // optional .bls.block.protobuf.AgainstParticipant against_req = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->_internal_against_req(), output);
+  }
+
+  // optional uint32 index = 4;
+  if (cached_has_bits & 0x00000020u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->index(), output);
+  }
+
+  // optional bytes sign_ch = 5;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      5, this->sign_ch(), output);
+  }
+
+  // optional bytes sign_res = 6;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      6, this->sign_res(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1746,24 +1741,43 @@ void BlsMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .bls.block.protobuf.VerifyVecBrdReq verify_brd = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_verify_brd(), deterministic, target);
   }
 
   // optional .bls.block.protobuf.SwapSecKeyReq swap_req = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, this->_internal_swap_req(), deterministic, target);
   }
 
   // optional .bls.block.protobuf.AgainstParticipant against_req = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, this->_internal_against_req(), deterministic, target);
+  }
+
+  // optional uint32 index = 4;
+  if (cached_has_bits & 0x00000020u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->index(), target);
+  }
+
+  // optional bytes sign_ch = 5;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        5, this->sign_ch(), target);
+  }
+
+  // optional bytes sign_res = 6;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->sign_res(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1783,7 +1797,21 @@ size_t BlsMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 63u) {
+    // optional bytes sign_ch = 5;
+    if (has_sign_ch()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_ch());
+    }
+
+    // optional bytes sign_res = 6;
+    if (has_sign_res()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->sign_res());
+    }
+
     // optional .bls.block.protobuf.VerifyVecBrdReq verify_brd = 1;
     if (has_verify_brd()) {
       total_size += 1 +
@@ -1803,6 +1831,13 @@ size_t BlsMessage::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *against_req_);
+    }
+
+    // optional uint32 index = 4;
+    if (has_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->index());
     }
 
   }
@@ -1834,16 +1869,28 @@ void BlsMessage::MergeFrom(const BlsMessage& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 63u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_verify_brd()->::bls::block::protobuf::VerifyVecBrdReq::MergeFrom(from.verify_brd());
+      set_has_sign_ch();
+      sign_ch_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_ch_);
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_swap_req()->::bls::block::protobuf::SwapSecKeyReq::MergeFrom(from.swap_req());
+      set_has_sign_res();
+      sign_res_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.sign_res_);
     }
     if (cached_has_bits & 0x00000004u) {
+      mutable_verify_brd()->::bls::block::protobuf::VerifyVecBrdReq::MergeFrom(from.verify_brd());
+    }
+    if (cached_has_bits & 0x00000008u) {
+      mutable_swap_req()->::bls::block::protobuf::SwapSecKeyReq::MergeFrom(from.swap_req());
+    }
+    if (cached_has_bits & 0x00000010u) {
       mutable_against_req()->::bls::block::protobuf::AgainstParticipant::MergeFrom(from.against_req());
     }
+    if (cached_has_bits & 0x00000020u) {
+      index_ = from.index_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -1871,9 +1918,14 @@ void BlsMessage::Swap(BlsMessage* other) {
 }
 void BlsMessage::InternalSwap(BlsMessage* other) {
   using std::swap;
+  sign_ch_.Swap(&other->sign_ch_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sign_res_.Swap(&other->sign_res_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(verify_brd_, other->verify_brd_);
   swap(swap_req_, other->swap_req_);
   swap(against_req_, other->against_req_);
+  swap(index_, other->index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
