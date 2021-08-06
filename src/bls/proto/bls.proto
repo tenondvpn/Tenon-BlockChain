@@ -1,0 +1,32 @@
+syntax = "proto2";
+
+package bls.block.protobuf;
+
+message VerifyVecItem {
+    optional bytes x_c0 = 1;
+    optional bytes x_c1 = 2;
+    optional bytes y_c0 = 3;
+    optional bytes y_c1 = 4;
+    optional bytes z_c0 = 5;
+    optional bytes z_c1 = 6;
+}
+
+message VerifyVecBrdReq {
+    repeated VerifyVecItem verify_vec = 1;
+    optional uint32 index = 2;
+}
+
+message SwapSecKeyReq {
+    optional bytes sec_key = 1;
+    optional uint32 index = 2;
+}
+
+message AgainstParticipant {
+    optional uint32 index = 1;
+}
+
+message BlsMessage {
+    optional VerifyVecBrdReq verify_brd = 1;
+    optional SwapSecKeyReq swap_req = 2;
+    optional AgainstParticipant against_req = 3;
+}

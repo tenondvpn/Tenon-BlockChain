@@ -15,6 +15,7 @@
 #include "election/elect_pool_manager.h"
 #include "election/member_manager.h"
 #include "election/height_with_elect_blocks.h"
+#include "election/elect_node_detail.h"
 
 namespace tenon {
 
@@ -104,6 +105,7 @@ private:
     void WaitingNodeSendHeartbeat();
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
     void ClearExistsNetwork(uint32_t network_id);
+    void ChangeInvalidLeader(uint32_t network_id, uint32_t leader_index);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 
@@ -135,6 +137,7 @@ private:
     elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
     elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
     HeightWithElectBlock height_with_block_;
+    BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

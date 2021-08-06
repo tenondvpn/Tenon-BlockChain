@@ -561,7 +561,8 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-    BFT_DEBUG("this node is leader and start bft: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("this node is leader and start bft: %s",
+        common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 

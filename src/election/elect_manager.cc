@@ -291,7 +291,6 @@ void ElectManager::ProcessNewElectBlock(
 
     if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
 //         if (local_node_pool_mod_num_ >= 0) {
-        int32_t index = 0;
         for (auto iter = shard_members_ptr->begin();
                 iter != shard_members_ptr->end(); ++iter) {
             if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
@@ -304,11 +303,9 @@ void ElectManager::ProcessNewElectBlock(
 //                     common::Encode::HexEncode((*iter)->backup_ecdh_key).c_str(),
 //                     common::Encode::HexEncode((*iter)->id).c_str());
             }
-            ++index;
         }
 //         }
 
-        index = 0;
         for (auto iter = shard_members_ptr->begin();
                 iter != shard_members_ptr->end(); ++iter) {
             if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
@@ -320,9 +317,7 @@ void ElectManager::ProcessNewElectBlock(
 //                         index,
 //                         common::Encode::HexEncode((*iter)->leader_ecdh_key).c_str(),
 //                         common::Encode::HexEncode((*iter)->id).c_str());
-        }
-
-            ++index;
+            }
         }
     }
 
@@ -526,6 +521,11 @@ void ElectManager::AddNewNodeWithIdAndIp(
         std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
         added_net_ip_set_[network_id].insert(ip);
     }
+}
+
+void ElectManager::ChangeInvalidLeader(uint32_t network_id, uint32_t leader_index) {
+    // change invalid leader with 
+
 }
 
 }  // namespace elect

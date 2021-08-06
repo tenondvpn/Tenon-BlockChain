@@ -71,6 +71,7 @@ enum MessageType {
     kVpnRelayMessage = 13,
     kVssMessage = 14,
     kTtimeBlockMessage = 15,
+    kBlsMessage = 16,
     // max (message) type
     kLegoMaxMessageTypeCount,
 };
