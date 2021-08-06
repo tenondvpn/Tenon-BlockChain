@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package bls.block.protobuf;
+package tenon.bls.protobuf;
 
 message VerifyVecItem {
     optional bytes x_c0 = 1;
@@ -30,4 +30,5 @@ message BlsMessage {
     optional uint32 index = 4;
     optional bytes sign_ch = 5;
 	optional bytes sign_res = 6;
+    optional uint64 elect_height = 7;
 }
