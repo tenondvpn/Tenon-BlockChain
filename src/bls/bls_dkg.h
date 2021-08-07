@@ -79,6 +79,12 @@ private:
     libff::alt_bn128_G2 common_public_key_;
     std::mutex mutex_;
 
+#ifdef TENON_UNITTEST
+    transport::protobuf::Header ver_brd_msg_;
+    std::vector<transport::protobuf::Header> sec_swap_msgs_;
+    std::vector<transport::protobuf::Header> sec_against_msgs_;
+#endif
+
     DISALLOW_COPY_AND_ASSIGN(BlsDkg);
 };
 

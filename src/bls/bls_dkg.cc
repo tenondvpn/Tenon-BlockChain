@@ -201,6 +201,9 @@ void BlsDkg::HandleSwapSecKey(
         auto message_hash = common::Hash::keccak256(content_to_hash);
         CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
         network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+        sec_against_msgs_.push_back(msg);
+#endif
     }
 }
 
@@ -251,10 +254,16 @@ void BlsDkg::BroadcastVerfify() {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+    ver_brd_msg_ = msg;
+#endif
 }
 
 void BlsDkg::SwapSecKey() {
     std::lock_guard<std::mutex> guard(mutex_);
+#ifdef TENON_UNITTEST
+    sec_swap_msgs_.clear();
+#endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
         if (i == local_member_index_) {
             continue;
@@ -289,6 +298,9 @@ void BlsDkg::SwapSecKey() {
             (*members_)[i]->public_port,
             0,
             msg);
+#ifdef TENON_UNITTEST
+        sec_swap_msgs_.push_back(msg);
+#endif
     }
 }
 
