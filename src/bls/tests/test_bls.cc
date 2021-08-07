@@ -22,17 +22,16 @@ namespace test {
 class TestBls : public testing::Test {
 public:
     static void SetUpTestCase() {    
-        tenon::transport::MultiThreadHandler::Instance()->Init();
         transport_ = std::make_shared<tenon::transport::UdpTransport>(
                 "127.0.0.1",
                 9701,
                 1024 * 1024,
                 1024 * 1024);
         if (transport_->Init() != tenon::transport::kTransportSuccess) {
-            ERROR("init udp transport failed!");
             return;
         }
         transport_->Start(false);
+        tenon::transport::MultiThreadHandler::Instance()->Init(transport_, nullptr);
     }
 
     static void TearDownTestCase() {
@@ -55,7 +54,7 @@ TEST_F(TestBls, BinarySearch) {
     static const uint32_t t = 7;
     static const uint32_t n = 10;
 
-    Dkg dkg[10];
+    BlsDkg dkg[10];
 
 }
 
