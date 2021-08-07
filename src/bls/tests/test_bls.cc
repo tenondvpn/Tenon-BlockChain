@@ -8,10 +8,14 @@
 
 #include "common/random.h"
 #include "dht/dht_key.h"
+#include "election/elect_dht.h"
+#include "network/dht_manager.h"
+#include "network/universal_manager.h"
 #include "security/private_key.h"
 #include "security/public_key.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
+#include "security/schnorr.h"
 #include "transport/udp/udp_transport.h"
 #include "transport/multi_thread.h"
 #include "transport/transport_utils.h"
@@ -51,6 +55,47 @@ public:
     virtual void TearDown() {
     }
 
+    static void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
+        security::PrivateKey prikey(private_key);
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        common::GlobalInfo::Instance()->set_id(id);
+        common::GlobalInfo::Instance()->set_consensus_shard_count(1);
+        common::GlobalInfo::Instance()->set_network_id(network_id);
+        JoinNetwork(network::kRootCongressNetworkId);
+        JoinNetwork(network::kUniversalNetworkId);
+        JoinNetwork(network::kConsensusShardBeginNetworkId);
+    }
+
+    static void JoinNetwork(uint32_t network_id) {
+        network::DhtManager::Instance()->UnRegisterDht(network_id);
+        network::UniversalManager::Instance()->UnRegisterUniversal(network_id);
+        dht::DhtKeyManager dht_key(
+            network_id,
+            common::GlobalInfo::Instance()->country(),
+            common::GlobalInfo::Instance()->id());
+        dht::NodePtr local_node = std::make_shared<dht::Node>(
+            common::GlobalInfo::Instance()->id(),
+            dht_key.StrKey(),
+            dht::kNatTypeFullcone,
+            false,
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            security::Schnorr::Instance()->str_pubkey(),
+            common::GlobalInfo::Instance()->node_tag());
+        local_node->first_node = true;
+        transport::TransportPtr transport;
+        auto dht = std::make_shared<elect::ElectDht>(transport, local_node);
+        dht->Init(nullptr, nullptr);
+        auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(dht);
+        network::DhtManager::Instance()->RegisterDht(network_id, base_dht);
+        network::UniversalManager::Instance()->RegisterUniversal(network_id, base_dht);
+    }
 //     static tenon::transport::TransportPtr transport_;
 };
 
@@ -74,20 +119,49 @@ TEST_F(TestBls, BinarySearch) {
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        members->push_back(std::make_shared<elect::BftMember>(
-            network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1));
+        auto member = std::make_shared<elect::BftMember>(
+            network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1);
+        member->public_ip = 234234;
+        member->public_port = 123;
+        members->push_back(member);
     }
 
     std::vector<transport::protobuf::Header> verify_brd_msgs;
     for (uint32_t i = 0; i < n; ++i) {
+        SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
         dkg[i].dkg_verify_brd_timer_.Destroy();
         dkg[i].dkg_swap_seckkey_timer_.Destroy();
         dkg[i].dkg_finish_timer_.Destroy();
         dkg[i].OnNewElectionBlock(1, members);
+        dkg[i].local_member_index_ = i;
         dkg[i].BroadcastVerfify();
         verify_brd_msgs.push_back(dkg[i].ver_brd_msg_);
     }
 
+    for (uint32_t i = 0; i < n; ++i) {
+        for (uint32_t j = 0; j < n; ++j) {
+            if (i == j) {
+                continue;
+            }
+
+            SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(
+                verify_brd_msgs[i]);
+            dkg[j].HandleMessage(msg_ptr);
+        }
+    }
+
+    // swap sec key
+    for (uint32_t i = 0; i < n; ++i) {
+        SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
+        dkg[i].SwapSecKey();
+        for (uint32_t j = 0; j < n; ++j) {
+            SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(
+                verify_brd_msgs[i]);
+            dkg[j].HandleMessage(msg_ptr);
+        }
+    }
 }
 
 }  // namespace test

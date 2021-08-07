@@ -42,7 +42,9 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
     dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
+    all_verification_vector_.clear();
     all_verification_vector_.resize(members->size());
+    all_secret_key_contribution_.clear();
     all_secret_key_contribution_.resize(members->size());
     auto each_member_offset_us = kDkgPeriodUs / members->size();
     local_offset_us_ = each_member_offset_us * local_member_index_;
@@ -57,6 +59,7 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     if (members_ == nullptr) {
+        std::cout << "members_ == nullptr" << std::endl;
         return;
     }
 
@@ -70,10 +73,15 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     }
 
     if (bls_msg.index() >= members_->size()) {
+        std::cout << "bls_msg.index() >= members_->size()" << std::endl;
         return;
     }
 
     if (bls_msg.elect_height() != elect_hegiht_) {
+        std::cout << "bls_msg.elect_height() != elect_hegiht_"
+            << bls_msg.elect_height() 
+            << ", " << elect_hegiht_
+            << std::endl;
         return;
     }
 
@@ -131,10 +139,12 @@ void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     if (!IsSignValid(bls_msg)) {
+        std::cout << "sign verify failed!" << std::endl;
         return;
     }
 
-    if (bls_msg.verify_brd().verify_vec_size() != members_->size()) {
+    if (bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_) {
+        std::cout << "bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_" << std::endl;
         return;
     }
 
@@ -148,10 +158,10 @@ void BlsDkg::HandleVerifyBroadcast(
         auto z_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).z_c0().c_str());
         auto z_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).z_c1().c_str());
         auto z_coord = libff::alt_bn128_Fq2(z_c0, z_c1);
-        all_verification_vector_[bls_msg.index()][i] = libff::alt_bn128_G2(
+        all_verification_vector_[bls_msg.index()].push_back(libff::alt_bn128_G2(
             x_coord,
             y_coord,
-            z_coord);
+            z_coord));
     }
 }
 
@@ -265,7 +275,11 @@ void BlsDkg::SwapSecKey() {
     sec_swap_msgs_.clear();
 #endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
+        protobuf::BlsMessage bls_msg;
         if (i == local_member_index_) {
+#ifdef TENON_UNITTEST
+            sec_swap_msgs_.push_back(msg);
+#endif
             continue;
         }
 
@@ -282,7 +296,6 @@ void BlsDkg::SwapSecKey() {
             continue;
         }
 
-        protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
         swap_req->set_sec_key(enc_sec_key);
         transport::protobuf::Header msg;
@@ -374,6 +387,7 @@ void BlsDkg::CreateDkgMessage(
         SetDefaultBroadcastParam(broad_param);
     }
     
+    bls_msg.set_elect_height(elect_hegiht_);
     bls_msg.set_index(local_member_index_);
     msg.set_data(bls_msg.SerializeAsString());
 }
