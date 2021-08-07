@@ -1,5 +1,6 @@
 #include "big_num/libsnark.h"
 
+#include "libff/common/profiling.hpp"
 #include "big_num/bignum_utils.h"
 
 using namespace std;
@@ -8,8 +9,8 @@ void initLibSnark() noexcept
 {
 	static bool s_initialized = []() noexcept
 	{
-//		libff::inhibit_profiling_info = true;
-//		libff::inhibit_profiling_counters = true;
+		libff::inhibit_profiling_info = true;
+		libff::inhibit_profiling_counters = true;
 		libff::alt_bn128_pp::init_public_params();
 		return true;
 	}();
