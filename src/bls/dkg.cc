@@ -190,7 +190,7 @@ void Dkg::HandleSwapSecKey(
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
-            libff::alt_bn128_Fr("0");
+            libff::alt_bn128_Fr::zero();
         // send against
         bls::protobuf::BlsMessage bls_msg;
         auto against_req = bls_msg.mutable_against_req();
@@ -219,7 +219,7 @@ void Dkg::HandleAgainstParticipant(
     ++invalid_node_map_[bls_msg.against_req().against_index()];
     if (invalid_node_map_[bls_msg.against_req().against_index()] >= min_aggree_member_count_) {
         all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
-            libff::alt_bn128_Fr("0");
+            libff::alt_bn128_Fr::zero();
     }
 }
 
@@ -298,7 +298,20 @@ void Dkg::SwapSecKey() {
 }
 
 void Dkg::Finish() {
+    local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
+        all_secret_key_contribution_[local_member_index_]);
+    public_keys_.clear();
+    public_keys_.resize(members_->size());
+    common_public_key_ = libff::alt_bn128_G2::zero();
+    for (size_t i = 0; i < members_->size(); ++i) {
+        if (invalid_node_map_[i] >= min_aggree_member_count_) {
+            public_keys_[i] = libff::alt_bn128_G2::zero();
+            continue;
+        }
 
+        public_keys_[i] = all_verification_vector_[i][0];
+        common_public_key_ = common_public_key_ + public_keys_[i];
+    }
 }
 
 int Dkg::CreateContribution() {

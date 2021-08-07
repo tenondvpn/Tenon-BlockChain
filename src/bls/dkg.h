@@ -56,10 +56,10 @@ private:
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
-    static const int64_t kDkgPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 3;
+    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 3;
     static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
-    static const int64_t kDkgSwapSecKeyBeginUs = kDkgVerifyBrdBeginUs + kDkgPeriodUs + kDkgOffsetUs;
-    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgSwapSecKeyBeginUs = kDkgVerifyBrdBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
 
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
@@ -73,6 +73,9 @@ private:
     std::shared_ptr<signatures::Dkg> dkg_instance_;
     uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
     uint32_t min_aggree_member_count_{ 0 };
+    libff::alt_bn128_Fr local_sec_key_;
+    std::vector<libff::alt_bn128_G2> public_keys_;
+    libff::alt_bn128_G2 common_public_key_;
     std::mutex mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(Dkg);
