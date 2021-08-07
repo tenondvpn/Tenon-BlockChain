@@ -1,5 +1,7 @@
 #include "bls/bls_sign.h"
 
+#include "libff/common/profiling.hpp"
+
 namespace tenon {
 
 namespace bls {
