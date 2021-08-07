@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include <iostream>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -10,6 +11,7 @@
 #include "transport/multi_thread.h"
 #include "transport/transport_utils.h"
 #define private public
+#include "network/network_utils.h"
 #include "bls/bls_sign.h"
 #include "bls/bls_dkg.h"
 
@@ -54,7 +56,27 @@ TEST_F(TestBls, BinarySearch) {
     static const uint32_t t = 7;
     static const uint32_t n = 10;
 
-    BlsDkg dkg[10];
+    BlsDkg dkg[n];
+    elect::MembersPtr members = std::make_shared<elect::Members>();
+    std::vector<std::string> pri_vec;
+    for (uint32_t i = 0; i < n; ++i) {
+        pri_vec.push_back(common::Random::RandomString(32));
+    }
+
+    for (uint32_t i = 0; i < pri_vec.size(); ++i) {
+        security::PrivateKey prikey(pri_vec[i]);
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        security::CommitSecret secret;
+        members->push_back(std::make_shared<elect::BftMember>(
+            network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1));
+    }
+
+    for (uint32_t i = 0; i < n; ++i) {
+        dkg[i].OnNewElectionBlock(1, members);
+    }
 
 }
 
