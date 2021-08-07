@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <memory>
 
 #include <bls/BLSPrivateKey.h>
 #include <bls/BLSPrivateKeyShare.h>
@@ -30,17 +31,21 @@ private:
     ~Dkg();
     void HandleMessage(const transport::TransportMessagePtr& header);
     void HandleVerifyBroadcast(
-        const transport::TransportMessagePtr& header,
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg);
+    void HandleVerifyBroadcastRes(
+        const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
     void HandleSwapSecKey(
-        const transport::TransportMessagePtr& header,
+        const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
     void HandleAgainstParticipant(
-        const transport::TransportMessagePtr& header,
+        const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
     bool IsSignValid(const protobuf::BlsMessage& bls_msg);
     void BroadcastVerfify();
     void SwapSecKey();
+    void Finish();
     int CreateContribution();
     void CreateDkgMessage(
         const dht::NodePtr& local_node,
@@ -49,11 +54,25 @@ private:
         transport::protobuf::Header& msg);
     void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
 
+    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
+    static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
+    static const int64_t kDkgPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 3;
+    static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
+    static const int64_t kDkgSwapSecKeyBeginUs = kDkgVerifyBrdBeginUs + kDkgPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgPeriodUs + kDkgOffsetUs;
+
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
-    common::Tick dkg_timer_;
-    std::vector<libff::alt_bn128_Fr> secret_key_contribution_;
-    std::vector< libff::alt_bn128_G2 > verification_vector_;
+    common::Tick dkg_verify_brd_timer_;
+    common::Tick dkg_swap_seckkey_timer_;
+    common::Tick dkg_finish_timer_;
+    std::vector<std::vector<libff::alt_bn128_Fr>> all_secret_key_contribution_;
+    std::vector<std::vector<libff::alt_bn128_G2>> all_verification_vector_;
+    int64_t local_offset_us_{ 0 };
+    uint32_t local_member_index_{ common::kInvalidUint32 };
+    std::shared_ptr<signatures::Dkg> dkg_instance_;
+    uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
+    uint32_t min_aggree_member_count_{ 0 };
     std::mutex mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(Dkg);

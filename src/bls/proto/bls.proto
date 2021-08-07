@@ -15,6 +15,11 @@ message VerifyVecBrdReq {
     repeated VerifyVecItem verify_vec = 1;
 }
 
+message VerifyVecBrdRes {
+    optional uint32 public_ip = 1;
+    optional uint32 public_port = 2;
+}
+
 message SwapSecKeyReq {
     optional bytes sec_key = 1;
 }
@@ -31,4 +36,5 @@ message BlsMessage {
     optional bytes sign_ch = 5;
 	optional bytes sign_res = 6;
     optional uint64 elect_height = 7;
+    optional VerifyVecBrdRes verify_res = 8;
 }

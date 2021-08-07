@@ -37,9 +37,8 @@ std::string Crypto::GetEncryptData(
 }
 
 std::string Crypto::GetDecryptData(
-        const std::string& pubkey,
+        const security::PublicKey& pub_key,
         const std::string& crypt_message) {
-    security::PublicKey pub_key(pubkey);
     std::string seckey;
     auto res = tenon::security::EcdhCreateKey::Instance()->CreateKey(pub_key, seckey);
     if (res != tenon::security::kSecuritySuccess) {
@@ -49,16 +48,22 @@ std::string Crypto::GetDecryptData(
 
     std::string res_dec(crypt_message.size(), 0);
     if (security::Aes::Decrypt(
-            (char*)crypt_message.c_str(),
-            crypt_message.size(),
-            (char*)seckey.c_str(),
-            seckey.size(),
-            (char*)&res_dec[0]) != security::kSecuritySuccess) {
+        (char*)crypt_message.c_str(),
+        crypt_message.size(),
+        (char*)seckey.c_str(),
+        seckey.size(),
+        (char*)&res_dec[0]) != security::kSecuritySuccess) {
         CRYPTO_ERROR("Decrypt error!");
         return "";
     }
 
     return res_dec;
+}
+std::string Crypto::GetDecryptData(
+        const std::string& pubkey,
+        const std::string& crypt_message) {
+    security::PublicKey pub_key(pubkey);
+    return GetDecryptData(pub_key, crypt_message);
 }
 
 int Crypto::GetEncryptData(

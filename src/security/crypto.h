@@ -16,6 +16,9 @@ public:
     std::string GetDecryptData(
         const std::string& pubkey,
         const std::string& crypt_message);
+    std::string GetDecryptData(
+        const security::PublicKey& pubkey,
+        const std::string& crypt_message);
     int GetEncryptData(
         const std::string& enc_key,
         const std::string& message,
