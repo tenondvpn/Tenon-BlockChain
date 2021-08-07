@@ -16,6 +16,7 @@
 #include "dht/dht_utils.h"
 #include "election/elect_node_detail.h"
 #include "transport/transport_utils.h"
+#include "transport/proto/transport.pb.h"
 
 namespace tenon {
 
@@ -84,7 +85,6 @@ private:
     std::vector<transport::protobuf::Header> sec_swap_msgs_;
     std::vector<transport::protobuf::Header> sec_against_msgs_;
 #endif
-
     DISALLOW_COPY_AND_ASSIGN(BlsDkg);
 };
 

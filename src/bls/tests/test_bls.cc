@@ -78,8 +78,14 @@ TEST_F(TestBls, BinarySearch) {
             network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1));
     }
 
+    std::vector<transport::protobuf::Header> verify_brd_msgs;
     for (uint32_t i = 0; i < n; ++i) {
+        dkg[i].dkg_verify_brd_timer_.Destroy();
+        dkg[i].dkg_swap_seckkey_timer_.Destroy();
+        dkg[i].dkg_finish_timer_.Destroy();
         dkg[i].OnNewElectionBlock(1, members);
+        dkg[i].BroadcastVerfify();
+        verify_brd_msgs.push_back(dkg[i].ver_brd_msg_);
     }
 
 }
