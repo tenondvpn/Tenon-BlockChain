@@ -18,10 +18,13 @@ namespace tenon {
 
 namespace bls {
 
-Dkg* Dkg::Instance() {
-    static Dkg ins;
-    return &ins;
+Dkg::Dkg() {
+    network::Route::Instance()->RegisterMessage(
+        common::kBlsMessage,
+        std::bind(&Dkg::HandleMessage, this, std::placeholders::_1));
 }
+
+Dkg::~Dkg() {}
 
 void Dkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) {
     std::lock_guard<std::mutex> guard(mutex_);
@@ -51,14 +54,6 @@ void Dkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) 
         std::bind(&Dkg::SwapSecKey, this));
     dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&Dkg::Finish, this));
 }
-
-Dkg::Dkg() {
-    network::Route::Instance()->RegisterMessage(
-        common::kBlsMessage,
-        std::bind(&Dkg::HandleMessage, this, std::placeholders::_1));
-}
-
-Dkg::~Dkg() {}
 
 void Dkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     if (members_ == nullptr) {

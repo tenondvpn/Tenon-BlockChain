@@ -23,12 +23,11 @@ namespace bls {
 
 class Dkg {
 public:
-    static Dkg* Instance();
+    Dkg();
+    ~Dkg();
     void OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members);
 
 private:
-    Dkg();
-    ~Dkg();
     void HandleMessage(const transport::TransportMessagePtr& header);
     void HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
@@ -58,8 +57,10 @@ private:
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
     static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 3;
     static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
-    static const int64_t kDkgSwapSecKeyBeginUs = kDkgVerifyBrdBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
-    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgSwapSecKeyBeginUs =
+        kDkgVerifyBrdBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgFinishBeginUs =
+        kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
 
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
