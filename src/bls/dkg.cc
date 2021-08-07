@@ -167,8 +167,8 @@ void Dkg::HandleVerifyBroadcastRes(
         return;
     }
 
-    (*members_)[bls_msg.index()]->public_ip = bls_msg->verify_res().public_ip();
-    (*members_)[bls_msg.index()]->public_port = bls_msg->verify_res().public_port();
+    (*members_)[bls_msg.index()]->public_ip = bls_msg.verify_res().public_ip();
+    (*members_)[bls_msg.index()]->public_port = bls_msg.verify_res().public_port();
 }
 
 void Dkg::HandleSwapSecKey(
@@ -302,10 +302,10 @@ void Dkg::Finish() {
 }
 
 int Dkg::CreateContribution() {
-    std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance->GeneratePolynomial();
+    std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial();
     all_secret_key_contribution_[local_member_index_] =
-        dkg_instance->SecretKeyContribution(polynomial);
-    all_verification_vector_[local_member_index_] = dkg_instance->VerificationVector(polynomial);
+        dkg_instance_->SecretKeyContribution(polynomial);
+    all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
     return 0;
 }
 
