@@ -22,20 +22,20 @@ namespace test {
 class TestBls : public testing::Test {
 public:
     static void SetUpTestCase() {    
-        transport_ = std::make_shared<tenon::transport::UdpTransport>(
-                "127.0.0.1",
-                9701,
-                1024 * 1024,
-                1024 * 1024);
-        if (transport_->Init() != tenon::transport::kTransportSuccess) {
-            return;
-        }
-        transport_->Start(false);
-        tenon::transport::MultiThreadHandler::Instance()->Init(transport_, nullptr);
+//         transport_ = std::make_shared<tenon::transport::UdpTransport>(
+//                 "127.0.0.1",
+//                 9701,
+//                 1024 * 1024,
+//                 1024 * 1024);
+//         if (transport_->Init() != tenon::transport::kTransportSuccess) {
+//             return;
+//         }
+//         transport_->Start(false);
+//         tenon::transport::MultiThreadHandler::Instance()->Init(transport_, nullptr);
     }
 
     static void TearDownTestCase() {
-        transport_->Stop();
+//         transport_->Stop();
     }
 
     virtual void SetUp() {
@@ -44,7 +44,7 @@ public:
     virtual void TearDown() {
     }
 
-    static tenon::transport::TransportPtr transport_;
+//     static tenon::transport::TransportPtr transport_;
 };
 
 tenon::transport::TransportPtr TestBls::transport_ = nullptr;
