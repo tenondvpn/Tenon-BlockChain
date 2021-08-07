@@ -6,7 +6,12 @@
 
 #include <gtest/gtest.h>
 
+#include "common/random.h"
 #include "dht/dht_key.h"
+#include "security/private_key.h"
+#include "security/public_key.h"
+#include "security/secp256k1.h"
+#include "security/crypto_utils.h"
 #include "transport/udp/udp_transport.h"
 #include "transport/multi_thread.h"
 #include "transport/transport_utils.h"
@@ -69,7 +74,6 @@ TEST_F(TestBls, BinarySearch) {
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::CommitSecret secret;
         members->push_back(std::make_shared<elect::BftMember>(
             network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1));
     }
