@@ -47,7 +47,7 @@ public:
 //     static tenon::transport::TransportPtr transport_;
 };
 
-tenon::transport::TransportPtr TestBls::transport_ = nullptr;
+// tenon::transport::TransportPtr TestBls::transport_ = nullptr;
 
 TEST_F(TestBls, BinarySearch) {
     // t = 7, n = 10
