@@ -38,7 +38,7 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
         min_aggree_member_count_ += 1;
     }
 
-    dkg_instance_ = std::make_shared<signatures::BlsDkg>(min_aggree_member_count_, members_->size());
+    dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     members_ = members;
     local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
