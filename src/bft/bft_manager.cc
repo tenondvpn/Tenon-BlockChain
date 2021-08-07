@@ -670,7 +670,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
 
     // (TODO): just for test
 #ifdef TENON_UNITTEST
-    leader_prepare_msg_ = msg;
+    leader_prepare_msg_ = *prepare_msg;
 #endif
     return kBftSuccess;
 }
@@ -749,7 +749,7 @@ int BftManager::BackupPrepare(
     }
 
 #ifdef TENON_UNITTEST
-    backup_prepare_msg_ = msg;
+    backup_prepare_msg_ = *msg;
 #endif
     return kBftSuccess;
 }
@@ -915,7 +915,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     bft_ptr->set_leader_precommit_msg(precommit_msg);
     network::Route::Instance()->Send(*precommit_msg);
 #ifdef TENON_UNITTEST
-    leader_precommit_msg_ = msg;
+    leader_precommit_msg_ = *precommit_msg;
 #endif
     return kBftSuccess;
 }
@@ -1013,7 +1013,7 @@ int BftManager::BackupPrecommit(
     }
 
 #ifdef TENON_UNITTEST
-    backup_precommit_msg_ = msg;
+    backup_precommit_msg_ = *msg;
 #endif
     return kBftSuccess;
 }
