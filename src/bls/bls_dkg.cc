@@ -289,6 +289,12 @@ void BlsDkg::SwapSecKey() {
 
         auto sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(
             all_secret_key_contribution_[local_member_index_][i]);
+        std::string peer_pk;
+        (*members_)[i]->pubkey.Serialize(peer_pk);
+        std::cout << "local public key: "
+            << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
+            << ", peer public key: " << common::Encode::HexEncode(peer_pk)
+            << std::endl;
         std::string enc_sec_key = security::Crypto::Instance()->GetEncryptData(
             (*members_)[i]->pubkey,
             sec_key);

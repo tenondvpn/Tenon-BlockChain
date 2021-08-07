@@ -16,6 +16,7 @@
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
 #include "security/schnorr.h"
+#include "security/ecdh_create_key.h"
 #include "transport/udp/udp_transport.h"
 #include "transport/multi_thread.h"
 #include "transport/transport_utils.h"
@@ -32,7 +33,8 @@ namespace test {
 
 class TestBls : public testing::Test {
 public:
-    static void SetUpTestCase() {    
+    static void SetUpTestCase() {
+        security::EcdhCreateKey::Instance()->Init();
 //         transport_ = std::make_shared<tenon::transport::UdpTransport>(
 //                 "127.0.0.1",
 //                 9701,
@@ -156,6 +158,10 @@ TEST_F(TestBls, BinarySearch) {
         SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
         dkg[i].SwapSecKey();
         for (uint32_t j = 0; j < n; ++j) {
+            if (i == j) {
+                continue;
+            }
+
             SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
             auto msg_ptr = std::make_shared<transport::protobuf::Header>(
                 verify_brd_msgs[i]);
