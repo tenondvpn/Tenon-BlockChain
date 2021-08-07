@@ -21,10 +21,10 @@ namespace tenon {
 
 namespace bls {
 
-class Dkg {
+class BlsDkg {
 public:
-    Dkg();
-    ~Dkg();
+    BlsDkg();
+    ~BlsDkg();
     void OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members);
 
 private:
@@ -71,7 +71,7 @@ private:
     std::vector<std::vector<libff::alt_bn128_G2>> all_verification_vector_;
     int64_t local_offset_us_{ 0 };
     uint32_t local_member_index_{ common::kInvalidUint32 };
-    std::shared_ptr<signatures::Dkg> dkg_instance_;
+    std::shared_ptr<signatures::BlsDkg> dkg_instance_;
     uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
     uint32_t min_aggree_member_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
@@ -79,7 +79,7 @@ private:
     libff::alt_bn128_G2 common_public_key_;
     std::mutex mutex_;
 
-    DISALLOW_COPY_AND_ASSIGN(Dkg);
+    DISALLOW_COPY_AND_ASSIGN(BlsDkg);
 };
 
 };  // namespace bls

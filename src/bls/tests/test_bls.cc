@@ -7,11 +7,11 @@
 
 #include "dht/dht_key.h"
 #include "transport/udp/udp_transport.h"
-#include "transport/multi_thread/multi_thread.h"
+#include "transport/multi_thread.h"
 #include "transport/transport_utils.h"
 #define private public
 #include "bls/bls_sign.h"
-#include "bls/dkg.h"
+#include "bls/bls_dkg.h"
 
 namespace tenon {
 

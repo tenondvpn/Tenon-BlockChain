@@ -1,4 +1,4 @@
-#include "bls/dkg.h"
+#include "bls/bls_dkg.h"
 
 #include <vector>
 
@@ -18,15 +18,15 @@ namespace tenon {
 
 namespace bls {
 
-Dkg::Dkg() {
+BlsDkg::BlsDkg() {
     network::Route::Instance()->RegisterMessage(
         common::kBlsMessage,
-        std::bind(&Dkg::HandleMessage, this, std::placeholders::_1));
+        std::bind(&BlsDkg::HandleMessage, this, std::placeholders::_1));
 }
 
-Dkg::~Dkg() {}
+BlsDkg::~BlsDkg() {}
 
-void Dkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) {
+void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -38,7 +38,7 @@ void Dkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) 
         min_aggree_member_count_ += 1;
     }
 
-    dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
+    dkg_instance_ = std::make_shared<signatures::BlsDkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     members_ = members;
     local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
@@ -48,14 +48,14 @@ void Dkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) 
     local_offset_us_ = each_member_offset_us * local_member_index_;
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
-        std::bind(&Dkg::BroadcastVerfify, this));
+        std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
         kDkgSwapSecKeyBeginUs + local_offset_us_,
-        std::bind(&Dkg::SwapSecKey, this));
-    dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&Dkg::Finish, this));
+        std::bind(&BlsDkg::SwapSecKey, this));
+    dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&BlsDkg::Finish, this));
 }
 
-void Dkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
+void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     if (members_ == nullptr) {
         return;
     }
@@ -94,7 +94,7 @@ void Dkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     }
 }
 
-bool Dkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
+bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
     if (!security::IsValidSignature(bls_msg.sign_ch(), bls_msg.sign_res())) {
         BLS_ERROR("invalid sign: %s, %s!",
             common::Encode::HexEncode(bls_msg.sign_ch()),
@@ -127,7 +127,7 @@ bool Dkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
     return true;
 }
 
-void Dkg::HandleVerifyBroadcast(
+void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     if (!IsSignValid(bls_msg)) {
@@ -155,7 +155,7 @@ void Dkg::HandleVerifyBroadcast(
     }
 }
 
-void Dkg::HandleVerifyBroadcastRes(
+void BlsDkg::HandleVerifyBroadcastRes(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     if (!IsSignValid(bls_msg)) {
@@ -166,7 +166,7 @@ void Dkg::HandleVerifyBroadcastRes(
     (*members_)[bls_msg.index()]->public_port = bls_msg.verify_res().public_port();
 }
 
-void Dkg::HandleSwapSecKey(
+void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
@@ -204,7 +204,7 @@ void Dkg::HandleSwapSecKey(
     }
 }
 
-void Dkg::HandleAgainstParticipant(
+void BlsDkg::HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     if (!IsSignValid(bls_msg)) {
@@ -218,7 +218,7 @@ void Dkg::HandleAgainstParticipant(
     }
 }
 
-void Dkg::BroadcastVerfify() {
+void BlsDkg::BroadcastVerfify() {
     std::lock_guard<std::mutex> guard(mutex_);
     CreateContribution();
     bls::protobuf::BlsMessage bls_msg;
@@ -253,7 +253,7 @@ void Dkg::BroadcastVerfify() {
     network::Route::Instance()->Send(msg);
 }
 
-void Dkg::SwapSecKey() {
+void BlsDkg::SwapSecKey() {
     std::lock_guard<std::mutex> guard(mutex_);
     for (uint32_t i = 0; i < members_->size(); ++i) {
         if (i == local_member_index_) {
@@ -292,7 +292,7 @@ void Dkg::SwapSecKey() {
     }
 }
 
-void Dkg::Finish() {
+void BlsDkg::Finish() {
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     public_keys_.clear();
@@ -309,7 +309,7 @@ void Dkg::Finish() {
     }
 }
 
-int Dkg::CreateContribution() {
+int BlsDkg::CreateContribution() {
     std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial();
     all_secret_key_contribution_[local_member_index_] =
         dkg_instance_->SecretKeyContribution(polynomial);
@@ -317,7 +317,7 @@ int Dkg::CreateContribution() {
     return 0;
 }
 
-void Dkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
+void BlsDkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
     broad_param->set_layer_left(0);
     broad_param->set_layer_right((std::numeric_limits<uint64_t>::max)());
     broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
@@ -327,7 +327,7 @@ void Dkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_pa
     broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
 }
 
-void Dkg::CreateDkgMessage(
+void BlsDkg::CreateDkgMessage(
         const dht::NodePtr& local_node,
         protobuf::BlsMessage& bls_msg,
         const std::string& message_hash,
