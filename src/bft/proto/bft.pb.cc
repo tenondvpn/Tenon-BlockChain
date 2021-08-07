@@ -550,6 +550,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, member_index_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, backup_enc_data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BftMessage, elect_height_),
   0,
   13,
   15,
@@ -569,9 +570,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   10,
   18,
   19,
-  20,
+  21,
   11,
   12,
+  20,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::tenon::bft::protobuf::AccountAttributes)},
@@ -587,7 +589,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 150, 156, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
   { 157, 163, sizeof(::tenon::bft::protobuf::ToAccountTx)},
   { 164, 176, sizeof(::tenon::bft::protobuf::TxBft)},
-  { 183, 210, sizeof(::tenon::bft::protobuf::BftMessage)},
+  { 183, 211, sizeof(::tenon::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -672,7 +674,7 @@ void AddDescriptorsImpl() {
       "mmit\022<\n\rbtx_precommit\030\006 \001(\0132%.tenon.bft."
       "protobuf.BackupTxPreCommit\0226\n\nltx_commit"
       "\030\007 \001(\0132\".tenon.bft.protobuf.LeaderTxComm"
-      "it\"\257\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\020\n\010bft_st"
+      "it\"\305\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\020\n\010bft_st"
       "ep\030\002 \001(\005\022\016\n\006leader\030\003 \001(\010\022\016\n\006net_id\030\004 \001(\r"
       "\022\026\n\016sign_challenge\030\005 \001(\014\022\025\n\rsign_respons"
       "e\030\006 \001(\014\022\016\n\006secret\030\007 \001(\014\022\021\n\tchallenge\030\010 \001"
@@ -682,10 +684,11 @@ void AddDescriptorsImpl() {
       "\030\016 \001(\r\022\014\n\004data\030\017 \001(\014\022\024\n\014prepare_hash\030\020 \001"
       "(\014\022\017\n\007node_ip\030\021 \001(\014\022\021\n\tnode_port\030\022 \001(\r\022\r"
       "\n\005epoch\030\023 \001(\r\022\024\n\014member_index\030\024 \001(\r\022\016\n\006p"
-      "ubkey\030\025 \001(\014\022\027\n\017backup_enc_data\030\026 \001(\014"
+      "ubkey\030\025 \001(\014\022\027\n\017backup_enc_data\030\026 \001(\014\022\024\n\014"
+      "elect_height\030\027 \001(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2196);
+      descriptor, 2218);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft.proto", &protobuf_RegisterTypes);
 }
@@ -5844,6 +5847,7 @@ const int BftMessage::kEpochFieldNumber;
 const int BftMessage::kMemberIndexFieldNumber;
 const int BftMessage::kPubkeyFieldNumber;
 const int BftMessage::kBackupEncDataFieldNumber;
+const int BftMessage::kElectHeightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BftMessage::BftMessage()
@@ -6027,7 +6031,7 @@ void BftMessage::Clear() {
         reinterpret_cast<char*>(&leader_) -
         reinterpret_cast<char*>(&bft_step_)) + sizeof(leader_));
   }
-  if (cached_has_bits & 2031616u) {
+  if (cached_has_bits & 4128768u) {
     ::memset(&agree_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&member_index_) -
         reinterpret_cast<char*>(&agree_)) + sizeof(member_index_));
@@ -6333,6 +6337,20 @@ bool BftMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint64 elect_height = 23;
+      case 23: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(184u /* 184 & 0xFF */)) {
+          set_has_elect_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &elect_height_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -6468,7 +6486,7 @@ void BftMessage::SerializeWithCachedSizes(
   }
 
   // optional uint32 member_index = 20;
-  if (cached_has_bits & 0x00100000u) {
+  if (cached_has_bits & 0x00200000u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->member_index(), output);
   }
 
@@ -6482,6 +6500,11 @@ void BftMessage::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00001000u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       22, this->backup_enc_data(), output);
+  }
+
+  // optional uint64 elect_height = 23;
+  if (cached_has_bits & 0x00100000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(23, this->elect_height(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6616,7 +6639,7 @@ void BftMessage::SerializeWithCachedSizes(
   }
 
   // optional uint32 member_index = 20;
-  if (cached_has_bits & 0x00100000u) {
+  if (cached_has_bits & 0x00200000u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->member_index(), target);
   }
 
@@ -6632,6 +6655,11 @@ void BftMessage::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         22, this->backup_enc_data(), target);
+  }
+
+  // optional uint64 elect_height = 23;
+  if (cached_has_bits & 0x00100000u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(23, this->elect_height(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6774,7 +6802,7 @@ size_t BftMessage::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[16 / 32] & 2031616u) {
+  if (_has_bits_[16 / 32] & 4128768u) {
     // optional bool agree = 13;
     if (has_agree()) {
       total_size += 1 + 1;
@@ -6799,6 +6827,13 @@ size_t BftMessage::ByteSizeLong() const {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->epoch());
+    }
+
+    // optional uint64 elect_height = 23;
+    if (has_elect_height()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->elect_height());
     }
 
     // optional uint32 member_index = 20;
@@ -6904,7 +6939,7 @@ void BftMessage::MergeFrom(const BftMessage& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 2031616u) {
+  if (cached_has_bits & 4128768u) {
     if (cached_has_bits & 0x00010000u) {
       agree_ = from.agree_;
     }
@@ -6918,6 +6953,9 @@ void BftMessage::MergeFrom(const BftMessage& from) {
       epoch_ = from.epoch_;
     }
     if (cached_has_bits & 0x00100000u) {
+      elect_height_ = from.elect_height_;
+    }
+    if (cached_has_bits & 0x00200000u) {
       member_index_ = from.member_index_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -6982,6 +7020,7 @@ void BftMessage::InternalSwap(BftMessage* other) {
   swap(pool_index_, other->pool_index_);
   swap(node_port_, other->node_port_);
   swap(epoch_, other->epoch_);
+  swap(elect_height_, other->elect_height_);
   swap(member_index_, other->member_index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);

@@ -2632,6 +2632,13 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 epoch() const;
   void set_epoch(::google::protobuf::uint32 value);
 
+  // optional uint64 elect_height = 23;
+  bool has_elect_height() const;
+  void clear_elect_height();
+  static const int kElectHeightFieldNumber = 23;
+  ::google::protobuf::uint64 elect_height() const;
+  void set_elect_height(::google::protobuf::uint64 value);
+
   // optional uint32 member_index = 20;
   bool has_member_index() const;
   void clear_member_index();
@@ -2683,6 +2690,8 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_pubkey();
   void set_has_backup_enc_data();
   void clear_has_backup_enc_data();
+  void set_has_elect_height();
+  void clear_has_elect_height();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2708,6 +2717,7 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 pool_index_;
   ::google::protobuf::uint32 node_port_;
   ::google::protobuf::uint32 epoch_;
+  ::google::protobuf::uint64 elect_height_;
   ::google::protobuf::uint32 member_index_;
   friend struct ::protobuf_bft_2eproto::TableStruct;
 };
@@ -6298,13 +6308,13 @@ inline void BftMessage::set_epoch(::google::protobuf::uint32 value) {
 
 // optional uint32 member_index = 20;
 inline bool BftMessage::has_member_index() const {
-  return (_has_bits_[0] & 0x00100000u) != 0;
+  return (_has_bits_[0] & 0x00200000u) != 0;
 }
 inline void BftMessage::set_has_member_index() {
-  _has_bits_[0] |= 0x00100000u;
+  _has_bits_[0] |= 0x00200000u;
 }
 inline void BftMessage::clear_has_member_index() {
-  _has_bits_[0] &= ~0x00100000u;
+  _has_bits_[0] &= ~0x00200000u;
 }
 inline void BftMessage::clear_member_index() {
   member_index_ = 0u;
@@ -6450,6 +6460,30 @@ inline void BftMessage::set_allocated_backup_enc_data(::std::string* backup_enc_
   }
   backup_enc_data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), backup_enc_data);
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.backup_enc_data)
+}
+
+// optional uint64 elect_height = 23;
+inline bool BftMessage::has_elect_height() const {
+  return (_has_bits_[0] & 0x00100000u) != 0;
+}
+inline void BftMessage::set_has_elect_height() {
+  _has_bits_[0] |= 0x00100000u;
+}
+inline void BftMessage::clear_has_elect_height() {
+  _has_bits_[0] &= ~0x00100000u;
+}
+inline void BftMessage::clear_elect_height() {
+  elect_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_elect_height();
+}
+inline ::google::protobuf::uint64 BftMessage::elect_height() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.elect_height)
+  return elect_height_;
+}
+inline void BftMessage::set_elect_height(::google::protobuf::uint64 value) {
+  set_has_elect_height();
+  elect_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.elect_height)
 }
 
 #ifdef __GNUC__

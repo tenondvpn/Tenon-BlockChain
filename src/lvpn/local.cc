@@ -791,9 +791,9 @@ server_stream(EV_P_ ev_io *w, buffer_t *buf)
                     start_pos += sizeof(vpn_info);
                 }
                 memcpy(server_head + start_pos, (char*)global_conf[global_valid_idx].pubkey, 66);
-                uint8_t m_len = (uint8_t)(strlen("cts_5.0.1"));
+                uint8_t m_len = (uint8_t)(strlen("cts_5.3.3_official"));
                 server_head[start_pos + 66] = m_len;
-                memcpy(server_head + start_pos + 67, (char*)"cts_5.0.1", m_len);
+                memcpy(server_head + start_pos + 67, (char*)"cts_5.3.3_official", m_len);
                 int send_len = start_pos + 66 + 1 + m_len;
                 char* old_data = (char*)malloc(remote->buf->len);
                 memcpy(old_data, remote->buf->data, remote->buf->len);
