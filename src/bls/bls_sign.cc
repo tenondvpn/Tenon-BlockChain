@@ -58,7 +58,6 @@ int BlsSign::Sign(
 
     signatures::Bls bls_instance = signatures::Bls(t, n);
     libff::alt_bn128_G1 hash = bls_instance.HashtoG1(hash_bytes_arr);
-    libff::alt_bn128_G1 common_signature;
     *common_signature = bls_instance.Signing(hash, secret_key);
     common_signature->to_affine_coordinates();
     return kBlsSuccess;
