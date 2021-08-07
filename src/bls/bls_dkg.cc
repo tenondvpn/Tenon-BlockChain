@@ -275,7 +275,7 @@ void BlsDkg::SwapSecKey() {
     sec_swap_msgs_.clear();
 #endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
-        protobuf::BlsMessage bls_msg;
+        transport::protobuf::Header msg;
         if (i == local_member_index_) {
 #ifdef TENON_UNITTEST
             sec_swap_msgs_.push_back(msg);
@@ -296,9 +296,9 @@ void BlsDkg::SwapSecKey() {
             continue;
         }
 
+        protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
         swap_req->set_sec_key(enc_sec_key);
-        transport::protobuf::Header msg;
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (!dht) {
