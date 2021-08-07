@@ -38,7 +38,7 @@ namespace protobuf_bls_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[5];
+  static const ::google::protobuf::internal::ParseTable schema[6];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -60,6 +60,9 @@ extern SwapSecKeyReqDefaultTypeInternal _SwapSecKeyReq_default_instance_;
 class VerifyVecBrdReq;
 class VerifyVecBrdReqDefaultTypeInternal;
 extern VerifyVecBrdReqDefaultTypeInternal _VerifyVecBrdReq_default_instance_;
+class VerifyVecBrdRes;
+class VerifyVecBrdResDefaultTypeInternal;
+extern VerifyVecBrdResDefaultTypeInternal _VerifyVecBrdRes_default_instance_;
 class VerifyVecItem;
 class VerifyVecItemDefaultTypeInternal;
 extern VerifyVecItemDefaultTypeInternal _VerifyVecItem_default_instance_;
@@ -72,6 +75,7 @@ template<> ::tenon::bls::protobuf::AgainstParticipant* Arena::CreateMaybeMessage
 template<> ::tenon::bls::protobuf::BlsMessage* Arena::CreateMaybeMessage<::tenon::bls::protobuf::BlsMessage>(Arena*);
 template<> ::tenon::bls::protobuf::SwapSecKeyReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::SwapSecKeyReq>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecBrdReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdReq>(Arena*);
+template<> ::tenon::bls::protobuf::VerifyVecBrdRes* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdRes>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecItem* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecItem>(Arena*);
 }  // namespace protobuf
 }  // namespace google
@@ -410,6 +414,130 @@ class VerifyVecBrdReq : public ::google::protobuf::Message /* @@protoc_insertion
 };
 // -------------------------------------------------------------------
 
+class VerifyVecBrdRes : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.VerifyVecBrdRes) */ {
+ public:
+  VerifyVecBrdRes();
+  virtual ~VerifyVecBrdRes();
+
+  VerifyVecBrdRes(const VerifyVecBrdRes& from);
+
+  inline VerifyVecBrdRes& operator=(const VerifyVecBrdRes& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  VerifyVecBrdRes(VerifyVecBrdRes&& from) noexcept
+    : VerifyVecBrdRes() {
+    *this = ::std::move(from);
+  }
+
+  inline VerifyVecBrdRes& operator=(VerifyVecBrdRes&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const VerifyVecBrdRes& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const VerifyVecBrdRes* internal_default_instance() {
+    return reinterpret_cast<const VerifyVecBrdRes*>(
+               &_VerifyVecBrdRes_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(VerifyVecBrdRes* other);
+  friend void swap(VerifyVecBrdRes& a, VerifyVecBrdRes& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline VerifyVecBrdRes* New() const final {
+    return CreateMaybeMessage<VerifyVecBrdRes>(NULL);
+  }
+
+  VerifyVecBrdRes* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<VerifyVecBrdRes>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const VerifyVecBrdRes& from);
+  void MergeFrom(const VerifyVecBrdRes& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(VerifyVecBrdRes* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 public_ip = 1;
+  bool has_public_ip() const;
+  void clear_public_ip();
+  static const int kPublicIpFieldNumber = 1;
+  ::google::protobuf::uint32 public_ip() const;
+  void set_public_ip(::google::protobuf::uint32 value);
+
+  // optional uint32 public_port = 2;
+  bool has_public_port() const;
+  void clear_public_port();
+  static const int kPublicPortFieldNumber = 2;
+  ::google::protobuf::uint32 public_port() const;
+  void set_public_port(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.VerifyVecBrdRes)
+ private:
+  void set_has_public_ip();
+  void clear_has_public_ip();
+  void set_has_public_port();
+  void clear_has_public_port();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::uint32 public_ip_;
+  ::google::protobuf::uint32 public_port_;
+  friend struct ::protobuf_bls_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.SwapSecKeyReq) */ {
  public:
   SwapSecKeyReq();
@@ -452,7 +580,7 @@ class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_p
                &_SwapSecKeyReq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(SwapSecKeyReq* other);
   friend void swap(SwapSecKeyReq& a, SwapSecKeyReq& b) {
@@ -574,7 +702,7 @@ class AgainstParticipant : public ::google::protobuf::Message /* @@protoc_insert
                &_AgainstParticipant_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(AgainstParticipant* other);
   friend void swap(AgainstParticipant& a, AgainstParticipant& b) {
@@ -688,7 +816,7 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_BlsMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(BlsMessage* other);
   friend void swap(BlsMessage& a, BlsMessage& b) {
@@ -806,6 +934,18 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::tenon::bls::protobuf::AgainstParticipant* mutable_against_req();
   void set_allocated_against_req(::tenon::bls::protobuf::AgainstParticipant* against_req);
 
+  // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
+  bool has_verify_res() const;
+  void clear_verify_res();
+  static const int kVerifyResFieldNumber = 8;
+  private:
+  const ::tenon::bls::protobuf::VerifyVecBrdRes& _internal_verify_res() const;
+  public:
+  const ::tenon::bls::protobuf::VerifyVecBrdRes& verify_res() const;
+  ::tenon::bls::protobuf::VerifyVecBrdRes* release_verify_res();
+  ::tenon::bls::protobuf::VerifyVecBrdRes* mutable_verify_res();
+  void set_allocated_verify_res(::tenon::bls::protobuf::VerifyVecBrdRes* verify_res);
+
   // optional uint64 elect_height = 7;
   bool has_elect_height() const;
   void clear_elect_height();
@@ -836,6 +976,8 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_sign_res();
   void set_has_elect_height();
   void clear_has_elect_height();
+  void set_has_verify_res();
+  void clear_has_verify_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -845,6 +987,7 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::tenon::bls::protobuf::VerifyVecBrdReq* verify_brd_;
   ::tenon::bls::protobuf::SwapSecKeyReq* swap_req_;
   ::tenon::bls::protobuf::AgainstParticipant* against_req_;
+  ::tenon::bls::protobuf::VerifyVecBrdRes* verify_res_;
   ::google::protobuf::uint64 elect_height_;
   ::google::protobuf::uint32 index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
@@ -1292,6 +1435,58 @@ VerifyVecBrdReq::verify_vec() const {
 
 // -------------------------------------------------------------------
 
+// VerifyVecBrdRes
+
+// optional uint32 public_ip = 1;
+inline bool VerifyVecBrdRes::has_public_ip() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void VerifyVecBrdRes::set_has_public_ip() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void VerifyVecBrdRes::clear_has_public_ip() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void VerifyVecBrdRes::clear_public_ip() {
+  public_ip_ = 0u;
+  clear_has_public_ip();
+}
+inline ::google::protobuf::uint32 VerifyVecBrdRes::public_ip() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.VerifyVecBrdRes.public_ip)
+  return public_ip_;
+}
+inline void VerifyVecBrdRes::set_public_ip(::google::protobuf::uint32 value) {
+  set_has_public_ip();
+  public_ip_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.VerifyVecBrdRes.public_ip)
+}
+
+// optional uint32 public_port = 2;
+inline bool VerifyVecBrdRes::has_public_port() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void VerifyVecBrdRes::set_has_public_port() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void VerifyVecBrdRes::clear_has_public_port() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void VerifyVecBrdRes::clear_public_port() {
+  public_port_ = 0u;
+  clear_has_public_port();
+}
+inline ::google::protobuf::uint32 VerifyVecBrdRes::public_port() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.VerifyVecBrdRes.public_port)
+  return public_port_;
+}
+inline void VerifyVecBrdRes::set_public_port(::google::protobuf::uint32 value) {
+  set_has_public_port();
+  public_port_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.VerifyVecBrdRes.public_port)
+}
+
+// -------------------------------------------------------------------
+
 // SwapSecKeyReq
 
 // optional bytes sec_key = 1;
@@ -1568,13 +1763,13 @@ inline void BlsMessage::set_allocated_against_req(::tenon::bls::protobuf::Agains
 
 // optional uint32 index = 4;
 inline bool BlsMessage::has_index() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void BlsMessage::set_has_index() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void BlsMessage::clear_has_index() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void BlsMessage::clear_index() {
   index_ = 0u;
@@ -1724,13 +1919,13 @@ inline void BlsMessage::set_allocated_sign_res(::std::string* sign_res) {
 
 // optional uint64 elect_height = 7;
 inline bool BlsMessage::has_elect_height() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void BlsMessage::set_has_elect_height() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void BlsMessage::clear_has_elect_height() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void BlsMessage::clear_elect_height() {
   elect_height_ = GOOGLE_ULONGLONG(0);
@@ -1746,9 +1941,69 @@ inline void BlsMessage::set_elect_height(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsMessage.elect_height)
 }
 
+// optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
+inline bool BlsMessage::has_verify_res() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void BlsMessage::set_has_verify_res() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void BlsMessage::clear_has_verify_res() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void BlsMessage::clear_verify_res() {
+  if (verify_res_ != NULL) verify_res_->Clear();
+  clear_has_verify_res();
+}
+inline const ::tenon::bls::protobuf::VerifyVecBrdRes& BlsMessage::_internal_verify_res() const {
+  return *verify_res_;
+}
+inline const ::tenon::bls::protobuf::VerifyVecBrdRes& BlsMessage::verify_res() const {
+  const ::tenon::bls::protobuf::VerifyVecBrdRes* p = verify_res_;
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsMessage.verify_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bls::protobuf::VerifyVecBrdRes*>(
+      &::tenon::bls::protobuf::_VerifyVecBrdRes_default_instance_);
+}
+inline ::tenon::bls::protobuf::VerifyVecBrdRes* BlsMessage::release_verify_res() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsMessage.verify_res)
+  clear_has_verify_res();
+  ::tenon::bls::protobuf::VerifyVecBrdRes* temp = verify_res_;
+  verify_res_ = NULL;
+  return temp;
+}
+inline ::tenon::bls::protobuf::VerifyVecBrdRes* BlsMessage::mutable_verify_res() {
+  set_has_verify_res();
+  if (verify_res_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdRes>(GetArenaNoVirtual());
+    verify_res_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsMessage.verify_res)
+  return verify_res_;
+}
+inline void BlsMessage::set_allocated_verify_res(::tenon::bls::protobuf::VerifyVecBrdRes* verify_res) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete verify_res_;
+  }
+  if (verify_res) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      verify_res = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, verify_res, submessage_arena);
+    }
+    set_has_verify_res();
+  } else {
+    clear_has_verify_res();
+  }
+  verify_res_ = verify_res;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsMessage.verify_res)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
