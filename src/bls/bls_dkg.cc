@@ -194,6 +194,34 @@ void BlsDkg::HandleSwapSecKey(
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(dec_msg.c_str());
+    // verify it valid, if not broadcast against.
+    if (!dkg_instance_->Verification(
+            local_member_index_,
+            all_secret_key_contribution_[local_member_index_][bls_msg.index()],
+            all_verification_vector_[bls_msg.index()])) {
+        std::cout << "dkg_instance_->Verification failed!" << std::endl;
+        all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
+            libff::alt_bn128_Fr::zero();
+        // send against
+        bls::protobuf::BlsMessage bls_msg;
+        auto against_req = bls_msg.mutable_against_req();
+        against_req->set_against_index(bls_msg.index());
+        auto content_to_hash = std::to_string(bls_msg.index());
+        transport::protobuf::Header msg;
+        auto dht = network::DhtManager::Instance()->GetDht(
+            common::GlobalInfo::Instance()->network_id());
+        if (!dht) {
+            return;
+        }
+
+        auto message_hash = common::Hash::keccak256(content_to_hash);
+        CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+        network::Route::Instance()->Send(msg);
+#ifdef TENON_UNITTEST
+        sec_against_msgs_.push_back(msg);
+#endif
+        return;
+    }
 }
 
 void BlsDkg::HandleAgainstParticipant(
@@ -299,38 +327,6 @@ void BlsDkg::SwapSecKey() {
 }
 
 void BlsDkg::Finish() {
-    for (int32_t i = 0; i < members_->size(); ++i) {
-        for (int32_t j = 0; j < members_->size(); ++j) {
-            // verify it valid, if not broadcast against.
-            if (!dkg_instance_->Verification(
-                    i,
-                    all_secret_key_contribution_[i][j],
-                    all_verification_vector_[j])) {
-                std::cout << "dkg_instance_->Verification failed!" << std::endl;
-                all_secret_key_contribution_[i][j] =
-                    libff::alt_bn128_Fr::zero();
-                // send against
-                bls::protobuf::BlsMessage bls_msg;
-                auto against_req = bls_msg.mutable_against_req();
-                against_req->set_against_index(j);
-                auto content_to_hash = std::to_string(j);
-                transport::protobuf::Header msg;
-                auto dht = network::DhtManager::Instance()->GetDht(
-                    common::GlobalInfo::Instance()->network_id());
-                if (!dht) {
-                    return;
-                }
-
-                auto message_hash = common::Hash::keccak256(content_to_hash);
-                CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-                network::Route::Instance()->Send(msg);
-#ifdef TENON_UNITTEST
-                sec_against_msgs_.push_back(msg);
-#endif
-            }
-        }
-    }
-
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     public_keys_.clear();

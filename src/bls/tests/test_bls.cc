@@ -157,7 +157,7 @@ TEST_F(TestBls, BinarySearch) {
     for (uint32_t i = 0; i < n; ++i) {
         SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
         dkg[i].SwapSecKey();
-        for (uint32_t j = 0; j < n; ++j) {
+        for (uint32_t j = i; j < n; ++j) {
             if (i == j) {
                 continue;
             }
