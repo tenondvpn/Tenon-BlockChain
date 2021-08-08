@@ -171,14 +171,32 @@ TEST_F(TestBls, BinarySearch) {
     }
 
     // sign and verify
+    auto hash = common::Encode::HexEncode(common::Hash::Sha256("hello world"));
+    std::vector<libff::alt_bn128_G1> all_signs(n);
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();
         BlsSign bls_sign;
-        auto hash = common::Hash::Sha256("hello world");
-        libff::alt_bn128_G1 sign;
-        ASSERT_EQ(bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign), kBlsSuccess);
-        ASSERT_EQ(bls_sign.Verify(t, n, sign, hash, dkg[i].common_public_key_), kBlsSuccess);
+        ASSERT_EQ(
+            bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &all_signs[i]),
+            kBlsSuccess);
+        ASSERT_EQ(bls_sign.Verify(t, n, all_signs[i], hash, dkg[i].local_publick_key_), kBlsSuccess);
     }
+
+    std::vector<size_t> idx_vec(t);
+    for (size_t i = 0; i < t; ++i) {
+        idx_vec[i] = i + 1;
+    }
+
+    signatures::Bls bls_instance = signatures::Bls(t, n);
+    auto lagrange_coeffs = bls_instance.LagrangeCoeffs(idx_vec);
+    libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
+        all_signs,
+        lagrange_coeffs);
+    for (uint32_t i = 0; i < n; ++i) {
+        BlsSign bls_sign;
+        ASSERT_EQ(bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_), kBlsSuccess);
+    }
+
 }
 
 }  // namespace test

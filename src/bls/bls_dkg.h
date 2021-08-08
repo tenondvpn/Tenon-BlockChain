@@ -76,6 +76,7 @@ private:
     uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
     uint32_t min_aggree_member_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
+    libff::alt_bn128_G2 local_publick_key_;
     std::vector<libff::alt_bn128_G2> public_keys_;
     libff::alt_bn128_G2 common_public_key_;
     std::mutex mutex_;

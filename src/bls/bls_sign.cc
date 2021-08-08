@@ -52,7 +52,7 @@ int BlsSign::Sign(
         libff::alt_bn128_Fr& secret_key,
         const std::string& message,
         libff::alt_bn128_G1* sign) {
-    auto hash_bytes_arr = std::make_shared< std::array< uint8_t, 32 > >();
+    auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
     uint64_t bin_len;
     if (!hex2carray(message.c_str(), &bin_len, hash_bytes_arr->data())) {
         return kBlsError;
@@ -61,7 +61,6 @@ int BlsSign::Sign(
     signatures::Bls bls_instance = signatures::Bls(t, n);
     libff::alt_bn128_G1 hash = bls_instance.HashtoG1(hash_bytes_arr);
     *sign = bls_instance.Signing(hash, secret_key);
-    sign->to_affine_coordinates();
     return kBlsSuccess;
 }
 
@@ -72,6 +71,7 @@ int BlsSign::Verify(
         const std::string& message,
         const libff::alt_bn128_G2& pkey) {
     if (!sign.is_well_formed()) {
+        std::cout << "sign.is_well_formed() error." << std::endl;
         return kBlsError;
     }
 
@@ -80,11 +80,13 @@ int BlsSign::Verify(
     auto hash_bytes_arr = std::make_shared< std::array< uint8_t, 32 > >();
     uint64_t bin_len;
     if (!hex2carray(message.c_str(), &bin_len, hash_bytes_arr->data())) {
+        std::cout << "hex2carray error." << std::endl;
         return kBlsError;
     }
 
     bool bRes = bls_instance.Verification(hash_bytes_arr, sign, pkey);
     if (!bRes) {
+        std::cout << "bls_instance.Verification error." << std::endl;
         return kBlsError;
     }
     
