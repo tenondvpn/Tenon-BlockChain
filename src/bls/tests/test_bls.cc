@@ -178,6 +178,9 @@ TEST_F(TestBls, BinarySearch) {
     auto hash = common::Encode::HexEncode(common::Hash::Sha256("hello world"));
     std::vector<libff::alt_bn128_G1> all_signs(n);
     for (uint32_t i = 0; i < n; ++i) {
+        dkg[i].invalid_node_map_[3] = 6;
+        dkg[i].invalid_node_map_[5] = 6;
+        dkg[i].invalid_node_map_[6] = 6;
         dkg[i].Finish();
         BlsSign bls_sign;
         ASSERT_EQ(
