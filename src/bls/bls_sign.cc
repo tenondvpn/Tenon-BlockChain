@@ -77,15 +77,14 @@ int BlsSign::Verify(
 
     libff::inhibit_profiling_info = true;
     signatures::Bls bls_instance = signatures::Bls(t, n);
-    auto hash_bytes_arr = std::make_shared< std::array< uint8_t, 32 > >();
+    auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
     uint64_t bin_len;
     if (!hex2carray(message.c_str(), &bin_len, hash_bytes_arr->data())) {
         std::cout << "hex2carray error." << std::endl;
         return kBlsError;
     }
 
-    bool bRes = bls_instance.Verification(hash_bytes_arr, sign, pkey);
-    if (!bRes) {
+    if (!bls_instance.Verification(hash_bytes_arr, sign, pkey)) {
         std::cout << "bls_instance.Verification error." << std::endl;
         return kBlsError;
     }

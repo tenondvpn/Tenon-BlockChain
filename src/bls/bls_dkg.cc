@@ -1,6 +1,7 @@
 #include "bls/bls_dkg.h"
 
 #include <vector>
+#include <fstream>
 
 #include <bls/bls_utils.h>
 
@@ -9,6 +10,7 @@
 #include "dht/dht_key.h"
 #include "election/elect_manager.h"
 #include "network/route.h"
+#include "json/json.hpp"
 #include "security/signature.h"
 #include "security/crypto_utils.h"
 #include "security/schnorr.h"
@@ -339,6 +341,19 @@ void BlsDkg::Finish() {
     }
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
+    auto sec_key_str = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
+    common_public_key_.to_affine_coordinates();
+    auto public_key_str_x_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0);
+    auto public_key_str_x_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1);
+    auto public_key_str_y_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0);
+    auto public_key_str_y_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1);
+    std::cout << "local_member_index_: " << local_member_index_
+        << ", sec: " << sec_key_str
+        << ", pub key xc0: " << public_key_str_x_c0
+        << ", pub key xc1: " << public_key_str_x_c1
+        << ", pub key yc0: " << public_key_str_y_c0
+        << ", pub key yc1: " << public_key_str_y_c1
+        << std::endl;
 }
 
 int BlsDkg::CreateContribution() {
@@ -347,6 +362,34 @@ int BlsDkg::CreateContribution() {
         dkg_instance_->SecretKeyContribution(polynomial);
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
     return 0;
+}
+
+void BlsDkg::DumpContribution() {
+    nlohmann::json data;
+    data["idx"] = std::to_string(local_member_index_);
+    for (size_t i = 0; i < members_->size(); ++i) {
+        data["secret_key_contribution"][std::to_string(i)] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fr >(all_secret_key_contribution_[local_member_index_][i]);
+    }
+
+    for (size_t i = 0; i < min_aggree_member_count_; ++i) {
+        data["verification_vector"][std::to_string(i)]["X"]["c0"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].X.c0);
+        data["verification_vector"][std::to_string(i)]["X"]["c1"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].X.c1);
+        data["verification_vector"][std::to_string(i)]["Y"]["c0"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Y.c0);
+        data["verification_vector"][std::to_string(i)]["Y"]["c1"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Y.c1);
+        data["verification_vector"][std::to_string(i)]["Z"]["c0"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Z.c0);
+        data["verification_vector"][std::to_string(i)]["Z"]["c1"] =
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Z.c1);
+    }
+
+    std::ofstream outfile("data_for_" + std::to_string(local_member_index_) + "-th_participant.json");
+    outfile << data.dump(4) << "\n\n";
+
 }
 
 void BlsDkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
