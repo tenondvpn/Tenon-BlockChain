@@ -159,7 +159,14 @@ TEST_F(TestBls, BinarySearch) {
     for (uint32_t i = 0; i < n; ++i) {
         SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
         dkg[i].SwapSecKey();
-        for (uint32_t j = i + 1; j < n; ++j) {
+    }
+
+    for (uint32_t i = 0; i < n; ++i) {
+        for (uint32_t j = 0; j < n; ++j) {
+            if (i == j) {
+                continue;
+            }
+
             SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
             auto msg_ptr = std::make_shared<transport::protobuf::Header>(
                 dkg[i].sec_swap_msgs_[j]);
@@ -168,30 +175,17 @@ TEST_F(TestBls, BinarySearch) {
     }
 
     // sign and verify
-    std::vector<std::string> bls_prikeys = {
-    "2294693333552044080236769000059483663349841417751624599070777562397970206650"
-    ,"9718414207548464167165618385514348390474780319573951458084426396122522537248"
-    ,"1187464956706038301308266996433335881352532469969015590996216356913300885892"
-    ,"7021115389803627837638493868693449613558067871756025910676203339886238834493"
-    ,"15403367425616042974490681596328874853660039374408987833933473193279502680417"
-    ,"588230559585539188092710036343928823705566001364061091524453759583963305108"
-    ,"20259183662481234090845598531755534173347381367791894411032640132038182207070"
-    ,"9942694289778765935160998983491539252291152381762353229750261954699167273719"
-    ,"18676053144295551319234335109892238193707357842946808123300835109666387143083"
-    ,"10399808818510633204897358083524087266673150922216610202074430328426704330670"
-    };
     auto hash = common::Encode::HexEncode(common::Hash::Sha256("hello world"));
     std::vector<libff::alt_bn128_G1> all_signs(n);
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();
         BlsSign bls_sign;
-        dkg[i].local_sec_key_ = libff::alt_bn128_Fr(bls_prikeys[i].c_str());
         ASSERT_EQ(
             bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &all_signs[i]),
             kBlsSuccess);
-//         ASSERT_EQ(
-//             bls_sign.Verify(t, n, all_signs[i], hash, dkg[i].local_publick_key_),
-//             kBlsSuccess);
+        ASSERT_EQ(
+            bls_sign.Verify(t, n, all_signs[i], hash, dkg[i].local_publick_key_),
+            kBlsSuccess);
     }
 
     std::vector<size_t> idx_vec(t);
@@ -205,21 +199,12 @@ TEST_F(TestBls, BinarySearch) {
         all_signs,
         lagrange_coeffs);
 
-    std::vector<std::string> pkey_str;
-    pkey_str.push_back("8450064501504853443387960803404029182694431849098238527879028136828299206497");
-    pkey_str.push_back("1010619530225578161015298718462689657916059555100918119830682036106786237669");
-    pkey_str.push_back("4571649803337987184358497258959797622246195872870910425367355814518813580607");
-    pkey_str.push_back("7331594472031789866455650255249235107494510614949823829609836481391432392555");
-    BLSPublicKey pkey(std::make_shared< std::vector< std::string > >(pkey_str), t, n);
-
     for (uint32_t i = 0; i < n; ++i) {
-        dkg[i].common_public_key_ = *pkey.getPublicKey();
         BlsSign bls_sign;
         ASSERT_EQ(
             bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_),
             kBlsSuccess);
     }
-
 }
 
 }  // namespace test

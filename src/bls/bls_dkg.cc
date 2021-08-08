@@ -341,19 +341,19 @@ void BlsDkg::Finish() {
     }
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
-    auto sec_key_str = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
-    common_public_key_.to_affine_coordinates();
-    auto public_key_str_x_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0);
-    auto public_key_str_x_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1);
-    auto public_key_str_y_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0);
-    auto public_key_str_y_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1);
-    std::cout << "local_member_index_: " << local_member_index_
-        << ", sec: " << sec_key_str
-        << ", pub key xc0: " << public_key_str_x_c0
-        << ", pub key xc1: " << public_key_str_x_c1
-        << ", pub key yc0: " << public_key_str_y_c0
-        << ", pub key yc1: " << public_key_str_y_c1
-        << std::endl;
+//     auto sec_key_str = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
+//     common_public_key_.to_affine_coordinates();
+//     auto public_key_str_x_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0);
+//     auto public_key_str_x_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1);
+//     auto public_key_str_y_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0);
+//     auto public_key_str_y_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1);
+//     std::cout << "local_member_index_: " << local_member_index_
+//         << ", sec: " << sec_key_str
+//         << ", pub key xc0: " << public_key_str_x_c0
+//         << ", pub key xc1: " << public_key_str_x_c1
+//         << ", pub key yc0: " << public_key_str_y_c0
+//         << ", pub key yc1: " << public_key_str_y_c1
+//         << std::endl;
 }
 
 int BlsDkg::CreateContribution() {
