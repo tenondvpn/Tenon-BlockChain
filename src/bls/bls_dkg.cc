@@ -334,7 +334,6 @@ void BlsDkg::Finish() {
     common_public_key_ = libff::alt_bn128_G2::zero();
     for (size_t i = 0; i < members_->size(); ++i) {
         if (invalid_node_map_[i] >= min_aggree_member_count_) {
-            std::cout << "i: " << i << ", invalid count: " << invalid_node_map_[i] << ", min_aggree_member_count_: " << min_aggree_member_count_ << std::endl;
             continue;
         }
 
