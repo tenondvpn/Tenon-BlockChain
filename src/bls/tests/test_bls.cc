@@ -179,7 +179,9 @@ TEST_F(TestBls, BinarySearch) {
         ASSERT_EQ(
             bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &all_signs[i]),
             kBlsSuccess);
-        ASSERT_EQ(bls_sign.Verify(t, n, all_signs[i], hash, dkg[i].local_publick_key_), kBlsSuccess);
+        ASSERT_EQ(
+            bls_sign.Verify(t, n, all_signs[i], hash, dkg[i].local_publick_key_),
+            kBlsSuccess);
     }
 
     std::vector<size_t> idx_vec(t);
@@ -194,7 +196,9 @@ TEST_F(TestBls, BinarySearch) {
         lagrange_coeffs);
     for (uint32_t i = 0; i < n; ++i) {
         BlsSign bls_sign;
-        ASSERT_EQ(bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_), kBlsSuccess);
+        ASSERT_EQ(
+            bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_),
+            kBlsSuccess);
     }
 
 }
