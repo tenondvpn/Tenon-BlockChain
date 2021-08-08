@@ -34,7 +34,6 @@ namespace test {
 class TestBls : public testing::Test {
 public:
     static void SetUpTestCase() {
-        security::EcdhCreateKey::Instance()->Init();
 //         transport_ = std::make_shared<tenon::transport::UdpTransport>(
 //                 "127.0.0.1",
 //                 9701,
@@ -67,6 +66,7 @@ public:
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);
+        security::EcdhCreateKey::Instance()->Init();
         JoinNetwork(network::kRootCongressNetworkId);
         JoinNetwork(network::kUniversalNetworkId);
         JoinNetwork(network::kConsensusShardBeginNetworkId);
@@ -162,11 +162,16 @@ TEST_F(TestBls, BinarySearch) {
                 continue;
             }
 
-            SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
+            SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
             auto msg_ptr = std::make_shared<transport::protobuf::Header>(
-                verify_brd_msgs[i]);
+                dkg[i].sec_swap_msgs_[j]);
             dkg[j].HandleMessage(msg_ptr);
         }
+    }
+
+    // verify and brd against
+    for (uint32_t i = 0; i < n; ++i) {
+        dkg[i].Finish();
     }
 }
 
