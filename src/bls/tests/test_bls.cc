@@ -158,11 +158,7 @@ TEST_F(TestBls, BinarySearch) {
     for (uint32_t i = 0; i < n; ++i) {
         SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
         dkg[i].SwapSecKey();
-        for (uint32_t j = i; j < n; ++j) {
-            if (i == j) {
-                continue;
-            }
-
+        for (uint32_t j = i + 1; j < n; ++j) {
             SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
             auto msg_ptr = std::make_shared<transport::protobuf::Header>(
                 dkg[i].sec_swap_msgs_[j]);
