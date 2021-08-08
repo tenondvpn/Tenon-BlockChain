@@ -175,7 +175,7 @@ TEST_F(TestBls, AllSuccess) {
     }
 
     // sign and verify
-    auto hash = common::Encode::HexEncode(common::Hash::Sha256("hello world"));
+    auto hash = common::Hash::Sha256("hello world");
     std::vector<libff::alt_bn128_G1> all_signs;
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();
@@ -289,7 +289,7 @@ TEST_F(TestBls, ThreeRatioFail) {
     }
 
     // sign and verify
-    auto hash = common::Encode::HexEncode(common::Hash::Sha256("hello world"));
+    auto hash = common::Hash::Sha256("hello world");
     std::vector<libff::alt_bn128_G1> all_signs;
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();

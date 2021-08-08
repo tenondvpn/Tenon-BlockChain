@@ -65,7 +65,7 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     if (members_ == nullptr) {
-        std::cout << "members_ == nullptr" << std::endl;
+        BLS_ERROR("members_ == nullptr");
         return;
     }
 
@@ -79,15 +79,13 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     }
 
     if (bls_msg.index() >= members_->size()) {
-        std::cout << "bls_msg.index() >= members_->size()" << std::endl;
+        BLS_ERROR("bls_msg.index() >= members_->size()");
         return;
     }
 
     if (bls_msg.elect_height() != elect_hegiht_) {
-        std::cout << "bls_msg.elect_height() != elect_hegiht_"
-            << bls_msg.elect_height() 
-            << ", " << elect_hegiht_
-            << std::endl;
+        BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
+            bls_msg.elect_height(), elect_hegiht_);
         return;
     }
 
@@ -145,12 +143,12 @@ void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
     if (!IsSignValid(bls_msg)) {
-        std::cout << "sign verify failed!" << std::endl;
+        BLS_ERROR("sign verify failed!");
         return;
     }
 
     if (bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_) {
-        std::cout << "bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_" << std::endl;
+        BLS_ERROR("bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_");
         return;
     }
 
@@ -189,7 +187,7 @@ void BlsDkg::HandleSwapSecKey(
         (*members_)[bls_msg.index()]->pubkey,
         bls_msg.swap_req().sec_key());
     if (dec_msg.empty()) {
-        std::cout << "dec_msg.empty()" << std::endl;
+        BLS_ERROR("dec_msg.empty()");
         return;
     }
 
@@ -201,7 +199,7 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        std::cout << "dkg_instance_->Verification failed!" << std::endl;
+        BLS_ERROR("dkg_instance_->Verification failed!");
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
             libff::alt_bn128_Fr::zero();
         // send against
@@ -341,19 +339,6 @@ void BlsDkg::Finish() {
     }
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
-//     auto sec_key_str = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
-//     common_public_key_.to_affine_coordinates();
-//     auto public_key_str_x_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0);
-//     auto public_key_str_x_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1);
-//     auto public_key_str_y_c0 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0);
-//     auto public_key_str_y_c1 = BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1);
-//     std::cout << "local_member_index_: " << local_member_index_
-//         << ", sec: " << sec_key_str
-//         << ", pub key xc0: " << public_key_str_x_c0
-//         << ", pub key xc1: " << public_key_str_x_c1
-//         << ", pub key yc0: " << public_key_str_y_c0
-//         << ", pub key yc1: " << public_key_str_y_c1
-//         << std::endl;
 }
 
 int BlsDkg::CreateContribution() {
@@ -369,22 +354,29 @@ void BlsDkg::DumpContribution() {
     data["idx"] = std::to_string(local_member_index_);
     for (size_t i = 0; i < members_->size(); ++i) {
         data["secret_key_contribution"][std::to_string(i)] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fr >(all_secret_key_contribution_[local_member_index_][i]);
+            BLSutils::ConvertToString< libff::alt_bn128_Fr >(
+                all_secret_key_contribution_[local_member_index_][i]);
     }
 
     for (size_t i = 0; i < min_aggree_member_count_; ++i) {
         data["verification_vector"][std::to_string(i)]["X"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].X.c0);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].X.c0);
         data["verification_vector"][std::to_string(i)]["X"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].X.c1);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].X.c1);
         data["verification_vector"][std::to_string(i)]["Y"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Y.c0);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].Y.c0);
         data["verification_vector"][std::to_string(i)]["Y"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Y.c1);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].Y.c1);
         data["verification_vector"][std::to_string(i)]["Z"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Z.c0);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].Z.c0);
         data["verification_vector"][std::to_string(i)]["Z"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(all_verification_vector_[local_member_index_][i].Z.c1);
+            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+                all_verification_vector_[local_member_index_][i].Z.c1);
     }
 
     std::ofstream outfile("data_for_" + std::to_string(local_member_index_) + "-th_participant.json");
