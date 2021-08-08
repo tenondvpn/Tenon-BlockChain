@@ -51,7 +51,7 @@ int BlsSign::Sign(
         uint32_t n,
         libff::alt_bn128_Fr& secret_key,
         const std::string& message,
-        libff::alt_bn128_G1* common_signature) {
+        libff::alt_bn128_G1* sign) {
     auto hash_bytes_arr = std::make_shared< std::array< uint8_t, 32 > >();
     uint64_t bin_len;
     if (!hex2carray(message.c_str(), &bin_len, hash_bytes_arr->data())) {
@@ -60,8 +60,8 @@ int BlsSign::Sign(
 
     signatures::Bls bls_instance = signatures::Bls(t, n);
     libff::alt_bn128_G1 hash = bls_instance.HashtoG1(hash_bytes_arr);
-    *common_signature = bls_instance.Signing(hash, secret_key);
-    common_signature->to_affine_coordinates();
+    *sign = bls_instance.Signing(hash, secret_key);
+    sign->to_affine_coordinates();
     return kBlsSuccess;
 }
 

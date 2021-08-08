@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "common/random.h"
+#include "common/hash.h"
 #include "dht/dht_key.h"
 #include "election/elect_dht.h"
 #include "network/dht_manager.h"
@@ -169,9 +170,14 @@ TEST_F(TestBls, BinarySearch) {
         }
     }
 
-    // verify and brd against
+    // sign and verify
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();
+        BlsSign bls_sign;
+        auto hash = common::Hash::Sha256("hello world");
+        libff::alt_bn128_G1 sign;
+        ASSERT_EQ(bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign), kBlsSuccess);
+        ASSERT_EQ(bls_sign.Verify(t, n, sign, hash, dkg[i].common_public_key_), kBlsSuccess);
     }
 }
 
