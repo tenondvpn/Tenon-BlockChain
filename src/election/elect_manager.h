@@ -7,15 +7,15 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
-#include "transport/proto/transport.pb.h"
-#include "transport/transport_utils.h"
-#include "network/shard_network.h"
 #include "election/elect_utils.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_pool_manager.h"
 #include "election/member_manager.h"
 #include "election/height_with_elect_blocks.h"
 #include "election/elect_node_detail.h"
+#include "network/shard_network.h"
+#include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 

@@ -15,6 +15,7 @@
 #include "security/crypto_utils.h"
 #include "security/schnorr.h"
 #include "security/crypto.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -34,6 +35,10 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
         return;
     }
 
+    uint64_t random_seed = common::Hash::Hash64(
+        security::Schnorr::Instance()->str_prikey() +
+        std::to_string(vss::VssManager::Instance()->EpochRandom()));
+    random_ptr_ = std::make_shared<std::mt19937>(random_seed);
     members_ = members;
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = members_->size() * 2 / 3;
@@ -342,7 +347,7 @@ void BlsDkg::Finish() {
 }
 
 int BlsDkg::CreateContribution() {
-    std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial();
+    std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial(*random_ptr_);
     all_secret_key_contribution_[local_member_index_] =
         dkg_instance_->SecretKeyContribution(polynomial);
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);

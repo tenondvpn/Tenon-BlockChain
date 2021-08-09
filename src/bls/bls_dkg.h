@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <memory>
+#include <random>
 
 #include <bls/BLSPrivateKey.h>
 #include <bls/BLSPrivateKeyShare.h>
@@ -79,6 +80,7 @@ private:
     libff::alt_bn128_Fr local_sec_key_;
     libff::alt_bn128_G2 local_publick_key_;
     libff::alt_bn128_G2 common_public_key_;
+    std::shared_ptr<std::mt19937> random_ptr_;
     std::mutex mutex_;
 
 #ifdef TENON_UNITTEST

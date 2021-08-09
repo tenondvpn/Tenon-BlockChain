@@ -2,6 +2,13 @@ syntax = "proto2";
 
 package tenon.elect.protobuf;
 
+message BlsPublicKey {
+	optional bytes x_c0 = 1;
+	optional bytes x_c1 = 2;
+    optional bytes y_c0 = 3;
+	optional bytes y_c1 = 4;
+}
+
 message member {
 	optional bytes id = 1;
 	optional bytes pubkey = 2;
@@ -14,6 +21,7 @@ message member {
     optional bytes local_ip = 9;
 	optional uint32 local_port = 10;
 	optional int32 pool_idx_mod_num = 11;
+	repeated BlsPublicKey bls_pubkey = 12;
 }
 
 message ElectBlock {
@@ -24,6 +32,7 @@ message ElectBlock {
 	optional int32 leader_count = 5;
 	optional uint32 shard_network_id = 6;
 	optional uint64 elect_height = 7;
+	optional BlsPublicKey common_pubkey = 12;
 }
 
 message WaitingNodesMessage {
@@ -40,9 +49,10 @@ message WaitingNodeHeartbeat {
 
 message ElectMessage {
 	optional ElectBlock elect_block = 1;
-    optional WaitingNodesMessage waiting_nodes = 2;
-    optional bytes pubkey = 3;
-	optional bytes sign_ch = 4;
-	optional bytes sign_res = 5;
-    optional WaitingNodeHeartbeat waiting_heartbeat = 6;
+	optional ElectBlock prev_elect_block = 2;
+    optional WaitingNodesMessage waiting_nodes = 3;
+    optional bytes pubkey = 4;
+	optional bytes sign_ch = 5;
+	optional bytes sign_res = 6;
+    optional WaitingNodeHeartbeat waiting_heartbeat = 7;
 }
