@@ -25,7 +25,6 @@
 #pragma once
 
 #include <vector>
-#include <random>
 
 #include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
 #include <libff/algebra/fields/fp.hpp>
@@ -36,7 +35,7 @@ class Dkg {
 public:
     Dkg( const size_t t, const size_t n );
 
-    std::vector< libff::alt_bn128_Fr > GeneratePolynomial(std::mt19937& mt);
+    std::vector< libff::alt_bn128_Fr > GeneratePolynomial();
 
     std::vector< libff::alt_bn128_G2 > VerificationVector(
         const std::vector< libff::alt_bn128_Fr >& polynomial );
