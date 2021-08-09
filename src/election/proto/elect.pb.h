@@ -38,7 +38,7 @@ namespace protobuf_elect_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[6];
+  static const ::google::protobuf::internal::ParseTable schema[7];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -57,6 +57,9 @@ extern ElectBlockDefaultTypeInternal _ElectBlock_default_instance_;
 class ElectMessage;
 class ElectMessageDefaultTypeInternal;
 extern ElectMessageDefaultTypeInternal _ElectMessage_default_instance_;
+class PrevMembers;
+class PrevMembersDefaultTypeInternal;
+extern PrevMembersDefaultTypeInternal _PrevMembers_default_instance_;
 class WaitingNodeHeartbeat;
 class WaitingNodeHeartbeatDefaultTypeInternal;
 extern WaitingNodeHeartbeatDefaultTypeInternal _WaitingNodeHeartbeat_default_instance_;
@@ -74,6 +77,7 @@ namespace protobuf {
 template<> ::tenon::elect::protobuf::BlsPublicKey* Arena::CreateMaybeMessage<::tenon::elect::protobuf::BlsPublicKey>(Arena*);
 template<> ::tenon::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectBlock>(Arena*);
 template<> ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectMessage>(Arena*);
+template<> ::tenon::elect::protobuf::PrevMembers* Arena::CreateMaybeMessage<::tenon::elect::protobuf::PrevMembers>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodeHeartbeat* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodeHeartbeat>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodesMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodesMessage>(Arena*);
 template<> ::tenon::elect::protobuf::member* Arena::CreateMaybeMessage<::tenon::elect::protobuf::member>(Arena*);
@@ -355,18 +359,6 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 
   // accessors -------------------------------------------------------
 
-  // repeated .tenon.elect.protobuf.BlsPublicKey bls_pubkey = 12;
-  int bls_pubkey_size() const;
-  void clear_bls_pubkey();
-  static const int kBlsPubkeyFieldNumber = 12;
-  ::tenon::elect::protobuf::BlsPublicKey* mutable_bls_pubkey(int index);
-  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >*
-      mutable_bls_pubkey();
-  const ::tenon::elect::protobuf::BlsPublicKey& bls_pubkey(int index) const;
-  ::tenon::elect::protobuf::BlsPublicKey* add_bls_pubkey();
-  const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >&
-      bls_pubkey() const;
-
   // optional bytes id = 1;
   bool has_id() const;
   void clear_id();
@@ -520,7 +512,6 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey > bls_pubkey_;
   ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_;
@@ -532,6 +523,148 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 public_port_;
   ::google::protobuf::uint32 local_port_;
   ::google::protobuf::int32 pool_idx_mod_num_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class PrevMembers : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.PrevMembers) */ {
+ public:
+  PrevMembers();
+  virtual ~PrevMembers();
+
+  PrevMembers(const PrevMembers& from);
+
+  inline PrevMembers& operator=(const PrevMembers& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PrevMembers(PrevMembers&& from) noexcept
+    : PrevMembers() {
+    *this = ::std::move(from);
+  }
+
+  inline PrevMembers& operator=(PrevMembers&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PrevMembers& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PrevMembers* internal_default_instance() {
+    return reinterpret_cast<const PrevMembers*>(
+               &_PrevMembers_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(PrevMembers* other);
+  friend void swap(PrevMembers& a, PrevMembers& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PrevMembers* New() const final {
+    return CreateMaybeMessage<PrevMembers>(NULL);
+  }
+
+  PrevMembers* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PrevMembers>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PrevMembers& from);
+  void MergeFrom(const PrevMembers& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PrevMembers* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .tenon.elect.protobuf.BlsPublicKey bls_pubkey = 1;
+  int bls_pubkey_size() const;
+  void clear_bls_pubkey();
+  static const int kBlsPubkeyFieldNumber = 1;
+  ::tenon::elect::protobuf::BlsPublicKey* mutable_bls_pubkey(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >*
+      mutable_bls_pubkey();
+  const ::tenon::elect::protobuf::BlsPublicKey& bls_pubkey(int index) const;
+  ::tenon::elect::protobuf::BlsPublicKey* add_bls_pubkey();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >&
+      bls_pubkey() const;
+
+  // optional .tenon.elect.protobuf.BlsPublicKey common_pubkey = 3;
+  bool has_common_pubkey() const;
+  void clear_common_pubkey();
+  static const int kCommonPubkeyFieldNumber = 3;
+  private:
+  const ::tenon::elect::protobuf::BlsPublicKey& _internal_common_pubkey() const;
+  public:
+  const ::tenon::elect::protobuf::BlsPublicKey& common_pubkey() const;
+  ::tenon::elect::protobuf::BlsPublicKey* release_common_pubkey();
+  ::tenon::elect::protobuf::BlsPublicKey* mutable_common_pubkey();
+  void set_allocated_common_pubkey(::tenon::elect::protobuf::BlsPublicKey* common_pubkey);
+
+  // optional uint64 prev_elect_height = 2;
+  bool has_prev_elect_height() const;
+  void clear_prev_elect_height();
+  static const int kPrevElectHeightFieldNumber = 2;
+  ::google::protobuf::uint64 prev_elect_height() const;
+  void set_prev_elect_height(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.PrevMembers)
+ private:
+  void set_has_prev_elect_height();
+  void clear_has_prev_elect_height();
+  void set_has_common_pubkey();
+  void clear_has_common_pubkey();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey > bls_pubkey_;
+  ::tenon::elect::protobuf::BlsPublicKey* common_pubkey_;
+  ::google::protobuf::uint64 prev_elect_height_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -578,7 +711,7 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_ElectBlock_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(ElectBlock* other);
   friend void swap(ElectBlock& a, ElectBlock& b) {
@@ -684,17 +817,17 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_acc_sign();
   void set_allocated_acc_sign(::std::string* acc_sign);
 
-  // optional .tenon.elect.protobuf.BlsPublicKey common_pubkey = 9;
-  bool has_common_pubkey() const;
-  void clear_common_pubkey();
-  static const int kCommonPubkeyFieldNumber = 9;
+  // optional .tenon.elect.protobuf.PrevMembers prev_members = 8;
+  bool has_prev_members() const;
+  void clear_prev_members();
+  static const int kPrevMembersFieldNumber = 8;
   private:
-  const ::tenon::elect::protobuf::BlsPublicKey& _internal_common_pubkey() const;
+  const ::tenon::elect::protobuf::PrevMembers& _internal_prev_members() const;
   public:
-  const ::tenon::elect::protobuf::BlsPublicKey& common_pubkey() const;
-  ::tenon::elect::protobuf::BlsPublicKey* release_common_pubkey();
-  ::tenon::elect::protobuf::BlsPublicKey* mutable_common_pubkey();
-  void set_allocated_common_pubkey(::tenon::elect::protobuf::BlsPublicKey* common_pubkey);
+  const ::tenon::elect::protobuf::PrevMembers& prev_members() const;
+  ::tenon::elect::protobuf::PrevMembers* release_prev_members();
+  ::tenon::elect::protobuf::PrevMembers* mutable_prev_members();
+  void set_allocated_prev_members(::tenon::elect::protobuf::PrevMembers* prev_members);
 
   // optional int32 leader_count = 5;
   bool has_leader_count() const;
@@ -717,13 +850,6 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint64 elect_height() const;
   void set_elect_height(::google::protobuf::uint64 value);
 
-  // optional uint64 prev_elect_height = 8;
-  bool has_prev_elect_height() const;
-  void clear_prev_elect_height();
-  static const int kPrevElectHeightFieldNumber = 8;
-  ::google::protobuf::uint64 prev_elect_height() const;
-  void set_prev_elect_height(::google::protobuf::uint64 value);
-
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectBlock)
  private:
   void set_has_acc_pubkey();
@@ -736,10 +862,8 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_shard_network_id();
   void set_has_elect_height();
   void clear_has_elect_height();
-  void set_has_prev_elect_height();
-  void clear_has_prev_elect_height();
-  void set_has_common_pubkey();
-  void clear_has_common_pubkey();
+  void set_has_prev_members();
+  void clear_has_prev_members();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -748,11 +872,10 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::member > out_;
   ::google::protobuf::internal::ArenaStringPtr acc_pubkey_;
   ::google::protobuf::internal::ArenaStringPtr acc_sign_;
-  ::tenon::elect::protobuf::BlsPublicKey* common_pubkey_;
+  ::tenon::elect::protobuf::PrevMembers* prev_members_;
   ::google::protobuf::int32 leader_count_;
   ::google::protobuf::uint32 shard_network_id_;
   ::google::protobuf::uint64 elect_height_;
-  ::google::protobuf::uint64 prev_elect_height_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -799,7 +922,7 @@ class WaitingNodesMessage : public ::google::protobuf::Message /* @@protoc_inser
                &_WaitingNodesMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(WaitingNodesMessage* other);
   friend void swap(WaitingNodesMessage& a, WaitingNodesMessage& b) {
@@ -926,7 +1049,7 @@ class WaitingNodeHeartbeat : public ::google::protobuf::Message /* @@protoc_inse
                &_WaitingNodeHeartbeat_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(WaitingNodeHeartbeat* other);
   friend void swap(WaitingNodeHeartbeat& a, WaitingNodeHeartbeat& b) {
@@ -1078,7 +1201,7 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_ElectMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(ElectMessage* other);
   friend void swap(ElectMessage& a, ElectMessage& b) {
@@ -2047,34 +2170,120 @@ inline void member::set_pool_idx_mod_num(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.pool_idx_mod_num)
 }
 
-// repeated .tenon.elect.protobuf.BlsPublicKey bls_pubkey = 12;
-inline int member::bls_pubkey_size() const {
+// -------------------------------------------------------------------
+
+// PrevMembers
+
+// repeated .tenon.elect.protobuf.BlsPublicKey bls_pubkey = 1;
+inline int PrevMembers::bls_pubkey_size() const {
   return bls_pubkey_.size();
 }
-inline void member::clear_bls_pubkey() {
+inline void PrevMembers::clear_bls_pubkey() {
   bls_pubkey_.Clear();
 }
-inline ::tenon::elect::protobuf::BlsPublicKey* member::mutable_bls_pubkey(int index) {
-  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.member.bls_pubkey)
+inline ::tenon::elect::protobuf::BlsPublicKey* PrevMembers::mutable_bls_pubkey(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.PrevMembers.bls_pubkey)
   return bls_pubkey_.Mutable(index);
 }
 inline ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >*
-member::mutable_bls_pubkey() {
-  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.member.bls_pubkey)
+PrevMembers::mutable_bls_pubkey() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.PrevMembers.bls_pubkey)
   return &bls_pubkey_;
 }
-inline const ::tenon::elect::protobuf::BlsPublicKey& member::bls_pubkey(int index) const {
-  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.member.bls_pubkey)
+inline const ::tenon::elect::protobuf::BlsPublicKey& PrevMembers::bls_pubkey(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.PrevMembers.bls_pubkey)
   return bls_pubkey_.Get(index);
 }
-inline ::tenon::elect::protobuf::BlsPublicKey* member::add_bls_pubkey() {
-  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.member.bls_pubkey)
+inline ::tenon::elect::protobuf::BlsPublicKey* PrevMembers::add_bls_pubkey() {
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.PrevMembers.bls_pubkey)
   return bls_pubkey_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::BlsPublicKey >&
-member::bls_pubkey() const {
-  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.member.bls_pubkey)
+PrevMembers::bls_pubkey() const {
+  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.PrevMembers.bls_pubkey)
   return bls_pubkey_;
+}
+
+// optional uint64 prev_elect_height = 2;
+inline bool PrevMembers::has_prev_elect_height() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void PrevMembers::set_has_prev_elect_height() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void PrevMembers::clear_has_prev_elect_height() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void PrevMembers::clear_prev_elect_height() {
+  prev_elect_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_prev_elect_height();
+}
+inline ::google::protobuf::uint64 PrevMembers::prev_elect_height() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.PrevMembers.prev_elect_height)
+  return prev_elect_height_;
+}
+inline void PrevMembers::set_prev_elect_height(::google::protobuf::uint64 value) {
+  set_has_prev_elect_height();
+  prev_elect_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.PrevMembers.prev_elect_height)
+}
+
+// optional .tenon.elect.protobuf.BlsPublicKey common_pubkey = 3;
+inline bool PrevMembers::has_common_pubkey() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void PrevMembers::set_has_common_pubkey() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void PrevMembers::clear_has_common_pubkey() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void PrevMembers::clear_common_pubkey() {
+  if (common_pubkey_ != NULL) common_pubkey_->Clear();
+  clear_has_common_pubkey();
+}
+inline const ::tenon::elect::protobuf::BlsPublicKey& PrevMembers::_internal_common_pubkey() const {
+  return *common_pubkey_;
+}
+inline const ::tenon::elect::protobuf::BlsPublicKey& PrevMembers::common_pubkey() const {
+  const ::tenon::elect::protobuf::BlsPublicKey* p = common_pubkey_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.PrevMembers.common_pubkey)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::BlsPublicKey*>(
+      &::tenon::elect::protobuf::_BlsPublicKey_default_instance_);
+}
+inline ::tenon::elect::protobuf::BlsPublicKey* PrevMembers::release_common_pubkey() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.PrevMembers.common_pubkey)
+  clear_has_common_pubkey();
+  ::tenon::elect::protobuf::BlsPublicKey* temp = common_pubkey_;
+  common_pubkey_ = NULL;
+  return temp;
+}
+inline ::tenon::elect::protobuf::BlsPublicKey* PrevMembers::mutable_common_pubkey() {
+  set_has_common_pubkey();
+  if (common_pubkey_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::BlsPublicKey>(GetArenaNoVirtual());
+    common_pubkey_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.PrevMembers.common_pubkey)
+  return common_pubkey_;
+}
+inline void PrevMembers::set_allocated_common_pubkey(::tenon::elect::protobuf::BlsPublicKey* common_pubkey) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete common_pubkey_;
+  }
+  if (common_pubkey) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      common_pubkey = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, common_pubkey, submessage_arena);
+    }
+    set_has_common_pubkey();
+  } else {
+    clear_has_common_pubkey();
+  }
+  common_pubkey_ = common_pubkey;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.PrevMembers.common_pubkey)
 }
 
 // -------------------------------------------------------------------
@@ -2345,86 +2554,62 @@ inline void ElectBlock::set_elect_height(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.elect_height)
 }
 
-// optional uint64 prev_elect_height = 8;
-inline bool ElectBlock::has_prev_elect_height() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void ElectBlock::set_has_prev_elect_height() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void ElectBlock::clear_has_prev_elect_height() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void ElectBlock::clear_prev_elect_height() {
-  prev_elect_height_ = GOOGLE_ULONGLONG(0);
-  clear_has_prev_elect_height();
-}
-inline ::google::protobuf::uint64 ElectBlock::prev_elect_height() const {
-  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.prev_elect_height)
-  return prev_elect_height_;
-}
-inline void ElectBlock::set_prev_elect_height(::google::protobuf::uint64 value) {
-  set_has_prev_elect_height();
-  prev_elect_height_ = value;
-  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.prev_elect_height)
-}
-
-// optional .tenon.elect.protobuf.BlsPublicKey common_pubkey = 9;
-inline bool ElectBlock::has_common_pubkey() const {
+// optional .tenon.elect.protobuf.PrevMembers prev_members = 8;
+inline bool ElectBlock::has_prev_members() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ElectBlock::set_has_common_pubkey() {
+inline void ElectBlock::set_has_prev_members() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ElectBlock::clear_has_common_pubkey() {
+inline void ElectBlock::clear_has_prev_members() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ElectBlock::clear_common_pubkey() {
-  if (common_pubkey_ != NULL) common_pubkey_->Clear();
-  clear_has_common_pubkey();
+inline void ElectBlock::clear_prev_members() {
+  if (prev_members_ != NULL) prev_members_->Clear();
+  clear_has_prev_members();
 }
-inline const ::tenon::elect::protobuf::BlsPublicKey& ElectBlock::_internal_common_pubkey() const {
-  return *common_pubkey_;
+inline const ::tenon::elect::protobuf::PrevMembers& ElectBlock::_internal_prev_members() const {
+  return *prev_members_;
 }
-inline const ::tenon::elect::protobuf::BlsPublicKey& ElectBlock::common_pubkey() const {
-  const ::tenon::elect::protobuf::BlsPublicKey* p = common_pubkey_;
-  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.common_pubkey)
-  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::BlsPublicKey*>(
-      &::tenon::elect::protobuf::_BlsPublicKey_default_instance_);
+inline const ::tenon::elect::protobuf::PrevMembers& ElectBlock::prev_members() const {
+  const ::tenon::elect::protobuf::PrevMembers* p = prev_members_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.prev_members)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::PrevMembers*>(
+      &::tenon::elect::protobuf::_PrevMembers_default_instance_);
 }
-inline ::tenon::elect::protobuf::BlsPublicKey* ElectBlock::release_common_pubkey() {
-  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectBlock.common_pubkey)
-  clear_has_common_pubkey();
-  ::tenon::elect::protobuf::BlsPublicKey* temp = common_pubkey_;
-  common_pubkey_ = NULL;
+inline ::tenon::elect::protobuf::PrevMembers* ElectBlock::release_prev_members() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectBlock.prev_members)
+  clear_has_prev_members();
+  ::tenon::elect::protobuf::PrevMembers* temp = prev_members_;
+  prev_members_ = NULL;
   return temp;
 }
-inline ::tenon::elect::protobuf::BlsPublicKey* ElectBlock::mutable_common_pubkey() {
-  set_has_common_pubkey();
-  if (common_pubkey_ == NULL) {
-    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::BlsPublicKey>(GetArenaNoVirtual());
-    common_pubkey_ = p;
+inline ::tenon::elect::protobuf::PrevMembers* ElectBlock::mutable_prev_members() {
+  set_has_prev_members();
+  if (prev_members_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::PrevMembers>(GetArenaNoVirtual());
+    prev_members_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectBlock.common_pubkey)
-  return common_pubkey_;
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectBlock.prev_members)
+  return prev_members_;
 }
-inline void ElectBlock::set_allocated_common_pubkey(::tenon::elect::protobuf::BlsPublicKey* common_pubkey) {
+inline void ElectBlock::set_allocated_prev_members(::tenon::elect::protobuf::PrevMembers* prev_members) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
-    delete common_pubkey_;
+    delete prev_members_;
   }
-  if (common_pubkey) {
+  if (prev_members) {
     ::google::protobuf::Arena* submessage_arena = NULL;
     if (message_arena != submessage_arena) {
-      common_pubkey = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, common_pubkey, submessage_arena);
+      prev_members = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, prev_members, submessage_arena);
     }
-    set_has_common_pubkey();
+    set_has_prev_members();
   } else {
-    clear_has_common_pubkey();
+    clear_has_prev_members();
   }
-  common_pubkey_ = common_pubkey;
-  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectBlock.common_pubkey)
+  prev_members_ = prev_members;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectBlock.prev_members)
 }
 
 // -------------------------------------------------------------------
@@ -3064,6 +3249,8 @@ inline void ElectMessage::set_allocated_waiting_heartbeat(::tenon::elect::protob
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

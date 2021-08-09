@@ -21,7 +21,12 @@ message member {
     optional bytes local_ip = 9;
 	optional uint32 local_port = 10;
 	optional int32 pool_idx_mod_num = 11;
-	repeated BlsPublicKey bls_pubkey = 12;
+}
+
+message PrevMembers {
+	repeated BlsPublicKey bls_pubkey = 1;
+    optional uint64 prev_elect_height = 2;
+	optional BlsPublicKey common_pubkey = 3;
 }
 
 message ElectBlock {
@@ -32,8 +37,7 @@ message ElectBlock {
 	optional int32 leader_count = 5;
 	optional uint32 shard_network_id = 6;
 	optional uint64 elect_height = 7;
-	optional uint64 prev_elect_height = 8;
-	optional BlsPublicKey common_pubkey = 9;
+	optional PrevMembers prev_members = 8;
 }
 
 message WaitingNodesMessage {
