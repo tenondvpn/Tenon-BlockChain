@@ -14,10 +14,10 @@ class BlsSign {
 public:
     BlsSign();
     ~BlsSign();
-    static int Sign(
+    static void Sign(
         uint32_t t,
         uint32_t n,
-        libff::alt_bn128_Fr& sec_key,
+        const libff::alt_bn128_Fr& sec_key,
         const std::string& sign_msg,
         libff::alt_bn128_G1* common_signature);
     static int Verify(

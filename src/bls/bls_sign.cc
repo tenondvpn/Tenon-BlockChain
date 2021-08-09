@@ -10,10 +10,10 @@ BlsSign::BlsSign() {}
 
 BlsSign::~BlsSign() {}
 
-int BlsSign::Sign(
+void BlsSign::Sign(
         uint32_t t,
         uint32_t n,
-        libff::alt_bn128_Fr& secret_key,
+        const libff::alt_bn128_Fr& secret_key,
         const std::string& message,
         libff::alt_bn128_G1* sign) {
     auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
@@ -21,7 +21,6 @@ int BlsSign::Sign(
     signatures::Bls bls_instance = signatures::Bls(t, n);
     libff::alt_bn128_G1 hash = bls_instance.HashtoG1(hash_bytes_arr);
     *sign = bls_instance.Signing(hash, secret_key);
-    return kBlsSuccess;
 }
 
 int BlsSign::Verify(

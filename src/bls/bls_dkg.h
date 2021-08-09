@@ -34,6 +34,29 @@ public:
         return elect_hegiht_;
     }
 
+    const libff::alt_bn128_Fr& local_sec_key() const {
+        return local_sec_key_;
+    }
+
+    const libff::alt_bn128_G2& local_publick_key() const {
+        return local_publick_key_;
+    }
+    const libff::alt_bn128_G2& common_public_key() const {
+        return common_public_key_;
+    }
+
+    uint32_t t() const {
+        return min_aggree_member_count_;
+    }
+
+    uint32_t n() const {
+        if (members_ == nullptr) {
+            return 0;
+        }
+
+        return members_->size();
+    }
+
 private:
     void HandleMessage(const transport::TransportMessagePtr& header);
     void HandleVerifyBroadcast(
