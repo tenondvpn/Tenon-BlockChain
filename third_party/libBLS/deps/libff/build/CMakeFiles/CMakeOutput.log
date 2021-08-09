@@ -1,0 +1,499 @@
+The system is: Linux - [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+5.6.2-1.el7.elrepo.x86_64 - [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/local/gcc-8.3/bin/gcc 
+Build flags: ;-fPIC;;-fPIC
+Id flags:  
+
+The output was:
+0
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/3.15.2/CompilerIdC/a.out"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /usr/local/gcc-8.3/bin/g++ 
+Build flags: ;-fPIC
+Id flags:  
+
+The output was:
+0
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is GNU, found in "/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/3.15.2/CompilerIdCXX/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_84403/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/bin/make -f CMakeFiles/cmTC_84403.dir/build.make CMakeFiles/cmTC_84403.dir/build
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Building C object CMakeFiles/cmTC_84403.dir/testCCompiler.c.o
+/usr/local/gcc-8.3/bin/gcc   -fPIC  -fPIC  -fPIE   -o CMakeFiles/cmTC_84403.dir/testCCompiler.c.o   -c /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp/testCCompiler.c
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Linking C executable cmTC_84403
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_84403.dir/link.txt --verbose=1
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/local/gcc-8.3/bin/gcc -fPIC  -fPIC     -rdynamic CMakeFiles/cmTC_84403.dir/testCCompiler.c.o  -o cmTC_84403 
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Leaving directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_b872d/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/bin/make -f CMakeFiles/cmTC_b872d.dir/build.make CMakeFiles/cmTC_b872d.dir/build
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Building C object CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o
+/usr/local/gcc-8.3/bin/gcc   -fPIC  -fPIC  -fPIE   -v -o CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o   -c /usr/local/share/cmake-3.15/Modules/CMakeCCompilerABI.c
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Using built-in specs.
+COLLECT_GCC=/usr/local/gcc-8.3/bin/gcc
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib
+Thread model: posix
+gcc version 8.3.0 (GCC) 
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/cc1 -quiet -v /usr/local/share/cmake-3.15/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o -version -fPIE -o /tmp/cc9QWBLD.s
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+GNU C17 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../x86_64-pc-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include
+ /usr/local/include
+ /usr/local/gcc-8.3/include
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed
+ /usr/include
+End of search list.
+GNU C17 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 14e74022bb6c7cefe04d1d46a7e6c7a5
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o /tmp/cc9QWBLD.s
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-43.base.el7_8.1
+COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Linking C executable cmTC_b872d
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b872d.dir/link.txt --verbose=1
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/local/gcc-8.3/bin/gcc -fPIC  -fPIC    -v -rdynamic CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o  -o cmTC_b872d 
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Using built-in specs.
+COLLECT_GCC=/usr/local/gcc-8.3/bin/gcc
+COLLECT_LTO_WRAPPER=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib
+Thread model: posix
+gcc version 8.3.0 (GCC) 
+COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_b872d' '-mtune=generic' '-march=x86-64'
+ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2 -plugin /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so -plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cclQ0TvF.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_b872d /lib/../lib64/crt1.o /lib/../lib64/crti.o /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../.. CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o /lib/../lib64/crtn.o
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_b872d' '-mtune=generic' '-march=x86-64'
+make[1]: Leaving directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed C implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+    add: [/usr/local/include]
+    add: [/usr/local/gcc-8.3/include]
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/usr/local/gcc-8.3/include] ==> [/usr/local/gcc-8.3/include]
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include;/usr/local/include;/usr/local/gcc-8.3/include;/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed;/usr/include]
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake cmTC_b872d/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_b872d.dir/build.make CMakeFiles/cmTC_b872d.dir/build]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp']
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Building C object CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/local/gcc-8.3/bin/gcc   -fPIC  -fPIC  -fPIE   -v -o CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o   -c /usr/local/share/cmake-3.15/Modules/CMakeCCompilerABI.c]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/local/gcc-8.3/bin/gcc]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 8.3.0 (GCC) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/cc1 -quiet -v /usr/local/share/cmake-3.15/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o -version -fPIE -o /tmp/cc9QWBLD.s]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [GNU C17 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none]
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring nonexistent directory "/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../x86_64-pc-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /usr/local/gcc-8.3/include]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C17 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none]
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: 14e74022bb6c7cefe04d1d46a7e6c7a5]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o /tmp/cc9QWBLD.s]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-43.base.el7_8.1]
+  ignore line: [COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64']
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Linking C executable cmTC_b872d]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b872d.dir/link.txt --verbose=1]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [/usr/local/gcc-8.3/bin/gcc -fPIC  -fPIC    -v -rdynamic CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o  -o cmTC_b872d ]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/local/gcc-8.3/bin/gcc]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 8.3.0 (GCC) ]
+  ignore line: [COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_b872d' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2 -plugin /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so -plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/cclQ0TvF.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_b872d /lib/../lib64/crt1.o /lib/../lib64/crti.o /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../.. CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o /lib/../lib64/crtn.o]
+    arg [/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cclQ0TvF.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_b872d] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o] ==> ignore
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0]
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..]
+    arg [CMakeFiles/cmTC_b872d.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0]
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64] ==> [/usr/local/gcc-8.3/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..] ==> [/usr/local/gcc-8.3/lib]
+  implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+  implicit dirs: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0;/usr/local/gcc-8.3/lib64;/lib64;/usr/lib64;/usr/local/gcc-8.3/lib]
+  implicit fwks: []
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_a96f7/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/bin/make -f CMakeFiles/cmTC_a96f7.dir/build.make CMakeFiles/cmTC_a96f7.dir/build
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Building CXX object CMakeFiles/cmTC_a96f7.dir/testCXXCompiler.cxx.o
+/usr/local/gcc-8.3/bin/g++    -fPIC  -fPIE   -o CMakeFiles/cmTC_a96f7.dir/testCXXCompiler.cxx.o -c /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Linking CXX executable cmTC_a96f7
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a96f7.dir/link.txt --verbose=1
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/local/gcc-8.3/bin/g++  -fPIC     -rdynamic CMakeFiles/cmTC_a96f7.dir/testCXXCompiler.cxx.o  -o cmTC_a96f7 
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Leaving directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_3aa9d/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/bin/make -f CMakeFiles/cmTC_3aa9d.dir/build.make CMakeFiles/cmTC_3aa9d.dir/build
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Building CXX object CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o
+/usr/local/gcc-8.3/bin/g++    -fPIC  -fPIE   -v -o CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.15/Modules/CMakeCXXCompilerABI.cpp
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Using built-in specs.
+COLLECT_GCC=/usr/local/gcc-8.3/bin/g++
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib
+Thread model: posix
+gcc version 8.3.0 (GCC) 
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/cc1plus -quiet -v -D_GNU_SOURCE /usr/local/share/cmake-3.15/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -version -fPIE -o /tmp/ccuJQ6N0.s
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+GNU C++14 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../x86_64-pc-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include
+ /usr/local/include
+ /usr/local/gcc-8.3/include
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed
+ /usr/include
+End of search list.
+GNU C++14 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)
+	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 8f01e950d7738761a8f4937fed5ee60b
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ as -v --64 -o CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccuJQ6N0.s
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-43.base.el7_8.1
+COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Linking CXX executable cmTC_3aa9d
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3aa9d.dir/link.txt --verbose=1
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+/usr/local/gcc-8.3/bin/g++  -fPIC    -v -rdynamic CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_3aa9d 
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+Using built-in specs.
+COLLECT_GCC=/usr/local/gcc-8.3/bin/g++
+COLLECT_LTO_WRAPPER=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib
+Thread model: posix
+gcc version 8.3.0 (GCC) 
+COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/
+LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_3aa9d' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2 -plugin /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so -plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccgvyhL2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_3aa9d /lib/../lib64/crt1.o /lib/../lib64/crti.o /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../.. CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o /lib/../lib64/crtn.o
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7
+COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_3aa9d' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+make[1]: Leaving directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp'
+
+
+
+Parsed CXX implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0]
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu]
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward]
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+    add: [/usr/local/include]
+    add: [/usr/local/gcc-8.3/include]
+    add: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0] ==> [/usr/local/gcc-8.3/include/c++/8.3.0]
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu] ==> [/usr/local/gcc-8.3/include/c++/8.3.0/x86_64-pc-linux-gnu]
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward] ==> [/usr/local/gcc-8.3/include/c++/8.3.0/backward]
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/usr/local/gcc-8.3/include] ==> [/usr/local/gcc-8.3/include]
+  collapse include dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/usr/local/gcc-8.3/include/c++/8.3.0;/usr/local/gcc-8.3/include/c++/8.3.0/x86_64-pc-linux-gnu;/usr/local/gcc-8.3/include/c++/8.3.0/backward;/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include;/usr/local/include;/usr/local/gcc-8.3/include;/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed;/usr/include]
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/gmake cmTC_3aa9d/fast && [proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_3aa9d.dir/build.make CMakeFiles/cmTC_3aa9d.dir/build]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [make[1]: Entering directory `/root/work/Tenon-BlockChain/third_party/libBLS/deps/libff/build/CMakeFiles/CMakeTmp']
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Building CXX object CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/local/gcc-8.3/bin/g++    -fPIC  -fPIE   -v -o CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.15/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/local/gcc-8.3/bin/g++]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 8.3.0 (GCC) ]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/cc1plus -quiet -v -D_GNU_SOURCE /usr/local/share/cmake-3.15/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mtune=generic -march=x86-64 -auxbase-strip CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -version -fPIE -o /tmp/ccuJQ6N0.s]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [GNU C++14 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none]
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [ignoring nonexistent directory "/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../x86_64-pc-linux-gnu/include"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /usr/local/gcc-8.3/include]
+  ignore line: [ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed]
+  ignore line: [ /usr/include]
+  ignore line: [End of search list.]
+  ignore line: [GNU C++14 (GCC) version 8.3.0 (x86_64-pc-linux-gnu)]
+  ignore line: [	compiled by GNU C version 8.3.0, GMP version 6.0.0, MPFR version 3.1.1, MPC version 1.0.1, isl version none]
+  ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+  ignore line: [Compiler executable checksum: 8f01e950d7738761a8f4937fed5ee60b]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [ as -v --64 -o CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccuJQ6N0.s]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [GNU assembler version 2.27 (x86_64-redhat-linux) using BFD version version 2.27-43.base.el7_8.1]
+  ignore line: [COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIE' '-v' '-o' 'CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Linking CXX executable cmTC_3aa9d]
+  ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3aa9d.dir/link.txt --verbose=1]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [/usr/local/gcc-8.3/bin/g++  -fPIC    -v -rdynamic CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_3aa9d ]
+  ignore line: [[proxychains] DLL init: proxychains-ng 4.14-git-8-gb8fa2a7]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/local/gcc-8.3/bin/g++]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper]
+  ignore line: [Target: x86_64-pc-linux-gnu]
+  ignore line: [Configured with: ../configure --prefix=/usr/local/gcc-8.3 --enable-threads=posix --disable-checking --disable-multilib]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 8.3.0 (GCC) ]
+  ignore line: [COMPILER_PATH=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-fPIC' '-v' '-rdynamic' '-o' 'cmTC_3aa9d' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2 -plugin /usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so -plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccgvyhL2.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_3aa9d /lib/../lib64/crt1.o /lib/../lib64/crti.o /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../.. CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o /lib/../lib64/crtn.o]
+    arg [/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/local/gcc-8.3/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccgvyhL2.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_3aa9d] ==> ignore
+    arg [/lib/../lib64/crt1.o] ==> ignore
+    arg [/lib/../lib64/crti.o] ==> ignore
+    arg [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtbegin.o] ==> ignore
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0]
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64]
+    arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+    arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+    arg [-L/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..] ==> dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..]
+    arg [CMakeFiles/cmTC_3aa9d.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/crtend.o] ==> ignore
+    arg [/lib/../lib64/crtn.o] ==> ignore
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0] ==> [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0]
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../lib64] ==> [/usr/local/gcc-8.3/lib64]
+  collapse library dir [/lib/../lib64] ==> [/lib64]
+  collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+  collapse library dir [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../..] ==> [/usr/local/gcc-8.3/lib]
+  implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+  implicit dirs: [/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0;/usr/local/gcc-8.3/lib64;/lib64;/usr/lib64;/usr/local/gcc-8.3/lib]
+  implicit fwks: []
+
+

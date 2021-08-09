@@ -1,0 +1,1 @@
+/usr/local/gcc-8.3/bin/g++  -fPIC -std=c++11 -Wall -Wextra -Wfatal-errors -O3 -DNDEBUG  -rdynamic CMakeFiles/algebra_groups_test.dir/algebra/curves/tests/test_groups.cpp.o  -o algebra_groups_test libff.a /usr/lib64/libgmp.so ../depends/libzm.a 

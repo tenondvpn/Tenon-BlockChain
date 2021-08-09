@@ -1,0 +1,41 @@
+guru_poly_test-get_time.o: misc/get_time.c /usr/include/stdc-predef.h \
+ /usr/include/sys/time.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/time.h \
+ /usr/include/bits/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h \
+ /usr/include/xlocale.h
+
+/usr/include/stdc-predef.h:
+
+/usr/include/sys/time.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/local/gcc-8.3/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h:
+
+/usr/include/xlocale.h:
