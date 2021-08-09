@@ -29,11 +29,19 @@ BlsDkg::BlsDkg() {
 
 BlsDkg::~BlsDkg() {}
 
-void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members) {
+void BlsDkg::OnNewElectionBlock(
+        uint64_t elect_height,
+        elect::MembersPtr& members) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
     }
+
+    finished_ = false;
+    // destroy old timer
+    dkg_verify_brd_timer_.Destroy();
+    dkg_swap_seckkey_timer_.Destroy();
+    dkg_finish_timer_.Destroy();
 
     uint64_t random_seed = common::Hash::Hash64(
         security::Schnorr::Instance()->str_prikey() +
@@ -69,6 +77,11 @@ void BlsDkg::OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& member
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (finished_) {
+        return;
+    }
+
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
         return;
@@ -332,6 +345,7 @@ void BlsDkg::SwapSecKey() {
 }
 
 void BlsDkg::Finish() {
+    std::lock_guard<std::mutex> guard(mutex_);
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     common_public_key_ = libff::alt_bn128_G2::zero();
@@ -344,6 +358,7 @@ void BlsDkg::Finish() {
     }
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
+    finished_ = true;
 }
 
 int BlsDkg::CreateContribution() {

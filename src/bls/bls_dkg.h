@@ -27,7 +27,12 @@ class BlsDkg {
 public:
     BlsDkg();
     ~BlsDkg();
-    void OnNewElectionBlock(uint64_t elect_height, elect::MembersPtr& members);
+    void OnNewElectionBlock(
+        uint64_t elect_height,
+        elect::MembersPtr& members);
+    uint64_t elect_hegiht() {
+        return elect_hegiht_;
+    }
 
 private:
     void HandleMessage(const transport::TransportMessagePtr& header);
@@ -81,6 +86,7 @@ private:
     libff::alt_bn128_G2 local_publick_key_;
     libff::alt_bn128_G2 common_public_key_;
     std::shared_ptr<std::mt19937> random_ptr_;
+    bool finished_{ false };
     std::mutex mutex_;
 
 #ifdef TENON_UNITTEST
