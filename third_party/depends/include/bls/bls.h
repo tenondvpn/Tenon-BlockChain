@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <third_party/cryptlite/sha256.h>
+#include <cryptlite/sha256.h>
 
 #include <iostream>
 #include <memory>

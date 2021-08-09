@@ -20,7 +20,7 @@ along with libBLS.  If not, see <https://www.gnu.org/licenses/>.
 @author Sveta Rogova
 @date 2019
 */
-
+#pragma once
 #include <array>
 #include <memory>
 
