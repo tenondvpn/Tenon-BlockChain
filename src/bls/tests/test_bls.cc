@@ -181,9 +181,7 @@ TEST_F(TestBls, AllSuccess) {
         dkg[i].Finish();
         BlsSign bls_sign;
         libff::alt_bn128_G1 sign;
-        ASSERT_EQ(
-            bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign),
-            kBlsSuccess);
+        bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign);
         ASSERT_EQ(
             bls_sign.Verify(t, n, sign, hash, dkg[i].local_publick_key_),
             kBlsSuccess);
@@ -299,9 +297,7 @@ TEST_F(TestBls, ThreeRatioFailFine) {
         }
 
         libff::alt_bn128_G1 sign;
-        ASSERT_EQ(
-            bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign),
-            kBlsSuccess);
+        bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign);
         ASSERT_EQ(
             bls_sign.Verify(t, n, sign, hash, dkg[i].local_publick_key_),
             kBlsSuccess);
@@ -428,9 +424,7 @@ TEST_F(TestBls, ThreeRatioFail) {
 
         BlsSign bls_sign;
         libff::alt_bn128_G1 sign;
-        ASSERT_EQ(
-            bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign),
-            kBlsSuccess);
+        bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign);
         ASSERT_EQ(
             bls_sign.Verify(t, n, sign, hash, dkg[i].local_publick_key_),
             kBlsSuccess);
