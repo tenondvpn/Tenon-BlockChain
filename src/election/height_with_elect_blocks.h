@@ -209,7 +209,7 @@ public:
             height,
             elect_block.shard_network_id());
         std::string val;
-        auto st = db::Db::Instance()->Get(bls_key, &val);
+        st = db::Db::Instance()->Get(bls_key, &val);
         if (st.ok()) {
             elect::protobuf::PrevMembers prev_members;
             if (prev_members.ParseFromString(val)) {
