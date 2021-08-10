@@ -247,7 +247,10 @@ int AccountManager::AddBlockItemToDb(
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (bft::IsRootSingleBlockTx(tx_list[i].type())) {
-            if (HandleRootSingleBlockTx(block_item->height(), tx_list[i]) != kBlockSuccess) {
+            if (HandleRootSingleBlockTx(
+                    block_item->height(),
+                    tx_list[i],
+                    db_batch) != kBlockSuccess) {
                 BLOCK_ERROR("HandleRootSingleBlockTx failed!");
                 return kBlockError;
             }
