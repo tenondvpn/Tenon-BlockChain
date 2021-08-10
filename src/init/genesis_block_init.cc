@@ -128,7 +128,7 @@ int GenesisBlockInit::CreateElectBlock(
         auto prev_members = ec_block.mutable_prev_members();
         std::cout << "prikey with network: " << shard_netid << std::endl;
         for (uint32_t i = 0; i < genesis_nodes.size(); ++i) {
-            std::cout << common::Encode::HexEncode(*skeys[i]->toString()) << std::endl;
+            std::cout << *skeys[i]->toString() << std::endl;
             auto mem_pk = prev_members->add_bls_pubkey();
             auto pkeys_str = pkeys[i]->toString();
             mem_pk->set_x_c0(pkeys_str->at(0));
