@@ -399,9 +399,11 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
         *pkey.getPublicKey());
-    bls::BlsManager::Instance()->SetUsedElectionBlock(
-        elect_block.prev_members().prev_elect_height(),
-        *pkey.getPublicKey());
+    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
+        bls::BlsManager::Instance()->SetUsedElectionBlock(
+            elect_block.prev_members().prev_elect_height(),
+            *pkey.getPublicKey());
+    }
 }
 
 int ElectManager::BackupCheckElectionBlockTx(
