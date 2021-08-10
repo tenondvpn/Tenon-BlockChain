@@ -380,11 +380,6 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
             elect_block.prev_members().bls_pubkey(i).y_c1()
         };
 
-        std::cout << "load pk x c0: " << elect_block.prev_members().bls_pubkey(i).x_c0() << std::endl;
-        std::cout << "load pk x c1: " << elect_block.prev_members().bls_pubkey(i).x_c1() << std::endl;
-        std::cout << "load pk y c0: " << elect_block.prev_members().bls_pubkey(i).y_c0() << std::endl;
-        std::cout << "load pk y c1: " << elect_block.prev_members().bls_pubkey(i).y_c1() << std::endl;
-
         BLSPublicKey pkey(
             std::make_shared<std::vector<std::string>>(pkey_str),
             t,
@@ -393,10 +388,10 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
     }
 
     std::vector<std::string> pkey_str = {
-            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().x_c0()),
-            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().x_c1()),
-            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().y_c0()),
-            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().y_c1())
+            elect_block.prev_members().common_pubkey().x_c0(),
+            elect_block.prev_members().common_pubkey().x_c1(),
+            elect_block.prev_members().common_pubkey().y_c0(),
+            elect_block.prev_members().common_pubkey().y_c1()
     };
     BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, members->size());
     height_with_block_.SetCommonPublicKey(
