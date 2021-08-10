@@ -17,18 +17,18 @@ void BlsManager::ProcessNewElectBlock(
         elect::MembersPtr& new_members) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (waiting_bls_ != nullptr &&
-            waiting_bls_->elect_hegiht() == elect_block.prev_elect_height()) {
+            waiting_bls_->elect_hegiht() == elect_block.prev_members().prev_elect_height()) {
         used_bls_ = waiting_bls_;
     }
     
-    if (elect_block.has_common_pubkey()) {
+    if (elect_block.prev_members().has_common_pubkey()) {
         std::vector<std::string> pkey_str;
-        pkey_str.push_back(elect_block.common_pubkey().x_c0());
-        pkey_str.push_back(elect_block.common_pubkey().x_c1());
-        pkey_str.push_back(elect_block.common_pubkey().y_c0());
-        pkey_str.push_back(elect_block.common_pubkey().y_c1());
+        pkey_str.push_back(elect_block.prev_members().common_pubkey().x_c0());
+        pkey_str.push_back(elect_block.prev_members().common_pubkey().x_c1());
+        pkey_str.push_back(elect_block.prev_members().common_pubkey().y_c0());
+        pkey_str.push_back(elect_block.prev_members().common_pubkey().y_c1());
         auto n = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-            elect_block.prev_elect_height(),
+            elect_block.prev_members().prev_elect_height(),
             elect_block.shard_network_id());
         if (n > 0) {
             auto t = n * 2 / 3;
@@ -39,7 +39,7 @@ void BlsManager::ProcessNewElectBlock(
             BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
             {
                 std::lock_guard<std::mutex> guard(common_public_key_with_height_mutex_);
-                common_public_key_with_height_[elect_block.prev_elect_height()] =
+                common_public_key_with_height_[elect_block.prev_members().prev_elect_height()] =
                     *pkey.getPublicKey();
             }
         }
