@@ -4,10 +4,13 @@
 #include <fstream>
 
 #include <bls/bls_utils.h>
+#include <dkg/dkg.h>
 
 #include "bls/bls_utils.h"
 #include "common/global_info.h"
+#include "common//db_key_prefix.h"
 #include "dht/dht_key.h"
+#include "db/db.h"
 #include "election/elect_manager.h"
 #include "network/route.h"
 #include "json/json.hpp"
@@ -45,11 +48,7 @@ void BlsDkg::OnNewElectionBlock(
 
     members_ = members;
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
-    min_aggree_member_count_ = members_->size() * 2 / 3;
-    if ((members_->size() * 2) % 3 > 0) {
-        min_aggree_member_count_ += 1;
-    }
-
+    min_aggree_member_count_ = common::GetSignerCount(members_->size());
     dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
@@ -340,10 +339,28 @@ void BlsDkg::SwapSecKey() {
     }
 }
 
+void BlsDkg::DumpLocalPrivateKey() {
+    // encrypt by private key and save to db
+    std::string enc_data;
+    std::string sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
+    if (security::Crypto::Instance()->GetEncryptData(
+            security::Schnorr::Instance()->str_prikey(),
+            sec_key,
+            &enc_data) != security::kSecuritySuccess) {
+        return;
+    }
+
+    std::string key = common::kBlsPrivateKeyPrefix +
+        std::to_string(elect_hegiht_) + "_" +
+        std::to_string(common::GlobalInfo::Instance()->network_id());
+    db::Db::Instance()->Put(key, enc_data);
+}
+
 void BlsDkg::Finish() {
     std::lock_guard<std::mutex> guard(mutex_);
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
+    DumpLocalPrivateKey();
     common_public_key_ = libff::alt_bn128_G2::zero();
     for (size_t i = 0; i < members_->size(); ++i) {
         if (invalid_node_map_[i] >= min_aggree_member_count_) {

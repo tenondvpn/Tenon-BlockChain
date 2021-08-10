@@ -51,6 +51,11 @@ private:
         std::vector<std::shared_ptr<BLSPrivateKeyShare>>* skeys,
         std::vector<std::shared_ptr<BLSPublicKeyShare>>* pkeys,
         libff::alt_bn128_G2* common_public_key);
+    void DumpLocalPrivateKey(
+        uint32_t shard_netid,
+        uint64_t height,
+        const std::string& prikey,
+        const std::string& sec_key);
 
     std::map<uint32_t, std::string> pool_index_map_;
     std::map<uint32_t, std::string> root_account_with_pool_index_map_;

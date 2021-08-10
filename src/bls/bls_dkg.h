@@ -93,6 +93,7 @@ private:
         transport::protobuf::Header& msg);
     void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     void DumpContribution();
+    void DumpLocalPrivateKey();
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;

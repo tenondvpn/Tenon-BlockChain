@@ -1,7 +1,13 @@
 #include "bls/bls_manager.h"
 
+#include <dkg/dkg.h>
+
 #include "bls/bls_sign.h"
+#include "common/db_key_prefix.h"
+#include "db/db.h"
 #include "election/elect_manager.h"
+#include "security/crypto.h"
+#include "security/schnorr.h"
 
 namespace tenon {
 
@@ -18,6 +24,43 @@ void BlsManager::ProcessNewElectBlock(
     std::lock_guard<std::mutex> guard(mutex_);
     waiting_bls_ = std::make_shared<bls::BlsDkg>();
     waiting_bls_->OnNewElectionBlock(elect_block.elect_height(), new_members);
+}
+
+void BlsManager::SetUsedElectionBlock(
+        uint64_t elect_height,
+        const libff::alt_bn128_G2& common_public_key) {
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
+        return;
+    }
+
+    max_height_ = elect_height;
+    std::string key = common::kBlsPrivateKeyPrefix +
+        std::to_string(elect_height) + "_" +
+        std::to_string(common::GlobalInfo::Instance()->network_id());
+    std::string val;
+    auto st = db::Db::Instance()->Get(key, &val);
+    if (!st.ok()) {
+        return;
+    }
+
+    std::string dec_data;
+    if (security::Crypto::Instance()->GetDecryptData(
+            security::Schnorr::Instance()->str_prikey(),
+            val,
+            &dec_data) != security::kSecuritySuccess) {
+        return;
+    }
+
+    libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
+    auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
+        elect_height,
+        common::GlobalInfo::Instance()->network_id());
+    auto t = common::GetSignerCount(member_count);
+    signatures::Dkg dkg(t, member_count);
+    libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
+    used_bls_ = std::make_shared<bls::BlsDkg>();
+    used_bls_->SetInitElectionBlock(local_sec_key, local_publick_key, common_public_key);
 }
 
 int BlsManager::Sign(

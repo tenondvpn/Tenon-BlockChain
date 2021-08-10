@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "common/encode.h"
+#include "common/db_key_prefix.h"
 #include "block/account_manager.h"
 #include "init/init_utils.h"
 #include "bft/proto/bft.pb.h"
@@ -15,6 +16,7 @@
 #include "security/public_key.h"
 #include "security/crypto_utils.h"
 #include "security/secp256k1.h"
+#include "security/crypto.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
 
@@ -88,6 +90,26 @@ int GenesisBlockInit::CreateBlsGenesisKeys(
     return kInitSuccess;
 }
 
+void GenesisBlockInit::DumpLocalPrivateKey(
+        uint32_t shard_netid,
+        uint64_t height,
+        const std::string& prikey,
+        const std::string& sec_key) {
+    // encrypt by private key and save to db
+    std::string enc_data;
+    if (security::Crypto::Instance()->GetEncryptData(
+            security::Schnorr::Instance()->str_prikey(),
+            sec_key,
+            &enc_data) != security::kSecuritySuccess) {
+        return;
+    }
+
+    std::string key = common::kBlsPrivateKeyPrefix +
+        std::to_string(height) + "_" +
+        std::to_string(shard_netid);
+    db::Db::Instance()->Put(key, enc_data);
+}
+
 int GenesisBlockInit::CreateElectBlock(
         uint32_t shard_netid,
         std::string& root_pre_hash,
@@ -126,7 +148,8 @@ int GenesisBlockInit::CreateElectBlock(
         libff::alt_bn128_G2 common_public_key;
         CreateBlsGenesisKeys(&skeys, &pkeys, &common_public_key);
         auto prev_members = ec_block.mutable_prev_members();
-        std::cout << "prikey with network: " << shard_netid << std::endl;
+        std::cout << "prikey with network: " << shard_netid
+            << ", elect height: " << prev_height << std::endl;
         for (uint32_t i = 0; i < genesis_nodes.size(); ++i) {
             std::cout << *skeys[i]->toString() << std::endl;
             auto mem_pk = prev_members->add_bls_pubkey();
@@ -135,6 +158,7 @@ int GenesisBlockInit::CreateElectBlock(
             mem_pk->set_x_c1(common::Encode::HexDecode(pkeys_str->at(1)));
             mem_pk->set_y_c0(common::Encode::HexDecode(pkeys_str->at(2)));
             mem_pk->set_y_c1(common::Encode::HexDecode(pkeys_str->at(3)));
+            DumpLocalPrivateKey(shard_netid, prev_height, "genesis_prikey", *skeys[i]->toString());
         }
 
         std::cout << std::endl;

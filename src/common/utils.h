@@ -240,6 +240,14 @@ std::string IpUint32ToString(uint32_t int_ip);
 uint32_t IpStringToUint32(const std::string& str_ip);
 int RemoteReachable(const std::string& ip, uint16_t port, bool* reachable);
 bool IsVlanIp(const std::string& ip);
+inline static uint32_t GetSignerCount(uint32_t n) {
+    auto t = n * 2 / 3;
+    if ((n * 2) % 3 > 0) {
+        t += 1;
+    }
+
+    return t;
+}
 
 }  // namespace common
 
