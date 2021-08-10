@@ -379,6 +379,12 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
             common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c0()),
             common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c1())
         };
+
+        std::cout << "load pk x c0: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c0()) << std::endl;
+        std::cout << "load pk x c1: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c1()) << std::endl;
+        std::cout << "load pk y c0: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c0()) << std::endl;
+        std::cout << "load pk y c1: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c1()) << std::endl;
+
         BLSPublicKey pkey(
             std::make_shared<std::vector<std::string>>(pkey_str),
             t,

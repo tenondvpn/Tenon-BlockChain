@@ -158,6 +158,10 @@ int GenesisBlockInit::CreateElectBlock(
             mem_pk->set_x_c1(common::Encode::HexDecode(pkeys_str->at(1)));
             mem_pk->set_y_c0(common::Encode::HexDecode(pkeys_str->at(2)));
             mem_pk->set_y_c1(common::Encode::HexDecode(pkeys_str->at(3)));
+            std::cout << "pk x c0: " << pkeys_str->at(0) << std::endl;
+            std::cout << "pk x c1: " << pkeys_str->at(1) << std::endl;
+            std::cout << "pk y c0: " << pkeys_str->at(2) << std::endl;
+            std::cout << "pk y c1: " << pkeys_str->at(3) << std::endl;
             DumpLocalPrivateKey(shard_netid, prev_height, "genesis_prikey", *skeys[i]->toString());
         }
 
@@ -169,6 +173,10 @@ int GenesisBlockInit::CreateElectBlock(
         common_pk->set_x_c1(common::Encode::HexDecode(common_pk_strs->at(1)));
         common_pk->set_y_c0(common::Encode::HexDecode(common_pk_strs->at(2)));
         common_pk->set_y_c1(common::Encode::HexDecode(common_pk_strs->at(3)));
+        std::cout << "cpk x c0: " << common_pk_strs->at(0) << std::endl;
+        std::cout << "cpk x c1: " << common_pk_strs->at(1) << std::endl;
+        std::cout << "cpk y c0: " << common_pk_strs->at(2) << std::endl;
+        std::cout << "cpk y c1: " << common_pk_strs->at(3) << std::endl;
         prev_members->set_prev_elect_height(prev_height);
     }
 
