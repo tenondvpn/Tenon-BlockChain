@@ -6,6 +6,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <cstdint>
+#include <libff/algebra/curves/alt_bn128/alt_bn128_pp.hpp>
 
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
@@ -89,6 +90,7 @@ struct BftMember {
     int32_t pool_index_mod_num[common::kNodeModIndexMaxCount];
     std::string backup_ecdh_key;
     std::string leader_ecdh_key;
+    libff::alt_bn128_G2 bls_publick_key;
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;

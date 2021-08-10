@@ -115,6 +115,12 @@ inline static bool IsPoolBaseAddress(const std::string& address) {
     return false;
 }
 
+inline static std::string GetElectBlsMembersKey(uint64_t height, uint32_t shard_id) {
+    return std::string("__EM_") +
+        std::to_string(shard_id) + "_" +
+        std::to_string(height);
+}
+
 }  // namespace block
 
 }  // namespace tenon

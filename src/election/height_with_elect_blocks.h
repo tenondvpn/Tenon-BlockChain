@@ -6,7 +6,9 @@
 #include <queue>
 #include <vector>
 
+#include "bls/BLSPublicKey.h"
 #include "bft/proto/bft.pb.h"
+#include "block/block_utils.h"
 #include "common/utils.h"
 #include "db/db.h"
 #include "election/elect_node_detail.h"
@@ -24,6 +26,8 @@ class HeightWithElectBlock {
         HeightMembersItem(MembersPtr& m, uint64_t h) : members_ptr(m), height(h) {}
         MembersPtr members_ptr;
         uint64_t height;
+        libff::alt_bn128_G2 common_bls_publick_key;
+
     };
 
     typedef std::shared_ptr<HeightMembersItem> HeightMembersItemPtr;
@@ -74,31 +78,77 @@ public:
             return;
         }
 
-        members_ptrs_[network_id][min_index] = std::make_shared<HeightMembersItem>(members_ptr, height);
+        members_ptrs_[network_id][min_index] = std::make_shared<HeightMembersItem>(
+            members_ptr,
+            height);
     }
 
-    MembersPtr GetMembersPtr(uint64_t height, uint32_t network_id) {
+    void SetCommonPublicKey(
+            uint64_t height,
+            uint32_t network_id,
+            const libff::alt_bn128_G2& common_pk) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return;
+        }
+
+        if (members_ptrs_[network_id][0] != nullptr &&
+                members_ptrs_[network_id][0]->height == height) {
+            members_ptrs_[network_id][0]->common_bls_publick_key = common_pk;
+            return;
+        }
+
+        if (members_ptrs_[network_id][1] != nullptr &&
+                members_ptrs_[network_id][1]->height == height) {
+            members_ptrs_[network_id][1]->common_bls_publick_key = common_pk;
+            return;
+        }
+
+        if (members_ptrs_[network_id][2] != nullptr &&
+                members_ptrs_[network_id][2]->height == height) {
+            members_ptrs_[network_id][2]->common_bls_publick_key = common_pk;
+            return;
+        }
+
+        std::lock_guard<std::mutex> guard(height_with_members_mutex_);
+        height_with_common_pks_[network_id][height] = common_pk;
+    }
+
+    MembersPtr GetMembersPtr(
+            uint64_t height,
+            uint32_t network_id,
+            libff::alt_bn128_G2* common_pk) {
         if (network_id >= network::kConsensusShardEndNetworkId) {
             return nullptr;
         }
 
-        if (members_ptrs_[network_id][0] != nullptr && members_ptrs_[network_id][0]->height == height) {
+        if (members_ptrs_[network_id][0] != nullptr &&
+                members_ptrs_[network_id][0]->height == height) {
+            *common_pk = members_ptrs_[network_id][0]->common_bls_publick_key;
             return members_ptrs_[network_id][0]->members_ptr;
         }
 
-        if (members_ptrs_[network_id][1] != nullptr && members_ptrs_[network_id][1]->height == height) {
+        if (members_ptrs_[network_id][1] != nullptr &&
+                members_ptrs_[network_id][1]->height == height) {
+            *common_pk = members_ptrs_[network_id][1]->common_bls_publick_key;
             return members_ptrs_[network_id][1]->members_ptr;
         }
 
-        if (members_ptrs_[network_id][2] != nullptr && members_ptrs_[network_id][2]->height == height) {
+        if (members_ptrs_[network_id][2] != nullptr &&
+                members_ptrs_[network_id][2]->height == height) {
+            *common_pk = members_ptrs_[network_id][2]->common_bls_publick_key;
             return members_ptrs_[network_id][2]->members_ptr;
         }
 
         // get from cache map
         {
             std::lock_guard<std::mutex> guard(height_with_members_mutex_);
-            auto iter = height_with_members_.find(height);
-            if (iter != height_with_members_.end()) {
+            auto pk_iter = height_with_common_pks_[network_id].find(height);
+            if (pk_iter != height_with_common_pks_[network_id].end()) {
+                *common_pk = pk_iter->second;
+            }
+
+            auto iter = height_with_members_[network_id].find(height);
+            if (iter != height_with_members_[network_id].end()) {
                 return iter->second;
             }
         }
@@ -155,15 +205,49 @@ public:
                 in[i].pool_idx_mod_num()));
         }
 
+        std::string bls_key = block::GetElectBlsMembersKey(
+            height,
+            elect_block.shard_network_id());
+        std::string val;
+        auto st = db::Db::Instance()->Get(bls_key, &val);
+        if (st.ok()) {
+            elect::protobuf::PrevMembers prev_members;
+            if (prev_members.ParseFromString(val)) {
+                std::vector<std::string> pkey_str = {
+                    prev_members.common_pubkey().x_c0(),
+                    prev_members.common_pubkey().x_c1(),
+                    prev_members.common_pubkey().y_c0(),
+                    prev_members.common_pubkey().y_c1()
+                };
+
+                auto n = prev_members.bls_pubkey_size();
+                auto t = n * 2 / 3;
+                if ((n * 2) % 3 > 0) {
+                    t += 1;
+                }
+
+                BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+                *common_pk = *pkey.getPublicKey();
+            }
+        }
         {
             std::lock_guard<std::mutex> guard(height_with_members_mutex_);
             height_queue_.push(height);
-            height_with_members_[height] = shard_members_ptr;
+            height_with_members_[network_id][height] = shard_members_ptr;
+            if (st.ok()) {
+                height_with_common_pks_[network_id][height] = *common_pk;
+            }
+
             if (height_queue_.size() > kMaxCacheElectBlockCount) {
                 auto min_height = height_queue_.top();
-                auto iter = height_with_members_.find(min_height);
-                if (iter != height_with_members_.end()) {
-                    height_with_members_.erase(iter);
+                auto iter = height_with_members_[network_id].find(min_height);
+                if (iter != height_with_members_[network_id].end()) {
+                    height_with_members_[network_id].erase(iter);
+                }
+
+                auto pk_iter = height_with_common_pks_[network_id].find(min_height);
+                if (pk_iter != height_with_common_pks_[network_id].end()) {
+                    height_with_common_pks_[network_id].erase(pk_iter);
                 }
 
                 height_queue_.pop();
@@ -177,10 +261,10 @@ private:
     static const uint32_t kMaxKeepElectBlockCount = 3u;
     static const uint32_t kMaxCacheElectBlockCount = 7u;
 
-    std::map<uint64_t, MembersPtr> height_with_members_;
+    std::map<uint64_t, MembersPtr> height_with_members_[network::kConsensusShardEndNetworkId];
+    std::map<uint64_t, libff::alt_bn128_G2> height_with_common_pks_[network::kConsensusShardEndNetworkId];
     std::priority_queue<uint64_t, std::vector<uint64_t>, std::greater<uint64_t>> height_queue_;
     std::mutex height_with_members_mutex_;
-
     HeightMembersItemPtr members_ptrs_[network::kConsensusShardEndNetworkId][kMaxKeepElectBlockCount];
 
     DISALLOW_COPY_AND_ASSIGN(HeightWithElectBlock);

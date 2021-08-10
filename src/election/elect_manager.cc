@@ -3,6 +3,7 @@
 
 #include <functional>
 
+#include "bls/BLSPublicKey.h"
 #include "bft/bft_manager.h"
 #include "common/utils.h"
 #include "common/time_utils.h"
@@ -348,6 +349,53 @@ void ElectManager::ProcessNewElectBlock(
             net_heights_iter->second = height;
         }
     }
+}
+
+void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
+    if (elect_block.prev_members().prev_elect_height() <= 0) {
+        return;
+    }
+
+    auto members = GetNetworkMembersWithHeight(
+        elect_block.prev_members().prev_elect_height(),
+        elect_block.shard_network_id());
+    if (members == nullptr) {
+        return;
+    }
+
+    if (members->size() != elect_block.prev_members().bls_pubkey_size()) {
+        return;
+    }
+
+    auto n = members->size();
+    auto t = n * 2 / 3;
+    if ((n * 2) % 3 > 0) {
+        t += 1;
+    }
+
+    int32_t i = 0;
+    for (auto iter = members->begin(); iter != members->end(); ++iter, ++i) {
+        std::vector<std::string> pkey_str = {
+            elect_block.prev_members().bls_pubkey(i).x_c0(),
+            elect_block.prev_members().bls_pubkey(i).x_c1(),
+            elect_block.prev_members().bls_pubkey(i).y_c0(),
+            elect_block.prev_members().bls_pubkey(i).y_c1()
+        };
+        BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+        (*iter)->bls_publick_key = *pkey.getPublicKey();
+    }
+
+    std::vector<std::string> pkey_str = {
+            elect_block.prev_members().common_pubkey().x_c0(),
+            elect_block.prev_members().common_pubkey().x_c1(),
+            elect_block.prev_members().common_pubkey().y_c0(),
+            elect_block.prev_members().common_pubkey().y_c1()
+    };
+    BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+    height_with_block_.SetCommonPublicKey(
+        elect_block.prev_members().prev_elect_height(),
+        elect_block.shard_network_id(),
+        *pkey.getPublicKey());
 }
 
 int ElectManager::BackupCheckElectionBlockTx(

@@ -106,6 +106,7 @@ private:
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
     void ClearExistsNetwork(uint32_t network_id);
     void ChangeInvalidLeader(uint32_t network_id, uint32_t leader_index);
+    void UpdatePrevElectMembers(protobuf::ElectBlock& elect_block);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 

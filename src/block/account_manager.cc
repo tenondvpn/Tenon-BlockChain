@@ -149,7 +149,10 @@ int AccountManager::GetAddressConsensusNetworkId(
     return kBlockSuccess;
 }
 
-int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info) {
+int AccountManager::HandleElectBlock(
+        uint64_t height,
+        const bft::protobuf::TxInfo& tx_info,
+        db::DbWriteBach& db_batch) {
     elect::protobuf::ElectBlock elect_block;
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         if (tx_info.attr(i).key() == elect::kElectNodeAttrElectBlock) {
@@ -163,6 +166,12 @@ int AccountManager::HandleElectBlock(uint64_t height, const bft::protobuf::TxInf
 
     elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
     vss::VssManager::Instance()->OnElectBlock(elect_block.shard_network_id(), height);
+    if (elect_block.prev_members().bls_pubkey_size() > 0) {
+        std::string key = GetElectBlsMembersKey(
+            elect_block.prev_members().prev_elect_height(),
+            elect_block.shard_network_id());
+        db_batch.Put(key, elect_block.prev_members().SerializeAsString());
+    }
 
     return kBlockSuccess;
 }
@@ -189,10 +198,11 @@ int AccountManager::HandleTimeBlock(uint64_t height, const bft::protobuf::TxInfo
 
 int AccountManager::HandleRootSingleBlockTx(
         uint64_t height,
-        const bft::protobuf::TxInfo& tx_info) {
+        const bft::protobuf::TxInfo& tx_info,
+        db::DbWriteBach& db_batch) {
     switch (tx_info.type()) {
     case common::kConsensusRootElectShard:
-        return HandleElectBlock(height, tx_info);
+        return HandleElectBlock(height, tx_info, db_batch);
     case common::kConsensusRootTimeBlock:
         return HandleTimeBlock(height, tx_info);
     default:
