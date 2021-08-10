@@ -374,16 +374,16 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
     int32_t i = 0;
     for (auto iter = members->begin(); iter != members->end(); ++iter, ++i) {
         std::vector<std::string> pkey_str = {
-            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c0()),
-            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c1()),
-            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c0()),
-            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c1())
+            elect_block.prev_members().bls_pubkey(i).x_c0(),
+            elect_block.prev_members().bls_pubkey(i).x_c1(),
+            elect_block.prev_members().bls_pubkey(i).y_c0(),
+            elect_block.prev_members().bls_pubkey(i).y_c1()
         };
 
-        std::cout << "load pk x c0: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c0()) << std::endl;
-        std::cout << "load pk x c1: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c1()) << std::endl;
-        std::cout << "load pk y c0: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c0()) << std::endl;
-        std::cout << "load pk y c1: " << common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c1()) << std::endl;
+        std::cout << "load pk x c0: " << elect_block.prev_members().bls_pubkey(i).x_c0() << std::endl;
+        std::cout << "load pk x c1: " << elect_block.prev_members().bls_pubkey(i).x_c1() << std::endl;
+        std::cout << "load pk y c0: " << elect_block.prev_members().bls_pubkey(i).y_c0() << std::endl;
+        std::cout << "load pk y c1: " << elect_block.prev_members().bls_pubkey(i).y_c1() << std::endl;
 
         BLSPublicKey pkey(
             std::make_shared<std::vector<std::string>>(pkey_str),
