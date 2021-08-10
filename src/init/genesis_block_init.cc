@@ -131,20 +131,20 @@ int GenesisBlockInit::CreateElectBlock(
             std::cout << *skeys[i]->toString() << std::endl;
             auto mem_pk = prev_members->add_bls_pubkey();
             auto pkeys_str = pkeys[i]->toString();
-            mem_pk->set_x_c0(pkeys_str->at(0));
-            mem_pk->set_x_c1(pkeys_str->at(1));
-            mem_pk->set_y_c0(pkeys_str->at(2));
-            mem_pk->set_y_c1(pkeys_str->at(3));
+            mem_pk->set_x_c0(common::Encode::HexDecode(pkeys_str->at(0)));
+            mem_pk->set_x_c1(common::Encode::HexDecode(pkeys_str->at(1)));
+            mem_pk->set_y_c0(common::Encode::HexDecode(pkeys_str->at(2)));
+            mem_pk->set_y_c1(common::Encode::HexDecode(pkeys_str->at(3)));
         }
 
         std::cout << std::endl;
         auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key, 2, 3);
         auto common_pk_strs = common_pk_ptr->toString();
         auto common_pk = prev_members->mutable_common_pubkey();
-        common_pk->set_x_c0(common_pk_strs->at(0));
-        common_pk->set_x_c1(common_pk_strs->at(0));
-        common_pk->set_y_c0(common_pk_strs->at(0));
-        common_pk->set_y_c1(common_pk_strs->at(0));
+        common_pk->set_x_c0(common::Encode::HexDecode(common_pk_strs->at(0)));
+        common_pk->set_x_c1(common::Encode::HexDecode(common_pk_strs->at(0)));
+        common_pk->set_y_c0(common::Encode::HexDecode(common_pk_strs->at(0)));
+        common_pk->set_y_c1(common::Encode::HexDecode(common_pk_strs->at(0)));
         prev_members->set_prev_elect_height(prev_height);
     }
 
