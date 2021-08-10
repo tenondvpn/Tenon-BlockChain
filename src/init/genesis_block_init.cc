@@ -166,9 +166,9 @@ int GenesisBlockInit::CreateElectBlock(
         auto common_pk_strs = common_pk_ptr->toString();
         auto common_pk = prev_members->mutable_common_pubkey();
         common_pk->set_x_c0(common::Encode::HexDecode(common_pk_strs->at(0)));
-        common_pk->set_x_c1(common::Encode::HexDecode(common_pk_strs->at(0)));
-        common_pk->set_y_c0(common::Encode::HexDecode(common_pk_strs->at(0)));
-        common_pk->set_y_c1(common::Encode::HexDecode(common_pk_strs->at(0)));
+        common_pk->set_x_c1(common::Encode::HexDecode(common_pk_strs->at(1)));
+        common_pk->set_y_c0(common::Encode::HexDecode(common_pk_strs->at(2)));
+        common_pk->set_y_c1(common::Encode::HexDecode(common_pk_strs->at(3)));
         prev_members->set_prev_elect_height(prev_height);
     }
 
