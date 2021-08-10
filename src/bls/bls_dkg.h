@@ -30,6 +30,16 @@ public:
     void OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members);
+
+    void SetInitElectionBlock(
+            const libff::alt_bn128_Fr& local_sec_key,
+            const libff::alt_bn128_G2 local_publick_key,
+            const libff::alt_bn128_G2 common_public_key) {
+        local_sec_key_ = local_sec_key_;
+        local_publick_key_ = local_publick_key;
+        common_public_key_ = common_public_key;
+    }
+
     uint64_t elect_hegiht() {
         return elect_hegiht_;
     }

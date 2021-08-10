@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "bls/BLSPublicKey.h"
+#include "bls/bls_manager.h"
 #include "bft/bft_manager.h"
 #include "common/utils.h"
 #include "common/time_utils.h"
@@ -349,6 +350,8 @@ void ElectManager::ProcessNewElectBlock(
             net_heights_iter->second = height;
         }
     }
+
+    UpdatePrevElectMembers(elect_block);
 }
 
 void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
@@ -395,6 +398,9 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
     height_with_block_.SetCommonPublicKey(
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
+        *pkey.getPublicKey());
+    bls::BlsManager::Instance()->SetUsedElectionBlock(
+        elect_block.prev_members().prev_elect_height(),
         *pkey.getPublicKey());
 }
 
