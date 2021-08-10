@@ -437,7 +437,8 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(
         uint64_t elect_height,
         uint32_t network_id) {
-    return height_with_block_.GetMembersPtr(elect_height, network_id);
+    libff::alt_bn128_G2 common_pk;
+    return height_with_block_.GetMembersPtr(elect_height, network_id, &common_pk);
 }
 
 uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id) {
