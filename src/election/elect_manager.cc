@@ -370,31 +370,29 @@ void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {
         return;
     }
 
-    auto n = members->size();
-    auto t = n * 2 / 3;
-    if ((n * 2) % 3 > 0) {
-        t += 1;
-    }
-
+    auto t = common::GetSignerCount(members->size());
     int32_t i = 0;
     for (auto iter = members->begin(); iter != members->end(); ++iter, ++i) {
         std::vector<std::string> pkey_str = {
-            elect_block.prev_members().bls_pubkey(i).x_c0(),
-            elect_block.prev_members().bls_pubkey(i).x_c1(),
-            elect_block.prev_members().bls_pubkey(i).y_c0(),
-            elect_block.prev_members().bls_pubkey(i).y_c1()
+            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c0()),
+            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).x_c1()),
+            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c0()),
+            common::Encode::HexEncode(elect_block.prev_members().bls_pubkey(i).y_c1())
         };
-        BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+        BLSPublicKey pkey(
+            std::make_shared<std::vector<std::string>>(pkey_str),
+            t,
+            members->size());
         (*iter)->bls_publick_key = *pkey.getPublicKey();
     }
 
     std::vector<std::string> pkey_str = {
-            elect_block.prev_members().common_pubkey().x_c0(),
-            elect_block.prev_members().common_pubkey().x_c1(),
-            elect_block.prev_members().common_pubkey().y_c0(),
-            elect_block.prev_members().common_pubkey().y_c1()
+            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().x_c0()),
+            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().x_c1()),
+            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().y_c0()),
+            common::Encode::HexEncode(elect_block.prev_members().common_pubkey().y_c1())
     };
-    BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+    BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, members->size());
     height_with_block_.SetCommonPublicKey(
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
