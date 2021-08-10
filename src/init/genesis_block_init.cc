@@ -1,6 +1,7 @@
 #include "init/genesis_block_init.h"
 
 #include <cmath>
+#include <vector>
 
 #include "common/encode.h"
 #include "block/account_manager.h"
@@ -46,10 +47,52 @@ int GenesisBlockInit::CreateGenesisBlocks(
     return CreateShardGenesisBlocks(net_id);
 }
 
+int GenesisBlockInit::CreateBlsGenesisKeys(
+        std::vector<std::shared_ptr<BLSPrivateKeyShare>>* skeys,
+        std::vector<std::shared_ptr<BLSPublicKeyShare>>* pkeys,
+        libff::alt_bn128_G2* common_public_key) {
+    static const uint32_t t = 2;
+    static const uint32_t n = 3;
+    signatures::Dkg dkg_instance = signatures::Dkg(t, n);
+    std::vector<std::vector<libff::alt_bn128_Fr>> polynomial(n);
+    for (auto& pol : polynomial) {
+        pol = dkg_instance.GeneratePolynomial();
+    }
+
+    std::vector<std::vector<libff::alt_bn128_Fr>> secret_key_contribution(n);
+    for (size_t i = 0; i < n; ++i) {
+        secret_key_contribution[i] = dkg_instance.SecretKeyContribution(polynomial[i]);
+    }
+
+    std::vector<std::vector<libff::alt_bn128_G2>> verification_vector(n);
+    for (size_t i = 0; i < n; ++i) {
+        verification_vector[i] = dkg_instance.VerificationVector(polynomial[i]);
+    }
+
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = i; j < n; ++j) {
+            std::swap(secret_key_contribution[j][i], secret_key_contribution[i][j]);
+        }
+    }
+
+    *common_public_key = libff::alt_bn128_G2::zero();
+    for (size_t i = 0; i < n; ++i) {
+        *common_public_key = *common_public_key + polynomial[i][0] * libff::alt_bn128_G2::one();
+        BLSPrivateKeyShare cur_skey(
+            dkg_instance.SecretKeyShareCreate(secret_key_contribution[i]), t, n);
+        skeys->push_back(std::make_shared<BLSPrivateKeyShare>(cur_skey));
+        BLSPublicKeyShare pkey(*cur_skey.getPrivateKey(), t, n);
+        pkeys->push_back(std::make_shared<BLSPublicKeyShare>(pkey));
+    }
+
+    return kInitSuccess;
+}
+
 int GenesisBlockInit::CreateElectBlock(
         uint32_t shard_netid,
         std::string& root_pre_hash,
         uint64_t height,
+        uint64_t prev_height,
         FILE* root_gens_init_block_file,
         const std::vector<dht::NodePtr>& genesis_nodes) {
     auto tenon_block = std::make_shared<bft::protobuf::Block>();
@@ -77,6 +120,34 @@ int GenesisBlockInit::CreateElectBlock(
 
     ec_block.set_leader_count(expect_leader_count);
     ec_block.set_shard_network_id(shard_netid);
+    if (prev_height != common::kInvalidUint64) {
+        std::vector<std::shared_ptr<BLSPrivateKeyShare>> skeys;
+        std::vector<std::shared_ptr<BLSPublicKeyShare>> pkeys;
+        libff::alt_bn128_G2 common_public_key;
+        CreateBlsGenesisKeys(&skeys, &pkeys, &common_public_key);
+        auto prev_members = ec_block.mutable_prev_members();
+        std::cout << "prikey with network: " << shard_netid << std::endl;
+        for (uint32_t i = 0; i < genesis_nodes.size(); ++i) {
+            std::cout << common::Encode::HexEncode(*skeys[i]->toString()) << std::endl;
+            auto mem_pk = prev_members->add_bls_pubkey();
+            auto pkeys_str = pkeys[i]->toString();
+            mem_pk->set_x_c0(pkeys_str->at(0));
+            mem_pk->set_x_c1(pkeys_str->at(1));
+            mem_pk->set_y_c0(pkeys_str->at(2));
+            mem_pk->set_y_c1(pkeys_str->at(3));
+        }
+
+        std::cout << std::endl;
+        auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key, 2, 3);
+        auto common_pk_strs = common_pk_ptr->toString();
+        auto common_pk = prev_members->mutable_common_pubkey();
+        common_pk->set_x_c0(common_pk_strs->at(0));
+        common_pk->set_x_c1(common_pk_strs->at(0));
+        common_pk->set_y_c0(common_pk_strs->at(0));
+        common_pk->set_y_c1(common_pk_strs->at(0));
+        prev_members->set_prev_elect_height(prev_height);
+    }
+
     auto ec_block_attr = tx_info->add_attr();
     ec_block_attr->set_key(elect::kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
@@ -327,10 +398,12 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         }
     }
 
+    uint64_t root_prev_elect_height = root_single_block_height;
     if (CreateElectBlock(
             network::kRootCongressNetworkId,
             root_pre_hash,
             root_single_block_height++,
+            common::kInvalidUint64,
             root_gens_init_block_file,
             root_genesis_nodes) != kInitSuccess) {
         INIT_ERROR("CreateElectBlock kRootCongressNetworkId failed!");
@@ -338,9 +411,33 @@ int GenesisBlockInit::GenerateRootSingleBlock(
     }
 
     if (CreateElectBlock(
+            network::kRootCongressNetworkId,
+            root_pre_hash,
+            root_single_block_height++,
+            root_prev_elect_height,
+            root_gens_init_block_file,
+            root_genesis_nodes) != kInitSuccess) {
+        INIT_ERROR("CreateElectBlock kRootCongressNetworkId failed!");
+        return kInitError;
+    }
+
+    uint64_t shard_prev_elect_height = root_single_block_height;
+    if (CreateElectBlock(
             network::kConsensusShardBeginNetworkId,
             root_pre_hash,
             root_single_block_height++,
+            common::kInvalidUint64,
+            root_gens_init_block_file,
+            cons_genesis_nodes) != kInitSuccess) {
+        INIT_ERROR("CreateElectBlock kConsensusShardBeginNetworkId failed!");
+        return kInitError;
+    }
+
+    if (CreateElectBlock(
+            network::kConsensusShardBeginNetworkId,
+            root_pre_hash,
+            root_single_block_height++,
+            shard_prev_elect_height,
             root_gens_init_block_file,
             cons_genesis_nodes) != kInitSuccess) {
         INIT_ERROR("CreateElectBlock kConsensusShardBeginNetworkId failed!");
