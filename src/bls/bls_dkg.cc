@@ -156,6 +156,9 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
         }
     } else if (bls_msg.has_against_req()) {
         content_to_hash = std::to_string(bls_msg.against_req().against_index());
+    } else if (bls_msg.has_verify_res()) {
+        content_to_hash = bls_msg.verify_res().public_ip() + "_" +
+            std::to_string(bls_msg.verify_res().public_port());
     }
 
     auto message_hash = common::Hash::keccak256(content_to_hash);
@@ -319,7 +322,7 @@ void BlsDkg::BroadcastVerfify() {
         verfiy_brd->set_public_port(dht->local_node()->public_port + 1);
     }
 
-    std::cout << "verify brd local: " << dht->local_node()->public_ip() << ":" << (dht->local_node()->public_port + 1) << std::endl;
+    std::cout << "verify brd local: " << verfiy_brd->public_ip() << ":" << (verfiy_brd->public_port() + 1) << std::endl;
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
@@ -402,8 +405,11 @@ void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_por
     auto verify_res = bls_msg.mutable_verify_res();
     verify_res->set_public_ip(dht->local_node()->public_ip());
     verify_res->set_public_port(dht->local_node()->public_port + 1);
+    std::string str_to_hash = dht->local_node()->public_ip() + "_" +
+        std::to_string(dht->local_node()->public_port + 1);
+    auto message_hash = common::Hash::keccak256(str_to_hash);
     transport::protobuf::Header msg;
-    CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
+    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             from_ip,
