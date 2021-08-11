@@ -200,10 +200,10 @@ void BlsDkg::HandleVerifyBroadcast(
         auto z_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).z_c0().c_str());
         auto z_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).z_c1().c_str());
         auto z_coord = libff::alt_bn128_Fq2(z_c0, z_c1);
-        all_verification_vector_[bls_msg.index()].push_back(libff::alt_bn128_G2(
+        all_verification_vector_[bls_msg.index()][i] = libff::alt_bn128_G2(
             x_coord,
             y_coord,
-            z_coord));
+            z_coord);
     }
 
     SendVerifyBrdResponse(
@@ -354,11 +354,6 @@ void BlsDkg::SwapSecKey() {
             continue;
         }
 
-        if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
-            BLS_ERROR("member %d not set public ip and port.", i);
-            continue;
-        }
-
         auto sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(
             all_secret_key_contribution_[local_member_index_][i]);
         std::string enc_sec_key = security::Crypto::Instance()->GetEncryptData(
@@ -379,15 +374,24 @@ void BlsDkg::SwapSecKey() {
 
         CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
         if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
-            transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                (*members_)[i]->public_ip,
-                (*members_)[i]->public_port,
-                0,
-                msg);
+            if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
+                auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
+                    network::kUniversalNetworkId);
+                auto local_node = std::make_shared<dht::Node>(*unversal_dht->local_node());
+                uint8_t country = dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key());
+                dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), country, local_node->id());
+                msg.set_des_dht_key(dht_key.StrKey());
+                network::Route::Instance()->Send(msg);
+            } else {
+                transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+                    (*members_)[i]->public_ip,
+                    (*members_)[i]->public_port,
+                    0,
+                    msg);
+            }
         }
 
         BLS_DEBUG("bls SwapSecKey called!");
-
 #ifdef TENON_UNITTEST
         sec_swap_msgs_.push_back(msg);
 #endif
