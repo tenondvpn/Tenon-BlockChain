@@ -35,6 +35,7 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) {
+    std::cout << "OnNewElectionBlock: " << elect_height << ":" << elect_hegiht_ << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -69,6 +70,7 @@ void BlsDkg::OnNewElectionBlock(
         kDkgSwapSecKeyBeginUs + local_offset_us_,
         std::bind(&BlsDkg::SwapSecKey, this));
     dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&BlsDkg::Finish, this));
+    BLS_DEBUG("bls OnNewElectionBlock called!");
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
@@ -102,6 +104,10 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
+    BLS_DEBUG("HandleMessage comming!has_verify_brd: %d,"
+        "has_swap_req: %d, has_against_req: %d, has_verify_res: %d",
+        bls_msg.has_verify_brd(), bls_msg.has_swap_req(),
+        bls_msg.has_against_req(), bls_msg.has_verify_res());
     if (bls_msg.has_verify_brd()) {
         HandleVerifyBroadcast(header, bls_msg);
     }
@@ -284,6 +290,8 @@ void BlsDkg::BroadcastVerfify() {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
+    BLS_DEBUG("bls BroadcastVerfify called!");
+
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
 #endif
@@ -333,6 +341,9 @@ void BlsDkg::SwapSecKey() {
                 0,
                 msg);
         }
+
+        BLS_DEBUG("bls SwapSecKey called!");
+
 #ifdef TENON_UNITTEST
         sec_swap_msgs_.push_back(msg);
 #endif

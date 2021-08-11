@@ -19,11 +19,12 @@ BlsManager* BlsManager::Instance() {
 }
 
 void BlsManager::ProcessNewElectBlock(
+        uint64_t elect_height,
         elect::protobuf::ElectBlock& elect_block,
         elect::MembersPtr& new_members) {
     std::lock_guard<std::mutex> guard(mutex_);
     waiting_bls_ = std::make_shared<bls::BlsDkg>();
-    waiting_bls_->OnNewElectionBlock(elect_block.elect_height(), new_members);
+    waiting_bls_->OnNewElectionBlock(elect_height, new_members);
 }
 
 void BlsManager::SetUsedElectionBlock(

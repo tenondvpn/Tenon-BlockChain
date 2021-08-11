@@ -353,7 +353,7 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     UpdatePrevElectMembers(elect_block);
-    bls::BlsManager::Instance()->ProcessNewElectBlock(elect_block, shard_members_ptr);
+    bls::BlsManager::Instance()->ProcessNewElectBlock(height, elect_block, shard_members_ptr);
 }
 
 void ElectManager::UpdatePrevElectMembers(protobuf::ElectBlock& elect_block) {

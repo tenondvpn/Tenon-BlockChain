@@ -15,6 +15,7 @@ class BlsManager {
 public:
     static BlsManager* Instance();
     void ProcessNewElectBlock(
+        uint64_t elect_height,
         elect::protobuf::ElectBlock& elect_block,
         elect::MembersPtr& new_members);
     void SetUsedElectionBlock(
