@@ -228,6 +228,17 @@ void BlsDkg::HandleVerifyBroadcastRes(
 void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    if (dht->local_node()->dht_key() != header.des_dht_key()) {
+        dht->SendToClosestNode(header);
+        return;
+    }
+
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
         (*members_)[bls_msg.index()]->pubkey,
         bls_msg.swap_req().sec_key());
@@ -385,12 +396,12 @@ void BlsDkg::SwapSecKey() {
 
         CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
         if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
+            dht::DhtKeyManager dht_key(
+                common::GlobalInfo::Instance()->network_id(),
+                0,
+                (*members_)[i]->id);
+            msg.set_des_dht_key(dht_key.StrKey());
             if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
-                dht::DhtKeyManager dht_key(
-                    common::GlobalInfo::Instance()->network_id(),
-                    0,
-                    (*members_)[i]->id);
-                msg.set_des_dht_key(dht_key.StrKey());
                 network::Route::Instance()->Send(msg);
             } else {
                 transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
