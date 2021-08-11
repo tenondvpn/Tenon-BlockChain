@@ -82,7 +82,7 @@ struct BftMember {
     std::string id;
     security::PublicKey pubkey;
     uint32_t index;
-    uint32_t public_ip;
+    std::string public_ip;
     uint16_t public_port;
     std::string dht_key;
     security::CommitSecret secret;

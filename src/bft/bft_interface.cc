@@ -458,76 +458,76 @@ int BftInterface::BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg) {
 }
 
 void BftInterface::CheckCommitRecallBackup() {
-    if (!this_node_is_leader_) {
-        return;
-    }
-
-    std::set<uint32_t> prepare_enc_failed_nodes;
-    {
-        std::lock_guard<std::mutex> guard(prepare_enc_failed_nodes_mutex_);
-        prepare_enc_failed_nodes.swap(prepare_enc_failed_nodes_);
-    }
-
-    for (auto iter = prepare_enc_failed_nodes.begin();
-            iter != prepare_enc_failed_nodes.end(); ++iter) {
-        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), *iter);
-        if (mem_ptr->public_ip == 0) {
-            continue;
-        }
-
-        // send precommit to backup and get response again
-        std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
-    }
-
-    if (status_ != kBftCommit) {
-        return;
-    }
-
-    if (members_ptr_ == nullptr) {
-        return;
-    }
-
-    if (leader_precommit_msg_ == nullptr) {
-        return;
-    }
-
-    auto now_timestamp = std::chrono::steady_clock::now();
-    if (now_timestamp < (precommit_timeout_ -
-            std::chrono::microseconds(kBftLeaderPrepareWaitPeriod / 2)) ||
-            now_timestamp >= (precommit_timeout_ - std::chrono::microseconds(50000))) {
-        return;
-    }
-
-    if (precommit_bitmap_.valid_count() >= prepare_bitmap_.valid_count() * 9 / 10) {
-        uint32_t bit_size = prepare_bitmap_.data().size() * 64;
-        for (uint32_t i = 0; i < bit_size; ++i) {
-            if (!prepare_bitmap_.Valid(i)) {
-                continue;
-            }
-
-            if (precommit_bitmap_.Valid(i)) {
-                continue;
-            }
-
-            if (i >= members_ptr_->size()) {
-                return;
-            }
-
-            auto mem_ptr = (*members_ptr_)[i];
-            if (mem_ptr->public_ip == 0) {
-                BFT_DEBUG("prepared member public ip is 0, index: %d", i);
-                assert(false);
-                continue;
-            }
-
-            // send precommit to backup and get response again
-            std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
-            transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
-        }
-    }
+//     if (!this_node_is_leader_) {
+//         return;
+//     }
+// 
+//     std::set<uint32_t> prepare_enc_failed_nodes;
+//     {
+//         std::lock_guard<std::mutex> guard(prepare_enc_failed_nodes_mutex_);
+//         prepare_enc_failed_nodes.swap(prepare_enc_failed_nodes_);
+//     }
+// 
+//     for (auto iter = prepare_enc_failed_nodes.begin();
+//             iter != prepare_enc_failed_nodes.end(); ++iter) {
+//         auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id(), *iter);
+//         if (mem_ptr->public_ip == 0) {
+//             continue;
+//         }
+// 
+//         // send precommit to backup and get response again
+//         std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
+//         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+//             ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
+//     }
+// 
+//     if (status_ != kBftCommit) {
+//         return;
+//     }
+// 
+//     if (members_ptr_ == nullptr) {
+//         return;
+//     }
+// 
+//     if (leader_precommit_msg_ == nullptr) {
+//         return;
+//     }
+// 
+//     auto now_timestamp = std::chrono::steady_clock::now();
+//     if (now_timestamp < (precommit_timeout_ -
+//             std::chrono::microseconds(kBftLeaderPrepareWaitPeriod / 2)) ||
+//             now_timestamp >= (precommit_timeout_ - std::chrono::microseconds(50000))) {
+//         return;
+//     }
+// 
+//     if (precommit_bitmap_.valid_count() >= prepare_bitmap_.valid_count() * 9 / 10) {
+//         uint32_t bit_size = prepare_bitmap_.data().size() * 64;
+//         for (uint32_t i = 0; i < bit_size; ++i) {
+//             if (!prepare_bitmap_.Valid(i)) {
+//                 continue;
+//             }
+// 
+//             if (precommit_bitmap_.Valid(i)) {
+//                 continue;
+//             }
+// 
+//             if (i >= members_ptr_->size()) {
+//                 return;
+//             }
+// 
+//             auto mem_ptr = (*members_ptr_)[i];
+//             if (mem_ptr->public_ip == 0) {
+//                 BFT_DEBUG("prepared member public ip is 0, index: %d", i);
+//                 assert(false);
+//                 continue;
+//             }
+// 
+//             // send precommit to backup and get response again
+//             std::string ip = common::IpUint32ToString(mem_ptr->public_ip);
+//             transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+//                 ip, mem_ptr->public_port, 0, *leader_precommit_msg_);
+//         }
+//     }
 }
 
 }  // namespace bft

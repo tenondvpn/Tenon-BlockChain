@@ -351,7 +351,7 @@ void BlsDkg::SwapSecKey() {
             continue;
         }
 
-        if ((*members_)[i]->public_ip == 0 || (*members_)[i]->public_port == 0) {
+        if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
             BLS_ERROR("member %d not set public ip and port.", i);
             continue;
         }
@@ -377,7 +377,7 @@ void BlsDkg::SwapSecKey() {
         CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
         if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
             transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                common::IpUint32ToString((*members_)[i]->public_ip),
+                (*members_)[i]->public_ip,
                 (*members_)[i]->public_port,
                 0,
                 msg);
