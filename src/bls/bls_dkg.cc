@@ -342,6 +342,10 @@ void BlsDkg::BroadcastVerfify() {
 
 void BlsDkg::SwapSecKey() {
     std::lock_guard<std::mutex> guard(mutex_);
+    if (members_ == nullptr || local_member_index_ >= members_->size()) {
+        return;
+    }
+
 #ifdef TENON_UNITTEST
     sec_swap_msgs_.clear();
 #endif
@@ -442,6 +446,10 @@ void BlsDkg::DumpLocalPrivateKey() {
 
 void BlsDkg::Finish() {
     std::lock_guard<std::mutex> guard(mutex_);
+    if (members_ == nullptr || local_member_index_ >= members_->size()) {
+        return;
+    }
+
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     DumpLocalPrivateKey();
