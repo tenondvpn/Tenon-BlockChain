@@ -31,7 +31,10 @@ ElectManager::ElectManager() {
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
     memset(latest_leader_count_, 0, sizeof(latest_leader_count_));
     memset(latest_member_count_, 0, sizeof(latest_member_count_));
-    
+    for (uint32_t i = 0; i < network::kConsensusShardEndNetworkId; ++i) {
+        elect_net_heights_map_[i] = common::kInvalidUint64;
+    }
+
     waiting_hb_tick_.CutOff(
         kWaitingHeartbeatPeriod,
         std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
@@ -342,13 +345,9 @@ void ElectManager::ProcessNewElectBlock(
         height,
         elect_block.shard_network_id(),
         shard_members_ptr);
-    auto net_heights_iter = elect_net_heights_map_.find(elect_block.shard_network_id());
-    if (net_heights_iter == elect_net_heights_map_.end()) {
+    if (elect_net_heights_map_[elect_block.shard_network_id()] == common::kInvalidUint64 ||
+            height > elect_net_heights_map_[elect_block.shard_network_id()]) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;
-    } else {
-        if (height > net_heights_iter->second) {
-            net_heights_iter->second = height;
-        }
     }
 
     UpdatePrevElectMembers(elect_block);
@@ -433,13 +432,7 @@ int ElectManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
 }
 
 uint64_t ElectManager::latest_height(uint32_t network_id) {
-    std::lock_guard<std::mutex> guard(elect_members_mutex_);
-    auto net_heights_iter = elect_net_heights_map_.find(network_id);
-    if (net_heights_iter == elect_net_heights_map_.end()) {
-        return common::kInvalidUint64;
-    }
-
-    return net_heights_iter->second;
+    return elect_net_heights_map_[network_id];
 }
 
 elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(

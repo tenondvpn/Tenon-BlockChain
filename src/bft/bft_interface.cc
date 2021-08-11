@@ -171,7 +171,8 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     }
 
     if (local_elect_height != bft_msg.elect_height()) {
-        BFT_ERROR("leader elect height not equal to local.");
+        BFT_ERROR("leader elect height not equal to local. local_elect_height: %lu, leader: %lu",
+            local_elect_height, bft_msg.elect_height());
         return false;
     }
 
