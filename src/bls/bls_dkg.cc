@@ -46,6 +46,7 @@ void BlsDkg::OnNewElectionBlock(
     dkg_swap_seckkey_timer_.Destroy();
     dkg_finish_timer_.Destroy();
 
+    valid_sec_key_count_ = 0;
     members_ = members;
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
@@ -117,8 +118,10 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
 
     BLS_DEBUG("HandleMessage comming!has_verify_brd: %d,"
         "has_swap_req: %d, has_against_req: %d, has_verify_res: %d",
-        bls_msg.has_verify_brd(), bls_msg.has_swap_req(),
-        bls_msg.has_against_req(), bls_msg.has_verify_res());
+        bls_msg.has_verify_brd(),
+        bls_msg.has_swap_req(),
+        bls_msg.has_against_req(),
+        bls_msg.has_verify_res());
     if (bls_msg.has_verify_brd()) {
         HandleVerifyBroadcast(header, bls_msg);
     }
@@ -241,7 +244,9 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        BLS_ERROR("dkg_instance_->Verification failed!");
+        BLS_ERROR("dkg_instance_->Verification failed!local_member_index_: %d, remote idx: %d",
+            local_member_index_,
+            bls_msg.index());
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
             libff::alt_bn128_Fr::zero();
         // send against
@@ -264,6 +269,9 @@ void BlsDkg::HandleSwapSecKey(
 #endif
         return;
     }
+
+    ++valid_sec_key_count_;
+    BLS_DEBUG("handle swap sec key success: %d", bls_msg.index());
 }
 
 void BlsDkg::HandleAgainstParticipant(
@@ -322,7 +330,6 @@ void BlsDkg::BroadcastVerfify() {
         verfiy_brd->set_public_port(dht->local_node()->public_port + 1);
     }
 
-    std::cout << "verify brd local: " << verfiy_brd->public_ip() << ":" << (verfiy_brd->public_port() + 1) << std::endl;
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
@@ -379,11 +386,10 @@ void BlsDkg::SwapSecKey() {
         CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
         if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
             if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
-                auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
-                    network::kUniversalNetworkId);
-                auto local_node = std::make_shared<dht::Node>(*unversal_dht->local_node());
-                uint8_t country = dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key());
-                dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), country, local_node->id());
+                dht::DhtKeyManager dht_key(
+                    common::GlobalInfo::Instance()->network_id(),
+                    0,
+                    (*members_)[i]->id);
                 msg.set_des_dht_key(dht_key.StrKey());
                 network::Route::Instance()->Send(msg);
             } else {
@@ -392,10 +398,10 @@ void BlsDkg::SwapSecKey() {
                     (*members_)[i]->public_port,
                     0,
                     msg);
+                BLS_DEBUG("bls SwapSecKey called! %s:%d", (*members_)[i]->public_ip.c_str(), (*members_)[i]->public_port);
             }
         }
 
-        BLS_DEBUG("bls SwapSecKey called!");
 #ifdef TENON_UNITTEST
         sec_swap_msgs_.push_back(msg);
 #endif
@@ -471,6 +477,7 @@ void BlsDkg::CreateContribution() {
     all_secret_key_contribution_[local_member_index_] =
         dkg_instance_->SecretKeyContribution(polynomial);
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
+    ++valid_sec_key_count_;
 }
 
 void BlsDkg::DumpContribution() {

@@ -122,6 +122,7 @@ private:
     libff::alt_bn128_G2 common_public_key_;
     std::shared_ptr<std::mt19937> random_ptr_;
     bool finished_{ false };
+    uint32_t valid_sec_key_count_{ 0 };
     std::mutex mutex_;
 
 #ifdef TENON_UNITTEST

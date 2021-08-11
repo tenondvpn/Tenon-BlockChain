@@ -107,6 +107,11 @@ int ShardNetwork<DhtType>::JoinUniversal() {
     assert(unversal_dht->local_node());
     auto local_node = std::make_shared<dht::Node>(*unversal_dht->local_node());
     uint8_t country = dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key());
+    if (network_id_ >= network::kRootCongressNetworkId &&
+            network_id_ < network::kConsensusShardEndNetworkId) {
+        country = 0;
+    }
+
     dht::DhtKeyManager dht_key(network_id_, country, local_node->id());
     local_node->set_dht_key(dht_key.StrKey());
     local_node->dht_key_hash = common::Hash::Hash64(dht_key.StrKey());
