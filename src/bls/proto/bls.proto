@@ -13,12 +13,12 @@ message VerifyVecItem {
 
 message VerifyVecBrdReq {
     repeated VerifyVecItem verify_vec = 1;
-    optional uint32 public_ip = 2;
+    optional bytes public_ip = 2;
     optional uint32 public_port = 3;
 }
 
 message VerifyVecBrdRes {
-    optional uint32 public_ip = 1;
+    optional bytes public_ip = 1;
     optional uint32 public_port = 2;
 }
 

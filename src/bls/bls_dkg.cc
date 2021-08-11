@@ -311,8 +311,15 @@ void BlsDkg::BroadcastVerfify() {
         return;
     }
 
-    verfiy_brd->set_public_ip(common::IpStringToUint32(dht->local_node()->public_ip()));
-    verfiy_brd->set_public_port(dht->local_node()->public_port);
+    if (common::GlobalInfo::Instance()->config_first_node()) {
+        verfiy_brd->set_public_ip(common::GlobalInfo::Instance()->config_local_ip());
+        verfiy_brd->set_public_port(common::GlobalInfo::Instance()->config_local_port() + 1);
+    } else {
+        verfiy_brd->set_public_ip(dht->local_node()->public_ip());
+        verfiy_brd->set_public_port(dht->local_node()->public_port + 1);
+    }
+
+    std::cout << "verify brd local: " << dht->local_node()->public_ip() << ":" << (dht->local_node()->public_port + 1) << std::endl;
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
@@ -384,7 +391,7 @@ void BlsDkg::SwapSecKey() {
     }
 }
 
-void BlsDkg::SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port) {
+void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port) {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -393,13 +400,13 @@ void BlsDkg::SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port) {
     
     protobuf::BlsMessage bls_msg;
     auto verify_res = bls_msg.mutable_verify_res();
-    verify_res->set_public_ip(common::IpStringToUint32(dht->local_node()->public_ip()));
+    verify_res->set_public_ip(dht->local_node()->public_ip());
     verify_res->set_public_port(dht->local_node()->public_port + 1);
     transport::protobuf::Header msg;
     CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
     if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            common::IpUint32ToString(from_ip),
+            from_ip,
             from_port,
             0,
             msg);
