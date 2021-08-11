@@ -68,7 +68,7 @@ struct BftMember {
             id(in_id),
             pubkey(pkey),
             index(idx),
-            public_ip(0),
+            public_ip(""),
             public_port(0),
             dht_key(dhtkey) {
         for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {

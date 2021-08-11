@@ -94,7 +94,7 @@ private:
     void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     void DumpContribution();
     void DumpLocalPrivateKey();
-    void SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port);
+    void SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port);
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
