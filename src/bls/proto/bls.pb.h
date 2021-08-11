@@ -403,13 +403,33 @@ class VerifyVecBrdReq : public ::google::protobuf::Message /* @@protoc_insertion
   const ::google::protobuf::RepeatedPtrField< ::tenon::bls::protobuf::VerifyVecItem >&
       verify_vec() const;
 
+  // optional uint32 public_ip = 2;
+  bool has_public_ip() const;
+  void clear_public_ip();
+  static const int kPublicIpFieldNumber = 2;
+  ::google::protobuf::uint32 public_ip() const;
+  void set_public_ip(::google::protobuf::uint32 value);
+
+  // optional uint32 public_port = 3;
+  bool has_public_port() const;
+  void clear_public_port();
+  static const int kPublicPortFieldNumber = 3;
+  ::google::protobuf::uint32 public_port() const;
+  void set_public_port(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.VerifyVecBrdReq)
  private:
+  void set_has_public_ip();
+  void clear_has_public_ip();
+  void set_has_public_port();
+  void clear_has_public_port();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::tenon::bls::protobuf::VerifyVecItem > verify_vec_;
+  ::google::protobuf::uint32 public_ip_;
+  ::google::protobuf::uint32 public_port_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1431,6 +1451,54 @@ inline const ::google::protobuf::RepeatedPtrField< ::tenon::bls::protobuf::Verif
 VerifyVecBrdReq::verify_vec() const {
   // @@protoc_insertion_point(field_list:tenon.bls.protobuf.VerifyVecBrdReq.verify_vec)
   return verify_vec_;
+}
+
+// optional uint32 public_ip = 2;
+inline bool VerifyVecBrdReq::has_public_ip() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void VerifyVecBrdReq::set_has_public_ip() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void VerifyVecBrdReq::clear_has_public_ip() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void VerifyVecBrdReq::clear_public_ip() {
+  public_ip_ = 0u;
+  clear_has_public_ip();
+}
+inline ::google::protobuf::uint32 VerifyVecBrdReq::public_ip() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.VerifyVecBrdReq.public_ip)
+  return public_ip_;
+}
+inline void VerifyVecBrdReq::set_public_ip(::google::protobuf::uint32 value) {
+  set_has_public_ip();
+  public_ip_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.VerifyVecBrdReq.public_ip)
+}
+
+// optional uint32 public_port = 3;
+inline bool VerifyVecBrdReq::has_public_port() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void VerifyVecBrdReq::set_has_public_port() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void VerifyVecBrdReq::clear_has_public_port() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void VerifyVecBrdReq::clear_public_port() {
+  public_port_ = 0u;
+  clear_has_public_port();
+}
+inline ::google::protobuf::uint32 VerifyVecBrdReq::public_port() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.VerifyVecBrdReq.public_port)
+  return public_port_;
+}
+inline void VerifyVecBrdReq::set_public_port(::google::protobuf::uint32 value) {
+  set_has_public_port();
+  public_port_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.VerifyVecBrdReq.public_port)
 }
 
 // -------------------------------------------------------------------

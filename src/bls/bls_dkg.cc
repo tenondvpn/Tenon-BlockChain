@@ -311,6 +311,8 @@ void BlsDkg::BroadcastVerfify() {
         return;
     }
 
+    verfiy_brd->set_public_ip(common::IpStringToUint32(dht->local_node()->public_ip()));
+    verfiy_brd->set_public_port(dht->local_node()->public_port);
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
@@ -388,15 +390,8 @@ void BlsDkg::SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port) {
     if (!dht) {
         return;
     }
-
     
     protobuf::BlsMessage bls_msg;
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        return;
-    }
-
     auto verify_res = bls_msg.mutable_verify_res();
     verify_res->set_public_ip(common::IpStringToUint32(dht->local_node()->public_ip()));
     verify_res->set_public_port(dht->local_node()->public_port + 1);

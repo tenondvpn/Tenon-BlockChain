@@ -187,7 +187,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecBrdReq, verify_vec_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecBrdReq, public_ip_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecBrdReq, public_port_),
   ~0u,
+  0,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecBrdRes, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecBrdRes, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -235,11 +239,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 11, sizeof(::tenon::bls::protobuf::VerifyVecItem)},
-  { 17, 23, sizeof(::tenon::bls::protobuf::VerifyVecBrdReq)},
-  { 24, 31, sizeof(::tenon::bls::protobuf::VerifyVecBrdRes)},
-  { 33, 39, sizeof(::tenon::bls::protobuf::SwapSecKeyReq)},
-  { 40, 46, sizeof(::tenon::bls::protobuf::AgainstParticipant)},
-  { 47, 60, sizeof(::tenon::bls::protobuf::BlsMessage)},
+  { 17, 25, sizeof(::tenon::bls::protobuf::VerifyVecBrdReq)},
+  { 28, 35, sizeof(::tenon::bls::protobuf::VerifyVecBrdRes)},
+  { 37, 43, sizeof(::tenon::bls::protobuf::SwapSecKeyReq)},
+  { 44, 50, sizeof(::tenon::bls::protobuf::AgainstParticipant)},
+  { 51, 64, sizeof(::tenon::bls::protobuf::BlsMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -275,9 +279,10 @@ void AddDescriptorsImpl() {
       "\n\tbls.proto\022\022tenon.bls.protobuf\"c\n\rVerif"
       "yVecItem\022\014\n\004x_c0\030\001 \001(\014\022\014\n\004x_c1\030\002 \001(\014\022\014\n\004"
       "y_c0\030\003 \001(\014\022\014\n\004y_c1\030\004 \001(\014\022\014\n\004z_c0\030\005 \001(\014\022\014"
-      "\n\004z_c1\030\006 \001(\014\"H\n\017VerifyVecBrdReq\0225\n\nverif"
+      "\n\004z_c1\030\006 \001(\014\"p\n\017VerifyVecBrdReq\0225\n\nverif"
       "y_vec\030\001 \003(\0132!.tenon.bls.protobuf.VerifyV"
-      "ecItem\"9\n\017VerifyVecBrdRes\022\021\n\tpublic_ip\030\001"
+      "ecItem\022\021\n\tpublic_ip\030\002 \001(\r\022\023\n\013public_port"
+      "\030\003 \001(\r\"9\n\017VerifyVecBrdRes\022\021\n\tpublic_ip\030\001"
       " \001(\r\022\023\n\013public_port\030\002 \001(\r\" \n\rSwapSecKeyR"
       "eq\022\017\n\007sec_key\030\001 \001(\014\"+\n\022AgainstParticipan"
       "t\022\025\n\ragainst_index\030\001 \001(\r\"\270\002\n\nBlsMessage\022"
@@ -291,7 +296,7 @@ void AddDescriptorsImpl() {
       "buf.VerifyVecBrdRes"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 659);
+      descriptor, 699);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bls.proto", &protobuf_RegisterTypes);
 }
@@ -802,6 +807,8 @@ void VerifyVecBrdReq::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int VerifyVecBrdReq::kVerifyVecFieldNumber;
+const int VerifyVecBrdReq::kPublicIpFieldNumber;
+const int VerifyVecBrdReq::kPublicPortFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 VerifyVecBrdReq::VerifyVecBrdReq()
@@ -817,10 +824,16 @@ VerifyVecBrdReq::VerifyVecBrdReq(const VerifyVecBrdReq& from)
       _has_bits_(from._has_bits_),
       verify_vec_(from.verify_vec_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&public_ip_, &from.public_ip_,
+    static_cast<size_t>(reinterpret_cast<char*>(&public_port_) -
+    reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
   // @@protoc_insertion_point(copy_constructor:tenon.bls.protobuf.VerifyVecBrdReq)
 }
 
 void VerifyVecBrdReq::SharedCtor() {
+  ::memset(&public_ip_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&public_port_) -
+      reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
 }
 
 VerifyVecBrdReq::~VerifyVecBrdReq() {
@@ -852,6 +865,12 @@ void VerifyVecBrdReq::Clear() {
   (void) cached_has_bits;
 
   verify_vec_.Clear();
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 3u) {
+    ::memset(&public_ip_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&public_port_) -
+        reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -872,6 +891,34 @@ bool VerifyVecBrdReq::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                 input, add_verify_vec()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 public_ip = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_public_ip();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &public_ip_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 public_port = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          set_has_public_port();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &public_port_)));
         } else {
           goto handle_unusual;
         }
@@ -913,6 +960,17 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
       output);
   }
 
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 public_ip = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->public_ip(), output);
+  }
+
+  // optional uint32 public_port = 3;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->public_port(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -933,6 +991,17 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->verify_vec(static_cast<int>(i)), deterministic, target);
+  }
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 public_ip = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->public_ip(), target);
+  }
+
+  // optional uint32 public_port = 3;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->public_port(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -963,6 +1032,22 @@ size_t VerifyVecBrdReq::ByteSizeLong() const {
     }
   }
 
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional uint32 public_ip = 2;
+    if (has_public_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->public_ip());
+    }
+
+    // optional uint32 public_port = 3;
+    if (has_public_port()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->public_port());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -991,6 +1076,16 @@ void VerifyVecBrdReq::MergeFrom(const VerifyVecBrdReq& from) {
   (void) cached_has_bits;
 
   verify_vec_.MergeFrom(from.verify_vec_);
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      public_ip_ = from.public_ip_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      public_port_ = from.public_port_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
 }
 
 void VerifyVecBrdReq::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1018,6 +1113,8 @@ void VerifyVecBrdReq::Swap(VerifyVecBrdReq* other) {
 void VerifyVecBrdReq::InternalSwap(VerifyVecBrdReq* other) {
   using std::swap;
   CastToBase(&verify_vec_)->InternalSwap(CastToBase(&other->verify_vec_));
+  swap(public_ip_, other->public_ip_);
+  swap(public_port_, other->public_port_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
