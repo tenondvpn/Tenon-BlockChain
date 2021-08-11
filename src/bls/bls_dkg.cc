@@ -34,7 +34,7 @@ BlsDkg::~BlsDkg() {}
 
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
-        elect::MembersPtr& members) {
+        elect::MembersPtr& members) try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -83,9 +83,11 @@ void BlsDkg::OnNewElectionBlock(
         kDkgFinishBeginUs,
         local_offset_us_,
         each_member_offset_us);
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
-void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
+void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (finished_) {
         return;
@@ -137,6 +139,8 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     if (bls_msg.has_verify_res()) {
         HandleVerifyBroadcastRes(header, bls_msg);
     }
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
@@ -182,7 +186,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
 
 void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
+        const protobuf::BlsMessage& bls_msg) try {
     if (!IsSignValid(bls_msg)) {
         BLS_ERROR("sign verify failed!");
         return;
@@ -212,6 +216,8 @@ void BlsDkg::HandleVerifyBroadcast(
     SendVerifyBrdResponse(
         bls_msg.verify_brd().public_ip(),
         bls_msg.verify_brd().public_port());
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 void BlsDkg::HandleVerifyBroadcastRes(
@@ -227,7 +233,7 @@ void BlsDkg::HandleVerifyBroadcastRes(
 
 void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
+        const protobuf::BlsMessage& bls_msg) try {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -289,6 +295,8 @@ void BlsDkg::HandleSwapSecKey(
         local_member_index_,
         bls_msg.index(),
         valid_sec_key_count_);
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 void BlsDkg::HandleAgainstParticipant(
@@ -305,7 +313,7 @@ void BlsDkg::HandleAgainstParticipant(
     }
 }
 
-void BlsDkg::BroadcastVerfify() {
+void BlsDkg::BroadcastVerfify() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -362,9 +370,11 @@ void BlsDkg::BroadcastVerfify() {
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
 #endif
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
-void BlsDkg::SwapSecKey() {
+void BlsDkg::SwapSecKey() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -423,6 +433,8 @@ void BlsDkg::SwapSecKey() {
         sec_swap_msgs_.push_back(msg);
 #endif
     }
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port) {
@@ -467,7 +479,7 @@ void BlsDkg::DumpLocalPrivateKey() {
     db::Db::Instance()->Put(key, enc_data);
 }
 
-void BlsDkg::Finish() {
+void BlsDkg::Finish() try {
     std::lock_guard<std::mutex> guard(mutex_);
     std::cout << "bls finish called valid_sec_key_count_: " << valid_sec_key_count_
         << ", min_aggree_member_count_: " << min_aggree_member_count_
@@ -480,7 +492,6 @@ void BlsDkg::Finish() {
 
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
-    DumpLocalPrivateKey();
     common_public_key_ = libff::alt_bn128_G2::zero();
     for (size_t i = 0; i < members_->size(); ++i) {
         if (invalid_node_map_[i] >= min_aggree_member_count_) {
@@ -491,7 +502,6 @@ void BlsDkg::Finish() {
     }
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
-    finished_ = true;
     std::string sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
     common_public_key_.to_affine_coordinates();
     std::cout << "bls finish, local sec key: " << sec_key
@@ -501,6 +511,11 @@ void BlsDkg::Finish() {
         << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0) << ","
         << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1)
         << std::endl;
+    DumpLocalPrivateKey();
+    finished_ = true;
+} catch (std::exception& e) {
+    local_sec_key_ = libff::alt_bn128_Fr::zero();
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 void BlsDkg::CreateContribution() {
