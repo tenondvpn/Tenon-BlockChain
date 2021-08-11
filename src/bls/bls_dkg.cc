@@ -151,7 +151,12 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        BLS_ERROR("security::Schnorr::Instance()->Verify failed!");
+        std::string str_pk;
+        pubkey.Serialize(str_pk);
+        BLS_ERROR("security::Schnorr::Instance()->Verify failed! hash: %s, index: %d, public key: %s",
+            common::Encode::HexEncode(message_hash).c_str(),
+            bls_msg.index(),
+            common::Encode::HexEncode(str_pk).c_str());
         return false;
     }
 
@@ -290,7 +295,14 @@ void BlsDkg::BroadcastVerfify() {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
-    BLS_DEBUG("bls BroadcastVerfify called!");
+    auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
+    std::string tmp_pk_str;
+    pubkey.Serialize(tmp_pk_str);
+    BLS_DEBUG("bls BroadcastVerfify called hash: %s, index: %d, public key: %s, tmp pk: %s!",
+        common::Encode::HexEncode(message_hash).c_str(),
+        local_member_index_,
+        common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey()).c_str(),
+        common::Encode::HexEncode(tmp_pk_str).c_str());
 
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
