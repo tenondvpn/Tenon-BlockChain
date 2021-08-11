@@ -281,9 +281,9 @@ void AddDescriptorsImpl() {
       "y_c0\030\003 \001(\014\022\014\n\004y_c1\030\004 \001(\014\022\014\n\004z_c0\030\005 \001(\014\022\014"
       "\n\004z_c1\030\006 \001(\014\"p\n\017VerifyVecBrdReq\0225\n\nverif"
       "y_vec\030\001 \003(\0132!.tenon.bls.protobuf.VerifyV"
-      "ecItem\022\021\n\tpublic_ip\030\002 \001(\r\022\023\n\013public_port"
+      "ecItem\022\021\n\tpublic_ip\030\002 \001(\014\022\023\n\013public_port"
       "\030\003 \001(\r\"9\n\017VerifyVecBrdRes\022\021\n\tpublic_ip\030\001"
-      " \001(\r\022\023\n\013public_port\030\002 \001(\r\" \n\rSwapSecKeyR"
+      " \001(\014\022\023\n\013public_port\030\002 \001(\r\" \n\rSwapSecKeyR"
       "eq\022\017\n\007sec_key\030\001 \001(\014\"+\n\022AgainstParticipan"
       "t\022\025\n\ragainst_index\030\001 \001(\r\"\270\002\n\nBlsMessage\022"
       "7\n\nverify_brd\030\001 \001(\0132#.tenon.bls.protobuf"
@@ -824,16 +824,17 @@ VerifyVecBrdReq::VerifyVecBrdReq(const VerifyVecBrdReq& from)
       _has_bits_(from._has_bits_),
       verify_vec_(from.verify_vec_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&public_ip_, &from.public_ip_,
-    static_cast<size_t>(reinterpret_cast<char*>(&public_port_) -
-    reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_public_ip()) {
+    public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
+  }
+  public_port_ = from.public_port_;
   // @@protoc_insertion_point(copy_constructor:tenon.bls.protobuf.VerifyVecBrdReq)
 }
 
 void VerifyVecBrdReq::SharedCtor() {
-  ::memset(&public_ip_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&public_port_) -
-      reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  public_port_ = 0u;
 }
 
 VerifyVecBrdReq::~VerifyVecBrdReq() {
@@ -842,6 +843,7 @@ VerifyVecBrdReq::~VerifyVecBrdReq() {
 }
 
 void VerifyVecBrdReq::SharedDtor() {
+  public_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void VerifyVecBrdReq::SetCachedSize(int size) const {
@@ -866,11 +868,10 @@ void VerifyVecBrdReq::Clear() {
 
   verify_vec_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
-    ::memset(&public_ip_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&public_port_) -
-        reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  if (cached_has_bits & 0x00000001u) {
+    public_ip_.ClearNonDefaultToEmptyNoArena();
   }
+  public_port_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -897,14 +898,12 @@ bool VerifyVecBrdReq::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint32 public_ip = 2;
+      // optional bytes public_ip = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          set_has_public_ip();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &public_ip_)));
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_public_ip()));
         } else {
           goto handle_unusual;
         }
@@ -961,9 +960,10 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
   }
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 public_ip = 2;
+  // optional bytes public_ip = 2;
   if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->public_ip(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->public_ip(), output);
   }
 
   // optional uint32 public_port = 3;
@@ -994,9 +994,11 @@ void VerifyVecBrdReq::SerializeWithCachedSizes(
   }
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 public_ip = 2;
+  // optional bytes public_ip = 2;
   if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->public_ip(), target);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->public_ip(), target);
   }
 
   // optional uint32 public_port = 3;
@@ -1033,10 +1035,10 @@ size_t VerifyVecBrdReq::ByteSizeLong() const {
   }
 
   if (_has_bits_[0 / 32] & 3u) {
-    // optional uint32 public_ip = 2;
+    // optional bytes public_ip = 2;
     if (has_public_ip()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->public_ip());
     }
 
@@ -1079,7 +1081,8 @@ void VerifyVecBrdReq::MergeFrom(const VerifyVecBrdReq& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      public_ip_ = from.public_ip_;
+      set_has_public_ip();
+      public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
     }
     if (cached_has_bits & 0x00000002u) {
       public_port_ = from.public_port_;
@@ -1113,7 +1116,8 @@ void VerifyVecBrdReq::Swap(VerifyVecBrdReq* other) {
 void VerifyVecBrdReq::InternalSwap(VerifyVecBrdReq* other) {
   using std::swap;
   CastToBase(&verify_vec_)->InternalSwap(CastToBase(&other->verify_vec_));
-  swap(public_ip_, other->public_ip_);
+  public_ip_.Swap(&other->public_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(public_port_, other->public_port_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -1146,16 +1150,17 @@ VerifyVecBrdRes::VerifyVecBrdRes(const VerifyVecBrdRes& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&public_ip_, &from.public_ip_,
-    static_cast<size_t>(reinterpret_cast<char*>(&public_port_) -
-    reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_public_ip()) {
+    public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
+  }
+  public_port_ = from.public_port_;
   // @@protoc_insertion_point(copy_constructor:tenon.bls.protobuf.VerifyVecBrdRes)
 }
 
 void VerifyVecBrdRes::SharedCtor() {
-  ::memset(&public_ip_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&public_port_) -
-      reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  public_port_ = 0u;
 }
 
 VerifyVecBrdRes::~VerifyVecBrdRes() {
@@ -1164,6 +1169,7 @@ VerifyVecBrdRes::~VerifyVecBrdRes() {
 }
 
 void VerifyVecBrdRes::SharedDtor() {
+  public_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void VerifyVecBrdRes::SetCachedSize(int size) const {
@@ -1187,11 +1193,10 @@ void VerifyVecBrdRes::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
-    ::memset(&public_ip_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&public_port_) -
-        reinterpret_cast<char*>(&public_ip_)) + sizeof(public_port_));
+  if (cached_has_bits & 0x00000001u) {
+    public_ip_.ClearNonDefaultToEmptyNoArena();
   }
+  public_port_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1206,14 +1211,12 @@ bool VerifyVecBrdRes::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 public_ip = 1;
+      // optional bytes public_ip = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          set_has_public_ip();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &public_ip_)));
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_public_ip()));
         } else {
           goto handle_unusual;
         }
@@ -1261,9 +1264,10 @@ void VerifyVecBrdRes::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 public_ip = 1;
+  // optional bytes public_ip = 1;
   if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->public_ip(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->public_ip(), output);
   }
 
   // optional uint32 public_port = 2;
@@ -1286,9 +1290,11 @@ void VerifyVecBrdRes::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional uint32 public_ip = 1;
+  // optional bytes public_ip = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->public_ip(), target);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->public_ip(), target);
   }
 
   // optional uint32 public_port = 2;
@@ -1314,10 +1320,10 @@ size_t VerifyVecBrdRes::ByteSizeLong() const {
         _internal_metadata_.unknown_fields());
   }
   if (_has_bits_[0 / 32] & 3u) {
-    // optional uint32 public_ip = 1;
+    // optional bytes public_ip = 1;
     if (has_public_ip()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->public_ip());
     }
 
@@ -1359,7 +1365,8 @@ void VerifyVecBrdRes::MergeFrom(const VerifyVecBrdRes& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      public_ip_ = from.public_ip_;
+      set_has_public_ip();
+      public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
     }
     if (cached_has_bits & 0x00000002u) {
       public_port_ = from.public_port_;
@@ -1392,7 +1399,8 @@ void VerifyVecBrdRes::Swap(VerifyVecBrdRes* other) {
 }
 void VerifyVecBrdRes::InternalSwap(VerifyVecBrdRes* other) {
   using std::swap;
-  swap(public_ip_, other->public_ip_);
+  public_ip_.Swap(&other->public_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(public_port_, other->public_port_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
