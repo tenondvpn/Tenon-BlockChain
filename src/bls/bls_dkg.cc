@@ -236,6 +236,9 @@ void BlsDkg::HandleSwapSecKey(
 
     if (dht->local_node()->dht_key() != header.des_dht_key()) {
         dht->SendToClosestNode(header);
+        BLS_ERROR("local dht key: %s, des dht key: %s",
+            common::Encode::HexEncode(dht->local_node()->dht_key()).c_str(),
+            common::Encode::HexEncode(header.des_dht_key()).c_str());
         return;
     }
 
@@ -463,6 +466,9 @@ void BlsDkg::DumpLocalPrivateKey() {
 
 void BlsDkg::Finish() {
     std::lock_guard<std::mutex> guard(mutex_);
+    std::cout << "bls finish called valid_sec_key_count_: " << valid_sec_key_count_
+        << ", min_aggree_member_count_: " << min_aggree_member_count_
+        << std::endl;
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
@@ -483,6 +489,15 @@ void BlsDkg::Finish() {
 
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
     finished_ = true;
+    std::string sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
+    common_public_key_.to_affine_coordinates();
+    std::cout << "bls finish, local sec key: " << sec_key
+        << ", common pubkey: "
+        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0) << ","
+        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1) << ","
+        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0) << ","
+        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1)
+        << std::endl;
 }
 
 void BlsDkg::CreateContribution() {
