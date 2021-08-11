@@ -250,16 +250,14 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 
 		if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
-// 			message_ptr->set_handled(true);
             return;
-		} else {
-			message_ptr->set_handled(false);
 		}
-// 	} else {
-//         if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
-// 			const auto& msg = *message_ptr;
-// 			return;
-// 		}
+
+        message_ptr->set_handled(false);
+	} else {
+        if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
+			return;
+		}
 	}
 
     message_ptr->set_transport_type(transport_type);
