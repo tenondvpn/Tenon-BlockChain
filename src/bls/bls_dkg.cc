@@ -285,7 +285,10 @@ void BlsDkg::HandleSwapSecKey(
     }
 
     ++valid_sec_key_count_;
-    BLS_DEBUG("handle swap sec key success: %d", bls_msg.index());
+    BLS_ERROR("dkg_instance_->Verification success!local_member_index_: %d, remote idx: %d, valid_sec_key_count_: %d",
+        local_member_index_,
+        bls_msg.index(),
+        valid_sec_key_count_);
 }
 
 void BlsDkg::HandleAgainstParticipant(
