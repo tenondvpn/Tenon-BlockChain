@@ -348,6 +348,8 @@ void ElectManager::ProcessNewElectBlock(
     if (elect_net_heights_map_[elect_block.shard_network_id()] == common::kInvalidUint64 ||
             height > elect_net_heights_map_[elect_block.shard_network_id()]) {
         elect_net_heights_map_[elect_block.shard_network_id()] = height;
+        ELECT_DEBUG("add new elect height network id: %u, height: %lu",
+            elect_block.shard_network_id(), height);
     }
 
     UpdatePrevElectMembers(elect_block);
