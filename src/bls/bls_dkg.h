@@ -85,7 +85,7 @@ private:
     void BroadcastVerfify();
     void SwapSecKey();
     void Finish();
-    int CreateContribution();
+    void CreateContribution();
     void CreateDkgMessage(
         const dht::NodePtr& local_node,
         protobuf::BlsMessage& bls_msg,
@@ -94,15 +94,16 @@ private:
     void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     void DumpContribution();
     void DumpLocalPrivateKey();
+    void SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port);
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
-    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 3;
+    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 2;
     static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
     static const int64_t kDkgSwapSecKeyBeginUs =
-        kDkgVerifyBrdBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+        kDkgWorkPeriodUs + kDkgOffsetUs;
     static const int64_t kDkgFinishBeginUs =
-        kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+        kDkgPeriodUs + kDkgOffsetUs;
 
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };

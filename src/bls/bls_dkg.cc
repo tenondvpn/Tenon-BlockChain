@@ -35,7 +35,6 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) {
-    std::cout << "OnNewElectionBlock: " << elect_height << ":" << elect_hegiht_ << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -55,13 +54,19 @@ void BlsDkg::OnNewElectionBlock(
     local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
     all_verification_vector_.clear();
     all_verification_vector_.resize(members->size());
+    for (uint32_t i = 0; i < members->size(); ++i) {
+        all_verification_vector_[i] = std::vector<libff::alt_bn128_G2>(
+            min_aggree_member_count_,
+            libff::alt_bn128_G2::zero());
+    }
+
     all_secret_key_contribution_.clear();
     all_secret_key_contribution_.resize(members->size());
     for (uint32_t i = 0; i < members->size(); ++i) {
         all_secret_key_contribution_[i].push_back(libff::alt_bn128_Fr::zero());
     }
 
-    auto each_member_offset_us = kDkgPeriodUs / members->size();
+    auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
     local_offset_us_ = each_member_offset_us * local_member_index_;
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
@@ -70,7 +75,13 @@ void BlsDkg::OnNewElectionBlock(
         kDkgSwapSecKeyBeginUs + local_offset_us_,
         std::bind(&BlsDkg::SwapSecKey, this));
     dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&BlsDkg::Finish, this));
-    BLS_DEBUG("bls OnNewElectionBlock called!");
+    BLS_DEBUG("bls OnNewElectionBlock called! verify brd tm: %ld, swap: %ld, finish: %ld,"
+        "local_offset_us_: %ld, each_member_offset_us: %ld",
+        kDkgVerifyBrdBeginUs + local_offset_us_,
+        kDkgSwapSecKeyBeginUs + local_offset_us_,
+        kDkgFinishBeginUs,
+        local_offset_us_,
+        each_member_offset_us);
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
@@ -191,6 +202,10 @@ void BlsDkg::HandleVerifyBroadcast(
             y_coord,
             z_coord));
     }
+
+    SendVerifyBrdResponse(
+        bls_msg.verify_brd().public_ip(),
+        bls_msg.verify_brd().public_port());
 }
 
 void BlsDkg::HandleVerifyBroadcastRes(
@@ -264,6 +279,10 @@ void BlsDkg::HandleAgainstParticipant(
 
 void BlsDkg::BroadcastVerfify() {
     std::lock_guard<std::mutex> guard(mutex_);
+    if (members_ == nullptr || local_member_index_ >= members_->size()) {
+        return;
+    }
+
     CreateContribution();
     bls::protobuf::BlsMessage bls_msg;
     auto verfiy_brd = bls_msg.mutable_verify_brd();
@@ -324,6 +343,7 @@ void BlsDkg::SwapSecKey() {
         }
 
         if ((*members_)[i]->public_ip == 0 || (*members_)[i]->public_port == 0) {
+            BLS_ERROR("member %d not set public ip and port.", i);
             continue;
         }
 
@@ -362,6 +382,35 @@ void BlsDkg::SwapSecKey() {
     }
 }
 
+void BlsDkg::SendVerifyBrdResponse(uint32_t from_ip, uint16_t from_port) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    
+    protobuf::BlsMessage bls_msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    auto verify_res = bls_msg.mutable_verify_res();
+    verify_res->set_public_ip(common::IpStringToUint32(dht->local_node()->public_ip()));
+    verify_res->set_public_port(dht->local_node()->public_port + 1);
+    transport::protobuf::Header msg;
+    CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
+    if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            common::IpUint32ToString(from_ip),
+            from_port,
+            0,
+            msg);
+    }
+}
+
 void BlsDkg::DumpLocalPrivateKey() {
     // encrypt by private key and save to db
     std::string enc_data;
@@ -397,12 +446,11 @@ void BlsDkg::Finish() {
     finished_ = true;
 }
 
-int BlsDkg::CreateContribution() {
+void BlsDkg::CreateContribution() {
     std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial();
     all_secret_key_contribution_[local_member_index_] =
         dkg_instance_->SecretKeyContribution(polynomial);
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
-    return 0;
 }
 
 void BlsDkg::DumpContribution() {

@@ -436,6 +436,10 @@ int ElectManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
 }
 
 uint64_t ElectManager::latest_height(uint32_t network_id) {
+    if (network_id >= network::kConsensusShardEndNetworkId) {
+        return common::kInvalidUint64;
+    }
+
     return elect_net_heights_map_[network_id];
 }
 
