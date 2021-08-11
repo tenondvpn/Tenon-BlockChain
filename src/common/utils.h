@@ -236,8 +236,6 @@ uint16_t GetUdpRoutePort(
         uint32_t timestamp_days,
         uint16_t min_port,
         uint16_t max_port);
-std::string IpUint32ToString(uint32_t int_ip);
-uint32_t IpStringToUint32(const std::string& str_ip);
 int RemoteReachable(const std::string& ip, uint16_t port, bool* reachable);
 bool IsVlanIp(const std::string& ip);
 inline static uint32_t GetSignerCount(uint32_t n) {

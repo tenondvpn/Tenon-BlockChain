@@ -217,14 +217,6 @@ uint16_t GetUdpRoutePort(
     return tmp_port;
 }
 
-std::string IpUint32ToString(uint32_t int_ip) {
-    return "";
-}
-
-uint32_t IpStringToUint32(const std::string& str_ip) {
-    return 0;
-}
-
 bool IsVlanIp(const std::string& ip_str)
 {
     /*-----------------------------------------
