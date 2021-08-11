@@ -479,8 +479,8 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
         return kInitError;
     }
 
-    char data[2048];
-    while (fgets(data, 2048, root_gens_init_block_file) != nullptr)
+    char data[20480];
+    while (fgets(data, 20480, root_gens_init_block_file) != nullptr)
     {
         auto tenon_block = std::make_shared<bft::protobuf::Block>();
         std::string tmp_data(data, strlen(data) - 1);
