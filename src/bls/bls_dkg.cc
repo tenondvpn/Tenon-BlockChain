@@ -452,7 +452,9 @@ void BlsDkg::DumpLocalPrivateKey() {
 
 void BlsDkg::Finish() {
     std::lock_guard<std::mutex> guard(mutex_);
-    if (members_ == nullptr || local_member_index_ >= members_->size()) {
+    if (members_ == nullptr ||
+            local_member_index_ >= members_->size() ||
+            valid_sec_key_count_ < min_aggree_member_count_) {
         return;
     }
 
