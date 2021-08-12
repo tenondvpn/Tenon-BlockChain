@@ -14,6 +14,7 @@
 #include "bls/proto/bls.pb.h"
 #include "common/utils.h"
 #include "common/tick.h"
+#include "common/bitmap.h"
 #include "dht/dht_utils.h"
 #include "election/elect_node_detail.h"
 #include "transport/transport_utils.h"
@@ -95,15 +96,14 @@ private:
     void DumpContribution();
     void DumpLocalPrivateKey();
     void SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port);
+    void BroadcastFinish(const common::Bitmap& bitmap);
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
-    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - kDkgOffsetUs) / 2;
+    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - 2 * kDkgOffsetUs) / 3;
     static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
-    static const int64_t kDkgSwapSecKeyBeginUs =
-        kDkgWorkPeriodUs + kDkgOffsetUs;
-    static const int64_t kDkgFinishBeginUs =
-        kDkgPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgSwapSecKeyBeginUs = kDkgWorkPeriodUs + kDkgOffsetUs;
+    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
 
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
@@ -111,6 +111,7 @@ private:
     common::Tick dkg_swap_seckkey_timer_;
     common::Tick dkg_finish_timer_;
     std::vector<std::vector<libff::alt_bn128_Fr>> all_secret_key_contribution_;
+    std::vector<libff::alt_bn128_Fr> local_src_secret_key_contribution_;
     std::vector<std::vector<libff::alt_bn128_G2>> all_verification_vector_;
     int64_t local_offset_us_{ 0 };
     uint32_t local_member_index_{ common::kInvalidUint32 };

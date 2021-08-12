@@ -8,7 +8,7 @@
 
 #include "bls/bls_utils.h"
 #include "common/global_info.h"
-#include "common//db_key_prefix.h"
+#include "common/db_key_prefix.h"
 #include "dht/dht_key.h"
 #include "db/db.h"
 #include "election/elect_manager.h"
@@ -75,14 +75,9 @@ void BlsDkg::OnNewElectionBlock(
     dkg_swap_seckkey_timer_.CutOff(
         kDkgSwapSecKeyBeginUs + local_offset_us_,
         std::bind(&BlsDkg::SwapSecKey, this));
-    dkg_finish_timer_.CutOff(kDkgFinishBeginUs, std::bind(&BlsDkg::Finish, this));
-    BLS_DEBUG("bls OnNewElectionBlock called! verify brd tm: %ld, swap: %ld, finish: %ld,"
-        "local_offset_us_: %ld, each_member_offset_us: %ld",
-        kDkgVerifyBrdBeginUs + local_offset_us_,
-        kDkgSwapSecKeyBeginUs + local_offset_us_,
-        kDkgFinishBeginUs,
-        local_offset_us_,
-        each_member_offset_us);
+    dkg_finish_timer_.CutOff(
+        kDkgFinishBeginUs + local_offset_us_,
+        std::bind(&BlsDkg::Finish, this));
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -118,12 +113,6 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-    BLS_DEBUG("HandleMessage comming!has_verify_brd: %d,"
-        "has_swap_req: %d, has_against_req: %d, has_verify_res: %d",
-        bls_msg.has_verify_brd(),
-        bls_msg.has_swap_req(),
-        bls_msg.has_against_req(),
-        bls_msg.has_verify_res());
     if (bls_msg.has_verify_brd()) {
         HandleVerifyBroadcast(header, bls_msg);
     }
@@ -172,12 +161,6 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        std::string str_pk;
-        pubkey.Serialize(str_pk);
-        BLS_ERROR("security::Schnorr::Instance()->Verify failed! hash: %s, index: %d, public key: %s",
-            common::Encode::HexEncode(message_hash).c_str(),
-            bls_msg.index(),
-            common::Encode::HexEncode(str_pk).c_str());
         return false;
     }
 
@@ -264,7 +247,9 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        BLS_ERROR("dkg_instance_->Verification failed!local_member_index_: %d, remote idx: %d",
+        BLS_ERROR("dkg_instance_->Verification failed!elect height: %lu,"
+            "local_member_index_: %d, remote idx: %d",
+            elect_hegiht_,
             local_member_index_,
             bls_msg.index());
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
@@ -291,10 +276,6 @@ void BlsDkg::HandleSwapSecKey(
     }
 
     ++valid_sec_key_count_;
-    BLS_ERROR("dkg_instance_->Verification success!local_member_index_: %d, remote idx: %d, valid_sec_key_count_: %d",
-        local_member_index_,
-        bls_msg.index(),
-        valid_sec_key_count_);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -358,15 +339,6 @@ void BlsDkg::BroadcastVerfify() try {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
-    auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
-    std::string tmp_pk_str;
-    pubkey.Serialize(tmp_pk_str);
-    BLS_DEBUG("bls BroadcastVerfify called hash: %s, index: %d, public key: %s, tmp pk: %s!",
-        common::Encode::HexEncode(message_hash).c_str(),
-        local_member_index_,
-        common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey()).c_str(),
-        common::Encode::HexEncode(tmp_pk_str).c_str());
-
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
 #endif
@@ -393,7 +365,7 @@ void BlsDkg::SwapSecKey() try {
         }
 
         auto sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(
-            all_secret_key_contribution_[local_member_index_][i]);
+            local_src_secret_key_contribution_[i]);
         std::string enc_sec_key = security::Crypto::Instance()->GetEncryptData(
             (*members_)[i]->pubkey,
             sec_key);
@@ -425,7 +397,6 @@ void BlsDkg::SwapSecKey() try {
                     (*members_)[i]->public_port,
                     0,
                     msg);
-                BLS_DEBUG("bls SwapSecKey called! %s:%d", (*members_)[i]->public_ip.c_str(), (*members_)[i]->public_port);
             }
         }
 
@@ -483,6 +454,7 @@ void BlsDkg::Finish() try {
     std::lock_guard<std::mutex> guard(mutex_);
     std::cout << "bls finish called valid_sec_key_count_: " << valid_sec_key_count_
         << ", min_aggree_member_count_: " << min_aggree_member_count_
+        << ", elect height: " << elect_hegiht_
         << std::endl;
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
@@ -490,6 +462,12 @@ void BlsDkg::Finish() try {
         return;
     }
 
+    uint32_t bitmap_size = members_->size() / 64 * 64;
+    if (members_->size() % 64 > 0) {
+        bitmap_size += 64;
+    }
+
+    common::Bitmap bitmap(bitmap_size);
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     common_public_key_ = libff::alt_bn128_G2::zero();
@@ -498,19 +476,10 @@ void BlsDkg::Finish() try {
             continue;
         }
 
+        bitmap.Set(i);
         common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
     }
 
-    local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
-    std::string sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
-    common_public_key_.to_affine_coordinates();
-    std::cout << "bls finish, local sec key: " << sec_key
-        << ", common pubkey: "
-        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0) << ","
-        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1) << ","
-        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0) << ","
-        << BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1)
-        << std::endl;
     DumpLocalPrivateKey();
     finished_ = true;
 } catch (std::exception& e) {
@@ -518,10 +487,15 @@ void BlsDkg::Finish() try {
     BLS_ERROR("catch error: %s", e.what());
 }
 
+void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
+    protobuf::BlsMessage bls_msg;
+}
+
 void BlsDkg::CreateContribution() {
     std::vector<libff::alt_bn128_Fr> polynomial = dkg_instance_->GeneratePolynomial();
     all_secret_key_contribution_[local_member_index_] =
         dkg_instance_->SecretKeyContribution(polynomial);
+    local_src_secret_key_contribution_ = all_secret_key_contribution_[local_member_index_];
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
     ++valid_sec_key_count_;
 }
