@@ -687,15 +687,25 @@ class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::std::string* release_sec_key();
   void set_allocated_sec_key(::std::string* sec_key);
 
+  // optional uint32 sec_key_len = 2;
+  bool has_sec_key_len() const;
+  void clear_sec_key_len();
+  static const int kSecKeyLenFieldNumber = 2;
+  ::google::protobuf::uint32 sec_key_len() const;
+  void set_sec_key_len(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.SwapSecKeyReq)
  private:
   void set_has_sec_key();
   void clear_has_sec_key();
+  void set_has_sec_key_len();
+  void clear_has_sec_key_len();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr sec_key_;
+  ::google::protobuf::uint32 sec_key_len_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1857,6 +1867,30 @@ inline void SwapSecKeyReq::set_allocated_sec_key(::std::string* sec_key) {
   }
   sec_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sec_key);
   // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.SwapSecKeyReq.sec_key)
+}
+
+// optional uint32 sec_key_len = 2;
+inline bool SwapSecKeyReq::has_sec_key_len() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SwapSecKeyReq::set_has_sec_key_len() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SwapSecKeyReq::clear_has_sec_key_len() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SwapSecKeyReq::clear_sec_key_len() {
+  sec_key_len_ = 0u;
+  clear_has_sec_key_len();
+}
+inline ::google::protobuf::uint32 SwapSecKeyReq::sec_key_len() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.SwapSecKeyReq.sec_key_len)
+  return sec_key_len_;
+}
+inline void SwapSecKeyReq::set_sec_key_len(::google::protobuf::uint32 value) {
+  set_has_sec_key_len();
+  sec_key_len_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.SwapSecKeyReq.sec_key_len)
 }
 
 // -------------------------------------------------------------------
