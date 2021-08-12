@@ -3,6 +3,7 @@
 #include <atomic>
 #include <memory>
 #include <random>
+#include <unordered_map>
 
 #include <bls/BLSPrivateKey.h>
 #include <bls/BLSPrivateKeyShare.h>
@@ -128,7 +129,7 @@ private:
     std::shared_ptr<std::mt19937> random_ptr_;
     bool finished_{ false };
     uint32_t valid_sec_key_count_{ 0 };
-    std::unordered_map<std::string, MaxBlsMemberItem> max_bls_members_;
+    std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members_;
     std::string max_finish_hash_;
     uint32_t max_finish_count_{ 0 };
     std::mutex mutex_;

@@ -86,10 +86,10 @@ void BlsDkg::OnNewElectionBlock(
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try {
     std::lock_guard<std::mutex> guard(mutex_);
-    if (finished_) {
-        return;
-    }
-
+//     if (finished_) {
+//         return;
+//     }
+// 
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
         return;
@@ -316,9 +316,9 @@ void BlsDkg::HandleFinish(
 
     auto iter = max_bls_members_.find(msg_hash);
     if (iter != max_bls_members_.end()) {
-        ++iter->second.count;
-        if (iter->second.count > max_finish_count_) {
-            max_finish_count_ = iter->second.count;
+        ++iter->second->count;
+        if (iter->second->count > max_finish_count_) {
+            max_finish_count_ = iter->second->count;
             max_finish_hash_ = msg_hash;
         }
 
@@ -331,7 +331,8 @@ void BlsDkg::HandleFinish(
     }
 
     common::Bitmap bitmap(bitmap_data);
-    max_bls_members_[msg_hash] = MaxBlsMemberItem(1, bitmap);
+    auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
+    max_bls_members_[msg_hash] = item;
     if (max_finish_count_ == 0) {
         max_finish_count_ = 1;
         max_finish_hash_ = msg_hash;
@@ -496,10 +497,6 @@ void BlsDkg::DumpLocalPrivateKey() {
 
 void BlsDkg::Finish() try {
     std::lock_guard<std::mutex> guard(mutex_);
-    std::cout << "bls finish called valid_sec_key_count_: " << valid_sec_key_count_
-        << ", min_aggree_member_count_: " << min_aggree_member_count_
-        << ", elect height: " << elect_hegiht_
-        << std::endl;
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
@@ -525,6 +522,7 @@ void BlsDkg::Finish() try {
     }
 
     DumpLocalPrivateKey();
+    BroadcastFinish(bitmap);
     finished_ = true;
 } catch (std::exception& e) {
     local_sec_key_ = libff::alt_bn128_Fr::zero();

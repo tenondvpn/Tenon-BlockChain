@@ -29,10 +29,6 @@ public:
     static ElectManager* Instance();
     int Join(uint32_t network_id);
     int Quit(uint32_t network_id);
-    void ProcessNewElectBlock(
-        uint64_t height,
-        protobuf::ElectBlock& elect_block,
-        bool load_from_db);
     uint64_t latest_height(uint32_t network_id);
     int CreateElectTransaction(
         uint32_t shard_netid,
@@ -43,6 +39,9 @@ public:
         const bft::protobuf::TxInfo& local_tx_info,
         const bft::protobuf::TxInfo& tx_info);
     void OnTimeBlock(uint64_t tm_block_tm);
+    void OnNewElectBlock(
+        uint64_t height,
+        protobuf::ElectBlock& elect_block);
     int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
     elect::MembersPtr GetNetworkMembersWithHeight(uint64_t elect_height, uint32_t network_id);
     uint32_t GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id);
@@ -106,7 +105,13 @@ private:
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
     void ClearExistsNetwork(uint32_t network_id);
     void ChangeInvalidLeader(uint32_t network_id, uint32_t leader_index);
-    void UpdatePrevElectMembers(protobuf::ElectBlock& elect_block);
+    void UpdatePrevElectMembers(
+        const elect::MembersPtr& members,
+        protobuf::ElectBlock& elect_block);
+    void ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected);
+    void ProcessNewElectBlock(
+        uint64_t height,
+        protobuf::ElectBlock& elect_block, bool* elected);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 

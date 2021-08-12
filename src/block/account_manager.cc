@@ -164,7 +164,7 @@ int AccountManager::HandleElectBlock(
         return kBlockSuccess;
     }
 
-    elect::ElectManager::Instance()->ProcessNewElectBlock(height, elect_block, true);
+    elect::ElectManager::Instance()->OnNewElectBlock(height, elect_block);
     vss::VssManager::Instance()->OnElectBlock(elect_block.shard_network_id(), height);
     if (elect_block.prev_members().bls_pubkey_size() > 0) {
         std::string key = GetElectBlsMembersKey(

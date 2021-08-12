@@ -31,12 +31,11 @@ message PrevMembers {
 
 message ElectBlock {
 	repeated member in = 1;
-	repeated member out = 2;
-	optional bytes acc_pubkey = 3;
-	optional bytes acc_sign = 4;
-	optional int32 leader_count = 5;
-	optional uint32 shard_network_id = 6;
-	optional PrevMembers prev_members = 7;
+	optional bytes acc_pubkey = 2;
+	optional bytes acc_sign = 3;
+	optional int32 leader_count = 4;
+	optional uint32 shard_network_id = 5;
+	optional PrevMembers prev_members = 6;
 }
 
 message WaitingNodesMessage {
