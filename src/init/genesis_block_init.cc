@@ -98,7 +98,7 @@ void GenesisBlockInit::DumpLocalPrivateKey(
     // encrypt by private key and save to db
     std::string enc_data;
     if (security::Crypto::Instance()->GetEncryptData(
-            security::Schnorr::Instance()->str_prikey(),
+            prikey,
             sec_key,
             &enc_data) != security::kSecuritySuccess) {
         return;
