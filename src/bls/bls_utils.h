@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common/bitmap.h"
 #include "common/utils.h"
 #include "common/log.h"
 #include "common/limit_heap.h"
@@ -16,6 +17,11 @@ namespace bls {
 enum BlsErrorCode {
     kBlsSuccess = 0,
     kBlsError = 1,
+};
+
+struct MaxBlsMemberItem {
+    uint32_t count;
+    common::Bitmap bitmap;
 };
 
 }  // namespace bls

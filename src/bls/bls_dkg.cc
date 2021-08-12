@@ -46,6 +46,8 @@ void BlsDkg::OnNewElectionBlock(
     dkg_swap_seckkey_timer_.Destroy();
     dkg_finish_timer_.Destroy();
 
+    max_finish_count_ = 0;
+    max_finish_hash_ = "";
     valid_sec_key_count_ = 0;
     members_ = members;
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
@@ -128,11 +130,15 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     if (bls_msg.has_verify_res()) {
         HandleVerifyBroadcastRes(header, bls_msg);
     }
+
+    if (bls_msg.has_finish_req()) {
+        HandleFinish(header, bls_msg);
+    }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
 
-bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
+bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {
     if (!security::IsValidSignature(bls_msg.sign_ch(), bls_msg.sign_res())) {
         BLS_ERROR("invalid sign: %s, %s!",
             common::Encode::HexEncode(bls_msg.sign_ch()),
@@ -140,10 +146,9 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
         return false;
     }
 
-    std::string content_to_hash;
     if (bls_msg.has_verify_brd()) {
         for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
-            content_to_hash += bls_msg.verify_brd().verify_vec(i).x_c0() +
+            *content_to_hash += bls_msg.verify_brd().verify_vec(i).x_c0() +
                 bls_msg.verify_brd().verify_vec(i).x_c1() +
                 bls_msg.verify_brd().verify_vec(i).y_c0() +
                 bls_msg.verify_brd().verify_vec(i).y_c1() +
@@ -151,13 +156,17 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
                 bls_msg.verify_brd().verify_vec(i).z_c1();
         }
     } else if (bls_msg.has_against_req()) {
-        content_to_hash = std::to_string(bls_msg.against_req().against_index());
+        *content_to_hash = std::to_string(bls_msg.against_req().against_index());
     } else if (bls_msg.has_verify_res()) {
-        content_to_hash = bls_msg.verify_res().public_ip() + "_" +
+        *content_to_hash = bls_msg.verify_res().public_ip() + "_" +
             std::to_string(bls_msg.verify_res().public_port());
+    } else if (bls_msg.has_finish_req()) {
+        for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
+            *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i));
+        }
     }
 
-    auto message_hash = common::Hash::keccak256(content_to_hash);
+    auto message_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
@@ -170,7 +179,8 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg) {
 void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
-    if (!IsSignValid(bls_msg)) {
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
         BLS_ERROR("sign verify failed!");
         return;
     }
@@ -206,7 +216,8 @@ void BlsDkg::HandleVerifyBroadcast(
 void BlsDkg::HandleVerifyBroadcastRes(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
-    if (!IsSignValid(bls_msg)) {
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
         return;
     }
 
@@ -283,7 +294,8 @@ void BlsDkg::HandleSwapSecKey(
 void BlsDkg::HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
-    if (!IsSignValid(bls_msg)) {
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
         return;
     }
 
@@ -291,6 +303,38 @@ void BlsDkg::HandleAgainstParticipant(
     if (invalid_node_map_[bls_msg.against_req().against_index()] >= min_aggree_member_count_) {
         all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
             libff::alt_bn128_Fr::zero();
+    }
+}
+
+void BlsDkg::HandleFinish(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
+        return;
+    }
+
+    auto iter = max_bls_members_.find(msg_hash);
+    if (iter != max_bls_members_.end()) {
+        ++iter->second.count;
+        if (iter->second.count > max_finish_count_) {
+            max_finish_count_ = iter->second.count;
+            max_finish_hash_ = msg_hash;
+        }
+
+        return;
+    }
+
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
+        bitmap_data.push_back(bls_msg.finish_req().bitmap(i));
+    }
+
+    common::Bitmap bitmap(bitmap_data);
+    max_bls_members_[msg_hash] = { 1, bitmap };
+    if (max_finish_count_ == 0) {
+        max_finish_count_ = 1;
+        max_finish_hash_ = msg_hash;
     }
 }
 
@@ -489,6 +533,24 @@ void BlsDkg::Finish() try {
 
 void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     protobuf::BlsMessage bls_msg;
+    auto finish_msg = bls_msg.mutable_finish_req();
+    auto& data = bitmap.data();
+    std::string msg_for_hash;
+    for (auto iter = data.begin(); iter != data.end(); ++iter) {
+        finish_msg->add_bitmap(*iter);
+        msg_for_hash += std::to_string(*iter);
+    }
+
+    auto message_hash = common::Hash::keccak256(msg_for_hash);
+    transport::protobuf::Header msg;
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    network::Route::Instance()->Send(msg);
 }
 
 void BlsDkg::CreateContribution() {
