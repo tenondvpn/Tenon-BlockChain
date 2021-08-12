@@ -224,6 +224,10 @@ template<class DhtType>
 int ShardNetwork<DhtType>::JoinShard() {
     auto unversal_dht = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
+    if (unversal_dht == nullptr) {
+        return kNetworkError;
+    }
+
     assert(unversal_dht);
 //     assert(unversal_dht->transport());
     assert(unversal_dht->local_node());

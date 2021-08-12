@@ -204,23 +204,22 @@ void ElectManager::OnNewElectBlock(
             if (Join(local_netid + network::kConsensusWaitingShardOffset) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]",
                     local_netid + network::kConsensusWaitingShardOffset);
+            } else {
+                BFT_INFO("join new election shard network: %u",
+                    local_netid + network::kConsensusWaitingShardOffset);
+                common::GlobalInfo::Instance()->set_network_id(
+                    local_netid + network::kConsensusWaitingShardOffset);
             }
-
-            BFT_INFO("join new election shard network: %u",
-                local_netid + network::kConsensusWaitingShardOffset);
-            common::GlobalInfo::Instance()->set_network_id(
-                local_netid + network::kConsensusWaitingShardOffset);
-
         }
     } else {
         if (local_netid != elect_block.shard_network_id()) {
             Quit(local_netid);
             if (Join(elect_block.shard_network_id()) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]", elect_block.shard_network_id());
+            } else {
+                BFT_INFO("join new election shard network: %u", elect_block.shard_network_id());
+                common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
-
-            BFT_INFO("join new election shard network: %u", elect_block.shard_network_id());
-            common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
         }
     }
 }
