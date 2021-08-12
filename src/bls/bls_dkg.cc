@@ -251,11 +251,11 @@ void BlsDkg::HandleSwapSecKey(
     }
 
     std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
-    if (!IsValidBigInt(sec_key)) {
-        assert(false);
-        BLS_ERROR("invalid big int[%s]", sec_key.c_str());
-        return;
-    }
+//     if (!IsValidBigInt(sec_key)) {
+//         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
+//         assert(false);
+//         return;
+//     }
 
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
