@@ -427,7 +427,7 @@ void ElectManager::ProcessNewElectBlock(
     }
 
     if (*elected) {
-        bls::BlsManager::Instance()->ProcessNewElectBlock(height, elect_block, shard_members_ptr);
+        bls::BlsManager::Instance()->ProcessNewElectBlock(height, shard_members_ptr);
     }
 }
 
