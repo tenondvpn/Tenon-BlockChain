@@ -29,7 +29,7 @@ void BlsManager::ProcessNewElectBlock(
 
 void BlsManager::SetUsedElectionBlock(
         uint64_t elect_height,
-        const libff::alt_bn128_G2& common_public_key) {
+        const libff::alt_bn128_G2& common_public_key) try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
         return;
@@ -46,13 +46,23 @@ void BlsManager::SetUsedElectionBlock(
     }
 
     std::string dec_data;
-    if (security::Crypto::Instance()->GetDecryptData(
-            security::Schnorr::Instance()->str_prikey(),
-            val,
-            &dec_data) != security::kSecuritySuccess) {
-        return;
+    if (elect_height <= 4) {
+        // for genesis block with sure encrypt key
+        if (security::Crypto::Instance()->GetDecryptData(
+                "genesis_prikey",
+                val,
+                &dec_data) != security::kSecuritySuccess) {
+            return;
+        }
+    } else {
+        if (security::Crypto::Instance()->GetDecryptData(
+                security::Schnorr::Instance()->str_prikey(),
+                val,
+                &dec_data) != security::kSecuritySuccess) {
+            return;
+        }
     }
-
+    
     libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
     auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
         elect_height,
@@ -62,12 +72,14 @@ void BlsManager::SetUsedElectionBlock(
     libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
     used_bls_ = std::make_shared<bls::BlsDkg>();
     used_bls_->SetInitElectionBlock(local_sec_key, local_publick_key, common_public_key);
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 int BlsManager::Sign(
         const std::string& sign_msg,
         std::string* sign_x,
-        std::string* sign_y) {
+        std::string* sign_y) try {
     if (used_bls_ == nullptr || used_bls_->n() == 0) {
         return kBlsError;
     }
@@ -78,6 +90,8 @@ int BlsManager::Sign(
     *sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.X);
     *sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.Y);
     return kBlsSuccess;
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 int BlsManager::Verify(
@@ -86,12 +100,14 @@ int BlsManager::Verify(
         const libff::alt_bn128_G2& pubkey,
         const std::string& sign_x,
         const std::string& sign_y,
-        const std::string& sign_msg) {
+        const std::string& sign_msg) try {
     libff::alt_bn128_G1 sign;
     sign.X = libff::alt_bn128_Fq(sign_x.c_str());
     sign.Y = libff::alt_bn128_Fq(sign_y.c_str());
     sign.Z = libff::alt_bn128_Fq::one();
     return BlsSign::Verify(t, n, sign, sign_msg, pubkey);
+} catch (std::exception& e) {
+    BLS_ERROR("catch error: %s", e.what());
 }
 
 BlsManager::BlsManager() {}

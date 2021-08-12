@@ -289,6 +289,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         if (id == common::GlobalInfo::Instance()->id()) {
             *elected = true;
             local_node_member_index_ = i;
+            common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
         }
 
         ++member_index;
@@ -346,7 +347,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     if (prev_elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
         for (auto iter = shard_members_ptr->begin();
-            iter != shard_members_ptr->end(); ++iter) {
+                iter != shard_members_ptr->end(); ++iter) {
             if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
                 security::EcdhCreateKey::Instance()->CreateKey(
                     (*iter)->pubkey,
@@ -355,7 +356,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         }
 
         for (auto iter = shard_members_ptr->begin();
-            iter != shard_members_ptr->end(); ++iter) {
+                iter != shard_members_ptr->end(); ++iter) {
             if ((*iter)->id != common::GlobalInfo::Instance()->id()) {
                 security::EcdhCreateKey::Instance()->CreateKey(
                     (*iter)->pubkey,
