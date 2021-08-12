@@ -250,6 +250,12 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    if (!IsValidBigInt(dec_msg)) {
+        assert(false);
+        BLS_ERROR("invalid big int[%s]", dec_msg.c_str());
+        return;
+    }
+
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(dec_msg.c_str());

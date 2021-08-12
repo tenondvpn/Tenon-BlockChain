@@ -25,6 +25,18 @@ struct MaxBlsMemberItem {
     common::Bitmap bitmap;
 };
 
+static inline bool IsValidBigInt(const std::string& big_int) {
+    for (size_t i = 0; i < big_int.size(); ++i)
+    {
+        if (big_int[i] >= '0' && big_int[i] <= '9') {
+            continue;
+        }
+
+        return false;
+    }
+
+    return true;
+}
 }  // namespace bls
 
 }  // namespace tenon
