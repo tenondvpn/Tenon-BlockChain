@@ -198,8 +198,7 @@ void ElectManager::OnNewElectBlock(
     ProcessNewElectBlock(height, elect_block, &elected);
     auto local_netid = common::GlobalInfo::Instance()->network_id();
     if (!elected) {
-        if (local_netid >= network::kRootCongressNetworkId &&
-                local_netid < network::kConsensusShardEndNetworkId) {
+        if (local_netid == elect_block.shard_network_id()) {
             Quit(local_netid);
             if (Join(local_netid + network::kConsensusWaitingShardOffset) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]",
