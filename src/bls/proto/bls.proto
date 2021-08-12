@@ -24,6 +24,7 @@ message VerifyVecBrdRes {
 
 message SwapSecKeyReq {
     optional bytes sec_key = 1;
+    optional uint32 sec_key_len = 2;
 }
 
 message AgainstParticipant {

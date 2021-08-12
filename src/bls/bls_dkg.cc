@@ -250,15 +250,16 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    if (!IsValidBigInt(dec_msg)) {
+    std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
+    if (!IsValidBigInt(sec_key)) {
         assert(false);
-        BLS_ERROR("invalid big int[%s]", dec_msg.c_str());
+        BLS_ERROR("invalid big int[%s]", sec_key.c_str());
         return;
     }
 
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
-        libff::alt_bn128_Fr(dec_msg.c_str());
+        libff::alt_bn128_Fr(sec_key.c_str());
     // verify it valid, if not broadcast against.
     if (!dkg_instance_->Verification(
             local_member_index_,
@@ -427,6 +428,7 @@ void BlsDkg::SwapSecKey() try {
         protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
         swap_req->set_sec_key(enc_sec_key);
+        swap_req->set_sec_key_len(sec_key.size());
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (!dht) {
