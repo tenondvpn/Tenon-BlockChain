@@ -197,6 +197,7 @@ void ElectManager::OnNewElectBlock(
     ProcessPrevElectMembers(elect_block, &elected);
     ProcessNewElectBlock(height, elect_block, &elected);
     auto local_netid = common::GlobalInfo::Instance()->network_id();
+    std::cout << "local_netid: " << local_netid << ", elected: " << elected << std::endl;
     if (!elected) {
         if (local_netid >= network::kRootCongressNetworkId &&
                 local_netid < network::kConsensusShardEndNetworkId) {
@@ -288,11 +289,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         AddNewNodeWithIdAndIp(prev_elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
         if (id == common::GlobalInfo::Instance()->id()) {
-            if (common::GlobalInfo::Instance()->network_id() != prev_elect_block.shard_network_id()) {
-                // TODO: delay to quit
-                *elected = true;
-            }
-
+            *elected = true;
             local_node_member_index_ = i;
         }
 
@@ -418,10 +415,7 @@ void ElectManager::ProcessNewElectBlock(
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
         if (id == common::GlobalInfo::Instance()->id()) {
-            if (common::GlobalInfo::Instance()->network_id() != elect_block.shard_network_id()) {
-                // TODO: delay to quit
-                *elected = true;
-            }
+            *elected = true;
         }
 
         ++member_index;
