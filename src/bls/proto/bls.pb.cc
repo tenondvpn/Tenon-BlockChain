@@ -21,6 +21,7 @@
 
 namespace protobuf_bls_2eproto {
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_bls_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_AgainstParticipant;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_bls_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_FinishBroadcast;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_bls_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SwapSecKeyReq;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_bls_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_VerifyVecBrdRes;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_bls_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_VerifyVecItem;
@@ -54,6 +55,11 @@ class AgainstParticipantDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<AgainstParticipant>
       _instance;
 } _AgainstParticipant_default_instance_;
+class FinishBroadcastDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<FinishBroadcast>
+      _instance;
+} _FinishBroadcast_default_instance_;
 class BlsMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<BlsMessage>
@@ -134,6 +140,20 @@ static void InitDefaultsAgainstParticipant() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_AgainstParticipant =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsAgainstParticipant}, {}};
 
+static void InitDefaultsFinishBroadcast() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::bls::protobuf::_FinishBroadcast_default_instance_;
+    new (ptr) ::tenon::bls::protobuf::FinishBroadcast();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::bls::protobuf::FinishBroadcast::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_FinishBroadcast =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFinishBroadcast}, {}};
+
 static void InitDefaultsBlsMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -145,11 +165,12 @@ static void InitDefaultsBlsMessage() {
   ::tenon::bls::protobuf::BlsMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<4> scc_info_BlsMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 4, InitDefaultsBlsMessage}, {
+::google::protobuf::internal::SCCInfo<5> scc_info_BlsMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 5, InitDefaultsBlsMessage}, {
       &protobuf_bls_2eproto::scc_info_VerifyVecBrdReq.base,
       &protobuf_bls_2eproto::scc_info_SwapSecKeyReq.base,
       &protobuf_bls_2eproto::scc_info_AgainstParticipant.base,
+      &protobuf_bls_2eproto::scc_info_FinishBroadcast.base,
       &protobuf_bls_2eproto::scc_info_VerifyVecBrdRes.base,}};
 
 void InitDefaults() {
@@ -158,10 +179,11 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_VerifyVecBrdRes.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SwapSecKeyReq.base);
   ::google::protobuf::internal::InitSCC(&scc_info_AgainstParticipant.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_FinishBroadcast.base);
   ::google::protobuf::internal::InitSCC(&scc_info_BlsMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[6];
+::google::protobuf::Metadata file_level_metadata[7];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::VerifyVecItem, _has_bits_),
@@ -215,6 +237,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::AgainstParticipant, against_index_),
   0,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, bitmap_),
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -223,19 +252,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, verify_brd_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, swap_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, against_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, finish_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, verify_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, index_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, sign_ch_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, sign_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, elect_height_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, verify_res_),
   2,
   3,
   4,
-  7,
+  5,
+  6,
+  8,
   0,
   1,
-  6,
-  5,
+  7,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 11, sizeof(::tenon::bls::protobuf::VerifyVecItem)},
@@ -243,7 +274,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 28, 35, sizeof(::tenon::bls::protobuf::VerifyVecBrdRes)},
   { 37, 43, sizeof(::tenon::bls::protobuf::SwapSecKeyReq)},
   { 44, 50, sizeof(::tenon::bls::protobuf::AgainstParticipant)},
-  { 51, 64, sizeof(::tenon::bls::protobuf::BlsMessage)},
+  { 51, 57, sizeof(::tenon::bls::protobuf::FinishBroadcast)},
+  { 58, 72, sizeof(::tenon::bls::protobuf::BlsMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -252,6 +284,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::bls::protobuf::_VerifyVecBrdRes_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::bls::protobuf::_SwapSecKeyReq_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::bls::protobuf::_AgainstParticipant_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::bls::protobuf::_FinishBroadcast_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::bls::protobuf::_BlsMessage_default_instance_),
 };
 
@@ -270,7 +303,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 6);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 7);
 }
 
 void AddDescriptorsImpl() {
@@ -285,18 +318,20 @@ void AddDescriptorsImpl() {
       "\030\003 \001(\r\"9\n\017VerifyVecBrdRes\022\021\n\tpublic_ip\030\001"
       " \001(\014\022\023\n\013public_port\030\002 \001(\r\" \n\rSwapSecKeyR"
       "eq\022\017\n\007sec_key\030\001 \001(\014\"+\n\022AgainstParticipan"
-      "t\022\025\n\ragainst_index\030\001 \001(\r\"\270\002\n\nBlsMessage\022"
-      "7\n\nverify_brd\030\001 \001(\0132#.tenon.bls.protobuf"
-      ".VerifyVecBrdReq\0223\n\010swap_req\030\002 \001(\0132!.ten"
-      "on.bls.protobuf.SwapSecKeyReq\022;\n\013against"
-      "_req\030\003 \001(\0132&.tenon.bls.protobuf.AgainstP"
-      "articipant\022\r\n\005index\030\004 \001(\r\022\017\n\007sign_ch\030\005 \001"
-      "(\014\022\020\n\010sign_res\030\006 \001(\014\022\024\n\014elect_height\030\007 \001"
-      "(\004\0227\n\nverify_res\030\010 \001(\0132#.tenon.bls.proto"
-      "buf.VerifyVecBrdRes"
+      "t\022\025\n\ragainst_index\030\001 \001(\r\"!\n\017FinishBroadc"
+      "ast\022\016\n\006bitmap\030\001 \003(\004\"\361\002\n\nBlsMessage\0227\n\nve"
+      "rify_brd\030\001 \001(\0132#.tenon.bls.protobuf.Veri"
+      "fyVecBrdReq\0223\n\010swap_req\030\002 \001(\0132!.tenon.bl"
+      "s.protobuf.SwapSecKeyReq\022;\n\013against_req\030"
+      "\003 \001(\0132&.tenon.bls.protobuf.AgainstPartic"
+      "ipant\0227\n\nfinish_req\030\004 \001(\0132#.tenon.bls.pr"
+      "otobuf.FinishBroadcast\0227\n\nverify_res\030\005 \001"
+      "(\0132#.tenon.bls.protobuf.VerifyVecBrdRes\022"
+      "\r\n\005index\030\006 \001(\r\022\017\n\007sign_ch\030\007 \001(\014\022\020\n\010sign_"
+      "res\030\010 \001(\014\022\024\n\014elect_height\030\t \001(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 699);
+      descriptor, 791);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bls.proto", &protobuf_RegisterTypes);
 }
@@ -1880,6 +1915,236 @@ void AgainstParticipant::InternalSwap(AgainstParticipant* other) {
 
 // ===================================================================
 
+void FinishBroadcast::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int FinishBroadcast::kBitmapFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+FinishBroadcast::FinishBroadcast()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_bls_2eproto::scc_info_FinishBroadcast.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.bls.protobuf.FinishBroadcast)
+}
+FinishBroadcast::FinishBroadcast(const FinishBroadcast& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      bitmap_(from.bitmap_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:tenon.bls.protobuf.FinishBroadcast)
+}
+
+void FinishBroadcast::SharedCtor() {
+}
+
+FinishBroadcast::~FinishBroadcast() {
+  // @@protoc_insertion_point(destructor:tenon.bls.protobuf.FinishBroadcast)
+  SharedDtor();
+}
+
+void FinishBroadcast::SharedDtor() {
+}
+
+void FinishBroadcast::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* FinishBroadcast::descriptor() {
+  ::protobuf_bls_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_bls_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const FinishBroadcast& FinishBroadcast::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_bls_2eproto::scc_info_FinishBroadcast.base);
+  return *internal_default_instance();
+}
+
+
+void FinishBroadcast::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.bls.protobuf.FinishBroadcast)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  bitmap_.Clear();
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool FinishBroadcast::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.bls.protobuf.FinishBroadcast)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated uint64 bitmap = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 8u, input, this->mutable_bitmap())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_bitmap())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.bls.protobuf.FinishBroadcast)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.bls.protobuf.FinishBroadcast)
+  return false;
+#undef DO_
+}
+
+void FinishBroadcast::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.bls.protobuf.FinishBroadcast)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 bitmap = 1;
+  for (int i = 0, n = this->bitmap_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      1, this->bitmap(i), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.bls.protobuf.FinishBroadcast)
+}
+
+::google::protobuf::uint8* FinishBroadcast::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.bls.protobuf.FinishBroadcast)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 bitmap = 1;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(1, this->bitmap_, target);
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.bls.protobuf.FinishBroadcast)
+  return target;
+}
+
+size_t FinishBroadcast::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.bls.protobuf.FinishBroadcast)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint64 bitmap = 1;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->bitmap_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->bitmap_size());
+    total_size += data_size;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void FinishBroadcast::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.bls.protobuf.FinishBroadcast)
+  GOOGLE_DCHECK_NE(&from, this);
+  const FinishBroadcast* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const FinishBroadcast>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.bls.protobuf.FinishBroadcast)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.bls.protobuf.FinishBroadcast)
+    MergeFrom(*source);
+  }
+}
+
+void FinishBroadcast::MergeFrom(const FinishBroadcast& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.bls.protobuf.FinishBroadcast)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  bitmap_.MergeFrom(from.bitmap_);
+}
+
+void FinishBroadcast::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.bls.protobuf.FinishBroadcast)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FinishBroadcast::CopyFrom(const FinishBroadcast& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.bls.protobuf.FinishBroadcast)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FinishBroadcast::IsInitialized() const {
+  return true;
+}
+
+void FinishBroadcast::Swap(FinishBroadcast* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void FinishBroadcast::InternalSwap(FinishBroadcast* other) {
+  using std::swap;
+  bitmap_.InternalSwap(&other->bitmap_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata FinishBroadcast::GetMetadata() const {
+  protobuf_bls_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_bls_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void BlsMessage::InitAsDefaultInstance() {
   ::tenon::bls::protobuf::_BlsMessage_default_instance_._instance.get_mutable()->verify_brd_ = const_cast< ::tenon::bls::protobuf::VerifyVecBrdReq*>(
       ::tenon::bls::protobuf::VerifyVecBrdReq::internal_default_instance());
@@ -1887,6 +2152,8 @@ void BlsMessage::InitAsDefaultInstance() {
       ::tenon::bls::protobuf::SwapSecKeyReq::internal_default_instance());
   ::tenon::bls::protobuf::_BlsMessage_default_instance_._instance.get_mutable()->against_req_ = const_cast< ::tenon::bls::protobuf::AgainstParticipant*>(
       ::tenon::bls::protobuf::AgainstParticipant::internal_default_instance());
+  ::tenon::bls::protobuf::_BlsMessage_default_instance_._instance.get_mutable()->finish_req_ = const_cast< ::tenon::bls::protobuf::FinishBroadcast*>(
+      ::tenon::bls::protobuf::FinishBroadcast::internal_default_instance());
   ::tenon::bls::protobuf::_BlsMessage_default_instance_._instance.get_mutable()->verify_res_ = const_cast< ::tenon::bls::protobuf::VerifyVecBrdRes*>(
       ::tenon::bls::protobuf::VerifyVecBrdRes::internal_default_instance());
 }
@@ -1894,11 +2161,12 @@ void BlsMessage::InitAsDefaultInstance() {
 const int BlsMessage::kVerifyBrdFieldNumber;
 const int BlsMessage::kSwapReqFieldNumber;
 const int BlsMessage::kAgainstReqFieldNumber;
+const int BlsMessage::kFinishReqFieldNumber;
+const int BlsMessage::kVerifyResFieldNumber;
 const int BlsMessage::kIndexFieldNumber;
 const int BlsMessage::kSignChFieldNumber;
 const int BlsMessage::kSignResFieldNumber;
 const int BlsMessage::kElectHeightFieldNumber;
-const int BlsMessage::kVerifyResFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BlsMessage::BlsMessage()
@@ -1936,6 +2204,11 @@ BlsMessage::BlsMessage(const BlsMessage& from)
   } else {
     against_req_ = NULL;
   }
+  if (from.has_finish_req()) {
+    finish_req_ = new ::tenon::bls::protobuf::FinishBroadcast(*from.finish_req_);
+  } else {
+    finish_req_ = NULL;
+  }
   if (from.has_verify_res()) {
     verify_res_ = new ::tenon::bls::protobuf::VerifyVecBrdRes(*from.verify_res_);
   } else {
@@ -1966,6 +2239,7 @@ void BlsMessage::SharedDtor() {
   if (this != internal_default_instance()) delete verify_brd_;
   if (this != internal_default_instance()) delete swap_req_;
   if (this != internal_default_instance()) delete against_req_;
+  if (this != internal_default_instance()) delete finish_req_;
   if (this != internal_default_instance()) delete verify_res_;
 }
 
@@ -1990,7 +2264,7 @@ void BlsMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 63u) {
+  if (cached_has_bits & 127u) {
     if (cached_has_bits & 0x00000001u) {
       sign_ch_.ClearNonDefaultToEmptyNoArena();
     }
@@ -2010,15 +2284,16 @@ void BlsMessage::Clear() {
       against_req_->Clear();
     }
     if (cached_has_bits & 0x00000020u) {
+      GOOGLE_DCHECK(finish_req_ != NULL);
+      finish_req_->Clear();
+    }
+    if (cached_has_bits & 0x00000040u) {
       GOOGLE_DCHECK(verify_res_ != NULL);
       verify_res_->Clear();
     }
   }
-  if (cached_has_bits & 192u) {
-    ::memset(&elect_height_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&index_) -
-        reinterpret_cast<char*>(&elect_height_)) + sizeof(index_));
-  }
+  elect_height_ = GOOGLE_ULONGLONG(0);
+  index_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -2069,10 +2344,34 @@ bool BlsMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint32 index = 4;
+      // optional .tenon.bls.protobuf.FinishBroadcast finish_req = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_finish_req()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_verify_res()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 index = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
           set_has_index();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
@@ -2083,10 +2382,10 @@ bool BlsMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes sign_ch = 5;
-      case 5: {
+      // optional bytes sign_ch = 7;
+      case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_sign_ch()));
         } else {
@@ -2095,10 +2394,10 @@ bool BlsMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes sign_res = 6;
-      case 6: {
+      // optional bytes sign_res = 8;
+      case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_sign_res()));
         } else {
@@ -2107,26 +2406,14 @@ bool BlsMessage::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 elect_height = 7;
-      case 7: {
+      // optional uint64 elect_height = 9;
+      case 9: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(56u /* 56 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(72u /* 72 & 0xFF */)) {
           set_has_elect_height();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &elect_height_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
-      case 8: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_verify_res()));
         } else {
           goto handle_unusual;
         }
@@ -2178,32 +2465,38 @@ void BlsMessage::SerializeWithCachedSizes(
       3, this->_internal_against_req(), output);
   }
 
-  // optional uint32 index = 4;
-  if (cached_has_bits & 0x00000080u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->index(), output);
-  }
-
-  // optional bytes sign_ch = 5;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      5, this->sign_ch(), output);
-  }
-
-  // optional bytes sign_res = 6;
-  if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      6, this->sign_res(), output);
-  }
-
-  // optional uint64 elect_height = 7;
-  if (cached_has_bits & 0x00000040u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(7, this->elect_height(), output);
-  }
-
-  // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
+  // optional .tenon.bls.protobuf.FinishBroadcast finish_req = 4;
   if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, this->_internal_verify_res(), output);
+      4, this->_internal_finish_req(), output);
+  }
+
+  // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 5;
+  if (cached_has_bits & 0x00000040u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->_internal_verify_res(), output);
+  }
+
+  // optional uint32 index = 6;
+  if (cached_has_bits & 0x00000100u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->index(), output);
+  }
+
+  // optional bytes sign_ch = 7;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      7, this->sign_ch(), output);
+  }
+
+  // optional bytes sign_res = 8;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      8, this->sign_res(), output);
+  }
+
+  // optional uint64 elect_height = 9;
+  if (cached_has_bits & 0x00000080u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(9, this->elect_height(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2242,35 +2535,42 @@ void BlsMessage::SerializeWithCachedSizes(
         3, this->_internal_against_req(), deterministic, target);
   }
 
-  // optional uint32 index = 4;
-  if (cached_has_bits & 0x00000080u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->index(), target);
-  }
-
-  // optional bytes sign_ch = 5;
-  if (cached_has_bits & 0x00000001u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        5, this->sign_ch(), target);
-  }
-
-  // optional bytes sign_res = 6;
-  if (cached_has_bits & 0x00000002u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        6, this->sign_res(), target);
-  }
-
-  // optional uint64 elect_height = 7;
-  if (cached_has_bits & 0x00000040u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(7, this->elect_height(), target);
-  }
-
-  // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
+  // optional .tenon.bls.protobuf.FinishBroadcast finish_req = 4;
   if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        8, this->_internal_verify_res(), deterministic, target);
+        4, this->_internal_finish_req(), deterministic, target);
+  }
+
+  // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 5;
+  if (cached_has_bits & 0x00000040u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        5, this->_internal_verify_res(), deterministic, target);
+  }
+
+  // optional uint32 index = 6;
+  if (cached_has_bits & 0x00000100u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->index(), target);
+  }
+
+  // optional bytes sign_ch = 7;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        7, this->sign_ch(), target);
+  }
+
+  // optional bytes sign_res = 8;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        8, this->sign_res(), target);
+  }
+
+  // optional uint64 elect_height = 9;
+  if (cached_has_bits & 0x00000080u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(9, this->elect_height(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2291,14 +2591,14 @@ size_t BlsMessage::ByteSizeLong() const {
         _internal_metadata_.unknown_fields());
   }
   if (_has_bits_[0 / 32] & 255u) {
-    // optional bytes sign_ch = 5;
+    // optional bytes sign_ch = 7;
     if (has_sign_ch()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->sign_ch());
     }
 
-    // optional bytes sign_res = 6;
+    // optional bytes sign_res = 8;
     if (has_sign_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -2326,28 +2626,35 @@ size_t BlsMessage::ByteSizeLong() const {
           *against_req_);
     }
 
-    // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 8;
+    // optional .tenon.bls.protobuf.FinishBroadcast finish_req = 4;
+    if (has_finish_req()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *finish_req_);
+    }
+
+    // optional .tenon.bls.protobuf.VerifyVecBrdRes verify_res = 5;
     if (has_verify_res()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *verify_res_);
     }
 
-    // optional uint64 elect_height = 7;
+    // optional uint64 elect_height = 9;
     if (has_elect_height()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->elect_height());
     }
 
-    // optional uint32 index = 4;
-    if (has_index()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->index());
-    }
-
   }
+  // optional uint32 index = 6;
+  if (has_index()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->index());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -2395,15 +2702,18 @@ void BlsMessage::MergeFrom(const BlsMessage& from) {
       mutable_against_req()->::tenon::bls::protobuf::AgainstParticipant::MergeFrom(from.against_req());
     }
     if (cached_has_bits & 0x00000020u) {
-      mutable_verify_res()->::tenon::bls::protobuf::VerifyVecBrdRes::MergeFrom(from.verify_res());
+      mutable_finish_req()->::tenon::bls::protobuf::FinishBroadcast::MergeFrom(from.finish_req());
     }
     if (cached_has_bits & 0x00000040u) {
-      elect_height_ = from.elect_height_;
+      mutable_verify_res()->::tenon::bls::protobuf::VerifyVecBrdRes::MergeFrom(from.verify_res());
     }
     if (cached_has_bits & 0x00000080u) {
-      index_ = from.index_;
+      elect_height_ = from.elect_height_;
     }
     _has_bits_[0] |= cached_has_bits;
+  }
+  if (cached_has_bits & 0x00000100u) {
+    set_index(from.index());
   }
 }
 
@@ -2438,6 +2748,7 @@ void BlsMessage::InternalSwap(BlsMessage* other) {
   swap(verify_brd_, other->verify_brd_);
   swap(swap_req_, other->swap_req_);
   swap(against_req_, other->against_req_);
+  swap(finish_req_, other->finish_req_);
   swap(verify_res_, other->verify_res_);
   swap(elect_height_, other->elect_height_);
   swap(index_, other->index_);
@@ -2471,6 +2782,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::bls::protobuf::SwapSecKey
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::bls::protobuf::AgainstParticipant* Arena::CreateMaybeMessage< ::tenon::bls::protobuf::AgainstParticipant >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::bls::protobuf::AgainstParticipant >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::bls::protobuf::FinishBroadcast* Arena::CreateMaybeMessage< ::tenon::bls::protobuf::FinishBroadcast >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::bls::protobuf::FinishBroadcast >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::bls::protobuf::BlsMessage* Arena::CreateMaybeMessage< ::tenon::bls::protobuf::BlsMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::bls::protobuf::BlsMessage >(arena);
