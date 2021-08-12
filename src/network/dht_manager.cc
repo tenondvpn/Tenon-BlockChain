@@ -73,7 +73,10 @@ void DhtManager::UnRegisterDht(uint32_t net_id) {
 }
 
 dht::BaseDhtPtr DhtManager::GetDht(uint32_t net_id) {
-    assert(net_id < common::kNetworkMaxDhtCount);
+    if (net_id >= common::kNetworkMaxDhtCount) {
+        return nullptr;
+    }
+
     return dhts_[net_id];
 }
 
