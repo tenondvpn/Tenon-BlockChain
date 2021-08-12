@@ -257,6 +257,8 @@ void BlsDkg::HandleSwapSecKey(
         << ", enc_sec_key: " << common::Encode::HexEncode(bls_msg.swap_req().sec_key())
         << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
         << ", peer pk: " << common::Encode::HexEncode(peer_pk)
+        << ", local index: " << local_member_index_
+        << ", peer index: " << bls_msg.index()
         << std::endl;
 //     if (!IsValidBigInt(sec_key)) {
 //         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
@@ -438,6 +440,8 @@ void BlsDkg::SwapSecKey() try {
             << ", enc_sec_key: " << common::Encode::HexEncode(enc_sec_key)
             << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
             << ", peer pk: " << common::Encode::HexEncode(peer_pk)
+            << ", local index: " << local_member_index_
+            << ", peer index: " << i
             << std::endl;
 
         protobuf::BlsMessage bls_msg;

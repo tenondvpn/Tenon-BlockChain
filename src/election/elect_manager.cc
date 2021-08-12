@@ -366,6 +366,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     members_ptr_[prev_elect_block.shard_network_id()] = shard_members_ptr;
     std::cout << "prev_elect_block.shard_network_id(): " << prev_elect_block.shard_network_id() << ", size: " << shard_members_ptr->size() << std::endl;
+    for (uint32_t i = 0; i < shard_members_ptr->size(); ++i) {
+        std::string pk;
+        (*shard_members_ptr)[i]->pubkey.Serialize(pk);
+        std::cout << "i: " << i << ", " << common::Encode::HexEncode(pk) << std::endl;
+    }
     pool_manager_.NetworkMemberChange(prev_elect_block.shard_network_id(), shard_members_ptr);
     auto member_ptr = std::make_shared<MemberManager>();
     member_ptr->SetNetworkMember(
