@@ -12,6 +12,7 @@
 #include <dkg/dkg.h>
 
 #include "bls/proto/bls.pb.h"
+#include "bls/bls_utils.h"
 #include "common/utils.h"
 #include "common/tick.h"
 #include "common/bitmap.h"

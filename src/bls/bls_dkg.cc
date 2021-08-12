@@ -331,7 +331,7 @@ void BlsDkg::HandleFinish(
     }
 
     common::Bitmap bitmap(bitmap_data);
-    max_bls_members_[msg_hash] = { 1, bitmap };
+    max_bls_members_[msg_hash] = MaxBlsMemberItem(1, bitmap);
     if (max_finish_count_ == 0) {
         max_finish_count_ = 1;
         max_finish_hash_ = msg_hash;

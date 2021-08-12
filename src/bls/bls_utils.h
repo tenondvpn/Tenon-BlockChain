@@ -20,6 +20,7 @@ enum BlsErrorCode {
 };
 
 struct MaxBlsMemberItem {
+    MaxBlsMemberItem(uint32_t c, const common::Bitmap& b) : count(c), bitmap(b) {}
     uint32_t count;
     common::Bitmap bitmap;
 };
