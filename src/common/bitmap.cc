@@ -20,6 +20,12 @@ Bitmap::Bitmap(const std::vector<uint64_t>& data) : data_(data) {}
 
 Bitmap::~Bitmap() {}
 
+Bitmap::Bitmap(const Bitmap& src) {
+    data_ = src.data_;
+    hash_count_ = src.hash_count_;
+    valid_count_ = src.valid_count_;
+}
+
 void Bitmap::Set(uint32_t index) {
     if (Valid(index)) {
         return;

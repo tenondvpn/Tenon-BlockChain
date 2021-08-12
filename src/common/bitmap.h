@@ -11,6 +11,7 @@ class Bitmap {
 public:
     Bitmap(uint32_t bit_count);
     Bitmap(const std::vector<uint64_t>& data);
+    Bitmap(const Bitmap& src);
     ~Bitmap();
     void Set(uint32_t bit_index);
     void UnSet(uint32_t bit_index);
