@@ -197,7 +197,6 @@ void ElectManager::OnNewElectBlock(
     ProcessPrevElectMembers(elect_block, &elected);
     ProcessNewElectBlock(height, elect_block, &elected);
     auto local_netid = common::GlobalInfo::Instance()->network_id();
-    std::cout << "local_netid: " << local_netid << ", elected: " << elected << std::endl;
     if (!elected) {
         if (local_netid >= network::kRootCongressNetworkId &&
                 local_netid < network::kConsensusShardEndNetworkId) {
