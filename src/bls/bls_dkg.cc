@@ -54,7 +54,13 @@ void BlsDkg::OnNewElectionBlock(
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
     dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
-    local_member_index_ = elect::ElectManager::Instance()->local_node_member_index();
+    for (uint32_t i = 0; i < members_->size(); ++i) {
+        if ((*members_)[i]->id == common::GlobalInfo::Instance()->id()) {
+            local_member_index_ = i;
+            break;
+        }
+    }
+
     all_verification_vector_.clear();
     all_verification_vector_.resize(members->size());
     for (uint32_t i = 0; i < members->size(); ++i) {
@@ -253,7 +259,7 @@ void BlsDkg::HandleSwapSecKey(
     std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
     std::string peer_pk;
     (*members_)[bls_msg.index()]->pubkey.Serialize(peer_pk);
-    std::cout << "sec_key: " << common::Encode::HexEncode(sec_key)
+    std::cout << "handle sec_key: " << common::Encode::HexEncode(sec_key)
         << ", enc_sec_key: " << common::Encode::HexEncode(bls_msg.swap_req().sec_key())
         << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
         << ", peer pk: " << common::Encode::HexEncode(peer_pk)
@@ -434,15 +440,15 @@ void BlsDkg::SwapSecKey() try {
             continue;
         }
 
-//         std::string peer_pk;
-//         (*members_)[i]->pubkey.Serialize(peer_pk);
-//         std::cout << "sec_key: " << common::Encode::HexEncode(sec_key)
-//             << ", enc_sec_key: " << common::Encode::HexEncode(enc_sec_key)
-//             << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
-//             << ", peer pk: " << common::Encode::HexEncode(peer_pk)
-//             << ", local index: " << local_member_index_
-//             << ", peer index: " << i
-//             << std::endl;
+        std::string peer_pk;
+        (*members_)[i]->pubkey.Serialize(peer_pk);
+        std::cout << "sec_key: " << common::Encode::HexEncode(sec_key)
+            << ", enc_sec_key: " << common::Encode::HexEncode(enc_sec_key)
+            << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
+            << ", peer pk: " << common::Encode::HexEncode(peer_pk)
+            << ", local index: " << local_member_index_
+            << ", peer index: " << i
+            << std::endl;
 
         protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
