@@ -223,7 +223,8 @@ void BftManager::HandleBftMessage(
         const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-            BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
+            BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s",
+                common::Encode::HexEncode(bft_ptr->gid()).c_str());
             RemoveBft(bft_ptr->gid(), false);
             BFT_DEBUG("this node is leader not handle backup message.");
             return;
