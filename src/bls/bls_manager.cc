@@ -6,6 +6,7 @@
 #include "common/db_key_prefix.h"
 #include "db/db.h"
 #include "election/elect_manager.h"
+#include "init/init_utils.h"
 #include "security/crypto.h"
 #include "security/schnorr.h"
 
@@ -49,7 +50,7 @@ void BlsManager::SetUsedElectionBlock(
     if (elect_height <= 4) {
         // for genesis block with sure encrypt key
         if (security::Crypto::Instance()->GetDecryptData(
-                "genesis_prikey",
+                init::kGenesisElectPrikeyEncryptKey,
                 val,
                 &dec_data) != security::kSecuritySuccess) {
             return;
