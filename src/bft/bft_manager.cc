@@ -108,6 +108,10 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
             return;
         }
 
+        if (!bft_ptr->this_node_is_leader()) {
+            return;
+        }
+
 //         uint64_t time2 = common::TimeUtils::TimestampUs();
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
 //         uint64_t time3 = common::TimeUtils::TimestampUs();
@@ -223,9 +227,9 @@ void BftManager::HandleBftMessage(
         const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-            BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s",
-                common::Encode::HexEncode(bft_ptr->gid()).c_str());
-            RemoveBft(bft_ptr->gid(), false);
+//             BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s",
+//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
+//             RemoveBft(bft_ptr->gid(), false);
             BFT_DEBUG("this node is leader not handle backup message.");
             return;
         }
@@ -568,6 +572,11 @@ int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
 }
 
 int BftManager::AddBft(BftInterfacePtr& bft_ptr) {
+    if (common::GlobalInfo::Instance()->id() == common::Encode::HexDecode("01cab67e8eca011d1ea49177807690fa5b9958c2")) {
+        assert(bft_ptr->this_node_is_leader());
+        assert(bft_ptr->leader_mem_ptr() != nullptr);
+    }
+
     std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
     auto iter = bft_hash_map_.find(bft_ptr->gid());
     if (iter != bft_hash_map_.end()) {

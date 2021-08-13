@@ -605,7 +605,10 @@ int TcpTransport::Send(
     if (!message.has_hash() || message.hash() == 0) {
         auto cast_msg = const_cast<transport::protobuf::Header*>(&message);
         cast_msg->set_hash(GetMessageHash(message));
-//         MessageFilter::Instance()->CheckUnique(message.hash());
+    }
+
+    if (message.has_broadcast()) {
+        MessageFilter::Instance()->CheckUnique(message.hash());
     }
 
     message.SerializeToString(&msg);

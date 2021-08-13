@@ -165,6 +165,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
     members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
         common::GlobalInfo::Instance()->network_id());
+    std::cout << "LeaderCreatePrepare: ssize: " << members_ptr_->size() << std::endl;
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
         common::GlobalInfo::Instance()->network_id());
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
