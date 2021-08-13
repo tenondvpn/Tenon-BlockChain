@@ -56,7 +56,9 @@ private:
         uint64_t height,
         const std::string& id,
         const std::string& prikey,
-        const std::string& sec_key);
+        const std::string& sec_key,
+        FILE* fd);
+    void ReloadBlsPri();
 
     std::map<uint32_t, std::string> pool_index_map_;
     std::map<uint32_t, std::string> root_account_with_pool_index_map_;

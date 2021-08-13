@@ -100,9 +100,20 @@ int BlsManager::Sign(
 
     libff::alt_bn128_G1 bn_sign;
     BlsSign::Sign(used_bls_->t(), used_bls_->n(), used_bls_->local_sec_key(), sign_msg, &bn_sign);
+    BLSPublicKeyShare pkey(used_bls_->local_sec_key(), used_bls_->t(), used_bls_->n());
+
     bn_sign.to_affine_coordinates();
     *sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.X);
     *sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.Y);
+
+    std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
+    std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
+        << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
+        << ", sign x: " << *sign_x
+        << ", sign y: " << *sign_y
+        << ", sign msg: " << common::Encode::HexEncode(sign_msg)
+        << std::endl;
+
     return kBlsSuccess;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -125,8 +136,11 @@ int BlsManager::Verify(
     pk->to_affine_coordinates();
     auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
     auto strs = pk_ptr->toString();
-    std::cout << "t: " << t << ", n: " << n
-        << ", pk: " << strs->at(0) << ", " << strs->at(0) << ", " << strs->at(0) << ", " << strs->at(0)
+    std::cout << "verify t: " << t << ", n: " << n
+        << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
+        << ", sign x: " << sign_x
+        << ", sign y: " << sign_y
+        << ", sign msg: " << common::Encode::HexEncode(sign_msg)
         << std::endl;
     return BlsSign::Verify(t, n, sign, sign_msg, pubkey);
 } catch (std::exception& e) {

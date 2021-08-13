@@ -95,7 +95,8 @@ void GenesisBlockInit::DumpLocalPrivateKey(
         uint64_t height,
         const std::string& id,
         const std::string& prikey,
-        const std::string& sec_key) {
+        const std::string& sec_key,
+        FILE* fd) {
     // encrypt by private key and save to db
     std::string enc_data;
     if (security::Crypto::Instance()->GetEncryptData(
@@ -108,8 +109,26 @@ void GenesisBlockInit::DumpLocalPrivateKey(
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(height) + "_" +
         std::to_string(shard_netid) + "_" + id;
-    std::cout << "put prikey to db: " << common::Encode::HexEncode(key) << std::endl;
     db::Db::Instance()->Put(key, enc_data);
+    fputs((common::Encode::HexEncode(key) + "," + common::Encode::HexEncode(enc_data) + "\n").c_str(), fd);
+}
+
+void GenesisBlockInit::ReloadBlsPri() {
+    FILE* bls_fd = fopen("./bls_pri", "r");
+    assert(bls_fd != nullptr);
+    char data[20480];
+    while (fgets(data, 20480, bls_fd) != nullptr)
+    {
+        std::string tmp_data(data, strlen(data) - 1);
+        common::Split<> spliter(tmp_data.c_str(), ',', tmp_data.size());
+        if (spliter.Count() == 2) {
+            std::string key = common::Encode::HexDecode(spliter[0]);
+            std::string val = common::Encode::HexDecode(spliter[1]);
+            db::Db::Instance()->Put(key, val);
+        }
+    }
+
+    fclose(bls_fd);
 }
 
 int GenesisBlockInit::CreateElectBlock(
@@ -152,6 +171,8 @@ int GenesisBlockInit::CreateElectBlock(
         auto prev_members = ec_block.mutable_prev_members();
         std::cout << "prikey with network: " << shard_netid
             << ", elect height: " << prev_height << std::endl;
+        FILE* bls_fd = fopen("./bls_pri", "w");
+        assert(bls_fd != nullptr);
         for (uint32_t i = 0; i < genesis_nodes.size(); ++i) {
             std::cout << *skeys[i]->toString() << std::endl;
             auto mem_pk = prev_members->add_bls_pubkey();
@@ -165,8 +186,11 @@ int GenesisBlockInit::CreateElectBlock(
                 prev_height,
                 genesis_nodes[i]->id(),
                 kGenesisElectPrikeyEncryptKey,
-                *skeys[i]->toString());
+                *skeys[i]->toString(),
+                bls_fd);
         }
+
+        fclose(bls_fd);
 
         std::cout << std::endl;
         auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key, 2, 3);
@@ -537,6 +561,7 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
         }
     }
 
+    ReloadBlsPri();
     std::cout << "create shard genesis blocks success." << std::endl;
     return kInitSuccess;
 }
