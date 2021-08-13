@@ -6,6 +6,7 @@
 #include <bls/BLSPublicKey.h>
 #include <bls/BLSPublicKeyShare.h>
 #include <bls/BLSutils.h>
+#include <libff/common/profiling.hpp>
 
 #include "bls/bls_sign.h"
 #include "common/db_key_prefix.h"
@@ -22,8 +23,8 @@ namespace bls {
 void initLibSnark() noexcept {
     static bool s_initialized = []() noexcept
     {
-        libff::inhibit_profiling_info = false;
-        libff::inhibit_profiling_counters = false;
+        libff::inhibit_profiling_info = true;
+        libff::inhibit_profiling_counters = true;
         libff::alt_bn128_pp::init_public_params();
         return true;
     }();
