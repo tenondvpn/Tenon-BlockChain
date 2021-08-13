@@ -42,6 +42,7 @@ private:
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };
     uint64_t max_height_{ common::kInvalidUint64 };
     std::mutex mutex_;
+    std::mutex sign_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlsManager);
 };

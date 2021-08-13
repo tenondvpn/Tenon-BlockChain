@@ -9,8 +9,8 @@ void initLibSnark() noexcept
 {
 	static bool s_initialized = []() noexcept
 	{
-		libff::inhibit_profiling_info = true;
-		libff::inhibit_profiling_counters = true;
+		libff::inhibit_profiling_info = false;
+		libff::inhibit_profiling_counters = false;
 		libff::alt_bn128_pp::init_public_params();
 		return true;
 	}();

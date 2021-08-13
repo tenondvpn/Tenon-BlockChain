@@ -38,7 +38,6 @@ int BlsSign::Verify(
     signatures::Bls bls_instance = signatures::Bls(t, n);
     auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
     memcpy(hash_bytes_arr->data(), message.c_str(), 32);
-    return kBlsSuccess;
     if (!bls_instance.Verification(hash_bytes_arr, sign, pkey)) {
         BLS_ERROR("bls_instance.Verification error.");
         return kBlsError;
