@@ -124,4 +124,6 @@ message BftMessage {
 	optional bytes pubkey = 21;
 	optional bytes backup_enc_data = 22;
 	optional uint64 elect_height = 23;
+	optional bytes bls_sign_x = 24;
+	optional bytes bls_sign_y = 25;
 }

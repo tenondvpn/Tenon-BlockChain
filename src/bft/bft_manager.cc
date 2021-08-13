@@ -946,7 +946,8 @@ int BftManager::BackupPrecommit(
     }
 
     if (!bft_msg.agree()) {
-        BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_INFO("BackupPrecommit LeaderCallCommitOppose gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         RemoveBft(bft_ptr->gid(), false);
         return kBftSuccess;
     }
