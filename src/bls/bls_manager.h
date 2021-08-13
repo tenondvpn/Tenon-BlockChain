@@ -19,6 +19,7 @@ public:
         elect::MembersPtr& new_members);
     void SetUsedElectionBlock(
         uint64_t elect_height,
+        uint32_t network_id,
         const libff::alt_bn128_G2& common_public_key);
     int Sign(
         const std::string& sign_msg,

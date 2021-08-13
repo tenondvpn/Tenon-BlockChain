@@ -29,19 +29,22 @@ void BlsManager::ProcessNewElectBlock(
 
 void BlsManager::SetUsedElectionBlock(
         uint64_t elect_height,
+        uint32_t network_id,
         const libff::alt_bn128_G2& common_public_key) try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
+        BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
         return;
     }
 
     max_height_ = elect_height;
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(elect_height) + "_" +
-        std::to_string(common::GlobalInfo::Instance()->network_id());
+        std::to_string(network_id);
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
+        BLS_ERROR("get bls private key failed![%s]", key.c_str());
         return;
     }
 
@@ -77,6 +80,7 @@ void BlsManager::SetUsedElectionBlock(
         local_sec_key,
         local_publick_key,
         common_public_key);
+    std::cout << "used_bls_->n(): " << used_bls_->n() << std::endl;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }

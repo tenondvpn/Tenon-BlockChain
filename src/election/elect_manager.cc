@@ -390,7 +390,9 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_block.prev_members().prev_elect_height();
     }
 
-    UpdatePrevElectMembers(shard_members_ptr, elect_block);
+    if (*elected) {
+        UpdatePrevElectMembers(shard_members_ptr, elect_block);
+    }
 }
 
 void ElectManager::ProcessNewElectBlock(
@@ -459,11 +461,10 @@ void ElectManager::UpdatePrevElectMembers(
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
         *pkey.getPublicKey());
-    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
-        bls::BlsManager::Instance()->SetUsedElectionBlock(
-            elect_block.prev_members().prev_elect_height(),
-            *pkey.getPublicKey());
-    }
+    bls::BlsManager::Instance()->SetUsedElectionBlock(
+        elect_block.prev_members().prev_elect_height(),
+        elect_block.shard_network_id(),
+        *pkey.getPublicKey());
 }
 
 int ElectManager::BackupCheckElectionBlockTx(
