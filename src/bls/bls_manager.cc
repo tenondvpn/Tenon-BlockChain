@@ -136,30 +136,24 @@ int BlsManager::Verify(
         uint32_t t,
         uint32_t n,
         const libff::alt_bn128_G2& pubkey,
-        const std::string& sign_x,
-        const std::string& sign_y,
+        const libff::alt_bn128_G1& sign,
         const std::string& sign_msg) try {
 //     std::lock_guard<std::mutex> guard(sign_mutex_);
     if (sign_msg.size() != 32) {
         BLS_ERROR("sign message error: %s", common::Encode::HexEncode(sign_msg));
         return kBlsError;
     }
-
-    libff::alt_bn128_G1 sign;
-    sign.X = libff::alt_bn128_Fq(sign_x.c_str());
-    sign.Y = libff::alt_bn128_Fq(sign_y.c_str());
-    sign.Z = libff::alt_bn128_Fq::one();
-
-    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-    pk->to_affine_coordinates();
-    auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
-    auto strs = pk_ptr->toString();
-    std::cout << "verify t: " << t << ", n: " << n
-        << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
-        << ", sign x: " << sign_x
-        << ", sign y: " << sign_y
-        << ", sign msg: " << common::Encode::HexEncode(sign_msg)
-        << std::endl;
+// 
+//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+//     pk->to_affine_coordinates();
+//     auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
+//     auto strs = pk_ptr->toString();
+//     std::cout << "verify t: " << t << ", n: " << n
+//         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
+//         << ", sign x: " << sign_x
+//         << ", sign y: " << sign_y
+//         << ", sign msg: " << common::Encode::HexEncode(sign_msg)
+//         << std::endl;
     return BlsSign::Verify(t, n, sign, sign_msg, pubkey);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());

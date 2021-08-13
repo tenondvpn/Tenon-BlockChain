@@ -30,8 +30,7 @@ public:
         uint32_t t,
         uint32_t n,
         const libff::alt_bn128_G2& pubkey,
-        const std::string& sign_x,
-        const std::string& sign_y,
+        const libff::alt_bn128_G1& sign,
         const std::string& sign_msg);
 
 private:
