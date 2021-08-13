@@ -115,14 +115,12 @@ void BftProto::BackupCreatePrepare(
     std::string sha128 = GetPrepareSignHash(bft_msg);
     std::string enc_data;
     if (bft_ptr->leader_mem_ptr() == nullptr) {
-        std::cout << "bft_ptr->leader_mem_ptr() == nullptr" << std::endl;
         return;
     }
 
     if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
         BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
 //         assert(false);
-        std::cout << "bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()" << std::endl;
         return;
     }
 
@@ -130,7 +128,6 @@ void BftProto::BackupCreatePrepare(
             bft_ptr->leader_mem_ptr()->leader_ecdh_key,
             sha128,
             &enc_data) != security::kSecuritySuccess) {
-        std::cout << "security::Crypto::Instance()->GetEncryptData failed" << std::endl;
         return;
     }
 

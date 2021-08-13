@@ -421,12 +421,6 @@ void ElectManager::ProcessNewElectBlock(
 
     if (*elected) {
         bls::BlsManager::Instance()->ProcessNewElectBlock(height, shard_members_ptr);
-        std::cout << "handle network: " << elect_block.shard_network_id() << ", size: " << shard_members_ptr->size() << std::endl;
-        for (uint32_t i = 0; i < shard_members_ptr->size(); ++i) {
-            std::string pk;
-            (*shard_members_ptr)[i]->pubkey.Serialize(pk);
-            std::cout << "i: " << i << ", " << common::Encode::HexEncode(pk) << std::endl;
-        }
     }
 }
 

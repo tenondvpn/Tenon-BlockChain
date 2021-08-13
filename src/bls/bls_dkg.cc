@@ -257,15 +257,15 @@ void BlsDkg::HandleSwapSecKey(
     }
 
     std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
-    std::string peer_pk;
-    (*members_)[bls_msg.index()]->pubkey.Serialize(peer_pk);
-    std::cout << "handle sec_key: " << common::Encode::HexEncode(sec_key)
-        << ", enc_sec_key: " << common::Encode::HexEncode(bls_msg.swap_req().sec_key())
-        << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
-        << ", peer pk: " << common::Encode::HexEncode(peer_pk)
-        << ", local index: " << local_member_index_
-        << ", peer index: " << bls_msg.index()
-        << std::endl;
+//     std::string peer_pk;
+//     (*members_)[bls_msg.index()]->pubkey.Serialize(peer_pk);
+//     std::cout << "handle sec_key: " << common::Encode::HexEncode(sec_key)
+//         << ", enc_sec_key: " << common::Encode::HexEncode(bls_msg.swap_req().sec_key())
+//         << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
+//         << ", peer pk: " << common::Encode::HexEncode(peer_pk)
+//         << ", local index: " << local_member_index_
+//         << ", peer index: " << bls_msg.index()
+//         << std::endl;
     if (!IsValidBigInt(sec_key)) {
         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
         assert(false);
@@ -440,15 +440,15 @@ void BlsDkg::SwapSecKey() try {
             continue;
         }
 
-        std::string peer_pk;
-        (*members_)[i]->pubkey.Serialize(peer_pk);
-        std::cout << "sec_key: " << common::Encode::HexEncode(sec_key)
-            << ", enc_sec_key: " << common::Encode::HexEncode(enc_sec_key)
-            << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
-            << ", peer pk: " << common::Encode::HexEncode(peer_pk)
-            << ", local index: " << local_member_index_
-            << ", peer index: " << i
-            << std::endl;
+//         std::string peer_pk;
+//         (*members_)[i]->pubkey.Serialize(peer_pk);
+//         std::cout << "sec_key: " << common::Encode::HexEncode(sec_key)
+//             << ", enc_sec_key: " << common::Encode::HexEncode(enc_sec_key)
+//             << ", local pk: " << common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
+//             << ", peer pk: " << common::Encode::HexEncode(peer_pk)
+//             << ", local index: " << local_member_index_
+//             << ", peer index: " << i
+//             << std::endl;
 
         protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
