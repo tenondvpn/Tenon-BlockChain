@@ -93,6 +93,7 @@ int GenesisBlockInit::CreateBlsGenesisKeys(
 void GenesisBlockInit::DumpLocalPrivateKey(
         uint32_t shard_netid,
         uint64_t height,
+        const std::string& id,
         const std::string& prikey,
         const std::string& sec_key) {
     // encrypt by private key and save to db
@@ -106,7 +107,7 @@ void GenesisBlockInit::DumpLocalPrivateKey(
 
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(height) + "_" +
-        std::to_string(shard_netid);
+        std::to_string(shard_netid) + "_" + id;
     db::Db::Instance()->Put(key, enc_data);
 }
 
@@ -158,7 +159,12 @@ int GenesisBlockInit::CreateElectBlock(
             mem_pk->set_x_c1(pkeys_str->at(1));
             mem_pk->set_y_c0(pkeys_str->at(2));
             mem_pk->set_y_c1(pkeys_str->at(3));
-            DumpLocalPrivateKey(shard_netid, prev_height, kGenesisElectPrikeyEncryptKey, *skeys[i]->toString());
+            DumpLocalPrivateKey(
+                shard_netid,
+                prev_height,
+                genesis_nodes[i]->id,
+                kGenesisElectPrikeyEncryptKey,
+                *skeys[i]->toString());
         }
 
         std::cout << std::endl;

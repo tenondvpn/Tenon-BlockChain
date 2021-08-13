@@ -54,6 +54,7 @@ private:
     void DumpLocalPrivateKey(
         uint32_t shard_netid,
         uint64_t height,
+        const std::string& id,
         const std::string& prikey,
         const std::string& sec_key);
 

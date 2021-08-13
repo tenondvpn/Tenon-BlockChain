@@ -1,6 +1,11 @@
 #include "bls/bls_manager.h"
 
 #include <dkg/dkg.h>
+#include <bls/BLSPrivateKey.h>
+#include <bls/BLSPrivateKeyShare.h>
+#include <bls/BLSPublicKey.h>
+#include <bls/BLSPublicKeyShare.h>
+#include <bls/BLSutils.h>
 
 #include "bls/bls_sign.h"
 #include "common/db_key_prefix.h"
@@ -41,7 +46,8 @@ void BlsManager::SetUsedElectionBlock(
     max_height_ = elect_height;
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(elect_height) + "_" +
-        std::to_string(network_id);
+        std::to_string(network_id) + "_" +
+        common::GlobalInfo::Instance()->id();
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
@@ -113,6 +119,14 @@ int BlsManager::Verify(
     sign.X = libff::alt_bn128_Fq(sign_x.c_str());
     sign.Y = libff::alt_bn128_Fq(sign_y.c_str());
     sign.Z = libff::alt_bn128_Fq::one();
+
+    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+    pk->to_affine_coordinates();
+    auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
+    auto strs = pk_ptr->toString();
+    std::cout << "t: " << t << ", n: " << n
+        << ", pk: " << strs->at(0) << ", " << strs->at(0) << ", " << strs->at(0) << ", " << strs->at(0)
+        << std::endl;
     return BlsSign::Verify(t, n, sign, sign_msg, pubkey);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());

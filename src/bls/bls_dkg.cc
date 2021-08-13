@@ -525,7 +525,8 @@ void BlsDkg::DumpLocalPrivateKey() {
 
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(elect_hegiht_) + "_" +
-        std::to_string(common::GlobalInfo::Instance()->network_id());
+        std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" +
+        common::GlobalInfo::Instance()->id();
     db::Db::Instance()->Put(key, enc_data);
 }
 
