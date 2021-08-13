@@ -10,6 +10,8 @@
 #include "bft/dispatch_pool.h"
 #include "block/block_manager.h"
 #include "block/account_manager.h"
+#include "bls/bls_utils.h"
+#include "bls/bls_manager.h"
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "common/random.h"
@@ -791,25 +793,34 @@ int BftManager::LeaderPrecommit(
     }
 
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
-    std::string dec_data;
-    if (member_ptr->backup_ecdh_key.empty()) {
-        BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
-            common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
-//         assert(false);
-        return kBftError;
-    }
-
-    if (security::Crypto::Instance()->GetDecryptData(
-            member_ptr->backup_ecdh_key,
-            bft_msg.backup_enc_data(),
-            &dec_data) != security::kSecuritySuccess) {
-        bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
-        BFT_ERROR("verify encrypt prepare hash error!");
-        return kBftError;
-    }
-
-//     time2 = common::TimeUtils::TimestampUs();
-    if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
+//     std::string dec_data;
+//     if (member_ptr->backup_ecdh_key.empty()) {
+//         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
+//             common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
+//         return kBftError;
+//     }
+// 
+//     if (security::Crypto::Instance()->GetDecryptData(
+//             member_ptr->backup_ecdh_key,
+//             bft_msg.backup_enc_data(),
+//             &dec_data) != security::kSecuritySuccess) {
+//         bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
+//         BFT_ERROR("verify encrypt prepare hash error!");
+//         return kBftError;
+//     }
+// 
+//     if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
+//         BFT_ERROR("verify encrypt prepare hash error!");
+//         return kBftError;
+//     }
+    uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
+    if (bls::BlsManager::Instance()->Verify(
+            t,
+            bft_ptr->members_ptr()->size(),
+            member_ptr->bls_publick_key,
+            bft_msg.bls_sign_x(),
+            bft_msg.bls_sign_y(),
+            backup_prepare_hash) != bls::kBlsSuccess) {
         BFT_ERROR("verify encrypt prepare hash error!");
         return kBftError;
     }
