@@ -52,6 +52,7 @@ void BlsDkg::OnNewElectionBlock(
     members_ = members;
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
+    member_count_ = members_->size();
     dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     for (uint32_t i = 0; i < members_->size(); ++i) {

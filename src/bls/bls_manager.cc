@@ -71,7 +71,12 @@ void BlsManager::SetUsedElectionBlock(
     signatures::Dkg dkg(t, member_count);
     libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
     used_bls_ = std::make_shared<bls::BlsDkg>();
-    used_bls_->SetInitElectionBlock(local_sec_key, local_publick_key, common_public_key);
+    used_bls_->SetInitElectionBlock(
+        t,
+        member_count,
+        local_sec_key,
+        local_publick_key,
+        common_public_key);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }

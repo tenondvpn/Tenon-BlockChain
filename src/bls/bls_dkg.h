@@ -35,9 +35,13 @@ public:
         elect::MembersPtr& members);
 
     void SetInitElectionBlock(
+            uint32_t t,
+            uint32_t n,
             const libff::alt_bn128_Fr& local_sec_key,
             const libff::alt_bn128_G2 local_publick_key,
             const libff::alt_bn128_G2 common_public_key) {
+        min_aggree_member_count_ = t;
+        member_count_ = n;
         local_sec_key_ = local_sec_key_;
         local_publick_key_ = local_publick_key;
         common_public_key_ = common_public_key;
@@ -63,11 +67,7 @@ public:
     }
 
     uint32_t n() const {
-        if (members_ == nullptr) {
-            return 0;
-        }
-
-        return members_->size();
+        return member_count_;
     }
 
 private:
@@ -123,6 +123,7 @@ private:
     std::shared_ptr<signatures::Dkg> dkg_instance_;
     uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
     uint32_t min_aggree_member_count_{ 0 };
+    uint32_t member_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
     libff::alt_bn128_G2 local_publick_key_;
     libff::alt_bn128_G2 common_public_key_;
