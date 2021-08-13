@@ -30,6 +30,7 @@ void BlsManager::ProcessNewElectBlock(
 void BlsManager::SetUsedElectionBlock(
         uint64_t elect_height,
         uint32_t network_id,
+        uint32_t member_count,
         const libff::alt_bn128_G2& common_public_key) try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
@@ -67,9 +68,6 @@ void BlsManager::SetUsedElectionBlock(
     }
     
     libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
-    auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-        elect_height,
-        common::GlobalInfo::Instance()->network_id());
     auto t = common::GetSignerCount(member_count);
     signatures::Dkg dkg(t, member_count);
     libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);

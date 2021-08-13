@@ -464,6 +464,7 @@ void ElectManager::UpdatePrevElectMembers(
     bls::BlsManager::Instance()->SetUsedElectionBlock(
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
+        members->size(),
         *pkey.getPublicKey());
 }
 
