@@ -5,6 +5,8 @@
 #include <mutex>
 #include <unordered_map>
 
+#include <bls/BLSutils.h>
+
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
@@ -51,11 +53,13 @@ public:
         uint32_t msg_id,
         bool agree,
         const security::CommitSecret& secret,
+        const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int LeaderCommitOk(
         uint32_t index,
         bool agree,
         const security::Response& res,
+        const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
     int CheckTimeout();
@@ -415,6 +419,8 @@ protected:
     std::mutex prepare_enc_failed_nodes_mutex_;
     bool this_node_is_leader_{ false };
     uint64_t elect_height_{ 0 };
+    libff::alt_bn128_G1 backup_precommit_signs_[common::kEachShardMaxNodeCount];
+    libff::alt_bn128_G1 backup_commit_signs_[common::kEachShardMaxNodeCount];
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

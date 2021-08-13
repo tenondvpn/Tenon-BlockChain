@@ -96,7 +96,7 @@ public:
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_msg.response() + "_" +
             std::to_string(bft_msg.agree());
-        return common::Hash::Hash128(prepare_sign_data);
+        return common::Hash::keccak256(prepare_sign_data);
     }
 
     static int CreateBackupPrecommitSignature(bft::protobuf::BftMessage& bft_msg) {

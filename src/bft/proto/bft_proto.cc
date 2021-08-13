@@ -231,16 +231,24 @@ void BftProto::BackupCreatePreCommit(
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
     std::string sha128 = GetPrecommitSignHash(bft_msg);
-    std::string enc_data;
-
-    if (security::Crypto::Instance()->GetEncryptData(
-            leader_ecdh_key,
-            sha128,
-            &enc_data) != security::kSecuritySuccess) {
+//     std::string enc_data;
+// 
+//     if (security::Crypto::Instance()->GetEncryptData(
+//             leader_ecdh_key,
+//             sha128,
+//             &enc_data) != security::kSecuritySuccess) {
+//         return;
+//     }
+// 
+//     bft_msg.set_backup_enc_data(enc_data);
+    std::string bls_sign_x;
+    std::string bls_sign_y;
+    if (bls::BlsManager::Instance()->Sign(sha128, &bls_sign_x, &bls_sign_y) != bls::kBlsSuccess) {
         return;
     }
 
-    bft_msg.set_backup_enc_data(enc_data);
+    bft_msg.set_bls_sign_x(bls_sign_x);
+    bft_msg.set_bls_sign_y(bls_sign_y);
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
 //         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));

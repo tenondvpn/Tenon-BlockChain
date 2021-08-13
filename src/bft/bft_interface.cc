@@ -186,6 +186,7 @@ int BftInterface::LeaderPrecommitOk(
         uint32_t msg_id,
         bool agree,
         const security::CommitSecret& secret,
+        const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_precommit_) {
@@ -202,6 +203,7 @@ int BftInterface::LeaderPrecommitOk(
         std::string sec_str;
         secret.Serialize(sec_str);
         prepare_bitmap_.Set(index);
+        backup_precommit_signs_[index] = backup_sign;
     } else {
         precommit_oppose_set_.insert(id);
     }
@@ -229,6 +231,7 @@ int BftInterface::LeaderCommitOk(
         uint32_t index,
         bool agree,
         const security::Response& res,
+        const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_commit_) {
@@ -257,6 +260,7 @@ int BftInterface::LeaderCommitOk(
             backup_res->response = res;
             backup_res->index = index;
             backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
+            backup_commit_signs_[index] = backup_sign;
         }
     } else {
         prepare_bitmap_.UnSet(index);
