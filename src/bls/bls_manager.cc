@@ -105,7 +105,7 @@ int BlsManager::Sign(
         const std::string& sign_msg,
         std::string* sign_x,
         std::string* sign_y) try {
-    std::lock_guard<std::mutex> guard(sign_mutex_);
+//     std::lock_guard<std::mutex> guard(sign_mutex_);
     if (used_bls_ == nullptr || used_bls_->n() == 0) {
         return kBlsError;
     }
@@ -138,7 +138,7 @@ int BlsManager::Verify(
         const std::string& sign_x,
         const std::string& sign_y,
         const std::string& sign_msg) try {
-    std::lock_guard<std::mutex> guard(sign_mutex_);
+//     std::lock_guard<std::mutex> guard(sign_mutex_);
     if (sign_msg.size() != 32) {
         BLS_ERROR("sign message error: %s", common::Encode::HexEncode(sign_msg));
         return kBlsError;
