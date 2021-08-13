@@ -12,6 +12,7 @@
 #include "common/log.h"
 #include "security/public_key.h"
 #include "security/signature.h"
+#include "security/secp256k1.h"
 #include "dht/proto/dht.pb.h"
 
 #define DHT_DEBUG(fmt, ...) TENON_DEBUG("[dht]" fmt, ## __VA_ARGS__)
@@ -205,6 +206,7 @@ struct Node {
 
     void set_pubkey(const std::string& pubkey) {
         pubkey_str_ = pubkey;
+        id_ = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str_);
     }
 
     const std::string& local_ip() {
