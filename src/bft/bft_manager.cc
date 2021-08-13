@@ -793,45 +793,45 @@ int BftManager::LeaderPrecommit(
     }
 
     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
-    std::string dec_data;
-    if (member_ptr->backup_ecdh_key.empty()) {
-        BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
-            common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
-        return kBftError;
-    }
-
-    if (security::Crypto::Instance()->GetDecryptData(
-            member_ptr->backup_ecdh_key,
-            bft_msg.backup_enc_data(),
-            &dec_data) != security::kSecuritySuccess) {
-        bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
-        BFT_ERROR("verify encrypt prepare hash error!");
-        return kBftError;
-    }
-
-    if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
-        BFT_ERROR("verify encrypt prepare hash error!");
-        return kBftError;
-    }
-//     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
-//     if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) || !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
-//         BFT_ERROR("verify prepare hash error!");
+//     std::string dec_data;
+//     if (member_ptr->backup_ecdh_key.empty()) {
+//         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
+//             common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
 //         return kBftError;
 //     }
 // 
-//     libff::alt_bn128_G1 sign;
-//     sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
-//     sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
-//     sign.Z = libff::alt_bn128_Fq::one();
-//     if (bls::BlsManager::Instance()->Verify(
-//             t,
-//             bft_ptr->members_ptr()->size(),
-//             member_ptr->bls_publick_key,
-//             sign,
-//             backup_prepare_hash) != bls::kBlsSuccess) {
-//         BFT_ERROR("verify prepare hash error!");
+//     if (security::Crypto::Instance()->GetDecryptData(
+//             member_ptr->backup_ecdh_key,
+//             bft_msg.backup_enc_data(),
+//             &dec_data) != security::kSecuritySuccess) {
+//         bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
+//         BFT_ERROR("verify encrypt prepare hash error!");
 //         return kBftError;
 //     }
+// 
+//     if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
+//         BFT_ERROR("verify encrypt prepare hash error!");
+//         return kBftError;
+//     }
+    uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
+    if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) || !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
+        BFT_ERROR("verify prepare hash error!");
+        return kBftError;
+    }
+
+    libff::alt_bn128_G1 sign;
+    sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
+    sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
+    sign.Z = libff::alt_bn128_Fq::one();
+    if (bls::BlsManager::Instance()->Verify(
+            t,
+            bft_ptr->members_ptr()->size(),
+            member_ptr->bls_publick_key,
+            sign,
+            backup_prepare_hash) != bls::kBlsSuccess) {
+        BFT_ERROR("verify prepare hash error!");
+        return kBftError;
+    }
 
     if (!bft_msg.has_secret()) {
         BFT_ERROR("backup prepare must has commit secret.");
