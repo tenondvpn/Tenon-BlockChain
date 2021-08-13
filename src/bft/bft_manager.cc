@@ -650,12 +650,19 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
+    libff::alt_bn128_G1 sign;
+    if (bls::BlsManager::Instance()->Sign(bft_ptr->prepare_hash(), &sign) != bls::kBlsSuccess) {
+        BFT_ERROR("leader signature error.");
+        return kBftError;
+    }
+
     bft_ptr->LeaderPrecommitOk(
         member_idx,
         bft_ptr->gid(),
         0,
         true,
         bft_ptr->secret(),
+        sign,
         common::GlobalInfo::Instance()->id());
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
@@ -792,7 +799,7 @@ int BftManager::LeaderPrecommit(
         BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
     }
 
-    auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
+//     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
 //     std::string dec_data;
 //     if (member_ptr->backup_ecdh_key.empty()) {
 //         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
@@ -828,7 +835,7 @@ int BftManager::LeaderPrecommit(
             bft_ptr->members_ptr()->size(),
             member_ptr->bls_publick_key,
             sign,
-            backup_prepare_hash) != bls::kBlsSuccess) {
+            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     }
@@ -927,10 +934,17 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
             bft_ptr->secret(),
             bft_ptr->challenge(),
             *(security::Schnorr::Instance()->prikey()));
+    libff::alt_bn128_G1 sign;
+    if (bls::BlsManager::Instance()->Sign(bft_ptr->prepare_hash(), &sign) != bls::kBlsSuccess) {
+        BFT_ERROR("leader signature error.");
+        return kBftError;
+    }
+
     if (bft_ptr->LeaderCommitOk(
             elect::ElectManager::Instance()->local_node_member_index(),
             true,
             sec_res,
+            sign,
             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
         RemoveBft(bft_ptr->gid(), false);
@@ -1073,7 +1087,7 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    auto backup_precommit_hash = BftProto::GetPrecommitSignHash(bft_msg);
+//     auto backup_precommit_hash = BftProto::GetPrecommitSignHash(bft_msg);
 //     if ((*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key.empty()) {
 //         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
 //             common::GlobalInfo::Instance()->network_id(),
@@ -1112,7 +1126,7 @@ int BftManager::LeaderCommit(
             bft_ptr->members_ptr()->size(),
             member_ptr->bls_publick_key,
             sign,
-            backup_precommit_hash) != bls::kBlsSuccess) {
+            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
         BFT_ERROR("verify precommit hash error!");
         return kBftError;
     }
@@ -1247,46 +1261,46 @@ int BftManager::LeaderCallCommit(
 }
 
 int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
-    transport::protobuf::Header msg;
-    bft_ptr->init_precommit_timeout();
-    uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
-        bft_ptr->network_id(),
-        common::GlobalInfo::Instance()->id());
-    if (member_idx == elect::kInvalidMemberIndex) {
-        return kBftError;
-    }
-
-    security::Response sec_res(
-        bft_ptr->secret(),
-        bft_ptr->challenge(),
-        *(security::Schnorr::Instance()->prikey()));
-    if (bft_ptr->LeaderCommitOk(
-            member_idx,
-            true,
-            sec_res,
-            common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
-        BFT_ERROR("leader commit failed!");
-        RemoveBft(bft_ptr->gid(), false);
-        return kBftError;
-    }
-
-    std::string agg_res_str;
-    sec_res.Serialize(agg_res_str);
-    std::string agg_cha_str;
-    bft_ptr->challenge().Serialize(agg_cha_str);
-    std::string pri_key_str;
-    security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
-    std::string sec_key_str;
-    bft_ptr->secret().Serialize(sec_key_str);
-    std::string pub_key_str;
-    security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-    auto local_node = dht_ptr->local_node();
-    BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
-    network::Route::Instance()->Send(msg);
-#ifdef TENON_UNITTEST
-    leader_precommit_msg_ = msg;
-#endif
+//     transport::protobuf::Header msg;
+//     bft_ptr->init_precommit_timeout();
+//     uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
+//         bft_ptr->network_id(),
+//         common::GlobalInfo::Instance()->id());
+//     if (member_idx == elect::kInvalidMemberIndex) {
+//         return kBftError;
+//     }
+// 
+//     security::Response sec_res(
+//         bft_ptr->secret(),
+//         bft_ptr->challenge(),
+//         *(security::Schnorr::Instance()->prikey()));
+//     if (bft_ptr->LeaderCommitOk(
+//             member_idx,
+//             true,
+//             sec_res,
+//             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
+//         BFT_ERROR("leader commit failed!");
+//         RemoveBft(bft_ptr->gid(), false);
+//         return kBftError;
+//     }
+// 
+//     std::string agg_res_str;
+//     sec_res.Serialize(agg_res_str);
+//     std::string agg_cha_str;
+//     bft_ptr->challenge().Serialize(agg_cha_str);
+//     std::string pri_key_str;
+//     security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
+//     std::string sec_key_str;
+//     bft_ptr->secret().Serialize(sec_key_str);
+//     std::string pub_key_str;
+//     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
+//     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+//     auto local_node = dht_ptr->local_node();
+//     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
+//     network::Route::Instance()->Send(msg);
+// #ifdef TENON_UNITTEST
+//     leader_precommit_msg_ = msg;
+// #endif
     return kBftSuccess;
 }
 

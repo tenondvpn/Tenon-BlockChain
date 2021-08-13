@@ -113,14 +113,17 @@ void BftProto::BackupCreatePrepare(
     std::string secret_str;
     bft_ptr->secret().Serialize(secret_str);
     bft_msg.set_secret(secret_str);
-    std::string sha128 = GetPrepareSignHash(bft_msg);
+//     std::string sha128 = GetPrepareSignHash(bft_msg);
     if (bft_ptr->leader_mem_ptr() == nullptr) {
         return;
     }
 
     std::string bls_sign_x;
     std::string bls_sign_y;
-    if (bls::BlsManager::Instance()->Sign(sha128, &bls_sign_x, &bls_sign_y) != bls::kBlsSuccess) {
+    if (bls::BlsManager::Instance()->Sign(
+            from_bft_msg.prepare_hash(),
+            &bls_sign_x,
+            &bls_sign_y) != bls::kBlsSuccess) {
         return;
     }
 
@@ -230,7 +233,6 @@ void BftProto::BackupCreatePreCommit(
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
-    std::string sha128 = GetPrecommitSignHash(bft_msg);
 //     std::string enc_data;
 // 
 //     if (security::Crypto::Instance()->GetEncryptData(
@@ -243,7 +245,10 @@ void BftProto::BackupCreatePreCommit(
 //     bft_msg.set_backup_enc_data(enc_data);
     std::string bls_sign_x;
     std::string bls_sign_y;
-    if (bls::BlsManager::Instance()->Sign(sha128, &bls_sign_x, &bls_sign_y) != bls::kBlsSuccess) {
+    if (bls::BlsManager::Instance()->Sign(
+            from_bft_msg.prepare_hash(),
+            &bls_sign_x,
+            &bls_sign_y) != bls::kBlsSuccess) {
         return;
     }
 

@@ -26,6 +26,9 @@ public:
         const std::string& sign_msg,
         std::string* sign_x,
         std::string* sign_y);
+    int Sign(
+        const std::string& sign_msg,
+        libff::alt_bn128_G1* bn_sign);
     int Verify(
         uint32_t t,
         uint32_t n,

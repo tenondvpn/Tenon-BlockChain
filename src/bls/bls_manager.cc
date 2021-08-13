@@ -104,6 +104,17 @@ void BlsManager::SetUsedElectionBlock(
 
 int BlsManager::Sign(
         const std::string& sign_msg,
+        libff::alt_bn128_G1* bn_sign) {
+    if (used_bls_ == nullptr || used_bls_->n() == 0) {
+        return kBlsError;
+    }
+
+    BlsSign::Sign(used_bls_->t(), used_bls_->n(), used_bls_->local_sec_key(), sign_msg, bn_sign);
+    return kBlsSuccess;
+}
+
+int BlsManager::Sign(
+        const std::string& sign_msg,
         std::string* sign_x,
         std::string* sign_y) try {
 //     std::lock_guard<std::mutex> guard(sign_mutex_);
