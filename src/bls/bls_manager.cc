@@ -48,6 +48,7 @@ void BlsManager::SetUsedElectionBlock(
         std::to_string(elect_height) + "_" +
         std::to_string(network_id) + "_" +
         common::GlobalInfo::Instance()->id();
+    std::cout << "get prikey from db: " << common::Encode::HexEncode(key) << std::endl;
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
