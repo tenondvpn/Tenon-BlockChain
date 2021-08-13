@@ -92,6 +92,7 @@ int BlsManager::Sign(
     return kBlsSuccess;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
+    return kBlsError;
 }
 
 int BlsManager::Verify(
@@ -108,6 +109,7 @@ int BlsManager::Verify(
     return BlsSign::Verify(t, n, sign, sign_msg, pubkey);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
+    return kBlsError;
 }
 
 BlsManager::BlsManager() {}
