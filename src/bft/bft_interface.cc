@@ -212,7 +212,6 @@ int BftInterface::LeaderPrecommitOk(
 
 //     BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
 //         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
-    auto now_timestamp = std::chrono::steady_clock::now();
     if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
         LeaderCreatePreCommitAggChallenge();
         leader_handled_precommit_ = true;
@@ -376,7 +375,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             all_signs,
             lagrange_coeffs));
         std::string msg_hash_src = prepare_hash();
-        for (int32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
+        for (uint32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
             msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
         }
 
@@ -446,7 +445,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
             all_signs,
             lagrange_coeffs));
         std::string msg_hash_src = precommit_hash();
-        for (int32_t i = 0; i < precommit_bitmap_.data().size(); ++i) {
+        for (uint32_t i = 0; i < precommit_bitmap_.data().size(); ++i) {
             msg_hash_src += std::to_string(precommit_bitmap_.data()[i]);
         }
 

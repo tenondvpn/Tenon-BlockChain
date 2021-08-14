@@ -1197,9 +1197,9 @@ int BftManager::LeaderCallCommit(
     }
 
     auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
-    tenon_block.set_bls_agg_sign_x(
+    tenon_block->set_bls_agg_sign_x(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->X));
-    tenon_block.set_bls_agg_sign_y(
+    tenon_block->set_bls_agg_sign_y(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->Y));
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
