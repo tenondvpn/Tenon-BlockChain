@@ -85,7 +85,7 @@ public:
 
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         if (network_id >= network::kConsensusShardEndNetworkId) {
-            return;
+            return libff::alt_bn128_G2::zero();
         }
 
         if (members_ptrs_[network_id][0] != nullptr &&
