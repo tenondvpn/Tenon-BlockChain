@@ -192,7 +192,7 @@ void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
 
 // get from end to begin, count's heights, one time max: 1024
 void DbAccountInfo::GetHeights(int64_t index, int32_t count, std::vector<uint64_t>* res) {
-    if (index > tx_queue_.size()) {
+    if (index > (int64_t)tx_queue_.size()) {
         index = tx_queue_.size();
     }
 

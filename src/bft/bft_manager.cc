@@ -1586,6 +1586,7 @@ int BftManager::VerifyBlsAggSignature(
             elect::ElectManager::Instance()->GetCommonPublicKey(
             bft_ptr->elect_height(),
             bft_ptr->network_id())) != bls::kBlsSuccess) {
+        BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
         return kBftError;
     }
 

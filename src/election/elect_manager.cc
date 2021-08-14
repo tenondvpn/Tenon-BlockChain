@@ -429,7 +429,7 @@ void ElectManager::ProcessNewElectBlock(
 void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block) {
-    if (members->size() != elect_block.prev_members().bls_pubkey_size()) {
+    if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
     }
 

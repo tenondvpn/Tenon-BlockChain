@@ -364,6 +364,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
                 network_id_)) != bls::kBlsSuccess) {
+            BFT_ERROR("leader verify leader precommit agg sign failed!");
             return kBftError;
         }
 
@@ -423,6 +424,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
                 elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
                 network_id_)) != bls::kBlsSuccess) {
+            BFT_ERROR("leader verify leader commit agg sign failed!");
             return kBftError;
         }
 

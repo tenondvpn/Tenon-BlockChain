@@ -19,7 +19,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
         if ((*iter)->pool_index_mod_num < 0) {
             backup_nodes_[invalid_index].push_back(*iter);
         } else {
-            if ((*iter)->pool_index_mod_num[0] >= common::kInvalidPoolIndex) {
+            if ((uint32_t)(*iter)->pool_index_mod_num[0] >= common::kInvalidPoolIndex) {
                 return;
             }
 

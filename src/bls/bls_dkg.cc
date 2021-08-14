@@ -192,7 +192,7 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
-    if (bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_) {
+    if (bls_msg.verify_brd().verify_vec_size() < (int32_t)min_aggree_member_count_) {
         BLS_ERROR("bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_");
         return;
     }
