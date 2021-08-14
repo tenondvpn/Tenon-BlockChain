@@ -938,6 +938,8 @@ int BftManager::BackupPrecommit(
     if (bft_ptr->backup_precommit_msg() != nullptr) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             bft_msg.node_ip(), bft_msg.node_port(), 0, *bft_ptr->backup_precommit_msg());
+        BFT_INFO("bft_ptr->backup_precommit_msg() error gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftSuccess;
     }
 
@@ -955,6 +957,8 @@ int BftManager::BackupPrecommit(
     }
 
     if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
+        BFT_INFO("VerifyBlsAggSignature error gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftError;
     }
 
@@ -972,6 +976,7 @@ int BftManager::BackupPrecommit(
         sign_hash,
         *msg);
     if (!msg->has_data()) {
+        BFT_ERROR("BackupCreatePreCommit not has data.");
         return kBftError;
     }
 
@@ -989,6 +994,7 @@ int BftManager::BackupPrecommit(
 #ifdef TENON_UNITTEST
     backup_precommit_msg_ = *msg;
 #endif
+    BFT_DEBUG("BackupPrecommit success.");
     return kBftSuccess;
 }
 

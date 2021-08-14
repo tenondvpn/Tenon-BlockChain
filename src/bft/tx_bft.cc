@@ -76,6 +76,8 @@ int TxBft::Prepare(
         res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
     }
 
+    members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
+        common::GlobalInfo::Instance()->network_id());
     if (res != kBftSuccess) {
         BFT_ERROR("backup prepare failed: %d", res);
         if (res == kBftBlockPreHashError) {
