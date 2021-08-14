@@ -34,6 +34,11 @@ int BlsSign::Verify(
         return kBlsError;
     }
 
+    if (!pkey.is_well_formed()) {
+        BLS_ERROR("pkey.is_well_formed() error.");
+        return kBlsError;
+    }
+
     libff::inhibit_profiling_info = true;
     signatures::Bls bls_instance = signatures::Bls(t, n);
     auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();

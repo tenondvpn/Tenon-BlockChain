@@ -1549,35 +1549,12 @@ int BftManager::VerifyBlsAggSignature(
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         const std::string& sign_hash) {
-//     std::string hash_to_sign = bft_ptr->prepare_hash();
-//     if (bft_msg.bft_step() == kBftCommit) {
-//         std::string msg_hash_src = bft_ptr->prepare_hash();
-//         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-//             msg_hash_src += std::to_string(bft_msg.bitmap(i));
-//         }
-// 
-//         msg_hash_src = common::Hash::Hash256(msg_hash_src);
-//         for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
-//             msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
-//         }
-// 
-//         *sign_hash = common::Hash::Hash256(msg_hash_src);
-//     } else if (bft_msg.bft_step() == kBftPreCommit) {
-//         std::string msg_hash_src = bft_ptr->prepare_hash();
-//         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-//             msg_hash_src += std::to_string(bft_msg.bitmap(i));
-//         }
-// 
-//         *sign_hash = common::Hash::Hash256(msg_hash_src);
-//     }
-// 
     libff::alt_bn128_G1 sign;
     sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
     sign.Z = libff::alt_bn128_Fq::one();
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
     uint32_t n = bft_ptr->members_ptr()->size();
-    signatures::Bls bls_instance = signatures::Bls(t, n);
     if (bls::BlsSign::Verify(
             t,
             n,
