@@ -174,7 +174,7 @@ void BftProto::LeaderCreatePreCommit(
         bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     }
 
-    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
+    const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
         bft_msg.add_bitmap(bitmap_data[i]);
     }

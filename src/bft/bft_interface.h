@@ -187,6 +187,10 @@ public:
         return leader_index_;
     }
 
+    const common::Bitmap& prepare_bitmap() const {
+        return prepare_bitmap_;
+    }
+
     const std::string& precommit_hash() const {
         return precommit_hash_;
     }
