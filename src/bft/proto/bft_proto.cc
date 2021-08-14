@@ -184,7 +184,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(
-            bft_ptr->prepare_hash(),
+            bft_ptr->precommit_hash(),
             *(security::Schnorr::Instance()->prikey()),
             *(security::Schnorr::Instance()->pubkey()),
             leader_sign)) {

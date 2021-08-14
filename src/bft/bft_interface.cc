@@ -354,12 +354,12 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         bls_precommit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));
-//         std::string msg_hash_src = prepare_hash();
-//         for (uint32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
-//             msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
-//         }
-// 
-//         precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsSign::Verify(
+        std::string msg_hash_src = prepare_hash();
+        for (uint32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
+            msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
+        }
+
+        precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsSign::Verify(
                 t,
                 n,
                 *bls_precommit_agg_sign_,
