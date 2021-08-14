@@ -819,12 +819,6 @@ int BftManager::LeaderPrecommit(
         return kBftError;
     }
 
-    if (!bft_msg.has_secret()) {
-        BFT_ERROR("backup prepare must has commit secret.");
-        return kBftError;
-    }
-    
-    security::CommitSecret backup_secret(bft_msg.secret());
     int res = bft_ptr->LeaderPrecommitOk(
         bft_msg.member_index(),
         bft_ptr->gid(),
@@ -908,10 +902,6 @@ int BftManager::LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr) {
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
-//     security::Response sec_res(
-//             bft_ptr->secret(),
-//             bft_ptr->challenge(),
-//             *(security::Schnorr::Instance()->prikey()));
     libff::alt_bn128_G1 sign;
     if (bls::BlsManager::Instance()->Sign(bft_ptr->precommit_hash(), &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
@@ -965,11 +955,6 @@ int BftManager::BackupPrecommit(
     }
 
     if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
-        return kBftError;
-    }
-
-    if (!bft_msg.has_challenge()) {
-        BFT_ERROR("leader pre commit message must has challenge.");
         return kBftError;
     }
 
@@ -1052,12 +1037,6 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    if (!bft_msg.has_response()) {
-        BFT_ERROR("backup pre commit message must have response.");
-        return kBftError;
-    }
-
-    security::Response agg_res(bft_msg.response());
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
@@ -1078,12 +1057,7 @@ int BftManager::LeaderCommit(
     if (res == kBftAgree) {
         LeaderCallCommit(header, bft_ptr);
 //         time5 = common::TimeUtils::TimestampUs();
-    }
-    else if (res == kBftReChallenge) {
-        LeaderReChallenge(bft_ptr);
-//         time5 = common::TimeUtils::TimestampUs();
-    }
-    else if (res == kBftOppose) {
+    } else if (res == kBftOppose) {
 //         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
         LeaderCallCommitOppose(header, bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
@@ -1177,50 +1151,6 @@ int BftManager::LeaderCallCommit(
 #endif
     BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    return kBftSuccess;
-}
-
-int BftManager::LeaderReChallenge(BftInterfacePtr& bft_ptr) {
-//     transport::protobuf::Header msg;
-//     bft_ptr->init_precommit_timeout();
-//     uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
-//         bft_ptr->network_id(),
-//         common::GlobalInfo::Instance()->id());
-//     if (member_idx == elect::kInvalidMemberIndex) {
-//         return kBftError;
-//     }
-// 
-//     security::Response sec_res(
-//         bft_ptr->secret(),
-//         bft_ptr->challenge(),
-//         *(security::Schnorr::Instance()->prikey()));
-//     if (bft_ptr->LeaderCommitOk(
-//             member_idx,
-//             true,
-//             sec_res,
-//             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
-//         BFT_ERROR("leader commit failed!");
-//         RemoveBft(bft_ptr->gid(), false);
-//         return kBftError;
-//     }
-// 
-//     std::string agg_res_str;
-//     sec_res.Serialize(agg_res_str);
-//     std::string agg_cha_str;
-//     bft_ptr->challenge().Serialize(agg_cha_str);
-//     std::string pri_key_str;
-//     security::Schnorr::Instance()->prikey()->Serialize(pri_key_str);
-//     std::string sec_key_str;
-//     bft_ptr->secret().Serialize(sec_key_str);
-//     std::string pub_key_str;
-//     security::Schnorr::Instance()->pubkey()->Serialize(pub_key_str);
-//     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-//     auto local_node = dht_ptr->local_node();
-//     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, msg);
-//     network::Route::Instance()->Send(msg);
-// #ifdef TENON_UNITTEST
-//     leader_precommit_msg_ = msg;
-// #endif
     return kBftSuccess;
 }
 
@@ -1475,11 +1405,6 @@ void BftManager::CheckTimeout() {
         case kTimeoutCallPrecommit: {
             iter->second->AddBftEpoch();
             LeaderCallPrecommit(iter->second);
-            break;
-        }
-        case kTimeoutCallReChallenge: {
-            iter->second->AddBftEpoch();
-            LeaderReChallenge(iter->second);
             break;
         }
         case kTimeoutNormal:

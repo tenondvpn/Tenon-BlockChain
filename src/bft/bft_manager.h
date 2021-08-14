@@ -99,7 +99,6 @@ private:
     void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
-    int LeaderReChallenge(BftInterfacePtr& bft_ptr);
     void HandleOpposeNodeMsg(bft::protobuf::BftMessage& bft_msg, BftInterfacePtr& bft_ptr);
     BftInterfacePtr CreateBftPtr(const bft::protobuf::BftMessage& bft_msg);
     void HandleBftMessage(
@@ -135,7 +134,6 @@ private:
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr);
-//     void CheckCommitBackupRecall();
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 
