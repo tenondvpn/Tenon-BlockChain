@@ -799,27 +799,6 @@ int BftManager::LeaderPrecommit(
         BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
     }
 
-//     auto backup_prepare_hash = BftProto::GetPrepareSignHash(bft_msg);
-//     std::string dec_data;
-//     if (member_ptr->backup_ecdh_key.empty()) {
-//         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
-//             common::GlobalInfo::Instance()->network_id(), common::Encode::HexEncode(member_ptr->id).c_str(), bft_msg.member_index());
-//         return kBftError;
-//     }
-// 
-//     if (security::Crypto::Instance()->GetDecryptData(
-//             member_ptr->backup_ecdh_key,
-//             bft_msg.backup_enc_data(),
-//             &dec_data) != security::kSecuritySuccess) {
-//         bft_ptr->add_prepair_failed_node_index(bft_msg.member_index());
-//         BFT_ERROR("verify encrypt prepare hash error!");
-//         return kBftError;
-//     }
-// 
-//     if (memcmp(backup_prepare_hash.c_str(), dec_data.c_str(), backup_prepare_hash.size()) != 0) {
-//         BFT_ERROR("verify encrypt prepare hash error!");
-//         return kBftError;
-//     }
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
     if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) || !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
         BFT_ERROR("verify prepare hash error!");
@@ -1051,29 +1030,6 @@ int BftManager::LeaderCommit(
     if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
         return kBftError;
     }
-
-//     auto backup_precommit_hash = BftProto::GetPrecommitSignHash(bft_msg);
-//     if ((*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key.empty()) {
-//         BFT_ERROR("get backup ecdh key failed! network id: %d, node id: %s, mem index: %d",
-//             common::GlobalInfo::Instance()->network_id(),
-//             common::Encode::HexEncode((*bft_ptr->members_ptr())[bft_msg.member_index()]->id).c_str(),
-//             bft_msg.member_index());
-//         //         assert(false);
-//         return kBftError;
-//     }
-//     std::string dec_data;
-//     if (security::Crypto::Instance()->GetDecryptData(
-//             (*bft_ptr->members_ptr())[bft_msg.member_index()]->backup_ecdh_key,
-//             bft_msg.backup_enc_data(),
-//             &dec_data) != security::kSecuritySuccess) {
-//         BFT_ERROR("verify encrypt prepare hash error!");
-//         return kBftError;
-//     }
-// 
-//     if (memcmp(backup_precommit_hash.c_str(), dec_data.c_str(), backup_precommit_hash.size()) != 0) {
-//         BFT_ERROR("verify encrypt prepare hash error!");
-//         return kBftError;
-//     }
 
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
     if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) || !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
