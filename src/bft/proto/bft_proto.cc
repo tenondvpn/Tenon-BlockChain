@@ -110,10 +110,6 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    std::string secret_str;
-    bft_ptr->secret().Serialize(secret_str);
-    bft_msg.set_secret(secret_str);
-//     std::string sha128 = GetPrepareSignHash(bft_msg);
     if (bft_ptr->leader_mem_ptr() == nullptr) {
         return;
     }
@@ -175,10 +171,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_agree(agree);
     bft_msg.set_elect_height(bft_ptr->elect_height());
     if (agree) {
-        std::string challenge_str;
-        bft_ptr->challenge().Serialize(challenge_str);
         bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-        bft_msg.set_challenge(challenge_str);
     }
 
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
@@ -300,11 +293,6 @@ void BftProto::LeaderCreateCommit(
     sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
-    std::string agg_sign_challenge_str;
-    std::string agg_sign_response_str;
-    bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
-    bft_msg.set_agg_sign_challenge(agg_sign_challenge_str);
-    bft_msg.set_agg_sign_response(agg_sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
