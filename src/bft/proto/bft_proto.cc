@@ -217,7 +217,6 @@ void BftProto::BackupCreatePreCommit(
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
-        const security::Response& agg_res,
         bool agree,
         const std::string& sign_hash,
         transport::protobuf::Header& msg) {
@@ -238,9 +237,6 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    std::string agg_res_str;
-    agg_res.Serialize(agg_res_str);
-    bft_msg.set_response(agg_res_str);
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(

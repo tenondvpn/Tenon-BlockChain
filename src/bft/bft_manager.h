@@ -78,9 +78,6 @@ private:
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         std::string* sign_hash);
-    int VerifyAggSignature(
-        BftInterfacePtr& bft_ptr,
-        const bft::protobuf::BftMessage& bft_msg);
     int VerifyBlsAggSignature(
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg,

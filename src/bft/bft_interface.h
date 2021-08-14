@@ -52,16 +52,13 @@ public:
         const std::string& bft_gid,
         uint32_t msg_id,
         bool agree,
-        const security::CommitSecret& secret,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int LeaderCommitOk(
         uint32_t index,
         bool agree,
-        const security::Response& res,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
-    int BackupCheckAggSign(const bft::protobuf::BftMessage& bft_msg);
     int CheckTimeout();
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg);
@@ -191,20 +188,6 @@ public:
         return leader_index_;
     }
 
-    void set_challenge(const security::Challenge& challenge) {
-        challenge_ = challenge;
-    }
-
-    const security::Challenge& challenge() const {
-        assert(challenge_.inited());
-        return challenge_;
-    }
-
-    const security::CommitSecret& secret() const {
-        assert(secret_.inited());
-        return secret_;
-    }
-
     const std::string& precommit_hash() const {
         return precommit_hash_;
     }
@@ -217,11 +200,6 @@ public:
     const std::shared_ptr<libff::alt_bn128_G1>& bls_commit_agg_sign() const {
         assert(bls_commit_agg_sign_ != nullptr);
         return bls_commit_agg_sign_;
-    }
-
-    const std::shared_ptr<security::Signature>& agg_sign() const {
-        assert(agg_sign_ != nullptr);
-        return agg_sign_;
     }
 
     void init_prepare_timeout() {
@@ -404,11 +382,6 @@ protected:
     std::mutex item_index_vec_mutex_;
     std::chrono::steady_clock::time_point timeout_;
     std::string prepare_hash_;
-    std::unordered_map<uint32_t, BackupResponsePtr> backup_prepare_response_;
-    std::unordered_map<uint32_t, BackupResponsePtr> backup_precommit_response_;
-    security::Challenge challenge_;
-    security::CommitSecret secret_;
-    std::shared_ptr<security::Signature> agg_sign_{ nullptr };
     std::chrono::steady_clock::time_point prepare_timeout_;
     std::chrono::steady_clock::time_point precommit_timeout_;
     std::vector<std::string> bft_item_vec_;

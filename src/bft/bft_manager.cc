@@ -662,7 +662,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         bft_ptr->gid(),
         0,
         true,
-        bft_ptr->secret(),
         sign,
         common::GlobalInfo::Instance()->id());
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
@@ -852,7 +851,6 @@ int BftManager::LeaderPrecommit(
         bft_ptr->gid(),
         header.id(),
         bft_msg.agree(),
-        backup_secret,
         sign,
         member_ptr->id);
 //     time3 = common::TimeUtils::TimestampUs();
@@ -931,10 +929,10 @@ int BftManager::LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr) {
 int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
-    security::Response sec_res(
-            bft_ptr->secret(),
-            bft_ptr->challenge(),
-            *(security::Schnorr::Instance()->prikey()));
+//     security::Response sec_res(
+//             bft_ptr->secret(),
+//             bft_ptr->challenge(),
+//             *(security::Schnorr::Instance()->prikey()));
     libff::alt_bn128_G1 sign;
     if (bls::BlsManager::Instance()->Sign(bft_ptr->precommit_hash(), &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
@@ -944,7 +942,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     if (bft_ptr->LeaderCommitOk(
             elect::ElectManager::Instance()->local_node_member_index(),
             true,
-            sec_res,
             sign,
             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
@@ -997,11 +994,6 @@ int BftManager::BackupPrecommit(
         return kBftError;
     }
 
-    security::Challenge agg_challenge(bft_msg.challenge());
-    security::Response agg_res(
-        bft_ptr->secret(),
-        agg_challenge,
-        *(security::Schnorr::Instance()->prikey()));
     // check prepare multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1012,7 +1004,6 @@ int BftManager::BackupPrecommit(
         bft_msg,
         local_node,
         precommit_data,
-        agg_res,
         true,
         sign_hash,
         *msg);
@@ -1125,7 +1116,6 @@ int BftManager::LeaderCommit(
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
         bft_msg.agree(),
-        agg_res,
         sign,
         member_ptr->id);
 //     time4 = common::TimeUtils::TimestampUs();
@@ -1185,11 +1175,6 @@ int BftManager::LeaderCallCommit(
     }
 
     auto& tenon_block = bft_ptr->prpare_block();
-    std::string agg_sign_challenge_str;
-    std::string agg_sign_response_str;
-    bft_ptr->agg_sign()->Serialize(agg_sign_challenge_str, agg_sign_response_str);
-    tenon_block->set_agg_sign_challenge(agg_sign_challenge_str);
-    tenon_block->set_agg_sign_response(agg_sign_response_str);
     tenon_block->set_pool_index(bft_ptr->pool_index());
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
@@ -1314,11 +1299,6 @@ int BftManager::BackupCommit(
     if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
         return kBftError;
     }
-
-//     if (VerifyAggSignature(bft_ptr, bft_msg) != kBftSuccess) {
-//         BFT_ERROR("check bft agg signature error!");
-//         return kBftError;
-//     }
 
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1678,17 +1658,6 @@ int BftManager::VerifyLeaderSignature(
             sign,
             bft_ptr->leader_mem_ptr()->pubkey)) {
         BFT_ERROR("check signature error!");
-        return kBftError;
-    }
-
-    return kBftSuccess;
-}
-
-int BftManager::VerifyAggSignature(
-        BftInterfacePtr& bft_ptr,
-        const bft::protobuf::BftMessage& bft_msg) {
-    if (bft_ptr->BackupCheckAggSign(bft_msg) != kBftSuccess) {
-        BFT_ERROR("check agg sign failed!");
         return kBftError;
     }
 
