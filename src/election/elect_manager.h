@@ -52,6 +52,10 @@ public:
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
+    libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
+        return height_with_block_.GetCommonPublicKey(height, network_id);
+    }
+
     std::unordered_set<std::string> leaders(uint32_t network_id) {
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
         auto iter = network_leaders_.find(network_id);

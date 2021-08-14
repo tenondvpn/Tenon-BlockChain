@@ -83,6 +83,30 @@ public:
             height);
     }
 
+    libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return;
+        }
+
+        if (members_ptrs_[network_id][0] != nullptr &&
+                members_ptrs_[network_id][0]->height == height) {
+            return members_ptrs_[network_id][0]->common_bls_publick_key;
+        }
+
+        if (members_ptrs_[network_id][1] != nullptr &&
+                members_ptrs_[network_id][1]->height == height) {
+            return members_ptrs_[network_id][1]->common_bls_publick_key;
+        }
+
+        if (members_ptrs_[network_id][2] != nullptr &&
+                members_ptrs_[network_id][2]->height == height) {
+            return members_ptrs_[network_id][2]->common_bls_publick_key;
+        }
+
+        std::lock_guard<std::mutex> guard(height_with_members_mutex_);
+        return height_with_common_pks_[network_id][height];
+    }
+
     void SetCommonPublicKey(
             uint64_t height,
             uint32_t network_id,

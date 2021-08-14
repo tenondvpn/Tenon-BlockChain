@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "bft/bft_interface.h"
 
+#include <bls/bls_sign.h>
+
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
@@ -211,9 +213,7 @@ int BftInterface::LeaderPrecommitOk(
 //     BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
 //         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
     auto now_timestamp = std::chrono::steady_clock::now();
-    if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
-            (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
-            now_timestamp >= prepare_timeout_)) {
+    if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
         LeaderCreatePreCommitAggChallenge();
         leader_handled_precommit_ = true;
         return kBftAgree;
@@ -246,22 +246,13 @@ int BftInterface::LeaderCommitOk(
     secret_.Serialize(sec_str);
     if (agree) {
         auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
-        if (!security::MultiSign::Instance()->VerifyResponse(
-                res,
-                challenge_,
-                mem_ptr->pubkey,
-                mem_ptr->commit_point)) {
-            BFT_ERROR("verify response failed!");
-            commit_oppose_set_.insert(id);
-        } else {
-            commit_aggree_set_.insert(id);
-            precommit_bitmap_.Set(index);
-            auto backup_res = std::make_shared<BackupResponse>();
-            backup_res->response = res;
-            backup_res->index = index;
-            backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
-            backup_commit_signs_[index] = backup_sign;
-        }
+        commit_aggree_set_.insert(id);
+        precommit_bitmap_.Set(index);
+        auto backup_res = std::make_shared<BackupResponse>();
+        backup_res->response = res;
+        backup_res->index = index;
+        backup_precommit_response_[index] = backup_res;  // just cover with rechallenge
+        backup_commit_signs_[index] = backup_sign;
     } else {
         prepare_bitmap_.UnSet(index);
         if (prepare_bitmap_.valid_count() < min_aggree_member_count_) {
@@ -283,20 +274,6 @@ int BftInterface::LeaderCommitOk(
         }
 
         return kBftAgree;
-    }
-
-    auto now_timestamp = std::chrono::steady_clock::now();
-    if (now_timestamp >= precommit_timeout_) {
-        // todo re-challenge
-        if (precommit_bitmap_.valid_count() < min_aggree_member_count_) {
-            BFT_ERROR("precommit_bitmap_.valid_count() failed!");
-            return kBftOppose;
-        }
-
-        prepare_bitmap_ = precommit_bitmap_;
-        LeaderCreatePreCommitAggChallenge();
-        RechallengePrecommitClear();
-        return kBftReChallenge;
     }
 
     return kBftWaitingBackup;
@@ -360,6 +337,7 @@ void BftInterface::RechallengePrecommitClear() {
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge() {
+    std::vector<libff::alt_bn128_G1> all_signs;
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = prepare_bitmap_.data().size() * 64;
     std::vector<security::CommitPoint> points;
@@ -374,6 +352,49 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         assert(iter != backup_prepare_response_.end());
         mem_ptr->commit_point = security::CommitPoint(iter->second->secret);
         points.push_back(mem_ptr->commit_point);
+        all_signs.push_back(backup_precommit_signs_[i]);
+    }
+
+    uint32_t t = min_aggree_member_count_;
+    uint32_t n = members_ptr_->size();
+    std::vector<size_t> idx_vec;
+    for (uint32_t i = 0; i < bit_size; ++i) {
+        if (!prepare_bitmap_.Valid(i)) {
+            continue;
+        }
+
+        idx_vec.push_back(i + 1);
+        if (idx_vec.size() >= min_aggree_member_count_) {
+            break;
+        }
+    }
+
+    try {
+        signatures::Bls bls_instance = signatures::Bls(t, n);
+        auto lagrange_coeffs = bls_instance.LagrangeCoeffs(idx_vec);
+        bls_precommit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
+            all_signs,
+            lagrange_coeffs));
+        std::string msg_hash_src = prepare_hash();
+        for (int32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
+            msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
+        }
+
+        precommit_hash_ = common::Hash::Hash256(msg_hash_src);
+        if (bls::BlsSign::Verify(
+                t,
+                n,
+                *bls_precommit_agg_sign_,
+                precommit_hash_,
+                elect::ElectManager::Instance()->GetCommonPublicKey(
+                elect_height_,
+                network_id_)) != bls::kBlsSuccess) {
+            return kBftError;
+        }
+
+        bls_precommit_agg_sign_->to_affine_coordinates();
+    } catch (...) {
+        return kBftError;
     }
 
     auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
@@ -387,6 +408,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
 
 int BftInterface::LeaderCreateCommitAggSign() {
     assert(precommit_bitmap_ == prepare_bitmap_);
+    std::vector<libff::alt_bn128_G1> all_signs;
     std::vector<security::Response> responses;
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = precommit_bitmap_.data().size() * 64;
@@ -400,6 +422,49 @@ int BftInterface::LeaderCreateCommitAggSign() {
         assert(iter != backup_precommit_response_.end());
         responses.push_back(iter->second->response);
         pubkeys.push_back(mem_ptr->pubkey);
+        all_signs.push_back(backup_commit_signs_[i]);
+    }
+
+    uint32_t t = min_aggree_member_count_;
+    uint32_t n = members_ptr_->size();
+    std::vector<size_t> idx_vec;
+    for (uint32_t i = 0; i < bit_size; ++i) {
+        if (!precommit_bitmap_.Valid(i)) {
+            continue;
+        }
+
+        idx_vec.push_back(i + 1);
+        if (idx_vec.size() >= min_aggree_member_count_) {
+            break;
+        }
+    }
+
+    try {
+        signatures::Bls bls_instance = signatures::Bls(t, n);
+        auto lagrange_coeffs = bls_instance.LagrangeCoeffs(idx_vec);
+        bls_commit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
+            all_signs,
+            lagrange_coeffs));
+        std::string msg_hash_src = precommit_hash();
+        for (int32_t i = 0; i < precommit_bitmap_.data().size(); ++i) {
+            msg_hash_src += std::to_string(precommit_bitmap_.data()[i]);
+        }
+
+        commit_hash_ = common::Hash::Hash256(msg_hash_src);
+        if (bls::BlsSign::Verify(
+                t,
+                n,
+                *bls_commit_agg_sign_,
+                commit_hash_,
+                elect::ElectManager::Instance()->GetCommonPublicKey(
+                elect_height_,
+                network_id_)) != bls::kBlsSuccess) {
+            return kBftError;
+        }
+
+        bls_commit_agg_sign_->to_affine_coordinates();
+    } catch (...) {
+        return kBftError;
     }
 
     auto agg_response = security::MultiSign::AggregateResponses(responses);

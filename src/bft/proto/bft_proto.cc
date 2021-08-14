@@ -181,6 +181,14 @@ void BftProto::LeaderCreatePreCommit(
         bft_msg.set_challenge(challenge_str);
     }
 
+    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
+    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+        bft_msg.add_bitmap(bitmap_data[i]);
+    }
+
+    auto& bls_precommit_sign = bft_ptr->bls_precommit_agg_sign();
+    bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->X));
+    bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(
             bft_ptr->prepare_hash(),
@@ -209,9 +217,9 @@ void BftProto::BackupCreatePreCommit(
         const bft::protobuf::BftMessage& from_bft_msg,
         const dht::NodePtr& local_node,
         const std::string& data,
-        const std::string& leader_ecdh_key,
         const security::Response& agg_res,
         bool agree,
+        const std::string& sign_hash,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(from_header.src_dht_key());
@@ -233,20 +241,10 @@ void BftProto::BackupCreatePreCommit(
     std::string agg_res_str;
     agg_res.Serialize(agg_res_str);
     bft_msg.set_response(agg_res_str);
-//     std::string enc_data;
-// 
-//     if (security::Crypto::Instance()->GetEncryptData(
-//             leader_ecdh_key,
-//             sha128,
-//             &enc_data) != security::kSecuritySuccess) {
-//         return;
-//     }
-// 
-//     bft_msg.set_backup_enc_data(enc_data);
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(
-            from_bft_msg.prepare_hash(),
+            sign_hash,
             &bls_sign_x,
             &bls_sign_y) != bls::kBlsSuccess) {
         return;
@@ -255,8 +253,6 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_bls_sign_x(bls_sign_x);
     bft_msg.set_bls_sign_y(bls_sign_y);
     SetLocalPublicIpPort(local_node, bft_msg);
-//     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup precommit pool index: %d, step: %d, bft gid: %s",
-//         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
     msg.set_data(bft_msg.SerializeAsString());
 }
 

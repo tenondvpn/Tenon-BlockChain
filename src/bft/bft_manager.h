@@ -76,10 +76,15 @@ private:
         std::string* tx_hash);
     int VerifyLeaderSignature(
         BftInterfacePtr& bft_ptr,
-        const bft::protobuf::BftMessage& bft_msg);
+        const bft::protobuf::BftMessage& bft_msg,
+        std::string* sign_hash);
     int VerifyAggSignature(
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg);
+    int VerifyBlsAggSignature(
+        BftInterfacePtr& bft_ptr,
+        const bft::protobuf::BftMessage& bft_msg,
+        const std::string& sign_hash);
     void LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader);
     void HandleToAccountTxBlock(
         const transport::protobuf::Header& header,

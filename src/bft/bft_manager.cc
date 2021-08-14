@@ -12,6 +12,7 @@
 #include "block/account_manager.h"
 #include "bls/bls_utils.h"
 #include "bls/bls_manager.h"
+#include "bls/bls_sign.h"
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "common/random.h"
@@ -935,7 +936,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
             bft_ptr->challenge(),
             *(security::Schnorr::Instance()->prikey()));
     libff::alt_bn128_G1 sign;
-    if (bls::BlsManager::Instance()->Sign(bft_ptr->prepare_hash(), &sign) != bls::kBlsSuccess) {
+    if (bls::BlsManager::Instance()->Sign(bft_ptr->precommit_hash(), &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
         return kBftError;
     }
@@ -974,7 +975,8 @@ int BftManager::BackupPrecommit(
         return kBftSuccess;
     }
 
-    if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
+    std::string sign_hash;
+    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
@@ -986,6 +988,10 @@ int BftManager::BackupPrecommit(
         return kBftSuccess;
     }
 
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
+        return kBftError;
+    }
+
     if (!bft_msg.has_challenge()) {
         BFT_ERROR("leader pre commit message must has challenge.");
         return kBftError;
@@ -993,55 +999,23 @@ int BftManager::BackupPrecommit(
 
     security::Challenge agg_challenge(bft_msg.challenge());
     security::Response agg_res(
-            bft_ptr->secret(),
-            agg_challenge,
-            *(security::Schnorr::Instance()->prikey()));
+        bft_ptr->secret(),
+        agg_challenge,
+        *(security::Schnorr::Instance()->prikey()));
     // check prepare multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     auto msg = std::make_shared<transport::protobuf::Header>();
     std::string precommit_data;
-    if (bft_ptr->PreCommit(false, precommit_data) != kBftSuccess) {
-//         BFT_DEBUG("bft backup pre-commit failed! not agree bft gid: %s",
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        std::string rand_num_str = std::to_string(rand() % (std::numeric_limits<int>::max)());
-        if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
-            BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
-//             assert(false);
-            return kBftError;
-        }
-
-        BftProto::BackupCreatePreCommit(
-            header,
-            bft_msg,
-            local_node,
-            rand_num_str,
-            bft_ptr->leader_mem_ptr()->leader_ecdh_key,
-            agg_res,
-            false,
-            *msg);
-        RemoveBft(bft_ptr->gid(), false);
-    } else {
-//         BFT_DEBUG("bft backup pre-commit from: %d success! agree bft gid: %s, from: %s:%d",
-//             header.from_port(), common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-//             bft_msg.node_ip().c_str(), bft_msg.node_port());
-        if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
-            BFT_ERROR("get leader ecdh key failed [%s]", common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
-//             assert(false);
-            return kBftError;
-        }
-
-        BftProto::BackupCreatePreCommit(
-            header,
-            bft_msg,
-            local_node,
-            precommit_data,
-            bft_ptr->leader_mem_ptr()->leader_ecdh_key,
-            agg_res,
-            true,
-            *msg);
-    }
-
+    BftProto::BackupCreatePreCommit(
+        header,
+        bft_msg,
+        local_node,
+        precommit_data,
+        agg_res,
+        true,
+        sign_hash,
+        *msg);
     if (!msg->has_data()) {
         return kBftError;
     }
@@ -1126,7 +1100,7 @@ int BftManager::LeaderCommit(
             bft_ptr->members_ptr()->size(),
             member_ptr->bls_publick_key,
             sign,
-            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
+            bft_ptr->precommit_hash()) != bls::kBlsSuccess) {
         BFT_ERROR("verify precommit hash error!");
         return kBftError;
     }
@@ -1222,6 +1196,11 @@ int BftManager::LeaderCallCommit(
         tenon_block->add_bitmap(bitmap_data[i]);
     }
 
+    auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
+    tenon_block.set_bls_agg_sign_x(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->X));
+    tenon_block.set_bls_agg_sign_y(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->Y));
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (tenon_block->tx_list_size() == 1 &&
@@ -1319,21 +1298,27 @@ int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (VerifyLeaderSignature(bft_ptr, bft_msg) != kBftSuccess) {
+    std::string sign_hash;
+    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
 
     if (!bft_msg.agree()) {
-        BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         RemoveBft(bft_ptr->gid(), false);
         return kBftSuccess;
     }
     
-    if (VerifyAggSignature(bft_ptr, bft_msg) != kBftSuccess) {
-        BFT_ERROR("check bft agg signature error!");
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
         return kBftError;
     }
+
+//     if (VerifyAggSignature(bft_ptr, bft_msg) != kBftSuccess) {
+//         BFT_ERROR("check bft agg signature error!");
+//         return kBftError;
+//     }
 
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1349,9 +1334,11 @@ int BftManager::BackupCommit(
     }
 
     auto& tenon_block = bft_ptr->prpare_block();
-    tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
-    tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
+//     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
+//     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
+    tenon_block->set_bls_agg_sign_x(bft_msg.bls_sign_x());
+    tenon_block->set_bls_agg_sign_y(bft_msg.bls_sign_y());
     for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
         tenon_block->add_bitmap(bft_msg.bitmap(i));
     }
@@ -1656,7 +1643,8 @@ int BftManager::VerifySignature(
 
 int BftManager::VerifyLeaderSignature(
         BftInterfacePtr& bft_ptr,
-        const bft::protobuf::BftMessage& bft_msg) {
+        const bft::protobuf::BftMessage& bft_msg,
+        std::string* sign_hash) {
     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
         BFT_ERROR("backup has no sign");
         return kBftError;
@@ -1670,11 +1658,23 @@ int BftManager::VerifyLeaderSignature(
             msg_hash_src += std::to_string(bft_msg.bitmap(i));
         }
 
-        hash_to_sign = common::Hash::Hash256(msg_hash_src);
+        msg_hash_src = common::Hash::Hash256(msg_hash_src);
+        for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
+        }
+
+        *sign_hash = common::Hash::Hash256(msg_hash_src);
+    } else if (bft_msg.bft_step() == kBftPreCommit) {
+        std::string msg_hash_src = bft_ptr->prepare_hash();
+        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.bitmap(i));
+        }
+
+        *sign_hash = common::Hash::Hash256(msg_hash_src);
     }
 
     if (!security::Schnorr::Instance()->Verify(
-            hash_to_sign,
+            *sign_hash,
             sign,
             bft_ptr->leader_mem_ptr()->pubkey)) {
         BFT_ERROR("check signature error!");
@@ -1694,6 +1694,54 @@ int BftManager::VerifyAggSignature(
 
     return kBftSuccess;
 }
+
+int BftManager::VerifyBlsAggSignature(
+        BftInterfacePtr& bft_ptr,
+        const bft::protobuf::BftMessage& bft_msg,
+        const std::string& sign_hash) {
+//     std::string hash_to_sign = bft_ptr->prepare_hash();
+//     if (bft_msg.bft_step() == kBftCommit) {
+//         std::string msg_hash_src = bft_ptr->prepare_hash();
+//         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+//             msg_hash_src += std::to_string(bft_msg.bitmap(i));
+//         }
+// 
+//         msg_hash_src = common::Hash::Hash256(msg_hash_src);
+//         for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+//             msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
+//         }
+// 
+//         *sign_hash = common::Hash::Hash256(msg_hash_src);
+//     } else if (bft_msg.bft_step() == kBftPreCommit) {
+//         std::string msg_hash_src = bft_ptr->prepare_hash();
+//         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+//             msg_hash_src += std::to_string(bft_msg.bitmap(i));
+//         }
+// 
+//         *sign_hash = common::Hash::Hash256(msg_hash_src);
+//     }
+// 
+    libff::alt_bn128_G1 sign;
+    sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
+    sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
+    sign.Z = libff::alt_bn128_Fq::one();
+    uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
+    uint32_t n = bft_ptr->members_ptr()->size();
+    signatures::Bls bls_instance = signatures::Bls(t, n);
+    if (bls::BlsSign::Verify(
+            t,
+            n,
+            sign,
+            sign_hash,
+            elect::ElectManager::Instance()->GetCommonPublicKey(
+            bft_ptr->elect_height(),
+            bft_ptr->network_id())) != bls::kBlsSuccess) {
+        return kBftError;
+    }
+
+    return kBftSuccess;
+}
+
 
 int BftManager::AddKeyValueSyncBlock(
         const transport::protobuf::Header& header,

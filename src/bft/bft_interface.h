@@ -205,6 +205,20 @@ public:
         return secret_;
     }
 
+    const std::string& precommit_hash() const {
+        return precommit_hash_;
+    }
+
+    const std::shared_ptr<libff::alt_bn128_G1>& bls_precommit_agg_sign() const {
+        assert(bls_precommit_agg_sign_ != nullptr);
+        return bls_precommit_agg_sign_;
+    }
+
+    const std::shared_ptr<libff::alt_bn128_G1>& bls_commit_agg_sign() const {
+        assert(bls_commit_agg_sign_ != nullptr);
+        return bls_commit_agg_sign_;
+    }
+
     const std::shared_ptr<security::Signature>& agg_sign() const {
         assert(agg_sign_ != nullptr);
         return agg_sign_;
@@ -421,6 +435,10 @@ protected:
     uint64_t elect_height_{ 0 };
     libff::alt_bn128_G1 backup_precommit_signs_[common::kEachShardMaxNodeCount];
     libff::alt_bn128_G1 backup_commit_signs_[common::kEachShardMaxNodeCount];
+    std::shared_ptr<libff::alt_bn128_G1> bls_precommit_agg_sign_{ nullptr };
+    std::shared_ptr<libff::alt_bn128_G1> bls_commit_agg_sign_{ nullptr };
+    std::string precommit_hash_;
+    std::string commit_hash_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
