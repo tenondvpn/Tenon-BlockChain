@@ -135,7 +135,7 @@ private:
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr);
-    void CheckCommitBackupRecall();
+//     void CheckCommitBackupRecall();
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 

@@ -62,7 +62,6 @@ public:
     int CheckTimeout();
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg);
-    void CheckCommitRecallBackup();
 
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;

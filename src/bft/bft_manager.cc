@@ -45,7 +45,7 @@ BftManager::BftManager() {
         kBftTimeoutCheckPeriod,
         std::bind(&BftManager::CheckTimeout, this));
     BlockToDb();
-    CheckCommitBackupRecall();
+//     CheckCommitBackupRecall();
 }
 
 BftManager::~BftManager() {}
@@ -1969,22 +1969,22 @@ void BftManager::VerifyWaitingBlock() {
         kBlockToDbPeriod,
         std::bind(&BftManager::VerifyWaitingBlock, this));
 }
-
-void BftManager::CheckCommitBackupRecall() {
-    std::unordered_map<std::string, BftInterfacePtr> bft_hash_map;
-    {
-        std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
-        bft_hash_map = bft_hash_map_;
-    }
-
-    for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end(); ++iter) {
-        iter->second->CheckCommitRecallBackup();
-    }
-
-    leader_resend_tick_.CutOff(
-        300000,
-        std::bind(&BftManager::CheckCommitBackupRecall, this));
-}
+// 
+// void BftManager::CheckCommitBackupRecall() {
+//     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map;
+//     {
+//         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
+//         bft_hash_map = bft_hash_map_;
+//     }
+// 
+//     for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end(); ++iter) {
+//         iter->second->CheckCommitRecallBackup();
+//     }
+// 
+//     leader_resend_tick_.CutOff(
+//         300000,
+//         std::bind(&BftManager::CheckCommitBackupRecall, this));
+// }
 
 }  // namespace bft
 
