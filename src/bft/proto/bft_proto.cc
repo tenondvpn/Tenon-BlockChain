@@ -269,11 +269,16 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     bft_msg.set_agree(agree);
-    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
-    std::string msg_hash_src = bft_ptr->precommit_hash();
+    const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
         bft_msg.add_bitmap(bitmap_data[i]);
-        msg_hash_src += std::to_string(bitmap_data[i]);
+    }
+
+    std::string msg_hash_src = bft_ptr->precommit_hash();
+    const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
+    for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
+        bft_msg.add_commit_bitmap(commit_bitmap_data[i]);
+        msg_hash_src += std::to_string(commit_bitmap_data[i]);
     }
 
     std::string hash_to_sign = common::Hash::Hash256(msg_hash_src);
