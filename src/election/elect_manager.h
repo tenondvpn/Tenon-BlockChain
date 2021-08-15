@@ -111,7 +111,8 @@ private:
     void ChangeInvalidLeader(uint32_t network_id, uint32_t leader_index);
     void UpdatePrevElectMembers(
         const elect::MembersPtr& members,
-        protobuf::ElectBlock& elect_block);
+        protobuf::ElectBlock& elect_block,
+        bool elected);
     void ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected);
     void ProcessNewElectBlock(
         uint64_t height,

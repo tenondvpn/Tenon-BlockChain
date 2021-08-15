@@ -390,9 +390,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_block.prev_members().prev_elect_height();
     }
 
-    if (*elected) {
-        UpdatePrevElectMembers(shard_members_ptr, elect_block);
-    }
+    UpdatePrevElectMembers(shard_members_ptr, elect_block, *elected);
 }
 
 void ElectManager::ProcessNewElectBlock(
@@ -428,7 +426,8 @@ void ElectManager::ProcessNewElectBlock(
 
 void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
-        protobuf::ElectBlock& elect_block) {
+        protobuf::ElectBlock& elect_block,
+        bool elected) {
     if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
     }
@@ -461,11 +460,13 @@ void ElectManager::UpdatePrevElectMembers(
         elect_block.prev_members().prev_elect_height(),
         elect_block.shard_network_id(),
         *pkey.getPublicKey());
-    bls::BlsManager::Instance()->SetUsedElectionBlock(
-        elect_block.prev_members().prev_elect_height(),
-        elect_block.shard_network_id(),
-        members->size(),
-        *pkey.getPublicKey());
+    if (elected) {
+        bls::BlsManager::Instance()->SetUsedElectionBlock(
+            elect_block.prev_members().prev_elect_height(),
+            elect_block.shard_network_id(),
+            members->size(),
+            *pkey.getPublicKey());
+    }
 }
 
 int ElectManager::BackupCheckElectionBlockTx(
