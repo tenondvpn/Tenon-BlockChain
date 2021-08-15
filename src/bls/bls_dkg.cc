@@ -170,10 +170,10 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
         }
     }
 
-    auto message_hash = common::Hash::keccak256(*content_to_hash);
+    *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+    if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
         return false;
     }
 
@@ -340,6 +340,7 @@ void BlsDkg::HandleFinish(
         if (iter->second->count > max_finish_count_) {
             max_finish_count_ = iter->second->count;
             max_finish_hash_ = msg_hash;
+            std::cout << "finsh called: " << common::Encode::HexEncode(max_finish_hash_) << ", count: " << max_finish_count_ << std::endl;
         }
 
         return;
@@ -357,6 +358,7 @@ void BlsDkg::HandleFinish(
         max_finish_count_ = 1;
         max_finish_hash_ = msg_hash;
     }
+
 }
 
 void BlsDkg::BroadcastVerfify() try {

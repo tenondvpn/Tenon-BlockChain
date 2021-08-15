@@ -1541,7 +1541,7 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    std::string hash_to_sign = bft_ptr->prepare_hash();
+    *sign_hash = bft_ptr->prepare_hash();
     if (bft_msg.agree()) {
         if (bft_msg.bft_step() == kBftCommit) {
             std::string msg_hash_src = bft_ptr->prepare_hash();
