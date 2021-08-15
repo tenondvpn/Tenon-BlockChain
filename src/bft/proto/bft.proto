@@ -52,14 +52,12 @@ message Block {
     optional uint64 consistency_random = 7;
     optional uint32 electblock_height = 8;
 	repeated uint64 bitmap = 9;
-	optional bytes agg_pubkey = 10;
-	optional bytes agg_sign_challenge = 11;
-	optional bytes agg_sign_response = 12;
-    repeated TxInfo tx_list = 13;
-	optional uint64 timestamp = 14;
-	optional uint64 timeblock_height = 15;
-    optional bytes bls_agg_sign_x = 16;
-	optional bytes bls_agg_sign_y = 17;
+    repeated TxInfo tx_list = 10;
+	optional uint64 timestamp = 11;
+	optional uint64 timeblock_height = 11;
+    optional bytes bls_agg_sign_x = 12;
+	optional bytes bls_agg_sign_y = 13;
+	repeated uint64 commit_bitmap = 14;
 }
 
 message TxPrepareItem {

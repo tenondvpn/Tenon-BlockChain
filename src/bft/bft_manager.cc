@@ -294,15 +294,16 @@ int BftManager::CreateGenisisBlock(
     return kBftSuccess;
 }
 
-bool BftManager::VerifyAggSignWithMembers(const elect::MembersPtr& members, const bft::protobuf::Block& block) {
-    auto sign = security::Signature(block.agg_sign_challenge(), block.agg_sign_response());
+bool BftManager::VerifyAggSignWithMembers(
+        const elect::MembersPtr& members,
+        const bft::protobuf::Block& block) {
     std::vector<uint64_t> data;
     for (int32_t i = 0; i < block.bitmap_size(); ++i) {
         data.push_back(block.bitmap(i));
     }
 
+    auto block_hash = GetBlockHash(block);
     common::Bitmap leader_agg_bitmap(data);
-    std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = leader_agg_bitmap.data().size() * 64;
     for (uint32_t i = 0; i < bit_size; ++i) {
         if (!leader_agg_bitmap.Valid(i)) {
@@ -313,16 +314,25 @@ bool BftManager::VerifyAggSignWithMembers(const elect::MembersPtr& members, cons
             return false;
         }
 
-        pubkeys.push_back((*members)[i]->pubkey);
+        block_hash += std::to_string(leader_agg_bitmap.data()[i]);
     }
 
-    auto agg_pubkey = security::MultiSign::AggregatePubKeys(pubkeys);
-    auto block_hash = GetBlockHash(block);
-    assert(agg_pubkey != nullptr);
-    if (!security::MultiSign::Instance()->MultiSigVerify(
-            block_hash,
+    auto hash = common::Hash::Hash256(block_hash);
+    libff::alt_bn128_G1 sign;
+    sign.X = libff::alt_bn128_Fq(block.bls_agg_sign_x().c_str());
+    sign.Y = libff::alt_bn128_Fq(block.bls_agg_sign_y().c_str());
+    sign.Z = libff::alt_bn128_Fq::one();
+    uint32_t t = common::GetSignerCount(block.commit_bitmap_size());
+    uint32_t n = block.commit_bitmap_size();
+    if (bls::BlsSign::Verify(
+            t,
+            n,
             sign,
-            *agg_pubkey)) {
+            hash,
+            elect::ElectManager::Instance()->GetCommonPublicKey(
+            block.electblock_height(),
+            block.network_id())) != bls::kBlsSuccess) {
+        BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
         return false;
     }
 
@@ -334,12 +344,12 @@ bool BftManager::AggSignValid(
         uint32_t type,
         const bft::protobuf::Block& block) {
     assert(thread_idx < transport::kMessageHandlerThreadCount);
-    if (!block.has_agg_sign_challenge() ||
-            !block.has_agg_sign_response() ||
+    if (!block.has_bls_agg_sign_x() ||
+            !block.has_bls_agg_sign_y() ||
             block.bitmap_size() <= 0) {
-        BFT_ERROR("commit must have agg sign. block.has_agg_sign(): %d,"
-            "block.has_agg_sign_response(): %d, block.bitmap_size(): %u",
-            block.has_agg_sign_challenge(), block.has_agg_sign_response(), block.bitmap_size());
+        BFT_ERROR("commit must have agg sign. block.has_bls_agg_sign_y(): %d,"
+            "block.has_bls_agg_sign_y(): %d, block.bitmap_size(): %u",
+            block.has_bls_agg_sign_x(), block.has_bls_agg_sign_y(), block.bitmap_size());
         return false;
     }
 
@@ -1112,9 +1122,14 @@ int BftManager::LeaderCallCommit(
 
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_pool_index(bft_ptr->pool_index());
-    const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
-    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
-        tenon_block->add_bitmap(bitmap_data[i]);
+    const auto& prepare_bitmap_data = bft_ptr->prepare_bitmap().data();
+    for (uint32_t i = 0; i < prepare_bitmap_data.size(); ++i) {
+        tenon_block->add_bitmap(prepare_bitmap_data[i]);
+    }
+
+    const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
+    for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
+        tenon_block->add_commit_bitmap(commit_bitmap_data[i]);
     }
 
     auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
@@ -1217,6 +1232,10 @@ int BftManager::BackupCommit(
     tenon_block->set_bls_agg_sign_y(bft_msg.bls_sign_y());
     for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
         tenon_block->add_bitmap(bft_msg.bitmap(i));
+    }
+
+    for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+        tenon_block->add_commit_bitmap(bft_msg.commit_bitmap(i));
     }
 
     assert(tenon_block->bitmap_size() > 0);
