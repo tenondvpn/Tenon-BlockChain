@@ -25,9 +25,6 @@ namespace tenon {
 namespace bls {
 
 BlsDkg::BlsDkg() {
-    network::Route::Instance()->RegisterMessage(
-        common::kBlsMessage,
-        std::bind(&BlsDkg::HandleMessage, this, std::placeholders::_1));
 }
 
 BlsDkg::~BlsDkg() {}

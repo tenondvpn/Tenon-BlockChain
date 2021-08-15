@@ -13,6 +13,7 @@
 #include "db/db.h"
 #include "election/elect_manager.h"
 #include "init/init_utils.h"
+#include "network/route.h"
 #include "security/crypto.h"
 #include "security/schnorr.h"
 
@@ -171,8 +172,17 @@ int BlsManager::Verify(
     return kBlsError;
 }
 
+void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
+    if (waiting_bls_ != nullptr) {
+        waiting_bls_->HandleMessage(header);
+    }
+}
+
 BlsManager::BlsManager() {
     initLibSnark();
+    network::Route::Instance()->RegisterMessage(
+        common::kBlsMessage,
+        std::bind(&BlsManager::HandleMessage, this, std::placeholders::_1));
 }
 
 BlsManager::~BlsManager() {}

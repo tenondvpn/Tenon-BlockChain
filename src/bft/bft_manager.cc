@@ -400,12 +400,12 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-//     if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
-//         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
-//             tx_bft.to_tx().block().height(),
-//             tx_bft.to_tx().block().tx_list(0).type());
-//         return;
-//     }
+    if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
+        BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
+            tx_bft.to_tx().block().height(),
+            tx_bft.to_tx().block().tx_list(0).type());
+        return;
+    }
  
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kRootBlock, tx_bft.to_tx().block(), block_ptr);
@@ -471,10 +471,10 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-//     if (!AggSignValid(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block())) {
-//         BFT_ERROR("sync block agg sign verify failed!");
-//         return;
-//     }
+    if (!AggSignValid(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block())) {
+        BFT_ERROR("sync block agg sign verify failed!");
+        return;
+    }
 
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block(), block_ptr);
@@ -506,10 +506,10 @@ void BftManager::HandleToAccountTxBlock(
         return;
     }
 
-//     if (!AggSignValid(header.thread_idx(), kToBlock, tx_bft.to_tx().block())) {
-//         BFT_ERROR("ts block agg sign verify failed!");
-//         return;
-//     }
+    if (!AggSignValid(header.thread_idx(), kToBlock, tx_bft.to_tx().block())) {
+        BFT_ERROR("ts block agg sign verify failed!");
+        return;
+    }
 
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kToBlock, tx_bft.to_tx().block(), block_ptr);

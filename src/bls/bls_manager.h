@@ -39,6 +39,7 @@ public:
 private:
     BlsManager();
     ~BlsManager();
+    void HandleMessage(const transport::TransportMessagePtr& header);
 
     std::shared_ptr<bls::BlsDkg> used_bls_{ nullptr };
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };

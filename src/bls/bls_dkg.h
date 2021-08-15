@@ -33,6 +33,7 @@ public:
     void OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members);
+    void HandleMessage(const transport::TransportMessagePtr& header);
 
     void SetInitElectionBlock(
             uint32_t t,
@@ -71,7 +72,6 @@ public:
     }
 
 private:
-    void HandleMessage(const transport::TransportMessagePtr& header);
     void HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
