@@ -318,6 +318,7 @@ bool BftManager::VerifyAggSignWithMembers(
     }
 
     auto hash = common::Hash::Hash256(block_hash);
+    std::cout << "prepare hash: " << common::Encode::HexEncode(block_hash) << ", agg sign hash: " << common::Encode::HexEncode(block_hash)
     libff::alt_bn128_G1 sign;
     sign.X = libff::alt_bn128_Fq(block.bls_agg_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(block.bls_agg_sign_y().c_str());
@@ -332,7 +333,14 @@ bool BftManager::VerifyAggSignWithMembers(
             elect::ElectManager::Instance()->GetCommonPublicKey(
             block.electblock_height(),
             block.network_id())) != bls::kBlsSuccess) {
-        BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
+        auto tmp_block_hash = GetBlockHash(block);
+        BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
+            "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
+            common::Encode::HexEncode(tmp_block_hash).c_str(),
+            common::Encode::HexEncode(block_hash),
+            t, n, block.electblock_height(), block.network_id(),
+            block.bls_agg_sign_x().c_str(),
+            block.bls_agg_sign_y().c_str());
         return false;
     }
 
@@ -1161,6 +1169,14 @@ int BftManager::LeaderCallCommit(
         return kBftError;
     }
 
+    BFT_DEBUG("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
+        "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
+        common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
+        common::Encode::HexEncode(bft_ptr->precommit_hash()),
+        bft_ptr->min_aggree_member_count(), bft_ptr->member_count(),
+        tenon_block->electblock_height(), tenon_block->network_id(),
+        tenon_block->bls_agg_sign_x().c_str(),
+        tenon_block->bls_agg_sign_y().c_str());
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
