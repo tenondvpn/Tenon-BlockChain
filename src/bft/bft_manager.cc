@@ -297,15 +297,9 @@ int BftManager::CreateGenisisBlock(
 bool BftManager::VerifyAggSignWithMembers(
         const elect::MembersPtr& members,
         const bft::protobuf::Block& block) {
-    std::vector<uint64_t> data;
-    for (int32_t i = 0; i < block.bitmap_size(); ++i) {
-        data.push_back(block.bitmap(i));
-    }
-
     auto block_hash = GetBlockHash(block);
-    common::Bitmap leader_agg_bitmap(data);
-    for (uint32_t i = 0; i < leader_agg_bitmap.data().size(); ++i) {
-        block_hash += std::to_string(leader_agg_bitmap.data()[i]);
+    for (int32_t i = 0; i < block.bitmap_size(); ++i) {
+        block_hash += std::to_string(block.bitmap(i));
     }
 
     auto hash = common::Hash::Hash256(block_hash);
