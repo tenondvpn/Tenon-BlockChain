@@ -297,24 +297,9 @@ int BftManager::CreateGenisisBlock(
 bool BftManager::VerifyAggSignWithMembers(
         const elect::MembersPtr& members,
         const bft::protobuf::Block& block) {
-    std::vector<uint64_t> data;
-    for (int32_t i = 0; i < block.bitmap_size(); ++i) {
-        data.push_back(block.bitmap(i));
-    }
-
     auto block_hash = GetBlockHash(block);
-    common::Bitmap leader_agg_bitmap(data);
-    uint32_t bit_size = leader_agg_bitmap.data().size() * 64;
-    for (uint32_t i = 0; i < bit_size; ++i) {
-        if (!leader_agg_bitmap.Valid(i)) {
-            continue;
-        }
-
-        if (members->size() <= i) {
-            return false;
-        }
-
-        block_hash += std::to_string(leader_agg_bitmap.data()[i]);
+    for (int32_t i = 0; i < block.bitmap_size(); ++i) {
+        block_hash += std::to_string(block.bitmap(i));
     }
 
     auto hash = common::Hash::Hash256(block_hash);
@@ -336,7 +321,7 @@ bool BftManager::VerifyAggSignWithMembers(
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
             common::Encode::HexEncode(tmp_block_hash).c_str(),
-            common::Encode::HexEncode(block_hash).c_str(),
+            common::Encode::HexEncode(hash).c_str(),
             t, n, block.electblock_height(), block.network_id(),
             block.bls_agg_sign_x().c_str(),
             block.bls_agg_sign_y().c_str());
@@ -1168,10 +1153,10 @@ int BftManager::LeaderCallCommit(
         return kBftError;
     }
 
-    BFT_DEBUG("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
+    BFT_DEBUG("VerifyBlsAggSignature agg sign success!prepare hash: %s, agg sign hash: %s,"
         "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
         common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
-        common::Encode::HexEncode(bft_ptr->precommit_hash()),
+        common::Encode::HexEncode(bft_ptr->precommit_hash()).c_str(),
         bft_ptr->min_aggree_member_count(), bft_ptr->member_count(),
         tenon_block->electblock_height(), tenon_block->network_id(),
         tenon_block->bls_agg_sign_x().c_str(),
