@@ -170,6 +170,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_agree(agree);
     bft_msg.set_elect_height(bft_ptr->elect_height());
+    security::Signature leader_sign;
     if (agree) {
         bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
         const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
@@ -180,16 +181,23 @@ void BftProto::LeaderCreatePreCommit(
         auto& bls_precommit_sign = bft_ptr->bls_precommit_agg_sign();
         bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->X));
         bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
-    }
-    
-    security::Signature leader_sign;
-    if (!security::Schnorr::Instance()->Sign(
+        if (!security::Schnorr::Instance()->Sign(
             bft_ptr->precommit_hash(),
             *(security::Schnorr::Instance()->prikey()),
             *(security::Schnorr::Instance()->pubkey()),
             leader_sign)) {
-        BFT_ERROR("leader pre commit signature failed!");
-        return;
+            BFT_ERROR("leader pre commit signature failed!");
+            return;
+        }
+    } else {
+        if (!security::Schnorr::Instance()->Sign(
+                bft_ptr->prepare_hash(),
+                *(security::Schnorr::Instance()->prikey()),
+                *(security::Schnorr::Instance()->pubkey()),
+                leader_sign)) {
+            BFT_ERROR("leader pre commit signature failed!");
+            return;
+        }
     }
 
     std::string sign_challenge_str;
@@ -274,20 +282,21 @@ void BftProto::LeaderCreateCommit(
         bft_msg.add_bitmap(bitmap_data[i]);
     }
 
+    std::string hash_to_sign = bft_ptr->prepare_hash();
     if (agree) {
         auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
         bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->X));
         bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->Y));
+        std::string msg_hash_src = bft_ptr->precommit_hash();
+        const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
+        for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
+            bft_msg.add_commit_bitmap(commit_bitmap_data[i]);
+            msg_hash_src += std::to_string(commit_bitmap_data[i]);
+        }
+
+        hash_to_sign = common::Hash::Hash256(msg_hash_src);
     }
 
-    std::string msg_hash_src = bft_ptr->precommit_hash();
-    const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
-    for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
-        bft_msg.add_commit_bitmap(commit_bitmap_data[i]);
-        msg_hash_src += std::to_string(commit_bitmap_data[i]);
-    }
-
-    std::string hash_to_sign = common::Hash::Hash256(msg_hash_src);
     security::Signature sign;
     bool sign_res = security::Schnorr::Instance()->Sign(
         hash_to_sign,

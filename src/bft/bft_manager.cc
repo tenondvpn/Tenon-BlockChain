@@ -1542,26 +1542,28 @@ int BftManager::VerifyLeaderSignature(
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     std::string hash_to_sign = bft_ptr->prepare_hash();
-    if (bft_msg.bft_step() == kBftCommit) {
-        std::string msg_hash_src = bft_ptr->prepare_hash();
-        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.bitmap(i));
-        }
+    if (bft_msg.agree()) {
+        if (bft_msg.bft_step() == kBftCommit) {
+            std::string msg_hash_src = bft_ptr->prepare_hash();
+            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.bitmap(i));
+            }
 
-        msg_hash_src = common::Hash::Hash256(msg_hash_src);
-        for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
-        }
+            msg_hash_src = common::Hash::Hash256(msg_hash_src);
+            for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
+            }
 
-        *sign_hash = common::Hash::Hash256(msg_hash_src);
-    } else if (bft_msg.bft_step() == kBftPreCommit) {
-        std::string msg_hash_src = bft_ptr->prepare_hash();
-        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.bitmap(i));
-        }
+            *sign_hash = common::Hash::Hash256(msg_hash_src);
+        } else if (bft_msg.bft_step() == kBftPreCommit) {
+            std::string msg_hash_src = bft_ptr->prepare_hash();
+            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.bitmap(i));
+            }
 
-        *sign_hash = common::Hash::Hash256(msg_hash_src);
-        bft_ptr->set_precoimmit_hash(*sign_hash);
+            *sign_hash = common::Hash::Hash256(msg_hash_src);
+            bft_ptr->set_precoimmit_hash(*sign_hash);
+        }
     }
 
     if (!security::Schnorr::Instance()->Verify(
