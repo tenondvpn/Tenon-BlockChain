@@ -322,8 +322,8 @@ bool BftManager::VerifyAggSignWithMembers(
     sign.X = libff::alt_bn128_Fq(block.bls_agg_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(block.bls_agg_sign_y().c_str());
     sign.Z = libff::alt_bn128_Fq::one();
-    uint32_t t = common::GetSignerCount(block.commit_bitmap_size());
-    uint32_t n = block.commit_bitmap_size();
+    uint32_t t = common::GetSignerCount(members->size());
+    uint32_t n = members->size();
     if (bls::BlsSign::Verify(
             t,
             n,
@@ -336,7 +336,7 @@ bool BftManager::VerifyAggSignWithMembers(
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
             common::Encode::HexEncode(tmp_block_hash).c_str(),
-            common::Encode::HexEncode(block_hash),
+            common::Encode::HexEncode(block_hash).c_str(),
             t, n, block.electblock_height(), block.network_id(),
             block.bls_agg_sign_x().c_str(),
             block.bls_agg_sign_y().c_str());
