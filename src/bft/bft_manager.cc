@@ -390,12 +390,12 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-    if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
-        BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
-            tx_bft.to_tx().block().height(),
-            tx_bft.to_tx().block().tx_list(0).type());
-        return;
-    }
+//     if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
+//         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
+//             tx_bft.to_tx().block().height(),
+//             tx_bft.to_tx().block().tx_list(0).type());
+//         return;
+//     }
  
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kRootBlock, tx_bft.to_tx().block(), block_ptr);
@@ -461,10 +461,10 @@ void BftManager::HandleSyncBlock(
         return;
     }
 
-    if (!AggSignValid(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block())) {
-        BFT_ERROR("sync block agg sign verify failed!");
-        return;
-    }
+//     if (!AggSignValid(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block())) {
+//         BFT_ERROR("sync block agg sign verify failed!");
+//         return;
+//     }
 
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kSyncBlock, tx_bft.to_tx().block(), block_ptr);
@@ -496,10 +496,10 @@ void BftManager::HandleToAccountTxBlock(
         return;
     }
 
-    if (!AggSignValid(header.thread_idx(), kToBlock, tx_bft.to_tx().block())) {
-        BFT_ERROR("ts block agg sign verify failed!");
-        return;
-    }
+//     if (!AggSignValid(header.thread_idx(), kToBlock, tx_bft.to_tx().block())) {
+//         BFT_ERROR("ts block agg sign verify failed!");
+//         return;
+//     }
 
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kToBlock, tx_bft.to_tx().block(), block_ptr);
@@ -1188,7 +1188,11 @@ int BftManager::BackupCommit(
         return kBftSuccess;
     }
     
-    if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
+    if (bft_ptr->precommit_hash().empty()) {
+        return kBftError;
+    }
+
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->precommit_hash()) != kBftSuccess) {
         return kBftError;
     }
 
@@ -1538,6 +1542,7 @@ int BftManager::VerifyLeaderSignature(
         }
 
         *sign_hash = common::Hash::Hash256(msg_hash_src);
+        bft_ptr->set_precoimmit_hash(*sign_hash);
     }
 
     if (!security::Schnorr::Instance()->Verify(

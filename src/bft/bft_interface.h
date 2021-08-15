@@ -183,6 +183,10 @@ public:
         prepare_hash_ = prepare_hash;
     }
 
+    void set_precoimmit_hash(const std::string& precommit_hash) {
+        precommit_hash_ = precommit_hash;
+    }
+
     uint32_t leader_index() const {
         return leader_index_;
     }
