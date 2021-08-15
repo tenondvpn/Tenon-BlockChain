@@ -270,7 +270,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
     bft_msg.set_agree(agree);
     const auto& bitmap_data = bft_ptr->precommit_bitmap().data();
-    std::string msg_hash_src = bft_ptr->prepare_hash();
+    std::string msg_hash_src = bft_ptr->precommit_hash();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
         bft_msg.add_bitmap(bitmap_data[i]);
         msg_hash_src += std::to_string(bitmap_data[i]);

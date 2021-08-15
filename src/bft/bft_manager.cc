@@ -956,7 +956,7 @@ int BftManager::BackupPrecommit(
         return kBftSuccess;
     }
 
-    if (VerifyBlsAggSignature(bft_ptr, bft_msg, sign_hash) != kBftSuccess) {
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->prepare_hash()) != kBftSuccess) {
         BFT_INFO("VerifyBlsAggSignature error gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftError;
