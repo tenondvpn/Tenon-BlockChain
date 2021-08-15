@@ -1032,10 +1032,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_bitmap();
 
-  // repeated .tenon.bft.protobuf.TxInfo tx_list = 13;
+  // repeated .tenon.bft.protobuf.TxInfo tx_list = 10;
   int tx_list_size() const;
   void clear_tx_list();
-  static const int kTxListFieldNumber = 13;
+  static const int kTxListFieldNumber = 10;
   ::tenon::bft::protobuf::TxInfo* mutable_tx_list(int index);
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >*
       mutable_tx_list();
@@ -1043,6 +1043,18 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::tenon::bft::protobuf::TxInfo* add_tx_list();
   const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >&
       tx_list() const;
+
+  // repeated uint64 commit_bitmap = 15;
+  int commit_bitmap_size() const;
+  void clear_commit_bitmap();
+  static const int kCommitBitmapFieldNumber = 15;
+  ::google::protobuf::uint64 commit_bitmap(int index) const;
+  void set_commit_bitmap(int index, ::google::protobuf::uint64 value);
+  void add_commit_bitmap(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      commit_bitmap() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_commit_bitmap();
 
   // optional bytes prehash = 3;
   bool has_prehash() const;
@@ -1074,55 +1086,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_hash();
   void set_allocated_hash(::std::string* hash);
 
-  // optional bytes agg_pubkey = 10;
-  bool has_agg_pubkey() const;
-  void clear_agg_pubkey();
-  static const int kAggPubkeyFieldNumber = 10;
-  const ::std::string& agg_pubkey() const;
-  void set_agg_pubkey(const ::std::string& value);
-  #if LANG_CXX11
-  void set_agg_pubkey(::std::string&& value);
-  #endif
-  void set_agg_pubkey(const char* value);
-  void set_agg_pubkey(const void* value, size_t size);
-  ::std::string* mutable_agg_pubkey();
-  ::std::string* release_agg_pubkey();
-  void set_allocated_agg_pubkey(::std::string* agg_pubkey);
-
-  // optional bytes agg_sign_challenge = 11;
-  bool has_agg_sign_challenge() const;
-  void clear_agg_sign_challenge();
-  static const int kAggSignChallengeFieldNumber = 11;
-  const ::std::string& agg_sign_challenge() const;
-  void set_agg_sign_challenge(const ::std::string& value);
-  #if LANG_CXX11
-  void set_agg_sign_challenge(::std::string&& value);
-  #endif
-  void set_agg_sign_challenge(const char* value);
-  void set_agg_sign_challenge(const void* value, size_t size);
-  ::std::string* mutable_agg_sign_challenge();
-  ::std::string* release_agg_sign_challenge();
-  void set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge);
-
-  // optional bytes agg_sign_response = 12;
-  bool has_agg_sign_response() const;
-  void clear_agg_sign_response();
-  static const int kAggSignResponseFieldNumber = 12;
-  const ::std::string& agg_sign_response() const;
-  void set_agg_sign_response(const ::std::string& value);
-  #if LANG_CXX11
-  void set_agg_sign_response(::std::string&& value);
-  #endif
-  void set_agg_sign_response(const char* value);
-  void set_agg_sign_response(const void* value, size_t size);
-  ::std::string* mutable_agg_sign_response();
-  ::std::string* release_agg_sign_response();
-  void set_allocated_agg_sign_response(::std::string* agg_sign_response);
-
-  // optional bytes bls_agg_sign_x = 16;
+  // optional bytes bls_agg_sign_x = 13;
   bool has_bls_agg_sign_x() const;
   void clear_bls_agg_sign_x();
-  static const int kBlsAggSignXFieldNumber = 16;
+  static const int kBlsAggSignXFieldNumber = 13;
   const ::std::string& bls_agg_sign_x() const;
   void set_bls_agg_sign_x(const ::std::string& value);
   #if LANG_CXX11
@@ -1134,10 +1101,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_bls_agg_sign_x();
   void set_allocated_bls_agg_sign_x(::std::string* bls_agg_sign_x);
 
-  // optional bytes bls_agg_sign_y = 17;
+  // optional bytes bls_agg_sign_y = 14;
   bool has_bls_agg_sign_y() const;
   void clear_bls_agg_sign_y();
-  static const int kBlsAggSignYFieldNumber = 17;
+  static const int kBlsAggSignYFieldNumber = 14;
   const ::std::string& bls_agg_sign_y() const;
   void set_bls_agg_sign_y(const ::std::string& value);
   #if LANG_CXX11
@@ -1191,17 +1158,17 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint64 consistency_random() const;
   void set_consistency_random(::google::protobuf::uint64 value);
 
-  // optional uint64 timestamp = 14;
+  // optional uint64 timestamp = 11;
   bool has_timestamp() const;
   void clear_timestamp();
-  static const int kTimestampFieldNumber = 14;
+  static const int kTimestampFieldNumber = 11;
   ::google::protobuf::uint64 timestamp() const;
   void set_timestamp(::google::protobuf::uint64 value);
 
-  // optional uint64 timeblock_height = 15;
+  // optional uint64 timeblock_height = 12;
   bool has_timeblock_height() const;
   void clear_timeblock_height();
-  static const int kTimeblockHeightFieldNumber = 15;
+  static const int kTimeblockHeightFieldNumber = 12;
   ::google::protobuf::uint64 timeblock_height() const;
   void set_timeblock_height(::google::protobuf::uint64 value);
 
@@ -1223,12 +1190,6 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_consistency_random();
   void set_has_electblock_height();
   void clear_has_electblock_height();
-  void set_has_agg_pubkey();
-  void clear_has_agg_pubkey();
-  void set_has_agg_sign_challenge();
-  void clear_has_agg_sign_challenge();
-  void set_has_agg_sign_response();
-  void clear_has_agg_sign_response();
   void set_has_timestamp();
   void clear_has_timestamp();
   void set_has_timeblock_height();
@@ -1243,11 +1204,9 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bitmap_;
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo > tx_list_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > commit_bitmap_;
   ::google::protobuf::internal::ArenaStringPtr prehash_;
   ::google::protobuf::internal::ArenaStringPtr hash_;
-  ::google::protobuf::internal::ArenaStringPtr agg_pubkey_;
-  ::google::protobuf::internal::ArenaStringPtr agg_sign_challenge_;
-  ::google::protobuf::internal::ArenaStringPtr agg_sign_response_;
   ::google::protobuf::internal::ArenaStringPtr bls_agg_sign_x_;
   ::google::protobuf::internal::ArenaStringPtr bls_agg_sign_y_;
   ::google::protobuf::uint32 network_id_;
@@ -2412,10 +2371,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
-  // repeated uint64 bitmap = 12;
+  // repeated uint64 bitmap = 7;
   int bitmap_size() const;
   void clear_bitmap();
-  static const int kBitmapFieldNumber = 12;
+  static const int kBitmapFieldNumber = 7;
   ::google::protobuf::uint64 bitmap(int index) const;
   void set_bitmap(int index, ::google::protobuf::uint64 value);
   void add_bitmap(::google::protobuf::uint64 value);
@@ -2424,10 +2383,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_bitmap();
 
-  // repeated uint64 commit_bitmap = 26;
+  // repeated uint64 commit_bitmap = 21;
   int commit_bitmap_size() const;
   void clear_commit_bitmap();
-  static const int kCommitBitmapFieldNumber = 26;
+  static const int kCommitBitmapFieldNumber = 21;
   ::google::protobuf::uint64 commit_bitmap(int index) const;
   void set_commit_bitmap(int index, ::google::protobuf::uint64 value);
   void add_commit_bitmap(::google::protobuf::uint64 value);
@@ -2481,85 +2440,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_sign_response();
   void set_allocated_sign_response(::std::string* sign_response);
 
-  // optional bytes secret = 7;
-  bool has_secret() const;
-  void clear_secret();
-  static const int kSecretFieldNumber = 7;
-  const ::std::string& secret() const;
-  void set_secret(const ::std::string& value);
-  #if LANG_CXX11
-  void set_secret(::std::string&& value);
-  #endif
-  void set_secret(const char* value);
-  void set_secret(const void* value, size_t size);
-  ::std::string* mutable_secret();
-  ::std::string* release_secret();
-  void set_allocated_secret(::std::string* secret);
-
-  // optional bytes challenge = 8;
-  bool has_challenge() const;
-  void clear_challenge();
-  static const int kChallengeFieldNumber = 8;
-  const ::std::string& challenge() const;
-  void set_challenge(const ::std::string& value);
-  #if LANG_CXX11
-  void set_challenge(::std::string&& value);
-  #endif
-  void set_challenge(const char* value);
-  void set_challenge(const void* value, size_t size);
-  ::std::string* mutable_challenge();
-  ::std::string* release_challenge();
-  void set_allocated_challenge(::std::string* challenge);
-
-  // optional bytes response = 9;
-  bool has_response() const;
-  void clear_response();
-  static const int kResponseFieldNumber = 9;
-  const ::std::string& response() const;
-  void set_response(const ::std::string& value);
-  #if LANG_CXX11
-  void set_response(::std::string&& value);
-  #endif
-  void set_response(const char* value);
-  void set_response(const void* value, size_t size);
-  ::std::string* mutable_response();
-  ::std::string* release_response();
-  void set_allocated_response(::std::string* response);
-
-  // optional bytes agg_sign_challenge = 10;
-  bool has_agg_sign_challenge() const;
-  void clear_agg_sign_challenge();
-  static const int kAggSignChallengeFieldNumber = 10;
-  const ::std::string& agg_sign_challenge() const;
-  void set_agg_sign_challenge(const ::std::string& value);
-  #if LANG_CXX11
-  void set_agg_sign_challenge(::std::string&& value);
-  #endif
-  void set_agg_sign_challenge(const char* value);
-  void set_agg_sign_challenge(const void* value, size_t size);
-  ::std::string* mutable_agg_sign_challenge();
-  ::std::string* release_agg_sign_challenge();
-  void set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge);
-
-  // optional bytes agg_sign_response = 11;
-  bool has_agg_sign_response() const;
-  void clear_agg_sign_response();
-  static const int kAggSignResponseFieldNumber = 11;
-  const ::std::string& agg_sign_response() const;
-  void set_agg_sign_response(const ::std::string& value);
-  #if LANG_CXX11
-  void set_agg_sign_response(::std::string&& value);
-  #endif
-  void set_agg_sign_response(const char* value);
-  void set_agg_sign_response(const void* value, size_t size);
-  ::std::string* mutable_agg_sign_response();
-  ::std::string* release_agg_sign_response();
-  void set_allocated_agg_sign_response(::std::string* agg_sign_response);
-
-  // optional bytes data = 15;
+  // optional bytes data = 10;
   bool has_data() const;
   void clear_data();
-  static const int kDataFieldNumber = 15;
+  static const int kDataFieldNumber = 10;
   const ::std::string& data() const;
   void set_data(const ::std::string& value);
   #if LANG_CXX11
@@ -2571,10 +2455,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_data();
   void set_allocated_data(::std::string* data);
 
-  // optional bytes prepare_hash = 16;
+  // optional bytes prepare_hash = 11;
   bool has_prepare_hash() const;
   void clear_prepare_hash();
-  static const int kPrepareHashFieldNumber = 16;
+  static const int kPrepareHashFieldNumber = 11;
   const ::std::string& prepare_hash() const;
   void set_prepare_hash(const ::std::string& value);
   #if LANG_CXX11
@@ -2586,10 +2470,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_prepare_hash();
   void set_allocated_prepare_hash(::std::string* prepare_hash);
 
-  // optional bytes node_ip = 17;
+  // optional bytes node_ip = 12;
   bool has_node_ip() const;
   void clear_node_ip();
-  static const int kNodeIpFieldNumber = 17;
+  static const int kNodeIpFieldNumber = 12;
   const ::std::string& node_ip() const;
   void set_node_ip(const ::std::string& value);
   #if LANG_CXX11
@@ -2601,10 +2485,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_node_ip();
   void set_allocated_node_ip(::std::string* node_ip);
 
-  // optional bytes pubkey = 21;
+  // optional bytes pubkey = 16;
   bool has_pubkey() const;
   void clear_pubkey();
-  static const int kPubkeyFieldNumber = 21;
+  static const int kPubkeyFieldNumber = 16;
   const ::std::string& pubkey() const;
   void set_pubkey(const ::std::string& value);
   #if LANG_CXX11
@@ -2616,10 +2500,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_pubkey();
   void set_allocated_pubkey(::std::string* pubkey);
 
-  // optional bytes backup_enc_data = 22;
+  // optional bytes backup_enc_data = 17;
   bool has_backup_enc_data() const;
   void clear_backup_enc_data();
-  static const int kBackupEncDataFieldNumber = 22;
+  static const int kBackupEncDataFieldNumber = 17;
   const ::std::string& backup_enc_data() const;
   void set_backup_enc_data(const ::std::string& value);
   #if LANG_CXX11
@@ -2631,10 +2515,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_backup_enc_data();
   void set_allocated_backup_enc_data(::std::string* backup_enc_data);
 
-  // optional bytes bls_sign_x = 24;
+  // optional bytes bls_sign_x = 19;
   bool has_bls_sign_x() const;
   void clear_bls_sign_x();
-  static const int kBlsSignXFieldNumber = 24;
+  static const int kBlsSignXFieldNumber = 19;
   const ::std::string& bls_sign_x() const;
   void set_bls_sign_x(const ::std::string& value);
   #if LANG_CXX11
@@ -2646,10 +2530,10 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_bls_sign_x();
   void set_allocated_bls_sign_x(::std::string* bls_sign_x);
 
-  // optional bytes bls_sign_y = 25;
+  // optional bytes bls_sign_y = 20;
   bool has_bls_sign_y() const;
   void clear_bls_sign_y();
-  static const int kBlsSignYFieldNumber = 25;
+  static const int kBlsSignYFieldNumber = 20;
   const ::std::string& bls_sign_y() const;
   void set_bls_sign_y(const ::std::string& value);
   #if LANG_CXX11
@@ -2682,45 +2566,45 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   bool leader() const;
   void set_leader(bool value);
 
-  // optional bool agree = 13;
+  // optional bool agree = 8;
   bool has_agree() const;
   void clear_agree();
-  static const int kAgreeFieldNumber = 13;
+  static const int kAgreeFieldNumber = 8;
   bool agree() const;
   void set_agree(bool value);
 
-  // optional uint32 pool_index = 14;
+  // optional uint32 pool_index = 9;
   bool has_pool_index() const;
   void clear_pool_index();
-  static const int kPoolIndexFieldNumber = 14;
+  static const int kPoolIndexFieldNumber = 9;
   ::google::protobuf::uint32 pool_index() const;
   void set_pool_index(::google::protobuf::uint32 value);
 
-  // optional uint32 node_port = 18;
+  // optional uint32 node_port = 13;
   bool has_node_port() const;
   void clear_node_port();
-  static const int kNodePortFieldNumber = 18;
+  static const int kNodePortFieldNumber = 13;
   ::google::protobuf::uint32 node_port() const;
   void set_node_port(::google::protobuf::uint32 value);
 
-  // optional uint32 epoch = 19;
+  // optional uint32 epoch = 14;
   bool has_epoch() const;
   void clear_epoch();
-  static const int kEpochFieldNumber = 19;
+  static const int kEpochFieldNumber = 14;
   ::google::protobuf::uint32 epoch() const;
   void set_epoch(::google::protobuf::uint32 value);
 
-  // optional uint64 elect_height = 23;
+  // optional uint64 elect_height = 18;
   bool has_elect_height() const;
   void clear_elect_height();
-  static const int kElectHeightFieldNumber = 23;
+  static const int kElectHeightFieldNumber = 18;
   ::google::protobuf::uint64 elect_height() const;
   void set_elect_height(::google::protobuf::uint64 value);
 
-  // optional uint32 member_index = 20;
+  // optional uint32 member_index = 15;
   bool has_member_index() const;
   void clear_member_index();
-  static const int kMemberIndexFieldNumber = 20;
+  static const int kMemberIndexFieldNumber = 15;
   ::google::protobuf::uint32 member_index() const;
   void set_member_index(::google::protobuf::uint32 value);
 
@@ -2738,16 +2622,6 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_sign_challenge();
   void set_has_sign_response();
   void clear_has_sign_response();
-  void set_has_secret();
-  void clear_has_secret();
-  void set_has_challenge();
-  void clear_has_challenge();
-  void set_has_response();
-  void clear_has_response();
-  void set_has_agg_sign_challenge();
-  void clear_has_agg_sign_challenge();
-  void set_has_agg_sign_response();
-  void clear_has_agg_sign_response();
   void set_has_agree();
   void clear_has_agree();
   void set_has_pool_index();
@@ -2783,11 +2657,6 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr gid_;
   ::google::protobuf::internal::ArenaStringPtr sign_challenge_;
   ::google::protobuf::internal::ArenaStringPtr sign_response_;
-  ::google::protobuf::internal::ArenaStringPtr secret_;
-  ::google::protobuf::internal::ArenaStringPtr challenge_;
-  ::google::protobuf::internal::ArenaStringPtr response_;
-  ::google::protobuf::internal::ArenaStringPtr agg_sign_challenge_;
-  ::google::protobuf::internal::ArenaStringPtr agg_sign_response_;
   ::google::protobuf::internal::ArenaStringPtr data_;
   ::google::protobuf::internal::ArenaStringPtr prepare_hash_;
   ::google::protobuf::internal::ArenaStringPtr node_ip_;
@@ -4071,13 +3940,13 @@ TxInfo::transfers() const {
 
 // optional uint32 network_id = 1;
 inline bool Block::has_network_id() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void Block::set_has_network_id() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void Block::clear_has_network_id() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void Block::clear_network_id() {
   network_id_ = 0u;
@@ -4095,13 +3964,13 @@ inline void Block::set_network_id(::google::protobuf::uint32 value) {
 
 // optional uint32 pool_index = 2;
 inline bool Block::has_pool_index() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void Block::set_has_pool_index() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void Block::clear_has_pool_index() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Block::clear_pool_index() {
   pool_index_ = 0u;
@@ -4251,13 +4120,13 @@ inline void Block::set_allocated_hash(::std::string* hash) {
 
 // optional uint32 version = 5;
 inline bool Block::has_version() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Block::set_has_version() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Block::clear_has_version() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Block::clear_version() {
   version_ = 0u;
@@ -4275,13 +4144,13 @@ inline void Block::set_version(::google::protobuf::uint32 value) {
 
 // optional uint64 height = 6;
 inline bool Block::has_height() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void Block::set_has_height() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void Block::clear_has_height() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Block::clear_height() {
   height_ = GOOGLE_ULONGLONG(0);
@@ -4299,13 +4168,13 @@ inline void Block::set_height(::google::protobuf::uint64 value) {
 
 // optional uint64 consistency_random = 7;
 inline bool Block::has_consistency_random() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void Block::set_has_consistency_random() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void Block::clear_has_consistency_random() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void Block::clear_consistency_random() {
   consistency_random_ = GOOGLE_ULONGLONG(0);
@@ -4323,13 +4192,13 @@ inline void Block::set_consistency_random(::google::protobuf::uint64 value) {
 
 // optional uint32 electblock_height = 8;
 inline bool Block::has_electblock_height() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Block::set_has_electblock_height() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Block::clear_has_electblock_height() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Block::clear_electblock_height() {
   electblock_height_ = 0u;
@@ -4375,205 +4244,7 @@ Block::mutable_bitmap() {
   return &bitmap_;
 }
 
-// optional bytes agg_pubkey = 10;
-inline bool Block::has_agg_pubkey() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Block::set_has_agg_pubkey() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Block::clear_has_agg_pubkey() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Block::clear_agg_pubkey() {
-  agg_pubkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_pubkey();
-}
-inline const ::std::string& Block::agg_pubkey() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.agg_pubkey)
-  return agg_pubkey_.GetNoArena();
-}
-inline void Block::set_agg_pubkey(const ::std::string& value) {
-  set_has_agg_pubkey();
-  agg_pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.agg_pubkey)
-}
-#if LANG_CXX11
-inline void Block::set_agg_pubkey(::std::string&& value) {
-  set_has_agg_pubkey();
-  agg_pubkey_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.Block.agg_pubkey)
-}
-#endif
-inline void Block::set_agg_pubkey(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_agg_pubkey();
-  agg_pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.Block.agg_pubkey)
-}
-inline void Block::set_agg_pubkey(const void* value, size_t size) {
-  set_has_agg_pubkey();
-  agg_pubkey_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.Block.agg_pubkey)
-}
-inline ::std::string* Block::mutable_agg_pubkey() {
-  set_has_agg_pubkey();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.Block.agg_pubkey)
-  return agg_pubkey_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* Block::release_agg_pubkey() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.Block.agg_pubkey)
-  if (!has_agg_pubkey()) {
-    return NULL;
-  }
-  clear_has_agg_pubkey();
-  return agg_pubkey_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Block::set_allocated_agg_pubkey(::std::string* agg_pubkey) {
-  if (agg_pubkey != NULL) {
-    set_has_agg_pubkey();
-  } else {
-    clear_has_agg_pubkey();
-  }
-  agg_pubkey_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_pubkey);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.Block.agg_pubkey)
-}
-
-// optional bytes agg_sign_challenge = 11;
-inline bool Block::has_agg_sign_challenge() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Block::set_has_agg_sign_challenge() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Block::clear_has_agg_sign_challenge() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void Block::clear_agg_sign_challenge() {
-  agg_sign_challenge_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_sign_challenge();
-}
-inline const ::std::string& Block::agg_sign_challenge() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.agg_sign_challenge)
-  return agg_sign_challenge_.GetNoArena();
-}
-inline void Block::set_agg_sign_challenge(const ::std::string& value) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.agg_sign_challenge)
-}
-#if LANG_CXX11
-inline void Block::set_agg_sign_challenge(::std::string&& value) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.Block.agg_sign_challenge)
-}
-#endif
-inline void Block::set_agg_sign_challenge(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.Block.agg_sign_challenge)
-}
-inline void Block::set_agg_sign_challenge(const void* value, size_t size) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.Block.agg_sign_challenge)
-}
-inline ::std::string* Block::mutable_agg_sign_challenge() {
-  set_has_agg_sign_challenge();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.Block.agg_sign_challenge)
-  return agg_sign_challenge_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* Block::release_agg_sign_challenge() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.Block.agg_sign_challenge)
-  if (!has_agg_sign_challenge()) {
-    return NULL;
-  }
-  clear_has_agg_sign_challenge();
-  return agg_sign_challenge_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Block::set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge) {
-  if (agg_sign_challenge != NULL) {
-    set_has_agg_sign_challenge();
-  } else {
-    clear_has_agg_sign_challenge();
-  }
-  agg_sign_challenge_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_challenge);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.Block.agg_sign_challenge)
-}
-
-// optional bytes agg_sign_response = 12;
-inline bool Block::has_agg_sign_response() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Block::set_has_agg_sign_response() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Block::clear_has_agg_sign_response() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void Block::clear_agg_sign_response() {
-  agg_sign_response_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_sign_response();
-}
-inline const ::std::string& Block::agg_sign_response() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.agg_sign_response)
-  return agg_sign_response_.GetNoArena();
-}
-inline void Block::set_agg_sign_response(const ::std::string& value) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.agg_sign_response)
-}
-#if LANG_CXX11
-inline void Block::set_agg_sign_response(::std::string&& value) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.Block.agg_sign_response)
-}
-#endif
-inline void Block::set_agg_sign_response(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.Block.agg_sign_response)
-}
-inline void Block::set_agg_sign_response(const void* value, size_t size) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.Block.agg_sign_response)
-}
-inline ::std::string* Block::mutable_agg_sign_response() {
-  set_has_agg_sign_response();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.Block.agg_sign_response)
-  return agg_sign_response_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* Block::release_agg_sign_response() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.Block.agg_sign_response)
-  if (!has_agg_sign_response()) {
-    return NULL;
-  }
-  clear_has_agg_sign_response();
-  return agg_sign_response_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Block::set_allocated_agg_sign_response(::std::string* agg_sign_response) {
-  if (agg_sign_response != NULL) {
-    set_has_agg_sign_response();
-  } else {
-    clear_has_agg_sign_response();
-  }
-  agg_sign_response_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_response);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.Block.agg_sign_response)
-}
-
-// repeated .tenon.bft.protobuf.TxInfo tx_list = 13;
+// repeated .tenon.bft.protobuf.TxInfo tx_list = 10;
 inline int Block::tx_list_size() const {
   return tx_list_.size();
 }
@@ -4603,15 +4274,15 @@ Block::tx_list() const {
   return tx_list_;
 }
 
-// optional uint64 timestamp = 14;
+// optional uint64 timestamp = 11;
 inline bool Block::has_timestamp() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void Block::set_has_timestamp() {
-  _has_bits_[0] |= 0x00002000u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void Block::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00002000u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void Block::clear_timestamp() {
   timestamp_ = GOOGLE_ULONGLONG(0);
@@ -4627,15 +4298,15 @@ inline void Block::set_timestamp(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.timestamp)
 }
 
-// optional uint64 timeblock_height = 15;
+// optional uint64 timeblock_height = 12;
 inline bool Block::has_timeblock_height() const {
-  return (_has_bits_[0] & 0x00004000u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void Block::set_has_timeblock_height() {
-  _has_bits_[0] |= 0x00004000u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void Block::clear_has_timeblock_height() {
-  _has_bits_[0] &= ~0x00004000u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void Block::clear_timeblock_height() {
   timeblock_height_ = GOOGLE_ULONGLONG(0);
@@ -4651,15 +4322,15 @@ inline void Block::set_timeblock_height(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.timeblock_height)
 }
 
-// optional bytes bls_agg_sign_x = 16;
+// optional bytes bls_agg_sign_x = 13;
 inline bool Block::has_bls_agg_sign_x() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Block::set_has_bls_agg_sign_x() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Block::clear_has_bls_agg_sign_x() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Block::clear_bls_agg_sign_x() {
   bls_agg_sign_x_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -4717,15 +4388,15 @@ inline void Block::set_allocated_bls_agg_sign_x(::std::string* bls_agg_sign_x) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.Block.bls_agg_sign_x)
 }
 
-// optional bytes bls_agg_sign_y = 17;
+// optional bytes bls_agg_sign_y = 14;
 inline bool Block::has_bls_agg_sign_y() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void Block::set_has_bls_agg_sign_y() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void Block::clear_has_bls_agg_sign_y() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void Block::clear_bls_agg_sign_y() {
   bls_agg_sign_y_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -4781,6 +4452,36 @@ inline void Block::set_allocated_bls_agg_sign_y(::std::string* bls_agg_sign_y) {
   }
   bls_agg_sign_y_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), bls_agg_sign_y);
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.Block.bls_agg_sign_y)
+}
+
+// repeated uint64 commit_bitmap = 15;
+inline int Block::commit_bitmap_size() const {
+  return commit_bitmap_.size();
+}
+inline void Block::clear_commit_bitmap() {
+  commit_bitmap_.Clear();
+}
+inline ::google::protobuf::uint64 Block::commit_bitmap(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.commit_bitmap)
+  return commit_bitmap_.Get(index);
+}
+inline void Block::set_commit_bitmap(int index, ::google::protobuf::uint64 value) {
+  commit_bitmap_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.commit_bitmap)
+}
+inline void Block::add_commit_bitmap(::google::protobuf::uint64 value) {
+  commit_bitmap_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.bft.protobuf.Block.commit_bitmap)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+Block::commit_bitmap() const {
+  // @@protoc_insertion_point(field_list:tenon.bft.protobuf.Block.commit_bitmap)
+  return commit_bitmap_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+Block::mutable_commit_bitmap() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.bft.protobuf.Block.commit_bitmap)
+  return &commit_bitmap_;
 }
 
 // -------------------------------------------------------------------
@@ -5667,13 +5368,13 @@ inline void BftMessage::set_allocated_gid(::std::string* gid) {
 
 // optional int32 bft_step = 2;
 inline bool BftMessage::has_bft_step() const {
-  return (_has_bits_[0] & 0x00008000u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void BftMessage::set_has_bft_step() {
-  _has_bits_[0] |= 0x00008000u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void BftMessage::clear_has_bft_step() {
-  _has_bits_[0] &= ~0x00008000u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void BftMessage::clear_bft_step() {
   bft_step_ = 0;
@@ -5691,13 +5392,13 @@ inline void BftMessage::set_bft_step(::google::protobuf::int32 value) {
 
 // optional bool leader = 3;
 inline bool BftMessage::has_leader() const {
-  return (_has_bits_[0] & 0x00020000u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void BftMessage::set_has_leader() {
-  _has_bits_[0] |= 0x00020000u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void BftMessage::clear_has_leader() {
-  _has_bits_[0] &= ~0x00020000u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void BftMessage::clear_leader() {
   leader_ = false;
@@ -5715,13 +5416,13 @@ inline void BftMessage::set_leader(bool value) {
 
 // optional uint32 net_id = 4;
 inline bool BftMessage::has_net_id() const {
-  return (_has_bits_[0] & 0x00010000u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void BftMessage::set_has_net_id() {
-  _has_bits_[0] |= 0x00010000u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void BftMessage::clear_has_net_id() {
-  _has_bits_[0] &= ~0x00010000u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void BftMessage::clear_net_id() {
   net_id_ = 0u;
@@ -5869,337 +5570,7 @@ inline void BftMessage::set_allocated_sign_response(::std::string* sign_response
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.sign_response)
 }
 
-// optional bytes secret = 7;
-inline bool BftMessage::has_secret() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void BftMessage::set_has_secret() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void BftMessage::clear_has_secret() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void BftMessage::clear_secret() {
-  secret_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_secret();
-}
-inline const ::std::string& BftMessage::secret() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.secret)
-  return secret_.GetNoArena();
-}
-inline void BftMessage::set_secret(const ::std::string& value) {
-  set_has_secret();
-  secret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.secret)
-}
-#if LANG_CXX11
-inline void BftMessage::set_secret(::std::string&& value) {
-  set_has_secret();
-  secret_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.secret)
-}
-#endif
-inline void BftMessage::set_secret(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_secret();
-  secret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.secret)
-}
-inline void BftMessage::set_secret(const void* value, size_t size) {
-  set_has_secret();
-  secret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.secret)
-}
-inline ::std::string* BftMessage::mutable_secret() {
-  set_has_secret();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.secret)
-  return secret_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BftMessage::release_secret() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.secret)
-  if (!has_secret()) {
-    return NULL;
-  }
-  clear_has_secret();
-  return secret_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BftMessage::set_allocated_secret(::std::string* secret) {
-  if (secret != NULL) {
-    set_has_secret();
-  } else {
-    clear_has_secret();
-  }
-  secret_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), secret);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.secret)
-}
-
-// optional bytes challenge = 8;
-inline bool BftMessage::has_challenge() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void BftMessage::set_has_challenge() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void BftMessage::clear_has_challenge() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void BftMessage::clear_challenge() {
-  challenge_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_challenge();
-}
-inline const ::std::string& BftMessage::challenge() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.challenge)
-  return challenge_.GetNoArena();
-}
-inline void BftMessage::set_challenge(const ::std::string& value) {
-  set_has_challenge();
-  challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.challenge)
-}
-#if LANG_CXX11
-inline void BftMessage::set_challenge(::std::string&& value) {
-  set_has_challenge();
-  challenge_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.challenge)
-}
-#endif
-inline void BftMessage::set_challenge(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_challenge();
-  challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.challenge)
-}
-inline void BftMessage::set_challenge(const void* value, size_t size) {
-  set_has_challenge();
-  challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.challenge)
-}
-inline ::std::string* BftMessage::mutable_challenge() {
-  set_has_challenge();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.challenge)
-  return challenge_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BftMessage::release_challenge() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.challenge)
-  if (!has_challenge()) {
-    return NULL;
-  }
-  clear_has_challenge();
-  return challenge_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BftMessage::set_allocated_challenge(::std::string* challenge) {
-  if (challenge != NULL) {
-    set_has_challenge();
-  } else {
-    clear_has_challenge();
-  }
-  challenge_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), challenge);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.challenge)
-}
-
-// optional bytes response = 9;
-inline bool BftMessage::has_response() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void BftMessage::set_has_response() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void BftMessage::clear_has_response() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void BftMessage::clear_response() {
-  response_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_response();
-}
-inline const ::std::string& BftMessage::response() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.response)
-  return response_.GetNoArena();
-}
-inline void BftMessage::set_response(const ::std::string& value) {
-  set_has_response();
-  response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.response)
-}
-#if LANG_CXX11
-inline void BftMessage::set_response(::std::string&& value) {
-  set_has_response();
-  response_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.response)
-}
-#endif
-inline void BftMessage::set_response(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_response();
-  response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.response)
-}
-inline void BftMessage::set_response(const void* value, size_t size) {
-  set_has_response();
-  response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.response)
-}
-inline ::std::string* BftMessage::mutable_response() {
-  set_has_response();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.response)
-  return response_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BftMessage::release_response() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.response)
-  if (!has_response()) {
-    return NULL;
-  }
-  clear_has_response();
-  return response_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BftMessage::set_allocated_response(::std::string* response) {
-  if (response != NULL) {
-    set_has_response();
-  } else {
-    clear_has_response();
-  }
-  response_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), response);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.response)
-}
-
-// optional bytes agg_sign_challenge = 10;
-inline bool BftMessage::has_agg_sign_challenge() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void BftMessage::set_has_agg_sign_challenge() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void BftMessage::clear_has_agg_sign_challenge() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void BftMessage::clear_agg_sign_challenge() {
-  agg_sign_challenge_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_sign_challenge();
-}
-inline const ::std::string& BftMessage::agg_sign_challenge() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-  return agg_sign_challenge_.GetNoArena();
-}
-inline void BftMessage::set_agg_sign_challenge(const ::std::string& value) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-}
-#if LANG_CXX11
-inline void BftMessage::set_agg_sign_challenge(::std::string&& value) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-}
-#endif
-inline void BftMessage::set_agg_sign_challenge(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-}
-inline void BftMessage::set_agg_sign_challenge(const void* value, size_t size) {
-  set_has_agg_sign_challenge();
-  agg_sign_challenge_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-}
-inline ::std::string* BftMessage::mutable_agg_sign_challenge() {
-  set_has_agg_sign_challenge();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-  return agg_sign_challenge_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BftMessage::release_agg_sign_challenge() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-  if (!has_agg_sign_challenge()) {
-    return NULL;
-  }
-  clear_has_agg_sign_challenge();
-  return agg_sign_challenge_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BftMessage::set_allocated_agg_sign_challenge(::std::string* agg_sign_challenge) {
-  if (agg_sign_challenge != NULL) {
-    set_has_agg_sign_challenge();
-  } else {
-    clear_has_agg_sign_challenge();
-  }
-  agg_sign_challenge_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_challenge);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.agg_sign_challenge)
-}
-
-// optional bytes agg_sign_response = 11;
-inline bool BftMessage::has_agg_sign_response() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void BftMessage::set_has_agg_sign_response() {
-  _has_bits_[0] |= 0x00000080u;
-}
-inline void BftMessage::clear_has_agg_sign_response() {
-  _has_bits_[0] &= ~0x00000080u;
-}
-inline void BftMessage::clear_agg_sign_response() {
-  agg_sign_response_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_agg_sign_response();
-}
-inline const ::std::string& BftMessage::agg_sign_response() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.BftMessage.agg_sign_response)
-  return agg_sign_response_.GetNoArena();
-}
-inline void BftMessage::set_agg_sign_response(const ::std::string& value) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.agg_sign_response)
-}
-#if LANG_CXX11
-inline void BftMessage::set_agg_sign_response(::std::string&& value) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.BftMessage.agg_sign_response)
-}
-#endif
-inline void BftMessage::set_agg_sign_response(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.BftMessage.agg_sign_response)
-}
-inline void BftMessage::set_agg_sign_response(const void* value, size_t size) {
-  set_has_agg_sign_response();
-  agg_sign_response_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.BftMessage.agg_sign_response)
-}
-inline ::std::string* BftMessage::mutable_agg_sign_response() {
-  set_has_agg_sign_response();
-  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.BftMessage.agg_sign_response)
-  return agg_sign_response_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BftMessage::release_agg_sign_response() {
-  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.BftMessage.agg_sign_response)
-  if (!has_agg_sign_response()) {
-    return NULL;
-  }
-  clear_has_agg_sign_response();
-  return agg_sign_response_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BftMessage::set_allocated_agg_sign_response(::std::string* agg_sign_response) {
-  if (agg_sign_response != NULL) {
-    set_has_agg_sign_response();
-  } else {
-    clear_has_agg_sign_response();
-  }
-  agg_sign_response_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), agg_sign_response);
-  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.agg_sign_response)
-}
-
-// repeated uint64 bitmap = 12;
+// repeated uint64 bitmap = 7;
 inline int BftMessage::bitmap_size() const {
   return bitmap_.size();
 }
@@ -6229,15 +5600,15 @@ BftMessage::mutable_bitmap() {
   return &bitmap_;
 }
 
-// optional bool agree = 13;
+// optional bool agree = 8;
 inline bool BftMessage::has_agree() const {
-  return (_has_bits_[0] & 0x00040000u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void BftMessage::set_has_agree() {
-  _has_bits_[0] |= 0x00040000u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void BftMessage::clear_has_agree() {
-  _has_bits_[0] &= ~0x00040000u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void BftMessage::clear_agree() {
   agree_ = false;
@@ -6253,15 +5624,15 @@ inline void BftMessage::set_agree(bool value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.agree)
 }
 
-// optional uint32 pool_index = 14;
+// optional uint32 pool_index = 9;
 inline bool BftMessage::has_pool_index() const {
-  return (_has_bits_[0] & 0x00080000u) != 0;
+  return (_has_bits_[0] & 0x00004000u) != 0;
 }
 inline void BftMessage::set_has_pool_index() {
-  _has_bits_[0] |= 0x00080000u;
+  _has_bits_[0] |= 0x00004000u;
 }
 inline void BftMessage::clear_has_pool_index() {
-  _has_bits_[0] &= ~0x00080000u;
+  _has_bits_[0] &= ~0x00004000u;
 }
 inline void BftMessage::clear_pool_index() {
   pool_index_ = 0u;
@@ -6277,15 +5648,15 @@ inline void BftMessage::set_pool_index(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.pool_index)
 }
 
-// optional bytes data = 15;
+// optional bytes data = 10;
 inline bool BftMessage::has_data() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void BftMessage::set_has_data() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void BftMessage::clear_has_data() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void BftMessage::clear_data() {
   data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6343,15 +5714,15 @@ inline void BftMessage::set_allocated_data(::std::string* data) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.data)
 }
 
-// optional bytes prepare_hash = 16;
+// optional bytes prepare_hash = 11;
 inline bool BftMessage::has_prepare_hash() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void BftMessage::set_has_prepare_hash() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void BftMessage::clear_has_prepare_hash() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void BftMessage::clear_prepare_hash() {
   prepare_hash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6409,15 +5780,15 @@ inline void BftMessage::set_allocated_prepare_hash(::std::string* prepare_hash) 
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.prepare_hash)
 }
 
-// optional bytes node_ip = 17;
+// optional bytes node_ip = 12;
 inline bool BftMessage::has_node_ip() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void BftMessage::set_has_node_ip() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void BftMessage::clear_has_node_ip() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void BftMessage::clear_node_ip() {
   node_ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6475,15 +5846,15 @@ inline void BftMessage::set_allocated_node_ip(::std::string* node_ip) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.node_ip)
 }
 
-// optional uint32 node_port = 18;
+// optional uint32 node_port = 13;
 inline bool BftMessage::has_node_port() const {
-  return (_has_bits_[0] & 0x00100000u) != 0;
+  return (_has_bits_[0] & 0x00008000u) != 0;
 }
 inline void BftMessage::set_has_node_port() {
-  _has_bits_[0] |= 0x00100000u;
+  _has_bits_[0] |= 0x00008000u;
 }
 inline void BftMessage::clear_has_node_port() {
-  _has_bits_[0] &= ~0x00100000u;
+  _has_bits_[0] &= ~0x00008000u;
 }
 inline void BftMessage::clear_node_port() {
   node_port_ = 0u;
@@ -6499,15 +5870,15 @@ inline void BftMessage::set_node_port(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.node_port)
 }
 
-// optional uint32 epoch = 19;
+// optional uint32 epoch = 14;
 inline bool BftMessage::has_epoch() const {
-  return (_has_bits_[0] & 0x00200000u) != 0;
+  return (_has_bits_[0] & 0x00010000u) != 0;
 }
 inline void BftMessage::set_has_epoch() {
-  _has_bits_[0] |= 0x00200000u;
+  _has_bits_[0] |= 0x00010000u;
 }
 inline void BftMessage::clear_has_epoch() {
-  _has_bits_[0] &= ~0x00200000u;
+  _has_bits_[0] &= ~0x00010000u;
 }
 inline void BftMessage::clear_epoch() {
   epoch_ = 0u;
@@ -6523,15 +5894,15 @@ inline void BftMessage::set_epoch(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.epoch)
 }
 
-// optional uint32 member_index = 20;
+// optional uint32 member_index = 15;
 inline bool BftMessage::has_member_index() const {
-  return (_has_bits_[0] & 0x00800000u) != 0;
+  return (_has_bits_[0] & 0x00040000u) != 0;
 }
 inline void BftMessage::set_has_member_index() {
-  _has_bits_[0] |= 0x00800000u;
+  _has_bits_[0] |= 0x00040000u;
 }
 inline void BftMessage::clear_has_member_index() {
-  _has_bits_[0] &= ~0x00800000u;
+  _has_bits_[0] &= ~0x00040000u;
 }
 inline void BftMessage::clear_member_index() {
   member_index_ = 0u;
@@ -6547,15 +5918,15 @@ inline void BftMessage::set_member_index(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.member_index)
 }
 
-// optional bytes pubkey = 21;
+// optional bytes pubkey = 16;
 inline bool BftMessage::has_pubkey() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void BftMessage::set_has_pubkey() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void BftMessage::clear_has_pubkey() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void BftMessage::clear_pubkey() {
   pubkey_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6613,15 +5984,15 @@ inline void BftMessage::set_allocated_pubkey(::std::string* pubkey) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.pubkey)
 }
 
-// optional bytes backup_enc_data = 22;
+// optional bytes backup_enc_data = 17;
 inline bool BftMessage::has_backup_enc_data() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void BftMessage::set_has_backup_enc_data() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void BftMessage::clear_has_backup_enc_data() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void BftMessage::clear_backup_enc_data() {
   backup_enc_data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6679,15 +6050,15 @@ inline void BftMessage::set_allocated_backup_enc_data(::std::string* backup_enc_
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.backup_enc_data)
 }
 
-// optional uint64 elect_height = 23;
+// optional uint64 elect_height = 18;
 inline bool BftMessage::has_elect_height() const {
-  return (_has_bits_[0] & 0x00400000u) != 0;
+  return (_has_bits_[0] & 0x00020000u) != 0;
 }
 inline void BftMessage::set_has_elect_height() {
-  _has_bits_[0] |= 0x00400000u;
+  _has_bits_[0] |= 0x00020000u;
 }
 inline void BftMessage::clear_has_elect_height() {
-  _has_bits_[0] &= ~0x00400000u;
+  _has_bits_[0] &= ~0x00020000u;
 }
 inline void BftMessage::clear_elect_height() {
   elect_height_ = GOOGLE_ULONGLONG(0);
@@ -6703,15 +6074,15 @@ inline void BftMessage::set_elect_height(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.BftMessage.elect_height)
 }
 
-// optional bytes bls_sign_x = 24;
+// optional bytes bls_sign_x = 19;
 inline bool BftMessage::has_bls_sign_x() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void BftMessage::set_has_bls_sign_x() {
-  _has_bits_[0] |= 0x00002000u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void BftMessage::clear_has_bls_sign_x() {
-  _has_bits_[0] &= ~0x00002000u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void BftMessage::clear_bls_sign_x() {
   bls_sign_x_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6769,15 +6140,15 @@ inline void BftMessage::set_allocated_bls_sign_x(::std::string* bls_sign_x) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.bls_sign_x)
 }
 
-// optional bytes bls_sign_y = 25;
+// optional bytes bls_sign_y = 20;
 inline bool BftMessage::has_bls_sign_y() const {
-  return (_has_bits_[0] & 0x00004000u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void BftMessage::set_has_bls_sign_y() {
-  _has_bits_[0] |= 0x00004000u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void BftMessage::clear_has_bls_sign_y() {
-  _has_bits_[0] &= ~0x00004000u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void BftMessage::clear_bls_sign_y() {
   bls_sign_y_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -6835,7 +6206,7 @@ inline void BftMessage::set_allocated_bls_sign_y(::std::string* bls_sign_y) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.BftMessage.bls_sign_y)
 }
 
-// repeated uint64 commit_bitmap = 26;
+// repeated uint64 commit_bitmap = 21;
 inline int BftMessage::commit_bitmap_size() const {
   return commit_bitmap_.size();
 }
