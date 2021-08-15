@@ -274,6 +274,9 @@ void BftProto::LeaderCreateCommit(
         bft_msg.add_bitmap(bitmap_data[i]);
     }
 
+    auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
+    bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->X));
+    bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_commit_sign->Y));
     std::string msg_hash_src = bft_ptr->precommit_hash();
     const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
     for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
