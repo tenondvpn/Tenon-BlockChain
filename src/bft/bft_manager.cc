@@ -318,7 +318,6 @@ bool BftManager::VerifyAggSignWithMembers(
     }
 
     auto hash = common::Hash::Hash256(block_hash);
-    std::cout << "prepare hash: " << common::Encode::HexEncode(block_hash) << ", agg sign hash: " << common::Encode::HexEncode(block_hash)
     libff::alt_bn128_G1 sign;
     sign.X = libff::alt_bn128_Fq(block.bls_agg_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(block.bls_agg_sign_y().c_str());
