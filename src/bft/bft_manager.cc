@@ -1246,8 +1246,8 @@ int BftManager::BackupCommit(
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
-//     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
-//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
+    BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft

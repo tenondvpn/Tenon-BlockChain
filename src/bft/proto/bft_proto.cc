@@ -172,16 +172,16 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_elect_height(bft_ptr->elect_height());
     if (agree) {
         bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    }
+        const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
+        for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
+            bft_msg.add_bitmap(bitmap_data[i]);
+        }
 
-    const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
-    for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
-        bft_msg.add_bitmap(bitmap_data[i]);
+        auto& bls_precommit_sign = bft_ptr->bls_precommit_agg_sign();
+        bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->X));
+        bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
     }
-
-    auto& bls_precommit_sign = bft_ptr->bls_precommit_agg_sign();
-    bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->X));
-    bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
+    
     security::Signature leader_sign;
     if (!security::Schnorr::Instance()->Sign(
             bft_ptr->precommit_hash(),
