@@ -208,9 +208,6 @@ int GenesisBlockInit::CreateElectBlock(
     ec_block_attr->set_value(ec_block.SerializeAsString());
     tenon_block->set_prehash(root_pre_hash);
     tenon_block->set_version(common::kTransactionVersion);
-    tenon_block->set_agg_pubkey("");
-    tenon_block->set_agg_sign_challenge("");
-    tenon_block->set_agg_sign_response("");
     tenon_block->set_pool_index(common::kRootChainPoolIndex);
     tenon_block->set_height(height);
     const auto& bitmap_data = root_bitmap_.data();
@@ -307,9 +304,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
-        tenon_block->set_agg_pubkey("");
-        tenon_block->set_agg_sign_challenge("");
-        tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(common::kRootChainPoolIndex);
         tenon_block->set_height(root_single_block_height++);
         const auto& bitmap_data = root_bitmap_.data();
@@ -393,9 +387,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         std::cout << "set init timestamp: " << now_tm << std::endl;
         tenon_block->set_prehash(root_pre_hash);
         tenon_block->set_version(common::kTransactionVersion);
-        tenon_block->set_agg_pubkey("");
-        tenon_block->set_agg_sign_challenge("");
-        tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(common::kRootChainPoolIndex);
         tenon_block->set_height(root_single_block_height++);
         const auto& bitmap_data = root_bitmap_.data();
@@ -642,9 +633,6 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
-        tenon_block->set_agg_pubkey("");
-        tenon_block->set_agg_sign_challenge("");
-        tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(iter->first);
         tenon_block->set_height(0);
         const auto& bitmap_data = root_bitmap_.data();
@@ -785,9 +773,6 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
 
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
-        tenon_block->set_agg_pubkey("");
-        tenon_block->set_agg_sign_challenge("");
-        tenon_block->set_agg_sign_response("");
         tenon_block->set_pool_index(iter->first);
         tenon_block->set_height(0);
         const auto& bitmap_data = root_bitmap_.data();
