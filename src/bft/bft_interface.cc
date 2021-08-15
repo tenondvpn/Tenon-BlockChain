@@ -423,7 +423,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
                 t,
                 n,
                 *bls_commit_agg_sign_,
-                commit_hash_,
+                precommit_hash_,
                 elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
                 network_id_)) != bls::kBlsSuccess) {
