@@ -357,13 +357,14 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         common_public_key = common_public_key + all_verification_vector_[i][0];
     }
 
-    pre_ec_members->common_pubkey.set_x_c0(
+    auto common_pk = pre_ec_members->mutable_common_pubkey();
+    common_pk->set_x_c0(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.X.c0));
-    pre_ec_members->common_pubkey.set_x_c1(
+    common_pk->set_x_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.X.c1));
-    pre_ec_members->common_pubkey.set_y_c0(
+    common_pk->set_y_c0(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c0));
-    pre_ec_members->common_pubkey.set_y_c1(
+    common_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
 }
 
