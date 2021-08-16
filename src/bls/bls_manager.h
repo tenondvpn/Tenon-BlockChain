@@ -48,6 +48,7 @@ private:
         const elect::MembersPtr& members,
         const protobuf::BlsMessage& bls_msg,
         std::string* content_to_hash);
+    void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block);
 
     std::shared_ptr<bls::BlsDkg> used_bls_{ nullptr };
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };

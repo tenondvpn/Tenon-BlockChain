@@ -193,6 +193,11 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
 void ElectManager::OnNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block) {
+    if (elect_block.shard_network_id() >= network::kConsensusShardEndNetworkId ||
+            elect_block.shard_network_id() < network::kRootCongressNetworkId) {
+        return;
+    }
+
     bool elected = false;
     ProcessPrevElectMembers(elect_block, &elected);
     ProcessNewElectBlock(height, elect_block, &elected);
@@ -428,6 +433,8 @@ void ElectManager::ProcessNewElectBlock(
         ++member_index;
     }
 
+    waiting_members_ptr_[elect_block.shard_network_id()] = shard_members_ptr;
+    waiting_elect_height_ = height;
     if (*elected) {
         bls::BlsManager::Instance()->ProcessNewElectBlock(height, shard_members_ptr);
     }
@@ -560,6 +567,10 @@ uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& no
 
 elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
     return members_ptr_[network_id];
+}
+
+elect::MembersPtr ElectManager::GetWaitingNetworkMembers(uint32_t network_id) {
+    return waiting_members_ptr_[network_id];
 }
 
 elect::BftMemberPtr ElectManager::GetMemberWithId(

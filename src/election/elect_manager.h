@@ -52,6 +52,8 @@ public:
     uint32_t GetMemberCount(uint32_t network_id);
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
+    elect::MembersPtr GetWaitingNetworkMembers(uint32_t network_id);
+
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         return height_with_block_.GetCommonPublicKey(height, network_id);
     }
@@ -99,6 +101,9 @@ public:
 
     bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
     bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
+    uint64_t waiting_elect_height(uint32_t network_id) {
+        return waiting_elect_height_[network_id]
+    }
 
 private:
     ElectManager();
@@ -142,6 +147,8 @@ private:
     volatile int32_t local_node_pool_mod_num_{ -1 };
     volatile int32_t local_node_member_index_{ -1 };
     MembersPtr members_ptr_[network::kConsensusShardEndNetworkId];
+    MembersPtr waiting_members_ptr_[network::kConsensusShardEndNetworkId];
+    uint64_t waiting_elect_height_[network::kConsensusShardEndNetworkId];
     std::shared_ptr<MemberManager> mem_manager_ptr_[network::kConsensusShardEndNetworkId];
     int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];

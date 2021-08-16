@@ -226,7 +226,7 @@ bool BlsManager::IsSignValid(
 void BlsManager::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
-    auto members = elect::ElectManager::Instance()->GetNetworkMembers(
+    auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         bls_msg.finish_req().network_id());
     if (members == nullptr) {
         return;
@@ -317,9 +317,85 @@ void BlsManager::HandleFinish(
 }
 
 void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
-    if (waiting_bls_ != nullptr) {
-        waiting_bls_->AddBlsConsensusInfo(ec_block);
+    std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
+    auto iter = finish_networks_map_.find(ec_block.shard_network_id());
+    if (iter == finish_networks_map_.end()) {
+        return;
     }
+
+    auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
+        ec_block.shard_network_id());
+    if (members == nullptr) {
+        return;
+    }
+
+    auto t = common::GetSignerCount(members->size());
+    BlsFinishItemPtr finish_item = iter->second;
+    if (finish_item->max_finish_count < t) {
+        return;
+    }
+
+    auto item_iter = finish_item->max_bls_members.find(finish_item->max_finish_hash);
+    if (item_iter == finish_item->max_bls_members.end()) {
+        return;
+    }
+
+    uint32_t max_mem_size = item_iter->second->bitmap.data().size() * 64;
+    if (max_mem_size < members->size()) {
+        return;
+    }
+
+    auto pre_ec_members = ec_block.mutable_prev_members();
+    uint32_t all_valid_count = 0;
+    for (size_t i = 0; i < members->size(); ++i) {
+        auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
+        mem_bls_pk->set_x_c0(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].X.c0));
+        mem_bls_pk->set_x_c1(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].X.c1));
+        mem_bls_pk->set_y_c0(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c0));
+        mem_bls_pk->set_y_c1(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c1));
+        if (!item_iter->second->bitmap.Valid(i)) {
+            continue;
+        }
+
+        if (finish_item->all_public_keys[i] == libff::alt_bn128_G2::zero()) {
+            continue;
+        }
+
+        ++all_valid_count;
+    }
+
+    if (all_valid_count < t) {
+        ec_block.clear_prev_members();
+        return;
+    }
+
+    auto common_pk_iter = finish_item->common_pk_map.find(finish_item->max_finish_hash);
+    if (common_pk_iter == finish_item->common_pk_map.end()) {
+        return;
+    }
+
+    common_pk_iter->second.to_affine_coordinates();
+    auto common_pk = pre_ec_members->mutable_common_pubkey();
+    common_pk->set_x_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.X.c0));
+    common_pk->set_x_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.X.c1));
+    common_pk->set_y_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.Y.c0));
+    common_pk->set_y_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.Y.c1));
+    pre_ec_members->set_prev_elect_height(
+        elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
+    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
+        << ", " << common_pk->x_c0()
+        << ", " << common_pk->x_c1()
+        << ", " << common_pk->y_c0()
+        << ", " << common_pk->y_c1()
+        << std::endl;
 }
 
 BlsManager::BlsManager() {
