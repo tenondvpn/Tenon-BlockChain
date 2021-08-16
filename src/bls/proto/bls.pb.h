@@ -1122,16 +1122,41 @@ class FinishBroadcast : public ::google::protobuf::Message /* @@protoc_insertion
   ::tenon::bls::protobuf::BlsPublicKey* mutable_pubkey();
   void set_allocated_pubkey(::tenon::bls::protobuf::BlsPublicKey* pubkey);
 
+  // optional .tenon.bls.protobuf.BlsPublicKey common_pubkey = 3;
+  bool has_common_pubkey() const;
+  void clear_common_pubkey();
+  static const int kCommonPubkeyFieldNumber = 3;
+  private:
+  const ::tenon::bls::protobuf::BlsPublicKey& _internal_common_pubkey() const;
+  public:
+  const ::tenon::bls::protobuf::BlsPublicKey& common_pubkey() const;
+  ::tenon::bls::protobuf::BlsPublicKey* release_common_pubkey();
+  ::tenon::bls::protobuf::BlsPublicKey* mutable_common_pubkey();
+  void set_allocated_common_pubkey(::tenon::bls::protobuf::BlsPublicKey* common_pubkey);
+
+  // optional uint32 network_id = 4;
+  bool has_network_id() const;
+  void clear_network_id();
+  static const int kNetworkIdFieldNumber = 4;
+  ::google::protobuf::uint32 network_id() const;
+  void set_network_id(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.FinishBroadcast)
  private:
   void set_has_pubkey();
   void clear_has_pubkey();
+  void set_has_common_pubkey();
+  void clear_has_common_pubkey();
+  void set_has_network_id();
+  void clear_has_network_id();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bitmap_;
   ::tenon::bls::protobuf::BlsPublicKey* pubkey_;
+  ::tenon::bls::protobuf::BlsPublicKey* common_pubkey_;
+  ::google::protobuf::uint32 network_id_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -2474,6 +2499,88 @@ inline void FinishBroadcast::set_allocated_pubkey(::tenon::bls::protobuf::BlsPub
   }
   pubkey_ = pubkey;
   // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.FinishBroadcast.pubkey)
+}
+
+// optional .tenon.bls.protobuf.BlsPublicKey common_pubkey = 3;
+inline bool FinishBroadcast::has_common_pubkey() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FinishBroadcast::set_has_common_pubkey() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FinishBroadcast::clear_has_common_pubkey() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FinishBroadcast::clear_common_pubkey() {
+  if (common_pubkey_ != NULL) common_pubkey_->Clear();
+  clear_has_common_pubkey();
+}
+inline const ::tenon::bls::protobuf::BlsPublicKey& FinishBroadcast::_internal_common_pubkey() const {
+  return *common_pubkey_;
+}
+inline const ::tenon::bls::protobuf::BlsPublicKey& FinishBroadcast::common_pubkey() const {
+  const ::tenon::bls::protobuf::BlsPublicKey* p = common_pubkey_;
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.FinishBroadcast.common_pubkey)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bls::protobuf::BlsPublicKey*>(
+      &::tenon::bls::protobuf::_BlsPublicKey_default_instance_);
+}
+inline ::tenon::bls::protobuf::BlsPublicKey* FinishBroadcast::release_common_pubkey() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.FinishBroadcast.common_pubkey)
+  clear_has_common_pubkey();
+  ::tenon::bls::protobuf::BlsPublicKey* temp = common_pubkey_;
+  common_pubkey_ = NULL;
+  return temp;
+}
+inline ::tenon::bls::protobuf::BlsPublicKey* FinishBroadcast::mutable_common_pubkey() {
+  set_has_common_pubkey();
+  if (common_pubkey_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bls::protobuf::BlsPublicKey>(GetArenaNoVirtual());
+    common_pubkey_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.FinishBroadcast.common_pubkey)
+  return common_pubkey_;
+}
+inline void FinishBroadcast::set_allocated_common_pubkey(::tenon::bls::protobuf::BlsPublicKey* common_pubkey) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete common_pubkey_;
+  }
+  if (common_pubkey) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      common_pubkey = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, common_pubkey, submessage_arena);
+    }
+    set_has_common_pubkey();
+  } else {
+    clear_has_common_pubkey();
+  }
+  common_pubkey_ = common_pubkey;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.FinishBroadcast.common_pubkey)
+}
+
+// optional uint32 network_id = 4;
+inline bool FinishBroadcast::has_network_id() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FinishBroadcast::set_has_network_id() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FinishBroadcast::clear_has_network_id() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FinishBroadcast::clear_network_id() {
+  network_id_ = 0u;
+  clear_has_network_id();
+}
+inline ::google::protobuf::uint32 FinishBroadcast::network_id() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.FinishBroadcast.network_id)
+  return network_id_;
+}
+inline void FinishBroadcast::set_network_id(::google::protobuf::uint32 value) {
+  set_has_network_id();
+  network_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.FinishBroadcast.network_id)
 }
 
 // -------------------------------------------------------------------
