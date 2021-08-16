@@ -38,7 +38,7 @@ namespace protobuf_bls_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[7];
+  static const ::google::protobuf::internal::ParseTable schema[8];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -54,6 +54,9 @@ extern AgainstParticipantDefaultTypeInternal _AgainstParticipant_default_instanc
 class BlsMessage;
 class BlsMessageDefaultTypeInternal;
 extern BlsMessageDefaultTypeInternal _BlsMessage_default_instance_;
+class BlsPublicKey;
+class BlsPublicKeyDefaultTypeInternal;
+extern BlsPublicKeyDefaultTypeInternal _BlsPublicKey_default_instance_;
 class FinishBroadcast;
 class FinishBroadcastDefaultTypeInternal;
 extern FinishBroadcastDefaultTypeInternal _FinishBroadcast_default_instance_;
@@ -76,6 +79,7 @@ namespace google {
 namespace protobuf {
 template<> ::tenon::bls::protobuf::AgainstParticipant* Arena::CreateMaybeMessage<::tenon::bls::protobuf::AgainstParticipant>(Arena*);
 template<> ::tenon::bls::protobuf::BlsMessage* Arena::CreateMaybeMessage<::tenon::bls::protobuf::BlsMessage>(Arena*);
+template<> ::tenon::bls::protobuf::BlsPublicKey* Arena::CreateMaybeMessage<::tenon::bls::protobuf::BlsPublicKey>(Arena*);
 template<> ::tenon::bls::protobuf::FinishBroadcast* Arena::CreateMaybeMessage<::tenon::bls::protobuf::FinishBroadcast>(Arena*);
 template<> ::tenon::bls::protobuf::SwapSecKeyReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::SwapSecKeyReq>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecBrdReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdReq>(Arena*);
@@ -301,6 +305,182 @@ class VerifyVecItem : public ::google::protobuf::Message /* @@protoc_insertion_p
 };
 // -------------------------------------------------------------------
 
+class BlsPublicKey : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.BlsPublicKey) */ {
+ public:
+  BlsPublicKey();
+  virtual ~BlsPublicKey();
+
+  BlsPublicKey(const BlsPublicKey& from);
+
+  inline BlsPublicKey& operator=(const BlsPublicKey& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  BlsPublicKey(BlsPublicKey&& from) noexcept
+    : BlsPublicKey() {
+    *this = ::std::move(from);
+  }
+
+  inline BlsPublicKey& operator=(BlsPublicKey&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BlsPublicKey& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const BlsPublicKey* internal_default_instance() {
+    return reinterpret_cast<const BlsPublicKey*>(
+               &_BlsPublicKey_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  void Swap(BlsPublicKey* other);
+  friend void swap(BlsPublicKey& a, BlsPublicKey& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline BlsPublicKey* New() const final {
+    return CreateMaybeMessage<BlsPublicKey>(NULL);
+  }
+
+  BlsPublicKey* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<BlsPublicKey>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const BlsPublicKey& from);
+  void MergeFrom(const BlsPublicKey& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(BlsPublicKey* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes x_c0 = 1;
+  bool has_x_c0() const;
+  void clear_x_c0();
+  static const int kXC0FieldNumber = 1;
+  const ::std::string& x_c0() const;
+  void set_x_c0(const ::std::string& value);
+  #if LANG_CXX11
+  void set_x_c0(::std::string&& value);
+  #endif
+  void set_x_c0(const char* value);
+  void set_x_c0(const void* value, size_t size);
+  ::std::string* mutable_x_c0();
+  ::std::string* release_x_c0();
+  void set_allocated_x_c0(::std::string* x_c0);
+
+  // optional bytes x_c1 = 2;
+  bool has_x_c1() const;
+  void clear_x_c1();
+  static const int kXC1FieldNumber = 2;
+  const ::std::string& x_c1() const;
+  void set_x_c1(const ::std::string& value);
+  #if LANG_CXX11
+  void set_x_c1(::std::string&& value);
+  #endif
+  void set_x_c1(const char* value);
+  void set_x_c1(const void* value, size_t size);
+  ::std::string* mutable_x_c1();
+  ::std::string* release_x_c1();
+  void set_allocated_x_c1(::std::string* x_c1);
+
+  // optional bytes y_c0 = 3;
+  bool has_y_c0() const;
+  void clear_y_c0();
+  static const int kYC0FieldNumber = 3;
+  const ::std::string& y_c0() const;
+  void set_y_c0(const ::std::string& value);
+  #if LANG_CXX11
+  void set_y_c0(::std::string&& value);
+  #endif
+  void set_y_c0(const char* value);
+  void set_y_c0(const void* value, size_t size);
+  ::std::string* mutable_y_c0();
+  ::std::string* release_y_c0();
+  void set_allocated_y_c0(::std::string* y_c0);
+
+  // optional bytes y_c1 = 4;
+  bool has_y_c1() const;
+  void clear_y_c1();
+  static const int kYC1FieldNumber = 4;
+  const ::std::string& y_c1() const;
+  void set_y_c1(const ::std::string& value);
+  #if LANG_CXX11
+  void set_y_c1(::std::string&& value);
+  #endif
+  void set_y_c1(const char* value);
+  void set_y_c1(const void* value, size_t size);
+  ::std::string* mutable_y_c1();
+  ::std::string* release_y_c1();
+  void set_allocated_y_c1(::std::string* y_c1);
+
+  // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.BlsPublicKey)
+ private:
+  void set_has_x_c0();
+  void clear_has_x_c0();
+  void set_has_x_c1();
+  void clear_has_x_c1();
+  void set_has_y_c0();
+  void clear_has_y_c0();
+  void set_has_y_c1();
+  void clear_has_y_c1();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr x_c0_;
+  ::google::protobuf::internal::ArenaStringPtr x_c1_;
+  ::google::protobuf::internal::ArenaStringPtr y_c0_;
+  ::google::protobuf::internal::ArenaStringPtr y_c1_;
+  friend struct ::protobuf_bls_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class VerifyVecBrdReq : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.VerifyVecBrdReq) */ {
  public:
   VerifyVecBrdReq();
@@ -343,7 +523,7 @@ class VerifyVecBrdReq : public ::google::protobuf::Message /* @@protoc_insertion
                &_VerifyVecBrdReq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(VerifyVecBrdReq* other);
   friend void swap(VerifyVecBrdReq& a, VerifyVecBrdReq& b) {
@@ -488,7 +668,7 @@ class VerifyVecBrdRes : public ::google::protobuf::Message /* @@protoc_insertion
                &_VerifyVecBrdRes_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(VerifyVecBrdRes* other);
   friend void swap(VerifyVecBrdRes& a, VerifyVecBrdRes& b) {
@@ -620,7 +800,7 @@ class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_p
                &_SwapSecKeyReq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(SwapSecKeyReq* other);
   friend void swap(SwapSecKeyReq& a, SwapSecKeyReq& b) {
@@ -752,7 +932,7 @@ class AgainstParticipant : public ::google::protobuf::Message /* @@protoc_insert
                &_AgainstParticipant_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(AgainstParticipant* other);
   friend void swap(AgainstParticipant& a, AgainstParticipant& b) {
@@ -866,7 +1046,7 @@ class FinishBroadcast : public ::google::protobuf::Message /* @@protoc_insertion
                &_FinishBroadcast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(FinishBroadcast* other);
   friend void swap(FinishBroadcast& a, FinishBroadcast& b) {
@@ -930,13 +1110,28 @@ class FinishBroadcast : public ::google::protobuf::Message /* @@protoc_insertion
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_bitmap();
 
+  // optional .tenon.bls.protobuf.BlsPublicKey pubkey = 2;
+  bool has_pubkey() const;
+  void clear_pubkey();
+  static const int kPubkeyFieldNumber = 2;
+  private:
+  const ::tenon::bls::protobuf::BlsPublicKey& _internal_pubkey() const;
+  public:
+  const ::tenon::bls::protobuf::BlsPublicKey& pubkey() const;
+  ::tenon::bls::protobuf::BlsPublicKey* release_pubkey();
+  ::tenon::bls::protobuf::BlsPublicKey* mutable_pubkey();
+  void set_allocated_pubkey(::tenon::bls::protobuf::BlsPublicKey* pubkey);
+
   // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.FinishBroadcast)
  private:
+  void set_has_pubkey();
+  void clear_has_pubkey();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bitmap_;
+  ::tenon::bls::protobuf::BlsPublicKey* pubkey_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -983,7 +1178,7 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_BlsMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   void Swap(BlsMessage* other);
   friend void swap(BlsMessage& a, BlsMessage& b) {
@@ -1583,6 +1778,274 @@ inline void VerifyVecItem::set_allocated_z_c1(::std::string* z_c1) {
 
 // -------------------------------------------------------------------
 
+// BlsPublicKey
+
+// optional bytes x_c0 = 1;
+inline bool BlsPublicKey::has_x_c0() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BlsPublicKey::set_has_x_c0() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BlsPublicKey::clear_has_x_c0() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BlsPublicKey::clear_x_c0() {
+  x_c0_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_x_c0();
+}
+inline const ::std::string& BlsPublicKey::x_c0() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsPublicKey.x_c0)
+  return x_c0_.GetNoArena();
+}
+inline void BlsPublicKey::set_x_c0(const ::std::string& value) {
+  set_has_x_c0();
+  x_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsPublicKey.x_c0)
+}
+#if LANG_CXX11
+inline void BlsPublicKey::set_x_c0(::std::string&& value) {
+  set_has_x_c0();
+  x_c0_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bls.protobuf.BlsPublicKey.x_c0)
+}
+#endif
+inline void BlsPublicKey::set_x_c0(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_x_c0();
+  x_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bls.protobuf.BlsPublicKey.x_c0)
+}
+inline void BlsPublicKey::set_x_c0(const void* value, size_t size) {
+  set_has_x_c0();
+  x_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bls.protobuf.BlsPublicKey.x_c0)
+}
+inline ::std::string* BlsPublicKey::mutable_x_c0() {
+  set_has_x_c0();
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsPublicKey.x_c0)
+  return x_c0_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsPublicKey::release_x_c0() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsPublicKey.x_c0)
+  if (!has_x_c0()) {
+    return NULL;
+  }
+  clear_has_x_c0();
+  return x_c0_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsPublicKey::set_allocated_x_c0(::std::string* x_c0) {
+  if (x_c0 != NULL) {
+    set_has_x_c0();
+  } else {
+    clear_has_x_c0();
+  }
+  x_c0_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), x_c0);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsPublicKey.x_c0)
+}
+
+// optional bytes x_c1 = 2;
+inline bool BlsPublicKey::has_x_c1() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BlsPublicKey::set_has_x_c1() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BlsPublicKey::clear_has_x_c1() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BlsPublicKey::clear_x_c1() {
+  x_c1_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_x_c1();
+}
+inline const ::std::string& BlsPublicKey::x_c1() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsPublicKey.x_c1)
+  return x_c1_.GetNoArena();
+}
+inline void BlsPublicKey::set_x_c1(const ::std::string& value) {
+  set_has_x_c1();
+  x_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsPublicKey.x_c1)
+}
+#if LANG_CXX11
+inline void BlsPublicKey::set_x_c1(::std::string&& value) {
+  set_has_x_c1();
+  x_c1_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bls.protobuf.BlsPublicKey.x_c1)
+}
+#endif
+inline void BlsPublicKey::set_x_c1(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_x_c1();
+  x_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bls.protobuf.BlsPublicKey.x_c1)
+}
+inline void BlsPublicKey::set_x_c1(const void* value, size_t size) {
+  set_has_x_c1();
+  x_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bls.protobuf.BlsPublicKey.x_c1)
+}
+inline ::std::string* BlsPublicKey::mutable_x_c1() {
+  set_has_x_c1();
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsPublicKey.x_c1)
+  return x_c1_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsPublicKey::release_x_c1() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsPublicKey.x_c1)
+  if (!has_x_c1()) {
+    return NULL;
+  }
+  clear_has_x_c1();
+  return x_c1_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsPublicKey::set_allocated_x_c1(::std::string* x_c1) {
+  if (x_c1 != NULL) {
+    set_has_x_c1();
+  } else {
+    clear_has_x_c1();
+  }
+  x_c1_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), x_c1);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsPublicKey.x_c1)
+}
+
+// optional bytes y_c0 = 3;
+inline bool BlsPublicKey::has_y_c0() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void BlsPublicKey::set_has_y_c0() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void BlsPublicKey::clear_has_y_c0() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void BlsPublicKey::clear_y_c0() {
+  y_c0_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_y_c0();
+}
+inline const ::std::string& BlsPublicKey::y_c0() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsPublicKey.y_c0)
+  return y_c0_.GetNoArena();
+}
+inline void BlsPublicKey::set_y_c0(const ::std::string& value) {
+  set_has_y_c0();
+  y_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsPublicKey.y_c0)
+}
+#if LANG_CXX11
+inline void BlsPublicKey::set_y_c0(::std::string&& value) {
+  set_has_y_c0();
+  y_c0_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bls.protobuf.BlsPublicKey.y_c0)
+}
+#endif
+inline void BlsPublicKey::set_y_c0(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_y_c0();
+  y_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bls.protobuf.BlsPublicKey.y_c0)
+}
+inline void BlsPublicKey::set_y_c0(const void* value, size_t size) {
+  set_has_y_c0();
+  y_c0_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bls.protobuf.BlsPublicKey.y_c0)
+}
+inline ::std::string* BlsPublicKey::mutable_y_c0() {
+  set_has_y_c0();
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsPublicKey.y_c0)
+  return y_c0_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsPublicKey::release_y_c0() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsPublicKey.y_c0)
+  if (!has_y_c0()) {
+    return NULL;
+  }
+  clear_has_y_c0();
+  return y_c0_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsPublicKey::set_allocated_y_c0(::std::string* y_c0) {
+  if (y_c0 != NULL) {
+    set_has_y_c0();
+  } else {
+    clear_has_y_c0();
+  }
+  y_c0_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), y_c0);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsPublicKey.y_c0)
+}
+
+// optional bytes y_c1 = 4;
+inline bool BlsPublicKey::has_y_c1() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void BlsPublicKey::set_has_y_c1() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void BlsPublicKey::clear_has_y_c1() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void BlsPublicKey::clear_y_c1() {
+  y_c1_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_y_c1();
+}
+inline const ::std::string& BlsPublicKey::y_c1() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsPublicKey.y_c1)
+  return y_c1_.GetNoArena();
+}
+inline void BlsPublicKey::set_y_c1(const ::std::string& value) {
+  set_has_y_c1();
+  y_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsPublicKey.y_c1)
+}
+#if LANG_CXX11
+inline void BlsPublicKey::set_y_c1(::std::string&& value) {
+  set_has_y_c1();
+  y_c1_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bls.protobuf.BlsPublicKey.y_c1)
+}
+#endif
+inline void BlsPublicKey::set_y_c1(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_y_c1();
+  y_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bls.protobuf.BlsPublicKey.y_c1)
+}
+inline void BlsPublicKey::set_y_c1(const void* value, size_t size) {
+  set_has_y_c1();
+  y_c1_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bls.protobuf.BlsPublicKey.y_c1)
+}
+inline ::std::string* BlsPublicKey::mutable_y_c1() {
+  set_has_y_c1();
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsPublicKey.y_c1)
+  return y_c1_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BlsPublicKey::release_y_c1() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsPublicKey.y_c1)
+  if (!has_y_c1()) {
+    return NULL;
+  }
+  clear_has_y_c1();
+  return y_c1_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BlsPublicKey::set_allocated_y_c1(::std::string* y_c1) {
+  if (y_c1 != NULL) {
+    set_has_y_c1();
+  } else {
+    clear_has_y_c1();
+  }
+  y_c1_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), y_c1);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsPublicKey.y_c1)
+}
+
+// -------------------------------------------------------------------
+
 // VerifyVecBrdReq
 
 // repeated .tenon.bls.protobuf.VerifyVecItem verify_vec = 1;
@@ -1953,6 +2416,64 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 FinishBroadcast::mutable_bitmap() {
   // @@protoc_insertion_point(field_mutable_list:tenon.bls.protobuf.FinishBroadcast.bitmap)
   return &bitmap_;
+}
+
+// optional .tenon.bls.protobuf.BlsPublicKey pubkey = 2;
+inline bool FinishBroadcast::has_pubkey() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FinishBroadcast::set_has_pubkey() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FinishBroadcast::clear_has_pubkey() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FinishBroadcast::clear_pubkey() {
+  if (pubkey_ != NULL) pubkey_->Clear();
+  clear_has_pubkey();
+}
+inline const ::tenon::bls::protobuf::BlsPublicKey& FinishBroadcast::_internal_pubkey() const {
+  return *pubkey_;
+}
+inline const ::tenon::bls::protobuf::BlsPublicKey& FinishBroadcast::pubkey() const {
+  const ::tenon::bls::protobuf::BlsPublicKey* p = pubkey_;
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.FinishBroadcast.pubkey)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bls::protobuf::BlsPublicKey*>(
+      &::tenon::bls::protobuf::_BlsPublicKey_default_instance_);
+}
+inline ::tenon::bls::protobuf::BlsPublicKey* FinishBroadcast::release_pubkey() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.FinishBroadcast.pubkey)
+  clear_has_pubkey();
+  ::tenon::bls::protobuf::BlsPublicKey* temp = pubkey_;
+  pubkey_ = NULL;
+  return temp;
+}
+inline ::tenon::bls::protobuf::BlsPublicKey* FinishBroadcast::mutable_pubkey() {
+  set_has_pubkey();
+  if (pubkey_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bls::protobuf::BlsPublicKey>(GetArenaNoVirtual());
+    pubkey_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.FinishBroadcast.pubkey)
+  return pubkey_;
+}
+inline void FinishBroadcast::set_allocated_pubkey(::tenon::bls::protobuf::BlsPublicKey* pubkey) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete pubkey_;
+  }
+  if (pubkey) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      pubkey = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, pubkey, submessage_arena);
+    }
+    set_has_pubkey();
+  } else {
+    clear_has_pubkey();
+  }
+  pubkey_ = pubkey;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.FinishBroadcast.pubkey)
 }
 
 // -------------------------------------------------------------------
@@ -2432,6 +2953,8 @@ inline void BlsMessage::set_elect_height(::google::protobuf::uint64 value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
