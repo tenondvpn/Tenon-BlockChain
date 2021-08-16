@@ -354,6 +354,7 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     auto pre_ec_members = ec_block.mutable_prev_members();
     uint32_t all_valid_count = 0;
     for (size_t i = 0; i < members->size(); ++i) {
+        finish_item->all_public_keys[i].to_affine_coordinates();
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
         mem_bls_pk->set_x_c0(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].X.c0));
