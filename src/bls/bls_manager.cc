@@ -321,28 +321,33 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
     auto iter = finish_networks_map_.find(ec_block.shard_network_id());
     if (iter == finish_networks_map_.end()) {
+        BLS_ERROR("find finish_networks_map_ failed![%u]", ec_block.shard_network_id());
         return;
     }
 
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         ec_block.shard_network_id());
     if (members == nullptr) {
+        BLS_ERROR("get waiting members failed![%u]", ec_block.shard_network_id());
         return;
     }
 
     auto t = common::GetSignerCount(members->size());
     BlsFinishItemPtr finish_item = iter->second;
     if (finish_item->max_finish_count < t) {
+        BLS_ERROR("finish_item->max_finish_count < t[%u][%u]", finish_item->max_finish_count, t);
         return;
     }
 
     auto item_iter = finish_item->max_bls_members.find(finish_item->max_finish_hash);
     if (item_iter == finish_item->max_bls_members.end()) {
+        BLS_ERROR("finish_item->max_bls_members failed");
         return;
     }
 
     uint32_t max_mem_size = item_iter->second->bitmap.data().size() * 64;
     if (max_mem_size < members->size()) {
+        BLS_ERROR("max_mem_size < members->size()[%u][%u]", max_mem_size, members->size());
         return;
     }
 
@@ -371,11 +376,13 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
 
     if (all_valid_count < t) {
         ec_block.clear_prev_members();
+        BLS_ERROR("all_valid_count < t[%u][%u]", all_valid_count, t);
         return;
     }
 
     auto common_pk_iter = finish_item->common_pk_map.find(finish_item->max_finish_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
+        BLS_ERROR("finish_item->common_pk_map failed!");
         return;
     }
 
