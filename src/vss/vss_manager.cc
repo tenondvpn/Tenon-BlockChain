@@ -55,12 +55,7 @@ void VssManager::OnTimeBlock(
             local_random_.OnTimeBlock(tm_block_tm);
         }
 
-        vss_first_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
-        vss_second_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
-        vss_third_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
         prev_tm_height_ = tm_height;
-
-
         auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
         auto local_offset_us = each_member_offset_us * local_index_;
         vss_first_tick_.CutOff(
