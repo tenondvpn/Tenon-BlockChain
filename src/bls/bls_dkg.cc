@@ -136,10 +136,6 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     if (bls_msg.has_verify_res()) {
         HandleVerifyBroadcastRes(header, bls_msg);
     }
-
-    if (bls_msg.has_finish_req()) {
-        HandleFinish(header, bls_msg);
-    }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -402,53 +398,6 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         << (all_verification_vector_[local_member_index_][0].Y.c0 == local_publick_key_.Y.c0) << ", "
         << (all_verification_vector_[local_member_index_][0].Y.c1 == local_publick_key_.Y.c1) << ", "
         << std::endl;
-}
-
-void BlsDkg::HandleFinish(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
-    std::string msg_hash;
-    if (!IsSignValid(bls_msg, &msg_hash)) {
-        return;
-    }
-
-    std::vector<std::string> pkey_str = {
-            bls_msg.finish_req().pubkey().x_c0(),
-            bls_msg.finish_req().pubkey().x_c1(),
-            bls_msg.finish_req().pubkey().y_c0(),
-            bls_msg.finish_req().pubkey().y_c1()
-    };
-
-    auto t = common::GetSignerCount(members_->size());
-    BLSPublicKey pkey(
-        std::make_shared<std::vector<std::string>>(pkey_str),
-        t,
-        members_->size());
-    all_public_keys_[bls_msg.index()] = *pkey.getPublicKey();
-    auto iter = max_bls_members_.find(msg_hash);
-    if (iter != max_bls_members_.end()) {
-        ++iter->second->count;
-        if (iter->second->count > max_finish_count_) {
-            max_finish_count_ = iter->second->count;
-            max_finish_hash_ = msg_hash;
-            std::cout << "finsh called: " << common::Encode::HexEncode(max_finish_hash_) << ", count: " << max_finish_count_ << std::endl;
-        }
-
-        return;
-    }
-
-    std::vector<uint64_t> bitmap_data;
-    for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
-        bitmap_data.push_back(bls_msg.finish_req().bitmap(i));
-    }
-
-    common::Bitmap bitmap(bitmap_data);
-    auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
-    max_bls_members_[msg_hash] = item;
-    if (max_finish_count_ == 0) {
-        max_finish_count_ = 1;
-        max_finish_hash_ = msg_hash;
-    }
 }
 
 void BlsDkg::BroadcastVerfify() try {
@@ -747,8 +696,14 @@ void BlsDkg::CreateDkgMessage(
         const std::string& message_hash,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
-    dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), 0);
-    msg.set_des_dht_key(dht_key.StrKey());
+    if (bls_msg.has_finish_req()) {
+        dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+        msg.set_des_dht_key(dht_key.StrKey());
+    } else {
+        dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), 0);
+        msg.set_des_dht_key(dht_key.StrKey());
+    }
+
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBlsMessage);

@@ -204,25 +204,13 @@ bool BlsManager::IsSignValid(
         return false;
     }
 
-    if (bls_msg.has_verify_brd()) {
-        for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
-            *content_to_hash += bls_msg.verify_brd().verify_vec(i).x_c0() +
-                bls_msg.verify_brd().verify_vec(i).x_c1() +
-                bls_msg.verify_brd().verify_vec(i).y_c0() +
-                bls_msg.verify_brd().verify_vec(i).y_c1() +
-                bls_msg.verify_brd().verify_vec(i).z_c0() +
-                bls_msg.verify_brd().verify_vec(i).z_c1();
-        }
-    } else if (bls_msg.has_against_req()) {
-        *content_to_hash = std::to_string(bls_msg.against_req().against_index());
-    } else if (bls_msg.has_verify_res()) {
-        *content_to_hash = bls_msg.verify_res().public_ip() + "_" +
-            std::to_string(bls_msg.verify_res().public_port());
-    } else if (bls_msg.has_finish_req()) {
-        for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
-            *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i)) + "_"  +
-                std::to_string(bls_msg.finish_req().network_id());
-        }
+    if (!bls_msg.has_finish_req()) {
+        return false;
+    }
+
+    for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
+        *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i)) + "_" +
+            std::to_string(bls_msg.finish_req().network_id());
     }
 
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
@@ -276,15 +264,34 @@ void BlsManager::HandleFinish(
     }
 
     std::string cpk_hash = common::Hash::Hash256(common_pk_str);
+    std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
+    BlsFinishItemPtr finish_item = nullptr;
+    auto iter = finish_networks_map_.find(bls_msg.finish_req().network_id());
+    if (iter == finish_networks_map_.end()) {
+        finish_item = std::make_shared<BlsFinishItem>();
+        finish_networks_map_[bls_msg.finish_req().network_id()] = finish_item;
+    } else {
+        finish_item = iter->second;
+    }
 
-    all_public_keys_[bls_msg.index()] = *pkey.getPublicKey();
-    auto iter = max_bls_members_.find(msg_hash);
-    if (iter != max_bls_members_.end()) {
-        ++iter->second->count;
-        if (iter->second->count > max_finish_count_) {
-            max_finish_count_ = iter->second->count;
-            max_finish_hash_ = msg_hash;
-            std::cout << "finsh called: " << common::Encode::HexEncode(max_finish_hash_) << ", count: " << max_finish_count_ << std::endl;
+    finish_item->all_public_keys[bls_msg.index()] = *pkey.getPublicKey();
+    auto cpk_iter = finish_item->max_public_pk_map.find(cpk_hash);
+    if (cpk_iter == finish_item->max_public_pk_map.end()) {
+        finish_item->max_public_pk_map[cpk_hash] = 1;
+    } else {
+        ++cpk_iter->second;
+    }
+
+    auto max_iter = finish_item->max_bls_members.find(msg_hash);
+    if (max_iter != finish_item->max_bls_members.end()) {
+        ++max_iter->second->count;
+        if (max_iter->second->count > finish_item->max_finish_count) {
+            finish_item->max_finish_count = max_iter->second->count;
+            finish_item->max_finish_hash = msg_hash;
+            std::cout << "finsh called: " << bls_msg.finish_req().network_id() << ", "
+                << common::Encode::HexEncode(msg_hash)
+                << ", count: " << finish_item->max_finish_count
+                << std::endl;
         }
 
         return;
@@ -297,10 +304,10 @@ void BlsManager::HandleFinish(
 
     common::Bitmap bitmap(bitmap_data);
     auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
-    max_bls_members_[msg_hash] = item;
-    if (max_finish_count_ == 0) {
-        max_finish_count_ = 1;
-        max_finish_hash_ = msg_hash;
+    finish_item->max_bls_members[msg_hash] = item;
+    if (finish_item->max_finish_count == 0) {
+        finish_item->max_finish_count = 1;
+        finish_item->max_finish_hash = msg_hash;
     }
 }
 

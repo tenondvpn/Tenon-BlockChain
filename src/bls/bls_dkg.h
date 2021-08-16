@@ -86,9 +86,6 @@ private:
     void HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
-    void HandleFinish(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg);
     bool IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* msg_hash);
     void BroadcastVerfify();
     void SwapSecKey();
