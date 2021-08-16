@@ -248,9 +248,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     elect::protobuf::ElectBlock prev_elect_block;
     bool ec_block_loaded = false;
-    std::cout << "block_item.tx_list(0).attr_size(): " << block_item.tx_list(0).attr_size() << std::endl;
     for (int32_t i = 0; i < block_item.tx_list(0).attr_size(); ++i) {
-        std::cout << "block_item.tx_list(0).attr_size(): " << i << ":" << block_item.tx_list(0).attr(i).key() << std::endl;
         if (block_item.tx_list(0).attr(i).key() == elect::kElectNodeAttrElectBlock) {
             prev_elect_block.ParseFromString(block_item.tx_list(0).attr(i).value());
             ec_block_loaded = true;

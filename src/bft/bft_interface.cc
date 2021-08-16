@@ -3,6 +3,7 @@
 
 #include <bls/bls_sign.h>
 
+#include "bls/bls_manager.h"
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
@@ -358,17 +359,25 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
         }
 
-        precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsSign::Verify(
+        precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
-                *bls_precommit_agg_sign_,
-                prepare_hash_,
                 elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
-                network_id_)) != bls::kBlsSuccess) {
+                network_id_), *bls_precommit_agg_sign_, prepare_hash_) != bls::kBlsSuccess) {
             BFT_ERROR("leader verify leader precommit agg sign failed!");
             return kBftError;
-        }
+        }//         if (bls::BlsSign::Verify(
+//                 t,
+//                 n,
+//                 *bls_precommit_agg_sign_,
+//                 prepare_hash_,
+//                 elect::ElectManager::Instance()->GetCommonPublicKey(
+//                 elect_height_,
+//                 network_id_)) != bls::kBlsSuccess) {
+//             BFT_ERROR("leader verify leader precommit agg sign failed!");
+//             return kBftError;
+//         }
 
         bls_precommit_agg_sign_->to_affine_coordinates();
     } catch (...) {
@@ -418,17 +427,28 @@ int BftInterface::LeaderCreateCommitAggSign() {
         }
 
         commit_hash_ = common::Hash::Hash256(msg_hash_src);
-        if (bls::BlsSign::Verify(
+        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
-                *bls_commit_agg_sign_,
-                precommit_hash_,
                 elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
-                network_id_)) != bls::kBlsSuccess) {
+                network_id_),
+                *bls_commit_agg_sign_,
+                precommit_hash_) != bls::kBlsSuccess) {
             BFT_ERROR("leader verify leader commit agg sign failed!");
             return kBftError;
         }
+//         if (bls::BlsSign::Verify(
+//                 t,
+//                 n,
+//                 *bls_commit_agg_sign_,
+//                 precommit_hash_,
+//                 elect::ElectManager::Instance()->GetCommonPublicKey(
+//                 elect_height_,
+//                 network_id_)) != bls::kBlsSuccess) {
+//             BFT_ERROR("leader verify leader commit agg sign failed!");
+//             return kBftError;
+//         }
 
         bls_commit_agg_sign_->to_affine_coordinates();
     } catch (...) {

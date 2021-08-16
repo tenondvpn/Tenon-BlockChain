@@ -309,14 +309,14 @@ bool BftManager::VerifyAggSignWithMembers(
     sign.Z = libff::alt_bn128_Fq::one();
     uint32_t t = common::GetSignerCount(members->size());
     uint32_t n = members->size();
-    if (bls::BlsSign::Verify(
+    if (bls::BlsManager::Instance()->Verify(
             t,
             n,
-            sign,
-            hash,
             elect::ElectManager::Instance()->GetCommonPublicKey(
             block.electblock_height(),
-            block.network_id())) != bls::kBlsSuccess) {
+            block.network_id()),
+            sign,
+            hash) != bls::kBlsSuccess) {
         auto tmp_block_hash = GetBlockHash(block);
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
@@ -326,6 +326,25 @@ bool BftManager::VerifyAggSignWithMembers(
             block.bls_agg_sign_x().c_str(),
             block.bls_agg_sign_y().c_str());
         return false;
+    }
+
+//     if (bls::BlsSign::Verify(
+//             t,
+//             n,
+//             sign,
+//             hash,
+//             elect::ElectManager::Instance()->GetCommonPublicKey(
+//             block.electblock_height(),
+//             block.network_id())) != bls::kBlsSuccess) {
+//         auto tmp_block_hash = GetBlockHash(block);
+        BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
+//             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
+//             common::Encode::HexEncode(tmp_block_hash).c_str(),
+//             common::Encode::HexEncode(hash).c_str(),
+//             t, n, block.electblock_height(), block.network_id(),
+//             block.bls_agg_sign_x().c_str(),
+//             block.bls_agg_sign_y().c_str());
+//         return false;
     }
 
     return true;
@@ -1587,16 +1606,27 @@ int BftManager::VerifyBlsAggSignature(
     sign.Z = libff::alt_bn128_Fq::one();
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
     uint32_t n = bft_ptr->members_ptr()->size();
-    if (bls::BlsSign::Verify(
+    if (bls::BlsManager::Instance()->Verify(
             t,
             n,
-            sign,
-            sign_hash,
             elect::ElectManager::Instance()->GetCommonPublicKey(
-            bft_ptr->elect_height(),
-            bft_ptr->network_id())) != bls::kBlsSuccess) {
+            block.electblock_height(),
+            block.network_id()),
+            sign,
+            sign_hash) != bls::kBlsSuccess) {
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
         return kBftError;
+    }
+//     if (bls::BlsSign::Verify(
+//             t,
+//             n,
+//             sign,
+//             sign_hash,
+//             elect::ElectManager::Instance()->GetCommonPublicKey(
+//             bft_ptr->elect_height(),
+//             bft_ptr->network_id())) != bls::kBlsSuccess) {
+//         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
+//         return kBftError;
     }
 
     return kBftSuccess;
