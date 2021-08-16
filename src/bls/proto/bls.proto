@@ -11,6 +11,13 @@ message VerifyVecItem {
     optional bytes z_c1 = 6;
 }
 
+message BlsPublicKey {
+    optional bytes x_c0 = 1;
+    optional bytes x_c1 = 2;
+    optional bytes y_c0 = 3;
+    optional bytes y_c1 = 4;
+}
+
 message VerifyVecBrdReq {
     repeated VerifyVecItem verify_vec = 1;
     optional bytes public_ip = 2;
@@ -33,6 +40,7 @@ message AgainstParticipant {
 
 message FinishBroadcast {
 	repeated uint64 bitmap = 1;
+    optional BlsPublicKey pubkey = 2;
 }
 
 message BlsMessage {
