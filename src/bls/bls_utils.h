@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 
 #include <bls/BLSPrivateKey.h>
 #include <bls/BLSPrivateKeyShare.h>
