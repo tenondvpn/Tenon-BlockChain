@@ -374,6 +374,7 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
+    common_public_key.to_affine_coordinates();
     auto common_pk = pre_ec_members->mutable_common_pubkey();
     common_pk->set_x_c0(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.X.c0));
