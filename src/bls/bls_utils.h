@@ -30,11 +30,10 @@ enum BlsErrorCode {
 };
 
 struct MaxBlsMemberItem {
-    MaxBlsMemberItem(uint32_t c, const common::Bitmap& b, const libff::alt_bn128_G2& cpk)
-        : count(c), bitmap(b), common_public_key(cpk) {}
+    MaxBlsMemberItem(uint32_t c, const common::Bitmap& b)
+        : count(c), bitmap(b) {}
     uint32_t count;
     common::Bitmap bitmap;
-    libff::alt_bn128_G2 common_public_key;
 };
 
 struct BlsFinishItem {
@@ -43,6 +42,7 @@ struct BlsFinishItem {
     std::string max_finish_hash;
     std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members;
     std::unordered_map<std::string, uint32_t> max_public_pk_map;
+    std::unordered_map<std::string, libff::alt_bn128_G2> common_pk_map;
 };
 
 typedef std::shared_ptr<BlsFinishItem> BlsFinishItemPtr;
