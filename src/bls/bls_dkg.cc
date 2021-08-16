@@ -32,6 +32,7 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {
+    std::cout << "new election block: " << elect_height << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -329,7 +330,6 @@ void BlsDkg::HandleAgainstParticipant(
 
 void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     std::lock_guard<std::mutex> guard(mutex_);
-    std::cout << "AddBlsConsensusInfo max_finish_count_: " << max_finish_count_ << std::endl;
     if (max_finish_count_ < min_aggree_member_count_) {
         return;
     }
@@ -361,11 +361,6 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].Y.c0));
         mem_bls_pk->set_y_c1(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].Y.c1));
-        std::cout << "add bls pk " << i <<", " << " x_c0: " << mem_bls_pk->x_c0()
-            << ", x_c1: " << mem_bls_pk->x_c1()
-            << ", y_c0: " << mem_bls_pk->y_c0()
-            << ", y_c1: " << mem_bls_pk->y_c1()
-            << std::endl;
         common_public_key = common_public_key + all_verification_vector_[i][0];
         ++all_valid_count;
     }
@@ -385,7 +380,7 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     common_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
     pre_ec_members->set_prev_elect_height(elect_hegiht_);
-    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << max_finish_count_ << std::endl;
+    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count << std::endl;
 }
 
 void BlsDkg::HandleFinish(
