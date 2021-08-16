@@ -556,6 +556,17 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.Y.c0));
     local_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.Y.c1));
+    finish_msg->set_network_id(common::GlobalInfo::Instance()->network_id());
+    auto common_pk = finish_msg->mutable_common_pubkey();
+    common_public_key_.to_affine_coordinates();
+    common_pk->set_x_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0));
+    common_pk->set_x_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1));
+    common_pk->set_y_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0));
+    common_pk->set_y_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1));
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
 }

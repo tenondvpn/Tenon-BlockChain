@@ -35,8 +35,6 @@ public:
         uint64_t elect_height,
         elect::MembersPtr& members);
     void HandleMessage(const transport::TransportMessagePtr& header);
-    void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block);
-
     void SetInitElectionBlock(
             uint32_t t,
             uint32_t n,

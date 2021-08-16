@@ -226,14 +226,19 @@ bool BlsManager::IsSignValid(
 void BlsManager::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    std::cout << "finish message coming." << std::endl;
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         bls_msg.finish_req().network_id());
     if (members == nullptr) {
+        BLS_ERROR("not get waiting network members network id: %u",
+            bls_msg.finish_req().network_id());
         return;
     }
 
     std::string msg_hash;
     if (!IsSignValid(members, bls_msg, &msg_hash)) {
+        BLS_ERROR("IsSignValid failed network id: %u",
+            bls_msg.finish_req().network_id());
         return;
     }
 
