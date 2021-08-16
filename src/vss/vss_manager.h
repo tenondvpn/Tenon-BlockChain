@@ -59,7 +59,6 @@ private:
     uint64_t prev_tm_height_{ common::kInvalidUint64 };
     uint64_t prev_elect_height_{ 0 };
     uint32_t local_member_index_{ common::kEachShardMaxNodeCount };
-    common::Tick vss_tick_;
     uint32_t local_index_{ elect::kInvalidMemberIndex };
     uint32_t member_count_{ 0 };
     std::mutex mutex_;
@@ -74,6 +73,9 @@ private:
     std::unordered_map<uint64_t, uint32_t> final_consensus_random_count_;
     uint32_t max_count_{ 0 };
     uint64_t max_count_random_{ 0 };
+    common::Tick vss_first_tick_;
+    common::Tick vss_second_tick_;
+    common::Tick vss_third_tick_;
 
     // for unit test
 #ifdef TENON_UNITTEST

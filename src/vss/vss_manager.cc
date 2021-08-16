@@ -23,7 +23,6 @@ VssManager::VssManager() {
     network::Route::Instance()->RegisterMessage(
         common::kVssMessage,
         std::bind(&VssManager::HandleMessage, this, std::placeholders::_1));
-    CheckVssPeriods();
 }
 
 uint64_t VssManager::EpochRandom() {
@@ -56,15 +55,36 @@ void VssManager::OnTimeBlock(
             local_random_.OnTimeBlock(tm_block_tm);
         }
 
+        vss_first_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
+        vss_second_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
+        vss_third_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
         prev_tm_height_ = tm_height;
+
+
+        auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
+        auto local_offset_us = each_member_offset_us * local_index_;
+        vss_first_tick_.CutOff(
+            kVssVerifyBrdBeginUs + local_offset_us,
+            std::bind(&VssManager::BroadcastFirstPeriodHash, this));
+        vss_second_tick_.CutOff(
+            kVssSecondBeginUs + local_offset_us,
+            std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
+        vss_third_tick_.CutOff(
+            kVssFinishBeginUs + local_offset_us,
+            std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
+
         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu",
+            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
+            "first begin us: %ld, second begin us: %ld, third begin us: %ld",
             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
         printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu\n",
             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_);
+            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_,
+            kVssVerifyBrdBeginUs + local_offset_us,
+            kVssSecondBeginUs + local_offset_us,
+            kVssFinishBeginUs + local_offset_us);
     }
 }
 
@@ -102,19 +122,9 @@ void VssManager::ClearAll() {
     final_consensus_random_count_.clear();
     max_count_ = 0;
     max_count_random_ = 0;
-}
-
-void VssManager::CheckVssPeriods() {
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId &&
-            local_index_ != elect::kInvalidMemberIndex) {
-        // Joined root and continue
-        std::lock_guard<std::mutex> guard(mutex_);
-        CheckVssFirstPeriods();
-        CheckVssSecondPeriods();
-        CheckVssThirdPeriods();
-    }
-
-    vss_tick_.CutOff(kVssCheckPeriodTimeout, std::bind(&VssManager::CheckVssPeriods, this));
+    vss_first_tick_.Destroy();
+    vss_second_tick_.Destroy();
+    vss_third_tick_.Destroy();
 }
 
 void VssManager::CheckVssFirstPeriods() {
@@ -213,7 +223,6 @@ bool VssManager::IsVssFirstPeriodsHandleMessage() {
     }
 
     return false;
-
 }
 
 bool VssManager::IsVssSecondPeriodsHandleMessage() {
@@ -240,7 +249,6 @@ bool VssManager::IsVssThirdPeriodsHandleMessage() {
     }
 
     return false;
-
 }
 
 void VssManager::BroadcastFirstPeriodHash() {
