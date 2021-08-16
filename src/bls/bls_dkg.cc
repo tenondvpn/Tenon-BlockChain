@@ -374,6 +374,8 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
+    all_verification_vector_[local_member_index_][0].to_affine_coordinates();
+    local_publick_key_.to_affine_coordinates();
     common_public_key.to_affine_coordinates();
     auto common_pk = pre_ec_members->mutable_common_pubkey();
     common_pk->set_x_c0(
@@ -390,6 +392,11 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         << ", " << common_pk->x_c1()
         << ", " << common_pk->y_c0()
         << ", " << common_pk->y_c1()
+        << ", pk eq: "
+        << (all_verification_vector_[local_member_index_][0].X.c0 == local_publick_key_.X.c0) << ", "
+        << (all_verification_vector_[local_member_index_][0].X.c1 == local_publick_key_.X.c1) << ", "
+        << (all_verification_vector_[local_member_index_][0].Y.c0 == local_publick_key_.Y.c0) << ", "
+        << (all_verification_vector_[local_member_index_][0].Y.c1 == local_publick_key_.Y.c1) << ", "
         << std::endl;
 }
 
