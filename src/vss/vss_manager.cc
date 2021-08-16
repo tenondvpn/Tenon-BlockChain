@@ -56,10 +56,11 @@ void VssManager::OnTimeBlock(
         }
 
         prev_tm_height_ = tm_height;
+        int64_t local_offset_us = 0;
         if (member_count_ > 0) {
             // waiting elect block coming.
             auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
-            auto local_offset_us = each_member_offset_us * local_index_;
+            local_offset_us = each_member_offset_us * local_index_;
             vss_first_tick_.CutOff(
                 kVssVerifyBrdBeginUs + local_offset_us,
                 std::bind(&VssManager::BroadcastFirstPeriodHash, this));
