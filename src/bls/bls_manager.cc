@@ -205,7 +205,7 @@ bool BlsManager::IsSignValid(
     }
 
     for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
-        *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i))
+        *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i));
     }
 
     *content_to_hash += std::string("_") + std::to_string(bls_msg.finish_req().network_id());
