@@ -275,9 +275,9 @@ void BlsManager::HandleFinish(
         finish_item = iter->second;
     }
 
-    auto common_pk_iter = finish_item->common_pk_map.find(cpk_hash);
+    auto common_pk_iter = finish_item->common_pk_map.find(msg_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
-        finish_item->common_pk_map[cpk_hash] = *common_pkey.getPublicKey();
+        finish_item->common_pk_map[msg_hash] = *common_pkey.getPublicKey();
     }
 
     finish_item->all_public_keys[bls_msg.index()] = *pkey.getPublicKey();
