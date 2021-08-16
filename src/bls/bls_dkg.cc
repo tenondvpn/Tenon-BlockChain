@@ -66,7 +66,6 @@ void BlsDkg::OnNewElectionBlock(
         all_verification_vector_[i] = std::vector<libff::alt_bn128_G2>(
             min_aggree_member_count_,
             libff::alt_bn128_G2::zero());
-        all_public_keys_[i] = libff::alt_bn128_G2::zero();
     }
 
     all_secret_key_contribution_.clear();
