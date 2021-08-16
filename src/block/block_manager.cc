@@ -607,6 +607,13 @@ int BlockManager::AddNewBlock(
         AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
     }
 
+    if (block_item->tx_list(0).attr_size() > 0)
+        std::cout << "AddNewBlock netid: " << block_item->network_id()
+        << ", pool: " << block_item->pool_index()
+        << ", height: " << block_item->height()
+        << ", hash: " << common::Encode::HexEncode(block_item->hash())
+        << ", attr key: " << block_item->tx_list(0).attr(0).key()
+        << std::endl;
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch);
     ShardStatistic::Instance()->AddStatistic(block_item);
 #ifdef TENON_UNITTEST
@@ -647,6 +654,13 @@ int BlockManager::GetBlockWithHeight(
     if (!block_item.ParseFromString(block_str)) {
         return kBlockError;
     }
+
+    std::cout << "GetBlockWithHeight netid: " << block_item.network_id()
+        << ", pool: " << block_item.pool_index()
+        << ", height: " << block_item.height()
+        << ", hash: " << common::Encode::HexEncode(block_item.hash())
+        << ", attr key: " << block_item.tx_list(0).attr(0).key()
+        << std::endl;
 
     return kBlockSuccess;
 }

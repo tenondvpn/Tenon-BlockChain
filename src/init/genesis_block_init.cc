@@ -150,7 +150,6 @@ int GenesisBlockInit::CreateElectBlock(
     tx_info->set_balance(0);
     tx_info->set_status(bft::kBftSuccess);
     tx_info->set_network_id(shard_netid);
-    auto all_exits_attr = tx_info->add_attr();
     elect::protobuf::ElectBlock ec_block;
     int32_t expect_leader_count = (int32_t)pow(2.0, (double)((int32_t)log2(double(genesis_nodes.size() / 3))));
     int32_t node_idx = 0;

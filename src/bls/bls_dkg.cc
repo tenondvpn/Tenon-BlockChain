@@ -328,6 +328,7 @@ void BlsDkg::HandleAgainstParticipant(
 
 void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     std::lock_guard<std::mutex> guard(mutex_);
+    std::cout << "AddBlsConsensusInfo max_finish_count_: " << max_finish_count_ << std::endl;
     if (max_finish_count_ < min_aggree_member_count_) {
         return;
     }
@@ -366,6 +367,7 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c0));
     common_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
+    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << max_finish_count_ << std::endl;
 }
 
 void BlsDkg::HandleFinish(

@@ -224,8 +224,11 @@ void ElectManager::OnNewElectBlock(
 }
 
 void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
-    if (!elect_block.has_prev_members() &&
+    if (!elect_block.has_prev_members() ||
             elect_block.prev_members().prev_elect_height() <= 0) {
+        ELECT_ERROR("not has prev network id: %u, elect: %lu",
+            elect_block.shard_network_id(),
+            elect_block.clear_elect_height());
         return;
     }
 
@@ -243,13 +246,19 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     elect::protobuf::ElectBlock prev_elect_block;
+    bool ec_block_loaded = false;
+    std::cout << "block_item.tx_list(0).attr_size(): " << block_item.tx_list(0).attr_size() << std::endl;
     for (int32_t i = 0; i < block_item.tx_list(0).attr_size(); ++i) {
+        std::cout << "block_item.tx_list(0).attr_size(): " << i << ":" << block_item.tx_list(0).attr(i).key() << std::endl;
         if (block_item.tx_list(0).attr(i).key() == elect::kElectNodeAttrElectBlock) {
             prev_elect_block.ParseFromString(block_item.tx_list(0).attr(i).value());
+            ec_block_loaded = true;
+            break;
         }
     }
 
-    if (!prev_elect_block.IsInitialized()) {
+    if (!ec_block_loaded) {
+        assert(false);
         return;
     }
 
@@ -269,6 +278,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto& in = prev_elect_block.in();
+    std::cout << "in member count: " << in.size() << std::endl;
     auto shard_members_ptr = std::make_shared<Members>();
     auto shard_members_index_ptr = std::make_shared<
         std::unordered_map<std::string, uint32_t>>();
