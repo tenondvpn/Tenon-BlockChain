@@ -163,9 +163,9 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         in->set_pool_idx_mod_num(-1);
     }
 
-    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block);
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
+    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block);
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
