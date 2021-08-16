@@ -337,7 +337,7 @@ bool BftManager::VerifyAggSignWithMembers(
 //             block.electblock_height(),
 //             block.network_id())) != bls::kBlsSuccess) {
 //         auto tmp_block_hash = GetBlockHash(block);
-        BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
+//         BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
 //             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
 //             common::Encode::HexEncode(tmp_block_hash).c_str(),
 //             common::Encode::HexEncode(hash).c_str(),
