@@ -344,14 +344,6 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     auto pre_ec_members = ec_block.mutable_prev_members();
     uint32_t all_valid_count = 0;
     for (size_t i = 0; i < max_mem_size; ++i) {
-        if (!iter->second->bitmap.Valid(i)) {
-            continue;
-        }
-
-        if (all_public_keys_[i] == libff::alt_bn128_G2::zero()) {
-            continue;
-        }
-
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
         mem_bls_pk->set_x_c0(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].X.c0));
@@ -361,6 +353,14 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].Y.c0));
         mem_bls_pk->set_y_c1(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].Y.c1));
+        if (!iter->second->bitmap.Valid(i)) {
+            continue;
+        }
+
+        if (all_public_keys_[i] == libff::alt_bn128_G2::zero()) {
+            continue;
+        }
+
         common_public_key = common_public_key + all_verification_vector_[i][0];
         ++all_valid_count;
     }
@@ -380,7 +380,12 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     common_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
     pre_ec_members->set_prev_elect_height(elect_hegiht_);
-    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count << std::endl;
+    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
+        << ", " << common_pk->x_c0()
+        << ", " << common_pk->x_c1()
+        << ", " << common_pk->y_c0()
+        << ", " << common_pk->y_c1()
+        << std::endl;
 }
 
 void BlsDkg::HandleFinish(

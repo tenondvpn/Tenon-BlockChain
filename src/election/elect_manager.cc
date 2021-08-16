@@ -470,6 +470,13 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.prev_members().common_pubkey().y_c0(),
             elect_block.prev_members().common_pubkey().y_c1()
     };
+
+    std::cout << "set common public key: " << i << ", " << elect_block.prev_members().common_pubkey().x_c0()
+        << ", " << elect_block.prev_members().common_pubkey().x_c1()
+        << ", " << elect_block.prev_members().common_pubkey().y_c0()
+        << ", " << elect_block.prev_members().common_pubkey().y_c1()
+        << std::endl;
+
     BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, members->size());
     height_with_block_.SetCommonPublicKey(
         elect_block.prev_members().prev_elect_height(),
