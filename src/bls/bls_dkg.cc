@@ -391,6 +391,19 @@ void BlsDkg::HandleFinish(
         return;
     }
 
+    std::vector<std::string> pkey_str = {
+            bls_msg.finish_req().pubkey().x_c0(),
+            bls_msg.finish_req().pubkey().x_c1(),
+            bls_msg.finish_req().pubkey().y_c0(),
+            bls_msg.finish_req().pubkey().y_c1()
+    };
+
+    auto t = common::GetSignerCount(members_->size());
+    BLSPublicKey pkey(
+        std::make_shared<std::vector<std::string>>(pkey_str),
+        t,
+        members_->size());
+    all_public_keys_[bls_msg.index()] = *pkey.getPublicKey();
     auto iter = max_bls_members_.find(msg_hash);
     if (iter != max_bls_members_.end()) {
         ++iter->second->count;
@@ -415,20 +428,6 @@ void BlsDkg::HandleFinish(
         max_finish_count_ = 1;
         max_finish_hash_ = msg_hash;
     }
-
-    std::vector<std::string> pkey_str = {
-            bls_msg.finish_req().pubkey().x_c0(),
-            bls_msg.finish_req().pubkey().x_c1(),
-            bls_msg.finish_req().pubkey().y_c0(),
-            bls_msg.finish_req().pubkey().y_c1()
-    };
-
-    auto t = common::GetSignerCount(members_->size());
-    BLSPublicKey pkey(
-        std::make_shared<std::vector<std::string>>(pkey_str),
-        t,
-        members_->size());
-    all_public_keys_[bls_msg.index()] = *pkey.getPublicKey();
 }
 
 void BlsDkg::BroadcastVerfify() try {

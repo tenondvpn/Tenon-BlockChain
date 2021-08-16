@@ -437,6 +437,7 @@ void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
         bool elected) {
+    std::cout << "DDDDDDDDDDDD " << members->size() << ":" << (uint32_t)elect_block.prev_members().bls_pubkey_size() << std::endl;
     if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
     }
