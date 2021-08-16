@@ -345,7 +345,7 @@ bool BftManager::VerifyAggSignWithMembers(
 //             block.bls_agg_sign_x().c_str(),
 //             block.bls_agg_sign_y().c_str());
 //         return false;
-    }
+//     }
 
     return true;
 }
@@ -1610,8 +1610,8 @@ int BftManager::VerifyBlsAggSignature(
             t,
             n,
             elect::ElectManager::Instance()->GetCommonPublicKey(
-            block.electblock_height(),
-            block.network_id()),
+            bft_ptr->elect_height(),
+            bft_ptr->network_id()),
             sign,
             sign_hash) != bls::kBlsSuccess) {
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
@@ -1627,7 +1627,7 @@ int BftManager::VerifyBlsAggSignature(
 //             bft_ptr->network_id())) != bls::kBlsSuccess) {
 //         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
 //         return kBftError;
-    }
+//     }
 
     return kBftSuccess;
 }
