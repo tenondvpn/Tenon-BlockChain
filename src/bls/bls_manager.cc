@@ -177,8 +177,130 @@ int BlsManager::Verify(
 }
 
 void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
+    protobuf::BlsMessage bls_msg;
+    if (!bls_msg.ParseFromString(header->data())) {
+        BLS_ERROR("bls_msg.ParseFromString ParseFromString failed!");
+        return;
+    }
+
+    if (bls_msg.has_finish_req()) {
+        HandleFinish(*header, bls_msg);
+        return;
+    }
+
     if (waiting_bls_ != nullptr) {
         waiting_bls_->HandleMessage(header);
+    }
+}
+
+bool BlsManager::IsSignValid(
+        const elect::MembersPtr& members,
+        const protobuf::BlsMessage& bls_msg,
+        std::string* content_to_hash) {
+    if (!security::IsValidSignature(bls_msg.sign_ch(), bls_msg.sign_res())) {
+        BLS_ERROR("invalid sign: %s, %s!",
+            common::Encode::HexEncode(bls_msg.sign_ch()),
+            common::Encode::HexEncode(bls_msg.sign_res()));
+        return false;
+    }
+
+    if (bls_msg.has_verify_brd()) {
+        for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
+            *content_to_hash += bls_msg.verify_brd().verify_vec(i).x_c0() +
+                bls_msg.verify_brd().verify_vec(i).x_c1() +
+                bls_msg.verify_brd().verify_vec(i).y_c0() +
+                bls_msg.verify_brd().verify_vec(i).y_c1() +
+                bls_msg.verify_brd().verify_vec(i).z_c0() +
+                bls_msg.verify_brd().verify_vec(i).z_c1();
+        }
+    } else if (bls_msg.has_against_req()) {
+        *content_to_hash = std::to_string(bls_msg.against_req().against_index());
+    } else if (bls_msg.has_verify_res()) {
+        *content_to_hash = bls_msg.verify_res().public_ip() + "_" +
+            std::to_string(bls_msg.verify_res().public_port());
+    } else if (bls_msg.has_finish_req()) {
+        for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
+            *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i)) + "_"  +
+                std::to_string(bls_msg.finish_req().network_id());
+        }
+    }
+
+    *content_to_hash = common::Hash::keccak256(*content_to_hash);
+    auto& pubkey = (*members)[bls_msg.index()]->pubkey;
+    auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
+    if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
+        return false;
+    }
+
+    return true;
+}
+
+void BlsManager::HandleFinish(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+    auto members = elect::ElectManager::Instance()->GetNetworkMembers(
+        bls_msg.finish_req().network_id());
+    if (members == nullptr) {
+        return;
+    }
+
+    std::string msg_hash;
+    if (!IsSignValid(members, bls_msg, &msg_hash)) {
+        return;
+    }
+
+    std::vector<std::string> pkey_str = {
+            bls_msg.finish_req().pubkey().x_c0(),
+            bls_msg.finish_req().pubkey().x_c1(),
+            bls_msg.finish_req().pubkey().y_c0(),
+            bls_msg.finish_req().pubkey().y_c1()
+    };
+    auto t = common::GetSignerCount(members->size());
+    BLSPublicKey pkey(
+        std::make_shared<std::vector<std::string>>(pkey_str),
+        t,
+        members->size());
+    std::vector<std::string> common_pkey_str = {
+            bls_msg.finish_req().common_pubkey().x_c0(),
+            bls_msg.finish_req().common_pubkey().x_c1(),
+            bls_msg.finish_req().common_pubkey().y_c0(),
+            bls_msg.finish_req().common_pubkey().y_c1()
+    };
+    BLSPublicKey common_pkey(
+        std::make_shared<std::vector<std::string>>(common_pkey_str),
+        t,
+        members->size());
+    std::string common_pk_str;
+    for (uint32_t i = 0; i < common_pkey_str.size(); ++i) {
+        common_pk_str += common_pkey_str[i];
+    }
+
+    std::string cpk_hash = common::Hash::Hash256(common_pk_str);
+
+    all_public_keys_[bls_msg.index()] = *pkey.getPublicKey();
+    auto iter = max_bls_members_.find(msg_hash);
+    if (iter != max_bls_members_.end()) {
+        ++iter->second->count;
+        if (iter->second->count > max_finish_count_) {
+            max_finish_count_ = iter->second->count;
+            max_finish_hash_ = msg_hash;
+            std::cout << "finsh called: " << common::Encode::HexEncode(max_finish_hash_) << ", count: " << max_finish_count_ << std::endl;
+        }
+
+        return;
+    }
+
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
+        bitmap_data.push_back(bls_msg.finish_req().bitmap(i));
+    }
+
+    common::Bitmap bitmap(bitmap_data);
+    auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
+    max_bls_members_[msg_hash] = item;
+    if (max_finish_count_ == 0) {
+        max_finish_count_ = 1;
+        max_finish_hash_ = msg_hash;
     }
 }
 

@@ -41,12 +41,21 @@ private:
     BlsManager();
     ~BlsManager();
     void HandleMessage(const transport::TransportMessagePtr& header);
+    void HandleFinish(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg);
+    bool IsSignValid(
+        const elect::MembersPtr& members,
+        const protobuf::BlsMessage& bls_msg,
+        std::string* content_to_hash);
 
     std::shared_ptr<bls::BlsDkg> used_bls_{ nullptr };
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };
     uint64_t max_height_{ common::kInvalidUint64 };
     std::mutex mutex_;
     std::mutex sign_mutex_;
+    std::unordered_map<uint32_t, BlsFinishItemPtr> finish_networks_map_;
+    std::mutex finish_networks_map_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlsManager);
 };
