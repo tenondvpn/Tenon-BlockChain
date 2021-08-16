@@ -178,6 +178,12 @@ void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
     }
 }
 
+void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
+    if (waiting_bls_ != nullptr) {
+        waiting_bls_->AddBlsConsensusInfo(ec_block);
+    }
+}
+
 BlsManager::BlsManager() {
     initLibSnark();
     network::Route::Instance()->RegisterMessage(

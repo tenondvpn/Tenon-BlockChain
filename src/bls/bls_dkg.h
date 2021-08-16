@@ -19,6 +19,7 @@
 #include "common/bitmap.h"
 #include "dht/dht_utils.h"
 #include "election/elect_node_detail.h"
+#include "election/proto/elect.pb.h"
 #include "transport/transport_utils.h"
 #include "transport/proto/transport.pb.h"
 
@@ -34,6 +35,7 @@ public:
         uint64_t elect_height,
         elect::MembersPtr& members);
     void HandleMessage(const transport::TransportMessagePtr& header);
+    void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block);
 
     void SetInitElectionBlock(
             uint32_t t,

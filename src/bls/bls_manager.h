@@ -35,6 +35,7 @@ public:
         const libff::alt_bn128_G2& pubkey,
         const libff::alt_bn128_G1& sign,
         const std::string& sign_msg);
+    void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block);
 
 private:
     BlsManager();

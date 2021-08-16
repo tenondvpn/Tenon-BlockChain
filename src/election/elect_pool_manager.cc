@@ -4,9 +4,10 @@
 #include <algorithm>
 #include <random>
 
+#include "bls/bls_manager.h"
+#include "bft/bft_utils.h"
 #include "common/fts_tree.h"
 #include "common/random.h"
-#include "bft/bft_utils.h"
 #include "election/elect_manager.h"
 #include "vss/vss_manager.h"
 #include "security/secp256k1.h"
@@ -162,6 +163,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         in->set_pool_idx_mod_num(-1);
     }
 
+    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block);
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
     auto ec_block_attr = tx_info.add_attr();

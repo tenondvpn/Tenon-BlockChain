@@ -326,6 +326,47 @@ void BlsDkg::HandleAgainstParticipant(
     }
 }
 
+void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (max_finish_count_ < min_aggree_member_count_) {
+        return;
+    }
+
+    auto iter = max_bls_members_.find(max_finish_hash_);
+    if (iter == max_bls_members_.end()) {
+        return;
+    }
+
+    uint32_t max_mem_size = iter->second->bitmap.data().size() * 64;
+    auto common_public_key = libff::alt_bn128_G2::zero();
+    auto pre_ec_members = ec_block.mutable_prev_members();
+    for (size_t i = 0; i < max_mem_size; ++i) {
+        if (!iter->second->bitmap.Valid(i)) {
+            continue;
+        }
+
+        auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
+        mem_bls_pk->set_x_c0(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].X.c0));
+        mem_bls_pk->set_x_c1(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].X.c1));
+        mem_bls_pk->set_y_c0(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].Y.c0));
+        mem_bls_pk->set_y_c1(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].Y.c1));
+        common_public_key = common_public_key + all_verification_vector_[i][0];
+    }
+
+    pre_ec_members->common_pubkey.set_x_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.X.c0));
+    pre_ec_members->common_pubkey.set_x_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.X.c1));
+    pre_ec_members->common_pubkey.set_y_c0(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c0));
+    pre_ec_members->common_pubkey.set_y_c1(
+        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
+}
+
 void BlsDkg::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
@@ -605,22 +646,22 @@ void BlsDkg::DumpContribution() {
 
     for (size_t i = 0; i < min_aggree_member_count_; ++i) {
         data["verification_vector"][std::to_string(i)]["X"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].X.c0);
         data["verification_vector"][std::to_string(i)]["X"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].X.c1);
         data["verification_vector"][std::to_string(i)]["Y"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].Y.c0);
         data["verification_vector"][std::to_string(i)]["Y"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].Y.c1);
         data["verification_vector"][std::to_string(i)]["Z"]["c0"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].Z.c0);
         data["verification_vector"][std::to_string(i)]["Z"]["c1"] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fq >(
+            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
                 all_verification_vector_[local_member_index_][i].Z.c1);
     }
 

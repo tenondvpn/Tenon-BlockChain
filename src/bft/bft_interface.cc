@@ -319,7 +319,6 @@ void BftInterface::RechallengePrecommitClear() {
     precommit_aggree_set_.clear();
     precommit_oppose_set_.clear();
     commit_oppose_set_.clear();
-
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge() {
