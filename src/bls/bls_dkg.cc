@@ -367,6 +367,7 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c0));
     common_pk->set_y_c1(
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key.Y.c1));
+    pre_ec_members->set_prev_elect_height(elect_hegiht_);
     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << max_finish_count_ << std::endl;
 }
 

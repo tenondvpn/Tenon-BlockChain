@@ -228,10 +228,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_block.prev_members().prev_elect_height() <= 0) {
         ELECT_ERROR("not has prev network id: %u, elect: %lu",
             elect_block.shard_network_id(),
-            elect_block.clear_elect_height());
+            elect_block.elect_height());
         return;
     }
 
+    std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
     bft::protobuf::Block block_item;
     if (block::BlockManager::Instance()->GetBlockWithHeight(
             network::kRootCongressNetworkId,
