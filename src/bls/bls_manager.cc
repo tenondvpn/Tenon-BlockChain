@@ -204,15 +204,11 @@ bool BlsManager::IsSignValid(
         return false;
     }
 
-    if (!bls_msg.has_finish_req()) {
-        return false;
-    }
-
     for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
-        *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i)) + "_" +
-            std::to_string(bls_msg.finish_req().network_id());
+        *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i))
     }
 
+    *content_to_hash += std::string("_") + std::to_string(bls_msg.finish_req().network_id());
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members)[bls_msg.index()]->pubkey;
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
