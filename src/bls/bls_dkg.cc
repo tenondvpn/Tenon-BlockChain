@@ -355,6 +355,11 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].Y.c0));
         mem_bls_pk->set_y_c1(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_verification_vector_[i][0].Y.c1));
+        std::cout << "add bls pk " << i <<", " << " x_c0: " << mem_bls_pk->x_c0()
+            << ", x_c1: " << mem_bls_pk->x_c1()
+            << ", y_c0: " << mem_bls_pk->y_c0()
+            << ", y_c1: " << mem_bls_pk->y_c1()
+            << std::endl;
         common_public_key = common_public_key + all_verification_vector_[i][0];
     }
 
