@@ -56,17 +56,20 @@ void VssManager::OnTimeBlock(
         }
 
         prev_tm_height_ = tm_height;
-        auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
-        auto local_offset_us = each_member_offset_us * local_index_;
-        vss_first_tick_.CutOff(
-            kVssVerifyBrdBeginUs + local_offset_us,
-            std::bind(&VssManager::BroadcastFirstPeriodHash, this));
-        vss_second_tick_.CutOff(
-            kVssSecondBeginUs + local_offset_us,
-            std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
-        vss_third_tick_.CutOff(
-            kVssFinishBeginUs + local_offset_us,
-            std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
+        if (member_count_ > 0) {
+            // waiting elect block coming.
+            auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
+            auto local_offset_us = each_member_offset_us * local_index_;
+            vss_first_tick_.CutOff(
+                kVssVerifyBrdBeginUs + local_offset_us,
+                std::bind(&VssManager::BroadcastFirstPeriodHash, this));
+            vss_second_tick_.CutOff(
+                kVssSecondBeginUs + local_offset_us,
+                std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
+            vss_third_tick_.CutOff(
+                kVssFinishBeginUs + local_offset_us,
+                std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
+        }
 
         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
