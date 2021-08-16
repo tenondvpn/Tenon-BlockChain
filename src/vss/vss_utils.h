@@ -35,11 +35,11 @@ static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSecon
 static const uint64_t kVssFirstPeriodTimeout = kVssAllPeriodSeconds / 3;
 static const uint64_t kVssSecondPeriodTimeout = 2 * kVssAllPeriodSeconds / 3;
 static const uint64_t kVssThirdPeriodTimeout = kVssAllPeriodSeconds;
-
+static const int64_t kMaxVssOffsetUs = 30L * 1000L * 1000L;
 static const int64_t kVssPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 1) * 1000L * 1000L;
-static const int64_t kVssOffsetUs = kVssPeriodUs / 10;
+static const int64_t kVssOffsetUs = kVssPeriodUs / 10 > kMaxVssOffsetUs ? kMaxVssOffsetUs : kVssPeriodUs / 10;
 static const int64_t kVssWorkPeriodUs = (kVssPeriodUs - 2 * kVssOffsetUs) / 3;
-static const int64_t kVssVerifyBrdBeginUs = kVssOffsetUs;
+static const int64_t kVssFirstBeginUs = kVssOffsetUs;
 static const int64_t kVssSecondBeginUs = kVssWorkPeriodUs + kVssOffsetUs;
 static const int64_t kVssFinishBeginUs = kVssSecondBeginUs + kVssWorkPeriodUs + kVssOffsetUs;
 
