@@ -102,7 +102,7 @@ public:
     bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
     bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
     uint64_t waiting_elect_height(uint32_t network_id) {
-        return waiting_elect_height_[network_id]
+        return waiting_elect_height_[network_id];
     }
 
 private:
