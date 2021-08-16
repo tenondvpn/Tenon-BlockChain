@@ -329,6 +329,10 @@ void BlsDkg::HandleAgainstParticipant(
 }
 
 void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
+    if (ec_block.shard_network_id() != common::GlobalInfo::Instance()->network_id()) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_finish_count_ < min_aggree_member_count_) {
         return;
