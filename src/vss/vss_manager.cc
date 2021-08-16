@@ -57,7 +57,7 @@ void VssManager::OnTimeBlock(
 
         prev_tm_height_ = tm_height;
         int64_t local_offset_us = 0;
-        if (member_count_ > 0) {
+        if (member_count_ > 0 && local_index_ < member_count_) {
             // waiting elect block coming.
             auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
             local_offset_us = each_member_offset_us * local_index_;
