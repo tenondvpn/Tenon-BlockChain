@@ -340,10 +340,14 @@ void BlsDkg::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     }
 
     uint32_t max_mem_size = iter->second->bitmap.data().size() * 64;
+    if (max_mem_size < members_->size()) {
+        return;
+    }
+
     auto common_public_key = libff::alt_bn128_G2::zero();
     auto pre_ec_members = ec_block.mutable_prev_members();
     uint32_t all_valid_count = 0;
-    for (size_t i = 0; i < max_mem_size; ++i) {
+    for (size_t i = 0; i < members_->size(); ++i) {
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
         mem_bls_pk->set_x_c0(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(all_public_keys_[i].X.c0));
