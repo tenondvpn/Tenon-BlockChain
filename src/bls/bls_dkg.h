@@ -125,7 +125,6 @@ private:
     libff::alt_bn128_G2 local_publick_key_;
     libff::alt_bn128_G2 common_public_key_;
     std::shared_ptr<std::mt19937> random_ptr_;
-    libff::alt_bn128_G2 all_public_keys_[common::kEachShardMaxNodeCount];
     bool finished_{ false };
     uint32_t valid_sec_key_count_{ 0 };
     std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members_;

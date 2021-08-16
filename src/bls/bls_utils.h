@@ -37,6 +37,12 @@ struct MaxBlsMemberItem {
 };
 
 struct BlsFinishItem {
+    BlsFinishItem() {
+        for (uint32_t i = 0; i < common::kEachShardMaxNodeCount; ++i) {
+            all_public_keys[i] = libff::alt_bn128_G2::zero();
+        }
+    }
+
     libff::alt_bn128_G2 all_public_keys[common::kEachShardMaxNodeCount];
     uint32_t max_finish_count{ 0 };
     std::string max_finish_hash;

@@ -509,7 +509,6 @@ void BlsDkg::Finish() try {
     local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
         all_secret_key_contribution_[local_member_index_]);
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
-    all_public_keys_[local_member_index_] = local_publick_key_;
     common_public_key_ = libff::alt_bn128_G2::zero();
     for (size_t i = 0; i < members_->size(); ++i) {
         if (invalid_node_map_[i] >= min_aggree_member_count_) {
@@ -571,6 +570,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1));
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
+    network::Route::Instance()->SendToLocal(msg);
 }
 
 void BlsDkg::CreateContribution() {
