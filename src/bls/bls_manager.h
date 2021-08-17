@@ -34,7 +34,7 @@ public:
     int Sign(
         uint32_t t,
         uint32_t n,
-        const libff::alt_bn128_G2& pubkey,
+        const libff::alt_bn128_Fr& sec_key,
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign);
     int Verify(
