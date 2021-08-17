@@ -673,6 +673,18 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
+    auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
+    uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
+    if (bls::BlsManager::Instance()->Verify(
+            t,
+            bft_ptr->members_ptr()->size(),
+            member_ptr->bls_publick_key,
+            sign,
+            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
+        BFT_ERROR("verify prepare hash error!");
+        return kBftError;
+    }
+
     bft_ptr->LeaderPrecommitOk(
         member_idx,
         bft_ptr->gid(),
