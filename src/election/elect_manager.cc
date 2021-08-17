@@ -454,6 +454,11 @@ void ElectManager::UpdatePrevElectMembers(
     auto t = common::GetSignerCount(members->size());
     int32_t i = 0;
     for (auto iter = members->begin(); iter != members->end(); ++iter, ++i) {
+        if (elect_block.prev_members().bls_pubkey(i).x_c0().empty()) {
+            (*iter)->bls_publick_key = libff::alt_bn128_G2::zero();
+            continue;
+        }
+
         std::vector<std::string> pkey_str = {
             elect_block.prev_members().bls_pubkey(i).x_c0(),
             elect_block.prev_members().bls_pubkey(i).x_c1(),

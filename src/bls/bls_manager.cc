@@ -175,7 +175,11 @@ int BlsManager::Verify(
         const libff::alt_bn128_G2& pubkey,
         const libff::alt_bn128_G1& sign,
         const std::string& sign_msg) try {
-//     std::lock_guard<std::mutex> guard(sign_mutex_);
+    if (pubkey == libff::alt_bn128_G2::zero()) {
+        return kBlsError;
+    }
+
+    //     std::lock_guard<std::mutex> guard(sign_mutex_);
     if (sign_msg.size() != 32) {
         BLS_ERROR("sign message error: %s", common::Encode::HexEncode(sign_msg));
         return kBlsError;
@@ -389,8 +393,24 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     auto pre_ec_members = ec_block.mutable_prev_members();
     uint32_t all_valid_count = 0;
     for (size_t i = 0; i < members->size(); ++i) {
-        finish_item->all_public_keys[i].to_affine_coordinates();
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
+        if (!item_iter->second->bitmap.Valid(i)) {
+            mem_bls_pk->set_x_c0("");
+            mem_bls_pk->set_x_c1("");
+            mem_bls_pk->set_y_c0("");
+            mem_bls_pk->set_y_c1("");
+            continue;
+        }
+
+        if (finish_item->all_public_keys[i] == libff::alt_bn128_G2::zero()) {
+            mem_bls_pk->set_x_c0("");
+            mem_bls_pk->set_x_c1("");
+            mem_bls_pk->set_y_c0("");
+            mem_bls_pk->set_y_c1("");
+            continue;
+        }
+
+        finish_item->all_public_keys[i].to_affine_coordinates();
         mem_bls_pk->set_x_c0(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].X.c0));
         mem_bls_pk->set_x_c1(
@@ -399,14 +419,6 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c0));
         mem_bls_pk->set_y_c1(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c1));
-        if (!item_iter->second->bitmap.Valid(i)) {
-            continue;
-        }
-
-        if (finish_item->all_public_keys[i] == libff::alt_bn128_G2::zero()) {
-            continue;
-        }
-
         ++all_valid_count;
     }
 
