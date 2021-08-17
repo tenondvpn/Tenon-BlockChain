@@ -843,6 +843,17 @@ int BftManager::LeaderPrecommit(
             member_ptr->bls_publick_key,
             sign,
             bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
+        auto failed_count = bft_ptr->add_prepare_verify_failed_count();
+        if (failed_count >= bft_ptr->min_oppose_member_count() &&
+                bft_ptr->elect_height() <
+                elect::ElectManager::Instance()->latest_height(bft_ptr->network_id())) {
+            BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
+                " pool_index: %u, bft: %s",
+                bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+            LeaderCallPrecommitOppose(bft_ptr);
+            RemoveBft(bft_ptr->gid(), false);
+        }
+
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     }

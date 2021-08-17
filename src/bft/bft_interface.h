@@ -356,6 +356,10 @@ public:
         return this_node_is_leader_;
     }
 
+    uint32_t add_prepare_verify_failed_count() {
+        return ++prepare_verify_failed_count_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -419,6 +423,7 @@ protected:
     std::shared_ptr<libff::alt_bn128_G1> bls_commit_agg_sign_{ nullptr };
     std::string precommit_hash_;
     std::string commit_hash_;
+    std::atomic<uint32_t> prepare_verify_failed_count_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
