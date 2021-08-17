@@ -461,16 +461,16 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.prev_members().bls_pubkey(i).y_c1()
         };
 
-        BLSPublicKey pkey(
-            std::make_shared<std::vector<std::string>>(pkey_str),
-            t,
-            members->size());
-        (*iter)->bls_publick_key = *pkey.getPublicKey();
         std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
             << ", " << elect_block.prev_members().bls_pubkey(i).x_c1()
             << ", " << elect_block.prev_members().bls_pubkey(i).y_c0()
             << ", " << elect_block.prev_members().bls_pubkey(i).y_c1()
             << std::endl;
+        BLSPublicKey pkey(
+            std::make_shared<std::vector<std::string>>(pkey_str),
+            t,
+            members->size());
+        (*iter)->bls_publick_key = *pkey.getPublicKey();
     }
 
     std::vector<std::string> pkey_str = {
