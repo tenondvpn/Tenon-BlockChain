@@ -125,21 +125,6 @@ void BftProto::BackupCreatePrepare(
 
     bft_msg.set_bls_sign_x(bls_sign_x);
     bft_msg.set_bls_sign_y(bls_sign_y);
-//     std::string enc_data;
-//     if (bft_ptr->leader_mem_ptr()->leader_ecdh_key.empty()) {
-//         BFT_ERROR("get leader ecdh key failed [%s]",
-//             common::Encode::HexDecode(bft_ptr->leader_mem_ptr()->id).c_str());
-//         return;
-//     }
-// 
-//     if (security::Crypto::Instance()->GetEncryptData(
-//             bft_ptr->leader_mem_ptr()->leader_ecdh_key,
-//             sha128,
-//             &enc_data) != security::kSecuritySuccess) {
-//         return;
-//     }
-
-//     bft_msg.set_backup_enc_data(enc_data);
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, backup prepare pool index: %d, step: %d, bft gid: %s",
 //         msg.id(), from_bft_msg.pool_index(), kBftPrepare, common::Encode::HexEncode(from_bft_msg.gid()).c_str()));
