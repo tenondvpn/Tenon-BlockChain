@@ -239,7 +239,7 @@ bool BlsManager::IsSignValid(
     std::string pk_str;
     pubkey.Serialize(pk_str);
     std::cout << "finish message coming." << bls_msg.finish_req().network_id()
-        << ", id: " << common::Encode::HexEncode(security::Secp256k1::ToAddressWithPublicKey(pk_str)) << std::endl;
+        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(pk_str)) << std::endl;
 
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
