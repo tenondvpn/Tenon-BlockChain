@@ -371,10 +371,17 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
+    // At least so many nodes are required to successfully exchange keys
+    auto exchange_member_count = (uint32_t)((float)members->size() * kBlsMaxExchangeMembersRatio);
+    if (exchange_member_count < members->size()) {
+        ++exchange_member_count;
+    }
+
     auto t = common::GetSignerCount(members->size());
     BlsFinishItemPtr finish_item = iter->second;
-    if (finish_item->max_finish_count < t) {
-        BLS_ERROR("finish_item->max_finish_count < t[%u][%u]", finish_item->max_finish_count, t);
+    if (finish_item->max_finish_count < exchange_member_count) {
+        BLS_ERROR("finish_item->max_finish_count < t[%u][%u]",
+            finish_item->max_finish_count, exchange_member_count);
         return;
     }
 

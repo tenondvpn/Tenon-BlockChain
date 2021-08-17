@@ -29,6 +29,8 @@ enum BlsErrorCode {
     kBlsError = 1,
 };
 
+static const float kBlsMaxExchangeMembersRatio = 0.9f;  // 90%
+
 struct MaxBlsMemberItem {
     MaxBlsMemberItem(uint32_t c, const common::Bitmap& b)
         : count(c), bitmap(b) {}
