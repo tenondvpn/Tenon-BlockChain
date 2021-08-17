@@ -16,6 +16,7 @@
 #include "network/route.h"
 #include "security/crypto.h"
 #include "security/schnorr.h"
+#include "security/secp256k1.h"
 
 namespace tenon {
 
@@ -143,12 +144,12 @@ int BlsManager::Sign(
     *sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.X);
     *sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.Y);
 
-    BLSPublicKeyShare pkey(used_bls_->local_sec_key(), used_bls_->t(), used_bls_->n());
-    std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
-    BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-        used_bls_->t(), used_bls_->n(), strs->at(0).c_str(), strs->at(1).c_str(),
-        strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
-        common::Encode::HexEncode(sign_msg).c_str());
+//     BLSPublicKeyShare pkey(used_bls_->local_sec_key(), used_bls_->t(), used_bls_->n());
+//     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
+//     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+//         used_bls_->t(), used_bls_->n(), strs->at(0).c_str(), strs->at(1).c_str(),
+//         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
+//         common::Encode::HexEncode(sign_msg).c_str());
 //     std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
 //         << ", sign x: " << *sign_x
@@ -174,18 +175,18 @@ int BlsManager::Verify(
         return kBlsError;
     }
 
-    auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
-    sign_ptr->to_affine_coordinates();
-    auto sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(sign_ptr->X);
-    auto sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(sign_ptr->Y);
-    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-    pk->to_affine_coordinates();
-    auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
-    auto strs = pk_ptr->toString();
-    BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-        strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),
-        common::Encode::HexEncode(sign_msg).c_str());
+//     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
+//     sign_ptr->to_affine_coordinates();
+//     auto sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(sign_ptr->X);
+//     auto sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(sign_ptr->Y);
+//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+//     pk->to_affine_coordinates();
+//     auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
+//     auto strs = pk_ptr->toString();
+//     BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+//         strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),
+//         common::Encode::HexEncode(sign_msg).c_str());
 
 //     std::cout << "verify t: " << t << ", n: " << n
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
@@ -234,6 +235,12 @@ bool BlsManager::IsSignValid(
     *content_to_hash += std::string("_") + std::to_string(bls_msg.finish_req().network_id());
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members)[bls_msg.index()]->pubkey;
+    
+    std::string pk_str;
+    pubkey.Serialize(pk_str);
+    std::cout << "finish message coming." << bls_msg.finish_req().network_id()
+        << ", id: " << common::Encode::HexEncode(security::Secp256k1::ToAddressWithPublicKey(pk_str)) << std::endl;
+
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
         return false;
@@ -245,7 +252,6 @@ bool BlsManager::IsSignValid(
 void BlsManager::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
-    std::cout << "finish message coming." << std::endl;
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         bls_msg.finish_req().network_id());
     if (members == nullptr) {
