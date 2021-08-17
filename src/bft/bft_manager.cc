@@ -688,15 +688,16 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
             bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
+    } else {
+        bft_ptr->LeaderPrecommitOk(
+            member_idx,
+            bft_ptr->gid(),
+            0,
+            true,
+            sign,
+            common::GlobalInfo::Instance()->id());
     }
-
-    bft_ptr->LeaderPrecommitOk(
-        member_idx,
-        bft_ptr->gid(),
-        0,
-        true,
-        sign,
-        common::GlobalInfo::Instance()->id());
+    
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
         BFT_ERROR("this node has not joined consensus network[%u].", bft_ptr->network_id());
