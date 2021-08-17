@@ -145,15 +145,15 @@ int BlsManager::Sign(
     }
 
     libff::alt_bn128_G1 bn_sign;
-    BlsSign::Sign(used_bls_->t(), used_bls_->n(), used_bls_->local_sec_key(), sign_msg, &bn_sign);
+    BlsSign::Sign(t, n, local_sec_key, sign_msg, &bn_sign);
     bn_sign.to_affine_coordinates();
     *sign_x = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.X);
     *sign_y = BLSutils::ConvertToString<libff::alt_bn128_Fq>(bn_sign.Y);
 
-    BLSPublicKeyShare pkey(used_bls_->local_sec_key(), used_bls_->t(), used_bls_->n());
+    BLSPublicKeyShare pkey(local_sec_key, t, n);
     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-        used_bls_->t(), used_bls_->n(), strs->at(0).c_str(), strs->at(1).c_str(),
+        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
         common::Encode::HexEncode(sign_msg).c_str());
 //     std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
