@@ -668,7 +668,12 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     }
 
     libff::alt_bn128_G1 sign;
-    if (bls::BlsManager::Instance()->Sign(bft_ptr->prepare_hash(), &sign) != bls::kBlsSuccess) {
+    if (bls::BlsManager::Instance()->Sign(
+            bft_ptr->min_aggree_member_count(),
+            bft_ptr->member_count(),
+            bft_ptr->local_sec_key(),
+            bft_ptr->prepare_hash(),
+            &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
         return kBftError;
     }
@@ -942,7 +947,12 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     bft_ptr->init_precommit_timeout();
     libff::alt_bn128_G1 sign;
-    if (bls::BlsManager::Instance()->Sign(bft_ptr->precommit_hash(), &sign) != bls::kBlsSuccess) {
+    if (bls::BlsManager::Instance()->Sign(
+            bft_ptr->min_aggree_member_count(),
+            bft_ptr->member_count(),
+            bft_ptr->local_sec_key(),
+            bft_ptr->precommit_hash(),
+            &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
         return kBftError;
     }
@@ -1009,6 +1019,7 @@ int BftManager::BackupPrecommit(
     BftProto::BackupCreatePreCommit(
         header,
         bft_msg,
+        bft_ptr,
         local_node,
         precommit_data,
         true,

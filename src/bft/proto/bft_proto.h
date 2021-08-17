@@ -36,6 +36,7 @@ public:
     static void BackupCreatePreCommit(
         const transport::protobuf::Header& from_header,
         const bft::protobuf::BftMessage& from_bft_msg,
+        const BftInterfacePtr& bft_ptr,
         const dht::NodePtr& local_node,
         const std::string& data,
         bool agree,

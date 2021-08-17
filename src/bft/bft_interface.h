@@ -360,6 +360,10 @@ public:
         return ++prepare_verify_failed_count_;
     }
 
+    const libff::alt_bn128_Fr& local_sec_key() const {
+        return local_sec_key_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -424,7 +428,7 @@ protected:
     std::string precommit_hash_;
     std::string commit_hash_;
     std::atomic<uint32_t> prepare_verify_failed_count_{ 0 };
-
+    libff::alt_bn128_Fr local_sec_key_;
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 

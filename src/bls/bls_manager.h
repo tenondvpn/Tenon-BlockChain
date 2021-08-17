@@ -25,10 +25,16 @@ public:
         uint32_t member_count,
         const libff::alt_bn128_G2& common_public_key);
     int Sign(
+        uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_Fr& local_sec_key,
         const std::string& sign_msg,
         std::string* sign_x,
         std::string* sign_y);
     int Sign(
+        uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_G2& pubkey,
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign);
     int Verify(
@@ -38,6 +44,14 @@ public:
         const libff::alt_bn128_G1& sign,
         const std::string& sign_msg);
     void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block);
+
+    libff::alt_bn128_Fr local_sec_key() {
+        if (used_bls_ == nullptr) {
+            return libff::alt_bn128_Fr::zero();
+        }
+
+        return used_bls_->local_sec_key();
+    }
 
 private:
     BlsManager();

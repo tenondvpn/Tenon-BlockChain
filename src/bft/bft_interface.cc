@@ -28,6 +28,11 @@ int BftInterface::Init() {
         return kBftError;
     }
 
+    local_sec_key_ = bls::BlsManager::Instance()->local_sec_key();
+    if (local_sec_key_ == libff::alt_bn128_Fr::zero()) {
+        return kBftError;
+    }
+
     leader_index_ = leader_mem_ptr_->index;
     // just leader call init
     this_node_is_leader_ = true;
@@ -78,6 +83,11 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         common::GlobalInfo::Instance()->network_id());
     if (leader_count <= 0) {
         BFT_ERROR("leader_count invalid[%d].", leader_count);
+        return false;
+    }
+
+    local_sec_key_ = bls::BlsManager::Instance()->local_sec_key();
+    if (local_sec_key_ == libff::alt_bn128_Fr::zero()) {
         return false;
     }
 
