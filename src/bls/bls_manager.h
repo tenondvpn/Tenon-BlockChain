@@ -15,6 +15,8 @@ class BlsManager {
 public:
     static BlsManager* Instance();
     void ProcessNewElectBlock(
+        bool this_node_elected,
+        uint32_t network_id,
         uint64_t elect_height,
         elect::MembersPtr& new_members);
     void SetUsedElectionBlock(

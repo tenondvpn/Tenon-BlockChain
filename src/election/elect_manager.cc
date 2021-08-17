@@ -435,9 +435,11 @@ void ElectManager::ProcessNewElectBlock(
 
     waiting_members_ptr_[elect_block.shard_network_id()] = shard_members_ptr;
     waiting_elect_height_[elect_block.shard_network_id()] = height;
-    if (*elected) {
-        bls::BlsManager::Instance()->ProcessNewElectBlock(height, shard_members_ptr);
-    }
+    bls::BlsManager::Instance()->ProcessNewElectBlock(
+        *elected,
+        elect_block.shard_network_id(),
+        height,
+        shard_members_ptr);
 }
 
 void ElectManager::UpdatePrevElectMembers(

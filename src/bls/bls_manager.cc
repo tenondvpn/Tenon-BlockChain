@@ -38,8 +38,22 @@ BlsManager* BlsManager::Instance() {
 }
 
 void BlsManager::ProcessNewElectBlock(
+        bool this_node_elected,
+        uint32_t network_id,
         uint64_t elect_height,
         elect::MembersPtr& new_members) {
+    {
+        std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
+        auto iter = finish_networks_map_.find(network_id);
+        if (iter != finish_networks_map_.end()) {
+            finish_networks_map_.erase(iter);
+        }
+    }
+
+    if (!this_node_elected) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     waiting_bls_ = std::make_shared<bls::BlsDkg>();
     waiting_bls_->OnNewElectionBlock(elect_height, new_members);

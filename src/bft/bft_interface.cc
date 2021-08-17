@@ -367,7 +367,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 network_id_),
                 *bls_precommit_agg_sign_,
                 prepare_hash_) != bls::kBlsSuccess) {
-                auto common_pk = elect::ElectManager::Instance()->GetCommonPublicKey(
+            auto common_pk = elect::ElectManager::Instance()->GetCommonPublicKey(
                 elect_height_,
                 network_id_);
             common_pk.to_affine_coordinates();
