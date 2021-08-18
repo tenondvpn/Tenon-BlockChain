@@ -174,8 +174,13 @@ void BftProto::LeaderCreatePreCommit(
             return;
         }
     } else {
+        std::string msg_to_hash = common::Hash::Hash256(
+            bft_msg.gid() +
+            std::to_string(bft_msg.agree()) + "_" +
+            std::to_string(bft_msg.bft_step()) + "_" +
+            bft_ptr->prepare_hash());
         if (!security::Schnorr::Instance()->Sign(
-                bft_ptr->prepare_hash(),
+                msg_to_hash,
                 *(security::Schnorr::Instance()->prikey()),
                 *(security::Schnorr::Instance()->pubkey()),
                 leader_sign)) {

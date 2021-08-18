@@ -115,6 +115,11 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
             return;
         }
 
+        if (!bft_msg.agree()) {
+            LeaderHandleBftOppose(bft_ptr, *header_ptr, bft_msg);
+            return;
+        }
+
 //         uint64_t time2 = common::TimeUtils::TimestampUs();
         HandleBftMessage(bft_ptr, bft_msg, header_ptr);
 //         uint64_t time3 = common::TimeUtils::TimestampUs();
@@ -132,7 +137,7 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
             }
 
             // oppose
-            BackupSendOppose(header_ptr, bft_msg);
+            BackupSendOppose(*header_ptr, bft_msg);
             return;
         }
 
@@ -144,21 +149,93 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         }
     }
 
+    if (!bft_msg.agree()) {
+        BackupHandleBftOppose(bft_ptr, *header_ptr, bft_msg);
+        return;
+    }
+
     HandleBftMessage(bft_ptr, bft_msg, header_ptr);
 }
 
+void BftManager::BackupHandleBftOppose(
+        const BftInterfacePtr& bft_ptr,
+        const transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg) {
+    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
+        BFT_ERROR("backup has no sign");
+        return;
+    }
+
+    if (bft_ptr->leader_mem_ptr() == nullptr) {
+        return;
+    }
+
+    std::string msg_to_hash = common::Hash::Hash256(
+        bft_msg.gid() +
+        std::to_string(bft_msg.agree()) + "_" +
+        std::to_string(bft_msg.bft_step()) + "_" +
+        bft_ptr->prepare_hash());
+    auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
+    if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, bft_ptr->leader_mem_ptr()->pubkey)) {
+        BFT_ERROR("check signature error!");
+        return;
+    }
+
+    RemoveBft(bft_msg.gid(), false);
+}
+
+void BftManager::LeaderHandleBftOppose(
+        const BftInterfacePtr& bft_ptr,
+        const transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg) {
+    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
+        BFT_ERROR("backup has no sign");
+        return;
+    }
+
+    auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
+    if (member_ptr == nullptr) {
+        return;
+    }
+
+    std::string msg_to_hash = common::Hash::Hash256(
+        bft_msg.gid() +
+        std::to_string(bft_msg.agree()) + "_" +
+        std::to_string(bft_msg.bft_step()) + "_" +
+        bft_ptr->prepare_hash());
+    auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
+    if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, member_ptr->pubkey)) {
+        BFT_ERROR("check signature error!");
+        return;
+    }
+
+    int32_t res = kBftSuccess;
+    if (bft_msg.bft_step() == kBftPrepare) {
+        res = bft_ptr->AddPrepareOpposeNode(member_ptr->id);
+    }
+
+    if (bft_msg.bft_step() == kBftPreCommit) {
+        res = bft_ptr->AddPrecommitOpposeNode(member_ptr->id);
+    }
+
+    if (res == kBftOppose) {
+        LeaderCallPrecommitOppose(bft_ptr);
+        RemoveBft(bft_ptr->gid(), false);
+    }
+}
+
 void BftManager::BackupSendOppose(
-        const transport::TransportMessagePtr& header_ptr,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& from_bft_msg) {
     std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
     auto dht_ptr = network::DhtManager::Instance()->GetDht(from_bft_msg.net_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
     msg.set_src_dht_key(local_node->dht_key());
-    msg.set_des_dht_key(header_ptr->src_dht_key());
-    msg.set_des_dht_key_hash(common::Hash::Hash64(header_ptr->src_dht_key()));
+    msg.set_des_dht_key(header.src_dht_key());
+    msg.set_des_dht_key_hash(common::Hash::Hash64(header.src_dht_key()));
     msg.set_priority(transport::kTransportPriorityLow);
-    msg.set_id(header_ptr->id());
+    msg.set_id(header.id());
     msg.set_type(common::kBftMessage);
     msg.set_client(false);
     msg.set_hop_count(0);
@@ -171,22 +248,42 @@ void BftManager::BackupSendOppose(
     bft_msg.set_bft_step(from_bft_msg.bft_step());
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    auto member_count = elect::ElectManager::Instance()->GetMemberCount(from_bft_msg.net_id());
-    auto t = common::GetSignerCount(member_count);
-    std::string bls_sign_x;
-    std::string bls_sign_y;
-    if (bls::BlsManager::Instance()->Sign(
-            t,
-            member_count,
-            bls::BlsManager::Instance()->local_sec_key(),
-            from_bft_msg.prepare_hash(),
-            &bls_sign_x,
-            &bls_sign_y) != bls::kBlsSuccess) {
+//     auto member_count = elect::ElectManager::Instance()->GetMemberCount(from_bft_msg.net_id());
+//     auto t = common::GetSignerCount(member_count);
+//     std::string bls_sign_x;
+//     std::string bls_sign_y;
+//     if (bls::BlsManager::Instance()->Sign(
+//             t,
+//             member_count,
+//             bls::BlsManager::Instance()->local_sec_key(),
+//             from_bft_msg.prepare_hash(),
+//             &bls_sign_x,
+//             &bls_sign_y) != bls::kBlsSuccess) {
+//         return;
+//     }
+// 
+//     bft_msg.set_bls_sign_x(bls_sign_x);
+//     bft_msg.set_bls_sign_y(bls_sign_y);
+    security::Signature sign;
+    std::string msg_to_hash = common::Hash::Hash256(
+        bft_msg.gid() +
+        std::to_string(bft_msg.agree()) + "_" +
+        std::to_string(bft_msg.bft_step()) + "_" +
+        from_bft_msg.prepare_hash());
+    if (!security::Schnorr::Instance()->Sign(
+            msg_to_hash,
+            *(security::Schnorr::Instance()->prikey()),
+            *(security::Schnorr::Instance()->pubkey()),
+            sign)) {
+        BFT_ERROR("leader pre commit signature failed!");
         return;
     }
 
-    bft_msg.set_bls_sign_x(bls_sign_x);
-    bft_msg.set_bls_sign_y(bls_sign_y);
+    std::string sign_challenge_str;
+    std::string sign_response_str;
+    sign.Serialize(sign_challenge_str, sign_response_str);
+    bft_msg.set_sign_challenge(sign_challenge_str);
+    bft_msg.set_sign_response(sign_response_str);
     BftProto::SetLocalPublicIpPort(local_node, bft_msg);
     msg.set_data(bft_msg.SerializeAsString());
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
@@ -708,70 +805,51 @@ int BftManager::BackupPrepare(
     auto local_node = dht_ptr->local_node();
     auto msg = std::make_shared<transport::protobuf::Header>();
     if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
-        std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
-        BftProto::BackupCreatePrepare(
-            header,
-            bft_msg,
-            local_node,
-            res_data,
-            bft_ptr,
-            false,
-            *msg);
+        BackupSendOppose(header, bft_msg);
         RemoveBft(bft_ptr->gid(), false);
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    } else {
-        std::string sign_hash;
-        if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
-            BFT_ERROR("check leader signature error!");
-            return kBftError;
-        }
-
-        std::string data;
-        int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
-        if (prepare_res != kBftSuccess) {
-            std::string res_data = std::to_string(prepare_res) + "," + data;
-            BftProto::BackupCreatePrepare(
-                header,
-                bft_msg,
-                local_node,
-                res_data,
-                bft_ptr,
-                false,
-                *msg);
-            RemoveBft(bft_ptr->gid(), false);
-            BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
-                common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        } else {
-            BftProto::BackupCreatePrepare(
-                header,
-                bft_msg,
-                local_node,
-                data,
-                bft_ptr,
-                true,
-                *msg);
-            BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
-                common::Encode::HexEncode(bft_ptr->gid()).c_str(),
-                bft_msg.node_ip().c_str(), bft_msg.node_port());
-        }
+        return kBftError;
     }
 
+    std::string sign_hash;
+    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
+        return kBftError;
+    }
+
+    std::string data;
+    int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
+    if (prepare_res != kBftSuccess) {
+        BackupSendOppose(header, bft_msg);
+        RemoveBft(bft_ptr->gid(), false);
+        BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        return kBftError;
+    }
+
+    BftProto::BackupCreatePrepare(
+        header,
+        bft_msg,
+        local_node,
+        data,
+        bft_ptr,
+        true,
+        *msg);
+    BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+        common::Encode::HexEncode(bft_ptr->gid()).c_str(),
+        bft_msg.node_ip().c_str(), bft_msg.node_port());
     if (!msg->has_data()) {
         BFT_ERROR("message set data failed!");
+        BackupSendOppose(header, bft_msg);
+        RemoveBft(bft_ptr->gid(), false);
         return kBftError;
     }
 
     bft_ptr->set_status(kBftPreCommit);
     // send prepare to leader
-    if (header.transport_type() == transport::kTcp) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
-    } else {
-        transport::MultiThreadHandler::Instance()->transport()->Send(
-            header.from_ip(), header.from_port(), 0, *msg);
-    }
-
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
 #ifdef TENON_UNITTEST
     backup_prepare_msg_ = *msg;
 #endif
@@ -839,7 +917,6 @@ int BftManager::LeaderPrecommit(
         bft_msg.member_index(),
         bft_ptr->gid(),
         header.id(),
-        bft_msg.agree(),
         sign,
         member_ptr->id);
 //     time3 = common::TimeUtils::TimestampUs();
@@ -851,13 +928,7 @@ int BftManager::LeaderPrecommit(
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
 //         time4 = common::TimeUtils::TimestampUs();
-    } else if (res == kBftOppose) {
-        BFT_DEBUG("LeaderPrecommit RemoveBft kBftOppose pool_index: %u, bft: %s", bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
-        LeaderCallPrecommitOppose(bft_ptr);
-        RemoveBft(bft_ptr->gid(), false);
 //         time4 = common::TimeUtils::TimestampUs();
-    } else {
-        BFT_DEBUG("LeaderPrecommit %d waiting pool_index: %u, bft: %s", bft_msg.agree(), bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
     }
 
 //     BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3);
@@ -901,7 +972,7 @@ void BftManager::HandleOpposeNodeMsg(
     }
 }
 
-int BftManager::LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr) {
+int BftManager::LeaderCallPrecommitOppose(const BftInterfacePtr& bft_ptr) {
     // check pre-commit multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -931,7 +1002,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
 
     if (bft_ptr->LeaderCommitOk(
             elect::ElectManager::Instance()->local_node_member_index(),
-            true,
             sign,
             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
@@ -995,14 +1065,8 @@ int BftManager::BackupPrecommit(
 
     bft_ptr->set_status(kBftCommit);
     // send pre-commit to leader
-    if (header.transport_type() == transport::kTcp) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
-    } else {
-        transport::MultiThreadHandler::Instance()->transport()->Send(
-            header.from_ip(), header.from_port(), 0, *msg);
-    }
-
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        bft_msg.node_ip(), bft_msg.node_port(), 0, *msg);
 #ifdef TENON_UNITTEST
     backup_precommit_msg_ = *msg;
 #endif
@@ -1068,18 +1132,11 @@ int BftManager::LeaderCommit(
 //     time3 = common::TimeUtils::TimestampUs();
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
-        bft_msg.agree(),
         sign,
         member_ptr->id);
 //     time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
         LeaderCallCommit(header, bft_ptr);
-//         time5 = common::TimeUtils::TimestampUs();
-    } else if (res == kBftOppose) {
-//         BFT_DEBUG("LeaderCommit RemoveBft kBftOppose pool_index: %u", bft_ptr->pool_index());
-        LeaderCallCommitOppose(header, bft_ptr);
-        RemoveBft(bft_ptr->gid(), false);
-//         time5 = common::TimeUtils::TimestampUs();
     }
 
 //     BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3, time5 - time4);

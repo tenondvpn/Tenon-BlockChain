@@ -51,12 +51,10 @@ public:
         uint32_t index,
         const std::string& bft_gid,
         uint32_t msg_id,
-        bool agree,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int LeaderCommitOk(
         uint32_t index,
-        bool agree,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int CheckTimeout();
@@ -316,6 +314,28 @@ public:
 
     const libff::alt_bn128_Fr& local_sec_key() const {
         return local_sec_key_;
+    }
+
+    int AddPrepareOpposeNode(const std::string& id) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        precommit_oppose_set_.insert(id);
+        if (precommit_oppose_set_.size() >= min_oppose_member_count_) {
+            leader_handled_precommit_ = true;
+            return kBftOppose;
+        }
+
+        return kBftWaitingBackup;
+    }
+
+    int AddPrecommitOpposeNode(const std::string& id) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        commit_oppose_set_.insert(id);
+        if (commit_oppose_set_.size() >= min_oppose_member_count_) {
+            leader_handled_precommit_ = true;
+            return kBftOppose;
+        }
+
+        return kBftWaitingBackup;
     }
 
 protected:

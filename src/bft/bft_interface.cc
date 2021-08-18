@@ -195,7 +195,6 @@ int BftInterface::LeaderPrecommitOk(
         uint32_t index,
         const std::string& bft_gid,
         uint32_t msg_id,
-        bool agree,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
@@ -204,14 +203,9 @@ int BftInterface::LeaderPrecommitOk(
         return kBftHandled;
     }
 
-    if (agree) {
-        precommit_aggree_set_.insert(id);
-        prepare_bitmap_.Set(index);
-        backup_precommit_signs_[index] = backup_sign;
-    } else {
-        precommit_oppose_set_.insert(id);
-    }
-
+    precommit_aggree_set_.insert(id);
+    prepare_bitmap_.Set(index);
+    backup_precommit_signs_[index] = backup_sign;
 //     BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
 //         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
     if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
@@ -224,17 +218,11 @@ int BftInterface::LeaderPrecommitOk(
         return kBftAgree;
     }
 
-    if (precommit_oppose_set_.size() >= min_oppose_member_count_) {
-        leader_handled_precommit_ = true;
-        return kBftOppose;
-    }
-
     return kBftWaitingBackup;
 }
 
 int BftInterface::LeaderCommitOk(
         uint32_t index,
-        bool agree,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
@@ -246,25 +234,11 @@ int BftInterface::LeaderCommitOk(
         return kBftWaitingBackup;
     }
 
-    if (agree) {
-        auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
-        commit_aggree_set_.insert(id);
-        precommit_bitmap_.Set(index);
-        backup_commit_signs_[index] = backup_sign;
-    } else {
-        prepare_bitmap_.UnSet(index);
-        if (prepare_bitmap_.valid_count() < min_aggree_member_count_) {
-            BFT_ERROR("precommit_bitmap_.valid_count() failed!");
-            return kBftOppose;
-        }
-
-        LeaderCreatePreCommitAggChallenge();
-        RechallengePrecommitClear();
-        return kBftReChallenge;
-        
-    }
-
-    if (precommit_bitmap_ == prepare_bitmap_) {
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
+    commit_aggree_set_.insert(id);
+    precommit_bitmap_.Set(index);
+    backup_commit_signs_[index] = backup_sign;
+    if (commit_aggree_set_.size() >= min_aggree_member_count_) {
         leader_handled_commit_ = true;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {
             BFT_ERROR("leader create commit agg sign failed!");

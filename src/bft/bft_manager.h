@@ -110,7 +110,7 @@ private:
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
         const std::string& res_data);
-    int LeaderCallPrecommitOppose(BftInterfacePtr& bft_ptr);
+    int LeaderCallPrecommitOppose(const BftInterfacePtr& bft_ptr);
     int LeaderCallCommitOppose(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     void BlockToDb();
     void VerifyWaitingBlock();
@@ -135,7 +135,15 @@ private:
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr);
     void BackupSendOppose(
-        const transport::TransportMessagePtr& header_ptr,
+        const transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg);
+    void LeaderHandleBftOppose(
+        const BftInterfacePtr& bft_ptr,
+        const transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg);
+    void BackupHandleBftOppose(
+        const BftInterfacePtr& bft_ptr,
+        const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
