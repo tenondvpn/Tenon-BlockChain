@@ -129,6 +129,7 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
             // oppose
             BackupSendOppose(header_ptr, bft_msg);
+            RemoveBft(bft_msg.gid(), false);
             return;
         }
     } else {
