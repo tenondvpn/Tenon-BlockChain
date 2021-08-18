@@ -18,7 +18,6 @@ public:
         const dht::NodePtr& local_node,
         const std::string& data,
         const BftInterfacePtr& bft_ptr,
-        const security::Signature& sign,
         transport::protobuf::Header& msg);
     static void BackupCreatePrepare(
         const transport::protobuf::Header& from_header,

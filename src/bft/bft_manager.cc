@@ -727,16 +727,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
-    security::Signature leader_sig;
-    if (!security::Schnorr::Instance()->Sign(
-            bft_ptr->prepare_hash(),
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
-            leader_sig)) {
-        BFT_ERROR("leader signature error.");
-        return kBftError;
-    }
-
     libff::alt_bn128_G1 sign;
     if (bls::BlsManager::Instance()->Sign(
             bft_ptr->min_aggree_member_count(),
@@ -784,7 +774,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         local_node,
         prepare_data,
         bft_ptr,
-        leader_sig,
         *prepare_msg);
     network::Route::Instance()->Send(*prepare_msg);
     bft_ptr->init_prepare_timeout();
@@ -1601,35 +1590,44 @@ int BftManager::VerifyLeaderSignature(
         BftInterfacePtr& bft_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         std::string* sign_hash) {
+    if (!bft_msg.agree()) {
+        return kBftError;
+    }
+
     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
         BFT_ERROR("backup has no sign");
         return kBftError;
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    *sign_hash = bft_ptr->prepare_hash();
-    if (bft_msg.agree()) {
-        if (bft_msg.bft_step() == kBftCommit) {
-            std::string msg_hash_src = bft_ptr->prepare_hash();
-            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-                msg_hash_src += std::to_string(bft_msg.bitmap(i));
-            }
-
-            msg_hash_src = common::Hash::Hash256(msg_hash_src);
-            for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
-                msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
-            }
-
-            *sign_hash = common::Hash::Hash256(msg_hash_src);
-        } else if (bft_msg.bft_step() == kBftPreCommit) {
-            std::string msg_hash_src = bft_ptr->prepare_hash();
-            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-                msg_hash_src += std::to_string(bft_msg.bitmap(i));
-            }
-
-            *sign_hash = common::Hash::Hash256(msg_hash_src);
-            bft_ptr->set_precoimmit_hash(*sign_hash);
+    if (bft_msg.bft_step() == kBftCommit) {
+        std::string msg_hash_src = bft_ptr->prepare_hash();
+        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.bitmap(i));
         }
+
+        msg_hash_src = common::Hash::Hash256(msg_hash_src);
+        for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
+        }
+
+        *sign_hash = common::Hash::Hash256(msg_hash_src);
+    } else if (bft_msg.bft_step() == kBftPreCommit) {
+        std::string msg_hash_src = bft_ptr->prepare_hash();
+        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+            msg_hash_src += std::to_string(bft_msg.bitmap(i));
+        }
+
+        *sign_hash = common::Hash::Hash256(msg_hash_src);
+        bft_ptr->set_precoimmit_hash(*sign_hash);
+    } else if (bft_msg.bft_step() == kBftPrepare) {
+        *sign_hash = common::Hash::Hash256(
+            bft_msg.gid() +
+            std::to_string(bft_msg.agree()) + "_" +
+            std::to_string(bft_msg.bft_step()) + "_" +
+            bft_ptr->prepare_hash());
+    } else {
+        return kBftError;
     }
 
     if (!security::Schnorr::Instance()->Verify(

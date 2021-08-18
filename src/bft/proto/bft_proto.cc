@@ -51,7 +51,6 @@ void BftProto::LeaderCreatePrepare(
         const dht::NodePtr& local_node,
         const std::string& data,
         const BftInterfacePtr& bft_ptr,
-        const security::Signature& sign,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(bft_ptr->network_id(), 0);
@@ -69,10 +68,26 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftPrepare);
+    bft_msg.set_agree(true);
     bft_msg.set_pool_index(bft_ptr->pool_index());
+    std::string msg_to_hash = common::Hash::Hash256(
+        bft_msg.gid() +
+        std::to_string(bft_msg.agree()) + "_" +
+        std::to_string(bft_msg.bft_step()) + "_" +
+        bft_ptr->prepare_hash());
+    security::Signature leader_sig;
+    if (!security::Schnorr::Instance()->Sign(
+            msg_to_hash,
+            *(security::Schnorr::Instance()->prikey()),
+            *(security::Schnorr::Instance()->pubkey()),
+            leader_sig)) {
+        BFT_ERROR("leader signature error.");
+        return;
+    }
+
     std::string sign_challenge_str;
     std::string sign_response_str;
-    sign.Serialize(sign_challenge_str, sign_response_str);
+    leader_sig.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
