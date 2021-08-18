@@ -988,7 +988,6 @@ int BftManager::BackupPrecommit(
     }
 
     bft_ptr->set_status(kBftCommit);
-    bft_ptr->set_backup_precommit_msg(msg);
     // send pre-commit to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
