@@ -684,7 +684,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         bft_ptr,
         leader_sig,
         *prepare_msg);
-    bft_ptr->set_leader_precommit_msg(prepare_msg);
     network::Route::Instance()->Send(*prepare_msg);
     bft_ptr->init_prepare_timeout();
 
@@ -699,10 +698,10 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (bft_ptr->backup_prepare_msg() != nullptr) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, *bft_ptr->backup_prepare_msg());
-        return kBftSuccess;
+    std::string sign_hash;
+    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
+        return kBftError;
     }
 
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
@@ -758,7 +757,6 @@ int BftManager::BackupPrepare(
     }
 
     bft_ptr->set_status(kBftPreCommit);
-    bft_ptr->set_backup_prepare_msg(msg);
     // send prepare to leader
     if (header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
@@ -940,7 +938,6 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto local_node = dht_ptr->local_node();
     auto precommit_msg = std::make_shared<transport::protobuf::Header>();  // msg;
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, *precommit_msg);
-    bft_ptr->set_leader_precommit_msg(precommit_msg);
     network::Route::Instance()->Send(*precommit_msg);
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = *precommit_msg;
@@ -952,14 +949,6 @@ int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    if (bft_ptr->backup_precommit_msg() != nullptr) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            bft_msg.node_ip(), bft_msg.node_port(), 0, *bft_ptr->backup_precommit_msg());
-        BFT_INFO("bft_ptr->backup_precommit_msg() error gid: %s",
-            common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        return kBftSuccess;
-    }
-
     std::string sign_hash;
     if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");

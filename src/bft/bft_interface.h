@@ -297,34 +297,6 @@ public:
         return mem_manager_ptr_;
     }
 
-    void set_backup_prepare_msg(
-            std::shared_ptr<transport::protobuf::Header>& bacup_prepare_ptr) {
-        backup_prepare_msg_ = bacup_prepare_ptr;
-    }
-
-    std::shared_ptr<transport::protobuf::Header> backup_prepare_msg() {
-        return backup_prepare_msg_;
-    }
-
-    void set_backup_precommit_msg(
-            std::shared_ptr<transport::protobuf::Header>& bacup_precommit_ptr) {
-        backup_precommit_msg_ = bacup_precommit_ptr;
-    }
-
-    std::shared_ptr<transport::protobuf::Header> backup_precommit_msg() {
-        return backup_precommit_msg_;
-    }
-
-    void set_leader_precommit_msg(
-            std::shared_ptr<transport::protobuf::Header>& leader_precommit_msg) {
-        leader_precommit_msg_ = leader_precommit_msg;
-    }
-    
-    void set_leader_prepare_msg(
-            std::shared_ptr<transport::protobuf::Header>& leader_prepare_msg) {
-        leader_prepare_msg_ = leader_prepare_msg;
-    }
-
     void add_prepair_failed_node_index(uint32_t index) {
         std::lock_guard<std::mutex> guard(prepare_enc_failed_nodes_mutex_);
         prepare_enc_failed_nodes_.insert(index);
@@ -394,10 +366,6 @@ protected:
     std::atomic<bool> aggree_{ true };
     std::atomic<uint32_t> bft_epoch_{ 0 };
     elect::BftMemberPtr leader_mem_ptr_{ nullptr };
-    std::shared_ptr<transport::protobuf::Header> backup_prepare_msg_{ nullptr };
-    std::shared_ptr<transport::protobuf::Header> backup_precommit_msg_{ nullptr };
-    std::shared_ptr<transport::protobuf::Header> leader_prepare_msg_{ nullptr };
-    std::shared_ptr<transport::protobuf::Header> leader_precommit_msg_{ nullptr };
     std::set<uint32_t> prepare_enc_failed_nodes_;
     std::mutex prepare_enc_failed_nodes_mutex_;
     bool this_node_is_leader_{ false };
