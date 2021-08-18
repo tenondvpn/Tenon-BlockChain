@@ -763,7 +763,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
             member_idx,
             bft_ptr->gid(),
             0,
-            true,
             sign,
             common::GlobalInfo::Instance()->id());
     }
