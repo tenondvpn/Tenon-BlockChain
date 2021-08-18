@@ -161,7 +161,7 @@ void BftManager::BackupSendOppose(
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_data(res_data);
     bft_msg.set_leader(true);
-    bft_msg.set_gid(bft_msg.gid());
+    bft_msg.set_gid(from_bft_msg.gid());
     bft_msg.set_net_id(from_bft_msg.net_id());
     bft_msg.set_agree(false);
     bft_msg.set_bft_step(from_bft_msg.bft_step());
