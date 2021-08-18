@@ -129,9 +129,10 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
             // oppose
             BackupSendOppose(header_ptr, bft_msg);
-            RemoveBft(bft_msg.gid(), false);
             return;
         }
+
+        AddBft(bft_ptr);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
@@ -247,7 +248,6 @@ BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_ms
     bft_ptr->set_status(kBftPrepare);
     bft_ptr->set_member_count(
         elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
-    AddBft(bft_ptr);
     return bft_ptr;
 }
 
