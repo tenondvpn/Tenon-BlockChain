@@ -316,7 +316,7 @@ void BlsManager::HandleFinish(
 
     auto common_pk_iter = finish_item->common_pk_map.find(msg_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
-        finish_item->common_pk_map[msg_hash] = *common_pkey.getPublicKey();
+        finish_item->common_pk_map[cpk_hash] = *common_pkey.getPublicKey();
     }
 
     finish_item->all_public_keys[bls_msg.index()] = *pkey.getPublicKey();
@@ -435,7 +435,17 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
-    auto common_pk_iter = finish_item->common_pk_map.find(finish_item->max_finish_hash);
+    uint32_t max_cpk_count = 0;
+    std::string max_cpk_hash;
+    for (auto max_cpk_count_iter = finish_item->max_public_pk_map.begin();
+            max_cpk_count_iter != finish_item->max_public_pk_map.end(); ++max_cpk_count_iter) {
+        if (max_cpk_count_iter->second > max_cpk_count) {
+            max_cpk_count = max_cpk_count_iter->second;
+            max_cpk_hash = max_cpk_count_iter->first;
+        }
+    }
+
+    auto common_pk_iter = finish_item->common_pk_map.find(max_cpk_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
         BLS_ERROR("finish_item->common_pk_map failed!");
         return;
