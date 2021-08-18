@@ -124,13 +124,13 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     }
 
     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
-    security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
-    std::string str_pubkey;
-    leader_mem_ptr_->pubkey.Serialize(str_pubkey);
-    if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
-        BFT_ERROR("leader signature verify failed!");
-        return false;
-    }
+//     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
+//     std::string str_pubkey;
+//     leader_mem_ptr_->pubkey.Serialize(str_pubkey);
+//     if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
+//         BFT_ERROR("leader signature verify failed!");
+//         return false;
+//     }
 
     leader_index_ = leader_mem_ptr_->index;
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
