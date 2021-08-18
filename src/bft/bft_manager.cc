@@ -173,7 +173,7 @@ void BftManager::BackupSendOppose(
             t,
             member_count,
             bls::BlsManager::Instance()->local_sec_key(),
-            bft_msg.prepare_hash(),
+            from_bft_msg.prepare_hash(),
             &bls_sign_x,
             &bls_sign_y) != bls::kBlsSuccess) {
         return;
@@ -235,6 +235,7 @@ void BftManager::HandleBftMessage(
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
     if (!DispatchPool::Instance()->LockPool(bft_msg.pool_index())) {
+        BFT_ERROR("pool has locked[%d]", bft_msg.pool_index());
         return nullptr;
     }
 
