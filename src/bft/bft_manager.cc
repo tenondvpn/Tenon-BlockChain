@@ -125,115 +125,22 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     // backup
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_msg.bft_step() == kBftPrepare) {
-        bft_ptr = GetBft(bft_msg.gid());
+        bft_ptr = CreateBftPtr(bft_msg);
         if (bft_ptr == nullptr) {
-            bft_ptr = CreateBftPtr(bft_msg);
-            if (bft_ptr == nullptr) {
-                // oppose
-                BackupSendOppose(header_ptr, bft_msg);
-                return;
-            }
-
-            bft_ptr->BackupCheckLeaderValid(bft_msg);
+            // oppose
+            BackupSendOppose(header_ptr, bft_msg);
+            return;
         }
 
-        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        bft_ptr->BackupCheckLeaderValid(bft_msg);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
-            if (!bft_msg.agree()) {
-                BFT_ERROR("BackupPrecommit LeaderCallCommitOppose gid: %s", common::Encode::HexEncode(bft_msg.gid()).c_str());
-                return;
-            }
-
-            if (bft_msg.bft_step() > kBftCommit) {
-                return;
-            }
-
-            bft_ptr = CreateBftPtr(bft_msg);
-            if (bft_ptr == nullptr) {
-                // oppose
-                BackupSendOppose(header_ptr, bft_msg);
-                return;
-            }
-
-            bft_ptr->BackupCheckLeaderValid(bft_msg);
-        }
-
-        bft_ptr->AddMsgStepPtr(bft_msg.bft_step(), bft_item_ptr);
-    }
-
-    if (bft_msg.bft_step() == kBftCommit && bft_ptr->status() != kBftCommit) {
-        sync::KeyValueSync::Instance()->AddSync(
-            bft_msg.net_id(),
-            bft_msg.prepare_hash(),
-            sync::kSyncHighest);
-//         BFT_DEBUG("kBftCommit add bft block pre hash sync: %s, bft gid: %s",
-//             common::Encode::HexEncode(bft_msg.prepare_hash()).c_str(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    }
-
-    if (!bft_ptr->prpare_block()) {
-        return;
-    }
-
-    assert(!bft_ptr->prepare_hash().empty());
-    if (bft_ptr->GetEpoch() < bft_msg.epoch()) {
-        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//         BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//             header.id(),
-//             common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//             bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        bft_ptr->SetEpoch(bft_msg.epoch());
-        return;
-    }
-
-    if (bft_ptr->status() == kBftPreCommit) {
-        if (bft_msg.bft_step() == kBftPreCommit) {
-            HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//             BFT_DEBUG("kBftPreCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        } else {
-            auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftPreCommit);
-            if (bft_item_ptr == nullptr) {
-                return;
-            }
-
-//             BFT_DEBUG("kBftPreCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-            HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+            return;
         }
     }
 
-    if (bft_ptr->status() == kBftCommit) {
-        if (bft_msg.bft_step() == kBftCommit) {
-            HandleBftMessage(bft_ptr, bft_msg, header_ptr);
-//             BFT_DEBUG("kBftCommit direct msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-        } else {
-            auto bft_item_ptr = bft_ptr->GetMsgStepPtr(kBftCommit);
-            if (bft_item_ptr == nullptr) {
-                return;
-            }
-
-//             BFT_DEBUG("kBftCommit history recover msg id: %lu, HandleMessage %s, step: %d, from:%s:%d, bft gid: %s",
-//                 header.id(),
-//                 common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//                 bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//                 common::Encode::HexEncode(bft_ptr->gid()).c_str());
-            HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
-        }
-    }
+    HandleBftMessage(bft_ptr, bft_msg, header_ptr);
 }
 
 void BftManager::BackupSendOppose(
