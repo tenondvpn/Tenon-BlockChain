@@ -698,12 +698,6 @@ int BftManager::BackupPrepare(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
-        return kBftError;
-    }
-
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
     auto msg = std::make_shared<transport::protobuf::Header>();
@@ -721,6 +715,12 @@ int BftManager::BackupPrepare(
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
     } else {
+        std::string sign_hash;
+        if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+            BFT_ERROR("check leader signature error!");
+            return kBftError;
+        }
+
         std::string data;
         int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
         if (prepare_res != kBftSuccess) {
