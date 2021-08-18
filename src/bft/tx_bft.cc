@@ -63,10 +63,10 @@ int TxBft::Prepare(
         return kBftInvalidPackage;
     }
 
-    if (!DispatchPool::Instance()->LockPool(pool_index())) {
-        BFT_ERROR("pool index has locked by other leader[%d]!", pool_index());
-        return kBftInvalidPackage;
-    }
+//     if (!DispatchPool::Instance()->LockPool(pool_index())) {
+//         BFT_ERROR("pool index has locked by other leader[%d]!", pool_index());
+//         return kBftInvalidPackage;
+//     }
 
     int32_t invalid_tx_idx = -1;
     int res = kBftSuccess;

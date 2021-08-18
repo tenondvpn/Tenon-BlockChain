@@ -134,6 +134,9 @@ private:
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr);
+    void BackupSendOppose(
+        const transport::TransportMessagePtr& header_ptr,
+        bft::protobuf::BftMessage& bft_msg);
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 

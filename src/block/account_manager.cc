@@ -809,9 +809,11 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    BLOCK_DEBUG("add new block hash: %s, prev hash: %s",
+    BLOCK_DEBUG("add new block hash: %s, prev hash: %s, pool_index: %d, height: %lu",
         common::Encode::HexEncode(block_item->hash()).c_str(),
-        common::Encode::HexEncode(block_item->prehash()).c_str());
+        common::Encode::HexEncode(block_item->prehash()).c_str(),
+        pool_index,
+        block_item->height());
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

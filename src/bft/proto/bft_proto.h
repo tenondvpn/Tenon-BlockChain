@@ -55,8 +55,6 @@ public:
         bool universal,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
         transport::protobuf::Header& msg);
-
-private:
     static void SetLocalPublicIpPort(
         const dht::NodePtr& local_node,
         bft::protobuf::BftMessage& bft_msg);

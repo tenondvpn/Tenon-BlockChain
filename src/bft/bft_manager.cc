@@ -128,6 +128,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
             bft_ptr = CreateBftPtr(bft_msg);
+            if (bft_ptr == nullptr) {
+                // oppose
+                BackupSendOppose(header_ptr, bft_msg);
+                return;
+            }
+
             bft_ptr->BackupCheckLeaderValid(bft_msg);
         }
 
@@ -145,6 +151,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
             }
 
             bft_ptr = CreateBftPtr(bft_msg);
+            if (bft_ptr == nullptr) {
+                // oppose
+                BackupSendOppose(header_ptr, bft_msg);
+                return;
+            }
+
             bft_ptr->BackupCheckLeaderValid(bft_msg);
         }
 
@@ -224,6 +236,52 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     }
 }
 
+void BftManager::BackupSendOppose(
+        const transport::TransportMessagePtr& header_ptr,
+        bft::protobuf::BftMessage& from_bft_msg) {
+    std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(from_bft_msg.net_id());
+    auto local_node = dht_ptr->local_node();
+    transport::protobuf::Header msg;
+    msg.set_src_dht_key(local_node->dht_key());
+    msg.set_des_dht_key(header_ptr->src_dht_key());
+    msg.set_des_dht_key_hash(common::Hash::Hash64(header_ptr->src_dht_key()));
+    msg.set_priority(transport::kTransportPriorityLow);
+    msg.set_id(header_ptr->id());
+    msg.set_type(common::kBftMessage);
+    msg.set_client(false);
+    msg.set_hop_count(0);
+    bft::protobuf::BftMessage bft_msg;
+    bft_msg.set_data(res_data);
+    bft_msg.set_leader(true);
+    bft_msg.set_gid(bft_msg.gid());
+    bft_msg.set_net_id(from_bft_msg.net_id());
+    bft_msg.set_agree(false);
+    bft_msg.set_bft_step(from_bft_msg.bft_step());
+    bft_msg.set_epoch(from_bft_msg.epoch());
+    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    auto member_count = elect::ElectManager::Instance()->GetMemberCount(from_bft_msg.net_id());
+    auto t = common::GetSignerCount(member_count);
+    std::string bls_sign_x;
+    std::string bls_sign_y;
+    if (bls::BlsManager::Instance()->Sign(
+            t,
+            member_count,
+            bls::BlsManager::Instance()->local_sec_key(),
+            bft_msg.prepare_hash(),
+            &bls_sign_x,
+            &bls_sign_y) != bls::kBlsSuccess) {
+        return;
+    }
+
+    bft_msg.set_bls_sign_x(bls_sign_x);
+    bft_msg.set_bls_sign_y(bls_sign_y);
+    BftProto::SetLocalPublicIpPort(local_node, bft_msg);
+    msg.set_data(bft_msg.SerializeAsString());
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        from_bft_msg.node_ip(), from_bft_msg.node_port(), 0, msg);
+}
+
 void BftManager::HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
@@ -271,6 +329,10 @@ void BftManager::HandleBftMessage(
 }
 
 BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_msg) {
+    if (!DispatchPool::Instance()->LockPool(bft_msg.pool_index())) {
+        return nullptr;
+    }
+
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     bft_ptr->set_gid(bft_msg.gid());
     bft_ptr->set_network_id(bft_msg.net_id());

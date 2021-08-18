@@ -110,10 +110,6 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-    if (bft_ptr->leader_mem_ptr() == nullptr) {
-        return;
-    }
-
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(
