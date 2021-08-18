@@ -127,6 +127,10 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     if (bft_msg.bft_step() == kBftPrepare) {
         bft_ptr = CreateBftPtr(bft_msg);
         if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+            if (bft_ptr != nullptr) {
+                DispatchPool::Instance()->BftOver(bft_ptr);
+            }
+
             // oppose
             BackupSendOppose(header_ptr, bft_msg);
             return;
