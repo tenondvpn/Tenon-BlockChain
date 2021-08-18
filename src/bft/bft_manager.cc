@@ -126,13 +126,11 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_msg.bft_step() == kBftPrepare) {
         bft_ptr = CreateBftPtr(bft_msg);
-        if (bft_ptr == nullptr) {
+        if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
             // oppose
             BackupSendOppose(header_ptr, bft_msg);
             return;
         }
-
-        bft_ptr->BackupCheckLeaderValid(bft_msg);
     } else {
         bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
