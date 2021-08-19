@@ -121,7 +121,7 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         }
 
 //         uint64_t time2 = common::TimeUtils::TimestampUs();
-        HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+        HandleBftMessage(bft_ptr, bft_msg, "", header_ptr);
 //         uint64_t time3 = common::TimeUtils::TimestampUs();
 //         BFT_DEBUG("leader HandleBftMessage time use: %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2);
         return;
@@ -154,6 +154,7 @@ void BftManager::CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr) {
 }
 
 void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
+
     // verify leader signature
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_item_ptr->bft_msg.bft_step() == kBftPrepare) {
@@ -196,12 +197,21 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
         }
     }
 
+    std::string sign_hash;
+    if (VerifyLeaderSignature(
+            bft_ptr->leader_mem_ptr(),
+            bft_item_ptr->bft_msg,
+            &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
+        return;
+    }
+
     if (!bft_item_ptr->bft_msg.agree()) {
         BackupHandleBftOppose(bft_ptr, *bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
         return;
     }
 
-    HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
+    HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, sign_hash, bft_item_ptr->header_ptr);
 }
 
 void BftManager::BackupHandleBftOppose(
@@ -341,6 +351,7 @@ void BftManager::BackupSendOppose(
 void BftManager::HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
+        const std::string& sign_hash,
         const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
@@ -364,7 +375,7 @@ void BftManager::HandleBftMessage(
     }
     case kBftPreCommit: {
         if (!bft_msg.leader()) {
-            BackupPrecommit(bft_ptr, header, bft_msg);
+            BackupPrecommit(bft_ptr, header, sign_hash, bft_msg);
         } else {
             LeaderCommit(bft_ptr, header, bft_msg);
         }
@@ -848,12 +859,6 @@ int BftManager::BackupPrepare(
         return kBftError;
     }
 
-    std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
-        return kBftError;
-    }
-
     std::string data;
     int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
     if (prepare_res != kBftSuccess) {
@@ -1060,13 +1065,8 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
 int BftManager::BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
+        const std::string& sign_hash,
         bft::protobuf::BftMessage& bft_msg) {
-    std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
-        return kBftError;
-    }
-
     bft_ptr->set_precoimmit_hash(sign_hash);
     if (!bft_msg.agree()) {
         BFT_INFO("BackupPrecommit LeaderCallCommitOppose gid: %s",
@@ -1294,12 +1294,6 @@ int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-    std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
-        return kBftError;
-    }
-
     if (!bft_msg.agree()) {
         BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
@@ -1668,7 +1662,6 @@ int BftManager::VerifyLeaderSignature(
         }
 
         *sign_hash = common::Hash::Hash256(msg_hash_src);
-//         bft_ptr->set_precoimmit_hash(*sign_hash);
     } else if (bft_msg.bft_step() == kBftPrepare) {
         *sign_hash = common::Hash::Hash256(
             bft_msg.gid() +

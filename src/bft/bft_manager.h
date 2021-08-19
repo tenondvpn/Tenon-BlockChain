@@ -52,6 +52,7 @@ private:
     int BackupPrecommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
+        const std::string& sign_hash,
         bft::protobuf::BftMessage& bft_msg);
     int LeaderCommit(
         BftInterfacePtr& bft_ptr,
@@ -105,6 +106,7 @@ private:
     void HandleBftMessage(
         BftInterfacePtr& bft_ptr,
         bft::protobuf::BftMessage& bft_msg,
+        const std::string& sign_hash,
         const transport::TransportMessagePtr& header_ptr);
     void BackupPrepareOppose(
         const transport::protobuf::Header& header,
