@@ -226,7 +226,7 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
 
     std::string sign_hash;
     if (VerifyLeaderSignature(
-            mem_ptr,
+            bft_ptr->leader_mem_ptr(),
             bft_item_ptr->bft_msg,
             &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
