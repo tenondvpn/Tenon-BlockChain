@@ -154,8 +154,26 @@ void BftManager::CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr) {
 }
 
 void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
-
     // verify leader signature
+    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+        bft_item_ptr->bft_msg.net_id(),
+        bft_item_ptr->bft_msg.member_index());
+    if (mem_ptr == nullptr) {
+        BFT_ERROR("get member failed network: %u, index: %d",
+            bft_item_ptr->bft_msg.net_id(),
+            bft_item_ptr->bft_msg.member_index());
+        return;
+    }
+
+    std::string sign_hash;
+    if (VerifyLeaderSignature(
+            mem_ptr,
+            bft_item_ptr->bft_msg,
+            &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
+        return;
+    }
+
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_item_ptr->bft_msg.bft_step() == kBftPrepare) {
         bft_ptr = CreateBftPtr(bft_item_ptr->bft_msg);
@@ -198,48 +216,13 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
     }
 
     if (!bft_item_ptr->bft_msg.agree()) {
-        BackupHandleBftOppose(bft_ptr, *bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
-        return;
-    }
-
-    std::string sign_hash;
-    if (VerifyLeaderSignature(
-        bft_ptr->leader_mem_ptr(),
-        bft_item_ptr->bft_msg,
-        &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
+        bft_item_ptr->prepare_valid = false;
+        RemoveBft(bft_item_ptr->bft_msg.gid(), false);
+        BFT_DEBUG("success handled leader oppose: %d", bft_item_ptr->bft_msg.pool_index());
         return;
     }
 
     HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, sign_hash, bft_item_ptr->header_ptr);
-}
-
-void BftManager::BackupHandleBftOppose(
-        const BftInterfacePtr& bft_ptr,
-        const transport::protobuf::Header& header,
-        bft::protobuf::BftMessage& bft_msg) {
-    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
-        BFT_ERROR("backup has no sign");
-        return;
-    }
-
-    if (bft_ptr->leader_mem_ptr() == nullptr) {
-        return;
-    }
-
-    std::string msg_to_hash = common::Hash::Hash256(
-        bft_msg.gid() +
-        std::to_string(bft_msg.agree()) + "_" +
-        std::to_string(bft_msg.bft_step()) + "_" +
-        bft_ptr->prepare_hash());
-    auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, bft_ptr->leader_mem_ptr()->pubkey)) {
-        BFT_ERROR("check signature error!");
-        return;
-    }
-
-    RemoveBft(bft_msg.gid(), false);
-    BFT_ERROR("success handled leader oppose: %d", bft_msg.pool_index());
 }
 
 void BftManager::LeaderHandleBftOppose(
@@ -1643,33 +1626,41 @@ int BftManager::VerifyLeaderSignature(
     }
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    if (bft_msg.bft_step() == kBftCommit) {
-        std::string msg_hash_src = bft_msg.prepare_hash();
-        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.bitmap(i));
-        }
-
-        msg_hash_src = common::Hash::Hash256(msg_hash_src);
-        for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
-        }
-
-        *sign_hash = common::Hash::Hash256(msg_hash_src);
-    } else if (bft_msg.bft_step() == kBftPreCommit) {
-        std::string msg_hash_src = bft_msg.prepare_hash();
-        for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-            msg_hash_src += std::to_string(bft_msg.bitmap(i));
-        }
-
-        *sign_hash = common::Hash::Hash256(msg_hash_src);
-    } else if (bft_msg.bft_step() == kBftPrepare) {
+    if (!bft_msg.agree()) {
         *sign_hash = common::Hash::Hash256(
             bft_msg.gid() +
             std::to_string(bft_msg.agree()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_msg.prepare_hash());
     } else {
-        return kBftError;
+        if (bft_msg.bft_step() == kBftCommit) {
+            std::string msg_hash_src = bft_msg.prepare_hash();
+            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.bitmap(i));
+            }
+
+            msg_hash_src = common::Hash::Hash256(msg_hash_src);
+            for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.commit_bitmap(i));
+            }
+
+            *sign_hash = common::Hash::Hash256(msg_hash_src);
+        } else if (bft_msg.bft_step() == kBftPreCommit) {
+            std::string msg_hash_src = bft_msg.prepare_hash();
+            for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+                msg_hash_src += std::to_string(bft_msg.bitmap(i));
+            }
+
+            *sign_hash = common::Hash::Hash256(msg_hash_src);
+        } else if (bft_msg.bft_step() == kBftPrepare) {
+            *sign_hash = common::Hash::Hash256(
+                bft_msg.gid() +
+                std::to_string(bft_msg.agree()) + "_" +
+                std::to_string(bft_msg.bft_step()) + "_" +
+                bft_msg.prepare_hash());
+        } else {
+            return kBftError;
+        }
     }
 
     if (!security::Schnorr::Instance()->Verify(

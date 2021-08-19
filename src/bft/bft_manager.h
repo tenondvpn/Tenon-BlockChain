@@ -144,10 +144,6 @@ private:
         const BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
-    void BackupHandleBftOppose(
-        const BftInterfacePtr& bft_ptr,
-        const transport::protobuf::Header& header,
-        bft::protobuf::BftMessage& bft_msg);
     void BackupHandleBftMessage(BftItemPtr& bft_item_ptr);
     void SetBftGidPrepareInvalid(BftItemPtr& bft_item_ptr);
     void CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr);
