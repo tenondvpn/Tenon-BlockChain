@@ -76,7 +76,7 @@ private:
         const bft::protobuf::BftMessage& bft_msg,
         std::string* tx_hash);
     int VerifyLeaderSignature(
-        BftInterfacePtr& bft_ptr,
+        const elect::BftMemberPtr& mem_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         std::string* sign_hash);
     int VerifyBlsAggSignature(

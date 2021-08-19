@@ -849,7 +849,7 @@ int BftManager::BackupPrepare(
     }
 
     std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
@@ -1062,11 +1062,12 @@ int BftManager::BackupPrecommit(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
 
+    bft_ptr->set_precoimmit_hash(sign_hash);
     if (!bft_msg.agree()) {
         BFT_INFO("BackupPrecommit LeaderCallCommitOppose gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
@@ -1294,7 +1295,7 @@ int BftManager::BackupCommit(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     std::string sign_hash;
-    if (VerifyLeaderSignature(bft_ptr, bft_msg, &sign_hash) != kBftSuccess) {
+    if (VerifyLeaderSignature(bft_ptr->leader_mem_ptr(), bft_msg, &sign_hash) != kBftSuccess) {
         BFT_ERROR("check leader signature error!");
         return kBftError;
     }
@@ -1370,7 +1371,7 @@ int BftManager::BackupCommit(
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    LeaderBroadcastToAcc(bft_ptr, false);
+//     LeaderBroadcastToAcc(bft_ptr, false);
     RemoveBft(bft_ptr->gid(), true);
     // start new bft
     return kBftSuccess;
@@ -1635,7 +1636,7 @@ int BftManager::VerifySignature(
 // }
 
 int BftManager::VerifyLeaderSignature(
-        BftInterfacePtr& bft_ptr,
+        const elect::BftMemberPtr& mem_ptr,
         const bft::protobuf::BftMessage& bft_msg,
         std::string* sign_hash) {
     if (!bft_msg.agree()) {
@@ -1649,7 +1650,7 @@ int BftManager::VerifyLeaderSignature(
 
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     if (bft_msg.bft_step() == kBftCommit) {
-        std::string msg_hash_src = bft_ptr->prepare_hash();
+        std::string msg_hash_src = bft_msg.prepare_hash();
         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
             msg_hash_src += std::to_string(bft_msg.bitmap(i));
         }
@@ -1661,19 +1662,19 @@ int BftManager::VerifyLeaderSignature(
 
         *sign_hash = common::Hash::Hash256(msg_hash_src);
     } else if (bft_msg.bft_step() == kBftPreCommit) {
-        std::string msg_hash_src = bft_ptr->prepare_hash();
+        std::string msg_hash_src = bft_msg.prepare_hash();
         for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
             msg_hash_src += std::to_string(bft_msg.bitmap(i));
         }
 
         *sign_hash = common::Hash::Hash256(msg_hash_src);
-        bft_ptr->set_precoimmit_hash(*sign_hash);
+//         bft_ptr->set_precoimmit_hash(*sign_hash);
     } else if (bft_msg.bft_step() == kBftPrepare) {
         *sign_hash = common::Hash::Hash256(
             bft_msg.gid() +
             std::to_string(bft_msg.agree()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
-            bft_ptr->prepare_hash());
+            bft_msg.prepare_hash());
     } else {
         return kBftError;
     }
@@ -1681,7 +1682,7 @@ int BftManager::VerifyLeaderSignature(
     if (!security::Schnorr::Instance()->Verify(
             *sign_hash,
             sign,
-            bft_ptr->leader_mem_ptr()->pubkey)) {
+            mem_ptr->pubkey)) {
         BFT_ERROR("check signature error!");
         return kBftError;
     }
