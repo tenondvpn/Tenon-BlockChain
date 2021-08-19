@@ -5,6 +5,7 @@
 
 #include "common/utils.h"
 #include "common/tick.h"
+#include "common/limit_hash_map.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -145,6 +146,9 @@ private:
         const BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
+    void BackupHandleBftMessage(BftItemPtr& bft_item_ptr);
+    void SetBftGidPrepareInvalid(BftItemPtr& bft_item_ptr);
+    void CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr);
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 
@@ -160,6 +164,8 @@ private:
     common::Tick verify_block_tick_;
     std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
     common::Tick leader_resend_tick_;
+    common::LimitHashMap<std::string, BftItemPtr> bft_gid_map_;
+    std::mutex bft_gid_map_mutex_;
 
 #ifdef TENON_UNITTEST
     // just for test

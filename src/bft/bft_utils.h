@@ -93,6 +93,7 @@ enum WaitingBlockType {
 struct BftItem {
     transport::TransportMessagePtr header_ptr;
     bft::protobuf::BftMessage bft_msg;
+    bool prepare_valid{ true };
 };
 
 typedef std::shared_ptr<BftItem> BftItemPtr;

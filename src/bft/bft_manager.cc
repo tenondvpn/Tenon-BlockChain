@@ -127,34 +127,81 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
+    // same leader unlock pool 
     // backup
+    BackupHandleBftMessage(bft_item_ptr);
+    BftItemPtr old_bft_item_ptr = nullptr;
+    if (bft_msg.bft_step() == kBftPrepare && bft_item_ptr->prepare_valid) {
+        std::lock_guard<std::mutex> guard(bft_gid_map_mutex_);
+        bft_gid_map_.Get(bft_item_ptr->bft_msg.gid(), &old_bft_item_ptr);
+    }
+
+    if (old_bft_item_ptr != nullptr && old_bft_item_ptr->bft_msg.bft_step() == kBftPreCommit) {
+        BackupHandleBftMessage(old_bft_item_ptr);
+    }
+}
+
+void BftManager::SetBftGidPrepareInvalid(BftItemPtr& bft_item_ptr) {
+    bft_item_ptr->prepare_valid = false;
+    std::lock_guard<std::mutex> guard(bft_gid_map_mutex_);
+    bft_gid_map_.Insert(bft_item_ptr->bft_msg.gid(), bft_item_ptr);
+}
+
+void BftManager::CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr) {
+    bft_item_ptr->prepare_valid = true;
+    std::lock_guard<std::mutex> guard(bft_gid_map_mutex_);
+    bft_gid_map_.Insert(bft_item_ptr->bft_msg.gid(), bft_item_ptr);
+}
+
+void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
+    // verify leader signature
     BftInterfacePtr bft_ptr = nullptr;
-    if (bft_msg.bft_step() == kBftPrepare) {
-        bft_ptr = CreateBftPtr(bft_msg);
-        if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_msg)) {
+    if (bft_item_ptr->bft_msg.bft_step() == kBftPrepare) {
+        bft_ptr = CreateBftPtr(bft_item_ptr->bft_msg);
+        if (bft_ptr == nullptr || !bft_ptr->BackupCheckLeaderValid(bft_item_ptr->bft_msg)) {
             if (bft_ptr != nullptr) {
                 DispatchPool::Instance()->BftOver(bft_ptr);
             }
 
+            SetBftGidPrepareInvalid(bft_item_ptr);
             // oppose
-            BackupSendOppose(*header_ptr, bft_msg);
+            BackupSendOppose(*bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
             return;
         }
 
         AddBft(bft_ptr);
     } else {
-        bft_ptr = GetBft(bft_msg.gid());
+        bft_ptr = GetBft(bft_item_ptr->bft_msg.gid());
         if (bft_ptr == nullptr) {
+            // if commit, check agg sign and just commit
+            if (bft_item_ptr->bft_msg.bft_step() == kBftCommit) {
+                // just commit it 
+                return;
+            }
+
+            // if precommit, if prepare failed, just return, if no prepare, just cache it
+            if (bft_item_ptr->bft_msg.bft_step() == kBftPreCommit) {
+                BftItemPtr old_bft_item_ptr = nullptr;
+                {
+                    std::lock_guard<std::mutex> guard(bft_gid_map_mutex_);
+                    if (bft_gid_map_.Get(bft_item_ptr->bft_msg.gid(), &old_bft_item_ptr)) {
+                        return;
+                    }
+                }
+
+                CacheBftPrecommitMsg(bft_item_ptr);
+            }
+
             return;
         }
     }
 
-    if (!bft_msg.agree()) {
-        BackupHandleBftOppose(bft_ptr, *header_ptr, bft_msg);
+    if (!bft_item_ptr->bft_msg.agree()) {
+        BackupHandleBftOppose(bft_ptr, *bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
         return;
     }
 
-    HandleBftMessage(bft_ptr, bft_msg, header_ptr);
+    HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, bft_item_ptr->header_ptr);
 }
 
 void BftManager::BackupHandleBftOppose(
@@ -182,6 +229,7 @@ void BftManager::BackupHandleBftOppose(
     }
 
     RemoveBft(bft_msg.gid(), false);
+    BFT_ERROR("success handled leader oppose: %d", bft_msg.pool_index());
 }
 
 void BftManager::LeaderHandleBftOppose(
