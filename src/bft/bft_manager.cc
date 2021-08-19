@@ -197,17 +197,17 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
         }
     }
 
-    std::string sign_hash;
-    if (VerifyLeaderSignature(
-            bft_ptr->leader_mem_ptr(),
-            bft_item_ptr->bft_msg,
-            &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
+    if (!bft_item_ptr->bft_msg.agree()) {
+        BackupHandleBftOppose(bft_ptr, *bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
         return;
     }
 
-    if (!bft_item_ptr->bft_msg.agree()) {
-        BackupHandleBftOppose(bft_ptr, *bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
+    std::string sign_hash;
+    if (VerifyLeaderSignature(
+        bft_ptr->leader_mem_ptr(),
+        bft_item_ptr->bft_msg,
+        &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
         return;
     }
 
