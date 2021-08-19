@@ -155,25 +155,6 @@ void BftManager::CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr) {
 
 void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
     // verify leader signature
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-        bft_item_ptr->bft_msg.net_id(),
-        bft_item_ptr->bft_msg.member_index());
-    if (mem_ptr == nullptr) {
-        BFT_ERROR("get member failed network: %u, index: %d",
-            bft_item_ptr->bft_msg.net_id(),
-            bft_item_ptr->bft_msg.member_index());
-        return;
-    }
-
-    std::string sign_hash;
-    if (VerifyLeaderSignature(
-            mem_ptr,
-            bft_item_ptr->bft_msg,
-            &sign_hash) != kBftSuccess) {
-        BFT_ERROR("check leader signature error!");
-        return;
-    }
-
     BftInterfacePtr bft_ptr = nullptr;
     if (bft_item_ptr->bft_msg.bft_step() == kBftPrepare) {
         bft_ptr = CreateBftPtr(bft_item_ptr->bft_msg);
@@ -192,6 +173,25 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
     } else {
         bft_ptr = GetBft(bft_item_ptr->bft_msg.gid());
         if (bft_ptr == nullptr) {
+            if (!bft_item_ptr->bft_msg.agree()) {
+                auto mem_ptr = elect::ElectManager::Instance()->GetMember(
+                    bft_item_ptr->bft_msg.net_id(),
+                    bft_item_ptr->bft_msg.member_index());
+                if (mem_ptr == nullptr) {
+                    BFT_ERROR("get member failed network: %u, index: %d",
+                        bft_item_ptr->bft_msg.net_id(),
+                        bft_item_ptr->bft_msg.member_index());
+                    return;
+                }
+
+                bft_item_ptr->prepare_valid = false;
+                BackupHandleBftOppose(
+                    mem_ptr,
+                    *bft_item_ptr->header_ptr,
+                    bft_item_ptr->bft_msg);
+                return;
+            }
+
             // if commit, check agg sign and just commit
             if (bft_item_ptr->bft_msg.bft_step() == kBftCommit) {
                 // just commit it 
@@ -217,12 +217,51 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
 
     if (!bft_item_ptr->bft_msg.agree()) {
         bft_item_ptr->prepare_valid = false;
-        RemoveBft(bft_item_ptr->bft_msg.gid(), false);
-        BFT_DEBUG("success handled leader oppose: %d", bft_item_ptr->bft_msg.pool_index());
+        BackupHandleBftOppose(
+            bft_ptr->leader_mem_ptr(),
+            *bft_item_ptr->header_ptr,
+            bft_item_ptr->bft_msg);
+        return;
+    }
+
+    std::string sign_hash;
+    if (VerifyLeaderSignature(
+            mem_ptr,
+            bft_item_ptr->bft_msg,
+            &sign_hash) != kBftSuccess) {
+        BFT_ERROR("check leader signature error!");
         return;
     }
 
     HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, sign_hash, bft_item_ptr->header_ptr);
+}
+
+void BftManager::BackupHandleBftOppose(
+        const elect::BftMemberPtr& mem_ptr,
+        const transport::protobuf::Header& header,
+        bft::protobuf::BftMessage& bft_msg) {
+    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
+        BFT_ERROR("backup has no sign");
+        return;
+    }
+
+    if (mem_ptr == nullptr) {
+        return;
+    }
+
+    std::string msg_to_hash = common::Hash::Hash256(
+        bft_msg.gid() +
+        std::to_string(bft_msg.agree()) + "_" +
+        std::to_string(bft_msg.bft_step()) + "_" +
+        bft_msg.prepare_hash());
+    auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
+    if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, mem_ptr->pubkey)) {
+        BFT_ERROR("check signature error!");
+        return;
+    }
+
+    RemoveBft(bft_msg.gid(), false);
+    BFT_ERROR("success handled leader oppose: %d", bft_msg.pool_index());
 }
 
 void BftManager::LeaderHandleBftOppose(
