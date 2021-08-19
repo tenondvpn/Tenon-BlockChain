@@ -164,7 +164,7 @@ private:
     common::Tick verify_block_tick_;
     std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
     common::Tick leader_resend_tick_;
-    common::LimitHashMap<std::string, BftItemPtr> bft_gid_map_;
+    common::LimitHashMap<std::string, BftItemPtr> bft_gid_map_{ 102400 };
     std::mutex bft_gid_map_mutex_;
 
 #ifdef TENON_UNITTEST
