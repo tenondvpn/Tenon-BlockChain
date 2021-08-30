@@ -212,7 +212,8 @@ int BaseDht::Bootstrap(
             get_init_msg,
             init_uid,
             boot_nodes[i]->pubkey_str(),
-            sign_msg_cb_, msg);
+            sign_msg_cb_,
+            msg);
         // TODO(): fix local_port to public_port
         if (transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                     boot_nodes[i]->public_ip(),

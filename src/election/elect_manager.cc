@@ -56,7 +56,7 @@ int ElectManager::Join(uint32_t network_id) {
     elect_node_ptr_ = std::make_shared<ElectNode>(
         network_id,
         std::bind(
-            &ElectManager::GetMemberWithId,
+            &ElectManager::NodeHasElected,
             this,
             std::placeholders::_1,
             std::placeholders::_2));
@@ -430,6 +430,18 @@ void ElectManager::ProcessNewElectBlock(
             *elected = true;
         }
 
+        ELECT_DEBUG("FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: %d,"
+            "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+            elect_block.shard_network_id(),
+            common::Encode::HexEncode(id).c_str(),
+            in[i].pool_idx_mod_num());
+        std::cout << "FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: "
+            << elect_block.shard_network_id()
+            << ", member leader: " << common::Encode::HexEncode(id)
+            << ", (*iter)->pool_index_mod_num: " << in[i].pool_idx_mod_num()
+            << ", leader count: " << elect_block.leader_count()
+            << std::endl;
+
         ++member_index;
     }
 
@@ -578,6 +590,33 @@ elect::MembersPtr ElectManager::GetNetworkMembers(uint32_t network_id) {
 
 elect::MembersPtr ElectManager::GetWaitingNetworkMembers(uint32_t network_id) {
     return waiting_members_ptr_[network_id];
+}
+
+bool ElectManager::NodeHasElected(uint32_t network_id, const std::string& node_id) {
+    if (network_id < network::kRootCongressNetworkId ||
+            network_id >= network::kConsensusShardEndNetworkId) {
+        return false;
+    }
+
+    auto valid_members = members_ptr_[network_id];
+    if (valid_members != nullptr) {
+        for (auto iter = valid_members->begin(); iter != valid_members->end(); ++iter) {
+            if ((*iter)->id == node_id) {
+                return true;
+            }
+        }
+    }
+
+    auto waiting_members = waiting_members_ptr_[network_id];
+    if (waiting_members == nullptr) {
+        for (auto iter = waiting_members->begin(); iter != waiting_members->end(); ++iter) {
+            if ((*iter)->id == node_id) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 elect::BftMemberPtr ElectManager::GetMemberWithId(

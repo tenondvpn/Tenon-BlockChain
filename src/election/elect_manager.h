@@ -122,6 +122,7 @@ private:
     void ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block, bool* elected);
+    bool NodeHasElected(uint32_t network_id, const std::string& node_id);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 

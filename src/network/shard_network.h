@@ -152,7 +152,7 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
         }
     }
 
-    return true;
+    return false;
 }
 
 template<class DhtType>
@@ -164,8 +164,11 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
 
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
     auto network_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key());
-    if (IsThisNetworkNode(network_id, node->id()) &&
-            (node->join_way == dht::kJoinFromBootstrapReq ||
+    if (!IsThisNetworkNode(network_id, node->id())) {
+        return dht::kDhtError;
+    }
+
+    if ((node->join_way == dht::kJoinFromBootstrapReq ||
             node->join_way == dht::kJoinFromDetection ||
             node->join_way == dht::kJoinFromConnect)) {
         if (node->enc_data.empty() || node->enc_data.size() > 128) {
@@ -215,6 +218,9 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
         if (now_tm_sec <= peer_tm_sec - 15 && now_tm_sec >= peer_tm_sec + 15) {
             return dht::kDhtError;
         }
+
+        std::cout << "LLLLLLLLL join success." << std::endl;
+        return dht::kDhtSuccess;
     }
 
     return dht::kDhtSuccess;
