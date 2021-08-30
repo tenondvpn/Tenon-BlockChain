@@ -268,6 +268,11 @@ void BftManager::LeaderHandleBftOppose(
         const BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    if (bft_msg.member_index() >= bft_ptr->members_ptr()->size()) {
+        BFT_ERROR("invalid bft message member index: %d", bft_msg.member_index());
+        return;
+    }
+
     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
         BFT_ERROR("backup has no sign");
         return;

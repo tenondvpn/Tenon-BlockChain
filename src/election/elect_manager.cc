@@ -347,8 +347,8 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         std::lock_guard<std::mutex> guard(network_leaders_mutex_);
         std::unordered_set<std::string> leaders;
         for (auto iter = node_index_vec.begin();
-            iter != node_index_vec.end() &&
-            leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
+                iter != node_index_vec.end() &&
+                leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
             leaders.insert(tmp_leaders[*iter]->id);
             if (tmp_leaders[*iter]->id == common::GlobalInfo::Instance()->id()) {
                 local_node_is_super_leader_ = true;
@@ -596,11 +596,16 @@ elect::BftMemberPtr ElectManager::GetMember(uint32_t network_id, uint32_t index)
         return nullptr;
     }
 
-    if (index >= members_ptr_[network_id]->size()) {
+    auto mems_ptr = members_ptr_[network_id];
+    if (mems_ptr == nullptr) {
         return nullptr;
     }
 
-    return (*members_ptr_[network_id])[index];
+    if (index >= mems_ptr->size()) {
+        return nullptr;
+    }
+
+    return (*mems_ptr)[index];
 }
 
 uint32_t ElectManager::GetMemberCount(uint32_t network_id) {
