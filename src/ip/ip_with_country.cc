@@ -61,7 +61,7 @@ uint8_t IpWithCountry::GetCountryUintCode(const std::string& ip) {
             }
         }
     }
-    return kInvalidCountryCode;
+    return 0;
 }
 
 std::string IpWithCountry::GetCountryCode(const std::string& ip) {

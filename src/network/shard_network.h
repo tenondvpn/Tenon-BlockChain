@@ -20,7 +20,7 @@ namespace tenon {
 
 namespace network {
 
-typedef std::function<elect::BftMemberPtr(
+typedef std::function<bool(
     uint32_t network_id,
     const std::string& node_id)> NetworkMemberCallback;
 
@@ -146,7 +146,7 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
             network_id >= network::kRootCongressNetworkId &&
             network_id < network::kConsensusShardEndNetworkId) {
         if (member_callback_ != nullptr) {
-            if (member_callback_(network_id, id) != nullptr) {
+            if (member_callback_(network_id, id)) {
                 return true;
             }
         }

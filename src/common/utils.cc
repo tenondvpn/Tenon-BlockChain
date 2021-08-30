@@ -89,8 +89,8 @@ std::string FixedCreateGID(const std::string& str) {
     return common::Hash::Hash256(str);
 }
 
-uint32_t RandomCountry() {
-    return rand() % FX;
+uint8_t RandomCountry() {
+    return rand() % (FX + 1);
 }
 
 void itimeofday(long *sec, long *usec) {

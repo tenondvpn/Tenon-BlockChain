@@ -807,8 +807,13 @@ bool BaseDht::NodeValid(NodePtr& node) {
         return false;
     }
 
-    auto country_id = ip::IpWithCountry::Instance()->GetCountryUintCode(node->public_ip());
     auto dht_key_country_code = DhtKeyManager::DhtKeyGetCountry(node->dht_key());
+    if (dht_key_country_code > common::CountryCode::FX) {
+        std::cout << "invalid dht key country code: " << dht_key_country_code << std::endl;
+        return false;
+    }
+
+    auto country_id = ip::IpWithCountry::Instance()->GetCountryUintCode(node->public_ip());
     if (country_id != ip::kInvalidCountryCode) {
         if (country_id != dht_key_country_code) {
             DHT_ERROR("network id[%d] node public ip[%s] country [%d] not equal to node dht key country[%d]",
@@ -819,6 +824,7 @@ bool BaseDht::NodeValid(NodePtr& node) {
             return false;
         }
     }
+
     return true;
 }
 
