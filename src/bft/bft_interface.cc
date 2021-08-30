@@ -188,6 +188,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     }
 
     elect_height_ = local_elect_height;
+    members_ptr_ = members;
     return true;
 }
 
