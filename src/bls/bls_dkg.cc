@@ -32,7 +32,7 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {
-    std::cout << "new election block: " << elect_height << std::endl;
+//     std::cout << "new election block: " << elect_height << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;

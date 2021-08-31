@@ -76,7 +76,7 @@ void BlsManager::SetUsedElectionBlock(
         std::to_string(elect_height) + "_" +
         std::to_string(network_id) + "_" +
         common::GlobalInfo::Instance()->id();
-    std::cout << "get prikey from db: " << common::Encode::HexEncode(key) << std::endl;
+//     std::cout << "get prikey from db: " << common::Encode::HexEncode(key) << std::endl;
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
@@ -113,7 +113,7 @@ void BlsManager::SetUsedElectionBlock(
         local_sec_key,
         local_publick_key,
         common_public_key);
-    std::cout << "used_bls_->n(): " << used_bls_->n() << std::endl;
+//     std::cout << "used_bls_->n(): " << used_bls_->n() << std::endl;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -247,8 +247,8 @@ bool BlsManager::IsSignValid(
     auto& pubkey = (*members)[bls_msg.index()]->pubkey;
     std::string pk_str;
     pubkey.Serialize(pk_str);
-    std::cout << "finish message coming." << bls_msg.finish_req().network_id()
-        << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(pk_str)) << std::endl;
+//     std::cout << "finish message coming." << bls_msg.finish_req().network_id()
+//         << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(pk_str)) << std::endl;
 
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
@@ -337,10 +337,10 @@ void BlsManager::HandleFinish(
         if (max_iter->second->count > finish_item->max_finish_count) {
             finish_item->max_finish_count = max_iter->second->count;
             finish_item->max_finish_hash = msg_hash;
-            std::cout << "finsh called: " << bls_msg.finish_req().network_id() << ", "
-                << common::Encode::HexEncode(msg_hash)
-                << ", count: " << finish_item->max_finish_count
-                << std::endl;
+//             std::cout << "finsh called: " << bls_msg.finish_req().network_id() << ", "
+//                 << common::Encode::HexEncode(msg_hash)
+//                 << ", count: " << finish_item->max_finish_count
+//                 << std::endl;
         }
 
         return;
@@ -467,13 +467,13 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
-    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
-        << ", member count: " << members->size()
-        << ", " << common_pk->x_c0()
-        << ", " << common_pk->x_c1()
-        << ", " << common_pk->y_c0()
-        << ", " << common_pk->y_c1()
-        << std::endl;
+//     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
+//         << ", member count: " << members->size()
+//         << ", " << common_pk->x_c0()
+//         << ", " << common_pk->x_c1()
+//         << ", " << common_pk->y_c0()
+//         << ", " << common_pk->y_c1()
+//         << std::endl;
 }
 
 BlsManager::BlsManager() {

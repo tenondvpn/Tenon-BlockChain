@@ -226,18 +226,18 @@ void ElectManager::OnNewElectBlock(
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
         } else {
-//             std::vector<std::string> erase_nodes;
-//             for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
-//                 if (now_elected_ids_.find(*iter) != now_elected_ids_.end()) {
-//                     continue;
-//                 }
-// 
-//                 erase_nodes.push_back(*iter);
-//             }
-// 
-//             auto dht = network::DhtManager::Instance()->GetDht(local_netid);
-//             dht->Drop(erase_nodes);
-//             prev_elected_ids_ = now_elected_ids_;
+            std::vector<std::string> erase_nodes;
+            for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
+                if (now_elected_ids_.find(*iter) != now_elected_ids_.end()) {
+                    continue;
+                }
+
+                erase_nodes.push_back(*iter);
+            }
+
+            auto dht = network::DhtManager::Instance()->GetDht(local_netid);
+            dht->Drop(erase_nodes);
+            prev_elected_ids_ = now_elected_ids_;
         }
     }
 }
@@ -251,7 +251,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         return;
     }
 
-    std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
+//     std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
     bft::protobuf::Block block_item;
     if (block::BlockManager::Instance()->GetBlockWithHeight(
             network::kRootCongressNetworkId,
@@ -296,7 +296,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto& in = prev_elect_block.in();
-    std::cout << "in member count: " << in.size() << std::endl;
+//     std::cout << "in member count: " << in.size() << std::endl;
     auto shard_members_ptr = std::make_shared<Members>();
     auto shard_members_index_ptr = std::make_shared<
         std::unordered_map<std::string, uint32_t>>();
@@ -474,7 +474,7 @@ void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
         bool elected) {
-    std::cout << "DDDDDDDDDDDD " << members->size() << ":" << (uint32_t)elect_block.prev_members().bls_pubkey_size() << std::endl;
+//     std::cout << "DDDDDDDDDDDD " << members->size() << ":" << (uint32_t)elect_block.prev_members().bls_pubkey_size() << std::endl;
     if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
     }
@@ -494,11 +494,11 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.prev_members().bls_pubkey(i).y_c1()
         };
 
-        std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
-            << ", " << elect_block.prev_members().bls_pubkey(i).x_c1()
-            << ", " << elect_block.prev_members().bls_pubkey(i).y_c0()
-            << ", " << elect_block.prev_members().bls_pubkey(i).y_c1()
-            << std::endl;
+//         std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
+//             << ", " << elect_block.prev_members().bls_pubkey(i).x_c1()
+//             << ", " << elect_block.prev_members().bls_pubkey(i).y_c0()
+//             << ", " << elect_block.prev_members().bls_pubkey(i).y_c1()
+//             << std::endl;
         BLSPublicKey pkey(
             std::make_shared<std::vector<std::string>>(pkey_str),
             t,
@@ -513,11 +513,11 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.prev_members().common_pubkey().y_c1()
     };
 
-    std::cout << "set common public key: " << i << ", " << elect_block.prev_members().common_pubkey().x_c0()
-        << ", " << elect_block.prev_members().common_pubkey().x_c1()
-        << ", " << elect_block.prev_members().common_pubkey().y_c0()
-        << ", " << elect_block.prev_members().common_pubkey().y_c1()
-        << std::endl;
+//     std::cout << "set common public key: " << i << ", " << elect_block.prev_members().common_pubkey().x_c0()
+//         << ", " << elect_block.prev_members().common_pubkey().x_c1()
+//         << ", " << elect_block.prev_members().common_pubkey().y_c0()
+//         << ", " << elect_block.prev_members().common_pubkey().y_c1()
+//         << std::endl;
 
     BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, members->size());
     height_with_block_.SetCommonPublicKey(
