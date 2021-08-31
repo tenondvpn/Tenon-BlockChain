@@ -205,7 +205,7 @@ void ElectManager::OnNewElectBlock(
     auto local_netid = common::GlobalInfo::Instance()->network_id();
     if (!elected) {
         if (local_netid == elect_block.shard_network_id()) {
-            Quit(local_netid);
+//             Quit(local_netid);
             if (Join(local_netid + network::kConsensusWaitingShardOffset) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]",
                     local_netid + network::kConsensusWaitingShardOffset);
@@ -218,7 +218,7 @@ void ElectManager::OnNewElectBlock(
         }
     } else {
         if (local_netid != elect_block.shard_network_id()) {
-            Quit(local_netid);
+//             Quit(local_netid);
             if (Join(elect_block.shard_network_id()) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]", elect_block.shard_network_id());
             } else {
@@ -226,18 +226,18 @@ void ElectManager::OnNewElectBlock(
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
         } else {
-            std::vector<std::string> erase_nodes;
-            for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
-                if (now_elected_ids_.find(*iter) != now_elected_ids_.end()) {
-                    continue;
-                }
-
-                erase_nodes.push_back(*iter);
-            }
-
-            auto dht = network::DhtManager::Instance()->GetDht(local_netid);
-            dht->Drop(erase_nodes);
-            prev_elected_ids_ = now_elected_ids_;
+//             std::vector<std::string> erase_nodes;
+//             for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
+//                 if (now_elected_ids_.find(*iter) != now_elected_ids_.end()) {
+//                     continue;
+//                 }
+// 
+//                 erase_nodes.push_back(*iter);
+//             }
+// 
+//             auto dht = network::DhtManager::Instance()->GetDht(local_netid);
+//             dht->Drop(erase_nodes);
+//             prev_elected_ids_ = now_elected_ids_;
         }
     }
 }

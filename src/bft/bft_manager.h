@@ -156,15 +156,15 @@ private:
 
     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map_;
     std::mutex bft_hash_map_mutex_;
-    common::Tick timeout_tick_;
     std::atomic<uint32_t> tps_{ 0 };
     std::atomic<uint32_t> pre_tps_{ 0 };
     uint64_t tps_btime_{ 0 };
     BlockQueue block_queue_[transport::kMessageHandlerThreadCount];
-    common::Tick block_to_db_tick_;
     WaitingBlockQueue waiting_verify_block_queue_[transport::kMessageHandlerThreadCount];
-    common::Tick verify_block_tick_;
     std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
+    common::Tick timeout_tick_;
+    common::Tick block_to_db_tick_;
+    common::Tick verify_block_tick_;
     common::Tick leader_resend_tick_;
     common::LimitHashMap<std::string, BftItemPtr> bft_gid_map_{ 102400 };
     std::mutex bft_gid_map_mutex_;
