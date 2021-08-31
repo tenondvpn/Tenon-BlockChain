@@ -311,13 +311,12 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     std::vector<libff::alt_bn128_G1> all_signs;
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = prepare_bitmap_.data().size() * 64;
-    for (uint32_t i = 0; i < bit_size; ++i) {
-        if (!prepare_bitmap_.Valid(i)) {
-            continue;
-        }
-
-        all_signs.push_back(backup_precommit_signs_[i]);
-    }
+//     for (uint32_t i = 0; i < bit_size; ++i) {
+//         if (!prepare_bitmap_.Valid(i)) {
+//             continue;
+//         }
+// 
+//     }
 
     uint32_t t = min_aggree_member_count_;
     uint32_t n = members_ptr_->size();
@@ -327,6 +326,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             continue;
         }
 
+        all_signs.push_back(backup_precommit_signs_[i]);
         idx_vec.push_back(i + 1);
         if (idx_vec.size() >= min_aggree_member_count_) {
             break;
@@ -373,7 +373,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
 }
 
 int BftInterface::LeaderCreateCommitAggSign() {
-    assert(precommit_bitmap_ == prepare_bitmap_);
     std::vector<libff::alt_bn128_G1> all_signs;
     std::vector<security::Response> responses;
     std::vector<security::PublicKey> pubkeys;

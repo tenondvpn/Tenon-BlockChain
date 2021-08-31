@@ -32,6 +32,8 @@ public:
     virtual int Destroy();
     virtual int Join(NodePtr& node);
     virtual int Drop(NodePtr& node);
+    virtual int Drop(const std::vector<std::string>& ids);
+    virtual int Drop(const std::string& id);
     virtual int Bootstrap(
             const std::vector<NodePtr>& boot_nodes,
             int32_t get_init_msg = 0,

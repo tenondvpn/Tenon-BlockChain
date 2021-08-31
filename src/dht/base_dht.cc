@@ -66,12 +66,16 @@ int BaseDht::Destroy() {
 int BaseDht::Join(NodePtr& node) {
     if (node_join_cb_ != nullptr) {
         if (node_join_cb_(node) != kDhtSuccess) {
+            DHT_ERROR("check callback join node failed! %s",
+                common::Encode::HexEncode(node->id()).c_str());
             return kDhtError;
         }
     }
 
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
+        DHT_ERROR("CheckJoin join node failed! %s",
+            common::Encode::HexEncode(node->id()).c_str());
         return res;
     }
 
@@ -100,6 +104,8 @@ int BaseDht::Join(NodePtr& node) {
     auto iter = node_map_.insert(std::make_pair(node->dht_key_hash, node));
 //     DHT_DEBUG("MMMMMMMM node_map_ size: %u", node_map_.size());
     if (!iter.second) {
+        DHT_ERROR("kDhtNodeJoined join node failed! %s",
+            common::Encode::HexEncode(node->id()).c_str());
         return kDhtNodeJoined;
     }
 
@@ -121,22 +127,78 @@ int BaseDht::Join(NodePtr& node) {
 
     auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
     auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
-//     DHT_ERROR("join new node public ip: %s, dht key: %s, id: %s,"
-//         "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
-//         node->public_ip().c_str(),
-//         common::Encode::HexEncode(node->dht_key()).c_str(),
-//         common::Encode::HexEncode(node->id()).c_str(),
-//         node->min_svr_port,
-//         node->max_svr_port,
-//         node->min_route_port,
-//         node->max_route_port,
-//         svr_port,
-//         route_port);
+    DHT_ERROR("join new node public ip: %s, dht key: %s, id: %s,"
+        "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
+        node->public_ip().c_str(),
+        common::Encode::HexEncode(node->dht_key()).c_str(),
+        common::Encode::HexEncode(node->id()).c_str(),
+        node->min_svr_port,
+        node->max_svr_port,
+        node->min_route_port,
+        node->max_route_port,
+        svr_port,
+        route_port);
 //     uint32_t e_dht_size = dht_.size();
 //     uint32_t e_map_size = node_map_.size();
 //     assert((b_dht_size + 1) == e_dht_size);
 //     assert((b_map_size + 1) == e_map_size);
 //     assert(readonly_hash_sort_dht_->size() == e_map_size);
+    return kDhtSuccess;
+}
+
+int BaseDht::Drop(const std::string& id) {
+    uint64_t dht_key_hash = 0;
+    {
+        std::lock_guard<std::mutex> guard2(dht_mutex_);
+        if (dht_.size() <= kDhtMinReserveNodes) {
+            return kDhtError;
+        }
+
+        auto iter = std::find_if(
+            dht_.begin(),
+            dht_.end(),
+            [id](const NodePtr& rhs) -> bool {
+            return id == rhs->id();
+        });
+        if (iter == dht_.end()) {
+            return;
+        }
+
+        dht_key_hash = (*iter)->dht_key_hash;
+        dht_.erase(iter);
+    }
+
+    {
+        std::lock_guard<std::mutex> guard1(node_map_mutex_);
+        auto iter = node_map_.find(dht_key_hash);
+        if (iter != node_map_.end()) {
+            node_map_.erase(iter);
+        }
+    }
+
+    return kDhtSuccess;
+}
+
+int BaseDht::Drop(const std::vector<std::string>& ids) {
+    for (auto iter = ids.begin(); iter != ids.end(); ++iter) {
+        Drop(*iter);
+    }
+
+    {
+        std::lock_guard<std::mutex> guard2(dht_mutex_);
+        std::sort(
+                dht_.begin(),
+                dht_.end(),
+                [](const NodePtr& lhs, const NodePtr& rhs)->bool {
+            return lhs->id_hash < rhs->id_hash;
+        });
+    }
+
+    {
+        std::lock_guard<std::mutex> hash_dht_guard(readonly_hash_sort_dht_mutex_);
+        readonly_hash_sort_dht_ = dht_;
+    }
+
     return kDhtSuccess;
 }
 
@@ -813,17 +875,17 @@ bool BaseDht::NodeValid(NodePtr& node) {
         return false;
     }
 
-    auto country_id = ip::IpWithCountry::Instance()->GetCountryUintCode(node->public_ip());
-    if (country_id != ip::kInvalidCountryCode) {
-        if (country_id != dht_key_country_code) {
-            DHT_ERROR("network id[%d] node public ip[%s] country [%d] not equal to node dht key country[%d]",
-                    dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
-                    node->public_ip().c_str(),
-                    country_id,
-                    dht_key_country_code);
-            return false;
-        }
-    }
+//     auto country_id = ip::IpWithCountry::Instance()->GetCountryUintCode(node->public_ip());
+//     if (country_id != ip::kInvalidCountryCode) {
+//         if (country_id != dht_key_country_code) {
+//             DHT_ERROR("network id[%d] node public ip[%s] country [%d] not equal to node dht key country[%d]",
+//                     dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+//                     node->public_ip().c_str(),
+//                     country_id,
+//                     dht_key_country_code);
+//             return false;
+//         }
+//     }
 
     return true;
 }

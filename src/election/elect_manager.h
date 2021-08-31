@@ -118,10 +118,13 @@ private:
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
         bool elected);
-    void ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected);
+    void ProcessPrevElectMembers(
+        protobuf::ElectBlock& elect_block,
+        bool* elected);
     void ProcessNewElectBlock(
         uint64_t height,
-        protobuf::ElectBlock& elect_block, bool* elected);
+        protobuf::ElectBlock& elect_block,
+        bool* elected);
     bool NodeHasElected(uint32_t network_id, const std::string& node_id);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
@@ -157,6 +160,8 @@ private:
     elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
     HeightWithElectBlock height_with_block_;
     BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];
+    std::set<std::string> prev_elected_ids_;
+    std::set<std::string> now_elected_ids_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

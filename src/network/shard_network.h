@@ -86,14 +86,14 @@ template<class DhtType>
 void ShardNetwork<DhtType>::Destroy() {
     if (universal_role_) {
         network::UniversalManager::Instance()->UnRegisterUniversal(network_id_);
-        universal_role_->Destroy();
-        universal_role_.reset();
+//         universal_role_->Destroy();
+//         universal_role_.reset();
     }
 
     if (elect_dht_) {
         network::DhtManager::Instance()->UnRegisterDht(network_id_);
-        elect_dht_->Destroy();
-        elect_dht_.reset();
+//         elect_dht_->Destroy();
+//         elect_dht_.reset();
     }
 }
 
@@ -152,6 +152,8 @@ bool ShardNetwork<DhtType>::IsThisNetworkNode(uint32_t network_id, const std::st
         }
     }
 
+    NETWORK_ERROR("IsThisNetworkNode check failed! network: %d, id: %s",
+        network_id, common::Encode::HexEncode(id).c_str());
     return false;
 }
 
@@ -165,6 +167,7 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
     network::UniversalManager::Instance()->AddNodeToUniversal(node);
     auto network_id = dht::DhtKeyManager::DhtKeyGetNetId(node->dht_key());
     if (!IsThisNetworkNode(network_id, node->id())) {
+        NETWORK_ERROR("node is not in this shard.");
         return dht::kDhtError;
     }
 
@@ -172,24 +175,28 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
             node->join_way == dht::kJoinFromDetection ||
             node->join_way == dht::kJoinFromConnect)) {
         if (node->enc_data.empty() || node->enc_data.size() > 128) {
+            NETWORK_ERROR("enc data invalid.");
             return dht::kDhtError;
         }
 
         // check ecdh encrypt and decrypt valid, if not, can't join
         std::string sec_key;
         if (!security::IsValidPublicKey(node->pubkey_str())) {
+            NETWORK_ERROR("public key invalid.");
             return dht::kDhtError;
         }
 
         security::PublicKey pubkey(node->pubkey_str());
         auto sign = security::Signature(node->sign_ch, node->sign_re);
         if (!security::Schnorr::Instance()->Verify(node->enc_data, sign, pubkey)) {
+            NETWORK_ERROR("verify invalid.");
             return dht::kDhtError;
         }
 
         if (security::EcdhCreateKey::Instance()->CreateKey(
                 pubkey,
                 sec_key) != security::kSecuritySuccess) {
+            NETWORK_ERROR("create ecdh key invalid.");
             return dht::kDhtError;
         }
 
@@ -204,6 +211,7 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
                 sec_key.size(),
                 tmp_out_enc) != security::kSecuritySuccess) {
             free(tmp_out_enc);
+            NETWORK_ERROR("decrypt error invalid.");
             return dht::kDhtError;
         }
 
@@ -211,11 +219,13 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
             1000000000llu;
         uint64_t peer_tm_sec = 0;
         if (!common::StringUtil::ToUint64(tmp_out_enc, &peer_tm_sec)) {
+            NETWORK_ERROR("time invalid.");
             return dht::kDhtError;
         }
 
         free(tmp_out_enc);
         if (now_tm_sec <= peer_tm_sec - 15 && now_tm_sec >= peer_tm_sec + 15) {
+            NETWORK_ERROR("time out.");
             return dht::kDhtError;
         }
 

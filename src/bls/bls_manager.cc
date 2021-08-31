@@ -245,7 +245,6 @@ bool BlsManager::IsSignValid(
     *content_to_hash += std::string("_") + std::to_string(bls_msg.finish_req().network_id());
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members)[bls_msg.index()]->pubkey;
-    
     std::string pk_str;
     pubkey.Serialize(pk_str);
     std::cout << "finish message coming." << bls_msg.finish_req().network_id()
@@ -264,9 +263,9 @@ void BlsManager::HandleFinish(
         const protobuf::BlsMessage& bls_msg) {
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         bls_msg.finish_req().network_id());
-    if (members == nullptr) {
-        BLS_ERROR("not get waiting network members network id: %u",
-            bls_msg.finish_req().network_id());
+    if (members == nullptr || bls_msg.index() >= members->size()) {
+        BLS_ERROR("not get waiting network members network id: %u, index: %d",
+            bls_msg.finish_req().network_id(), bls_msg.index());
         return;
     }
 
@@ -463,12 +462,13 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
-//     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
-//         << ", " << common_pk->x_c0()
-//         << ", " << common_pk->x_c1()
-//         << ", " << common_pk->y_c0()
-//         << ", " << common_pk->y_c1()
-//         << std::endl;
+    std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
+        << ", member count: " << members->size()
+        << ", " << common_pk->x_c0()
+        << ", " << common_pk->x_c1()
+        << ", " << common_pk->y_c0()
+        << ", " << common_pk->y_c1()
+        << std::endl;
 }
 
 BlsManager::BlsManager() {

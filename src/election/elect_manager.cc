@@ -199,6 +199,7 @@ void ElectManager::OnNewElectBlock(
     }
 
     bool elected = false;
+    now_elected_ids_.clear();
     ProcessPrevElectMembers(elect_block, &elected);
     ProcessNewElectBlock(height, elect_block, &elected);
     auto local_netid = common::GlobalInfo::Instance()->network_id();
@@ -224,13 +225,26 @@ void ElectManager::OnNewElectBlock(
                 BFT_INFO("join new election shard network: %u", elect_block.shard_network_id());
                 common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
+        } else {
+            std::vector<std::string> erase_nodes;
+            for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
+                if (now_elected_ids_.find(*iter) != now_elected_ids_.end()) {
+                    continue;
+                }
+
+                erase_nodes.push_back(*iter);
+            }
+
+            auto dht = network::DhtManager::Instance()->GetDht(local_netid);
+            dht->Drop(erase_nodes);
+            prev_elected_ids_ = now_elected_ids_;
         }
     }
 }
 
 void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
     if (!elect_block.has_prev_members() ||
-            elect_block.prev_members().prev_elect_height() <= 0) {
+        elect_block.prev_members().prev_elect_height() <= 0) {
         ELECT_ERROR("not has prev network id: %u, elect: %lu",
             elect_block.shard_network_id(),
             elect_block.elect_height());
@@ -326,6 +340,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
                 local_mem_ptr_[prev_elect_block.shard_network_id()] = *iter;
             }
 
+            now_elected_ids_.insert((*iter)->id);
             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: %d,"
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                 prev_elect_block.shard_network_id(),
@@ -430,6 +445,7 @@ void ElectManager::ProcessNewElectBlock(
             *elected = true;
         }
 
+        now_elected_ids_.insert(id);
         ELECT_DEBUG("FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: %d,"
             "member leader: %s,, (*iter)->pool_index_mod_num: %d",
             elect_block.shard_network_id(),
@@ -608,7 +624,7 @@ bool ElectManager::NodeHasElected(uint32_t network_id, const std::string& node_i
     }
 
     auto waiting_members = waiting_members_ptr_[network_id];
-    if (waiting_members == nullptr) {
+    if (waiting_members != nullptr) {
         for (auto iter = waiting_members->begin(); iter != waiting_members->end(); ++iter) {
             if ((*iter)->id == node_id) {
                 return true;
