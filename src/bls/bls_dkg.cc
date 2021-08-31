@@ -391,6 +391,10 @@ void BlsDkg::SwapSecKey() try {
         return;
     }
 
+    if (local_src_secret_key_contribution_.size() != members_->size()) {
+        return;
+    }
+
 #ifdef TENON_UNITTEST
     sec_swap_msgs_.clear();
 #endif
