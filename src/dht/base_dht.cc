@@ -161,7 +161,7 @@ int BaseDht::Drop(const std::string& id) {
             return id == rhs->id();
         });
         if (iter == dht_.end()) {
-            return;
+            return kDhtSuccess;
         }
 
         dht_key_hash = (*iter)->dht_key_hash;

@@ -324,6 +324,11 @@ void BlsDkg::HandleAgainstParticipant(
 }
 
 void BlsDkg::BroadcastVerfify() try {
+    if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+            common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -376,6 +381,11 @@ void BlsDkg::BroadcastVerfify() try {
 }
 
 void BlsDkg::SwapSecKey() try {
+    if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+            common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -492,6 +502,11 @@ void BlsDkg::DumpLocalPrivateKey() {
 }
 
 void BlsDkg::Finish() try {
+    if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+            common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||

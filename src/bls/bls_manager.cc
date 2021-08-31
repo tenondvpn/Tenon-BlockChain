@@ -261,6 +261,11 @@ bool BlsManager::IsSignValid(
 void BlsManager::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    if (bls_msg.finish_req().network_id() < network::kRootCongressNetworkId ||
+            bls_msg.finish_req().network_id() >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
+
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         bls_msg.finish_req().network_id());
     if (members == nullptr || bls_msg.index() >= members->size()) {
