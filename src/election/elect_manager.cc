@@ -394,7 +394,6 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     members_ptr_[prev_elect_block.shard_network_id()] = shard_members_ptr;
-    pool_manager_.NetworkMemberChange(prev_elect_block.shard_network_id(), shard_members_ptr);
     auto member_ptr = std::make_shared<MemberManager>();
     member_ptr->SetNetworkMember(
         prev_elect_block.shard_network_id(),
@@ -461,6 +460,7 @@ void ElectManager::ProcessNewElectBlock(
         ++member_index;
     }
 
+    pool_manager_.NetworkMemberChange(elect_block.shard_network_id(), shard_members_ptr);
     waiting_members_ptr_[elect_block.shard_network_id()] = shard_members_ptr;
     waiting_elect_height_[elect_block.shard_network_id()] = height;
     bls::BlsManager::Instance()->ProcessNewElectBlock(
