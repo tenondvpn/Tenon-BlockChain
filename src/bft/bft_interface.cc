@@ -207,8 +207,8 @@ int BftInterface::LeaderPrecommitOk(
     precommit_aggree_set_.insert(id);
     prepare_bitmap_.Set(index);
     backup_precommit_signs_[index] = backup_sign;
-//     BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u",
-//         precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_);
+    BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
+        precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(bft_gid).c_str());
     if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
         if (LeaderCreatePreCommitAggChallenge() != kBftSuccess) {
             BFT_ERROR("create bls precommit agg sign failed!");
@@ -216,6 +216,7 @@ int BftInterface::LeaderPrecommitOk(
         }
 
         leader_handled_precommit_ = true;
+        BFT_DEBUG("precommit_aggree_set_ bft_gid: %s", common::Encode::HexEncode(bft_gid).c_str());
         return kBftAgree;
     }
 
@@ -377,13 +378,13 @@ int BftInterface::LeaderCreateCommitAggSign() {
     std::vector<security::Response> responses;
     std::vector<security::PublicKey> pubkeys;
     uint32_t bit_size = precommit_bitmap_.data().size() * 64;
-    for (uint32_t i = 0; i < bit_size; ++i) {
-        if (!precommit_bitmap_.Valid(i)) {
-            continue;
-        }
-
-        all_signs.push_back(backup_commit_signs_[i]);
-    }
+//     for (uint32_t i = 0; i < bit_size; ++i) {
+//         if (!precommit_bitmap_.Valid(i)) {
+//             continue;
+//         }
+// 
+//         all_signs.push_back(backup_commit_signs_[i]);
+//     }
 
     uint32_t t = min_aggree_member_count_;
     uint32_t n = members_ptr_->size();
@@ -393,6 +394,7 @@ int BftInterface::LeaderCreateCommitAggSign() {
             continue;
         }
 
+        all_signs.push_back(backup_commit_signs_[i]);
         idx_vec.push_back(i + 1);
         if (idx_vec.size() >= min_aggree_member_count_) {
             break;
