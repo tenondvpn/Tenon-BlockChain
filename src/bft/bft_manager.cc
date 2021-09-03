@@ -256,7 +256,11 @@ void BftManager::BackupHandleBftOppose(
         bft_msg.prepare_hash());
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, mem_ptr->pubkey)) {
-        BFT_ERROR("check signature error!");
+        std::string pk_str;
+        mem_ptr->pubkey.Serialize(pk_str);
+        BFT_ERROR("check signature error! hash: %s, pk: %s",
+            common::Encode::HexEncode(msg_to_hash).c_str(),
+            common::Encode::HexEncode(pk_str).c_str());
         return;
     }
 

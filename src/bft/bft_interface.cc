@@ -207,8 +207,8 @@ int BftInterface::LeaderPrecommitOk(
     precommit_aggree_set_.insert(id);
     prepare_bitmap_.Set(index);
     backup_precommit_signs_[index] = backup_sign;
-    BFT_DEBUG("precommit_aggree_set_.size: %u, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
-        precommit_aggree_set_.size(), min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(bft_gid).c_str());
+    BFT_DEBUG("precommit_aggree_set_.size: %u, index: %d, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
+        precommit_aggree_set_.size(), index, min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(bft_gid).c_str());
     if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
         if (LeaderCreatePreCommitAggChallenge() != kBftSuccess) {
             BFT_ERROR("create bls precommit agg sign failed!");
@@ -236,10 +236,14 @@ int BftInterface::LeaderCommitOk(
         return kBftWaitingBackup;
     }
 
+
     auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
     commit_aggree_set_.insert(id);
     precommit_bitmap_.Set(index);
     backup_commit_signs_[index] = backup_sign;
+    BFT_DEBUG("LeaderCommitOk.size: %u, index: %d, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
+        commit_aggree_set_.size(), index, min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(),
+        common::Encode::HexEncode(gid_).c_str());
     if (commit_aggree_set_.size() >= min_aggree_member_count_) {
         leader_handled_commit_ = true;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {

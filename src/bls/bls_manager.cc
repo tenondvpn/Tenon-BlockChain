@@ -430,6 +430,11 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c0));
         mem_bls_pk->set_y_c1(
             BLSutils::ConvertToString<libff::alt_bn128_Fq>(finish_item->all_public_keys[i].Y.c1));
+        BLS_DEBUG("AddBlsConsensusInfo success node index: %d,"
+            "x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
+            i,
+            mem_bls_pk->x_c0().c_str(), mem_bls_pk->x_c1().c_str(),
+            mem_bls_pk->y_c0().c_str(), mem_bls_pk->y_c1().c_str());
         ++all_valid_count;
     }
 
@@ -467,6 +472,11 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
+    BLS_DEBUG("AddBlsConsensusInfo success max_finish_count_: %d,"
+        "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
+        all_valid_count, members->size(),
+        common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
+        common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
 //     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
 //         << ", member count: " << members->size()
 //         << ", " << common_pk->x_c0()
