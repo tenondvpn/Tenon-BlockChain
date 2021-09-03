@@ -168,8 +168,6 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
             BackupSendOppose(*bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
             return;
         }
-
-        AddBft(bft_ptr);
     } else {
         bft_ptr = GetBft(bft_item_ptr->bft_msg.gid());
         if (bft_ptr == nullptr) {
@@ -885,7 +883,6 @@ int BftManager::BackupPrepare(
     auto msg = std::make_shared<transport::protobuf::Header>();
     if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
         BackupSendOppose(header, bft_msg);
-        RemoveBft(bft_ptr->gid(), false);
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftError;
@@ -895,12 +892,12 @@ int BftManager::BackupPrepare(
     int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
     if (prepare_res != kBftSuccess) {
         BackupSendOppose(header, bft_msg);
-        RemoveBft(bft_ptr->gid(), false);
         BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftError;
     }
 
+    AddBft(bft_ptr);
     BftProto::BackupCreatePrepare(
         header,
         bft_msg,
