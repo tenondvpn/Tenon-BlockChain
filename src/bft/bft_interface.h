@@ -316,6 +316,10 @@ public:
         return local_sec_key_;
     }
 
+    uint32_t local_member_index() {
+        return local_member_index_;
+    }
+
     int AddPrepareOpposeNode(const std::string& id) {
         std::lock_guard<std::mutex> guard(mutex_);
         precommit_oppose_set_.insert(id);
@@ -398,6 +402,7 @@ protected:
     std::string commit_hash_;
     std::atomic<uint32_t> prepare_verify_failed_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
+    uint32_t local_member_index_{ elect::kInvalidMemberIndex };
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 

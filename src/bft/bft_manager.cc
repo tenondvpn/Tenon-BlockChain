@@ -189,6 +189,9 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
                     mem_ptr,
                     *bft_item_ptr->header_ptr,
                     bft_item_ptr->bft_msg);
+                BFT_DEBUG("handle BackupHandleBftOppose network id: %d, member index: %d",
+                    bft_item_ptr->bft_msg.net_id(),
+                    bft_item_ptr->bft_msg.member_index());
                 return;
             }
 
@@ -806,9 +809,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return res;
     }
 
-    uint32_t member_idx = bft_ptr->mem_manager_ptr()->GetMemberIndex(
-        bft_ptr->network_id(),
-        common::GlobalInfo::Instance()->id());
+    uint32_t member_idx = bft_ptr->local_member_index();
     if (member_idx == elect::kInvalidMemberIndex) {
         BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
             member_idx,

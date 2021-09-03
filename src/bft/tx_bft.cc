@@ -169,6 +169,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         common::GlobalInfo::Instance()->network_id());
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
         common::GlobalInfo::Instance()->network_id());
+    local_member_index_ = mem_manager_ptr_->GetMemberIndex(
+        network_id(),
+        common::GlobalInfo::Instance()->id());
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id())) {
         BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
