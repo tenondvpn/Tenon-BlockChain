@@ -169,7 +169,7 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_pool_index(bft_ptr->pool_index());
     bft_msg.set_agree(agree);
     bft_msg.set_elect_height(bft_ptr->elect_height());
-    bft_msg.set_member_index(bft_ptr->local_member_index())
+    bft_msg.set_member_index(bft_ptr->local_member_index());
     security::Signature leader_sign;
     if (agree) {
         bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
@@ -182,10 +182,10 @@ void BftProto::LeaderCreatePreCommit(
         bft_msg.set_bls_sign_x(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->X));
         bft_msg.set_bls_sign_y(BLSutils::ConvertToString<libff::alt_bn128_Fq>(bls_precommit_sign->Y));
         if (!security::Schnorr::Instance()->Sign(
-            bft_ptr->precommit_hash(),
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
-            leader_sign)) {
+                bft_ptr->precommit_hash(),
+                *(security::Schnorr::Instance()->prikey()),
+                *(security::Schnorr::Instance()->pubkey()),
+                leader_sign)) {
             BFT_ERROR("leader pre commit signature failed!");
             return;
         }
