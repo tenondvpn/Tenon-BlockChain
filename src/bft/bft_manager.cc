@@ -1007,9 +1007,9 @@ void BftManager::HandleOpposeNodeMsg(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
             sync::kSyncHighest);
-//         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-//             common::Encode::HexEncode(pre_hash).c_str(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
+        BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
+            common::Encode::HexEncode(pre_hash).c_str(),
+            common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
 
