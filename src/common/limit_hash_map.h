@@ -58,7 +58,7 @@ private:
     std::deque<KeyType> item_queue_;
     std::unordered_map<KeyType, ValueType> item_map_;
 
-    DISSALLOW_COPY_AND_ASSIGN(LimitHashMap);
+    DISALLOW_COPY_AND_ASSIGN(LimitHashMap);
 };
 
 };  // namespace common
