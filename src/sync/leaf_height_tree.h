@@ -33,8 +33,6 @@ private:
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
-
-    DISALLOW_COPY_AND_ASSIGN(LeafHeightTree);
 };
 
 };  // namespace sync

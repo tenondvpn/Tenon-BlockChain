@@ -42,7 +42,7 @@ void LeafHeightTree::Set(uint64_t index) {
 bool LeafHeightTree::Valid(uint64_t index) {
     if (index < global_leaf_index_ || index >= global_leaf_index_ + kEachHeightTreeMaxByteSize) {
         assert(false);
-        return;
+        return false;
     }
 
     index = index - global_leaf_index_;
