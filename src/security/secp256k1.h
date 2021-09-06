@@ -37,8 +37,8 @@ public:
 private:
     Secp256k1();
     ~Secp256k1();
-
-    DISDISALLOW_COPY_AND_ASSIGN(Secp256k1);
+    
+    DISALLOW_COPY_AND_ASSIGN(Secp256k1);
 
 };
 
