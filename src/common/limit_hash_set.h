@@ -49,7 +49,7 @@ private:
     std::deque<Type> item_queue_;
     std::unordered_set<Type> item_set_;
 
-    DISSALLOW_COPY_AND_ASSIGN(LimitHashSet);
+    DISALLOW_COPY_AND_ASSIGN(LimitHashSet);
 };
 
 };  // namespace common

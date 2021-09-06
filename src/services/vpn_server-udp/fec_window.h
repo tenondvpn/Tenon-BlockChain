@@ -149,7 +149,7 @@ private:
     Symbol** res_symbol_{ nullptr };
 #endif
 
-    DISSALLOW_COPY_AND_ASSIGN(FecWindow);
+    DISALLOW_COPY_AND_ASSIGN(FecWindow);
 };
 
 }  // namespace vpn

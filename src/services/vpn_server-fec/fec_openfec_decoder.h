@@ -193,7 +193,7 @@ private:
     std::unordered_map<uint32_t, std::pair<char*, common::Bitmap*>> window_map_;
     std::unordered_set<uint32_t> handled_fec_no_;
 
-    DISSALLOW_COPY_AND_ASSIGN(FecOpenFecDecoder);
+    DISALLOW_COPY_AND_ASSIGN(FecOpenFecDecoder);
 };
 
 }  // namespace vpn

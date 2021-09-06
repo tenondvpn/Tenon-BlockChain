@@ -122,7 +122,7 @@ private:
     int32_t socket_{ 0 };
     struct sockaddr addr_;
 
-    DISSALLOW_COPY_AND_ASSIGN(FecOpenFecEncoder);
+    DISALLOW_COPY_AND_ASSIGN(FecOpenFecEncoder);
 };
 
 }  // namespace vpn

@@ -130,7 +130,7 @@ private:
     FecDecoderCallback callback_;
     struct sockaddr addr_;
 
-    DISSALLOW_COPY_AND_ASSIGN(FecOpenFecDecoder);
+    DISALLOW_COPY_AND_ASSIGN(FecOpenFecDecoder);
 };
 
 }  // namespace vpn

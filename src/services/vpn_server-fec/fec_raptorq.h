@@ -29,7 +29,7 @@ private:
     std::shared_ptr<Encoder> encoder_{ nullptr };
     std::shared_ptr<Decoder> decoder_{ nullptr };
 
-    DISSALLOW_COPY_AND_ASSIGN(FecRaptorQ);
+    DISALLOW_COPY_AND_ASSIGN(FecRaptorQ);
 };
 
 }  // namespace vpn

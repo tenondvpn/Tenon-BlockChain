@@ -216,7 +216,7 @@ private:
     uint32_t start_msg_no_{ 0 };
     uint32_t ack_msg_no_{ 0 };
 
-    DISSALLOW_COPY_AND_ASSIGN(FecOpenFecEncoder);
+    DISALLOW_COPY_AND_ASSIGN(FecOpenFecEncoder);
 };
 
 }  // namespace vpn
