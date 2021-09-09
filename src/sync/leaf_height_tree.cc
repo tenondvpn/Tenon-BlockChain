@@ -45,9 +45,9 @@ void LeafHeightTree::Set(uint64_t index) {
     }
 
     index = index - global_leaf_index_;
-    assert(index < (data_.size() * 64));
-    uint32_t vec_index = (index % (64 * data_.size())) / 64;
-    uint32_t bit_index = (index % (64 * data_.size())) % 64;
+    assert(index < kLeafMaxHeightCount);
+    uint32_t vec_index = index / 64;
+    uint32_t bit_index = index % 64;
     data_[vec_index] |= (uint64_t)((uint64_t)(1) << bit_index);
     ButtomUp(vec_index);
 }
