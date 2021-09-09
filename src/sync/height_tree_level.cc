@@ -34,7 +34,7 @@ int HeightTreeLevel::SetHeight(uint64_t height) {
     LeafHeightTreePtr leaf_ptr = nullptr;
     auto iter = node_map_ptr->find(leaf_index);
     if (iter == node_map_ptr->end()) {
-        leaf_ptr = std::make_shared<LeafHeightTree>(kLeafMaxHeightCount * leaf_index);
+        leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
     } else {
         leaf_ptr = iter->second;
     }
