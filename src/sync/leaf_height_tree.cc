@@ -8,13 +8,17 @@ namespace tenon {
 
 namespace sync {
 
-LeafHeightTree::LeafHeightTree(uint64_t global_leaf_index) {
-    global_leaf_index_ = global_leaf_index;
-    uint32_t data_cnt = kEachHeightTreeMaxByteSize / 64;
+LeafHeightTree::LeafHeightTree(uint32_t level, uint64_t node_index) {
+    if (level == 0) {
+        global_leaf_index_ = node_index * kLeafMaxHeightCount;
+    } else {
+        global_leaf_index_ = node_index * kBranchMaxCount;
+    }
+
+    uint32_t data_cnt = kBranchMaxCount * 2;
     for (uint32_t i = 0; i < data_cnt; ++i) {
         data_.push_back(0ull);
     }
-    assert(!data_.empty());
 }
 
 LeafHeightTree::LeafHeightTree(const std::vector<uint64_t>& data) : data_(data) {}
@@ -29,6 +33,14 @@ void LeafHeightTree::Set(uint64_t index) {
     if (index < global_leaf_index_ || index >= global_leaf_index_ + kEachHeightTreeMaxByteSize) {
         assert(false);
         return;
+    }
+
+    if (max_height_ == common::kInvalidUint64) {
+        max_height_ = index;
+    }
+
+    if (index > max_height_) {
+        max_height_ = index;
     }
 
     index = index - global_leaf_index_;
@@ -72,18 +84,44 @@ bool LeafHeightTree::operator==(const LeafHeightTree& r) const {
     return data_ == r.data_;
 }
 
+uint64_t LeafHeightTree::GetRoot() {
+    if (max_height_ == common::kInvalidUint64) {
+        return 0;
+    }
+
+    uint32_t max_index = max_height_ - global_leaf_index_;
+    uint32_t tmp_max_index = max_index / 64;
+    if (tmp_max_index == 0) {
+        return data_[0];
+    }
+
+    if (tmp_max_index == 1) {
+        return data_[kBranchMaxCount];
+    }
+
+    float tmp = log(tmp_max_index) / log(2);
+    if (abs(tmp - (float(int(tmp)))) > (std::numeric_limits<float>::min)()) {
+        tmp += 1;
+    }
+
+    uint32_t max_tmp = (uint32_t)pow(2.0, float(uint32_t(tmp)));
+    return data_[max_tmp + kBranchMaxCount - 2];
+}
+
 void LeafHeightTree::ButtomUp(uint32_t vec_index) {
-    uint32_t init_level_count = kEachHeightTreeMaxByteSize / 2 / 64;
-    for (int32_t level = 0; level < kHeightTreeLeafMaxLevel; ++level) {
-        uint32_t parent_index = init_level_count + vec_index / 2;
-        if (vec_index % 2 == 0) {
-            data_[parent_index] = data_[vec_index] & data_[vec_index + 1];
-        } else {
-            data_[parent_index] = data_[vec_index - 1] & data_[vec_index];
+    if (vec_index % 2 != 0) {
+        vec_index -= 1;
+    }
+
+    uint32_t parent_idx = kBranchMaxCount + vec_index / 2;
+    while (parent_idx < kHeightLevelItemMaxCount) {
+        data_[parent_idx] = data_[vec_index] & data_[vec_index + 1];
+        vec_index = parent_idx;
+        if (vec_index % 2 != 0) {
+            vec_index -= 1;
         }
 
-        init_level_count += init_level_count / 2;
-        vec_index = parent_index;
+        parent_idx = kBranchMaxCount + vec_index / 2;
     }
 }
 

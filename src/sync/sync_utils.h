@@ -38,7 +38,10 @@ static const uint32_t kSyncPacketMaxSize = 1u * 1024u * 1024u;  // sync data 1M
 static const uint32_t kSyncMaxKeyCount = 1024u;
 static const uint32_t kSyncMaxRetryTimes = 7u;  // fail retry 3 times
 static const uint32_t kPoolHeightPairCount = 2u * (common::kImmutablePoolSize + 1u);
-static const uint32_t kEachHeightTreeMaxByteSize = 1024u * 1024u * 2u;  // each merkle block 1M
+static const uint32_t kLeafMaxHeightCount = 1024u * 1024u;  // each merkle block 1M
+static const uint32_t kEachHeightTreeMaxByteSize = kLeafMaxHeightCount * 2u;  // each merkle block 1M
+static const uint32_t kBranchMaxCount = kLeafMaxHeightCount / 64u;
+static const uint32_t kHeightLevelItemMaxCount = 2 * kBranchMaxCount - 1;
 static const uint32_t kHeightTreeLeafMaxLevel = 14u;
 
 }  // namespace sync

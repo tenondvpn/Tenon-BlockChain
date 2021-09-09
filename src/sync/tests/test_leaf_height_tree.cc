@@ -32,7 +32,7 @@ private:
 };
 
 TEST_F(TestLeafHeightTree, All) {
-    LeafHeightTree leaf_height_tree(0);
+    LeafHeightTree leaf_height_tree(0, 0);
     for (uint64_t i = 0; i < kEachHeightTreeMaxByteSize / 2; ++i) {
         leaf_height_tree.Set(i);
     }

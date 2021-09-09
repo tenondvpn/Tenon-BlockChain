@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "common/utils.h"
 #include "common/bitmap.h"
 
@@ -9,7 +11,7 @@ namespace sync {
 
 class LeafHeightTree {
 public:
-    LeafHeightTree(uint64_t global_leaf_index);
+    LeafHeightTree(uint32_t level, uint64_t node_index);
     LeafHeightTree(const std::vector<uint64_t>& data);
     LeafHeightTree(const LeafHeightTree& src);
     ~LeafHeightTree();
@@ -28,12 +30,17 @@ public:
         }
     }
 
+    uint64_t GetRoot();
+
 private:
     void ButtomUp(uint32_t vec_index);
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
+    uint64_t max_height_{ common::kInvalidUint64 };
 };
+
+typedef std::shared_ptr<LeafHeightTree> LeafHeightTreePtr;
 
 };  // namespace sync
 
