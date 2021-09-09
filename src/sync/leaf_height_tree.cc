@@ -86,7 +86,7 @@ bool LeafHeightTree::operator==(const LeafHeightTree& r) const {
     return data_ == r.data_;
 }
 
-uint64_t LeafHeightTree::GetRoot() {
+uint32_t LeafHeightTree::GetRootIndex() {
     if (max_height_ == common::kInvalidUint64) {
         return 0;
     }
@@ -94,11 +94,11 @@ uint64_t LeafHeightTree::GetRoot() {
     uint32_t max_index = max_height_ - global_leaf_index_;
     uint32_t tmp_max_index = max_index / 64;
     if (tmp_max_index == 0) {
-        return data_[0];
+        return 0;
     }
 
     if (tmp_max_index == 1) {
-        return data_[kBranchMaxCount];
+        return kBranchMaxCount;
     }
 
     float tmp = log(tmp_max_index) / log(2);
@@ -107,7 +107,11 @@ uint64_t LeafHeightTree::GetRoot() {
     }
 
     uint32_t max_tmp = (uint32_t)pow(2.0, float(uint32_t(tmp)));
-    return data_[max_tmp + kBranchMaxCount - 2];
+    return max_tmp + kBranchMaxCount - 2;
+}
+
+uint64_t LeafHeightTree::GetRoot() {
+    return data_[GetRootIndex()];
 }
 
 void LeafHeightTree::ButtomUp(uint32_t vec_index) {

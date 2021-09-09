@@ -34,6 +34,7 @@ public:
 
 private:
     void ButtomUp(uint32_t vec_index);
+    uint32_t GetRootIndex();
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
