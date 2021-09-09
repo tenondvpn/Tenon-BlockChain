@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <cassert>
+#include <cmath>
 
 #include "sync/leaf_height_tree.h"
 #include "sync/sync_utils.h"
@@ -64,6 +65,7 @@ bool LeafHeightTree::Valid(uint64_t index) {
     if ((data_[vec_index] & ((uint64_t)((uint64_t)(1) << bit_index))) == 0ull) {
         return false;
     }
+
     return true;
 }
 
