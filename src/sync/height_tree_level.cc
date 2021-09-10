@@ -60,6 +60,7 @@ void HeightTreeLevel::GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64
     }
 }
 
+
 };  // namespace sync
 
 };  // namespace tenon

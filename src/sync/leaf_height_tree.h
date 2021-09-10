@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <memory>
 
 #include "common/utils.h"
@@ -16,6 +17,7 @@ public:
     ~LeafHeightTree();
     void Set(uint64_t bit_index);
     bool Valid(uint64_t bit_index);
+    void GetInvalidHeights(std::vector<uint64_t>* height_vec);
 
     const std::vector<uint64_t>& data() const {
         return data_;
