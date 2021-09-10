@@ -52,6 +52,15 @@ void LeafHeightTree::Set(uint64_t index) {
     ButtomUp(vec_index);
 }
 
+void LeafHeightTree::CheckRootChanged() {
+    uint32_t new_root = GetRootIndex();
+    if (new_root == prev_root_index_) {
+        return;
+    }
+
+
+}
+
 bool LeafHeightTree::Valid(uint64_t index) {
     if (index < global_leaf_index_ || index >= global_leaf_index_ + kEachHeightTreeMaxByteSize) {
         assert(false);
@@ -101,13 +110,61 @@ uint32_t LeafHeightTree::GetRootIndex() {
         return kBranchMaxCount;
     }
 
+    return GetAlignMaxIndex() + kBranchMaxCount - 2;
+}
+
+uint32_t LeafHeightTree::GetAlignMaxLevel() {
+    if (max_height_ == common::kInvalidUint64) {
+        return 0;
+    }
+
+    uint32_t max_index = max_height_ - global_leaf_index_;
+    uint32_t tmp_max_index = max_index / 64;
+    if (tmp_max_index == 0) {
+        return 0;
+    }
+
+    if (tmp_max_index == 1) {
+        return 1;
+    }
+
+    if (tmp_max_index % 2 == 0) {
+        tmp_max_index += 1;
+    }
+
     float tmp = log(tmp_max_index) / log(2);
-    if (abs(tmp - (float(int(tmp)))) > (std::numeric_limits<float>::min)()) {
+    if (tmp - float(int(tmp)) > (std::numeric_limits<float>::min)()) {
         tmp += 1;
     }
 
-    uint32_t max_tmp = (uint32_t)pow(2.0, float(uint32_t(tmp)));
-    return max_tmp + kBranchMaxCount - 2;
+    return tmp;
+}
+
+uint32_t LeafHeightTree::GetAlignMaxIndex() {
+    if (max_height_ == common::kInvalidUint64) {
+        return 0;
+    }
+
+    uint32_t max_index = max_height_ - global_leaf_index_;
+    uint32_t tmp_max_index = max_index / 64;
+    if (tmp_max_index == 0) {
+        return 0;
+    }
+
+    if (tmp_max_index == 1) {
+        return 2;
+    }
+
+    if (tmp_max_index % 2 == 0) {
+        tmp_max_index += 1;
+    }
+
+    float tmp = log(tmp_max_index) / log(2);
+    if (tmp - float(int(tmp)) > (std::numeric_limits<float>::min)()) {
+        tmp += 1;
+    }
+
+    return (uint32_t)pow(2.0, float(uint32_t(tmp)));
 }
 
 uint64_t LeafHeightTree::GetRoot() {
@@ -119,15 +176,39 @@ void LeafHeightTree::ButtomUp(uint32_t vec_index) {
         vec_index -= 1;
     }
 
+    uint32_t root_index = GetRootIndex();
     uint32_t parent_idx = kBranchMaxCount + vec_index / 2;
-    while (parent_idx < kHeightLevelItemMaxCount) {
+    uint32_t align_index = GetAlignMaxIndex();
+    uint32_t end_index = kBranchMaxCount + align_index / 2;
+    align_index /= 2;
+    uint32_t src_vec_index = vec_index / 2;
+    std::cout << "vec_index: " << vec_index << ", parent index: " << parent_idx
+        << ", end_index: " << end_index
+        << ", align_index: " << align_index
+        << ", src_vec_index: " << src_vec_index
+        << ", global_leaf_index_: " << global_leaf_index_
+        << ", max_height: " << max_height_
+        << std::endl;
+    while (parent_idx <= root_index) {
         data_[parent_idx] = data_[vec_index] & data_[vec_index + 1];
+        if (parent_idx >= root_index) {
+            break;
+        }
+
         vec_index = parent_idx;
         if (vec_index % 2 != 0) {
             vec_index -= 1;
         }
 
-        parent_idx = kBranchMaxCount + vec_index / 2;
+        parent_idx = end_index + src_vec_index / 2 - 1;
+        align_index /= 2;
+        end_index += align_index;
+        src_vec_index /= 2;
+        std::cout << "rollup vec_index: " << vec_index << ", parent index: " << parent_idx
+            << ", end_index: " << end_index
+            << ", align_index: " << align_index
+            << ", src_vec_index: " << src_vec_index
+            << std::endl;
     }
 }
 
