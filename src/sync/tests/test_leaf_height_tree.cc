@@ -29,6 +29,23 @@ public:
     virtual void TearDown() {
     }
 
+    void TestGetInvalidHeight(uint64_t height) {
+        LeafHeightTree leaf_height_tree(0, 0);
+        for (uint64_t i = 0; i < kLeafMaxHeightCount; ++i) {
+            if (i == height) {
+                continue;
+            }
+
+            leaf_height_tree.Set(i);
+        }
+
+        leaf_height_tree.PrintTreeFromRoot();
+        std::cout << std::endl;
+        std::vector<uint64_t> get_invalid_heights;
+        leaf_height_tree.GetInvalidHeights(&get_invalid_heights);
+        ASSERT_EQ(get_invalid_heights[0], height);
+    }
+
 private:
 
 };
@@ -62,18 +79,9 @@ TEST_F(TestLeafHeightTree, TestGetInvalidHeights) {
         1024 * 1021,
     };
 
-    for (uint64_t i = 0; i < kLeafMaxHeightCount; ++i) {
-        if (invalid_heights.find(i) != invalid_heights.end()) {
-            continue;
-        }
-
-        leaf_height_tree.Set(i);
+    for (auto iter = invalid_heights.begin(); iter != invalid_heights.end(); ++iter) {
+        TestGetInvalidHeight(*iter);
     }
-
-    leaf_height_tree.PrintTreeFromRoot();
-    std::cout << std::endl;
-    std::vector<uint64_t> get_invalid_heights;
-    leaf_height_tree.GetInvalidHeights(&get_invalid_heights);
 }
 
 }  // namespace test
