@@ -13,12 +13,9 @@ class LeafHeightTree {
 public:
     LeafHeightTree(uint32_t level, uint64_t node_index);
     LeafHeightTree(const std::vector<uint64_t>& data);
-    LeafHeightTree(const LeafHeightTree& src);
     ~LeafHeightTree();
     void Set(uint64_t bit_index);
     bool Valid(uint64_t bit_index);
-    LeafHeightTree& operator=(const LeafHeightTree& src);
-    bool operator==(const LeafHeightTree& r) const;
 
     const std::vector<uint64_t>& data() const {
         return data_;
@@ -35,9 +32,9 @@ public:
 private:
     void ButtomUp(uint32_t vec_index);
     uint32_t GetRootIndex();
-    uint32_t GetAlignMaxIndex();
     uint32_t GetAlignMaxLevel();
     void PrintTreeFromRoot();
+    void InitVec();
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
