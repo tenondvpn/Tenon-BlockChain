@@ -42,7 +42,6 @@ static const uint32_t kLeafMaxHeightCount = 1024u * 1024u;  // each merkle block
 static const uint32_t kEachHeightTreeMaxByteSize = kLeafMaxHeightCount * 2u;  // each merkle block 1M
 static const uint32_t kBranchMaxCount = kLeafMaxHeightCount / 64u;
 static const uint32_t kHeightLevelItemMaxCount = 2 * kBranchMaxCount - 1;
-}
 
 }  // namespace sync
 
