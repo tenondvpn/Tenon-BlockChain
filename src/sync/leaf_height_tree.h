@@ -36,13 +36,14 @@ private:
     void ButtomUp(uint32_t vec_index);
     uint32_t GetRootIndex();
     uint32_t GetAlignMaxIndex();
-    void CheckRootChanged();
     uint32_t GetAlignMaxLevel();
+    void PrintTreeFromRoot();
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
     uint64_t max_height_{ common::kInvalidUint64 };
     uint32_t prev_root_index_{ common::kInvalidUint32 };
+    std::vector<std::pair<uint32_t, uint32_t>> level_tree_index_vec_;
 };
 
 typedef std::shared_ptr<LeafHeightTree> LeafHeightTreePtr;
