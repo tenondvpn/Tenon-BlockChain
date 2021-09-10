@@ -164,15 +164,20 @@ void LeafHeightTree::GetInvalidHeights(std::vector<uint64_t>* height_vec) {
         int32_t left_idx = level_tree_index_vec_[i].first + parent_level_idx * 2;
         int32_t right_idx = level_tree_index_vec_[i].first + parent_level_idx * 2 + 1;
         if (data_[left_idx] != kLevelNodeValidHeights) {
-            parent_level_idx = parent_level_idx * 2 * 2;
+            parent_level_idx = parent_level_idx * 2 ;
             choosed_leaf_node = left_idx;
         } else {
-            parent_level_idx = (parent_level_idx * 2 + 1) * 2;
+            parent_level_idx = parent_level_idx * 2 + 1;
             choosed_leaf_node = right_idx;
         }
     }
 
-    std::cout << "choosed_leaf_node: " << choosed_leaf_node << std::endl;
+    uint64_t b_idx = global_leaf_index_ + choosed_leaf_node * 64;
+    for (uint64_t i = 0; i < 64; ++i) {
+        if (!Valid(b_idx + i)) {
+            height_vec->push_back(b_idx + i);
+        }
+    }
 }
 
 }  // namespace sync
