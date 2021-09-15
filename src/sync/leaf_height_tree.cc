@@ -243,7 +243,6 @@ void LeafHeightTree::GetInvalidHeights(std::vector<uint64_t>* height_vec) {
     }
 
     int32_t max_level = GetAlignMaxLevel();
-    uint32_t level_rate = 1;
     int32_t parent_level_idx = 0;
     int32_t choosed_leaf_node = 0;
     for (int32_t i = max_level - 1; i >= 0; --i) {
@@ -259,8 +258,9 @@ void LeafHeightTree::GetInvalidHeights(std::vector<uint64_t>* height_vec) {
     }
 
     uint64_t b_idx = global_leaf_index_ + choosed_leaf_node * 64;
+    std::cout << "parent_index: " << parent_index << ", max_height_: " << max_height_ << ", b_idx: " << b_idx << std::endl;
     for (uint64_t i = 0; i < 64; ++i) {
-        if (b_idx + i >= max_height_) {
+        if (b_idx + i > max_height_) {
             break;
         }
 
