@@ -56,7 +56,7 @@ TEST_F(TestHeightTreeLevel, SetValid) {
 
     std::cout << height_tree_level.max_height_ << ":" << height_tree_level.max_level_ << std::endl;
     for (int32_t i = (int32_t)height_tree_level.max_level_; i >= 0; --i) {
-        auto* level_map = height_tree_level.tree_level_[i];
+        auto level_map = height_tree_level.tree_level_[i];
         for (auto iter = level_map->begin(); iter != level_map->end(); ++iter) {
             iter->second->PrintTree();
         }
