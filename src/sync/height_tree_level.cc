@@ -36,12 +36,12 @@ int HeightTreeLevel::Set(uint64_t height) {
         if (iter == node_map_ptr->end()) {
             leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
             (*node_map_ptr)[leaf_index] = leaf_ptr;
-            std::cout << "create new leaf index: " << leaf_index << std::endl;
-            if (leaf_index != 0) {
-                (*node_map_ptr)[leaf_index - 1]->PrintTree();
-            }
-
-            std::cout << std::endl;
+//             std::cout << "create new leaf index: " << leaf_index << std::endl;
+//             if (leaf_index != 0) {
+//                 (*node_map_ptr)[leaf_index - 1]->PrintTree();
+//             }
+// 
+//             std::cout << std::endl;
         } else {
             leaf_ptr = iter->second;
         }
