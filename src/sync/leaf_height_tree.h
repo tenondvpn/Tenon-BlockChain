@@ -16,6 +16,7 @@ public:
     LeafHeightTree(const std::vector<uint64_t>& data);
     ~LeafHeightTree();
     void Set(uint64_t bit_index);
+    void Set(uint64_t child_index, uint64_t val);
     bool Valid(uint64_t bit_index);
     void GetInvalidHeights(std::vector<uint64_t>* height_vec);
 
@@ -33,8 +34,10 @@ public:
 
 private:
     void ButtomUp(uint32_t vec_index);
+    void BranchButtomUp(uint32_t vec_index);
     uint32_t GetRootIndex();
     uint32_t GetAlignMaxLevel();
+    uint32_t GetBranchAlignMaxLevel();
     void PrintTreeFromRoot();
     void InitVec();
 
@@ -43,6 +46,8 @@ private:
     uint64_t max_height_{ common::kInvalidUint64 };
     uint32_t prev_root_index_{ common::kInvalidUint32 };
     std::vector<std::pair<uint32_t, uint32_t>> level_tree_index_vec_;
+    bool is_branch_{ false };
+    uint32_t max_vec_index_{ 0 };
 };
 
 typedef std::shared_ptr<LeafHeightTree> LeafHeightTreePtr;

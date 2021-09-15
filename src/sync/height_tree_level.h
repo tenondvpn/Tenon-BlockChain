@@ -23,6 +23,8 @@ private:
     typedef std::shared_ptr<TreeNodeMap> TreeNodeMapPtr;
 
     void GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64_t* index);
+    void BottomUpWithBrantchLevel(uint32_t level, uint64_t child_index);
+    uint32_t GetMaxLevel();
 
     static const uint32_t kMaxLevelCount = 64u;
 
@@ -30,6 +32,7 @@ private:
     TreeNodeMapPtr tree_level_[kMaxLevelCount];
     uint64_t max_height_{ common::kInvalidUint64 };
     std::mutex mutex_;
+    uint32_t max_level_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(HeightTreeLevel);
 };

@@ -14,30 +14,42 @@ HeightTreeLevel::~HeightTreeLevel() {}
 int HeightTreeLevel::SetHeight(uint64_t height) {
     if (max_height_ == common::kInvalidUint64) {
         max_height_ = height;
+        max_level_ = GetMaxLevel();
     }
 
     if (height > max_height_) {
         max_height_ = height;
+        max_level_ = GetMaxLevel();
     }
 
     uint64_t leaf_index = height / kLeafMaxHeightCount;
     uint32_t height_index = height % kLeafMaxHeightCount;
-    std::lock_guard<std::mutex> guard(mutex_);
-    TreeNodeMapPtr node_map_ptr = tree_level_[0];
-    if (node_map_ptr == nullptr) {
-        node_map_ptr = std::make_shared<TreeNodeMap>();
-        tree_level_[leaf_index] = node_map_ptr;
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        TreeNodeMapPtr node_map_ptr = tree_level_[0];
+        if (node_map_ptr == nullptr) {
+            node_map_ptr = std::make_shared<TreeNodeMap>();
+            tree_level_[0] = node_map_ptr;
+        }
+
+        LeafHeightTreePtr leaf_ptr = nullptr;
+        auto iter = node_map_ptr->find(leaf_index);
+        if (iter == node_map_ptr->end()) {
+            leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
+            (*node_map_ptr)[leaf_index] = leaf_ptr;
+        } else {
+            leaf_ptr = iter->second;
+        }
+
+        leaf_ptr->Set(height);
     }
 
-    LeafHeightTreePtr leaf_ptr = nullptr;
-    auto iter = node_map_ptr->find(leaf_index);
-    if (iter == node_map_ptr->end()) {
-        leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
-    } else {
-        leaf_ptr = iter->second;
+    uint64_t child_idx = height / kLeafMaxHeightCount;
+    for (uint32_t level = 0; level < max_level_; ++level) {
+        BottomUpWithBrantchLevel(level, child_idx);
+        child_idx = child_idx / 2 / kBranchMaxCount;
     }
 
-    leaf_ptr->Set(height);
     return kSyncSuccess;
 }
 
@@ -60,6 +72,77 @@ void HeightTreeLevel::GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64
     }
 }
 
+void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_index) {
+    uint32_t branch_index = child_index / 2 / kBranchMaxCount;
+    ++level;
+    std::lock_guard<std::mutex> guard(mutex_);
+    uint64_t and_val = 0;
+    {
+        TreeNodeMapPtr node_map_ptr = tree_level_[level - 1];
+        if (node_map_ptr == nullptr) {
+            return;
+        }
+
+        LeafHeightTreePtr branch_ptr = nullptr;
+        auto iter = node_map_ptr->find(child_index);
+        if (iter == node_map_ptr->end()) {
+            return;
+        }
+
+        auto child_ptr_1 = iter->second;
+        uint64_t child_val1 = iter->second->GetRoot();
+        uint64_t child_val2 = 0;
+        if (child_index % 2 == 0) {
+            iter = node_map_ptr->find(child_index + 1);
+            if (iter != node_map_ptr->end()) {
+                child_val2 = iter->second->GetRoot();
+            }
+        } else {
+            iter = node_map_ptr->find(child_index - 1);
+            if (iter != node_map_ptr->end()) {
+                child_val2 = iter->second->GetRoot();
+            }
+        }
+
+        and_val = child_val1 & child_val2;
+    }
+    
+    {
+        TreeNodeMapPtr node_map_ptr = tree_level_[level];
+        if (node_map_ptr == nullptr) {
+            node_map_ptr = std::make_shared<TreeNodeMap>();
+            tree_level_[level] = node_map_ptr;
+        }
+
+        LeafHeightTreePtr branch_ptr = nullptr;
+        auto iter = node_map_ptr->find(branch_index);
+        if (iter == node_map_ptr->end()) {
+            branch_ptr = std::make_shared<LeafHeightTree>(level, branch_index);
+            (*node_map_ptr)[branch_index] = branch_ptr;
+        } else {
+            branch_ptr = iter->second;
+        }
+
+        branch_ptr->Set(child_index, and_val);
+    }
+}
+
+uint32_t HeightTreeLevel::GetMaxLevel() {
+    if (max_height_ < kLeafMaxHeightCount) {
+        return 0;
+    }
+
+    uint32_t level = 0;
+    uint64_t child_index = max_height_ / kLeafMaxHeightCount;
+    while (true) {
+        child_index = child_index / 2 / kBranchMaxCount;
+        if (child_index == 0) {
+            return level + 1;
+        }
+    }
+
+    return 0;
+}
 
 };  // namespace sync
 
