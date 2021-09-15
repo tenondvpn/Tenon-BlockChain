@@ -55,10 +55,13 @@ TEST_F(TestHeightTreeLevel, SetValid) {
     }
 
     std::cout << height_tree_level.max_height_ << ":" << height_tree_level.max_level_ << std::endl;
+    uint32_t level_vec_index = 1;
     for (int32_t i = (int32_t)height_tree_level.max_level_; i >= 0; --i) {
         auto level_map = height_tree_level.tree_level_[i];
-        for (auto iter = level_map->begin(); iter != level_map->end(); ++iter) {
-            iter->second->PrintTree();
+        for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
+            auto iter = level_map->find(vec_idx);
+            ASSERT_TRUE(iter != level_map->end());
+            iter->second->PrintData();
         }
     }
 }

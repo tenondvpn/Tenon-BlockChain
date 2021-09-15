@@ -203,6 +203,42 @@ void LeafHeightTree::ButtomUp(uint32_t vec_index) {
     }
 }
 
+void LeafHeightTree::PrintData() {
+    if (is_branch_) {
+        PrintBranchDataFromRoot();
+    } else {
+        PrintDataFromRoot();
+    }
+}
+
+void LeafHeightTree::PrintBranchDataFromRoot() {
+    int32_t max_root_index = GetBranchRootIndex();
+    int32_t max_level = GetBranchAlignMaxLevel();
+    std::cout << data_[max_root_index] << " ";
+    uint32_t level_rate = 1;
+    for (int32_t i = max_level - 1; i >= 0; --i) {
+        level_rate *= 2;
+        uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
+        for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
+            std::cout << data_[level_idx] << " ";
+        }
+    }
+}
+
+void LeafHeightTree::PrintDataFromRoot() {
+    int32_t max_root_index = GetRootIndex();
+    int32_t max_level = GetAlignMaxLevel();
+    std::cout << data_[max_root_index] << " ";
+    uint32_t level_rate = 1;
+    for (int32_t i = max_level - 1; i >= 0; --i) {
+        level_rate *= 2;
+        uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
+        for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
+            std::cout << data_[level_idx] << " ";
+        }
+    }
+}
+
 void LeafHeightTree::PrintBranchTreeFromRoot() {
     int32_t max_root_index = GetBranchRootIndex();
     int32_t max_level = GetBranchAlignMaxLevel();
