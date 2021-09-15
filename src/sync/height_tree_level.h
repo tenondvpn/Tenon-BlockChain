@@ -15,7 +15,7 @@ class HeightTreeLevel {
 public:
     HeightTreeLevel();
     ~HeightTreeLevel();
-    int SetHeight(uint64_t height);
+    int Set(uint64_t height);
     int GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights);
 
 private:

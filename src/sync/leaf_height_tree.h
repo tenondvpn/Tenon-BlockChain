@@ -31,6 +31,7 @@ public:
     }
 
     uint64_t GetRoot();
+    void PrintTree();
 
 private:
     void ButtomUp(uint32_t vec_index);

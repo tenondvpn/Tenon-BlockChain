@@ -11,7 +11,7 @@ HeightTreeLevel::HeightTreeLevel() {}
 
 HeightTreeLevel::~HeightTreeLevel() {}
 
-int HeightTreeLevel::SetHeight(uint64_t height) {
+int HeightTreeLevel::Set(uint64_t height) {
     if (max_height_ == common::kInvalidUint64) {
         max_height_ = height;
         max_level_ = GetMaxLevel();

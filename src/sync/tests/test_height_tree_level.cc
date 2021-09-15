@@ -6,7 +6,7 @@
 #include <vector>
 
 #define private public
-#include "sync/leaf_height_tree.h"
+#include "sync/height_tree_level.h"
 #include "sync/sync_utils.h"
 
 namespace tenon {
@@ -15,7 +15,7 @@ namespace sync {
 
 namespace test {
 
-class TestLeafHeightTree : public testing::Test {
+class TestHeightTreeLevel : public testing::Test {
 public:
     static void SetUpTestCase() {
     }
@@ -48,32 +48,8 @@ private:
 
 };
 
-TEST_F(TestLeafHeightTree, TestGetInvalidHeights) {
-    LeafHeightTree leaf_height_tree(0, 0);
-    std::unordered_set<uint64_t> invalid_heights = {
-        23,
-        1024,
-        346545,
-        1024 * 156,
-        1024 * 1021,
-    };
-
-    for (uint32_t i = 0; i < 10; ++i) {
-        invalid_heights.insert(rand() % (1024 * 1024));
-    }
-
-    for (auto iter = invalid_heights.begin(); iter != invalid_heights.end(); ++iter) {
-        TestGetInvalidHeight(*iter);
-    }
-}
-
-TEST_F(TestLeafHeightTree, TestSetBranch) {
-    LeafHeightTree leaf_height_tree(1, 0);
-    for (uint64_t i = 0; i < 16384 * 2; ++i) {
-        leaf_height_tree.Set(i, 0xFFFFFFFFFFFFFFFFlu);
-    }
-
-    leaf_height_tree.PrintBranchTreeFromRoot();
+TEST_F(TestHeightTreeLevel, TestGetInvalidHeights) {
+    HeightTreeLevel height_tree_level;
 }
 
 }  // namespace test
