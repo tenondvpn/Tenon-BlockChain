@@ -34,7 +34,7 @@ void LeafHeightTree::InitVec() {
     uint32_t init_level_count = kBranchMaxCount;
     uint32_t init_rate = kBranchMaxCount;
     level_tree_index_vec_.push_back(std::make_pair(0, 0));
-    for (uint32_t i = 0; i < 14; ++i) {
+    for (uint32_t i = 0; i < 16; ++i) {
         level_tree_index_vec_.push_back(std::make_pair(init_level_count, init_rate));
         std::cout << "init_level_count: " << init_level_count << ", init_rate: " << init_rate << std::endl;
         init_rate = init_rate / 2;
