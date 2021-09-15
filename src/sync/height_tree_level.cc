@@ -1,7 +1,8 @@
+#include "sync/height_tree_level.h"
 #include <unordered_map>
+#include <cmath>
 
 #include "common/utils.h"
-#include "sync/height_tree_level.h"
 
 namespace tenon {
 
