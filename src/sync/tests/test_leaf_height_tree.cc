@@ -42,6 +42,7 @@ public:
 
 
         int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+        std::cout << "print level max: " << max_level << std::endl;
         for (int32_t i = max_level; i >= 0; --i) {
             leaf_height_tree.PrintLevel(i);
             std::cout << std::endl;
