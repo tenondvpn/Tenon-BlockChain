@@ -30,7 +30,6 @@ public:
     }
 
     void TestGetInvalidHeight(uint64_t height) {
-        std::cout << "invalid height: " << height << std::endl;
         LeafHeightTree leaf_height_tree(0, 0);
         for (uint64_t i = 0; i < kLeafMaxHeightCount; ++i) {
             if (i == height) {
@@ -40,7 +39,6 @@ public:
             leaf_height_tree.Set(i);
         }
 
-        leaf_height_tree.PrintTree();
         std::vector<uint64_t> get_invalid_heights;
         leaf_height_tree.GetInvalidHeights(&get_invalid_heights);
         ASSERT_EQ(get_invalid_heights[0], height);
@@ -67,8 +65,6 @@ TEST_F(TestLeafHeightTree, TestSetBranch) {
     for (uint64_t i = 0; i < kBranchMaxCount * 2; ++i) {
         leaf_height_tree.Set(i, 0xFFFFFFFFFFFFFFFFlu);
     }
-
-    leaf_height_tree.PrintBranchTreeFromRoot();
 }
 
 }  // namespace test
