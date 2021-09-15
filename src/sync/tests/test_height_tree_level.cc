@@ -50,6 +50,9 @@ private:
 
 TEST_F(TestHeightTreeLevel, TestGetInvalidHeights) {
     HeightTreeLevel height_tree_level;
+    for (uint64_t i = 0; i < 1024 * 1024; ++i) {
+        height_tree_level.Set(i);
+    }
 }
 
 }  // namespace test
