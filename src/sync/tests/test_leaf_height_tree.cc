@@ -71,6 +71,8 @@ TEST_F(TestLeafHeightTree, TestSetBranch) {
     LeafHeightTree leaf_height_tree(1, 0);
     for (uint64_t i = 0; i < 16384; ++i) {
         leaf_height_tree.Set(i, 0xFFFFFFFFFFFFFFFFlu);
+        leaf_height_tree.PrintBranchTreeFromRoot();
+        std::cout << std::endl;
     }
 }
 

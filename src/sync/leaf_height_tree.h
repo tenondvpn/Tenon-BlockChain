@@ -34,12 +34,15 @@ public:
 
 private:
     void ButtomUp(uint32_t vec_index);
-    void BranchButtomUp(uint32_t vec_index);
     uint32_t GetRootIndex();
     uint32_t GetAlignMaxLevel();
-    uint32_t GetBranchAlignMaxLevel();
     void PrintTreeFromRoot();
     void InitVec();
+
+    void BranchButtomUp(uint32_t vec_index);
+    uint32_t GetBranchAlignMaxLevel();
+    uint32_t GetBranchRootIndex();
+    void PrintBranchTreeFromRoot();
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
