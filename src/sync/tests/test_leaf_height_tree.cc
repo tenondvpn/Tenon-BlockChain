@@ -4,6 +4,7 @@
 #include <chrono>
 #include <unordered_set>
 #include <vector>
+#include <cmath>
 
 #define private public
 #include "sync/leaf_height_tree.h"

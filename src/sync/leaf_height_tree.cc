@@ -220,7 +220,6 @@ void LeafHeightTree::PrintLevel(uint32_t level) {
     }
 }
 
-
 void LeafHeightTree::PrintBranchDataFromRoot() {
     int32_t max_root_index = GetBranchRootIndex();
     int32_t max_level = GetBranchAlignMaxLevel();
