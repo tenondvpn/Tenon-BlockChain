@@ -17,6 +17,7 @@ public:
     ~HeightTreeLevel();
     int Set(uint64_t height);
     int GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights);
+    void PrintTree();
 
 private:
     typedef std::unordered_map<uint64_t, LeafHeightTreePtr> TreeNodeMap;

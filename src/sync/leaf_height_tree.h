@@ -33,6 +33,7 @@ public:
     uint64_t GetRoot();
     void PrintTree();
     void PrintData();
+    void PrintLevel(uint32_t level);
 
 private:
     void ButtomUp(uint32_t vec_index);

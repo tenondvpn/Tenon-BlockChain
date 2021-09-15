@@ -211,6 +211,16 @@ void LeafHeightTree::PrintData() {
     }
 }
 
+void LeafHeightTree::PrintLevel(uint32_t level) {
+    uint32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+    uint32_t level_rate = (uint32_t)pow(2.0, (max_level - level));
+    uint32_t end_idx = level_tree_index_vec_[level].first + level_rate;
+    for (uint32_t level_idx = level_tree_index_vec_[level].first; level_idx < end_idx; ++level_idx) {
+        std::cout << data_[level_idx] << " ";
+    }
+}
+
+
 void LeafHeightTree::PrintBranchDataFromRoot() {
     int32_t max_root_index = GetBranchRootIndex();
     int32_t max_level = GetBranchAlignMaxLevel();

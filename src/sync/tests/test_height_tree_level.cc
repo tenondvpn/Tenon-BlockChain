@@ -62,8 +62,9 @@ TEST_F(TestHeightTreeLevel, SetValid) {
             auto iter = level_map->find(vec_idx);
             ASSERT_TRUE(iter != level_map->end());
             iter->second->PrintData();
-            std::cout << std::endl;
         }
+
+        std::cout << std::endl;
     }
 }
 

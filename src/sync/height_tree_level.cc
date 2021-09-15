@@ -156,6 +156,25 @@ uint32_t HeightTreeLevel::GetMaxLevel() {
     return 0;
 }
 
+void HeightTreeLevel::PrintTree() {
+    uint32_t level_vec_index = 1;
+    for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
+        auto level_map = tree_level_[i];
+        for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
+            auto iter = level_map->find(vec_idx);
+            if (i == max_level_) {
+                iter->second->PrintTree();
+                continue;
+            }
+
+            iter->second->PrintData();
+        }
+
+        std::cout << std::endl;
+    }
+
+}
+
 };  // namespace sync
 
 };  // namespace tenon

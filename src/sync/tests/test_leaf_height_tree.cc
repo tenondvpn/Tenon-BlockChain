@@ -39,6 +39,13 @@ public:
             leaf_height_tree.Set(i);
         }
 
+
+        int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+        for (int32_t i = max_level; i >= 0; --i) {
+            leaf_height_tree.PrintLevel(i);
+            std::cout << std::endl;
+        }
+
         std::vector<uint64_t> get_invalid_heights;
         leaf_height_tree.GetInvalidHeights(&get_invalid_heights);
         if (get_invalid_heights.empty()) {
