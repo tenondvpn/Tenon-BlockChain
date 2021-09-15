@@ -23,7 +23,6 @@ int HeightTreeLevel::Set(uint64_t height) {
     }
 
     uint64_t leaf_index = height / kLeafMaxHeightCount;
-    uint32_t height_index = height % kLeafMaxHeightCount;
     {
         std::lock_guard<std::mutex> guard(mutex_);
         TreeNodeMapPtr node_map_ptr = tree_level_[0];
@@ -37,6 +36,12 @@ int HeightTreeLevel::Set(uint64_t height) {
         if (iter == node_map_ptr->end()) {
             leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
             (*node_map_ptr)[leaf_index] = leaf_ptr;
+            std::cout << "create new leaf index: " << leaf_index << std::endl;
+            if (leaf_index != 0) {
+                (*node_map_ptr)[leaf_index - 1]->PrintTree();
+            }
+
+            std::cout << std::endl;
         } else {
             leaf_ptr = iter->second;
         }
@@ -46,6 +51,7 @@ int HeightTreeLevel::Set(uint64_t height) {
 
     uint64_t child_idx = height / kLeafMaxHeightCount;
     for (uint32_t level = 0; level < max_level_; ++level) {
+//         std::cout << "height: " << height << ", child_idx: " << child_idx << ", max_level_: " << max_level_ << std::endl;
         BottomUpWithBrantchLevel(level, child_idx);
         child_idx = child_idx / 2 / kBranchMaxCount;
     }
@@ -77,6 +83,8 @@ void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_in
     ++level;
     std::lock_guard<std::mutex> guard(mutex_);
     uint64_t and_val = 0;
+    uint64_t child_val1 = 0;
+    uint64_t child_val2 = 0;
     {
         TreeNodeMapPtr node_map_ptr = tree_level_[level - 1];
         if (node_map_ptr == nullptr) {
@@ -89,9 +97,8 @@ void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_in
             return;
         }
 
-        auto child_ptr_1 = iter->second;
-        uint64_t child_val1 = iter->second->GetRoot();
-        uint64_t child_val2 = 0;
+        child_val1 = iter->second->GetRoot();
+        child_val2 = 0;
         if (child_index % 2 == 0) {
             iter = node_map_ptr->find(child_index + 1);
             if (iter != node_map_ptr->end()) {
@@ -119,11 +126,15 @@ void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_in
         if (iter == node_map_ptr->end()) {
             branch_ptr = std::make_shared<LeafHeightTree>(level, branch_index);
             (*node_map_ptr)[branch_index] = branch_ptr;
+//             std::cout << "create new branch level: " << level << ", index: " << branch_index << std::endl;
         } else {
             branch_ptr = iter->second;
         }
 
         branch_ptr->Set(child_index, and_val);
+//         std::cout << "branch_index: " << branch_index << ", set branch and value child_index: " << child_index << ", child1: " << child_val1 << ", child 2: " << child_val2 << ", and_val: " << and_val << ", level: " << level << std::endl;
+//         branch_ptr->PrintTree();
+//         std::cout << std::endl;
     }
 }
 
@@ -136,8 +147,9 @@ uint32_t HeightTreeLevel::GetMaxLevel() {
     uint64_t child_index = max_height_ / kLeafMaxHeightCount;
     while (true) {
         child_index = child_index / 2 / kBranchMaxCount;
+        ++level;
         if (child_index == 0) {
-            return level + 1;
+            return level;
         }
     }
 

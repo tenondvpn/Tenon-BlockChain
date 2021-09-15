@@ -50,7 +50,7 @@ private:
 
 TEST_F(TestHeightTreeLevel, SetValid) {
     HeightTreeLevel height_tree_level;
-    for (uint64_t i = 0; i < 1024 * 1024; ++i) {
+    for (uint64_t i = 0; i < 1024; ++i) {
         height_tree_level.Set(i);
     }
 

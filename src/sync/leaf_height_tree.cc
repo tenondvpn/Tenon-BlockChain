@@ -51,8 +51,8 @@ void LeafHeightTree::Set(uint64_t child_index, uint64_t val) {
     }
 
     assert(parent_idx >= global_leaf_index_ && parent_idx < global_leaf_index_ + kBranchMaxCount);
-    uint32_t vec_idx = parent_idx - global_leaf_index_;
-    if (vec_idx >= kBranchMaxCount) {
+    parent_idx = parent_idx - global_leaf_index_;
+    if (parent_idx >= kBranchMaxCount) {
         assert(false);
         return;
     }
@@ -61,8 +61,9 @@ void LeafHeightTree::Set(uint64_t child_index, uint64_t val) {
         max_vec_index_ = parent_idx;
     }
 
-    data_[vec_idx] = val;
-    BranchButtomUp(vec_idx);
+    data_[parent_idx] = val;
+//     std::cout << "branch set parent_idx: " << parent_idx << ", val: " << val << ", max_vec_index_: " << max_vec_index_ << std::endl;
+    BranchButtomUp(parent_idx);
 }
 
 void LeafHeightTree::Set(uint64_t index) {
