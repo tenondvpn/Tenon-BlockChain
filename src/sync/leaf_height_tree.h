@@ -35,6 +35,10 @@ public:
     void PrintData();
     void PrintLevel(uint32_t level);
 
+    uint32_t max_vec_index() const {
+        return prev_root_index_;
+    }
+
 private:
     void ButtomUp(uint32_t vec_index);
     uint32_t GetRootIndex();
