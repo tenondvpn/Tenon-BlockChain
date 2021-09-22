@@ -36,7 +36,7 @@ public:
     void PrintLevel(uint32_t level);
 
     uint32_t max_vec_index() const {
-        return prev_root_index_;
+        return max_vec_index_;
     }
 
 private:
@@ -56,7 +56,6 @@ private:
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
     uint64_t max_height_{ common::kInvalidUint64 };
-    uint32_t prev_root_index_{ common::kInvalidUint32 };
     std::vector<std::pair<uint32_t, uint32_t>> level_tree_index_vec_;
     bool is_branch_{ false };
     uint32_t max_vec_index_{ 0 };

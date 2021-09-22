@@ -1,6 +1,7 @@
 #include "sync/height_tree_level.h"
 #include <unordered_map>
 #include <cmath>
+#include <cassert>
 
 #include "common/utils.h"
 
@@ -165,23 +166,29 @@ void HeightTreeLevel::PrintTree() {
         if (i == max_level_) {
             auto iter = level_map->begin();
             iter->second->PrintTree();
-            level_vec_index = iter->second->max_vec_index();
+            level_vec_index = iter->second->max_vec_index() + 1;
+            if (level_vec_index >= kBranchMaxCount) {
+                return;
+            }
+
             continue;
         }
 
         level_vec_index *= 2;
         int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+        std::cout << "max_level: " << max_level << ", level_vec_index: " << level_vec_index << std::endl;
         for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
+                assert(iter != level_map->end());
                 iter->second->PrintLevel(level_idx);
             }
 
             std::cout << std::endl;
         }
 
+        level_vec_index = kBranchMaxCount;
         std::cout << std::endl;
-        level_vec_index = (uint32_t)(pow(2, max_level)) * level_vec_index;
     }
 
 }
