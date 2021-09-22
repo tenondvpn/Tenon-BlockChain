@@ -18,7 +18,8 @@ public:
     void Set(uint64_t bit_index);
     void Set(uint64_t child_index, uint64_t val);
     bool Valid(uint64_t bit_index);
-    void GetInvalidHeights(std::vector<uint64_t>* height_vec);
+    void GetLeafInvalidHeights(std::vector<uint64_t>* height_vec);
+    void GetBranchInvalidNode(uint64_t* vec_idx);
 
     const std::vector<uint64_t>& data() const {
         return data_;

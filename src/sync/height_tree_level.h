@@ -16,7 +16,8 @@ public:
     HeightTreeLevel();
     ~HeightTreeLevel();
     int Set(uint64_t height);
-    int GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights);
+    bool Valid(uint64_t height);
+    int GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights, uint64_t max_height);
     void PrintTree();
 
 private:

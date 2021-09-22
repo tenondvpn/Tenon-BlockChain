@@ -249,14 +249,11 @@ void LeafHeightTree::PrintDataFromRoot() {
 }
 
 void LeafHeightTree::PrintBranchTreeFromRoot() {
-    int32_t max_root_index = GetBranchRootIndex();
     int32_t max_level = GetBranchAlignMaxLevel();
-    std::cout << data_[max_root_index] << std::endl;
     uint32_t level_rate = 1;
     for (int32_t i = max_level - 1; i >= 0; --i) {
         level_rate *= 2;
         uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
-        std::cout << i << ", " << level_rate << " ----- ";
         for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
             std::cout << data_[level_idx] << " ";
         }
@@ -273,7 +270,6 @@ void LeafHeightTree::PrintTreeFromRoot() {
     for (int32_t i = max_level - 1; i >= 0; --i) {
         level_rate *= 2;
         uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
-        std::cout << level_rate << " ----- ";
         for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
             std::cout << data_[level_idx] << " ";
         }
@@ -282,7 +278,33 @@ void LeafHeightTree::PrintTreeFromRoot() {
     }
 }
 
-void LeafHeightTree::GetInvalidHeights(std::vector<uint64_t>* height_vec) {
+void LeafHeightTree::GetBranchInvalidNode(uint64_t* vec_idx) {
+    int32_t parent_index = GetBranchRootIndex();
+    if (data_[parent_index] == kLevelNodeValidHeights) {
+        return;
+    }
+
+    int32_t max_level = GetAlignMaxLevel();
+    int32_t dec_count = 1;
+    while (max_level > 0) {
+        int32_t left_child_idx = parent_index - dec_count - 1;
+        if (data_[left_child_idx] != kLevelNodeValidHeights) {
+            parent_index = left_child_idx;
+        } else {
+            parent_index = left_child_idx + 1;
+        }
+
+        dec_count *= 2;
+    }
+
+    if (data_[parent_index] == kLevelNodeValidHeights) {
+        return;
+    }
+
+    *vec_idx = parent_index;
+}
+
+void LeafHeightTree::GetLeafInvalidHeights(std::vector<uint64_t>* height_vec) {
     int32_t parent_index = GetRootIndex();
     if (data_[parent_index] == kLevelNodeValidHeights) {
         return;

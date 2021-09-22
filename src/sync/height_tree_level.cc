@@ -61,7 +61,37 @@ int HeightTreeLevel::Set(uint64_t height) {
     return kSyncSuccess;
 }
 
-int HeightTreeLevel::GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights) {
+bool HeightTreeLevel::Valid(uint64_t height) {
+    uint64_t leaf_index = height / kLeafMaxHeightCount;
+    std::lock_guard<std::mutex> guard(mutex_);
+    TreeNodeMapPtr node_map_ptr = tree_level_[0];
+    if (node_map_ptr == nullptr) {
+        return false;
+    }
+
+    LeafHeightTreePtr leaf_ptr = nullptr;
+    auto iter = node_map_ptr->find(leaf_index);
+    if (iter == node_map_ptr->end()) {
+        return false;
+    }
+
+    return iter->second->Valid(height);
+}
+
+int HeightTreeLevel::GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights, uint64_t max_height) {
+    if (max_height >= max_height_) {
+        for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
+            heights->push_back(i);
+            if (heights->size() > 1024) {
+                break;
+            }
+        }
+
+        return kSyncSuccess;
+    }
+
+
+
     return kSyncSuccess;
 }
 
@@ -161,13 +191,15 @@ uint32_t HeightTreeLevel::GetMaxLevel() {
 void HeightTreeLevel::PrintTree() {
     uint32_t level_vec_index = 1;
     std::cout << "all max_level_: " << max_level_ << std::endl;
+    int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
         if (i == max_level_) {
             auto iter = level_map->begin();
             iter->second->PrintTree();
             level_vec_index = iter->second->max_vec_index() + 1;
-            if (level_vec_index >= kBranchMaxCount) {
+            std::cout << "level_vec_index: " << level_vec_index << std::endl;
+            if (level_vec_index > kBranchMaxCount) {
                 return;
             }
 
@@ -175,8 +207,7 @@ void HeightTreeLevel::PrintTree() {
         }
 
         level_vec_index *= 2;
-        int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
-        std::cout << "max_level: " << max_level << ", level_vec_index: " << level_vec_index << std::endl;
+        std::cout << "level_vec_index: " << level_vec_index << std::endl;
         for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
@@ -187,8 +218,7 @@ void HeightTreeLevel::PrintTree() {
             std::cout << std::endl;
         }
 
-        level_vec_index = kBranchMaxCount;
-        std::cout << std::endl;
+        level_vec_index *= kBranchMaxCount;
     }
 
 }

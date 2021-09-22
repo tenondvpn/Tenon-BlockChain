@@ -80,6 +80,10 @@ TEST_F(TestLeafHeightTree, TestSetBranch) {
     for (uint64_t i = 0; i < kBranchMaxCount * 2; ++i) {
         leaf_height_tree.Set(i, 0xFFFFFFFFFFFFFFFFlu);
     }
+
+    uint64_t vec_idx = common::kInvalidUint64;
+    leaf_height_tree.GetBranchInvalidNode(&vec_idx);
+    ASSERT_EQ(vec_idx, common::kInvalidUint64);
 }
 
 }  // namespace test
