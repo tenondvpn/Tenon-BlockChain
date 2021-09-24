@@ -48,6 +48,10 @@ TEST_F(TestKeyValueSync, TestSyncHeight) {
     ASSERT_EQ(net_init.Init(params_split.cnt_, params_split.pt_), init::kInitSuccess);
     ASSERT_EQ(KeyValueSync::Instance()->AddSyncHeight(
         network::kRootCongressNetworkId, 0, 2, kSyncHigh), sync::kSyncSuccess);
+    KeyValueSync::Instance()->CheckSyncItem();
+    KeyValueSync::Instance()->HandleMessage(
+        std::make_shared<transport::protobuf::Header>(
+            KeyValueSync::Instance()->test_sync_req_msg_));
 }
 
 }  // namespace test

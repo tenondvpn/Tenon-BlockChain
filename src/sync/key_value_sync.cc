@@ -141,6 +141,7 @@ void KeyValueSync::CheckSyncItem() {
                         item->network_id,
                         sync_dht_map[item->network_id],
                         sended_neigbors);
+                std::cout << "SendSyncRequest choose node id hash: " << choose_node << std::endl;
                 if (choose_node != 0) {
                     sended_neigbors.insert(choose_node);
                 }
