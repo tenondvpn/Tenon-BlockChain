@@ -83,6 +83,11 @@ private:
     std::unordered_set<std::string> added_key_set_;
     std::mutex added_key_set_mutex_;
 
+#ifdef TENON_UNITTEST
+    transport::protobuf::Header test_sync_req_msg_;
+    transport::protobuf::Header test_sync_res_msg_;
+#endif
+
     DISALLOW_COPY_AND_ASSIGN(KeyValueSync);
 };
 

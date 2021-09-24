@@ -223,12 +223,18 @@ uint64_t KeyValueSync::SendSyncRequest(
     }
 
     if (!node) {
-        node = (*readonly_dht)[0];
+        node = (*readonly_dht)[rand() % readonly_dht->size()];
     }
 
     transport::protobuf::Header msg;
     dht->SetFrequently(msg);
     SyncProto::CreateSyncValueReqeust(dht->local_node(), node, sync_msg, msg);
+
+#ifdef TENON_UNITTEST
+    test_sync_req_msg_ = msg;
+    return;
+#endif
+
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             node->public_ip(), node->local_port + 1, 0, msg);
 //     SYNC_DEBUG("sent sync request [%s:%d], key size: %d",
@@ -317,6 +323,12 @@ void KeyValueSync::ProcessSyncValueRequest(
     transport::protobuf::Header msg;
     dht->SetFrequently(msg);
     SyncProto::CreateSyncValueResponse(dht->local_node(), header, res_sync_msg, msg);
+
+#ifdef TENON_UNITTEST
+    test_sync_res_msg_ = msg;
+    return;
+#endif
+
     if (msg.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             header.from_ip(), header.from_port(), 0, msg);
