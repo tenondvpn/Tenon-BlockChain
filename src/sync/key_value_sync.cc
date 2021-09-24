@@ -88,13 +88,17 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
         std::lock_guard<std::mutex> guard(prio_sync_queue_[priority].mutex);
         prio_sync_queue_[priority].sync_queue.push(item);
     }
+
+    return kSyncSuccess;
 }
 
 void KeyValueSync::Init() {
+#ifndef TENON_UNITTEST
     tick_.CutOff(kSyncTickPeriod, std::bind(&KeyValueSync::CheckSyncItem, this));
     sync_timeout_tick_.CutOff(
             kTimeoutCheckPeriod,
             std::bind(&KeyValueSync::CheckSyncTimeout, this));
+#endif
 }
 
 void KeyValueSync::Destroy() {
@@ -181,7 +185,9 @@ void KeyValueSync::CheckSyncItem() {
         }
     }
 
+#ifndef TENON_UNITTEST
     tick_.CutOff(kSyncTickPeriod, std::bind(&KeyValueSync::CheckSyncItem, this));
+#endif
 }
 
 uint64_t KeyValueSync::SendSyncRequest(
@@ -421,9 +427,11 @@ void KeyValueSync::CheckSyncTimeout() {
         }
     }
     
+#ifndef TENON_UNITTEST
     sync_timeout_tick_.CutOff(
             kTimeoutCheckPeriod,
             std::bind(&KeyValueSync::CheckSyncTimeout, this));
+#endif
 }
 
 }  // namespace sync
