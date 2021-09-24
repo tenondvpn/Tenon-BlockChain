@@ -248,6 +248,8 @@ void LeafHeightTree::PrintDataFromRoot() {
 }
 
 void LeafHeightTree::PrintBranchTreeFromRoot() {
+    int32_t max_root_index = GetBranchRootIndex();
+    std::cout << data_[max_root_index] << std::endl;
     int32_t max_level = GetBranchAlignMaxLevel();
     uint32_t level_rate = 1;
     for (int32_t i = max_level - 1; i >= 0; --i) {

@@ -82,7 +82,7 @@ void HeightTreeLevel::GetMissingHeights(
         uint32_t count,
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
-    if (max_height >= max_height_) {
+    if (max_height > max_height_) {
         for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
             heights->push_back(i);
             if (heights->size() > 1024) {
@@ -255,7 +255,6 @@ void HeightTreeLevel::PrintTree() {
             auto iter = level_map->begin();
             iter->second->PrintTree();
             level_vec_index = iter->second->max_vec_index() + 1;
-            std::cout << "level_vec_index: " << level_vec_index << std::endl;
             if (level_vec_index > kBranchMaxCount) {
                 return;
             }
@@ -264,7 +263,6 @@ void HeightTreeLevel::PrintTree() {
         }
 
         level_vec_index *= 2;
-        std::cout << "level_vec_index: " << level_vec_index << std::endl;
         for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
