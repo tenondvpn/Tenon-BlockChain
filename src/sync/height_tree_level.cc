@@ -26,7 +26,6 @@ int HeightTreeLevel::Set(uint64_t height) {
 
     uint64_t leaf_index = height / kLeafMaxHeightCount;
     {
-        std::lock_guard<std::mutex> guard(mutex_);
         TreeNodeMapPtr node_map_ptr = tree_level_[0];
         if (node_map_ptr == nullptr) {
             node_map_ptr = std::make_shared<TreeNodeMap>();
@@ -63,7 +62,6 @@ int HeightTreeLevel::Set(uint64_t height) {
 
 bool HeightTreeLevel::Valid(uint64_t height) {
     uint64_t leaf_index = height / kLeafMaxHeightCount;
-    std::lock_guard<std::mutex> guard(mutex_);
     TreeNodeMapPtr node_map_ptr = tree_level_[0];
     if (node_map_ptr == nullptr) {
         return false;
@@ -79,7 +77,6 @@ bool HeightTreeLevel::Valid(uint64_t height) {
 }
 
 void HeightTreeLevel::GetMissingHeights(
-        uint32_t count,
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
     // The higher the height, the higher the priority
@@ -173,7 +170,6 @@ void HeightTreeLevel::GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64
 void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_index) {
     uint32_t branch_index = child_index / 2 / kBranchMaxCount;
     ++level;
-    std::lock_guard<std::mutex> guard(mutex_);
     uint64_t and_val = 0;
     uint64_t child_val1 = 0;
     uint64_t child_val2 = 0;

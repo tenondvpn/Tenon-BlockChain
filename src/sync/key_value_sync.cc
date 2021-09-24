@@ -68,6 +68,28 @@ int KeyValueSync::AddSync(uint32_t network_id, const std::string& key, uint32_t 
     return kSyncSuccess;
 }
 
+int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t height, uint32_t priority) {
+    assert(priority <= kSyncHighest);
+    {
+        std::string key = std::to_string(network_id) + "_" +
+            std::to_string(pool_idx) + "_" +
+            std::to_string(height);
+        std::lock_guard<std::mutex> guard(added_key_set_mutex_);
+        auto iter = added_key_set_.find(key);
+        if (iter != added_key_set_.end()) {
+            return kSyncKeyAdded;
+        }
+
+        added_key_set_.insert(key);
+    }
+
+    auto item = std::make_shared<SyncItem>(network_id, pool_idx, height, priority);
+    {
+        std::lock_guard<std::mutex> guard(prio_sync_queue_[priority].mutex);
+        prio_sync_queue_[priority].sync_queue.push(item);
+    }
+}
+
 void KeyValueSync::Init() {
     tick_.CutOff(kSyncTickPeriod, std::bind(&KeyValueSync::CheckSyncItem, this));
     sync_timeout_tick_.CutOff(
@@ -102,7 +124,14 @@ void KeyValueSync::CheckSyncItem() {
             added_key.insert(item->key);
             auto sync_req = sync_dht_map[item->network_id].mutable_sync_value_req();
             sync_req->set_network_id(item->network_id);
-            sync_req->add_keys(item->key);
+            if (item->height != common::kInvalidUint64) {
+                auto height_item = sync_req->add_heights();
+                height_item->set_pool_idx(item->pool_idx);
+                height_item->set_height(item->height);
+            } else {
+                sync_req->add_keys(item->key);
+            }
+
             if (static_cast<uint32_t>(sync_req->keys_size()) > kMaxSyncKeyCount) {
                 uint64_t choose_node = SendSyncRequest(
                         item->network_id,
@@ -113,6 +142,7 @@ void KeyValueSync::CheckSyncItem() {
                 }
 
                 sync_req->clear_keys();
+                sync_req->clear_heights();
                 if (sended_neigbors.size() > kSyncNeighborCount) {
                     stop = true;
                     break;
@@ -255,6 +285,31 @@ void KeyValueSync::ProcessSyncValueRequest(
         }
     }
 
+    for (int32_t i = 0; i < sync_msg.sync_value_req().heights_size(); ++i) {
+        std::string value;
+        if (sync_msg.sync_value_req().network_id() != common::GlobalInfo::Instance()->network_id()) {
+            continue;
+        }
+
+        if (block::BlockManager::Instance()->GetBlockStringWithHeight(
+                sync_msg.sync_value_req().network_id(),
+                sync_msg.sync_value_req().heights(i).pool_idx(),
+                sync_msg.sync_value_req().heights(i).height(),
+                &value) != block::kBlockSuccess) {
+            continue;
+        }
+
+        auto res = sync_res->add_res();
+        res->set_network_id(sync_msg.sync_value_req().network_id());
+        res->set_pool_idx(sync_msg.sync_value_req().heights(i).pool_idx());
+        res->set_height(sync_msg.sync_value_req().heights(i).height());
+        res->set_value(value);
+        add_size += 16 + value.size();
+        if (add_size >= kSyncPacketMaxSize) {
+            break;
+        }
+    }
+
     if (add_size == 0) {
         return;
     }
@@ -302,16 +357,29 @@ void KeyValueSync::ProcessSyncValueResponse(
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
 //         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
-        if (block_item->ParseFromString(iter->value()) && block_item->hash() == iter->key()) {
+        if (block_item->ParseFromString(iter->value()) &&
+                (iter->has_height() || block_item->hash() == iter->key())) {
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
         }
 
+        std::string key = iter->key();
+        if (iter->has_height()) {
+            key = std::to_string(iter->network_id()) + "_" +
+                std::to_string(iter->pool_idx()) + "_" +
+                std::to_string(iter->height());
+        }
+
         {
             std::lock_guard<std::mutex> guard(synced_map_mutex_);
-            auto tmp_iter = synced_map_.find(iter->key());
+            auto tmp_iter = synced_map_.find(key);
             if (tmp_iter != synced_map_.end()) {
+                {
+                    std::lock_guard<std::mutex> guard(added_key_set_mutex_);
+                    added_key_set_.erase(tmp_iter->second->key);
+                }
+
                 synced_map_.erase(tmp_iter);
             }
         }
@@ -323,6 +391,11 @@ void KeyValueSync::CheckSyncTimeout() {
         std::lock_guard<std::mutex> guard(synced_map_mutex_);
         for (auto iter = synced_map_.begin(); iter != synced_map_.end();) {
             if (iter->second->sync_times >= kSyncMaxRetryTimes) {
+                {
+                    std::lock_guard<std::mutex> guard(added_key_set_mutex_);
+                    added_key_set_.erase(iter->second->key);
+                }
+
                 synced_map_.erase(iter++);
                 continue;
             }

@@ -65,6 +65,11 @@ public:
         uint32_t pool_index,
         uint64_t height,
         bft::protobuf::Block& block_item);
+    int GetBlockStringWithHeight(
+        uint32_t network_id,
+        uint32_t pool_index,
+        uint64_t height,
+        std::string* block_str);
 
 private:
     BlockManager();

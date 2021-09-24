@@ -623,11 +623,11 @@ int BlockManager::AddNewBlock(
     return kBlockSuccess;
 }
 
-int BlockManager::GetBlockWithHeight(
+int BlockManager::GetBlockStringWithHeight(
         uint32_t network_id,
         uint32_t pool_index,
         uint64_t height,
-        bft::protobuf::Block& block_item) {
+        std::string* block_str) {
     std::string height_db_key = common::GetHeightDbKey(
         network_id,
         pool_index,
@@ -638,9 +638,21 @@ int BlockManager::GetBlockWithHeight(
         return kBlockError;
     }
 
-    std::string block_str;
-    st = db::Db::Instance()->Get(block_hash, &block_str);
+    st = db::Db::Instance()->Get(block_hash, block_str);
     if (!st.ok()) {
+        return kBlockError;
+    }
+
+    return kBlockSuccess;
+}
+
+int BlockManager::GetBlockWithHeight(
+        uint32_t network_id,
+        uint32_t pool_index,
+        uint64_t height,
+        bft::protobuf::Block& block_item) {
+    std::string block_str;
+    if (GetBlockStringWithHeight(network_id, pool_index, height, &block_str) != kBlockSuccess) {
         return kBlockError;
     }
 

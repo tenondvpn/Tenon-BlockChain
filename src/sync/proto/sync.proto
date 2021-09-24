@@ -2,14 +2,23 @@ syntax = "proto2";
 
 package tenon.sync.protobuf;
 
+message SyncHeightItem {
+   	optional uint32 pool_idx = 1;
+    optional uint64 height = 2;
+}
+
 message SyncValueRequest {
 	optional uint32 network_id = 1;
 	repeated bytes keys = 2;
+	repeated SyncHeightItem heights = 3;
 }
 
 message SyncResItem {
     optional bytes key = 1;
     optional bytes value = 2;
+	optional uint32 network_id = 3;
+	optional uint32 pool_idx = 4;
+    optional uint64 height = 5;
 }
 
 message SyncValueResponse {

@@ -249,6 +249,16 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
     return kBlockSuccess;
 }
 
+void DbPoolInfo::SetHeightTree(uint64_t height) {
+    std::lock_guard<std::mutex> guard(height_tree_mutex_);
+    height_tree_.Set(height);
+}
+
+void DbPoolInfo::GetMissingHeights(std::vector<uint64_t>* heights) {
+    std::lock_guard<std::mutex> guard(height_tree_mutex_);
+    height_tree_.GetMissingHeights(heights, height_);
+}
+
 }  // namespace block
 
 }  // namespace tenon

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <vector>
 
 #include "common/utils.h"
 #include "common/string_utils.h"
@@ -11,6 +12,7 @@
 #include "block/block_utils.h"
 #include "block/proto/block.pb.h"
 #include "bft/proto/bft.pb.h"
+#include "sync/height_tree_level.h"
 
 namespace tenon {
 
@@ -25,6 +27,8 @@ public:
     int GetHash(std::string* hash);
     int SetHeight(uint64_t height, db::DbWriteBach& db_batch);
     int GetHeight(uint64_t* height);
+    void SetHeightTree(uint64_t height);
+    void GetMissingHeights(std::vector<uint64_t>* heights);
     int SetTimeBlockHeight(
         uint64_t tmblock_height,
         uint64_t block_height,
@@ -45,6 +49,8 @@ private:
     bft::protobuf::Block last_block_;
     std::atomic<uint64_t> prev_tmblock_height_{ common::kInvalidUint64 };
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
+    sync::HeightTreeLevel height_tree_;
+    std::mutex height_tree_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };

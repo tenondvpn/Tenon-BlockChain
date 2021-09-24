@@ -81,14 +81,17 @@ private:
         uint64_t height,
         const bft::protobuf::TxInfo& tx_info);
     int HandleFinalStatisticBlock(uint64_t height, const bft::protobuf::TxInfo& tx_info);
+    void CheckMissingHeight();
 
     static const uint64_t kStatisticPeriod = 3000000llu;
     static const uint32_t kMaxCacheAccountCount = 10240u;
+    static const uint64_t kCheckMissingHeightPeriod = 3000000llu;
 
     std::unordered_map<std::string, block::DbAccountInfoPtr> acc_map_;
     common::LimitHeap<block::DbAccountInfoPtr> acc_limit_heap_{ false, kMaxCacheAccountCount };
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
+    common::Tick check_missing_height_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };

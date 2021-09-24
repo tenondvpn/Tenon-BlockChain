@@ -34,7 +34,8 @@ namespace tenon {
 
 namespace block {
 
-static const std::string kPoolGidPrefixStr = common::Encode::HexDecode("cdcd41af3b1af1f402107969536664d3e249075843f635961041592ce83823b9");
+static const std::string kPoolGidPrefixStr = common::Encode::HexDecode(
+    "cdcd41af3b1af1f402107969536664d3e249075843f635961041592ce83823b9");
 
 AccountManager* AccountManager::Instance() {
     static AccountManager ins;
@@ -45,6 +46,10 @@ AccountManager::AccountManager() {
     for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
         network_block_[i] = new block::DbPoolInfo(i);
     }
+
+    check_missing_height_tick_.CutOff(
+        kCheckMissingHeightPeriod,
+        std::bind(&AccountManager::CheckMissingHeight, this));
 }
 
 AccountManager::~AccountManager() {
@@ -271,6 +276,19 @@ int AccountManager::AddBlockItemToDb(
             account_id = tx_list[i].from();
         }
 
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
+        if (consistent_pool_index == common::kInvalidPoolIndex) {
+            consistent_pool_index = pool_idx;
+        }
+
+        if (consistent_pool_index != pool_idx) {
+            BLOCK_ERROR("block pool index not consistent[%u][%u][%s]",
+                consistent_pool_index, pool_idx,
+                common::Encode::HexEncode(account_id).c_str());
+            assert(false);
+            exit(0);
+        }
+
         if (tx_list[i].type() == common::kConsensusCallContract ||
                 tx_list[i].type() == common::kConsensusCreateContract) {
             switch (tx_list[i].call_contract_step()) {
@@ -334,6 +352,7 @@ int AccountManager::AddBlockItemToDb(
         }
     }
 
+    network_block_[consistent_pool_index]->SetHeightTree(block_item->height());
     return kBlockSuccess;
 }
 
@@ -818,6 +837,20 @@ void AccountManager::SetPool(
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
     return network_block_[pool_index]->GetBaseAddr();
+}
+
+void AccountManager::CheckMissingHeight() {
+    std::vector<uint64_t> missing_heights;
+    for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        network_block_[i]->GetMissingHeights(&missing_heights);
+        if (missing_heights.size() > 64) {
+            break;
+        }
+    }
+
+    check_missing_height_tick_.CutOff(
+        kCheckMissingHeightPeriod,
+        std::bind(&AccountManager::CheckMissingHeight, this));
 }
 
 }  // namespace block
