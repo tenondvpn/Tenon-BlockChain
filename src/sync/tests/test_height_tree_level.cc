@@ -43,7 +43,7 @@ public:
         std::vector<uint64_t> invalid_heights;
         height_tree_level.GetMissingHeights(1, &invalid_heights, 1023);
         ASSERT_TRUE(!invalid_heights.empty());
-        std::cout << "invalid height: " << invalid_heights[0] << std::endl;
+        ASSERT_EQ(invalid_heights[0], height);
     }
 
 private:
@@ -61,8 +61,8 @@ TEST_F(TestHeightTreeLevel, SetValid) {
 
 TEST_F(TestHeightTreeLevel, GetInvalidHeights) {
     HeightTreeLevel height_tree_level;
-    for (uint64_t i = 0; i < 1; ++i) {
-        SetTreeWithInvalidHeight(i);
+    for (uint64_t i = 0; i < 1023; ++i) {
+        SetTreeWithInvalidHeight(127);
     }
 }
 

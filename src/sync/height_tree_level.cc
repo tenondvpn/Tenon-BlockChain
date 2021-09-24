@@ -82,6 +82,7 @@ void HeightTreeLevel::GetMissingHeights(
         uint32_t count,
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
+    // The higher the height, the higher the priority
     if (max_height > max_height_) {
         for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
             heights->push_back(i);
@@ -93,7 +94,7 @@ void HeightTreeLevel::GetMissingHeights(
         return;
     }
 
-    auto level_map = tree_level_[0];
+    auto level_map = tree_level_[max_level_];
     if (level_map == nullptr || level_map->empty()) {
         return;
     }
@@ -112,12 +113,14 @@ void HeightTreeLevel::GetMissingHeights(
 
     uint64_t parent_vec_idx = 0;
     uint32_t level_vec_index = 1;
-    std::cout << "all max_level_: " << max_level_ << std::endl;
-    int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+//     std::cout << "all max_level_: " << max_level_ << std::endl;
     for (int32_t i = (int32_t)max_level_ - 1; i >= 0; --i) {
         auto level_map = tree_level_[i];
         uint64_t left_child_vec_idx = 2 * (kBranchMaxCount * parent_vec_idx + parent_node_idx);
         uint64_t right_child_vec_idx = left_child_vec_idx + 1;
+//         std::cout << "level: " << i << ", parent_vec_idx: " << parent_vec_idx << ", parent_node_idx: " << parent_node_idx
+//             << ", left_child_vec_idx: " << left_child_vec_idx << ", right_child_vec_idx: " << right_child_vec_idx
+//             << std::endl;
         auto liter = level_map->find(left_child_vec_idx);
         if (liter == level_map->end()) {
             return;
@@ -136,7 +139,7 @@ void HeightTreeLevel::GetMissingHeights(
 
             return;
         }
-
+        
         parent_node_idx = common::kInvalidUint64;
         liter->second->GetBranchInvalidNode(&parent_node_idx);
         parent_vec_idx = left_child_vec_idx;
@@ -247,7 +250,7 @@ uint32_t HeightTreeLevel::GetMaxLevel() {
 
 void HeightTreeLevel::PrintTree() {
     uint32_t level_vec_index = 1;
-    std::cout << "all max_level_: " << max_level_ << std::endl;
+//     std::cout << "all max_level_: " << max_level_ << std::endl;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
