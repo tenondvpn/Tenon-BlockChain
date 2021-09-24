@@ -20,13 +20,19 @@
 // @@protoc_insertion_point(includes)
 
 namespace protobuf_sync_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncHeightItem;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncResItem;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncValueRequest;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SyncValueRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_sync_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SyncValueResponse;
 }  // namespace protobuf_sync_2eproto
 namespace tenon {
 namespace sync {
 namespace protobuf {
+class SyncHeightItemDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<SyncHeightItem>
+      _instance;
+} _SyncHeightItem_default_instance_;
 class SyncValueRequestDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<SyncValueRequest>
@@ -51,6 +57,20 @@ class SyncMessageDefaultTypeInternal {
 }  // namespace sync
 }  // namespace tenon
 namespace protobuf_sync_2eproto {
+static void InitDefaultsSyncHeightItem() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::sync::protobuf::_SyncHeightItem_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::SyncHeightItem();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::sync::protobuf::SyncHeightItem::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_SyncHeightItem =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncHeightItem}, {}};
+
 static void InitDefaultsSyncValueRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -62,8 +82,9 @@ static void InitDefaultsSyncValueRequest() {
   ::tenon::sync::protobuf::SyncValueRequest::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_SyncValueRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncValueRequest}, {}};
+::google::protobuf::internal::SCCInfo<1> scc_info_SyncValueRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsSyncValueRequest}, {
+      &protobuf_sync_2eproto::scc_info_SyncHeightItem.base,}};
 
 static void InitDefaultsSyncResItem() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -111,15 +132,25 @@ static void InitDefaultsSyncMessage() {
       &protobuf_sync_2eproto::scc_info_SyncValueResponse.base,}};
 
 void InitDefaults() {
+  ::google::protobuf::internal::InitSCC(&scc_info_SyncHeightItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncValueRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncResItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncValueResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[4];
+::google::protobuf::Metadata file_level_metadata[5];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, pool_idx_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, height_),
+  1,
+  0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -127,7 +158,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, network_id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, keys_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, heights_),
   0,
+  ~0u,
   ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, _internal_metadata_),
@@ -136,8 +169,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, key_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, value_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, pool_idx_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncResItem, height_),
   0,
   1,
+  2,
+  3,
+  4,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -158,13 +197,15 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   1,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 7, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
-  { 9, 16, sizeof(::tenon::sync::protobuf::SyncResItem)},
-  { 18, 25, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
-  { 27, 34, sizeof(::tenon::sync::protobuf::SyncMessage)},
+  { 0, 7, sizeof(::tenon::sync::protobuf::SyncHeightItem)},
+  { 9, 17, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
+  { 20, 30, sizeof(::tenon::sync::protobuf::SyncResItem)},
+  { 35, 42, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
+  { 44, 51, sizeof(::tenon::sync::protobuf::SyncMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncHeightItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncResItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueResponse_default_instance_),
@@ -186,16 +227,20 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 4);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 5);
 }
 
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\nsync.proto\022\023tenon.sync.protobuf\"4\n\020Syn"
-      "cValueRequest\022\022\n\nnetwork_id\030\001 \001(\r\022\014\n\004key"
-      "s\030\002 \003(\014\")\n\013SyncResItem\022\013\n\003key\030\001 \001(\014\022\r\n\005v"
-      "alue\030\002 \001(\014\"V\n\021SyncValueResponse\022\022\n\nnetwo"
+      "\n\nsync.proto\022\023tenon.sync.protobuf\"2\n\016Syn"
+      "cHeightItem\022\020\n\010pool_idx\030\001 \001(\r\022\016\n\006height\030"
+      "\002 \001(\004\"j\n\020SyncValueRequest\022\022\n\nnetwork_id\030"
+      "\001 \001(\r\022\014\n\004keys\030\002 \003(\014\0224\n\007heights\030\003 \003(\0132#.t"
+      "enon.sync.protobuf.SyncHeightItem\"_\n\013Syn"
+      "cResItem\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\022\022\n\n"
+      "network_id\030\003 \001(\r\022\020\n\010pool_idx\030\004 \001(\r\022\016\n\006he"
+      "ight\030\005 \001(\004\"V\n\021SyncValueResponse\022\022\n\nnetwo"
       "rk_id\030\001 \001(\r\022-\n\003res\030\002 \003(\0132 .tenon.sync.pr"
       "otobuf.SyncResItem\"\214\001\n\013SyncMessage\022=\n\016sy"
       "nc_value_req\030\001 \001(\0132%.tenon.sync.protobuf"
@@ -204,7 +249,7 @@ void AddDescriptorsImpl() {
       "e"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 361);
+      descriptor, 521);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "sync.proto", &protobuf_RegisterTypes);
 }
@@ -226,11 +271,291 @@ namespace protobuf {
 
 // ===================================================================
 
+void SyncHeightItem::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int SyncHeightItem::kPoolIdxFieldNumber;
+const int SyncHeightItem::kHeightFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+SyncHeightItem::SyncHeightItem()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_sync_2eproto::scc_info_SyncHeightItem.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.SyncHeightItem)
+}
+SyncHeightItem::SyncHeightItem(const SyncHeightItem& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&height_, &from.height_,
+    static_cast<size_t>(reinterpret_cast<char*>(&pool_idx_) -
+    reinterpret_cast<char*>(&height_)) + sizeof(pool_idx_));
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncHeightItem)
+}
+
+void SyncHeightItem::SharedCtor() {
+  ::memset(&height_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&pool_idx_) -
+      reinterpret_cast<char*>(&height_)) + sizeof(pool_idx_));
+}
+
+SyncHeightItem::~SyncHeightItem() {
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.SyncHeightItem)
+  SharedDtor();
+}
+
+void SyncHeightItem::SharedDtor() {
+}
+
+void SyncHeightItem::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* SyncHeightItem::descriptor() {
+  ::protobuf_sync_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_sync_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const SyncHeightItem& SyncHeightItem::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_sync_2eproto::scc_info_SyncHeightItem.base);
+  return *internal_default_instance();
+}
+
+
+void SyncHeightItem::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.SyncHeightItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 3u) {
+    ::memset(&height_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&pool_idx_) -
+        reinterpret_cast<char*>(&height_)) + sizeof(pool_idx_));
+  }
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool SyncHeightItem::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.SyncHeightItem)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 pool_idx = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          set_has_pool_idx();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &pool_idx_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 height = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &height_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.SyncHeightItem)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.SyncHeightItem)
+  return false;
+#undef DO_
+}
+
+void SyncHeightItem::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.SyncHeightItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 pool_idx = 1;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->pool_idx(), output);
+  }
+
+  // optional uint64 height = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->height(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.SyncHeightItem)
+}
+
+::google::protobuf::uint8* SyncHeightItem::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.SyncHeightItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 pool_idx = 1;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->pool_idx(), target);
+  }
+
+  // optional uint64 height = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->height(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.SyncHeightItem)
+  return target;
+}
+
+size_t SyncHeightItem::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.SyncHeightItem)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional uint64 height = 2;
+    if (has_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->height());
+    }
+
+    // optional uint32 pool_idx = 1;
+    if (has_pool_idx()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->pool_idx());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SyncHeightItem::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.SyncHeightItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SyncHeightItem* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const SyncHeightItem>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.SyncHeightItem)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.SyncHeightItem)
+    MergeFrom(*source);
+  }
+}
+
+void SyncHeightItem::MergeFrom(const SyncHeightItem& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.SyncHeightItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      height_ = from.height_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      pool_idx_ = from.pool_idx_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void SyncHeightItem::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.SyncHeightItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SyncHeightItem::CopyFrom(const SyncHeightItem& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.SyncHeightItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SyncHeightItem::IsInitialized() const {
+  return true;
+}
+
+void SyncHeightItem::Swap(SyncHeightItem* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void SyncHeightItem::InternalSwap(SyncHeightItem* other) {
+  using std::swap;
+  swap(height_, other->height_);
+  swap(pool_idx_, other->pool_idx_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata SyncHeightItem::GetMetadata() const {
+  protobuf_sync_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_sync_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void SyncValueRequest::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int SyncValueRequest::kNetworkIdFieldNumber;
 const int SyncValueRequest::kKeysFieldNumber;
+const int SyncValueRequest::kHeightsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 SyncValueRequest::SyncValueRequest()
@@ -244,7 +569,8 @@ SyncValueRequest::SyncValueRequest(const SyncValueRequest& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_),
-      keys_(from.keys_) {
+      keys_(from.keys_),
+      heights_(from.heights_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   network_id_ = from.network_id_;
   // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncValueRequest)
@@ -283,6 +609,7 @@ void SyncValueRequest::Clear() {
   (void) cached_has_bits;
 
   keys_.Clear();
+  heights_.Clear();
   network_id_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -318,6 +645,18 @@ bool SyncValueRequest::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->add_keys()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_heights()));
         } else {
           goto handle_unusual;
         }
@@ -362,6 +701,15 @@ void SyncValueRequest::SerializeWithCachedSizes(
       2, this->keys(i), output);
   }
 
+  // repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->heights_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3,
+      this->heights(static_cast<int>(i)),
+      output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -388,6 +736,14 @@ void SyncValueRequest::SerializeWithCachedSizes(
       WriteBytesToArray(2, this->keys(i), target);
   }
 
+  // repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->heights_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, this->heights(static_cast<int>(i)), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -411,6 +767,17 @@ size_t SyncValueRequest::ByteSizeLong() const {
   for (int i = 0, n = this->keys_size(); i < n; i++) {
     total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
       this->keys(i));
+  }
+
+  // repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+  {
+    unsigned int count = static_cast<unsigned int>(this->heights_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->heights(static_cast<int>(i)));
+    }
   }
 
   // optional uint32 network_id = 1;
@@ -448,6 +815,7 @@ void SyncValueRequest::MergeFrom(const SyncValueRequest& from) {
   (void) cached_has_bits;
 
   keys_.MergeFrom(from.keys_);
+  heights_.MergeFrom(from.heights_);
   if (from.has_network_id()) {
     set_network_id(from.network_id());
   }
@@ -478,6 +846,7 @@ void SyncValueRequest::Swap(SyncValueRequest* other) {
 void SyncValueRequest::InternalSwap(SyncValueRequest* other) {
   using std::swap;
   keys_.InternalSwap(CastToBase(&other->keys_));
+  CastToBase(&heights_)->InternalSwap(CastToBase(&other->heights_));
   swap(network_id_, other->network_id_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -496,6 +865,9 @@ void SyncResItem::InitAsDefaultInstance() {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int SyncResItem::kKeyFieldNumber;
 const int SyncResItem::kValueFieldNumber;
+const int SyncResItem::kNetworkIdFieldNumber;
+const int SyncResItem::kPoolIdxFieldNumber;
+const int SyncResItem::kHeightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 SyncResItem::SyncResItem()
@@ -518,12 +890,18 @@ SyncResItem::SyncResItem(const SyncResItem& from)
   if (from.has_value()) {
     value_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.value_);
   }
+  ::memcpy(&network_id_, &from.network_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&height_) -
+    reinterpret_cast<char*>(&network_id_)) + sizeof(height_));
   // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.SyncResItem)
 }
 
 void SyncResItem::SharedCtor() {
   key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   value_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&network_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&height_) -
+      reinterpret_cast<char*>(&network_id_)) + sizeof(height_));
 }
 
 SyncResItem::~SyncResItem() {
@@ -565,6 +943,11 @@ void SyncResItem::Clear() {
       value_.ClearNonDefaultToEmptyNoArena();
     }
   }
+  if (cached_has_bits & 28u) {
+    ::memset(&network_id_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&height_) -
+        reinterpret_cast<char*>(&network_id_)) + sizeof(height_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -597,6 +980,48 @@ bool SyncResItem::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_value()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 network_id = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          set_has_network_id();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &network_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 pool_idx = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          set_has_pool_idx();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &pool_idx_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 height = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+          set_has_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &height_)));
         } else {
           goto handle_unusual;
         }
@@ -642,6 +1067,21 @@ void SyncResItem::SerializeWithCachedSizes(
       2, this->value(), output);
   }
 
+  // optional uint32 network_id = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->network_id(), output);
+  }
+
+  // optional uint32 pool_idx = 4;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->pool_idx(), output);
+  }
+
+  // optional uint64 height = 5;
+  if (cached_has_bits & 0x00000010u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(5, this->height(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -671,6 +1111,21 @@ void SyncResItem::SerializeWithCachedSizes(
         2, this->value(), target);
   }
 
+  // optional uint32 network_id = 3;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->network_id(), target);
+  }
+
+  // optional uint32 pool_idx = 4;
+  if (cached_has_bits & 0x00000008u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->pool_idx(), target);
+  }
+
+  // optional uint64 height = 5;
+  if (cached_has_bits & 0x00000010u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->height(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -688,7 +1143,7 @@ size_t SyncResItem::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & 31u) {
     // optional bytes key = 1;
     if (has_key()) {
       total_size += 1 +
@@ -701,6 +1156,27 @@ size_t SyncResItem::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->value());
+    }
+
+    // optional uint32 network_id = 3;
+    if (has_network_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->network_id());
+    }
+
+    // optional uint32 pool_idx = 4;
+    if (has_pool_idx()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->pool_idx());
+    }
+
+    // optional uint64 height = 5;
+    if (has_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->height());
     }
 
   }
@@ -732,7 +1208,7 @@ void SyncResItem::MergeFrom(const SyncResItem& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_key();
       key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.key_);
@@ -741,6 +1217,16 @@ void SyncResItem::MergeFrom(const SyncResItem& from) {
       set_has_value();
       value_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.value_);
     }
+    if (cached_has_bits & 0x00000004u) {
+      network_id_ = from.network_id_;
+    }
+    if (cached_has_bits & 0x00000008u) {
+      pool_idx_ = from.pool_idx_;
+    }
+    if (cached_has_bits & 0x00000010u) {
+      height_ = from.height_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -772,6 +1258,9 @@ void SyncResItem::InternalSwap(SyncResItem* other) {
     GetArenaNoVirtual());
   value_.Swap(&other->value_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  swap(network_id_, other->network_id_);
+  swap(pool_idx_, other->pool_idx_);
+  swap(height_, other->height_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -1359,6 +1848,9 @@ void SyncMessage::InternalSwap(SyncMessage* other) {
 }  // namespace tenon
 namespace google {
 namespace protobuf {
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncHeightItem* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncHeightItem >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::SyncHeightItem >(arena);
+}
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncValueRequest >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::sync::protobuf::SyncValueRequest >(arena);
 }

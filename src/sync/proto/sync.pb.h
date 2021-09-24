@@ -38,7 +38,7 @@ namespace protobuf_sync_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[4];
+  static const ::google::protobuf::internal::ParseTable schema[5];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -48,6 +48,9 @@ void AddDescriptors();
 namespace tenon {
 namespace sync {
 namespace protobuf {
+class SyncHeightItem;
+class SyncHeightItemDefaultTypeInternal;
+extern SyncHeightItemDefaultTypeInternal _SyncHeightItem_default_instance_;
 class SyncMessage;
 class SyncMessageDefaultTypeInternal;
 extern SyncMessageDefaultTypeInternal _SyncMessage_default_instance_;
@@ -65,6 +68,7 @@ extern SyncValueResponseDefaultTypeInternal _SyncValueResponse_default_instance_
 }  // namespace tenon
 namespace google {
 namespace protobuf {
+template<> ::tenon::sync::protobuf::SyncHeightItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncHeightItem>(Arena*);
 template<> ::tenon::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncMessage>(Arena*);
 template<> ::tenon::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncResItem>(Arena*);
 template<> ::tenon::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncValueRequest>(Arena*);
@@ -76,6 +80,130 @@ namespace sync {
 namespace protobuf {
 
 // ===================================================================
+
+class SyncHeightItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncHeightItem) */ {
+ public:
+  SyncHeightItem();
+  virtual ~SyncHeightItem();
+
+  SyncHeightItem(const SyncHeightItem& from);
+
+  inline SyncHeightItem& operator=(const SyncHeightItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SyncHeightItem(SyncHeightItem&& from) noexcept
+    : SyncHeightItem() {
+    *this = ::std::move(from);
+  }
+
+  inline SyncHeightItem& operator=(SyncHeightItem&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SyncHeightItem& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SyncHeightItem* internal_default_instance() {
+    return reinterpret_cast<const SyncHeightItem*>(
+               &_SyncHeightItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  void Swap(SyncHeightItem* other);
+  friend void swap(SyncHeightItem& a, SyncHeightItem& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SyncHeightItem* New() const final {
+    return CreateMaybeMessage<SyncHeightItem>(NULL);
+  }
+
+  SyncHeightItem* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SyncHeightItem>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SyncHeightItem& from);
+  void MergeFrom(const SyncHeightItem& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SyncHeightItem* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint64 height = 2;
+  bool has_height() const;
+  void clear_height();
+  static const int kHeightFieldNumber = 2;
+  ::google::protobuf::uint64 height() const;
+  void set_height(::google::protobuf::uint64 value);
+
+  // optional uint32 pool_idx = 1;
+  bool has_pool_idx() const;
+  void clear_pool_idx();
+  static const int kPoolIdxFieldNumber = 1;
+  ::google::protobuf::uint32 pool_idx() const;
+  void set_pool_idx(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncHeightItem)
+ private:
+  void set_has_pool_idx();
+  void clear_has_pool_idx();
+  void set_has_height();
+  void clear_has_height();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::uint64 height_;
+  ::google::protobuf::uint32 pool_idx_;
+  friend struct ::protobuf_sync_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
 
 class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncValueRequest) */ {
  public:
@@ -119,7 +247,7 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
                &_SyncValueRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    1;
 
   void Swap(SyncValueRequest* other);
   friend void swap(SyncValueRequest& a, SyncValueRequest& b) {
@@ -193,6 +321,18 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
   const ::google::protobuf::RepeatedPtrField< ::std::string>& keys() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_keys();
 
+  // repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+  int heights_size() const;
+  void clear_heights();
+  static const int kHeightsFieldNumber = 3;
+  ::tenon::sync::protobuf::SyncHeightItem* mutable_heights(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncHeightItem >*
+      mutable_heights();
+  const ::tenon::sync::protobuf::SyncHeightItem& heights(int index) const;
+  ::tenon::sync::protobuf::SyncHeightItem* add_heights();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncHeightItem >&
+      heights() const;
+
   // optional uint32 network_id = 1;
   bool has_network_id() const;
   void clear_network_id();
@@ -209,6 +349,7 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::std::string> keys_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncHeightItem > heights_;
   ::google::protobuf::uint32 network_id_;
   friend struct ::protobuf_sync_2eproto::TableStruct;
 };
@@ -256,7 +397,7 @@ class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_SyncResItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(SyncResItem* other);
   friend void swap(SyncResItem& a, SyncResItem& b) {
@@ -338,18 +479,48 @@ class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_value();
   void set_allocated_value(::std::string* value);
 
+  // optional uint32 network_id = 3;
+  bool has_network_id() const;
+  void clear_network_id();
+  static const int kNetworkIdFieldNumber = 3;
+  ::google::protobuf::uint32 network_id() const;
+  void set_network_id(::google::protobuf::uint32 value);
+
+  // optional uint32 pool_idx = 4;
+  bool has_pool_idx() const;
+  void clear_pool_idx();
+  static const int kPoolIdxFieldNumber = 4;
+  ::google::protobuf::uint32 pool_idx() const;
+  void set_pool_idx(::google::protobuf::uint32 value);
+
+  // optional uint64 height = 5;
+  bool has_height() const;
+  void clear_height();
+  static const int kHeightFieldNumber = 5;
+  ::google::protobuf::uint64 height() const;
+  void set_height(::google::protobuf::uint64 value);
+
   // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.SyncResItem)
  private:
   void set_has_key();
   void clear_has_key();
   void set_has_value();
   void clear_has_value();
+  void set_has_network_id();
+  void clear_has_network_id();
+  void set_has_pool_idx();
+  void clear_has_pool_idx();
+  void set_has_height();
+  void clear_has_height();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr key_;
   ::google::protobuf::internal::ArenaStringPtr value_;
+  ::google::protobuf::uint32 network_id_;
+  ::google::protobuf::uint32 pool_idx_;
+  ::google::protobuf::uint64 height_;
   friend struct ::protobuf_sync_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -396,7 +567,7 @@ class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_inserti
                &_SyncValueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(SyncValueResponse* other);
   friend void swap(SyncValueResponse& a, SyncValueResponse& b) {
@@ -523,7 +694,7 @@ class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_SyncMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(SyncMessage* other);
   friend void swap(SyncMessage& a, SyncMessage& b) {
@@ -622,6 +793,58 @@ class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// SyncHeightItem
+
+// optional uint32 pool_idx = 1;
+inline bool SyncHeightItem::has_pool_idx() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SyncHeightItem::set_has_pool_idx() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SyncHeightItem::clear_has_pool_idx() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SyncHeightItem::clear_pool_idx() {
+  pool_idx_ = 0u;
+  clear_has_pool_idx();
+}
+inline ::google::protobuf::uint32 SyncHeightItem::pool_idx() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncHeightItem.pool_idx)
+  return pool_idx_;
+}
+inline void SyncHeightItem::set_pool_idx(::google::protobuf::uint32 value) {
+  set_has_pool_idx();
+  pool_idx_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncHeightItem.pool_idx)
+}
+
+// optional uint64 height = 2;
+inline bool SyncHeightItem::has_height() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SyncHeightItem::set_has_height() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SyncHeightItem::clear_has_height() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SyncHeightItem::clear_height() {
+  height_ = GOOGLE_ULONGLONG(0);
+  clear_has_height();
+}
+inline ::google::protobuf::uint64 SyncHeightItem::height() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncHeightItem.height)
+  return height_;
+}
+inline void SyncHeightItem::set_height(::google::protobuf::uint64 value) {
+  set_has_height();
+  height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncHeightItem.height)
+}
+
+// -------------------------------------------------------------------
+
 // SyncValueRequest
 
 // optional uint32 network_id = 1;
@@ -715,6 +938,36 @@ inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 SyncValueRequest::mutable_keys() {
   // @@protoc_insertion_point(field_mutable_list:tenon.sync.protobuf.SyncValueRequest.keys)
   return &keys_;
+}
+
+// repeated .tenon.sync.protobuf.SyncHeightItem heights = 3;
+inline int SyncValueRequest::heights_size() const {
+  return heights_.size();
+}
+inline void SyncValueRequest::clear_heights() {
+  heights_.Clear();
+}
+inline ::tenon::sync::protobuf::SyncHeightItem* SyncValueRequest::mutable_heights(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.sync.protobuf.SyncValueRequest.heights)
+  return heights_.Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncHeightItem >*
+SyncValueRequest::mutable_heights() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.sync.protobuf.SyncValueRequest.heights)
+  return &heights_;
+}
+inline const ::tenon::sync::protobuf::SyncHeightItem& SyncValueRequest::heights(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncValueRequest.heights)
+  return heights_.Get(index);
+}
+inline ::tenon::sync::protobuf::SyncHeightItem* SyncValueRequest::add_heights() {
+  // @@protoc_insertion_point(field_add:tenon.sync.protobuf.SyncValueRequest.heights)
+  return heights_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::sync::protobuf::SyncHeightItem >&
+SyncValueRequest::heights() const {
+  // @@protoc_insertion_point(field_list:tenon.sync.protobuf.SyncValueRequest.heights)
+  return heights_;
 }
 
 // -------------------------------------------------------------------
@@ -851,6 +1104,78 @@ inline void SyncResItem::set_allocated_value(::std::string* value) {
   }
   value_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set_allocated:tenon.sync.protobuf.SyncResItem.value)
+}
+
+// optional uint32 network_id = 3;
+inline bool SyncResItem::has_network_id() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SyncResItem::set_has_network_id() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SyncResItem::clear_has_network_id() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SyncResItem::clear_network_id() {
+  network_id_ = 0u;
+  clear_has_network_id();
+}
+inline ::google::protobuf::uint32 SyncResItem::network_id() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncResItem.network_id)
+  return network_id_;
+}
+inline void SyncResItem::set_network_id(::google::protobuf::uint32 value) {
+  set_has_network_id();
+  network_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncResItem.network_id)
+}
+
+// optional uint32 pool_idx = 4;
+inline bool SyncResItem::has_pool_idx() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SyncResItem::set_has_pool_idx() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SyncResItem::clear_has_pool_idx() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SyncResItem::clear_pool_idx() {
+  pool_idx_ = 0u;
+  clear_has_pool_idx();
+}
+inline ::google::protobuf::uint32 SyncResItem::pool_idx() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncResItem.pool_idx)
+  return pool_idx_;
+}
+inline void SyncResItem::set_pool_idx(::google::protobuf::uint32 value) {
+  set_has_pool_idx();
+  pool_idx_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncResItem.pool_idx)
+}
+
+// optional uint64 height = 5;
+inline bool SyncResItem::has_height() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SyncResItem::set_has_height() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SyncResItem::clear_has_height() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SyncResItem::clear_height() {
+  height_ = GOOGLE_ULONGLONG(0);
+  clear_has_height();
+}
+inline ::google::protobuf::uint64 SyncResItem::height() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.SyncResItem.height)
+  return height_;
+}
+inline void SyncResItem::set_height(::google::protobuf::uint64 value) {
+  set_has_height();
+  height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncResItem.height)
 }
 
 // -------------------------------------------------------------------
@@ -1034,6 +1359,8 @@ inline void SyncMessage::set_allocated_sync_value_res(::tenon::sync::protobuf::S
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
