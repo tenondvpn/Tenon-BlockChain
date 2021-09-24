@@ -78,7 +78,10 @@ bool HeightTreeLevel::Valid(uint64_t height) {
     return iter->second->Valid(height);
 }
 
-int HeightTreeLevel::GetMissingHeights(uint32_t count, std::vector<uint64_t>* heights, uint64_t max_height) {
+void HeightTreeLevel::GetMissingHeights(
+        uint32_t count,
+        std::vector<uint64_t>* heights,
+        uint64_t max_height) {
     if (max_height >= max_height_) {
         for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
             heights->push_back(i);
@@ -87,12 +90,66 @@ int HeightTreeLevel::GetMissingHeights(uint32_t count, std::vector<uint64_t>* he
             }
         }
 
-        return kSyncSuccess;
+        return;
     }
 
+    auto level_map = tree_level_[0];
+    if (level_map == nullptr || level_map->empty()) {
+        return;
+    }
 
+    auto iter = level_map->begin();
+    if (max_height_ == 0) {
+        iter->second->GetLeafInvalidHeights(heights);
+        return;
+    }
 
-    return kSyncSuccess;
+    uint64_t parent_node_idx = common::kInvalidUint64;
+    iter->second->GetBranchInvalidNode(&parent_node_idx);
+    if (parent_node_idx == common::kInvalidUint64) {
+        return;
+    }
+
+    uint64_t parent_vec_idx = 0;
+    uint32_t level_vec_index = 1;
+    std::cout << "all max_level_: " << max_level_ << std::endl;
+    int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+    for (int32_t i = (int32_t)max_level_ - 1; i >= 0; --i) {
+        auto level_map = tree_level_[i];
+        uint64_t left_child_vec_idx = 2 * (kBranchMaxCount * parent_vec_idx + parent_node_idx);
+        uint64_t right_child_vec_idx = left_child_vec_idx + 1;
+        auto liter = level_map->find(left_child_vec_idx);
+        if (liter == level_map->end()) {
+            return;
+        }
+
+        if (i == 0) {
+            liter->second->GetLeafInvalidHeights(heights);
+            if (heights->empty()) {
+                auto riter = level_map->find(right_child_vec_idx);
+                if (riter == level_map->end()) {
+                    return;
+                }
+
+                riter->second->GetLeafInvalidHeights(heights);
+            }
+
+            return;
+        }
+
+        parent_node_idx = common::kInvalidUint64;
+        liter->second->GetBranchInvalidNode(&parent_node_idx);
+        parent_vec_idx = left_child_vec_idx;
+        if (parent_node_idx == common::kInvalidUint64) {
+            auto riter = level_map->find(right_child_vec_idx);
+            if (riter == level_map->end()) {
+                return;
+            }
+
+            riter->second->GetBranchInvalidNode(&parent_node_idx);
+            parent_vec_idx = right_child_vec_idx;
+        }
+    }
 }
 
 void HeightTreeLevel::GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64_t* index) {
@@ -220,7 +277,6 @@ void HeightTreeLevel::PrintTree() {
 
         level_vec_index *= kBranchMaxCount;
     }
-
 }
 
 };  // namespace sync

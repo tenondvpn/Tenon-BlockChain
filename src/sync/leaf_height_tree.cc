@@ -62,7 +62,6 @@ void LeafHeightTree::Set(uint64_t child_index, uint64_t val) {
     }
 
     data_[parent_idx] = val;
-//     std::cout << "branch set parent_idx: " << parent_idx << ", val: " << val << ", max_vec_index_: " << max_vec_index_ << std::endl;
     BranchButtomUp(parent_idx);
 }
 
@@ -284,24 +283,20 @@ void LeafHeightTree::GetBranchInvalidNode(uint64_t* vec_idx) {
         return;
     }
 
-    int32_t max_level = GetAlignMaxLevel();
-    int32_t dec_count = 1;
+    int32_t max_level = GetBranchAlignMaxLevel();
+    int32_t parent_idx = 0;
     while (max_level > 0) {
-        int32_t left_child_idx = parent_index - dec_count - 1;
+        int32_t left_child_idx = level_tree_index_vec_[max_level - 1].first + parent_idx * 2;
         if (data_[left_child_idx] != kLevelNodeValidHeights) {
-            parent_index = left_child_idx;
+            parent_idx = 2 * parent_idx;
         } else {
-            parent_index = left_child_idx + 1;
+            parent_idx = 2 * parent_idx + 1;
         }
 
-        dec_count *= 2;
+        --max_level;
     }
 
-    if (data_[parent_index] == kLevelNodeValidHeights) {
-        return;
-    }
-
-    *vec_idx = parent_index;
+    *vec_idx = level_tree_index_vec_[max_level].first + parent_idx;
 }
 
 void LeafHeightTree::GetLeafInvalidHeights(std::vector<uint64_t>* height_vec) {

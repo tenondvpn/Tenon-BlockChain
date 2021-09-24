@@ -49,7 +49,7 @@ public:
         }
 
         std::vector<uint64_t> get_invalid_heights;
-        leaf_height_tree.GetInvalidHeights(&get_invalid_heights);
+        leaf_height_tree.GetLeafInvalidHeights(&get_invalid_heights);
         if (get_invalid_heights.empty()) {
             ASSERT_TRUE(height > leaf_height_tree.max_height_);
             return;
@@ -84,6 +84,16 @@ TEST_F(TestLeafHeightTree, TestSetBranch) {
     uint64_t vec_idx = common::kInvalidUint64;
     leaf_height_tree.GetBranchInvalidNode(&vec_idx);
     ASSERT_EQ(vec_idx, common::kInvalidUint64);
+    for (uint32_t i = 0; i < kBranchMaxCount * 2; ++i) {
+        leaf_height_tree.Set(i, 0xFFFFFFFF1FFFFFFFlu);
+        leaf_height_tree.GetBranchInvalidNode(&vec_idx);
+        ASSERT_EQ(vec_idx, i / 2);
+
+        leaf_height_tree.Set(i, 0xFFFFFFFFFFFFFFFFlu);
+        vec_idx = common::kInvalidUint64;
+        leaf_height_tree.GetBranchInvalidNode(&vec_idx);
+        ASSERT_EQ(vec_idx, common::kInvalidUint64);
+    }
 }
 
 }  // namespace test
