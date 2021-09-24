@@ -232,7 +232,7 @@ uint64_t KeyValueSync::SendSyncRequest(
 
 #ifdef TENON_UNITTEST
     test_sync_req_msg_ = msg;
-    return;
+    return node->id_hash;
 #endif
 
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(

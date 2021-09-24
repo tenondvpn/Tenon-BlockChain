@@ -41,7 +41,7 @@ public:
 
 //         height_tree_level.PrintTree();
         std::vector<uint64_t> invalid_heights;
-        height_tree_level.GetMissingHeights(1, &invalid_heights, max_height - 1);
+        height_tree_level.GetMissingHeights(&invalid_heights, max_height - 1);
         ASSERT_TRUE(!invalid_heights.empty());
         ASSERT_EQ(invalid_heights[0], invalid_height);
     }
