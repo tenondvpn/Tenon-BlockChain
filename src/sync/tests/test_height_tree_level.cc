@@ -29,10 +29,10 @@ public:
     virtual void TearDown() {
     }
 
-    void SetTreeWithInvalidHeight(uint64_t height) {
+    void SetTreeWithInvalidHeight(uint64_t max_height, uint64_t invalid_height) {
         HeightTreeLevel height_tree_level;
-        for (uint64_t i = 0; i < 1024; ++i) {
-            if (i == height) {
+        for (uint64_t i = 0; i < max_height; ++i) {
+            if (i == invalid_height) {
                 continue;
             }
 
@@ -41,9 +41,9 @@ public:
 
 //         height_tree_level.PrintTree();
         std::vector<uint64_t> invalid_heights;
-        height_tree_level.GetMissingHeights(1, &invalid_heights, 1023);
+        height_tree_level.GetMissingHeights(1, &invalid_heights, max_height - 1);
         ASSERT_TRUE(!invalid_heights.empty());
-        ASSERT_EQ(invalid_heights[0], height);
+        ASSERT_EQ(invalid_heights[0], invalid_height);
     }
 
 private:
@@ -60,9 +60,43 @@ TEST_F(TestHeightTreeLevel, SetValid) {
 }
 
 TEST_F(TestHeightTreeLevel, GetInvalidHeights) {
-    HeightTreeLevel height_tree_level;
-    for (uint64_t i = 0; i < 1023; ++i) {
-        SetTreeWithInvalidHeight(127);
+    {
+        std::vector<uint64_t> test_invalid_heidhts;
+        uint64_t test_max_height = 4 * kLeafMaxHeightCount;
+        for (uint64_t i = 0; i < 10; ++i) {
+            srand(time(NULL));
+            test_invalid_heidhts.push_back(rand() % test_max_height);
+        }
+
+        for (uint64_t i = 0; i < test_invalid_heidhts.size(); ++i) {
+            SetTreeWithInvalidHeight(test_max_height, test_invalid_heidhts[i]);
+        }
+    }
+
+    {
+        std::vector<uint64_t> test_invalid_heidhts;
+        uint64_t test_max_height = 2 * kLeafMaxHeightCount;
+        for (uint64_t i = 0; i < 10; ++i) {
+            srand(time(NULL));
+            test_invalid_heidhts.push_back(rand() % test_max_height);
+        }
+
+        for (uint64_t i = 0; i < test_invalid_heidhts.size(); ++i) {
+            SetTreeWithInvalidHeight(test_max_height, test_invalid_heidhts[i]);
+        }
+    }
+
+    {
+        std::vector<uint64_t> test_invalid_heidhts;
+        uint64_t test_max_height = 1 * kLeafMaxHeightCount;
+        for (uint64_t i = 0; i < 10; ++i) {
+            srand(time(NULL));
+            test_invalid_heidhts.push_back(rand() % test_max_height);
+        }
+
+        for (uint64_t i = 0; i < test_invalid_heidhts.size(); ++i) {
+            SetTreeWithInvalidHeight(test_max_height, test_invalid_heidhts[i]);
+        }
     }
 }
 

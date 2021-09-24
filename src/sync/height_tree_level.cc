@@ -100,7 +100,7 @@ void HeightTreeLevel::GetMissingHeights(
     }
 
     auto iter = level_map->begin();
-    if (max_height_ == 0) {
+    if (max_level_ == 0) {
         iter->second->GetLeafInvalidHeights(heights);
         return;
     }
