@@ -259,6 +259,11 @@ void DbPoolInfo::GetMissingHeights(std::vector<uint64_t>* heights) {
     height_tree_.GetMissingHeights(heights, height_);
 }
 
+void DbPoolInfo::PrintHeightTree() {
+    std::lock_guard<std::mutex> guard(height_tree_mutex_);
+    height_tree_.PrintTree();
+}
+
 }  // namespace block
 
 }  // namespace tenon

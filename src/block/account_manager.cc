@@ -840,10 +840,17 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 }
 
 void AccountManager::CheckMissingHeight() {
-    std::vector<uint64_t> missing_heights;
+    uint32_t synced_height = 0;
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        std::vector<uint64_t> missing_heights;
         network_block_[i]->GetMissingHeights(&missing_heights);
-        if (missing_heights.size() > 64) {
+
+        synced_height += missing_heights.size();
+        for (uint32_t h_idx = 0; h_idx < missing_heights.size(); +h_idx) {
+            std::cout << "missing height pool index: " << i << ", height: " << missing_heights[h_idx] << std::endl;
+        }
+
+        if (synced_height > 64) {
             break;
         }
     }
@@ -851,6 +858,10 @@ void AccountManager::CheckMissingHeight() {
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));
+}
+
+void AccountManager::PrintPoolHeightTree(uint32_t pool_idx) {
+
 }
 
 }  // namespace block

@@ -47,6 +47,7 @@ private:
     void SendClientUseBandwidth(const std::string& id, uint32_t bandwidth);
     void FixDb(const std::string& db_path);
     void LevelDbToRocksDb(const std::string& db_path);
+    void PrintPoolHeightTree(uint32_t pool_idx);
     int LoadAllTx(
             const std::string& frist_hash,
             uint32_t netid,

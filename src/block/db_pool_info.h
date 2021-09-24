@@ -36,6 +36,7 @@ public:
     int GetTimeBlockHeight(uint64_t* height, uint64_t* block_height);
     int GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index);
     std::string GetBaseAddr();
+    void PrintHeightTree();
 
 private:
     std::string dict_key_;

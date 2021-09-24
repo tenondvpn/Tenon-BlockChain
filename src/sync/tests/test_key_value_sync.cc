@@ -6,12 +6,19 @@
 #include <vector>
 
 #define private public
+#define protected public
 #include "sync/key_value_sync.h"
 #include "init/network_init.h"
 #include "init/init_utils.h"
 #include "common/split.h"
 #include "block/block_manager.h"
 #include "network/network_utils.h"
+#include "network/dht_manager.h"
+#include "network/universal_manager.h"
+#include "dht/dht_key.h"
+#include "dht/base_dht.h"
+#include "security/schnorr.h"
+#include "election/elect_dht.h"
 
 namespace tenon {
 
@@ -22,6 +29,7 @@ namespace test {
 class TestKeyValueSync : public testing::Test {
 public:
     static void SetUpTestCase() {
+        JoinNetwork(network::kRootCongressNetworkId);
     }
 
     static void TearDownTestCase() {
@@ -31,6 +39,51 @@ public:
     }
 
     virtual void TearDown() {
+    }
+
+    static void JoinNetwork(uint32_t network_id) {
+        network::DhtManager::Instance()->UnRegisterDht(network_id);
+        network::UniversalManager::Instance()->UnRegisterUniversal(network_id);
+        dht::DhtKeyManager dht_key(
+            network_id,
+            common::GlobalInfo::Instance()->country(),
+            common::GlobalInfo::Instance()->id());
+        dht::NodePtr local_node = std::make_shared<dht::Node>(
+            common::GlobalInfo::Instance()->id(),
+            dht_key.StrKey(),
+            dht::kNatTypeFullcone,
+            false,
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            common::GlobalInfo::Instance()->config_local_ip(),
+            common::GlobalInfo::Instance()->config_local_port(),
+            security::Schnorr::Instance()->str_pubkey(),
+            common::GlobalInfo::Instance()->node_tag());
+        local_node->first_node = true;
+        transport::TransportPtr transport;
+        auto dht = std::make_shared<elect::ElectDht>(transport, local_node);
+        dht->Init(nullptr, nullptr);
+        auto base_dht = std::dynamic_pointer_cast<dht::BaseDht>(dht);
+        network::DhtManager::Instance()->RegisterDht(network_id, base_dht);
+        network::UniversalManager::Instance()->RegisterUniversal(network_id, base_dht);
+
+        auto test_dht = network::DhtManager::Instance()->GetDht(network_id);
+        dht::DhtKeyManager test_dht_key(
+            network_id,
+            common::GlobalInfo::Instance()->country(),
+            "test_id1");
+        dht::NodePtr test_node = std::make_shared<dht::Node>(
+            "test_id1",
+            test_dht_key.StrKey(),
+            dht::kNatTypeFullcone,
+            false,
+            "192.1.1.1",
+            123,
+            "192.1.1.1",
+            123,
+            "",
+            "");
+        test_dht->dht_.push_back(test_node);
     }
 
 private:
@@ -47,11 +100,14 @@ TEST_F(TestKeyValueSync, TestSyncHeight) {
     common::Split<> params_split(params.c_str(), ' ', params.size());
     ASSERT_EQ(net_init.Init(params_split.cnt_, params_split.pt_), init::kInitSuccess);
     ASSERT_EQ(KeyValueSync::Instance()->AddSyncHeight(
-        network::kRootCongressNetworkId, 0, 2, kSyncHigh), sync::kSyncSuccess);
+        network::kRootCongressNetworkId, 0, 0, kSyncHigh), sync::kSyncSuccess);
     KeyValueSync::Instance()->CheckSyncItem();
     KeyValueSync::Instance()->HandleMessage(
         std::make_shared<transport::protobuf::Header>(
             KeyValueSync::Instance()->test_sync_req_msg_));
+    KeyValueSync::Instance()->HandleMessage(
+        std::make_shared<transport::protobuf::Header>(
+            KeyValueSync::Instance()->test_sync_res_msg_));
 }
 
 }  // namespace test

@@ -44,6 +44,7 @@ public:
     int GetAddressConsensusNetworkId(const std::string& address, uint32_t* network_id);
     DbAccountInfoPtr GetContractInfoByAddress(const std::string& address);
     std::string GetPoolBaseAddr(uint32_t pool_index);
+    void PrintPoolHeightTree(uint32_t pool_idx);
 
 private:
     AccountManager();

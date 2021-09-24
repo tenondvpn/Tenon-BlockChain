@@ -196,6 +196,11 @@ void Command::AddBaseCommands() {
             VpnHeartbeat(args[0]);
         }
     });
+    AddCommand("pt", [this](const std::vector<std::string>& args) {
+        if (args.size() > 0) {
+            VpnHeartbeat(args[0]);
+        }
+    });
 	AddCommand("ip", [this](const std::vector<std::string>& args) {
 		if (args.size() > 0) {
             std::cout << ip::IpWithCountry::Instance()->GetCountryCode(args[0]) << std::endl;
@@ -580,6 +585,10 @@ void Command::TxPeriod() {
     std::cout << "tx gid:" << tx_gid << " success transaction from: "
         << common::Encode::HexEncode(common::GlobalInfo::Instance()->id())
         << " to: " << to << " , amount: " << amount << std::endl;
+}
+
+void Command::PrintPoolHeightTree(uint32_t pool_idx) {
+    block::AccountManager::Instance()->PrintPoolHeightTree(pool_idx);
 }
 
 void Command::VpnHeartbeat(const std::string& dht_key) {

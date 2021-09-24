@@ -175,7 +175,8 @@ void KeyValueSync::CheckSyncItem() {
     }
 
     for (auto iter = sync_dht_map.begin(); iter != sync_dht_map.end(); ++iter) {
-        if (iter->second.sync_value_req().keys_size() > 0) {
+        if (iter->second.sync_value_req().keys_size() > 0 ||
+                iter->second.sync_value_req().heights_size() > 0) {
             uint64_t choose_node = SendSyncRequest(
                 iter->first,
                 iter->second,
@@ -257,9 +258,11 @@ void KeyValueSync::HandleMessage(const transport::TransportMessagePtr& header_pt
     protobuf::SyncMessage sync_msg;
     if (!sync_msg.ParseFromString(header.data())) {
         DHT_ERROR("protobuf::DhtMessage ParseFromString failed!");
+        std::cout << "parse failed!" << std::endl;
         return;
     }
 
+    std::cout << "HandleMessage sync_msg.has_sync_value_req(): " << sync_msg.has_sync_value_req() << ", sync_msg.has_sync_value_res(): " << sync_msg.has_sync_value_res() << std::endl;
     if (sync_msg.has_sync_value_req()) {
         ProcessSyncValueRequest(header, sync_msg);
     }
@@ -373,11 +376,13 @@ void KeyValueSync::ProcessSyncValueResponse(
     auto& res_arr = sync_msg.sync_value_res().res();
 //     SYNC_DEBUG("recv sync response from[%s:%d] key size: %u",
 //         header.from_ip().c_str(), header.from_port(), res_arr.size());
+    std::cout << "ProcessSyncValueResponse called." << std::endl;
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
 //         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
         if (block_item->ParseFromString(iter->value()) &&
                 (iter->has_height() || block_item->hash() == iter->key())) {
+            std::cout << "get block success height: " << iter->height() << std::endl;
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
