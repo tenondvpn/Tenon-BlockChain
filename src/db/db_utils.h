@@ -30,6 +30,9 @@ static const std::string kGlobalDbAccountInitBlocks = kGlobalDbKeyVersion + "_kA
 static const std::string kGlobalContractForPayforVpn = kGlobalDbKeyVersion + "_kCtrPayVpn";
 static const std::string kGlobalContractForVpnMining = kGlobalDbKeyVersion + "_kVpnMining";
 
+// for pool height tree
+static const std::string kGlobalHeightTreeKey = kGlobalDbKeyVersion + "_kHT";
+
 }
 
 }

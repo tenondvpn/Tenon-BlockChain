@@ -9,7 +9,7 @@ namespace tenon {
 
 namespace sync {
 
-HeightTreeLevel::HeightTreeLevel() {}
+HeightTreeLevel::HeightTreeLevel(const std::string& db_prefix) : db_prefix_(db_prefix) {}
 
 HeightTreeLevel::~HeightTreeLevel() {}
 
@@ -35,7 +35,7 @@ int HeightTreeLevel::Set(uint64_t height) {
         LeafHeightTreePtr leaf_ptr = nullptr;
         auto iter = node_map_ptr->find(leaf_index);
         if (iter == node_map_ptr->end()) {
-            leaf_ptr = std::make_shared<LeafHeightTree>(0, leaf_index);
+            leaf_ptr = std::make_shared<LeafHeightTree>(db_prefix_, 0, leaf_index);
             (*node_map_ptr)[leaf_index] = leaf_ptr;
 //             std::cout << "create new leaf index: " << leaf_index << std::endl;
 //             if (leaf_index != 0) {
@@ -212,7 +212,7 @@ void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_in
         LeafHeightTreePtr branch_ptr = nullptr;
         auto iter = node_map_ptr->find(branch_index);
         if (iter == node_map_ptr->end()) {
-            branch_ptr = std::make_shared<LeafHeightTree>(level, branch_index);
+            branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, level, branch_index);
             (*node_map_ptr)[branch_index] = branch_ptr;
 //             std::cout << "create new branch level: " << level << ", index: " << branch_index << std::endl;
         } else {

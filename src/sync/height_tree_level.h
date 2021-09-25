@@ -13,7 +13,7 @@ namespace sync {
 
 class HeightTreeLevel {
 public:
-    HeightTreeLevel();
+    HeightTreeLevel(const std::string& db_prefix);
     ~HeightTreeLevel();
     int Set(uint64_t height);
     bool Valid(uint64_t height);
@@ -35,6 +35,7 @@ private:
     uint64_t max_height_{ common::kInvalidUint64 };
     std::mutex mutex_;
     uint32_t max_level_{ 0 };
+    std::string db_prefix_;
 
     DISALLOW_COPY_AND_ASSIGN(HeightTreeLevel);
 };

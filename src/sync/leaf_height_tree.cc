@@ -2,6 +2,8 @@
 #include <cassert>
 #include <cmath>
 
+#include "common/global_info.h"
+#include "db/db.h"
 #include "sync/leaf_height_tree.h"
 #include "sync/sync_utils.h"
 
@@ -9,7 +11,7 @@ namespace tenon {
 
 namespace sync {
 
-LeafHeightTree::LeafHeightTree(uint32_t level, uint64_t node_index) {
+LeafHeightTree::LeafHeightTree(const std::string& db_prefix, uint32_t level, uint64_t node_index) {
     if (level == 0) {
         global_leaf_index_ = node_index * kLeafMaxHeightCount;
     } else {
@@ -17,9 +19,13 @@ LeafHeightTree::LeafHeightTree(uint32_t level, uint64_t node_index) {
         is_branch_ = true;
     }
 
-    uint32_t data_cnt = kBranchMaxCount * 2;
-    for (uint32_t i = 0; i < data_cnt; ++i) {
-        data_.push_back(0ull);
+    db_key_ = db_prefix + "_" + std::to_string(level) + "_" + std::to_string(node_index);
+    if (!LoadFromDb()) {
+        // load from db
+        uint32_t data_cnt = kBranchMaxCount * 2;
+        for (uint32_t i = 0; i < data_cnt; ++i) {
+            data_.push_back(0ull);
+        }
     }
 
     InitVec();
@@ -64,6 +70,7 @@ void LeafHeightTree::Set(uint64_t child_index, uint64_t val) {
 
     data_[parent_idx] = val;
     BranchButtomUp(parent_idx);
+    dirty_ = true;
 }
 
 void LeafHeightTree::Set(uint64_t index) {
@@ -90,6 +97,7 @@ void LeafHeightTree::Set(uint64_t index) {
     uint32_t bit_index = index % 64;
     data_[vec_index] |= (uint64_t)((uint64_t)(1) << bit_index);
     ButtomUp(vec_index);
+    dirty_ = true;
 }
 
 bool LeafHeightTree::Valid(uint64_t index) {
@@ -155,6 +163,43 @@ uint32_t LeafHeightTree::GetAlignMaxLevel() {
     }
 
     return tmp;
+}
+
+void LeafHeightTree::SyncToDb() {
+    if (!dirty_) {
+        return;
+    }
+
+    protobuf::FlushDbItem flush_db;
+    for (uint32_t i = 0; i < data_.size(); ++i) {
+        flush_db->add_heights(data_[i]);
+    }
+
+    db::Db::Instance()->Put(db_key_, flush_db.SerializeAsString());
+    dirty_ = false;
+}
+
+bool LeafHeightTree::LoadFromDb() {
+    std::string data;
+    auto st = db::Db::Instance()->Get(db_key_, &data);
+    if (!st.ok()) {
+        return false;
+    }
+
+    protobuf::FlushDbItem flush_db;
+    if (!flush_db.ParseFromString(data)) {
+        return false;
+    }
+
+    if (flush_db.heights_size() != kBranchMaxCount * 2) {
+        return false;
+    }
+
+    for (int32_t i = 0; i < flush_db.heights_size(); ++i) {
+        data_.push_back(flush_db.heights(i));
+    }
+
+    return true;
 }
 
 void LeafHeightTree::PrintTree() {

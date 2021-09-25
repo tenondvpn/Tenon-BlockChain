@@ -198,7 +198,9 @@ void Command::AddBaseCommands() {
     });
     AddCommand("pt", [this](const std::vector<std::string>& args) {
         if (args.size() > 0) {
-            VpnHeartbeat(args[0]);
+            uint32_t pool_idx = 0;
+            common::StringUtil::ToUint32(args[0], &pool_idx);
+            PrintPoolHeightTree(pool_idx);
         }
     });
 	AddCommand("ip", [this](const std::vector<std::string>& args) {

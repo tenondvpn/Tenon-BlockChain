@@ -24,6 +24,10 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     pool_index_ = pool_index;
     std::string block_latest_hash;
     GetHash(&block_latest_hash);
+    height_tree_ptr_ = std::make_shared<sync::HeightTreeLevel>(
+        db::kGlobalHeightTreeKey + "_" +
+        std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" +
+        std::to_string(pool_index));
 }
 
 DbPoolInfo::~DbPoolInfo() {}
@@ -251,17 +255,17 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
 
 void DbPoolInfo::SetHeightTree(uint64_t height) {
     std::lock_guard<std::mutex> guard(height_tree_mutex_);
-    height_tree_.Set(height);
+    height_tree_ptr_->Set(height);
 }
 
 void DbPoolInfo::GetMissingHeights(std::vector<uint64_t>* heights) {
     std::lock_guard<std::mutex> guard(height_tree_mutex_);
-    height_tree_.GetMissingHeights(heights, height_);
+    height_tree_ptr_->GetMissingHeights(heights, height_);
 }
 
 void DbPoolInfo::PrintHeightTree() {
     std::lock_guard<std::mutex> guard(height_tree_mutex_);
-    height_tree_.PrintTree();
+    height_tree_ptr_->PrintTree();
 }
 
 }  // namespace block

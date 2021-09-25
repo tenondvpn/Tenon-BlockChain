@@ -12,7 +12,7 @@ namespace sync {
 
 class LeafHeightTree {
 public:
-    LeafHeightTree(uint32_t level, uint64_t node_index);
+    LeafHeightTree(const std::string& db_prefix, uint32_t level, uint64_t node_index);
     LeafHeightTree(const std::vector<uint64_t>& data);
     ~LeafHeightTree();
     void Set(uint64_t bit_index);
@@ -20,6 +20,7 @@ public:
     bool Valid(uint64_t bit_index);
     void GetLeafInvalidHeights(std::vector<uint64_t>* height_vec);
     void GetBranchInvalidNode(uint64_t* vec_idx);
+    void SyncToDb();
 
     const std::vector<uint64_t>& data() const {
         return data_;
@@ -53,6 +54,7 @@ private:
     uint32_t GetBranchRootIndex();
     void PrintBranchTreeFromRoot();
     void PrintBranchDataFromRoot();
+    bool LoadFromDb();
 
     std::vector<uint64_t> data_;
     uint64_t global_leaf_index_{ common::kInvalidUint64 };
@@ -60,6 +62,8 @@ private:
     std::vector<std::pair<uint32_t, uint32_t>> level_tree_index_vec_;
     bool is_branch_{ false };
     uint32_t max_vec_index_{ 0 };
+    bool dirty_{ false };
+    std::string db_key_;
 };
 
 typedef std::shared_ptr<LeafHeightTree> LeafHeightTreePtr;

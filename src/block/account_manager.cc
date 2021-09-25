@@ -846,7 +846,7 @@ void AccountManager::CheckMissingHeight() {
         network_block_[i]->GetMissingHeights(&missing_heights);
 
         synced_height += missing_heights.size();
-        for (uint32_t h_idx = 0; h_idx < missing_heights.size(); +h_idx) {
+        for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
             std::cout << "missing height pool index: " << i << ", height: " << missing_heights[h_idx] << std::endl;
         }
 

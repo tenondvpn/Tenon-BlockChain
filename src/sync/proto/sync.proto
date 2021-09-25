@@ -7,6 +7,10 @@ message SyncHeightItem {
     optional uint64 height = 2;
 }
 
+message FlushDbItem {
+    repeated uint64 heights = 1;
+}
+
 message SyncValueRequest {
 	optional uint32 network_id = 1;
 	repeated bytes keys = 2;

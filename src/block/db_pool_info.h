@@ -50,7 +50,7 @@ private:
     bft::protobuf::Block last_block_;
     std::atomic<uint64_t> prev_tmblock_height_{ common::kInvalidUint64 };
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
-    sync::HeightTreeLevel height_tree_;
+    std::shared_ptr<sync::HeightTreeLevel> height_tree_ptr_;
     std::mutex height_tree_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
