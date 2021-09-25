@@ -45,6 +45,7 @@ public:
     DbAccountInfoPtr GetContractInfoByAddress(const std::string& address);
     std::string GetPoolBaseAddr(uint32_t pool_index);
     void PrintPoolHeightTree(uint32_t pool_idx);
+    void FlushPoolHeightTreeToDb();
 
 private:
     AccountManager();
@@ -87,12 +88,14 @@ private:
     static const uint64_t kStatisticPeriod = 3000000llu;
     static const uint32_t kMaxCacheAccountCount = 10240u;
     static const uint64_t kCheckMissingHeightPeriod = 3000000llu;
+    static const uint64_t kFushTreeToDbPeriod = 6000000llu;
 
     std::unordered_map<std::string, block::DbAccountInfoPtr> acc_map_;
     common::LimitHeap<block::DbAccountInfoPtr> acc_limit_heap_{ false, kMaxCacheAccountCount };
     std::mutex acc_map_mutex_;
     DbPoolInfo* network_block_[common::kImmutablePoolSize + 1];
     common::Tick check_missing_height_tick_;
+    common::Tick flush_db_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };

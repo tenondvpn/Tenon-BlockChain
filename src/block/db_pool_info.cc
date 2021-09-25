@@ -268,6 +268,11 @@ void DbPoolInfo::PrintHeightTree() {
     height_tree_ptr_->PrintTree();
 }
 
+void DbPoolInfo::FlushTreeToDb() {
+    std::lock_guard<std::mutex> guard(height_tree_mutex_);
+    height_tree_ptr_->FlushToDb();
+}
+
 }  // namespace block
 
 }  // namespace tenon

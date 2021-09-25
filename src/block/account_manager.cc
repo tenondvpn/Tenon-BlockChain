@@ -50,6 +50,9 @@ AccountManager::AccountManager() {
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));
+    flush_db_tick_.CutOff(
+        kFushTreeToDbPeriod,
+        std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
 }
 
 AccountManager::~AccountManager() {
@@ -862,6 +865,16 @@ void AccountManager::CheckMissingHeight() {
 
 void AccountManager::PrintPoolHeightTree(uint32_t pool_idx) {
 
+}
+
+void AccountManager::FlushPoolHeightTreeToDb() {
+    for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        network_block_[i]->FlushTreeToDb();
+    }
+
+    flush_db_tick_.CutOff(
+        kFushTreeToDbPeriod,
+        std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
 }
 
 }  // namespace block

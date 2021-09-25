@@ -19,6 +19,7 @@ public:
     bool Valid(uint64_t height);
     void GetMissingHeights(std::vector<uint64_t>* heights, uint64_t max_height);
     void PrintTree();
+    void FlushToDb();
 
 private:
     typedef std::unordered_map<uint64_t, LeafHeightTreePtr> TreeNodeMap;

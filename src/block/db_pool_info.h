@@ -37,6 +37,7 @@ public:
     int GetLastBlockInfo(uint64_t* block_height, uint64_t* block_tm, uint32_t* pool_index);
     std::string GetBaseAddr();
     void PrintHeightTree();
+    void FlushTreeToDb();
 
 private:
     std::string dict_key_;

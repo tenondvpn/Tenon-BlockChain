@@ -6,6 +6,7 @@
 #include "bft/bft_manager.h"
 #include "bft/proto/bft_proto.h"
 #include "block/block_manager.h"
+#include "block/account_manager.h"
 #include "common/global_info.h"
 #include "common/split.h"
 #include "common/string_utils.h"
@@ -96,6 +97,7 @@ int NetworkInit::Init(int argc, char** argv) {
 
     int genesis_check = GenesisCmd(parser_arg);
     if (genesis_check != -1) {
+        block::AccountManager::Instance()->FlushPoolHeightTreeToDb();
         return genesis_check;
     }
 

@@ -6,6 +6,7 @@
 #include "db/db.h"
 #include "sync/leaf_height_tree.h"
 #include "sync/sync_utils.h"
+#include "sync/proto/sync.pb.h"
 
 namespace tenon {
 
@@ -172,7 +173,7 @@ void LeafHeightTree::SyncToDb() {
 
     protobuf::FlushDbItem flush_db;
     for (uint32_t i = 0; i < data_.size(); ++i) {
-        flush_db->add_heights(data_[i]);
+        flush_db.add_heights(data_[i]);
     }
 
     db::Db::Instance()->Put(db_key_, flush_db.SerializeAsString());
