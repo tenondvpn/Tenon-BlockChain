@@ -38,7 +38,7 @@ namespace protobuf_sync_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[5];
+  static const ::google::protobuf::internal::ParseTable schema[6];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -48,6 +48,9 @@ void AddDescriptors();
 namespace tenon {
 namespace sync {
 namespace protobuf {
+class FlushDbItem;
+class FlushDbItemDefaultTypeInternal;
+extern FlushDbItemDefaultTypeInternal _FlushDbItem_default_instance_;
 class SyncHeightItem;
 class SyncHeightItemDefaultTypeInternal;
 extern SyncHeightItemDefaultTypeInternal _SyncHeightItem_default_instance_;
@@ -68,6 +71,7 @@ extern SyncValueResponseDefaultTypeInternal _SyncValueResponse_default_instance_
 }  // namespace tenon
 namespace google {
 namespace protobuf {
+template<> ::tenon::sync::protobuf::FlushDbItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::FlushDbItem>(Arena*);
 template<> ::tenon::sync::protobuf::SyncHeightItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncHeightItem>(Arena*);
 template<> ::tenon::sync::protobuf::SyncMessage* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncMessage>(Arena*);
 template<> ::tenon::sync::protobuf::SyncResItem* Arena::CreateMaybeMessage<::tenon::sync::protobuf::SyncResItem>(Arena*);
@@ -205,6 +209,123 @@ class SyncHeightItem : public ::google::protobuf::Message /* @@protoc_insertion_
 };
 // -------------------------------------------------------------------
 
+class FlushDbItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.FlushDbItem) */ {
+ public:
+  FlushDbItem();
+  virtual ~FlushDbItem();
+
+  FlushDbItem(const FlushDbItem& from);
+
+  inline FlushDbItem& operator=(const FlushDbItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  FlushDbItem(FlushDbItem&& from) noexcept
+    : FlushDbItem() {
+    *this = ::std::move(from);
+  }
+
+  inline FlushDbItem& operator=(FlushDbItem&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FlushDbItem& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const FlushDbItem* internal_default_instance() {
+    return reinterpret_cast<const FlushDbItem*>(
+               &_FlushDbItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  void Swap(FlushDbItem* other);
+  friend void swap(FlushDbItem& a, FlushDbItem& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline FlushDbItem* New() const final {
+    return CreateMaybeMessage<FlushDbItem>(NULL);
+  }
+
+  FlushDbItem* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<FlushDbItem>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const FlushDbItem& from);
+  void MergeFrom(const FlushDbItem& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FlushDbItem* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint64 heights = 1;
+  int heights_size() const;
+  void clear_heights();
+  static const int kHeightsFieldNumber = 1;
+  ::google::protobuf::uint64 heights(int index) const;
+  void set_heights(int index, ::google::protobuf::uint64 value);
+  void add_heights(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      heights() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_heights();
+
+  // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.FlushDbItem)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > heights_;
+  friend struct ::protobuf_sync_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.sync.protobuf.SyncValueRequest) */ {
  public:
   SyncValueRequest();
@@ -247,7 +368,7 @@ class SyncValueRequest : public ::google::protobuf::Message /* @@protoc_insertio
                &_SyncValueRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(SyncValueRequest* other);
   friend void swap(SyncValueRequest& a, SyncValueRequest& b) {
@@ -397,7 +518,7 @@ class SyncResItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_SyncResItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   void Swap(SyncResItem* other);
   friend void swap(SyncResItem& a, SyncResItem& b) {
@@ -567,7 +688,7 @@ class SyncValueResponse : public ::google::protobuf::Message /* @@protoc_inserti
                &_SyncValueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   void Swap(SyncValueResponse* other);
   friend void swap(SyncValueResponse& a, SyncValueResponse& b) {
@@ -694,7 +815,7 @@ class SyncMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_SyncMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(SyncMessage* other);
   friend void swap(SyncMessage& a, SyncMessage& b) {
@@ -841,6 +962,40 @@ inline void SyncHeightItem::set_height(::google::protobuf::uint64 value) {
   set_has_height();
   height_ = value;
   // @@protoc_insertion_point(field_set:tenon.sync.protobuf.SyncHeightItem.height)
+}
+
+// -------------------------------------------------------------------
+
+// FlushDbItem
+
+// repeated uint64 heights = 1;
+inline int FlushDbItem::heights_size() const {
+  return heights_.size();
+}
+inline void FlushDbItem::clear_heights() {
+  heights_.Clear();
+}
+inline ::google::protobuf::uint64 FlushDbItem::heights(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.FlushDbItem.heights)
+  return heights_.Get(index);
+}
+inline void FlushDbItem::set_heights(int index, ::google::protobuf::uint64 value) {
+  heights_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.FlushDbItem.heights)
+}
+inline void FlushDbItem::add_heights(::google::protobuf::uint64 value) {
+  heights_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.sync.protobuf.FlushDbItem.heights)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+FlushDbItem::heights() const {
+  // @@protoc_insertion_point(field_list:tenon.sync.protobuf.FlushDbItem.heights)
+  return heights_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+FlushDbItem::mutable_heights() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.sync.protobuf.FlushDbItem.heights)
+  return &heights_;
 }
 
 // -------------------------------------------------------------------
@@ -1359,6 +1514,8 @@ inline void SyncMessage::set_allocated_sync_value_res(::tenon::sync::protobuf::S
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

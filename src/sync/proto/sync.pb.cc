@@ -33,6 +33,11 @@ class SyncHeightItemDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<SyncHeightItem>
       _instance;
 } _SyncHeightItem_default_instance_;
+class FlushDbItemDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<FlushDbItem>
+      _instance;
+} _FlushDbItem_default_instance_;
 class SyncValueRequestDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<SyncValueRequest>
@@ -70,6 +75,20 @@ static void InitDefaultsSyncHeightItem() {
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_SyncHeightItem =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncHeightItem}, {}};
+
+static void InitDefaultsFlushDbItem() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::sync::protobuf::_FlushDbItem_default_instance_;
+    new (ptr) ::tenon::sync::protobuf::FlushDbItem();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::sync::protobuf::FlushDbItem::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_FlushDbItem =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFlushDbItem}, {}};
 
 static void InitDefaultsSyncValueRequest() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -133,13 +152,14 @@ static void InitDefaultsSyncMessage() {
 
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_SyncHeightItem.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_FlushDbItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncValueRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncResItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncValueResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[5];
+::google::protobuf::Metadata file_level_metadata[6];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, _has_bits_),
@@ -151,6 +171,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncHeightItem, height_),
   1,
   0,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, heights_),
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -198,14 +225,16 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::tenon::sync::protobuf::SyncHeightItem)},
-  { 9, 17, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
-  { 20, 30, sizeof(::tenon::sync::protobuf::SyncResItem)},
-  { 35, 42, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
-  { 44, 51, sizeof(::tenon::sync::protobuf::SyncMessage)},
+  { 9, 15, sizeof(::tenon::sync::protobuf::FlushDbItem)},
+  { 16, 24, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
+  { 27, 37, sizeof(::tenon::sync::protobuf::SyncResItem)},
+  { 42, 49, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
+  { 51, 58, sizeof(::tenon::sync::protobuf::SyncMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncHeightItem_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_FlushDbItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncResItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::sync::protobuf::_SyncValueResponse_default_instance_),
@@ -227,7 +256,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 5);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 6);
 }
 
 void AddDescriptorsImpl() {
@@ -235,21 +264,21 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\nsync.proto\022\023tenon.sync.protobuf\"2\n\016Syn"
       "cHeightItem\022\020\n\010pool_idx\030\001 \001(\r\022\016\n\006height\030"
-      "\002 \001(\004\"j\n\020SyncValueRequest\022\022\n\nnetwork_id\030"
-      "\001 \001(\r\022\014\n\004keys\030\002 \003(\014\0224\n\007heights\030\003 \003(\0132#.t"
-      "enon.sync.protobuf.SyncHeightItem\"_\n\013Syn"
-      "cResItem\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\022\022\n\n"
-      "network_id\030\003 \001(\r\022\020\n\010pool_idx\030\004 \001(\r\022\016\n\006he"
-      "ight\030\005 \001(\004\"V\n\021SyncValueResponse\022\022\n\nnetwo"
-      "rk_id\030\001 \001(\r\022-\n\003res\030\002 \003(\0132 .tenon.sync.pr"
-      "otobuf.SyncResItem\"\214\001\n\013SyncMessage\022=\n\016sy"
-      "nc_value_req\030\001 \001(\0132%.tenon.sync.protobuf"
-      ".SyncValueRequest\022>\n\016sync_value_res\030\002 \001("
-      "\0132&.tenon.sync.protobuf.SyncValueRespons"
-      "e"
+      "\002 \001(\004\"\036\n\013FlushDbItem\022\017\n\007heights\030\001 \003(\004\"j\n"
+      "\020SyncValueRequest\022\022\n\nnetwork_id\030\001 \001(\r\022\014\n"
+      "\004keys\030\002 \003(\014\0224\n\007heights\030\003 \003(\0132#.tenon.syn"
+      "c.protobuf.SyncHeightItem\"_\n\013SyncResItem"
+      "\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\022\022\n\nnetwork_"
+      "id\030\003 \001(\r\022\020\n\010pool_idx\030\004 \001(\r\022\016\n\006height\030\005 \001"
+      "(\004\"V\n\021SyncValueResponse\022\022\n\nnetwork_id\030\001 "
+      "\001(\r\022-\n\003res\030\002 \003(\0132 .tenon.sync.protobuf.S"
+      "yncResItem\"\214\001\n\013SyncMessage\022=\n\016sync_value"
+      "_req\030\001 \001(\0132%.tenon.sync.protobuf.SyncVal"
+      "ueRequest\022>\n\016sync_value_res\030\002 \001(\0132&.teno"
+      "n.sync.protobuf.SyncValueResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 521);
+      descriptor, 553);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "sync.proto", &protobuf_RegisterTypes);
 }
@@ -543,6 +572,236 @@ void SyncHeightItem::InternalSwap(SyncHeightItem* other) {
 }
 
 ::google::protobuf::Metadata SyncHeightItem::GetMetadata() const {
+  protobuf_sync_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_sync_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void FlushDbItem::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int FlushDbItem::kHeightsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+FlushDbItem::FlushDbItem()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_sync_2eproto::scc_info_FlushDbItem.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.sync.protobuf.FlushDbItem)
+}
+FlushDbItem::FlushDbItem(const FlushDbItem& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      heights_(from.heights_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.FlushDbItem)
+}
+
+void FlushDbItem::SharedCtor() {
+}
+
+FlushDbItem::~FlushDbItem() {
+  // @@protoc_insertion_point(destructor:tenon.sync.protobuf.FlushDbItem)
+  SharedDtor();
+}
+
+void FlushDbItem::SharedDtor() {
+}
+
+void FlushDbItem::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* FlushDbItem::descriptor() {
+  ::protobuf_sync_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_sync_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const FlushDbItem& FlushDbItem::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_sync_2eproto::scc_info_FlushDbItem.base);
+  return *internal_default_instance();
+}
+
+
+void FlushDbItem::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.sync.protobuf.FlushDbItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  heights_.Clear();
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool FlushDbItem::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.sync.protobuf.FlushDbItem)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated uint64 heights = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 8u, input, this->mutable_heights())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_heights())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.sync.protobuf.FlushDbItem)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.sync.protobuf.FlushDbItem)
+  return false;
+#undef DO_
+}
+
+void FlushDbItem::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.sync.protobuf.FlushDbItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  for (int i = 0, n = this->heights_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      1, this->heights(i), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.sync.protobuf.FlushDbItem)
+}
+
+::google::protobuf::uint8* FlushDbItem::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.sync.protobuf.FlushDbItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(1, this->heights_, target);
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.sync.protobuf.FlushDbItem)
+  return target;
+}
+
+size_t FlushDbItem::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.sync.protobuf.FlushDbItem)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint64 heights = 1;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->heights_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->heights_size());
+    total_size += data_size;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void FlushDbItem::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.sync.protobuf.FlushDbItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  const FlushDbItem* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const FlushDbItem>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.sync.protobuf.FlushDbItem)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.sync.protobuf.FlushDbItem)
+    MergeFrom(*source);
+  }
+}
+
+void FlushDbItem::MergeFrom(const FlushDbItem& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.sync.protobuf.FlushDbItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  heights_.MergeFrom(from.heights_);
+}
+
+void FlushDbItem::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.sync.protobuf.FlushDbItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FlushDbItem::CopyFrom(const FlushDbItem& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.sync.protobuf.FlushDbItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FlushDbItem::IsInitialized() const {
+  return true;
+}
+
+void FlushDbItem::Swap(FlushDbItem* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void FlushDbItem::InternalSwap(FlushDbItem* other) {
+  using std::swap;
+  heights_.InternalSwap(&other->heights_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata FlushDbItem::GetMetadata() const {
   protobuf_sync_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_sync_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1850,6 +2109,9 @@ namespace google {
 namespace protobuf {
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncHeightItem* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncHeightItem >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::sync::protobuf::SyncHeightItem >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::FlushDbItem* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::FlushDbItem >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::sync::protobuf::FlushDbItem >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::sync::protobuf::SyncValueRequest* Arena::CreateMaybeMessage< ::tenon::sync::protobuf::SyncValueRequest >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::sync::protobuf::SyncValueRequest >(arena);
