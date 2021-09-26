@@ -23,11 +23,14 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
     pool_index_ = pool_index;
     std::string block_latest_hash;
+    uint64_t max_height = 0;
+    GetHeight(&max_height);
     GetHash(&block_latest_hash);
     height_tree_ptr_ = std::make_shared<sync::HeightTreeLevel>(
         db::kGlobalHeightTreeKey + "_" +
         std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" +
-        std::to_string(pool_index));
+        std::to_string(pool_index),
+        max_height);
 }
 
 DbPoolInfo::~DbPoolInfo() {}

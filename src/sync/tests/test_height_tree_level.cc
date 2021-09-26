@@ -30,7 +30,7 @@ public:
     }
 
     void SetTreeWithInvalidHeight(uint64_t max_height, uint64_t invalid_height) {
-        HeightTreeLevel height_tree_level;
+        HeightTreeLevel height_tree_level("test_prefix", 0);
         for (uint64_t i = 0; i < max_height; ++i) {
             if (i == invalid_height) {
                 continue;
@@ -51,7 +51,7 @@ private:
 };
 
 TEST_F(TestHeightTreeLevel, SetValid) {
-    HeightTreeLevel height_tree_level;
+    HeightTreeLevel height_tree_level("test_prefix", 0);
     for (uint64_t i = 0; i < 1024; ++i) {
         height_tree_level.Set(i);
     }
