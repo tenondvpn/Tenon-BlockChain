@@ -77,6 +77,7 @@ TEST_F(TestHeightTreeLevel, LoadFromDb) {
     {
         HeightTreeLevel height_tree_level("test_prefix", kLeafMaxHeightCount * 10 - 1);
         std::vector<uint64_t> new_data;
+        height_tree_level.PrintTree();
         height_tree_level.GetTreeData(&new_data);
         ASSERT_EQ(old_data, new_data);
     }

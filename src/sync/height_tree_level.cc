@@ -41,7 +41,7 @@ int HeightTreeLevel::Set(uint64_t height) {
         if (iter == node_map_ptr->end()) {
             leaf_ptr = std::make_shared<LeafHeightTree>(db_prefix_, 0, leaf_index);
             (*node_map_ptr)[leaf_index] = leaf_ptr;
-//             std::cout << "create new leaf index: " << leaf_index << std::endl;
+            std::cout << "create new leaf index: " << leaf_index << std::endl;
 //             if (leaf_index != 0) {
 //                 (*node_map_ptr)[leaf_index - 1]->PrintTree();
 //             }
@@ -218,7 +218,7 @@ void HeightTreeLevel::BottomUpWithBrantchLevel(uint32_t level, uint64_t child_in
         if (iter == node_map_ptr->end()) {
             branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, level, branch_index);
             (*node_map_ptr)[branch_index] = branch_ptr;
-//             std::cout << "create new branch level: " << level << ", index: " << branch_index << std::endl;
+            std::cout << "create new branch level: " << level << ", index: " << branch_index << std::endl;
         } else {
             branch_ptr = iter->second;
         }
@@ -268,7 +268,10 @@ void HeightTreeLevel::GetTreeData(std::vector<uint64_t>* data_vec) {
         for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
-                assert(iter != level_map->end());
+                if (iter == level_map->end()) {
+                    break;
+                }
+
                 iter->second->GetLevelData(level_idx, data_vec);
             }
         }
@@ -297,6 +300,10 @@ void HeightTreeLevel::PrintTree() {
         for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
+                if (iter == level_map->end()) {
+                    break;
+                }
+
                 assert(iter != level_map->end());
                 iter->second->PrintLevel(level_idx);
             }
@@ -311,7 +318,6 @@ void HeightTreeLevel::PrintTree() {
 void HeightTreeLevel::LoadFromDb() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)max_level_;
-    std::cout << "load from db, max_level_: " << max_level_ << std::endl;
     if (max_level == 0) {
         auto node_map_ptr = std::make_shared<TreeNodeMap>();
         tree_level_[max_level] = node_map_ptr;
@@ -344,7 +350,6 @@ void HeightTreeLevel::LoadFromDb() {
 void HeightTreeLevel::FlushToDb() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
-    std::cout << "flush to db, max_level_: " << max_level << ", max_level_: " << max_level_ << std::endl;
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
         if (level_map == nullptr) {
@@ -365,7 +370,10 @@ void HeightTreeLevel::FlushToDb() {
         level_vec_index *= 2;
         for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
             auto iter = level_map->find(vec_idx);
-            assert(iter != level_map->end());
+            if (iter == level_map->end()) {
+                break;
+            }
+
             iter->second->SyncToDb();
         }
 
