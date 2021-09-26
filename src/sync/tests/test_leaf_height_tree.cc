@@ -19,6 +19,7 @@ namespace test {
 class TestLeafHeightTree : public testing::Test {
 public:
     static void SetUpTestCase() {
+        db::Db::Instance()->Init("./test_db");
     }
 
     static void TearDownTestCase() {

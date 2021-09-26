@@ -8,6 +8,7 @@
 #define private public
 #include "sync/height_tree_level.h"
 #include "sync/sync_utils.h"
+#include "db/db.h"
 
 namespace tenon {
 
@@ -18,6 +19,7 @@ namespace test {
 class TestHeightTreeLevel : public testing::Test {
 public:
     static void SetUpTestCase() {
+        db::Db::Instance()->Init("./test_db");
     }
 
     static void TearDownTestCase() {
