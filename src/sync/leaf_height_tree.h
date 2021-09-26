@@ -34,8 +34,10 @@ public:
 
     uint64_t GetRoot();
     void PrintTree();
+    void GetTreeData(std::vector<uint64_t>* data);
     void PrintData();
     void PrintLevel(uint32_t level);
+    void GetLevelData(uint32_t level, std::vector<uint64_t>* data);
 
     uint32_t max_vec_index() const {
         return max_vec_index_;
@@ -46,6 +48,7 @@ private:
     uint32_t GetRootIndex();
     uint32_t GetAlignMaxLevel();
     void PrintTreeFromRoot();
+    void GetDataTreeFromRoot(std::vector<uint64_t>* data);
     void PrintDataFromRoot();
     void InitVec();
 
@@ -54,6 +57,7 @@ private:
     uint32_t GetBranchRootIndex();
     void PrintBranchTreeFromRoot();
     void PrintBranchDataFromRoot();
+    void GetDataBranchTreeFromRoot(std::vector<uint64_t>* data);
     bool LoadFromDb();
 
     std::vector<uint64_t> data_;

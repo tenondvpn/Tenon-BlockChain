@@ -248,6 +248,35 @@ uint32_t HeightTreeLevel::GetMaxLevel() {
     return 0;
 }
 
+void HeightTreeLevel::GetTreeData(std::vector<uint64_t>* data_vec) {
+    uint32_t level_vec_index = 1;
+    int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+    for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
+        auto level_map = tree_level_[i];
+        if (i == max_level_) {
+            auto iter = level_map->begin();
+            iter->second->GetTreeData(data_vec);
+            level_vec_index = iter->second->max_vec_index() + 1;
+            if (level_vec_index > kBranchMaxCount) {
+                return;
+            }
+
+            continue;
+        }
+
+        level_vec_index *= 2;
+        for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
+            for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
+                auto iter = level_map->find(vec_idx);
+                assert(iter != level_map->end());
+                iter->second->GetLevelData(level_idx, data_vec);
+            }
+        }
+
+        level_vec_index *= kBranchMaxCount;
+    }
+}
+
 void HeightTreeLevel::PrintTree() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));

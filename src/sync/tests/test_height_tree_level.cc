@@ -62,6 +62,7 @@ TEST_F(TestHeightTreeLevel, SetValid) {
 }
 
 TEST_F(TestHeightTreeLevel, LoadFromDb) {
+    std::vector<uint64_t> old_data;
     {
         HeightTreeLevel height_tree_level("test_prefix", 0);
         for (uint64_t i = 0; i < 1024; ++i) {
@@ -70,12 +71,16 @@ TEST_F(TestHeightTreeLevel, LoadFromDb) {
 
         height_tree_level.PrintTree();
         height_tree_level.FlushToDb();
+        height_tree_level.GetTreeData(&old_data);
     }
 
     {
         std::cout << std::endl << "after load from db: " << std::endl;
         HeightTreeLevel height_tree_level("test_prefix", 1023);
         height_tree_level.PrintTree();
+        std::vector<uint64_t> new_data;
+        height_tree_level.GetTreeData(&new_data);
+        ASSERT_EQ(old_data, new_data);
     }
 }
 

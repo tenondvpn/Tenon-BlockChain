@@ -172,14 +172,12 @@ void LeafHeightTree::SyncToDb() {
     }
 
     protobuf::FlushDbItem flush_db;
-    std::cout << "SyncToDb data_.size(): " << data_.size() << std::endl;
     for (uint32_t i = 0; i < data_.size(); ++i) {
         flush_db.add_heights(data_[i]);
     }
 
     flush_db.set_max_height(max_height_);
     flush_db.set_max_vec_index(max_vec_index_);
-    std::cout << "SyncToDb max_vec_index_: " << max_vec_index_ << ", is_branch: " << is_branch_ << std::endl;
     db::Db::Instance()->Put(db_key_, flush_db.SerializeAsString());
     dirty_ = false;
 }
@@ -202,14 +200,16 @@ bool LeafHeightTree::LoadFromDb() {
 
     max_height_ = flush_db.max_height();
     max_vec_index_ = flush_db.max_vec_index();
-    std::cout << "LoadFromDb max_vec_index_: " << max_vec_index_ << ", is_branch: " << is_branch_ << std::endl;
     data_.clear();
-    std::cout << "LoadFromDb data_.size(): " << flush_db.heights_size() << std::endl;
     for (int32_t i = 0; i < flush_db.heights_size(); ++i) {
         data_.push_back(flush_db.heights(i));
     }
 
     return true;
+}
+
+void LeafHeightTree::GetTreeData(std::vector<uint64_t>* data) {
+
 }
 
 void LeafHeightTree::PrintTree() {
@@ -266,6 +266,15 @@ void LeafHeightTree::PrintData() {
     }
 }
 
+void LeafHeightTree::GetLevelData(uint32_t level, std::vector<uint64_t>* data) {
+    uint32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+    uint32_t level_rate = (uint32_t)pow(2.0, (max_level - level));
+    uint32_t end_idx = level_tree_index_vec_[level].first + level_rate;
+    for (uint32_t level_idx = level_tree_index_vec_[level].first; level_idx < end_idx; ++level_idx) {
+        data->push_back(data_[level_idx]);
+    }
+}
+
 void LeafHeightTree::PrintLevel(uint32_t level) {
     uint32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     uint32_t level_rate = (uint32_t)pow(2.0, (max_level - level));
@@ -303,6 +312,20 @@ void LeafHeightTree::PrintDataFromRoot() {
     }
 }
 
+void LeafHeightTree::GetDataBranchTreeFromRoot(std::vector<uint64_t>* data) {
+    int32_t max_root_index = GetBranchRootIndex();
+    data->push_back(data_[max_root_index]);
+    int32_t max_level = GetBranchAlignMaxLevel();
+    uint32_t level_rate = 1;
+    for (int32_t i = max_level - 1; i >= 0; --i) {
+        level_rate *= 2;
+        uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
+        for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
+            data->push_back(data_[level_idx]);
+        }
+    }
+}
+
 void LeafHeightTree::PrintBranchTreeFromRoot() {
     int32_t max_root_index = GetBranchRootIndex();
     std::cout << data_[max_root_index] << std::endl;
@@ -319,10 +342,23 @@ void LeafHeightTree::PrintBranchTreeFromRoot() {
     }
 }
 
+void LeafHeightTree::GetDataTreeFromRoot(std::vector<uint64_t>* data) {
+    int32_t max_root_index = GetRootIndex();
+    int32_t max_level = GetAlignMaxLevel();
+    data->push_back(data_[max_root_index]);
+    uint32_t level_rate = 1;
+    for (int32_t i = max_level - 1; i >= 0; --i) {
+        level_rate *= 2;
+        uint32_t end_idx = level_tree_index_vec_[i].first + level_rate;
+        for (uint32_t level_idx = level_tree_index_vec_[i].first; level_idx < end_idx; ++level_idx) {
+            data->push_back(data_[level_idx]);
+        }
+    }
+}
+
 void LeafHeightTree::PrintTreeFromRoot() {
     int32_t max_root_index = GetRootIndex();
     int32_t max_level = GetAlignMaxLevel();
-    std::cout << "max_root_index: " << max_root_index << ", max_level: " << max_level << std::endl;
     std::cout << data_[max_root_index] << std::endl;
     uint32_t level_rate = 1;
     for (int32_t i = max_level - 1; i >= 0; --i) {
