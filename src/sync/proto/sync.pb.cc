@@ -177,8 +177,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, max_vec_index_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, max_height_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::FlushDbItem, heights_),
   0,
+  1,
   ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::sync::protobuf::SyncValueRequest, _internal_metadata_),
@@ -227,11 +229,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 7, sizeof(::tenon::sync::protobuf::SyncHeightItem)},
-  { 9, 16, sizeof(::tenon::sync::protobuf::FlushDbItem)},
-  { 18, 26, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
-  { 29, 39, sizeof(::tenon::sync::protobuf::SyncResItem)},
-  { 44, 51, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
-  { 53, 60, sizeof(::tenon::sync::protobuf::SyncMessage)},
+  { 9, 17, sizeof(::tenon::sync::protobuf::FlushDbItem)},
+  { 20, 28, sizeof(::tenon::sync::protobuf::SyncValueRequest)},
+  { 31, 41, sizeof(::tenon::sync::protobuf::SyncResItem)},
+  { 46, 53, sizeof(::tenon::sync::protobuf::SyncValueResponse)},
+  { 55, 62, sizeof(::tenon::sync::protobuf::SyncMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -266,22 +268,22 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\nsync.proto\022\023tenon.sync.protobuf\"2\n\016Syn"
       "cHeightItem\022\020\n\010pool_idx\030\001 \001(\r\022\016\n\006height\030"
-      "\002 \001(\004\"5\n\013FlushDbItem\022\025\n\rmax_vec_index\030\001 "
-      "\001(\004\022\017\n\007heights\030\002 \003(\004\"j\n\020SyncValueRequest"
-      "\022\022\n\nnetwork_id\030\001 \001(\r\022\014\n\004keys\030\002 \003(\014\0224\n\007he"
-      "ights\030\003 \003(\0132#.tenon.sync.protobuf.SyncHe"
-      "ightItem\"_\n\013SyncResItem\022\013\n\003key\030\001 \001(\014\022\r\n\005"
-      "value\030\002 \001(\014\022\022\n\nnetwork_id\030\003 \001(\r\022\020\n\010pool_"
-      "idx\030\004 \001(\r\022\016\n\006height\030\005 \001(\004\"V\n\021SyncValueRe"
-      "sponse\022\022\n\nnetwork_id\030\001 \001(\r\022-\n\003res\030\002 \003(\0132"
-      " .tenon.sync.protobuf.SyncResItem\"\214\001\n\013Sy"
-      "ncMessage\022=\n\016sync_value_req\030\001 \001(\0132%.teno"
-      "n.sync.protobuf.SyncValueRequest\022>\n\016sync"
-      "_value_res\030\002 \001(\0132&.tenon.sync.protobuf.S"
-      "yncValueResponse"
+      "\002 \001(\004\"I\n\013FlushDbItem\022\025\n\rmax_vec_index\030\001 "
+      "\001(\004\022\022\n\nmax_height\030\002 \001(\004\022\017\n\007heights\030\003 \003(\004"
+      "\"j\n\020SyncValueRequest\022\022\n\nnetwork_id\030\001 \001(\r"
+      "\022\014\n\004keys\030\002 \003(\014\0224\n\007heights\030\003 \003(\0132#.tenon."
+      "sync.protobuf.SyncHeightItem\"_\n\013SyncResI"
+      "tem\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\022\022\n\nnetwo"
+      "rk_id\030\003 \001(\r\022\020\n\010pool_idx\030\004 \001(\r\022\016\n\006height\030"
+      "\005 \001(\004\"V\n\021SyncValueResponse\022\022\n\nnetwork_id"
+      "\030\001 \001(\r\022-\n\003res\030\002 \003(\0132 .tenon.sync.protobu"
+      "f.SyncResItem\"\214\001\n\013SyncMessage\022=\n\016sync_va"
+      "lue_req\030\001 \001(\0132%.tenon.sync.protobuf.Sync"
+      "ValueRequest\022>\n\016sync_value_res\030\002 \001(\0132&.t"
+      "enon.sync.protobuf.SyncValueResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 576);
+      descriptor, 596);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "sync.proto", &protobuf_RegisterTypes);
 }
@@ -586,6 +588,7 @@ void FlushDbItem::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int FlushDbItem::kMaxVecIndexFieldNumber;
+const int FlushDbItem::kMaxHeightFieldNumber;
 const int FlushDbItem::kHeightsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -602,12 +605,16 @@ FlushDbItem::FlushDbItem(const FlushDbItem& from)
       _has_bits_(from._has_bits_),
       heights_(from.heights_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  max_vec_index_ = from.max_vec_index_;
+  ::memcpy(&max_vec_index_, &from.max_vec_index_,
+    static_cast<size_t>(reinterpret_cast<char*>(&max_height_) -
+    reinterpret_cast<char*>(&max_vec_index_)) + sizeof(max_height_));
   // @@protoc_insertion_point(copy_constructor:tenon.sync.protobuf.FlushDbItem)
 }
 
 void FlushDbItem::SharedCtor() {
-  max_vec_index_ = GOOGLE_ULONGLONG(0);
+  ::memset(&max_vec_index_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&max_height_) -
+      reinterpret_cast<char*>(&max_vec_index_)) + sizeof(max_height_));
 }
 
 FlushDbItem::~FlushDbItem() {
@@ -639,7 +646,12 @@ void FlushDbItem::Clear() {
   (void) cached_has_bits;
 
   heights_.Clear();
-  max_vec_index_ = GOOGLE_ULONGLONG(0);
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 3u) {
+    ::memset(&max_vec_index_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&max_height_) -
+        reinterpret_cast<char*>(&max_vec_index_)) + sizeof(max_height_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -668,16 +680,30 @@ bool FlushDbItem::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated uint64 heights = 2;
+      // optional uint64 max_height = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_max_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &max_height_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated uint64 heights = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 16u, input, this->mutable_heights())));
+                 1, 24u, input, this->mutable_heights())));
         } else if (
             static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, this->mutable_heights())));
@@ -719,10 +745,15 @@ void FlushDbItem::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->max_vec_index(), output);
   }
 
-  // repeated uint64 heights = 2;
+  // optional uint64 max_height = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->max_height(), output);
+  }
+
+  // repeated uint64 heights = 3;
   for (int i = 0, n = this->heights_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(
-      2, this->heights(i), output);
+      3, this->heights(i), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -745,9 +776,14 @@ void FlushDbItem::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->max_vec_index(), target);
   }
 
-  // repeated uint64 heights = 2;
+  // optional uint64 max_height = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->max_height(), target);
+  }
+
+  // repeated uint64 heights = 3;
   target = ::google::protobuf::internal::WireFormatLite::
-    WriteUInt64ToArray(2, this->heights_, target);
+    WriteUInt64ToArray(3, this->heights_, target);
 
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
@@ -766,7 +802,7 @@ size_t FlushDbItem::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated uint64 heights = 2;
+  // repeated uint64 heights = 3;
   {
     size_t data_size = ::google::protobuf::internal::WireFormatLite::
       UInt64Size(this->heights_);
@@ -775,13 +811,22 @@ size_t FlushDbItem::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // optional uint64 max_vec_index = 1;
-  if (has_max_vec_index()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->max_vec_index());
-  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional uint64 max_vec_index = 1;
+    if (has_max_vec_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->max_vec_index());
+    }
 
+    // optional uint64 max_height = 2;
+    if (has_max_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->max_height());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -810,8 +855,15 @@ void FlushDbItem::MergeFrom(const FlushDbItem& from) {
   (void) cached_has_bits;
 
   heights_.MergeFrom(from.heights_);
-  if (from.has_max_vec_index()) {
-    set_max_vec_index(from.max_vec_index());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      max_vec_index_ = from.max_vec_index_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      max_height_ = from.max_height_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -841,6 +893,7 @@ void FlushDbItem::InternalSwap(FlushDbItem* other) {
   using std::swap;
   heights_.InternalSwap(&other->heights_);
   swap(max_vec_index_, other->max_vec_index_);
+  swap(max_height_, other->max_height_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
