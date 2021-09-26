@@ -13,7 +13,7 @@ namespace sync {
 
 class HeightTreeLevel {
 public:
-    HeightTreeLevel(const std::string& db_prefix);
+    HeightTreeLevel(const std::string& db_prefix, uint64_t max_height);
     ~HeightTreeLevel();
     int Set(uint64_t height);
     bool Valid(uint64_t height);
@@ -28,6 +28,7 @@ private:
     void GetHeightMaxLevel(uint64_t height, uint32_t* level, uint64_t* index);
     void BottomUpWithBrantchLevel(uint32_t level, uint64_t child_index);
     uint32_t GetMaxLevel();
+    void LoadFromDb();
 
     static const uint32_t kMaxLevelCount = 64u;
 

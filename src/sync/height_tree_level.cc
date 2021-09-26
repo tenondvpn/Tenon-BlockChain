@@ -9,7 +9,11 @@ namespace tenon {
 
 namespace sync {
 
-HeightTreeLevel::HeightTreeLevel(const std::string& db_prefix) : db_prefix_(db_prefix) {}
+HeightTreeLevel::HeightTreeLevel(const std::string& db_prefix, uint64_t max_height)
+        : db_prefix_(db_prefix), max_height_(max_height) {
+    max_level_ = GetMaxLevel();
+    LoadFromDb();
+}
 
 HeightTreeLevel::~HeightTreeLevel() {}
 
@@ -275,11 +279,47 @@ void HeightTreeLevel::PrintTree() {
     }
 }
 
+void HeightTreeLevel::LoadFromDb() {
+    uint32_t level_vec_index = 1;
+    int32_t max_level = (int32_t)max_level_;
+    if (max_level == 0) {
+        auto node_map_ptr = std::make_shared<TreeNodeMap>();
+        tree_level_[max_level] = node_map_ptr;
+
+        LeafHeightTreePtr branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, 0, 0);
+        (*node_map_ptr)[0] = branch_ptr;
+        return;
+    }
+
+    for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
+        auto level_map = std::make_shared<TreeNodeMap>();
+        tree_level_[i] = level_map;
+        if (i == max_level_) {
+            LeafHeightTreePtr branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, i, 0);
+            (*level_map)[0] = branch_ptr;
+            level_vec_index = branch_ptr->max_vec_index() + 1;
+            continue;
+        }
+
+        level_vec_index *= 2;
+        for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
+            LeafHeightTreePtr branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, i, vec_idx);
+            (*level_map)[vec_idx] = branch_ptr;
+        }
+
+        level_vec_index *= kBranchMaxCount;
+    }
+}
+
 void HeightTreeLevel::FlushToDb() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
+        if (level_map == nullptr) {
+            return;
+        }
+
         if (i == max_level_) {
             auto iter = level_map->begin();
             iter->second->SyncToDb();
