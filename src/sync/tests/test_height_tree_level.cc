@@ -61,6 +61,24 @@ TEST_F(TestHeightTreeLevel, SetValid) {
     height_tree_level.PrintTree();
 }
 
+TEST_F(TestHeightTreeLevel, LoadFromDb) {
+    {
+        HeightTreeLevel height_tree_level("test_prefix", 0);
+        for (uint64_t i = 0; i < 1024; ++i) {
+            height_tree_level.Set(i);
+        }
+
+        height_tree_level.PrintTree();
+        height_tree_level.FlushToDb();
+    }
+
+    {
+        std::cout << std::endl << "after load from db: " << std::endl;
+        HeightTreeLevel height_tree_level("test_prefix", 1023);
+        height_tree_level.PrintTree();
+    }
+}
+
 TEST_F(TestHeightTreeLevel, GetInvalidHeights) {
     {
         std::vector<uint64_t> test_invalid_heidhts;
@@ -101,7 +119,6 @@ TEST_F(TestHeightTreeLevel, GetInvalidHeights) {
         }
     }
 }
-
 
 }  // namespace test
 

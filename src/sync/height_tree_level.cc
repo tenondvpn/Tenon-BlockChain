@@ -282,6 +282,7 @@ void HeightTreeLevel::PrintTree() {
 void HeightTreeLevel::LoadFromDb() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)max_level_;
+    std::cout << "load from db, max_level_: " << max_level_ << std::endl;
     if (max_level == 0) {
         auto node_map_ptr = std::make_shared<TreeNodeMap>();
         tree_level_[max_level] = node_map_ptr;
@@ -314,6 +315,7 @@ void HeightTreeLevel::LoadFromDb() {
 void HeightTreeLevel::FlushToDb() {
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
+    std::cout << "flush to db, max_level_: " << max_level << ", max_level_: " << max_level_ << std::endl;
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
         if (level_map == nullptr) {

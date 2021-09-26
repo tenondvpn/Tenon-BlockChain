@@ -172,10 +172,12 @@ void LeafHeightTree::SyncToDb() {
     }
 
     protobuf::FlushDbItem flush_db;
+    std::cout << "SyncToDb data_.size(): " << data_.size() << std::endl;
     for (uint32_t i = 0; i < data_.size(); ++i) {
         flush_db.add_heights(data_[i]);
     }
 
+    flush_db.set_max_vec_index(max_vec_index_);
     db::Db::Instance()->Put(db_key_, flush_db.SerializeAsString());
     dirty_ = false;
 }
@@ -196,6 +198,9 @@ bool LeafHeightTree::LoadFromDb() {
         return false;
     }
 
+    max_vec_index_ = flush_db.max_vec_index();
+    data_.clear();
+    std::cout << "LoadFromDb data_.size(): " << flush_db.heights_size() << std::endl;
     for (int32_t i = 0; i < flush_db.heights_size(); ++i) {
         data_.push_back(flush_db.heights(i));
     }

@@ -30,7 +30,7 @@ namespace test {
 class TestKeyValueSync : public testing::Test {
 public:
     static void SetUpTestCase() {
-        db::Db::Instance()->Init("./test_db");
+//         db::Db::Instance()->Init("./test_db");
         JoinNetwork(network::kRootCongressNetworkId);
     }
 
