@@ -177,7 +177,9 @@ void LeafHeightTree::SyncToDb() {
         flush_db.add_heights(data_[i]);
     }
 
+    flush_db.set_max_height(max_height_);
     flush_db.set_max_vec_index(max_vec_index_);
+    std::cout << "SyncToDb max_vec_index_: " << max_vec_index_ << ", is_branch: " << is_branch_ << std::endl;
     db::Db::Instance()->Put(db_key_, flush_db.SerializeAsString());
     dirty_ = false;
 }
@@ -198,7 +200,9 @@ bool LeafHeightTree::LoadFromDb() {
         return false;
     }
 
+    max_height_ = flush_db.max_height();
     max_vec_index_ = flush_db.max_vec_index();
+    std::cout << "LoadFromDb max_vec_index_: " << max_vec_index_ << ", is_branch: " << is_branch_ << std::endl;
     data_.clear();
     std::cout << "LoadFromDb data_.size(): " << flush_db.heights_size() << std::endl;
     for (int32_t i = 0; i < flush_db.heights_size(); ++i) {
@@ -318,6 +322,7 @@ void LeafHeightTree::PrintBranchTreeFromRoot() {
 void LeafHeightTree::PrintTreeFromRoot() {
     int32_t max_root_index = GetRootIndex();
     int32_t max_level = GetAlignMaxLevel();
+    std::cout << "max_root_index: " << max_root_index << ", max_level: " << max_level << std::endl;
     std::cout << data_[max_root_index] << std::endl;
     uint32_t level_rate = 1;
     for (int32_t i = max_level - 1; i >= 0; --i) {
