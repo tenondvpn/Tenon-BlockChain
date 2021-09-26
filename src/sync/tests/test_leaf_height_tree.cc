@@ -9,6 +9,7 @@
 #define private public
 #include "sync/leaf_height_tree.h"
 #include "sync/sync_utils.h"
+#include "db/db.h"
 
 namespace tenon {
 

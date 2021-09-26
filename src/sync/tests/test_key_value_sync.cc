@@ -19,6 +19,7 @@
 #include "dht/base_dht.h"
 #include "security/schnorr.h"
 #include "election/elect_dht.h"
+#include "db/db.h"
 
 namespace tenon {
 
