@@ -303,10 +303,10 @@ class FlushDbItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // repeated uint64 heights = 2;
+  // repeated uint64 heights = 3;
   int heights_size() const;
   void clear_heights();
-  static const int kHeightsFieldNumber = 2;
+  static const int kHeightsFieldNumber = 3;
   ::google::protobuf::uint64 heights(int index) const;
   void set_heights(int index, ::google::protobuf::uint64 value);
   void add_heights(::google::protobuf::uint64 value);
@@ -322,16 +322,26 @@ class FlushDbItem : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::uint64 max_vec_index() const;
   void set_max_vec_index(::google::protobuf::uint64 value);
 
+  // optional uint64 max_height = 2;
+  bool has_max_height() const;
+  void clear_max_height();
+  static const int kMaxHeightFieldNumber = 2;
+  ::google::protobuf::uint64 max_height() const;
+  void set_max_height(::google::protobuf::uint64 value);
+
   // @@protoc_insertion_point(class_scope:tenon.sync.protobuf.FlushDbItem)
  private:
   void set_has_max_vec_index();
   void clear_has_max_vec_index();
+  void set_has_max_height();
+  void clear_has_max_height();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > heights_;
   ::google::protobuf::uint64 max_vec_index_;
+  ::google::protobuf::uint64 max_height_;
   friend struct ::protobuf_sync_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1002,7 +1012,31 @@ inline void FlushDbItem::set_max_vec_index(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:tenon.sync.protobuf.FlushDbItem.max_vec_index)
 }
 
-// repeated uint64 heights = 2;
+// optional uint64 max_height = 2;
+inline bool FlushDbItem::has_max_height() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FlushDbItem::set_has_max_height() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FlushDbItem::clear_has_max_height() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FlushDbItem::clear_max_height() {
+  max_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_max_height();
+}
+inline ::google::protobuf::uint64 FlushDbItem::max_height() const {
+  // @@protoc_insertion_point(field_get:tenon.sync.protobuf.FlushDbItem.max_height)
+  return max_height_;
+}
+inline void FlushDbItem::set_max_height(::google::protobuf::uint64 value) {
+  set_has_max_height();
+  max_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.sync.protobuf.FlushDbItem.max_height)
+}
+
+// repeated uint64 heights = 3;
 inline int FlushDbItem::heights_size() const {
   return heights_.size();
 }
