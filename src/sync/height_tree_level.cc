@@ -269,7 +269,11 @@ void HeightTreeLevel::GetTreeData(std::vector<uint64_t>* data_vec) {
             for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
                 auto iter = level_map->find(vec_idx);
                 if (iter == level_map->end()) {
-                    break;
+                    for (uint64_t zero_idx = 0; zero_idx < 2 * kBranchMaxCount - 1; ++zero_idx) {
+                        data_vec->push_back(0);
+                    }
+
+                    continue;
                 }
 
                 iter->second->GetLevelData(level_idx, data_vec);

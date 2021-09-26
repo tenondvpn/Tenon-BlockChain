@@ -198,7 +198,7 @@ bool LeafHeightTree::LoadFromDb() {
 
     max_height_ = flush_db.max_height();
     max_vec_index_ = flush_db.max_vec_index();
-    data_.clear();
+//     data_.clear();
     for (int32_t i = 0; i < flush_db.heights_size(); ++i) {
         data_[i] = flush_db.heights(i);
     }
