@@ -363,12 +363,10 @@ void HeightTreeLevel::FlushToDb() {
         }
 
         level_vec_index *= 2;
-        for (int32_t level_idx = max_level; level_idx >= 0; --level_idx) {
-            for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
-                auto iter = level_map->find(vec_idx);
-                assert(iter != level_map->end());
-                iter->second->SyncToDb();
-            }
+        for (uint64_t vec_idx = 0; vec_idx < level_vec_index; ++vec_idx) {
+            auto iter = level_map->find(vec_idx);
+            assert(iter != level_map->end());
+            iter->second->SyncToDb();
         }
 
         level_vec_index *= kBranchMaxCount;
