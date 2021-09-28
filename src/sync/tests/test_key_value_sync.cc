@@ -31,6 +31,8 @@ class TestKeyValueSync : public testing::Test {
 public:
     static void SetUpTestCase() {
 //         db::Db::Instance()->Init("./test_db");
+        db::Db::Instance()->db_.reset();
+        db::Db::Instance()->inited_ = false;
         JoinNetwork(network::kRootCongressNetworkId);
     }
 

@@ -32,7 +32,8 @@ public:
     }
 
     void SetTreeWithInvalidHeight(uint64_t max_height, uint64_t invalid_height) {
-        HeightTreeLevel height_tree_level("test_prefix", 0);
+        static int32_t i = 0;
+        HeightTreeLevel height_tree_level("test_prefix_" + std::to_string(i++), 0);
         for (uint64_t i = 0; i < max_height; ++i) {
             if (i == invalid_height) {
                 continue;
