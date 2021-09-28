@@ -433,10 +433,10 @@ void LeafHeightTree::GetLeafInvalidHeights(std::vector<uint64_t>* height_vec) {
             height_vec->push_back(b_idx + i);
         }
     }
-
-    if (height_vec->empty()) {
-        height_vec->push_back(max_height_ + 1);
-    }
+// 
+//     if (height_vec->empty()) {
+//         height_vec->push_back(max_height_ + 1);
+//     }
 }
 
 }  // namespace sync

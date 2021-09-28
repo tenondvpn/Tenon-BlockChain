@@ -586,7 +586,8 @@ void BlockManager::SendBlockResponse(
 
 int BlockManager::AddNewBlock(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
-        db::DbWriteBach& db_batch, bool to_cache) {
+        db::DbWriteBach& db_batch,
+        bool to_cache) {
     if (!block_hash_limit_set_.Push(block_item->hash())) {
         return kBlockSuccess;
     }

@@ -28,6 +28,7 @@ int HeightTreeLevel::Set(uint64_t height) {
         max_level_ = GetMaxLevel();
     }
 
+    std::cout << "height tree: " << db_prefix_ << " set height: " << height << ", max_height_: " << max_height_ << ", max_level_: " << max_level_ << std::endl;
     uint64_t leaf_index = height / kLeafMaxHeightCount;
     {
         TreeNodeMapPtr node_map_ptr = tree_level_[0];
@@ -84,6 +85,7 @@ void HeightTreeLevel::GetMissingHeights(
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
     // The higher the height, the higher the priority
+    std::cout << "GetMissingHeights max_height: " << max_height << ", valid max_height_: " << max_height_ << std::endl;
     if (max_height > max_height_) {
         for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
             heights->push_back(i);
