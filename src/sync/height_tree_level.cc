@@ -85,7 +85,6 @@ void HeightTreeLevel::GetMissingHeights(
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
     // The higher the height, the higher the priority
-    std::cout << "GetMissingHeights max_height: " << max_height << ", valid max_height_: " << max_height_ << std::endl;
     if (max_height > max_height_) {
         for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
             heights->push_back(i);
