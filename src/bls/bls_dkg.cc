@@ -169,6 +169,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
 
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
+    assert(pubkey.ec_point() != nullptr);
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
         return false;
