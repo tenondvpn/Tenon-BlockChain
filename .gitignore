@@ -4,3 +4,4 @@ cbuild_Debug
 cbuild_Release
 third_party/depends/libs/linux/librocksdb.a
 third_party/depends/libs/linux/libp2p.a
+.vs
