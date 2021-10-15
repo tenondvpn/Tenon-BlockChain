@@ -1,13 +1,16 @@
 /** @file
  *****************************************************************************
+
  Declaration of functions for profiling code blocks.
 
  Reports time, operation counts, memory usage, and others.
+
  *****************************************************************************
  * @author     This file is part of libff, developed by SCIPR Lab
  *             and contributors (see AUTHORS).
  * @copyright  MIT license (see LICENSE file)
  *****************************************************************************/
+
 #ifndef PROFILING_HPP_
 #define PROFILING_HPP_
 
@@ -22,13 +25,12 @@ void start_profiling();
 long long get_nsec_time();
 void print_time(const char* msg);
 void print_header(const char* msg);
-void print_separator();
 
 void print_indent();
 
 extern bool inhibit_profiling_info;
 extern bool inhibit_profiling_counters;
-extern std::map<std::string, std::size_t> invocation_counts;
+extern std::map<std::string, size_t> invocation_counts;
 extern std::map<std::string, long long> last_times;
 extern std::map<std::string, long long> cumulative_times;
 
@@ -44,6 +46,6 @@ void leave_block(const std::string &msg, const bool indent=true);
 void print_mem(const std::string &s = "");
 void print_compilation_info();
 
-} // namespace libff
+} // libff
 
 #endif // PROFILING_HPP_

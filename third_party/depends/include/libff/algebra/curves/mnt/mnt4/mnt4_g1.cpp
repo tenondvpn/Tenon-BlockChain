@@ -15,8 +15,6 @@
 
 namespace libff {
 
-using std::size_t;
-
 #ifdef PROFILE_OP_COUNTS
 long long mnt4_G1::add_cnt = 0;
 long long mnt4_G1::dbl_cnt = 0;
@@ -24,21 +22,16 @@ long long mnt4_G1::dbl_cnt = 0;
 
 std::vector<size_t> mnt4_G1::wnaf_window_table;
 std::vector<size_t> mnt4_G1::fixed_base_exp_window_table;
-mnt4_G1 mnt4_G1::G1_zero = {};
-mnt4_G1 mnt4_G1::G1_one = {};
-bool mnt4_G1::initialized = false;
+mnt4_G1 mnt4_G1::G1_zero;
+mnt4_G1 mnt4_G1::G1_one;
 mnt4_Fq mnt4_G1::coeff_a;
 mnt4_Fq mnt4_G1::coeff_b;
-bigint<mnt4_G1::h_limbs> mnt4_G1::h;
 
 mnt4_G1::mnt4_G1()
 {
-    if (mnt4_G1::initialized)
-    {
-        this->X = G1_zero.X;
-        this->Y = G1_zero.Y;
-        this->Z = G1_zero.Z;
-    }
+    this->X_ = G1_zero.X_;
+    this->Y_ = G1_zero.Y_;
+    this->Z_ = G1_zero.Z_;
 }
 
 void mnt4_G1::print() const
@@ -52,8 +45,8 @@ void mnt4_G1::print() const
         mnt4_G1 copy(*this);
         copy.to_affine_coordinates();
         gmp_printf("(%Nd , %Nd)\n",
-                   copy.X.as_bigint().data, mnt4_Fq::num_limbs,
-                   copy.Y.as_bigint().data, mnt4_Fq::num_limbs);
+                   copy.X_.as_bigint().data, mnt4_Fq::num_limbs,
+                   copy.Y_.as_bigint().data, mnt4_Fq::num_limbs);
     }
 }
 
@@ -66,9 +59,9 @@ void mnt4_G1::print_coordinates() const
     else
     {
         gmp_printf("(%Nd : %Nd : %Nd)\n",
-                   this->X.as_bigint().data, mnt4_Fq::num_limbs,
-                   this->Y.as_bigint().data, mnt4_Fq::num_limbs,
-                   this->Z.as_bigint().data, mnt4_Fq::num_limbs);
+                   this->X_.as_bigint().data, mnt4_Fq::num_limbs,
+                   this->Y_.as_bigint().data, mnt4_Fq::num_limbs,
+                   this->Z_.as_bigint().data, mnt4_Fq::num_limbs);
     }
 }
 
@@ -76,16 +69,16 @@ void mnt4_G1::to_affine_coordinates()
 {
     if (this->is_zero())
     {
-        this->X = mnt4_Fq::zero();
-        this->Y = mnt4_Fq::one();
-        this->Z = mnt4_Fq::zero();
+        this->X_ = mnt4_Fq::zero();
+        this->Y_ = mnt4_Fq::one();
+        this->Z_ = mnt4_Fq::zero();
     }
     else
     {
-        const mnt4_Fq Z_inv = Z.inverse();
-        this->X = this->X * Z_inv;
-        this->Y = this->Y * Z_inv;
-        this->Z = mnt4_Fq::one();
+        const mnt4_Fq Z_inv = Z_.inverse();
+        this->X_ = this->X_ * Z_inv;
+        this->Y_ = this->Y_ * Z_inv;
+        this->Z_ = mnt4_Fq::one();
     }
 }
 
@@ -96,12 +89,12 @@ void mnt4_G1::to_special()
 
 bool mnt4_G1::is_special() const
 {
-    return (this->is_zero() || this->Z == mnt4_Fq::one());
+    return (this->is_zero() || this->Z_ == mnt4_Fq::one());
 }
 
 bool mnt4_G1::is_zero() const
 {
-    return (this->X.is_zero() && this->Z.is_zero());
+    return (this->X_.is_zero() && this->Z_.is_zero());
 }
 
 bool mnt4_G1::operator==(const mnt4_G1 &other) const
@@ -119,13 +112,13 @@ bool mnt4_G1::operator==(const mnt4_G1 &other) const
     /* now neither is O */
 
     // X1/Z1 = X2/Z2 <=> X1*Z2 = X2*Z1
-    if ((this->X * other.Z) != (other.X * this->Z))
+    if ((this->X_ * other.Z_) != (other.X_ * this->Z_))
     {
         return false;
     }
 
     // Y1/Z1 = Y2/Z2 <=> Y1*Z2 = Y2*Z1
-    if ((this->Y * other.Z) != (other.Y * this->Z))
+    if ((this->Y_ * other.Z_) != (other.Y_ * this->Z_))
     {
         return false;
     }
@@ -168,27 +161,27 @@ mnt4_G1 mnt4_G1::operator+(const mnt4_G1 &other) const
       }
     */
 
-    const mnt4_Fq X1Z2 = (this->X) * (other.Z);        // X1Z2 = X1*Z2
-    const mnt4_Fq X2Z1 = (this->Z) * (other.X);        // X2Z1 = X2*Z1
+    const mnt4_Fq X1Z2 = (this->X_) * (other.Z_);        // X1Z2 = X1*Z2
+    const mnt4_Fq X2Z1 = (this->Z_) * (other.X_);        // X2Z1 = X2*Z1
 
     // (used both in add and double checks)
 
-    const mnt4_Fq Y1Z2 = (this->Y) * (other.Z);        // Y1Z2 = Y1*Z2
-    const mnt4_Fq Y2Z1 = (this->Z) * (other.Y);        // Y2Z1 = Y2*Z1
+    const mnt4_Fq Y1Z2 = (this->Y_) * (other.Z_);        // Y1Z2 = Y1*Z2
+    const mnt4_Fq Y2Z1 = (this->Z_) * (other.Y_);        // Y2Z1 = Y2*Z1
 
     if (X1Z2 == X2Z1 && Y1Z2 == Y2Z1)
     {
         // perform dbl case
-        const mnt4_Fq XX   = (this->X).squared();                   // XX  = X1^2
-        const mnt4_Fq ZZ   = (this->Z).squared();                   // ZZ  = Z1^2
+        const mnt4_Fq XX   = (this->X_).squared();                   // XX  = X1^2
+        const mnt4_Fq ZZ   = (this->Z_).squared();                   // ZZ  = Z1^2
         const mnt4_Fq w    = mnt4_G1::coeff_a * ZZ + (XX + XX + XX); // w   = a*ZZ + 3*XX
-        const mnt4_Fq Y1Z1 = (this->Y) * (this->Z);
+        const mnt4_Fq Y1Z1 = (this->Y_) * (this->Z_);
         const mnt4_Fq s    = Y1Z1 + Y1Z1;                            // s   = 2*Y1*Z1
         const mnt4_Fq ss   = s.squared();                            // ss  = s^2
         const mnt4_Fq sss  = s * ss;                                 // sss = s*ss
-        const mnt4_Fq R    = (this->Y) * s;                         // R   = Y1*s
+        const mnt4_Fq R    = (this->Y_) * s;                         // R   = Y1*s
         const mnt4_Fq RR   = R.squared();                            // RR  = R^2
-        const mnt4_Fq B    = ((this->X)+R).squared()-XX-RR;         // B   = (X1+R)^2 - XX - RR
+        const mnt4_Fq B    = ((this->X_)+R).squared()-XX-RR;         // B   = (X1+R)^2 - XX - RR
         const mnt4_Fq h    = w.squared() - (B+B);                    // h   = w^2 - 2*B
         const mnt4_Fq X3   = h * s;                                  // X3  = h*s
         const mnt4_Fq Y3   = w * (B-h)-(RR+RR);                      // Y3  = w*(B-h) - 2*RR
@@ -198,7 +191,7 @@ mnt4_G1 mnt4_G1::operator+(const mnt4_G1 &other) const
     }
 
     // if we have arrived here we are in the add case
-    const mnt4_Fq Z1Z2 = (this->Z) * (other.Z);        // Z1Z2 = Z1*Z2
+    const mnt4_Fq Z1Z2 = (this->Z_) * (other.Z_);        // Z1Z2 = Z1*Z2
     const mnt4_Fq u    = Y2Z1 - Y1Z2; // u    = Y2*Z1-Y1Z2
     const mnt4_Fq uu   = u.squared();                  // uu   = u^2
     const mnt4_Fq v    = X2Z1 - X1Z2; // v    = X2*Z1-X1Z2
@@ -215,7 +208,7 @@ mnt4_G1 mnt4_G1::operator+(const mnt4_G1 &other) const
 
 mnt4_G1 mnt4_G1::operator-() const
 {
-    return mnt4_G1(this->X, -(this->Y), this->Z);
+    return mnt4_G1(this->X_, -(this->Y_), this->Z_);
 }
 
 
@@ -252,12 +245,12 @@ mnt4_G1 mnt4_G1::add(const mnt4_G1 &other) const
     // NOTE: does not handle O and pts of order 2,4
     // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-projective.html#addition-add-1998-cmo-2
 
-    const mnt4_Fq Y1Z2 = (this->Y) * (other.Z);        // Y1Z2 = Y1*Z2
-    const mnt4_Fq X1Z2 = (this->X) * (other.Z);        // X1Z2 = X1*Z2
-    const mnt4_Fq Z1Z2 = (this->Z) * (other.Z);        // Z1Z2 = Z1*Z2
-    const mnt4_Fq u    = (other.Y) * (this->Z) - Y1Z2; // u    = Y2*Z1-Y1Z2
+    const mnt4_Fq Y1Z2 = (this->Y_) * (other.Z_);        // Y1Z2 = Y1*Z2
+    const mnt4_Fq X1Z2 = (this->X_) * (other.Z_);        // X1Z2 = X1*Z2
+    const mnt4_Fq Z1Z2 = (this->Z_) * (other.Z_);        // Z1Z2 = Z1*Z2
+    const mnt4_Fq u    = (other.Y_) * (this->Z_) - Y1Z2; // u    = Y2*Z1-Y1Z2
     const mnt4_Fq uu   = u.squared();                    // uu   = u^2
-    const mnt4_Fq v    = (other.X) * (this->Z) - X1Z2; // v    = X2*Z1-X1Z2
+    const mnt4_Fq v    = (other.X_) * (this->Z_) - X1Z2; // v    = X2*Z1-X1Z2
     const mnt4_Fq vv   = v.squared();                    // vv   = v^2
     const mnt4_Fq vvv  = v * vv;                         // vvv  = v*vv
     const mnt4_Fq R    = vv * X1Z2;                      // R    = vv*X1Z2
@@ -292,29 +285,29 @@ mnt4_G1 mnt4_G1::mixed_add(const mnt4_G1 &other) const
     assert(other.is_special());
 #endif
 
-    const mnt4_Fq &X1Z2 = (this->X);                    // X1Z2 = X1*Z2 (but other is special and not zero)
-    const mnt4_Fq X2Z1 = (this->Z) * (other.X);        // X2Z1 = X2*Z1
+    const mnt4_Fq &X1Z2 = (this->X_);                    // X1Z2 = X1*Z2 (but other is special and not zero)
+    const mnt4_Fq X2Z1 = (this->Z_) * (other.X_);        // X2Z1 = X2*Z1
 
     // (used both in add and double checks)
 
-    const mnt4_Fq &Y1Z2 = (this->Y);                    // Y1Z2 = Y1*Z2 (but other is special and not zero)
-    const mnt4_Fq Y2Z1 = (this->Z) * (other.Y);        // Y2Z1 = Y2*Z1
+    const mnt4_Fq &Y1Z2 = (this->Y_);                    // Y1Z2 = Y1*Z2 (but other is special and not zero)
+    const mnt4_Fq Y2Z1 = (this->Z_) * (other.Y_);        // Y2Z1 = Y2*Z1
 
     if (X1Z2 == X2Z1 && Y1Z2 == Y2Z1)
     {
         return this->dbl();
     }
 
-    const mnt4_Fq u = Y2Z1 - this->Y;              // u = Y2*Z1-Y1
+    const mnt4_Fq u = Y2Z1 - this->Y_;              // u = Y2*Z1-Y1
     const mnt4_Fq uu = u.squared();                 // uu = u2
-    const mnt4_Fq v = X2Z1 - this->X;              // v = X2*Z1-X1
+    const mnt4_Fq v = X2Z1 - this->X_;              // v = X2*Z1-X1
     const mnt4_Fq vv = v.squared();                 // vv = v2
     const mnt4_Fq vvv = v*vv;                       // vvv = v*vv
-    const mnt4_Fq R = vv * this->X;                // R = vv*X1
-    const mnt4_Fq A = uu * this->Z - vvv - R - R;  // A = uu*Z1-vvv-2*R
+    const mnt4_Fq R = vv * this->X_;                // R = vv*X1
+    const mnt4_Fq A = uu * this->Z_ - vvv - R - R;  // A = uu*Z1-vvv-2*R
     const mnt4_Fq X3 = v * A;                       // X3 = v*A
-    const mnt4_Fq Y3 = u*(R-A) - vvv * this->Y;    // Y3 = u*(R-A)-vvv*Y1
-    const mnt4_Fq Z3 = vvv * this->Z;              // Z3 = vvv*Z1
+    const mnt4_Fq Y3 = u*(R-A) - vvv * this->Y_;    // Y3 = u*(R-A)-vvv*Y1
+    const mnt4_Fq Z3 = vvv * this->Z_;              // Z3 = vvv*Z1
 
     return mnt4_G1(X3, Y3, Z3);
 }
@@ -328,31 +321,28 @@ mnt4_G1 mnt4_G1::dbl() const
     {
         return (*this);
     }
-    // NOTE: does not handle O and pts of order 2,4
-    // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-projective.html#doubling-dbl-2007-bl
+    else
+    {
+        // NOTE: does not handle O and pts of order 2,4
+        // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-projective.html#doubling-dbl-2007-bl
 
-    const mnt4_Fq XX   = (this->X).squared();                   // XX  = X1^2
-    const mnt4_Fq ZZ   = (this->Z).squared();                   // ZZ  = Z1^2
-    const mnt4_Fq w    = mnt4_G1::coeff_a * ZZ + (XX + XX + XX); // w   = a*ZZ + 3*XX
-    const mnt4_Fq Y1Z1 = (this->Y) * (this->Z);
-    const mnt4_Fq s    = Y1Z1 + Y1Z1;                            // s   = 2*Y1*Z1
-    const mnt4_Fq ss   = s.squared();                            // ss  = s^2
-    const mnt4_Fq sss  = s * ss;                                 // sss = s*ss
-    const mnt4_Fq R    = (this->Y) * s;                         // R   = Y1*s
-    const mnt4_Fq RR   = R.squared();                            // RR  = R^2
-    const mnt4_Fq B    = ((this->X)+R).squared()-XX-RR;         // B   = (X1+R)^2 - XX - RR
-    const mnt4_Fq h    = w.squared() - (B+B);                    // h   = w^2 - 2*B
-    const mnt4_Fq X3   = h * s;                                  // X3  = h*s
-    const mnt4_Fq Y3   = w * (B-h)-(RR+RR);                      // Y3  = w*(B-h) - 2*RR
-    const mnt4_Fq Z3   = sss;                                    // Z3  = sss
+        const mnt4_Fq XX   = (this->X_).squared();                   // XX  = X1^2
+        const mnt4_Fq ZZ   = (this->Z_).squared();                   // ZZ  = Z1^2
+        const mnt4_Fq w    = mnt4_G1::coeff_a * ZZ + (XX + XX + XX); // w   = a*ZZ + 3*XX
+        const mnt4_Fq Y1Z1 = (this->Y_) * (this->Z_);
+        const mnt4_Fq s    = Y1Z1 + Y1Z1;                            // s   = 2*Y1*Z1
+        const mnt4_Fq ss   = s.squared();                            // ss  = s^2
+        const mnt4_Fq sss  = s * ss;                                 // sss = s*ss
+        const mnt4_Fq R    = (this->Y_) * s;                         // R   = Y1*s
+        const mnt4_Fq RR   = R.squared();                            // RR  = R^2
+        const mnt4_Fq B    = ((this->X_)+R).squared()-XX-RR;         // B   = (X1+R)^2 - XX - RR
+        const mnt4_Fq h    = w.squared() - (B+B);                    // h   = w^2 - 2*B
+        const mnt4_Fq X3   = h * s;                                  // X3  = h*s
+        const mnt4_Fq Y3   = w * (B-h)-(RR+RR);                      // Y3  = w*(B-h) - 2*RR
+        const mnt4_Fq Z3   = sss;                                    // Z3  = sss
 
-    return mnt4_G1(X3, Y3, Z3);
-}
-
-mnt4_G1 mnt4_G1::mul_by_cofactor() const
-{
-    // Cofactor = 1
-    return (*this);
+        return mnt4_G1(X3, Y3, Z3);
+    }
 }
 
 bool mnt4_G1::is_well_formed() const
@@ -361,21 +351,24 @@ bool mnt4_G1::is_well_formed() const
     {
         return true;
     }
-    /*
-        y^2 = x^3 + ax + b
+    else
+    {
+        /*
+          y^2 = x^3 + ax + b
 
-        We are using projective, so equation we need to check is actually
+          We are using projective, so equation we need to check is actually
 
-        (y/z)^2 = (x/z)^3 + a (x/z) + b
-        z y^2 = x^3  + a z^2 x + b z^3
+          (y/z)^2 = (x/z)^3 + a (x/z) + b
+          z y^2 = x^3  + a z^2 x + b z^3
 
-        z (y^2 - b z^2) = x ( x^2 + a z^2)
-    */
-    const mnt4_Fq X2 = this->X.squared();
-    const mnt4_Fq Y2 = this->Y.squared();
-    const mnt4_Fq Z2 = this->Z.squared();
+          z (y^2 - b z^2) = x ( x^2 + a z^2)
+        */
+        const mnt4_Fq X2 = this->X_.squared();
+        const mnt4_Fq Y2 = this->Y_.squared();
+        const mnt4_Fq Z2 = this->Z_.squared();
 
-    return (this->Z * (Y2 - mnt4_G1::coeff_b * Z2) == this->X * (X2 + mnt4_G1::coeff_a * Z2));
+        return (this->Z_ * (Y2 - mnt4_G1::coeff_b * Z2) == this->X_ * (X2 + mnt4_G1::coeff_a * Z2));
+    }
 }
 
 mnt4_G1 mnt4_G1::zero()
@@ -400,10 +393,10 @@ std::ostream& operator<<(std::ostream &out, const mnt4_G1 &g)
 
     out << (copy.is_zero() ? 1 : 0) << OUTPUT_SEPARATOR;
 #ifdef NO_PT_COMPRESSION
-    out << copy.X << OUTPUT_SEPARATOR << copy.Y;
+    out << copy.X_ << OUTPUT_SEPARATOR << copy.Y_;
 #else
     /* storing LSB of Y */
-    out << copy.X << OUTPUT_SEPARATOR << (copy.Y.as_bigint().data[0] & 1);
+    out << copy.X_ << OUTPUT_SEPARATOR << (copy.Y_.as_bigint().data[0] & 1);
 #endif
 
     return out;
@@ -429,7 +422,7 @@ std::istream& operator>>(std::istream &in, mnt4_G1 &g)
     Y_lsb -= '0';
 
     // y = +/- sqrt(x^3 + a*x + b)
-    if (is_zero == 0)
+    if (!is_zero)
     {
         mnt4_Fq tX2 = tX.squared();
         mnt4_Fq tY2 = (tX2 + mnt4_G1::coeff_a) * tX + mnt4_G1::coeff_b;
@@ -442,11 +435,11 @@ std::istream& operator>>(std::istream &in, mnt4_G1 &g)
     }
 #endif
     // using projective coordinates
-    if (is_zero == 0)
+    if (!is_zero)
     {
-        g.X = tX;
-        g.Y = tY;
-        g.Z = mnt4_Fq::one();
+        g.X_ = tX;
+        g.Y_ = tY;
+        g.Z_ = mnt4_Fq::one();
     }
     else
     {
@@ -496,7 +489,7 @@ void mnt4_G1::batch_to_special_all_non_zeros(std::vector<mnt4_G1> &vec)
 
     for (auto &el: vec)
     {
-        Z_vec.emplace_back(el.Z);
+        Z_vec.emplace_back(el.Z());
     }
     batch_invert<mnt4_Fq>(Z_vec);
 
@@ -504,8 +497,8 @@ void mnt4_G1::batch_to_special_all_non_zeros(std::vector<mnt4_G1> &vec)
 
     for (size_t i = 0; i < vec.size(); ++i)
     {
-        vec[i] = mnt4_G1(vec[i].X * Z_vec[i], vec[i].Y * Z_vec[i], one);
+        vec[i] = mnt4_G1(vec[i].X() * Z_vec[i], vec[i].Y() * Z_vec[i], one);
     }
 }
 
-} // namespace libff
+} // libff

@@ -11,8 +11,8 @@
 
 #include "depends/ate-pairing/include/bn.h"
 
-#include <libff/algebra/field_utils/field_utils.hpp>
-#include <libff/algebra/fields/prime_base/fp.hpp>
+#include <libff/algebra/fields/field_utils.hpp>
+#include <libff/algebra/fields/fp.hpp>
 
 namespace libff {
 
@@ -53,5 +53,5 @@ bn128_GT operator^(const bn128_GT &rhs, const Fp_model<m,modulus_p> &lhs)
     return power<bn128_GT, m>(rhs, lhs.as_bigint());
 }
 
-} // namespace libff
+} // libff
 #endif // BN128_GT_HPP_

@@ -1,21 +1,22 @@
 /** @file
  *****************************************************************************
+
  Implementation of interfaces for wNAF ("weighted Non-Adjacent Form") exponentiation routines.
 
  See wnaf.hpp .
+
  *****************************************************************************
  * @author     This file is part of libff, developed by SCIPR Lab
  *             and contributors (see AUTHORS).
  * @copyright  MIT license (see LICENSE file)
  *****************************************************************************/
+
 #ifndef WNAF_TCC_
 #define WNAF_TCC_
 
 #include <gmp.h>
 
 namespace libff {
-
-using std::size_t;
 
 template<mp_size_t n>
 std::vector<long> find_wnaf(const size_t window_size, const bigint<n> &scalar)
@@ -119,6 +120,6 @@ T opt_window_wnaf_exp(const T &base, const bigint<n> &scalar, const size_t scala
     }
 }
 
-} // namespace libff
+} // libff
 
 #endif // WNAF_TCC_

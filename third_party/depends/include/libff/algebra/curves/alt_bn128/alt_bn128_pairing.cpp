@@ -15,8 +15,6 @@
 
 namespace libff {
 
-using std::size_t;
-
 bool alt_bn128_ate_G1_precomp::operator==(const alt_bn128_ate_G1_precomp &other) const
 {
     return (this->PX == other.PX &&
@@ -228,6 +226,9 @@ alt_bn128_Fq12 alt_bn128_final_exponentiation_last_chunk(const alt_bn128_Fq12 &e
 alt_bn128_GT alt_bn128_final_exponentiation(const alt_bn128_Fq12 &elt)
 {
     enter_block("Call to alt_bn128_final_exponentiation");
+    /* OLD naive version:
+        alt_bn128_GT result = elt^alt_bn128_final_exponent;
+    */
     alt_bn128_Fq12 A = alt_bn128_final_exponentiation_first_chunk(elt);
     alt_bn128_GT result = alt_bn128_final_exponentiation_last_chunk(A);
 
@@ -543,4 +544,4 @@ alt_bn128_GT alt_bn128_reduced_pairing(const alt_bn128_G1 &P,
 {
     return alt_bn128_ate_reduced_pairing(P, Q);
 }
-} // namespace libff
+} // libff

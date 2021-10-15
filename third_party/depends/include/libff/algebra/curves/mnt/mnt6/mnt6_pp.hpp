@@ -70,6 +70,6 @@ public:
                                            const mnt6_G2 &Q);
 };
 
-} // namespace libff
+} // libff
 
 #endif // MNT6_PP_HPP_

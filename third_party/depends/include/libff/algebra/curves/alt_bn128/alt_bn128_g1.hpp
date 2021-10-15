@@ -24,19 +24,13 @@ public:
     static long long add_cnt;
     static long long dbl_cnt;
 #endif
-    static std::vector<std::size_t> wnaf_window_table;
-    static std::vector<std::size_t> fixed_base_exp_window_table;
+    static std::vector<size_t> wnaf_window_table;
+    static std::vector<size_t> fixed_base_exp_window_table;
     static alt_bn128_G1 G1_zero;
     static alt_bn128_G1 G1_one;
-    static bool initialized;
 
     typedef alt_bn128_Fq base_field;
     typedef alt_bn128_Fr scalar_field;
-
-    // Cofactor
-    static const mp_size_t h_bitcount = 1;
-    static const mp_size_t h_limbs = (h_bitcount+GMP_NUMB_BITS-1)/GMP_NUMB_BITS;
-    static bigint<h_limbs> h;
 
     alt_bn128_Fq X, Y, Z;
 
@@ -63,7 +57,6 @@ public:
     alt_bn128_G1 add(const alt_bn128_G1 &other) const;
     alt_bn128_G1 mixed_add(const alt_bn128_G1 &other) const;
     alt_bn128_G1 dbl() const;
-    alt_bn128_G1 mul_by_cofactor() const;
 
     bool is_well_formed() const;
 
@@ -71,8 +64,8 @@ public:
     static alt_bn128_G1 one();
     static alt_bn128_G1 random_element();
 
-    static std::size_t size_in_bits() { return base_field::ceil_size_in_bits() + 1; }
-    static bigint<base_field::num_limbs> field_char() { return base_field::field_char(); }
+    static size_t size_in_bits() { return base_field::size_in_bits() + 1; }
+    static bigint<base_field::num_limbs> base_field_char() { return base_field::field_char(); }
     static bigint<scalar_field::num_limbs> order() { return scalar_field::field_char(); }
 
     friend std::ostream& operator<<(std::ostream &out, const alt_bn128_G1 &g);
@@ -96,5 +89,5 @@ alt_bn128_G1 operator*(const Fp_model<m,modulus_p> &lhs, const alt_bn128_G1 &rhs
 std::ostream& operator<<(std::ostream& out, const std::vector<alt_bn128_G1> &v);
 std::istream& operator>>(std::istream& in, std::vector<alt_bn128_G1> &v);
 
-} // namespace libff
+} // libff
 #endif // ALT_BN128_G1_HPP_

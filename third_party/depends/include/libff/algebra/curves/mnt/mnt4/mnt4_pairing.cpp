@@ -22,8 +22,6 @@
 
 namespace libff {
 
-using std::size_t;
-
 bool mnt4_ate_G1_precomp::operator==(const mnt4_ate_G1_precomp &other) const
 {
     return (this->PX == other.PX &&
@@ -234,9 +232,9 @@ mnt4_affine_ate_G1_precomputation mnt4_affine_ate_precompute_G1(const mnt4_G1& P
     Pcopy.to_affine_coordinates();
 
     mnt4_affine_ate_G1_precomputation result;
-    result.PX = Pcopy.X;
-    result.PY = Pcopy.Y;
-    result.PY_twist_squared = Pcopy.Y * mnt4_twist.squared();
+    result.PX = Pcopy.X();
+    result.PY = Pcopy.Y();
+    result.PY_twist_squared = Pcopy.Y() * mnt4_twist.squared();
 
     leave_block("Call to mnt4_affine_ate_precompute_G1");
     return result;
@@ -250,17 +248,17 @@ mnt4_affine_ate_G2_precomputation mnt4_affine_ate_precompute_G2(const mnt4_G2& Q
     Qcopy.to_affine_coordinates();
 
     mnt4_affine_ate_G2_precomputation result;
-    result.QX = Qcopy.X;
-    result.QY = Qcopy.Y;
+    result.QX = Qcopy.X();
+    result.QY = Qcopy.Y();
 
-    mnt4_Fq2 RX = Qcopy.X;
-    mnt4_Fq2 RY = Qcopy.Y;
+    mnt4_Fq2 RX = Qcopy.X();
+    mnt4_Fq2 RY = Qcopy.Y();
 
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
     bool found_nonzero = false;
 
     std::vector<long> NAF = find_wnaf(1, loop_count);
-    for (long i = (long) NAF.size() - 1; i >= 0; --i)
+    for (long i = NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
         {
@@ -334,7 +332,7 @@ mnt4_Fq4 mnt4_affine_ate_miller_loop(const mnt4_affine_ate_G1_precomputation &pr
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
 
     std::vector<long> NAF = find_wnaf(1, loop_count);
-    for (long i = (long) NAF.size() - 1; i >= 0; --i)
+    for (long i = NAF.size() - 1; i >= 0; --i)
     {
         if (!found_nonzero)
         {
@@ -403,7 +401,7 @@ struct extended_mnt4_G2_projective {
         T.print();
     }
 
-    static void test_invariant()
+    void test_invariant() const
     {
         assert(T == Z.squared());
     }
@@ -473,10 +471,10 @@ mnt4_ate_G1_precomp mnt4_ate_precompute_G1(const mnt4_G1& P)
     Pcopy.to_affine_coordinates();
 
     mnt4_ate_G1_precomp result;
-    result.PX = Pcopy.X;
-    result.PY = Pcopy.Y;
-    result.PX_twist = Pcopy.X * mnt4_twist;
-    result.PY_twist = Pcopy.Y * mnt4_twist;
+    result.PX = Pcopy.X();
+    result.PY = Pcopy.Y();
+    result.PX_twist = Pcopy.X() * mnt4_twist;
+    result.PY_twist = Pcopy.Y() * mnt4_twist;
 
     leave_block("Call to mnt4_ate_precompute_G1");
     return result;
@@ -490,22 +488,22 @@ mnt4_ate_G2_precomp mnt4_ate_precompute_G2(const mnt4_G2& Q)
     Qcopy.to_affine_coordinates();
 
     mnt4_ate_G2_precomp result;
-    result.QX = Qcopy.X;
-    result.QY = Qcopy.Y;
-    result.QY2 = Qcopy.Y.squared();
-    result.QX_over_twist = Qcopy.X * mnt4_twist.inverse();
-    result.QY_over_twist = Qcopy.Y * mnt4_twist.inverse();
+    result.QX = Qcopy.X();
+    result.QY = Qcopy.Y();
+    result.QY2 = Qcopy.Y().squared();
+    result.QX_over_twist = Qcopy.X() * mnt4_twist.inverse();
+    result.QY_over_twist = Qcopy.Y() * mnt4_twist.inverse();
 
     extended_mnt4_G2_projective R;
-    R.X = Qcopy.X;
-    R.Y = Qcopy.Y;
+    R.X = Qcopy.X();
+    R.Y = Qcopy.Y();
     R.Z = mnt4_Fq2::one();
     R.T = mnt4_Fq2::one();
 
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
     bool found_one = false;
 
-    for (long i = (long) loop_count.max_bits() - 1; i >= 0; --i)
+    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
         if (!found_one)
@@ -557,7 +555,7 @@ mnt4_Fq4 mnt4_ate_miller_loop(const mnt4_ate_G1_precomp &prec_P,
     size_t add_idx = 0;
 
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
-    for (long i = (long) loop_count.max_bits() - 1; i >= 0; --i)
+    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
 
@@ -616,7 +614,7 @@ mnt4_Fq4 mnt4_ate_double_miller_loop(const mnt4_ate_G1_precomp &prec_P1,
     size_t add_idx = 0;
 
     const bigint<mnt4_Fr::num_limbs> &loop_count = mnt4_ate_loop_count;
-    for (long i = (long) loop_count.max_bits() - 1; i >= 0; --i)
+    for (long i = loop_count.max_bits() - 1; i >= 0; --i)
     {
         const bool bit = loop_count.test_bit(i);
 
@@ -740,4 +738,4 @@ mnt4_GT mnt4_affine_reduced_pairing(const mnt4_G1 &P,
     return result;
 }
 
-} // namespace libff
+} // libff

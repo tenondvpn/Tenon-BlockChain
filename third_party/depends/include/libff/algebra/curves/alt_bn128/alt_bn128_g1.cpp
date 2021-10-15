@@ -9,8 +9,6 @@
 
 namespace libff {
 
-using std::size_t;
-
 #ifdef PROFILE_OP_COUNTS
 long long alt_bn128_G1::add_cnt = 0;
 long long alt_bn128_G1::dbl_cnt = 0;
@@ -18,19 +16,14 @@ long long alt_bn128_G1::dbl_cnt = 0;
 
 std::vector<size_t> alt_bn128_G1::wnaf_window_table;
 std::vector<size_t> alt_bn128_G1::fixed_base_exp_window_table;
-alt_bn128_G1 alt_bn128_G1::G1_zero = {};
-alt_bn128_G1 alt_bn128_G1::G1_one = {};
-bool alt_bn128_G1::initialized = false;
-bigint<alt_bn128_G1::h_limbs> alt_bn128_G1::h;
+alt_bn128_G1 alt_bn128_G1::G1_zero;
+alt_bn128_G1 alt_bn128_G1::G1_one;
 
 alt_bn128_G1::alt_bn128_G1()
 {
-    if (initialized)
-    {
-        this->X = G1_zero.X;
-        this->Y = G1_zero.Y;
-        this->Z = G1_zero.Z;
-    }
+    this->X = G1_zero.X;
+    this->Y = G1_zero.Y;
+    this->Z = G1_zero.Z;
 }
 
 void alt_bn128_G1::print() const
@@ -130,7 +123,12 @@ bool alt_bn128_G1::operator==(const alt_bn128_G1 &other) const
     alt_bn128_Fq Z1_cubed = (this->Z) * Z1_squared;
     alt_bn128_Fq Z2_cubed = (other.Z) * Z2_squared;
 
-    return !((this->Y * Z2_cubed) != (other.Y * Z1_cubed));
+    if ((this->Y * Z2_cubed) != (other.Y * Z1_cubed))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool alt_bn128_G1::operator!=(const alt_bn128_G1& other) const
@@ -154,9 +152,10 @@ alt_bn128_G1 alt_bn128_G1::operator+(const alt_bn128_G1 &other) const
     // no need to handle points of order 2,4
     // (they cannot exist in a prime-order subgroup)
 
-    // using Jacobian coordinates according to
-    // https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-add-2007-bl
-    // Note: (X1:Y1:Z1) = (X2:Y2:Z2)
+    // check for doubling case
+
+    // using Jacobian coordinates so:
+    // (X1:Y1:Z1) = (X2:Y2:Z2)
     // iff
     // X1/Z1^2 == X2/Z2^2 and Y1/Z1^3 == Y2/Z2^3
     // iff
@@ -174,16 +173,11 @@ alt_bn128_G1 alt_bn128_G1::operator+(const alt_bn128_G1 &other) const
     alt_bn128_Fq S1 = (this->Y) * Z2_cubed;      // S1 = Y1 * Z2 * Z2Z2
     alt_bn128_Fq S2 = (other.Y) * Z1_cubed;      // S2 = Y2 * Z1 * Z1Z1
 
-    // check for doubling case
     if (U1 == U2 && S1 == S2)
     {
         // dbl case; nothing of above can be reused
         return this->dbl();
     }
-
-#ifdef PROFILE_OP_COUNTS
-    this->add_cnt++;
-#endif
 
     // rest of add case
     alt_bn128_Fq H = U2 - U1;                            // H = U2-U1
@@ -213,7 +207,50 @@ alt_bn128_G1 alt_bn128_G1::operator-(const alt_bn128_G1 &other) const
 
 alt_bn128_G1 alt_bn128_G1::add(const alt_bn128_G1 &other) const
 {
-    return (*this) + other;
+    // handle special cases having to do with O
+    if (this->is_zero())
+    {
+        return other;
+    }
+
+    if (other.is_zero())
+    {
+        return *this;
+    }
+
+    // no need to handle points of order 2,4
+    // (they cannot exist in a prime-order subgroup)
+
+    // handle double case
+    if (this->operator==(other))
+    {
+        return this->dbl();
+    }
+
+#ifdef PROFILE_OP_COUNTS
+    this->add_cnt++;
+#endif
+    // NOTE: does not handle O and pts of order 2,4
+    // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-add-2007-bl
+
+    alt_bn128_Fq Z1Z1 = (this->Z).squared();             // Z1Z1 = Z1^2
+    alt_bn128_Fq Z2Z2 = (other.Z).squared();             // Z2Z2 = Z2^2
+    alt_bn128_Fq U1 = (this->X) * Z2Z2;                  // U1 = X1 * Z2Z2
+    alt_bn128_Fq U2 = (other.X) * Z1Z1;                  // U2 = X2 * Z1Z1
+    alt_bn128_Fq S1 = (this->Y) * (other.Z) * Z2Z2;      // S1 = Y1 * Z2 * Z2Z2
+    alt_bn128_Fq S2 = (other.Y) * (this->Z) * Z1Z1;      // S2 = Y2 * Z1 * Z1Z1
+    alt_bn128_Fq H = U2 - U1;                            // H = U2-U1
+    alt_bn128_Fq S2_minus_S1 = S2-S1;
+    alt_bn128_Fq I = (H+H).squared();                    // I = (2 * H)^2
+    alt_bn128_Fq J = H * I;                              // J = H * I
+    alt_bn128_Fq r = S2_minus_S1 + S2_minus_S1;          // r = 2 * (S2-S1)
+    alt_bn128_Fq V = U1 * I;                             // V = U1 * I
+    alt_bn128_Fq X3 = r.squared() - J - (V+V);           // X3 = r^2 - J - 2 * V
+    alt_bn128_Fq S1_J = S1 * J;
+    alt_bn128_Fq Y3 = r * (V-X3) - (S1_J+S1_J);          // Y3 = r * (V-X3)-2 S1 J
+    alt_bn128_Fq Z3 = ((this->Z+other.Z).squared()-Z1Z1-Z2Z2) * H; // Z3 = ((Z1+Z2)^2-Z1Z1-Z2Z2) * H
+
+    return alt_bn128_G1(X3, Y3, Z3);
 }
 
 alt_bn128_G1 alt_bn128_G1::mixed_add(const alt_bn128_G1 &other) const
@@ -236,13 +273,15 @@ alt_bn128_G1 alt_bn128_G1::mixed_add(const alt_bn128_G1 &other) const
     // no need to handle points of order 2,4
     // (they cannot exist in a prime-order subgroup)
 
-    // using Jacobian coordinates according to
-    // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-madd-2007-bl
-    // Note: (X1:Y1:Z1) = (X2:Y2:Z2)
+    // check for doubling case
+
+    // using Jacobian coordinates so:
+    // (X1:Y1:Z1) = (X2:Y2:Z2)
     // iff
     // X1/Z1^2 == X2/Z2^2 and Y1/Z1^3 == Y2/Z2^3
     // iff
     // X1 * Z2^2 == X2 * Z1^2 and Y1 * Z2^3 == Y2 * Z1^3
+
     // we know that Z2 = 1
 
     const alt_bn128_Fq Z1Z1 = (this->Z).squared();
@@ -255,7 +294,6 @@ alt_bn128_G1 alt_bn128_G1::mixed_add(const alt_bn128_G1 &other) const
     const alt_bn128_Fq &S1 = (this->Y);                // S1 = Y1 * Z2 * Z2Z2
     const alt_bn128_Fq S2 = (other.Y) * Z1_cubed;      // S2 = Y2 * Z1 * Z1Z1
 
-    // check for doubling case
     if (U1 == U2 && S1 == S2)
     {
         // dbl case; nothing of above can be reused
@@ -265,9 +303,11 @@ alt_bn128_G1 alt_bn128_G1::mixed_add(const alt_bn128_G1 &other) const
 #ifdef PROFILE_OP_COUNTS
     this->add_cnt++;
 #endif
- 
+
+    // NOTE: does not handle O and pts of order 2,4
+    // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#addition-madd-2007-bl
     alt_bn128_Fq H = U2-(this->X);                         // H = U2-X1
-    alt_bn128_Fq HH = H.squared() ;                        // HH = H^2
+    alt_bn128_Fq HH = H.squared() ;                        // HH = H&2
     alt_bn128_Fq I = HH+HH;                                // I = 4*HH
     I = I + I;
     alt_bn128_Fq J = H*I;                                  // J = H*I
@@ -296,9 +336,9 @@ alt_bn128_G1 alt_bn128_G1::dbl() const
     // no need to handle points of order 2,4
     // (they cannot exist in a prime-order subgroup)
 
-    // using Jacobian coordinates according to
-    // https://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#doubling-dbl-2009-l
-    
+    // NOTE: does not handle O and pts of order 2,4
+    // http://www.hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-0.html#doubling-dbl-2009-l
+
     alt_bn128_Fq A = (this->X).squared();         // A = X1^2
     alt_bn128_Fq B = (this->Y).squared();        // B = Y1^2
     alt_bn128_Fq C = B.squared();                // C = B^2
@@ -317,36 +357,33 @@ alt_bn128_G1 alt_bn128_G1::dbl() const
     return alt_bn128_G1(X3, Y3, Z3);
 }
 
-alt_bn128_G1 alt_bn128_G1::mul_by_cofactor() const
-{
-    // Cofactor = 1
-    return *this;
-}
-
 bool alt_bn128_G1::is_well_formed() const
 {
     if (this->is_zero())
     {
         return true;
     }
-    /*
-        y^2 = x^3 + b
+    else
+    {
+        /*
+          y^2 = x^3 + b
 
-        We are using Jacobian coordinates, so equation we need to check is actually
+          We are using Jacobian coordinates, so equation we need to check is actually
 
-        (y/z^3)^2 = (x/z^2)^3 + b
-        y^2 / z^6 = x^3 / z^6 + b
-        y^2 = x^3 + b z^6
-    */
-    alt_bn128_Fq X2 = this->X.squared();
-    alt_bn128_Fq Y2 = this->Y.squared();
-    alt_bn128_Fq Z2 = this->Z.squared();
+          (y/z^3)^2 = (x/z^2)^3 + b
+          y^2 / z^6 = x^3 / z^6 + b
+          y^2 = x^3 + b z^6
+        */
+        alt_bn128_Fq X2 = this->X.squared();
+        alt_bn128_Fq Y2 = this->Y.squared();
+        alt_bn128_Fq Z2 = this->Z.squared();
 
-    alt_bn128_Fq X3 = this->X * X2;
-    alt_bn128_Fq Z3 = this->Z * Z2;
-    alt_bn128_Fq Z6 = Z3.squared();
+        alt_bn128_Fq X3 = this->X * X2;
+        alt_bn128_Fq Z3 = this->Z * Z2;
+        alt_bn128_Fq Z6 = Z3.squared();
 
-    return (Y2 == X3 + alt_bn128_coeff_b * Z6);
+        return (Y2 == X3 + alt_bn128_coeff_b * Z6);
+    }
 }
 
 alt_bn128_G1 alt_bn128_G1::zero()
@@ -400,7 +437,7 @@ std::istream& operator>>(std::istream &in, alt_bn128_G1 &g)
     Y_lsb -= '0';
 
     // y = +/- sqrt(x^3 + b)
-    if (is_zero == 0)
+    if (!is_zero)
     {
         alt_bn128_Fq tX2 = tX.squared();
         alt_bn128_Fq tY2 = tX2*tX + alt_bn128_coeff_b;
@@ -413,7 +450,7 @@ std::istream& operator>>(std::istream &in, alt_bn128_G1 &g)
     }
 #endif
     // using Jacobian coordinates
-    if (is_zero == 0)
+    if (!is_zero)
     {
         g.X = tX;
         g.Y = tY;
@@ -483,4 +520,4 @@ void alt_bn128_G1::batch_to_special_all_non_zeros(std::vector<alt_bn128_G1> &vec
     }
 }
 
-} // namespace libff
+} // libff

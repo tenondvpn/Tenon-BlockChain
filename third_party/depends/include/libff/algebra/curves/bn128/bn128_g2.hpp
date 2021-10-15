@@ -29,25 +29,15 @@ public:
     static long long add_cnt;
     static long long dbl_cnt;
 #endif
-    static std::vector<std::size_t> wnaf_window_table;
-    static std::vector<std::size_t> fixed_base_exp_window_table;
+    static std::vector<size_t> wnaf_window_table;
+    static std::vector<size_t> fixed_base_exp_window_table;
     static bn128_G2 G2_zero;
     static bn128_G2 G2_one;
-    static bool initialized;
 
+    bn::Fp2 coord[3];
+    bn128_G2();
     typedef bn128_Fq base_field;
     typedef bn128_Fr scalar_field;
-
-    // Cofactor
-    static const mp_size_t h_bitcount = 256;
-    static const mp_size_t h_limbs = (h_bitcount+GMP_NUMB_BITS-1)/GMP_NUMB_BITS;
-    static bigint<h_limbs> h;
-
-    bn::Fp2 X, Y, Z;
-    void fill_coord(bn::Fp2 coord[3]) const { coord[0] = this->X; coord[1] = this->Y; coord[2] = this->Z; };
-
-    bn128_G2();
-    bn128_G2(bn::Fp2 coord[3]) : X(coord[0]), Y(coord[1]), Z(coord[2]) {};
 
     void print() const;
     void print_coordinates() const;
@@ -68,7 +58,6 @@ public:
     bn128_G2 add(const bn128_G2 &other) const;
     bn128_G2 mixed_add(const bn128_G2 &other) const;
     bn128_G2 dbl() const;
-    bn128_G2 mul_by_cofactor() const;
 
     bool is_well_formed() const;
 
@@ -76,8 +65,8 @@ public:
     static bn128_G2 one();
     static bn128_G2 random_element();
 
-    static std::size_t size_in_bits() { return 2*base_field::ceil_size_in_bits() + 1; }
-    static bigint<base_field::num_limbs> field_char() { return base_field::field_char(); }
+    static size_t size_in_bits() { return 2*base_field::size_in_bits() + 1; }
+    static bigint<base_field::num_limbs> base_field_char() { return base_field::field_char(); }
     static bigint<scalar_field::num_limbs> order() { return scalar_field::field_char(); }
 
     friend std::ostream& operator<<(std::ostream &out, const bn128_G2 &g);
@@ -98,5 +87,5 @@ bn128_G2 operator*(const Fp_model<m, modulus_p> &lhs, const bn128_G2 &rhs)
     return scalar_mul<bn128_G2, m>(rhs, lhs.as_bigint());
 }
 
-} // namespace libff
+} // libff
 #endif // BN128_G2_HPP_

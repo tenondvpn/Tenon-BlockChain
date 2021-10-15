@@ -47,5 +47,5 @@ public:
                                     const bn128_G2 &Q);
 };
 
-} // namespace libff
+} // libff
 #endif // BN128_PP_HPP_

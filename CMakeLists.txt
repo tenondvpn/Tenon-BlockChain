@@ -1,10 +1,10 @@
 # option
 option(BUILD_SHARED_LIBS "build shared library(.so/.a)" OFF)
-option(BUILD_CLIENT "build lego client" OFF)
+option(BUILD_CLIENT "build tenon client" OFF)
 
 # version required
 cmake_minimum_required(VERSION 2.8.12.2)
-project(lego)
+project(tenon)
 
 if(NOT BUILD_CLIENT)
     if(MSVC)
@@ -26,7 +26,7 @@ else()
     set(shared_str "static")
 endif()
 
-message("build info: ${PROJECT_NAME}|${CMAKE_SYSTEM_NAME}|${CMAKE_BUILD_TYPE}|${shared_str}|lego")
+message("build info: ${PROJECT_NAME}|${CMAKE_SYSTEM_NAME}|${CMAKE_BUILD_TYPE}|${shared_str}|tenon")
 
 # path definitions
 set(DEP_DIR ${PROJECT_SOURCE_DIR}/third_party/depends)
@@ -123,7 +123,7 @@ link_directories(
 )
 
 # bin/lib
-add_executable(lego ${MAIN_DIR}/main.cc)
+add_executable(tenon ${MAIN_DIR}/main.cc)
 add_executable(vpn_proxy ${MAIN_DIR}/vpn_proxy.cc)
 add_executable(vpn_client ${MAIN_DIR}/vpn_client.cc)
 add_executable(tenonvpn ${MAIN_DIR}/tenonvpn.cc)
@@ -131,8 +131,6 @@ add_executable(tenonvpn ${MAIN_DIR}/tenonvpn.cc)
 set(LINK_ARGS
     lvpn
     init
-    services
-    root_congress
     client
     bft
     vss
@@ -143,10 +141,10 @@ set(LINK_ARGS
     dht
     nat_traverse
     transport
-    crand
     kcp
     bz2
     block
+    bls
     db
     security
     statistics
@@ -203,7 +201,7 @@ set(CLIENT_LINK_ARGS
     tcmalloc
 )
 
-target_link_libraries(lego ${LINK_ARGS})
+target_link_libraries(tenon ${LINK_ARGS})
 target_link_libraries(vpn_proxy ${LINK_ARGS})
 target_link_libraries(vpn_client ${CLIENT_LINK_ARGS})
 target_link_libraries(tenonvpn ${LINK_ARGS})
@@ -229,25 +227,24 @@ else()
     add_subdirectory(${SRC_DIR}/bft bft)
     add_subdirectory(${SRC_DIR}/vss vss)
     add_subdirectory(${SRC_DIR}/init init)
-    add_subdirectory(${SRC_DIR}/services services)
     add_subdirectory(${SRC_DIR}/client client)
-    add_subdirectory(${SRC_DIR}/root_congress root_congress)
     add_subdirectory(${SRC_DIR}/statistics statistics)
     add_subdirectory(${SRC_DIR}/limit limit)
     add_subdirectory(${SRC_DIR}/contract contract)
     add_subdirectory(${SRC_DIR}/tnet tnet)
     add_subdirectory(${SRC_DIR}/lvpn lvpn)
     add_subdirectory(${SRC_DIR}/tvm tvm)
-    add_subdirectory(${SRC_DIR}/crand crand)
+    add_subdirectory(${SRC_DIR}/bls bls)
+    add_subdirectory(${SRC_DIR}/timeblock timeblock)
+    add_subdirectory(${SRC_DIR}/big_num big_num)
+    add_subdirectory(${SRC_DIR}/services services)
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         add_subdirectory(${SRC_DIR}/common/tests common_test)
         add_subdirectory(${SRC_DIR}/ip/tests ip_test)
         add_subdirectory(${SRC_DIR}/db/tests db_test)
-        add_subdirectory(${SRC_DIR}/transport/demo udp_demo_svr)
         add_subdirectory(${SRC_DIR}/broadcast/tests broadcast_test )
         add_subdirectory(${SRC_DIR}/security/tests security_test )
-        add_subdirectory(${SRC_DIR}/services/tests services_test)
         add_subdirectory(${SRC_DIR}/tvm/tests tvm_test)
         add_subdirectory(${SRC_DIR}/bft/tests bft_test)
     endif()
