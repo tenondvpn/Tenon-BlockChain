@@ -162,6 +162,10 @@ int DbPoolInfo::SetHeight(uint64_t height, db::DbWriteBach& db_batch) {
     return kBlockSuccess;
 }
 
+int DbPoolInfo::SetMaxHeight(uint64_t max_height) {
+    max_height_ = max_height;
+}
+
 int DbPoolInfo::GetHeight(uint64_t* height) {
     if (height_ != common::kInvalidUint64) {
         *height = height_;
@@ -266,7 +270,7 @@ void DbPoolInfo::SetHeightTree(uint64_t height) {
 
 void DbPoolInfo::GetMissingHeights(std::vector<uint64_t>* heights) {
     std::lock_guard<std::mutex> guard(height_tree_mutex_);
-    height_tree_ptr_->GetMissingHeights(heights, height_);
+    height_tree_ptr_->GetMissingHeights(heights, max_height_);
 }
 
 void DbPoolInfo::PrintHeightTree() {

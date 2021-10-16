@@ -360,7 +360,7 @@ int AccountManager::AddBlockItemToDb(
 }
 
 void AccountManager::SetTreeHeight(uint32_t pool_idx, uint64_t height) {
-    network_block_[pool_idx]->SetHeightTree(height);
+    network_block_[pool_idx]->SetMaxHeight(height);
 }
 
 int AccountManager::AddBlockItemToCache(

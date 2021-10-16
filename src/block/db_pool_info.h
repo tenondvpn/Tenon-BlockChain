@@ -26,6 +26,7 @@ public:
     int SetHash(const std::string& hash, db::DbWriteBach& db_batch);
     int GetHash(std::string* hash);
     int SetHeight(uint64_t height, db::DbWriteBach& db_batch);
+    int SetMaxHeight(uint64_t max_height);
     int GetHeight(uint64_t* height);
     void SetHeightTree(uint64_t height);
     void GetMissingHeights(std::vector<uint64_t>* heights);
@@ -53,6 +54,7 @@ private:
     std::atomic<uint64_t> prev_tmblock_with_pool_height_{ common::kInvalidUint64 };
     std::shared_ptr<sync::HeightTreeLevel> height_tree_ptr_;
     std::mutex height_tree_mutex_;
+    uint64_t max_height_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(DbPoolInfo);
 };
