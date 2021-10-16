@@ -88,12 +88,12 @@ include_directories(SYSTEM
 
 # compile definitions
 add_definitions(
-    -DLEGO_TESTING # for testing
+    -DTENON_UNITTEST # for testing
     -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2r
 #    -DTEST_TRANSPORT_PERFOMANCE
     -DENABLE_CLIENT_MODE
 #    -DLEGO_TRACE_MESSAGE
-#    -DLEVELDB
+    -DLEVELDB
 #   -DCLIENT_USE_UV
 #    -DMAKE_CLIENT_LIB
     #-DARMEABI_V7A
