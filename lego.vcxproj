@@ -73,7 +73,7 @@
     <IncludePath>E:\Tenon-BlockChain\third_party\depends\include;E:\Tenon-BlockChain\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\lego\lego\third_party\depends\include;D:\lego\lego\src;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Tenon-BlockChain\third_party\depends\include;E:\Tenon-BlockChain\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -1918,6 +1918,8 @@
     <ClCompile Include="src\bls\bls_sign.cc" />
     <ClCompile Include="src\bls\bls_dkg.cc" />
     <ClCompile Include="src\bls\proto\bls.pb.cc" />
+    <ClCompile Include="src\bls\tests\test_bls.cc" />
+    <ClCompile Include="src\bls\tests\test_main.cc" />
     <ClCompile Include="src\broadcast\broadcast.cc" />
     <ClCompile Include="src\broadcast\filter_broadcast.cc" />
     <ClCompile Include="src\broadcast\tests\test_filter_broadcast.cc" />

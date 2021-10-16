@@ -206,6 +206,10 @@ public:
         return gas_price_;
     }
 
+    bool missing_node() const {
+        return missing_node_;
+    }
+
 private:
     GlobalInfo();
     ~GlobalInfo();
@@ -250,6 +254,7 @@ private:
     volatile uint64_t now_gas_price_{ 100llu };
     volatile uint32_t consensus_shard_count_{ 1 };
     volatile uint64_t gas_price_{ 10 };
+    bool missing_node_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(GlobalInfo);
 };

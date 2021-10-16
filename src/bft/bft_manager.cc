@@ -1216,6 +1216,11 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
 int BftManager::LeaderCallCommit(
         const transport::protobuf::Header& header,
         BftInterfacePtr& bft_ptr) {
+    // TODO: remove just for test
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return kBftError;
+    }
+
     // check pre-commit multi sign and leader commit
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1304,6 +1309,11 @@ int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
+    // TODO: remove just for test
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return kBftError;
+    }
+
     bft_ptr->not_aggree();
     if (!bft_msg.agree()) {
         BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s",
@@ -1881,6 +1891,11 @@ void BftManager::HandleRootWaitingBlock(
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
+    // TODO: remove just for test
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
     auto& tx_list = block.tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(

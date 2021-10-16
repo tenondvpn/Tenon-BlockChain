@@ -28,7 +28,9 @@ int HeightTreeLevel::Set(uint64_t height) {
         max_level_ = GetMaxLevel();
     }
 
-    std::cout << "height tree: " << db_prefix_ << " set height: " << height << ", max_height_: " << max_height_ << ", max_level_: " << max_level_ << std::endl;
+    SYNC_INFO("height tree : %s, set height: %lu, max_height_: %lu, max_level_: %lu",
+        db_prefix_.c_str(), height, max_height_, max_level_);
+//     std::cout << "height tree: " << db_prefix_ << " set height: " << height << ", max_height_: " << max_height_ << ", max_level_: " << max_level_ << std::endl;
     uint64_t leaf_index = height / kLeafMaxHeightCount;
     {
         TreeNodeMapPtr node_map_ptr = tree_level_[0];

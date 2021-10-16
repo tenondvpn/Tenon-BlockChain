@@ -346,12 +346,12 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
                 prev_elect_block.shard_network_id(),
                 common::Encode::HexEncode((*iter)->id).c_str(),
                 (*iter)->pool_index_mod_num[0]);
-            std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-                << prev_elect_block.shard_network_id()
-                << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-                << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num[0]
-                << ", leader count: " << prev_elect_block.leader_count()
-                << std::endl;
+//             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
+//                 << prev_elect_block.shard_network_id()
+//                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
+//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num[0]
+//                 << ", leader count: " << prev_elect_block.leader_count()
+//                 << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
@@ -450,12 +450,12 @@ void ElectManager::ProcessNewElectBlock(
             elect_block.shard_network_id(),
             common::Encode::HexEncode(id).c_str(),
             in[i].pool_idx_mod_num());
-        std::cout << "FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: "
-            << elect_block.shard_network_id()
-            << ", member leader: " << common::Encode::HexEncode(id)
-            << ", (*iter)->pool_index_mod_num: " << in[i].pool_idx_mod_num()
-            << ", leader count: " << elect_block.leader_count()
-            << std::endl;
+//         std::cout << "FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: "
+//             << elect_block.shard_network_id()
+//             << ", member leader: " << common::Encode::HexEncode(id)
+//             << ", (*iter)->pool_index_mod_num: " << in[i].pool_idx_mod_num()
+//             << ", leader count: " << elect_block.leader_count()
+//             << std::endl;
 
         ++member_index;
     }

@@ -74,8 +74,8 @@ int BaseDht::Join(NodePtr& node) {
 
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
-        DHT_ERROR("CheckJoin join node failed! %s",
-            common::Encode::HexEncode(node->id()).c_str());
+//         DHT_ERROR("CheckJoin join node failed! %s",
+//             common::Encode::HexEncode(node->id()).c_str());
         return res;
     }
 

@@ -114,6 +114,7 @@ int GlobalInfo::Init(const common::Config& config) {
         udp_mtu_ -= 100;  // reserve 100 bytes for package header and udp header
     }
     config.Get("tenon", "udp_window_size", udp_window_size_);
+    config.Get("tenon", "missing_node", missing_node_);
 
     return kCommonSuccess;
 }

@@ -85,7 +85,9 @@ private:
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(const transport::protobuf::Header& header);
-    void SendBlockResponse(const transport::protobuf::Header& header, const std::string& block_str);
+    void SendBlockResponse(
+        const transport::protobuf::Header& header,
+        const std::string& block_str);
     int64_t FixRewardWithHistory(const std::string& id, int64_t new_amount);
     int InitRootSingleBlocks();
     int InitRootElectBlocks();

@@ -10841,6 +10841,12 @@
     <ClCompile Include="third_party\luatest\test_main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\bls\tests\test_bls.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bls\tests\test_main.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
