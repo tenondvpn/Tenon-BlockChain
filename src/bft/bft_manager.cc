@@ -71,12 +71,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-        header.id(),
-        bft_msg.leader(),
-        common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-        bft_msg.bft_step());
+//     BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+//         header.id(),
+//         bft_msg.leader(),
+//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
+//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+//         bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -248,7 +248,7 @@ void BftManager::BackupHandleBftOppose(
     }
 
     bft_ptr->not_aggree();
-    BFT_ERROR("success handled leader oppose: %d", bft_msg.pool_index());
+//     BFT_ERROR("success handled leader oppose: %d", bft_msg.pool_index());
 }
 
 void BftManager::LeaderHandleBftOppose(
@@ -930,7 +930,7 @@ int BftManager::LeaderPrecommit(
     if (member_ptr->public_ip.empty()) {
         member_ptr->public_ip = bft_msg.node_ip();
         member_ptr->public_port = bft_msg.node_port();
-        BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
+//         BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
     }
 
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
@@ -953,9 +953,9 @@ int BftManager::LeaderPrecommit(
         if (failed_count >= bft_ptr->min_oppose_member_count() &&
                 bft_ptr->elect_height() <
                 elect::ElectManager::Instance()->latest_height(bft_ptr->network_id())) {
-            BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
-                " pool_index: %u, bft: %s",
-                bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+//             BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
+//                 " pool_index: %u, bft: %s",
+//                 bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
             LeaderCallPrecommitOppose(bft_ptr);
             RemoveBft(bft_ptr->gid(), false);
         }
@@ -1007,9 +1007,9 @@ void BftManager::HandleOpposeNodeMsg(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
             sync::kSyncHighest);
-        BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-            common::Encode::HexEncode(pre_hash).c_str(),
-            common::Encode::HexEncode(bft_ptr->gid()).c_str());
+//         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
+//             common::Encode::HexEncode(pre_hash).c_str(),
+//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
 
@@ -1275,14 +1275,14 @@ int BftManager::LeaderCallCommit(
         return kBftError;
     }
 
-    BFT_DEBUG("VerifyBlsAggSignature agg sign success!prepare hash: %s, agg sign hash: %s,"
-        "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
-        common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
-        common::Encode::HexEncode(bft_ptr->precommit_hash()).c_str(),
-        bft_ptr->min_aggree_member_count(), bft_ptr->member_count(),
-        tenon_block->electblock_height(), tenon_block->network_id(),
-        tenon_block->bls_agg_sign_x().c_str(),
-        tenon_block->bls_agg_sign_y().c_str());
+//     BFT_DEBUG("VerifyBlsAggSignature agg sign success!prepare hash: %s, agg sign hash: %s,"
+//         "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
+//         common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
+//         common::Encode::HexEncode(bft_ptr->precommit_hash()).c_str(),
+//         bft_ptr->min_aggree_member_count(), bft_ptr->member_count(),
+//         tenon_block->electblock_height(), tenon_block->network_id(),
+//         tenon_block->bls_agg_sign_x().c_str(),
+//         tenon_block->bls_agg_sign_y().c_str());
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
@@ -1393,6 +1393,7 @@ int BftManager::BackupCommit(
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
 //     LeaderBroadcastToAcc(bft_ptr, false);
     // start new bft
+    RemoveBft(bft_ptr->gid(), true);
     return kBftSuccess;
 }
 

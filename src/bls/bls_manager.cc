@@ -152,10 +152,10 @@ int BlsManager::Sign(
 
     BLSPublicKeyShare pkey(local_sec_key, t, n);
     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
-    BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-        strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
-        common::Encode::HexEncode(sign_msg).c_str());
+//     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+//         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
+//         common::Encode::HexEncode(sign_msg).c_str());
 //     std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
 //         << ", sign x: " << *sign_x
@@ -193,10 +193,10 @@ int BlsManager::Verify(
     pk->to_affine_coordinates();
     auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
     auto strs = pk_ptr->toString();
-    BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-        strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),
-        common::Encode::HexEncode(sign_msg).c_str());
+//     BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+//         strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),
+//         common::Encode::HexEncode(sign_msg).c_str());
 
 //     std::cout << "verify t: " << t << ", n: " << n
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
