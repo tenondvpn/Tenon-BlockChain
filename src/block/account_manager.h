@@ -46,7 +46,7 @@ public:
     std::string GetPoolBaseAddr(uint32_t pool_index);
     void PrintPoolHeightTree(uint32_t pool_idx);
     void FlushPoolHeightTreeToDb();
-    void SetTreeHeight(uint32_t pool_idx, uint64_t height);
+    void SetMaxHeight(uint32_t pool_idx, uint64_t height);
 
 private:
     AccountManager();
