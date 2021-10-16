@@ -1218,6 +1218,9 @@ int BftManager::LeaderCallCommit(
         BftInterfacePtr& bft_ptr) {
     // TODO: remove just for test
     if (common::GlobalInfo::Instance()->missing_node()) {
+        block::AccountManager::Instance()->SetTreeHeight(
+            bft_ptr->pool_index(),
+            bft_ptr->prpare_block()->height());
         return kBftError;
     }
 
@@ -1311,6 +1314,9 @@ int BftManager::BackupCommit(
         bft::protobuf::BftMessage& bft_msg) {
     // TODO: remove just for test
     if (common::GlobalInfo::Instance()->missing_node()) {
+        block::AccountManager::Instance()->SetTreeHeight(
+            bft_ptr->pool_index(),
+            bft_ptr->prpare_block()->height());
         return kBftError;
     }
 
@@ -1893,6 +1899,9 @@ void BftManager::HandleRootWaitingBlock(
         BlockPtr& block_ptr) {
     // TODO: remove just for test
     if (common::GlobalInfo::Instance()->missing_node()) {
+        block::AccountManager::Instance()->SetTreeHeight(
+            block.pool_index(),
+            block.height());
         return;
     }
 

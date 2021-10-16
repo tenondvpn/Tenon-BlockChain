@@ -359,6 +359,10 @@ int AccountManager::AddBlockItemToDb(
     return kBlockSuccess;
 }
 
+void AccountManager::SetTreeHeight(uint32_t pool_idx, uint64_t height) {
+    network_block_[pool_idx]->SetHeightTree(height);
+}
+
 int AccountManager::AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
