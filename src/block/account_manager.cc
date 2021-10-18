@@ -56,6 +56,9 @@ AccountManager::AccountManager() {
     flush_db_tick_.CutOff(
         kFushTreeToDbPeriod,
         std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
+    refresh_pool_max_height_tick_.CutOff(
+        kRefreshPoolMaxHeightPeriod,
+        std::bind(&AccountManager::RefreshPoolMaxHeight, this));
 }
 
 AccountManager::~AccountManager() {
@@ -901,8 +904,12 @@ void AccountManager::FlushPoolHeightTreeToDb() {
 void AccountManager::RefreshPoolMaxHeight() {
     auto now_tm_sec = common::TimeUtils::TimestampSeconds();
     if (now_tm_sec - prev_refresh_heights_tm_ > 10) {
-
+        SendRefreshHeightsRequest();
     }
+
+    refresh_pool_max_height_tick_.CutOff(
+        kRefreshPoolMaxHeightPeriod,
+        std::bind(&AccountManager::RefreshPoolMaxHeight, this));
 }
 
 void AccountManager::SendRefreshHeightsRequest() {

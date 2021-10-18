@@ -14,6 +14,7 @@
 #include "block/proto/block.pb.h"
 #include "db/db.h"
 #include "db/db_queue.h"
+#include "transport/proto/transport.pb.h"
 
 namespace tenon {
 
@@ -99,6 +100,7 @@ private:
     static const uint32_t kMaxCacheAccountCount = 10240u;
     static const uint64_t kCheckMissingHeightPeriod = 3000000llu;
     static const uint64_t kFushTreeToDbPeriod = 6000000llu;
+    static const uint64_t kRefreshPoolMaxHeightPeriod = 4000000llu;
 
     std::unordered_map<std::string, block::DbAccountInfoPtr> acc_map_;
     common::LimitHeap<block::DbAccountInfoPtr> acc_limit_heap_{ false, kMaxCacheAccountCount };
