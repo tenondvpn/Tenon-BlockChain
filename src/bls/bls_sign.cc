@@ -37,7 +37,6 @@ int BlsSign::Verify(
         return kBlsError;
     }
 
-    libff::inhibit_profiling_info = true;
     crypto::Bls bls_instance = crypto::Bls(t, n);
     if (!bls_instance.Verification(message, sign, pkey)) {
         BLS_ERROR("bls_instance.Verification error.");

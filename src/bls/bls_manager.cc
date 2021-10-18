@@ -76,7 +76,6 @@ void BlsManager::SetUsedElectionBlock(
         std::to_string(elect_height) + "_" +
         std::to_string(network_id) + "_" +
         common::GlobalInfo::Instance()->id();
-//     std::cout << "get prikey from db: " << common::Encode::HexEncode(key) << std::endl;
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
@@ -106,14 +105,12 @@ void BlsManager::SetUsedElectionBlock(
     auto t = common::GetSignerCount(member_count);
     crypto::Dkg dkg(t, member_count);
     libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
-    used_bls_ = std::make_shared<bls::BlsDkg>();
-    used_bls_->SetInitElectionBlock(
+    used_bls_ = std::make_shared<bls::BlsDkg>(
         t,
         member_count,
         local_sec_key,
         local_publick_key,
         common_public_key);
-//     std::cout << "used_bls_->n(): " << used_bls_->n() << std::endl;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -150,8 +147,8 @@ int BlsManager::Sign(
     *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
     *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
     
-    BLSPublicKeyShare pkey(local_sec_key, t, n);
-    std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
+//     BLSPublicKeyShare pkey(local_sec_key, t, n);
+//     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
 //     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
 //         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
 //         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
@@ -185,14 +182,14 @@ int BlsManager::Verify(
         return kBlsError;
     }
 
-    auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
-    sign_ptr->to_affine_coordinates();
-    auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-    auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
-    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-    pk->to_affine_coordinates();
-    auto pk_ptr = std::make_shared< BLSPublicKey >(*pk, t, n);
-    auto strs = pk_ptr->toString();
+//     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
+//     sign_ptr->to_affine_coordinates();
+//     auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
+//     auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+//     pk->to_affine_coordinates();
+//     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
+//     auto strs = pk_ptr->toString();
 //     BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
 //         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
 //         strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),

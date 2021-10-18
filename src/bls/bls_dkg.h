@@ -29,25 +29,16 @@ namespace bls {
 
 class BlsDkg {
 public:
-    BlsDkg();
+    BlsDkg(uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_Fr& local_sec_key,
+        const libff::alt_bn128_G2 local_publick_key,
+        const libff::alt_bn128_G2 common_public_key);
     ~BlsDkg();
     void OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members);
     void HandleMessage(const transport::TransportMessagePtr& header);
-    void SetInitElectionBlock(
-            uint32_t t,
-            uint32_t n,
-            const libff::alt_bn128_Fr& local_sec_key,
-            const libff::alt_bn128_G2 local_publick_key,
-            const libff::alt_bn128_G2 common_public_key) {
-        min_aggree_member_count_ = t;
-        member_count_ = n;
-        local_sec_key_ = local_sec_key;
-        local_publick_key_ = local_publick_key;
-        common_public_key_ = common_public_key;
-    }
-
     uint64_t elect_hegiht() {
         return elect_hegiht_;
     }

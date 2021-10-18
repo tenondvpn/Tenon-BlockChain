@@ -24,8 +24,16 @@ namespace tenon {
 
 namespace bls {
 
-BlsDkg::BlsDkg() {
-}
+BlsDkg::BlsDkg(uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_Fr& local_sec_key,
+        const libff::alt_bn128_G2 local_publick_key,
+        const libff::alt_bn128_G2 common_public_key)
+        : min_aggree_member_count_(t),
+        member_count_(n),
+        local_sec_key_(local_sec_key),
+        local_publick_key_(local_publick_key),
+        common_public_key_(common_public_key){}
 
 BlsDkg::~BlsDkg() {}
 
@@ -633,7 +641,6 @@ void BlsDkg::DumpContribution() {
 
     std::ofstream outfile("data_for_" + std::to_string(local_member_index_) + "-th_participant.json");
     outfile << data.dump(4) << "\n\n";
-
 }
 
 void BlsDkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {

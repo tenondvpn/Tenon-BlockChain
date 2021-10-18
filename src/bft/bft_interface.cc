@@ -362,7 +362,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 elect_height_,
                 network_id_);
             common_pk.to_affine_coordinates();
-            auto cpk = std::make_shared<BLSPublicKey>(common_pk, t, n);
+            auto cpk = std::make_shared<BLSPublicKey>(common_pk);
             auto cpk_strs = cpk->toString();
             BFT_ERROR("leader verify leader precommit agg sign failed! t: %u, n: %u,"
                 "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",

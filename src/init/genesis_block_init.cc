@@ -192,7 +192,7 @@ int GenesisBlockInit::CreateElectBlock(
         fclose(bls_fd);
 
         std::cout << std::endl;
-        auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key, 2, 3);
+        auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key);
         auto common_pk_strs = common_pk_ptr->toString();
         auto common_pk = prev_members->mutable_common_pubkey();
         common_pk->set_x_c0(common_pk_strs->at(0));
