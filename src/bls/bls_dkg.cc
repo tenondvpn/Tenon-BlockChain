@@ -598,6 +598,23 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);
+
+    {
+        std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key_);
+        BLS_INFO("local bls info sec key: %s, "
+            "local public key: %s, %s, %s, %s, "
+            "common public key: %s, %s, %s, %s",
+            sec_key.c_str(),
+            local_pk->x_c0().c_str(),
+            local_pk->x_c1().c_str(),
+            local_pk->y_c0().c_str(),
+            local_pk->y_c1().c_str(),
+            common_pk->x_c0().c_str(),
+            common_pk->x_c1().c_str(),
+            common_pk->y_c0().c_str(),
+            common_pk->y_c1().c_str());
+    }
+
 }
 
 void BlsDkg::CreateContribution() {
