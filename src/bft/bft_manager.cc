@@ -1781,11 +1781,12 @@ void BftManager::BlockToDb() {
             BlockToDbItemPtr db_item_ptr;
             if (block_queue_[i].pop(&db_item_ptr)) {
                 //
-//                 block::BlockManager::Instance()->AddNewBlock(
-//                     db_item_ptr->block_ptr,
-//                     db_item_ptr->db_batch,
-//                     false,
-//                     db_item_ptr->is_kv_synced);
+//                 if (!common::GlobalInfo::Instance()->missing_node())
+                block::BlockManager::Instance()->AddNewBlock(
+                    db_item_ptr->block_ptr,
+                    db_item_ptr->db_batch,
+                    false,
+                    db_item_ptr->is_kv_synced);
             }
         }
     }

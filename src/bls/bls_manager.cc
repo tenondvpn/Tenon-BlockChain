@@ -116,6 +116,7 @@ void BlsManager::SetUsedElectionBlock(
         local_sec_key,
         local_publick_key,
         common_public_key);
+    BLS_INFO("used sec key: %s", dec_data.c_str());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }

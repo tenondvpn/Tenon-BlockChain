@@ -526,6 +526,11 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.shard_network_id(),
             members->size(),
             *pkey.getPublicKey());
+        ELECT_DEBUG("use common public key: %s, %s, %s, %s",
+            elect_block.prev_members().common_pubkey().x_c0().c_str(),
+            elect_block.prev_members().common_pubkey().x_c1().c_str(),
+            elect_block.prev_members().common_pubkey().y_c0().c_str(),
+            elect_block.prev_members().common_pubkey().y_c1().c_str());
     }
 }
 
