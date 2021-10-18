@@ -73,7 +73,7 @@
     <IncludePath>E:\Tenon-BlockChain\third_party\depends\include;E:\Tenon-BlockChain\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Tenon-BlockChain\third_party\depends\include;E:\Tenon-BlockChain\src;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Tenon-BlockChain\third_party\depends\include\libbls;E:\Tenon-BlockChain\third_party\depends\include;E:\Tenon-BlockChain\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -793,15 +793,15 @@
     <ClInclude Include="tenon-vpn-xng-local-server\src\utils.h" />
     <ClInclude Include="tenon-vpn-xng-local-server\src\winsock.h" />
     <ClInclude Include="third_party\depends\include\ares.h" />
-    <ClInclude Include="third_party\depends\include\bls\bls.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSPrivateKey.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSPrivateKeyShare.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSPublicKey.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSPublicKeyShare.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSSignature.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSSigShare.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSSigShareSet.h" />
-    <ClInclude Include="third_party\depends\include\bls\BLSutils.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\bls.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPrivateKey.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPrivateKeyShare.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPublicKey.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPublicKeyShare.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSignature.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSigShare.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSigShareSet.h" />
+    <ClInclude Include="third_party\depends\include\bls-o\BLSutils.h" />
     <ClInclude Include="third_party\depends\include\cryptopp\3way.h" />
     <ClInclude Include="third_party\depends\include\cryptopp\adler32.h" />
     <ClInclude Include="third_party\depends\include\cryptopp\adv_simd.h" />
@@ -975,12 +975,12 @@
     <ClInclude Include="third_party\depends\include\cryptopp\zdeflate.h" />
     <ClInclude Include="third_party\depends\include\cryptopp\zinflate.h" />
     <ClInclude Include="third_party\depends\include\cryptopp\zlib.h" />
-    <ClInclude Include="third_party\depends\include\dkg\dkg.h" />
-    <ClInclude Include="third_party\depends\include\dkg\DKGBLSSecret.h" />
-    <ClInclude Include="third_party\depends\include\dkg\DKGBLSWrapper.h" />
-    <ClInclude Include="third_party\depends\include\dkg\DKGTESecret.h" />
-    <ClInclude Include="third_party\depends\include\dkg\DKGTEWrapper.h" />
-    <ClInclude Include="third_party\depends\include\dkg\dkg_te.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\dkg.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGBLSSecret.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGBLSWrapper.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGTESecret.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGTEWrapper.h" />
+    <ClInclude Include="third_party\depends\include\dkg-o\dkg_te.h" />
     <ClInclude Include="third_party\depends\include\evmc\evmc-o.hpp" />
     <ClInclude Include="third_party\depends\include\evmc\evmc.h" />
     <ClInclude Include="third_party\depends\include\evmc\evmc.hpp" />
@@ -1598,6 +1598,32 @@
     <ClInclude Include="third_party\libBLS\threshold_encryption\TEPublicKeyShare.h" />
     <ClInclude Include="third_party\libBLS\threshold_encryption\threshold_encryption.h" />
     <ClInclude Include="third_party\libBLS\threshold_encryption\utils.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\bls.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPrivateKey.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPrivateKeyShare.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPublicKey.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPublicKeyShare.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSignature.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSigShare.h" />
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSigShareSet.h" />
+    <ClInclude Include="third_party\libBLS_n\dkg\dkg.h" />
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGBLSSecret.h" />
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGBLSWrapper.h" />
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGTESecret.h" />
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGTEWrapper.h" />
+    <ClInclude Include="third_party\libBLS_n\libBLS.h" />
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\base64.h" />
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\hmac.h" />
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\sha1.h" />
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\sha256.h" />
+    <ClInclude Include="third_party\libBLS_n\third_party\json.hpp" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEDecryptSet.h" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPrivateKey.h" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPrivateKeyShare.h" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPublicKey.h" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPublicKeyShare.h" />
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\threshold_encryption.h" />
+    <ClInclude Include="third_party\libBLS_n\tools\utils.h" />
     <ClInclude Include="third_party\LuaJIT\dynasm\dasm_arm.h" />
     <ClInclude Include="third_party\LuaJIT\dynasm\dasm_arm64.h" />
     <ClInclude Include="third_party\LuaJIT\dynasm\dasm_mips.h" />
@@ -3515,6 +3541,46 @@
     <ClCompile Include="third_party\libBLS\tools\hash_g1.cpp" />
     <ClCompile Include="third_party\libBLS\tools\sign_bls.cpp" />
     <ClCompile Include="third_party\libBLS\tools\verify_bls.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\bls.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPrivateKey.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPrivateKeyShare.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPublicKey.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPublicKeyShare.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSignature.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSigShare.cpp" />
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSigShareSet.cpp" />
+    <ClCompile Include="third_party\libBLS_n\dkg\dkg.cpp" />
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGBLSSecret.cpp" />
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGBLSWrapper.cpp" />
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGTESecret.cpp" />
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGTEWrapper.cpp" />
+    <ClCompile Include="third_party\libBLS_n\python\dkgpython.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\dkg_attack.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\encryptMessageJS.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\test_bls.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\test_TE_wrappers.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_bls.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_dkg.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_te.cpp" />
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_utils.cpp" />
+    <ClCompile Include="third_party\libBLS_n\third_party\cryptlite\base64.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\encryptMessage.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEDecryptSet.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPrivateKey.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPrivateKeyShare.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPublicKey.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPublicKeyShare.cpp" />
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\threshold_encryption.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\bls_glue.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\decryptMessage.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\dkg_glue.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\dkg_key_gen.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\generateBLSKeys.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\generate_key_system.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\hash_g1.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\sign_bls.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\utils.cpp" />
+    <ClCompile Include="third_party\libBLS_n\tools\verify_bls.cpp" />
     <ClCompile Include="third_party\LuaJIT\src\host\buildvm.c" />
     <ClCompile Include="third_party\LuaJIT\src\host\buildvm_asm.c" />
     <ClCompile Include="third_party\LuaJIT\src\host\buildvm_fold.c" />
@@ -4719,6 +4785,7 @@
     <None Include="third_party\libBLS\deps\gmp-6.1.2\tune\x86_64.asm" />
     <None Include="third_party\libBLS\deps\libff\build\CMakeFiles\3.15.2\CMakeDetermineCompilerABI_C.bin" />
     <None Include="third_party\libBLS\deps\libff\build\CMakeFiles\3.15.2\CMakeDetermineCompilerABI_CXX.bin" />
+    <None Include="third_party\libBLS_n\node\encryptTransaction.html" />
     <None Include="third_party\LuaJIT\doc\contact.html" />
     <None Include="third_party\LuaJIT\doc\extensions.html" />
     <None Include="third_party\LuaJIT\doc\ext_buffer.html" />

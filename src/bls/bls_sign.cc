@@ -16,10 +16,8 @@ void BlsSign::Sign(
         const libff::alt_bn128_Fr& secret_key,
         const std::string& message,
         libff::alt_bn128_G1* sign) {
-    auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
-    memcpy(hash_bytes_arr->data(), message.c_str(), 32);
-    signatures::Bls bls_instance = signatures::Bls(t, n);
-    libff::alt_bn128_G1 hash = bls_instance.HashtoG1(hash_bytes_arr);
+    crypto::Bls bls_instance = crypto::Bls(t, n);
+    libff::alt_bn128_G1 hash = bls_instance.Hashing(message);
     *sign = bls_instance.Signing(hash, secret_key);
 }
 
@@ -40,10 +38,8 @@ int BlsSign::Verify(
     }
 
     libff::inhibit_profiling_info = true;
-    signatures::Bls bls_instance = signatures::Bls(t, n);
-    auto hash_bytes_arr = std::make_shared<std::array<uint8_t, 32>>();
-    memcpy(hash_bytes_arr->data(), message.c_str(), 32);
-    if (!bls_instance.Verification(hash_bytes_arr, sign, pkey)) {
+    crypto::Bls bls_instance = crypto::Bls(t, n);
+    if (!bls_instance.Verification(message, sign, pkey)) {
         BLS_ERROR("bls_instance.Verification error.");
         return kBlsError;
     }

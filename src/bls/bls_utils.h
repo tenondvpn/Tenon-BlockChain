@@ -3,11 +3,11 @@
 #include <memory>
 #include <unordered_map>
 
-#include <bls/BLSPrivateKey.h>
-#include <bls/BLSPrivateKeyShare.h>
-#include <bls/BLSPublicKey.h>
-#include <bls/BLSPublicKeyShare.h>
-#include <bls/BLSutils.h>
+#include <libbls/bls/BLSPrivateKey.h>
+#include <libbls/bls/BLSPrivateKeyShare.h>
+#include <libbls/bls/BLSPublicKey.h>
+#include <libbls/bls/BLSPublicKeyShare.h>
+#include <libbls/tools/utils.h>
 #include <dkg/dkg.h>
 
 #include "common/bitmap.h"

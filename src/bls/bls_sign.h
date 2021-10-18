@@ -1,8 +1,8 @@
 #pragma once
 
-#include <bls/BLSutils.h>
-#include <bls/bls.h>
-#include <bls/BLSPublicKey.h>
+#include <libbls/tools/utils.h>
+#include <libbls/bls/bls.h>
+#include <libbls/bls/BLSPublicKey.h>
 
 #include "bls/bls_utils.h"
 

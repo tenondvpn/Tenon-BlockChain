@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 
-#include <bls/bls_utils.h>
+#include <libbls/tools/utils.h>
 #include <dkg/dkg.h>
 
 #include "bls/bls_utils.h"
@@ -51,7 +51,7 @@ void BlsDkg::OnNewElectionBlock(
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
     member_count_ = members_->size();
-    dkg_instance_ = std::make_shared<signatures::Dkg>(min_aggree_member_count_, members_->size());
+    dkg_instance_ = std::make_shared<crypto::Dkg>(min_aggree_member_count_, members_->size());
     elect_hegiht_ = elect_height;
     for (uint32_t i = 0; i < members_->size(); ++i) {
         if ((*members_)[i]->id == common::GlobalInfo::Instance()->id()) {
@@ -342,12 +342,12 @@ void BlsDkg::BroadcastVerfify() try {
     for (auto iter = all_verification_vector_[local_member_index_].begin();
             iter != all_verification_vector_[local_member_index_].end(); ++iter) {
         auto verify_item = verfiy_brd->add_verify_vec();
-        verify_item->set_x_c0(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).X.c0));
-        verify_item->set_x_c1(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).X.c1));
-        verify_item->set_y_c0(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).Y.c0));
-        verify_item->set_y_c1(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).Y.c1));
-        verify_item->set_z_c0(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).Z.c0));
-        verify_item->set_z_c1(BLSutils::ConvertToString<libff::alt_bn128_Fq>((*iter).Z.c1));
+        verify_item->set_x_c0(crypto::ThresholdUtils::fieldElementToString((*iter).X.c0));
+        verify_item->set_x_c1(crypto::ThresholdUtils::fieldElementToString((*iter).X.c1));
+        verify_item->set_y_c0(crypto::ThresholdUtils::fieldElementToString((*iter).Y.c0));
+        verify_item->set_y_c1(crypto::ThresholdUtils::fieldElementToString((*iter).Y.c1));
+        verify_item->set_z_c0(crypto::ThresholdUtils::fieldElementToString((*iter).Z.c0));
+        verify_item->set_z_c1(crypto::ThresholdUtils::fieldElementToString((*iter).Z.c1));
         content_to_hash += verify_item->x_c0();
         content_to_hash += verify_item->x_c1();
         content_to_hash += verify_item->y_c0();
@@ -408,7 +408,7 @@ void BlsDkg::SwapSecKey() try {
             continue;
         }
 
-        auto sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(
+        auto sec_key = crypto::ThresholdUtils::fieldElementToString(
             local_src_secret_key_contribution_[i]);
         std::string enc_sec_key = security::Crypto::Instance()->GetEncryptData(
             (*members_)[i]->pubkey,
@@ -491,7 +491,7 @@ void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_por
 void BlsDkg::DumpLocalPrivateKey() {
     // encrypt by private key and save to db
     std::string enc_data;
-    std::string sec_key = BLSutils::ConvertToString<libff::alt_bn128_Fr>(local_sec_key_);
+    std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key_);
     if (security::Crypto::Instance()->GetEncryptData(
             security::Schnorr::Instance()->str_prikey(),
             sec_key,
@@ -569,24 +569,24 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     local_publick_key_.to_affine_coordinates();
     auto local_pk = finish_msg->mutable_pubkey();
     local_pk->set_x_c0(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.X.c0));
+        crypto::ThresholdUtils::fieldElementToString(local_publick_key_.X.c0));
     local_pk->set_x_c1(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.X.c1));
+        crypto::ThresholdUtils::fieldElementToString(local_publick_key_.X.c1));
     local_pk->set_y_c0(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.Y.c0));
+        crypto::ThresholdUtils::fieldElementToString(local_publick_key_.Y.c0));
     local_pk->set_y_c1(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(local_publick_key_.Y.c1));
+        crypto::ThresholdUtils::fieldElementToString(local_publick_key_.Y.c1));
     finish_msg->set_network_id(common::GlobalInfo::Instance()->network_id());
     auto common_pk = finish_msg->mutable_common_pubkey();
     common_public_key_.to_affine_coordinates();
     common_pk->set_x_c0(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c0));
+        crypto::ThresholdUtils::fieldElementToString(common_public_key_.X.c0));
     common_pk->set_x_c1(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.X.c1));
+        crypto::ThresholdUtils::fieldElementToString(common_public_key_.X.c1));
     common_pk->set_y_c0(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c0));
+        crypto::ThresholdUtils::fieldElementToString(common_public_key_.Y.c0));
     common_pk->set_y_c1(
-        BLSutils::ConvertToString<libff::alt_bn128_Fq>(common_public_key_.Y.c1));
+        crypto::ThresholdUtils::fieldElementToString(common_public_key_.Y.c1));
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);
@@ -606,28 +606,28 @@ void BlsDkg::DumpContribution() {
     data["idx"] = std::to_string(local_member_index_);
     for (size_t i = 0; i < members_->size(); ++i) {
         data["secret_key_contribution"][std::to_string(i)] =
-            BLSutils::ConvertToString< libff::alt_bn128_Fr >(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_secret_key_contribution_[local_member_index_][i]);
     }
 
     for (size_t i = 0; i < min_aggree_member_count_; ++i) {
         data["verification_vector"][std::to_string(i)]["X"]["c0"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].X.c0);
         data["verification_vector"][std::to_string(i)]["X"]["c1"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].X.c1);
         data["verification_vector"][std::to_string(i)]["Y"]["c0"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].Y.c0);
         data["verification_vector"][std::to_string(i)]["Y"]["c1"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].Y.c1);
         data["verification_vector"][std::to_string(i)]["Z"]["c0"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].Z.c0);
         data["verification_vector"][std::to_string(i)]["Z"]["c1"] =
-            BLSutils::ConvertToString<libff::alt_bn128_Fq>(
+            crypto::ThresholdUtils::fieldElementToString(
                 all_verification_vector_[local_member_index_][i].Z.c1);
     }
 

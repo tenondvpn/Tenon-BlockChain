@@ -5094,49 +5094,127 @@
     <ClInclude Include="third_party\luatest\utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\bls.h">
+    <ClInclude Include="third_party\libBLS_n\bls\bls.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSPrivateKey.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPrivateKey.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSPrivateKeyShare.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPrivateKeyShare.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSPublicKey.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPublicKey.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSPublicKeyShare.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSPublicKeyShare.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSSignature.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSignature.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSSigShare.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSigShare.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSSigShareSet.h">
+    <ClInclude Include="third_party\libBLS_n\bls\BLSSigShareSet.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\bls\BLSutils.h">
+    <ClInclude Include="third_party\libBLS_n\dkg\dkg.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\dkg.h">
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGBLSSecret.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\dkg_te.h">
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGBLSWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\DKGBLSSecret.h">
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGTESecret.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\DKGBLSWrapper.h">
+    <ClInclude Include="third_party\libBLS_n\dkg\DKGTEWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\DKGTESecret.h">
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\base64.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\depends\include\dkg\DKGTEWrapper.h">
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\hmac.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\sha1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\third_party\cryptlite\sha256.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\third_party\json.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEDecryptSet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPrivateKey.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPrivateKeyShare.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPublicKey.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\TEPublicKeyShare.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\threshold_encryption\threshold_encryption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\tools\utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\libBLS_n\libBLS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\bls.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPrivateKey.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPrivateKeyShare.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPublicKey.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSPublicKeyShare.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSignature.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSigShare.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSSigShareSet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\bls-o\BLSutils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\dkg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\dkg_te.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGBLSSecret.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGBLSWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGTESecret.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\depends\include\dkg-o\DKGTEWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -10847,6 +10925,126 @@
     <ClCompile Include="src\bls\tests\test_main.cc">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPrivateKey.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPrivateKeyShare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPublicKey.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSPublicKeyShare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSignature.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSigShare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\bls\BLSSigShareSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\dkg\dkg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGBLSSecret.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGBLSWrapper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGTESecret.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\dkg\DKGTEWrapper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\python\dkgpython.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\dkg_attack.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\encryptMessageJS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\test_bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\test_TE_wrappers.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_dkg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_te.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\test\unit_tests_utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\third_party\cryptlite\base64.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\encryptMessage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEDecryptSet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPrivateKey.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPrivateKeyShare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPublicKey.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\TEPublicKeyShare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\threshold_encryption\threshold_encryption.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\bls_glue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\decryptMessage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\dkg_glue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\dkg_key_gen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\generate_key_system.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\generateBLSKeys.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\hash_g1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\sign_bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\libBLS_n\tools\verify_bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
@@ -13542,5 +13740,6 @@
     <None Include="third_party\LuaJIT\doc\luajit.html" />
     <None Include="third_party\LuaJIT\doc\running.html" />
     <None Include="third_party\LuaJIT\doc\status.html" />
+    <None Include="third_party\libBLS_n\node\encryptTransaction.html" />
   </ItemGroup>
 </Project>

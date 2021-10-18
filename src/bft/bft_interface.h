@@ -5,7 +5,7 @@
 #include <mutex>
 #include <unordered_map>
 
-#include <bls/BLSutils.h>
+#include <libbls/tools/utils.h>
 
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
