@@ -6764,9 +6764,6 @@
     <ClCompile Include="src\election\leader_rotation.cc">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\bls\proto\bls.pb.cc">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\bls\bls_sign.cc">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -11043,6 +11040,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="third_party\libBLS_n\tools\verify_bls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bls\proto\bls.pb.cc">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -42,7 +42,6 @@ extern "C" {
 #include "uv/uv.h"
 
 #include "ssr/netutils.h"
-#include "ssr/crypto.h"
 #include "ssr/jconf.h"
 #include "ssr/resolv.h"
 #include <libcork/core.h>

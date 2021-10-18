@@ -6,7 +6,8 @@
 #include <queue>
 #include <vector>
 
-#include "bls/BLSPublicKey.h"
+#include <libbls/bls/BLSPublicKey.h>
+
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
 #include "common/utils.h"
