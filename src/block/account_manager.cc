@@ -945,25 +945,16 @@ void AccountManager::SendRefreshHeightsRequest() {
 
     msg.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(msg);
+    std::cout << "now_tm_sec: " << common::TimeUtils::TimestampSeconds()
+        << ", prev_refresh_heights_tm_: " << prev_refresh_heights_tm_
+        << ", des_net_id: " << des_net_id
+        << std::endl;
 }
 
 void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Header& header) {
     transport::protobuf::Header msg;
-    dht::BaseDhtPtr dht = nullptr;
-    dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-    if (!dht || dht->readonly_dht()->size() < 3) {
-        dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
-        if (des_net_id >= network::kConsensusShardEndNetworkId) {
-            des_net_id -= network::kConsensusWaitingShardOffset;
-        }
-    }
-
-    msg.set_src_dht_key(dht->local_node()->dht_key());
-    dht::DhtKeyManager dht_key(des_net_id, 0);
-    msg.set_des_dht_key(dht_key.StrKey());
-    msg.set_des_dht_key_hash(common::Hash::Hash64(dht_key.StrKey()));
+    msg.set_src_dht_key(header.des_dht_key());
+    msg.set_des_dht_key(header.src_dht_key());
     msg.set_priority(transport::kTransportPriorityMiddle);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_universal(false);
@@ -986,6 +977,7 @@ void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Heade
 int AccountManager::HandleRefreshHeightsReq(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
+    std::cout << "HandleRefreshHeightsReq coming." << header.from_ip() << ":" << header.from_port() << std::endl;
     for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
     }
@@ -998,6 +990,7 @@ int AccountManager::HandleRefreshHeightsReq(
 int AccountManager::HandleRefreshHeightsRes(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
+    std::cout << "HandleRefreshHeightsRes coming." << header.from_ip() << ":" << header.from_port() << std::endl;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
     }

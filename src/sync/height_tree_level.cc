@@ -88,7 +88,7 @@ void HeightTreeLevel::GetMissingHeights(
         uint64_t max_height) {
     // The higher the height, the higher the priority
     if (max_height > max_height_) {
-        for (uint64_t i = max_height_ + 1; i < max_height; ++i) {
+        for (uint64_t i = max_height_ + 1; i <= max_height; ++i) {
             heights->push_back(i);
             if (heights->size() > 1024) {
                 break;
