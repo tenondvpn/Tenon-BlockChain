@@ -339,9 +339,10 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
     }
 
     try {
-        signatures::Bls bls_instance = signatures::Bls(t, n);
-        auto lagrange_coeffs = bls_instance.LagrangeCoeffs(idx_vec);
-        bls_precommit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
+        crypto::Bls bls_instance = crypto::Bls(t, n);
+        auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+        bls_precommit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(
+            bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));
         std::string msg_hash_src = prepare_hash();
@@ -406,8 +407,8 @@ int BftInterface::LeaderCreateCommitAggSign() {
     }
 
     try {
-        signatures::Bls bls_instance = signatures::Bls(t, n);
-        auto lagrange_coeffs = bls_instance.LagrangeCoeffs(idx_vec);
+        crypto::Bls bls_instance = crypto::Bls(t, n);
+        auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
         bls_commit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));

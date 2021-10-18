@@ -251,7 +251,7 @@ public:
                     t += 1;
                 }
 
-                BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str), t, n);
+                BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str));
                 *common_pk = *pkey.getPublicKey();
             }
         }

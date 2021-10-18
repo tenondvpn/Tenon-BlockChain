@@ -55,7 +55,7 @@ int GenesisBlockInit::CreateBlsGenesisKeys(
         libff::alt_bn128_G2* common_public_key) {
     static const uint32_t t = 2;
     static const uint32_t n = 3;
-    signatures::Dkg dkg_instance = signatures::Dkg(t, n);
+    crypto::Dkg dkg_instance = crypto::Dkg(t, n);
     std::vector<std::vector<libff::alt_bn128_Fr>> polynomial(n);
     for (auto& pol : polynomial) {
         pol = dkg_instance.GeneratePolynomial();
