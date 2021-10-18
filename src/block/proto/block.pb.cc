@@ -29,6 +29,8 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::inter
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountInitInfoRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockResponse;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightRequest;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_TxItem;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_UpdateVpnActiveRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_UpdateVpnCountRequest;
@@ -119,6 +121,16 @@ class StatisticInfoDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<StatisticInfo>
       _instance;
 } _StatisticInfo_default_instance_;
+class RefreshPoolHeightRequestDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<RefreshPoolHeightRequest>
+      _instance;
+} _RefreshPoolHeightRequest_default_instance_;
+class RefreshPoolHeightResponseDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<RefreshPoolHeightResponse>
+      _instance;
+} _RefreshPoolHeightResponse_default_instance_;
 class BlockMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<BlockMessage>
@@ -355,6 +367,34 @@ static void InitDefaultsStatisticInfo() {
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsStatisticInfo}, {
       &protobuf_block_2eproto::scc_info_ElectStatisticInfo.base,}};
 
+static void InitDefaultsRefreshPoolHeightRequest() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::block::protobuf::_RefreshPoolHeightRequest_default_instance_;
+    new (ptr) ::tenon::block::protobuf::RefreshPoolHeightRequest();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::block::protobuf::RefreshPoolHeightRequest::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsRefreshPoolHeightRequest}, {}};
+
+static void InitDefaultsRefreshPoolHeightResponse() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::block::protobuf::_RefreshPoolHeightResponse_default_instance_;
+    new (ptr) ::tenon::block::protobuf::RefreshPoolHeightResponse();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::block::protobuf::RefreshPoolHeightResponse::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsRefreshPoolHeightResponse}, {}};
+
 static void InitDefaultsBlockMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -366,8 +406,8 @@ static void InitDefaultsBlockMessage() {
   ::tenon::block::protobuf::BlockMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<12> scc_info_BlockMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 12, InitDefaultsBlockMessage}, {
+::google::protobuf::internal::SCCInfo<14> scc_info_BlockMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 14, InitDefaultsBlockMessage}, {
       &protobuf_block_2eproto::scc_info_GetTxBlockRequest.base,
       &protobuf_block_2eproto::scc_info_GetTxBlockResponse.base,
       &protobuf_block_2eproto::scc_info_AccountHeightRequest.base,
@@ -379,7 +419,9 @@ static void InitDefaultsBlockMessage() {
       &protobuf_block_2eproto::scc_info_GetAccountInitInfoRequest.base,
       &protobuf_block_2eproto::scc_info_GetAccountInitInfoResponse.base,
       &protobuf_block_2eproto::scc_info_UpdateVpnActiveRequest.base,
-      &protobuf_block_2eproto::scc_info_AdRewardRequest.base,}};
+      &protobuf_block_2eproto::scc_info_AdRewardRequest.base,
+      &protobuf_block_2eproto::scc_info_RefreshPoolHeightRequest.base,
+      &protobuf_block_2eproto::scc_info_RefreshPoolHeightResponse.base,}};
 
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_GetTxBlockRequest.base);
@@ -398,10 +440,12 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_AdRewardRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_ElectStatisticInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_StatisticInfo.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_RefreshPoolHeightRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_RefreshPoolHeightResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_BlockMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[17];
+::google::protobuf::Metadata file_level_metadata[19];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetTxBlockRequest, _has_bits_),
@@ -590,6 +634,20 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   0,
   1,
   ~0u,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightRequest, heights_),
+  ~0u,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightResponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightResponse, heights_),
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -607,6 +665,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, account_init_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, vpn_active_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ad_reward_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ref_heights_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ref_heights_res_),
   0,
   1,
   2,
@@ -619,6 +679,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   9,
   10,
   11,
+  12,
+  13,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 10, sizeof(::tenon::block::protobuf::GetTxBlockRequest)},
@@ -637,7 +699,9 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 155, 163, sizeof(::tenon::block::protobuf::AdRewardRequest)},
   { 166, 173, sizeof(::tenon::block::protobuf::ElectStatisticInfo)},
   { 175, 183, sizeof(::tenon::block::protobuf::StatisticInfo)},
-  { 186, 203, sizeof(::tenon::block::protobuf::BlockMessage)},
+  { 186, 192, sizeof(::tenon::block::protobuf::RefreshPoolHeightRequest)},
+  { 193, 199, sizeof(::tenon::block::protobuf::RefreshPoolHeightResponse)},
+  { 200, 219, sizeof(::tenon::block::protobuf::BlockMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -657,6 +721,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_AdRewardRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_ElectStatisticInfo_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_StatisticInfo_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_RefreshPoolHeightRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_RefreshPoolHeightResponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_BlockMessage_default_instance_),
 };
 
@@ -675,7 +741,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 17);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 19);
 }
 
 void AddDescriptorsImpl() {
@@ -715,30 +781,36 @@ void AddDescriptorsImpl() {
       "tx_count\030\002 \003(\r\"\202\001\n\rStatisticInfo\022\030\n\020time"
       "block_height\030\001 \001(\004\022\024\n\014all_tx_count\030\002 \001(\r"
       "\022A\n\017elect_statistic\030\003 \003(\0132(.tenon.block."
-      "protobuf.ElectStatisticInfo\"\247\006\n\014BlockMes"
-      "sage\022:\n\tblock_req\030\001 \001(\0132\'.tenon.block.pr"
-      "otobuf.GetTxBlockRequest\022;\n\tblock_res\030\002 "
-      "\001(\0132(.tenon.block.protobuf.GetTxBlockRes"
-      "ponse\022>\n\nheight_req\030\003 \001(\0132*.tenon.block."
-      "protobuf.AccountHeightRequest\022\?\n\nheight_"
-      "res\030\004 \001(\0132+.tenon.block.protobuf.Account"
-      "HeightResponse\022>\n\014acc_attr_req\030\005 \001(\0132(.t"
-      "enon.block.protobuf.AccountAttrRequest\022\?"
-      "\n\014acc_attr_res\030\006 \001(\0132).tenon.block.proto"
-      "buf.AccountAttrResponse\022\?\n\nup_vpn_req\030\007 "
-      "\001(\0132+.tenon.block.protobuf.UpdateVpnCoun"
-      "tRequest\022@\n\nup_vpn_res\030\010 \001(\0132,.tenon.blo"
-      "ck.protobuf.UpdateVpnCountResponse\022I\n\020ac"
-      "count_init_req\030\t \001(\0132/.tenon.block.proto"
-      "buf.GetAccountInitInfoRequest\022J\n\020account"
-      "_init_res\030\n \001(\01320.tenon.block.protobuf.G"
-      "etAccountInitInfoResponse\022D\n\016vpn_active_"
-      "req\030\013 \001(\0132,.tenon.block.protobuf.UpdateV"
-      "pnActiveRequest\022<\n\rad_reward_req\030\014 \001(\0132%"
-      ".tenon.block.protobuf.AdRewardRequest"
+      "protobuf.ElectStatisticInfo\"+\n\030RefreshPo"
+      "olHeightRequest\022\017\n\007heights\030\001 \003(\004\",\n\031Refr"
+      "eshPoolHeightResponse\022\017\n\007heights\030\001 \003(\004\"\272"
+      "\007\n\014BlockMessage\022:\n\tblock_req\030\001 \001(\0132\'.ten"
+      "on.block.protobuf.GetTxBlockRequest\022;\n\tb"
+      "lock_res\030\002 \001(\0132(.tenon.block.protobuf.Ge"
+      "tTxBlockResponse\022>\n\nheight_req\030\003 \001(\0132*.t"
+      "enon.block.protobuf.AccountHeightRequest"
+      "\022\?\n\nheight_res\030\004 \001(\0132+.tenon.block.proto"
+      "buf.AccountHeightResponse\022>\n\014acc_attr_re"
+      "q\030\005 \001(\0132(.tenon.block.protobuf.AccountAt"
+      "trRequest\022\?\n\014acc_attr_res\030\006 \001(\0132).tenon."
+      "block.protobuf.AccountAttrResponse\022\?\n\nup"
+      "_vpn_req\030\007 \001(\0132+.tenon.block.protobuf.Up"
+      "dateVpnCountRequest\022@\n\nup_vpn_res\030\010 \001(\0132"
+      ",.tenon.block.protobuf.UpdateVpnCountRes"
+      "ponse\022I\n\020account_init_req\030\t \001(\0132/.tenon."
+      "block.protobuf.GetAccountInitInfoRequest"
+      "\022J\n\020account_init_res\030\n \001(\01320.tenon.block"
+      ".protobuf.GetAccountInitInfoResponse\022D\n\016"
+      "vpn_active_req\030\013 \001(\0132,.tenon.block.proto"
+      "buf.UpdateVpnActiveRequest\022<\n\rad_reward_"
+      "req\030\014 \001(\0132%.tenon.block.protobuf.AdRewar"
+      "dRequest\022G\n\017ref_heights_req\030\r \001(\0132..teno"
+      "n.block.protobuf.RefreshPoolHeightReques"
+      "t\022H\n\017ref_heights_res\030\016 \001(\0132/.tenon.block"
+      ".protobuf.RefreshPoolHeightResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2197);
+      descriptor, 2435);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "block.proto", &protobuf_RegisterTypes);
 }
@@ -6235,6 +6307,466 @@ void StatisticInfo::InternalSwap(StatisticInfo* other) {
 
 // ===================================================================
 
+void RefreshPoolHeightRequest::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RefreshPoolHeightRequest::kHeightsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+RefreshPoolHeightRequest::RefreshPoolHeightRequest()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_block_2eproto::scc_info_RefreshPoolHeightRequest.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.block.protobuf.RefreshPoolHeightRequest)
+}
+RefreshPoolHeightRequest::RefreshPoolHeightRequest(const RefreshPoolHeightRequest& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      heights_(from.heights_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.RefreshPoolHeightRequest)
+}
+
+void RefreshPoolHeightRequest::SharedCtor() {
+}
+
+RefreshPoolHeightRequest::~RefreshPoolHeightRequest() {
+  // @@protoc_insertion_point(destructor:tenon.block.protobuf.RefreshPoolHeightRequest)
+  SharedDtor();
+}
+
+void RefreshPoolHeightRequest::SharedDtor() {
+}
+
+void RefreshPoolHeightRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* RefreshPoolHeightRequest::descriptor() {
+  ::protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const RefreshPoolHeightRequest& RefreshPoolHeightRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_block_2eproto::scc_info_RefreshPoolHeightRequest.base);
+  return *internal_default_instance();
+}
+
+
+void RefreshPoolHeightRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  heights_.Clear();
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool RefreshPoolHeightRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated uint64 heights = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 8u, input, this->mutable_heights())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_heights())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.block.protobuf.RefreshPoolHeightRequest)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.block.protobuf.RefreshPoolHeightRequest)
+  return false;
+#undef DO_
+}
+
+void RefreshPoolHeightRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  for (int i = 0, n = this->heights_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      1, this->heights(i), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.block.protobuf.RefreshPoolHeightRequest)
+}
+
+::google::protobuf::uint8* RefreshPoolHeightRequest::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(1, this->heights_, target);
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.block.protobuf.RefreshPoolHeightRequest)
+  return target;
+}
+
+size_t RefreshPoolHeightRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint64 heights = 1;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->heights_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->heights_size());
+    total_size += data_size;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void RefreshPoolHeightRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const RefreshPoolHeightRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const RefreshPoolHeightRequest>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.block.protobuf.RefreshPoolHeightRequest)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.block.protobuf.RefreshPoolHeightRequest)
+    MergeFrom(*source);
+  }
+}
+
+void RefreshPoolHeightRequest::MergeFrom(const RefreshPoolHeightRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  heights_.MergeFrom(from.heights_);
+}
+
+void RefreshPoolHeightRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void RefreshPoolHeightRequest::CopyFrom(const RefreshPoolHeightRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.block.protobuf.RefreshPoolHeightRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RefreshPoolHeightRequest::IsInitialized() const {
+  return true;
+}
+
+void RefreshPoolHeightRequest::Swap(RefreshPoolHeightRequest* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void RefreshPoolHeightRequest::InternalSwap(RefreshPoolHeightRequest* other) {
+  using std::swap;
+  heights_.InternalSwap(&other->heights_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata RefreshPoolHeightRequest::GetMetadata() const {
+  protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void RefreshPoolHeightResponse::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RefreshPoolHeightResponse::kHeightsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+RefreshPoolHeightResponse::RefreshPoolHeightResponse()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_block_2eproto::scc_info_RefreshPoolHeightResponse.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.block.protobuf.RefreshPoolHeightResponse)
+}
+RefreshPoolHeightResponse::RefreshPoolHeightResponse(const RefreshPoolHeightResponse& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      heights_(from.heights_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.RefreshPoolHeightResponse)
+}
+
+void RefreshPoolHeightResponse::SharedCtor() {
+}
+
+RefreshPoolHeightResponse::~RefreshPoolHeightResponse() {
+  // @@protoc_insertion_point(destructor:tenon.block.protobuf.RefreshPoolHeightResponse)
+  SharedDtor();
+}
+
+void RefreshPoolHeightResponse::SharedDtor() {
+}
+
+void RefreshPoolHeightResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* RefreshPoolHeightResponse::descriptor() {
+  ::protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const RefreshPoolHeightResponse& RefreshPoolHeightResponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_block_2eproto::scc_info_RefreshPoolHeightResponse.base);
+  return *internal_default_instance();
+}
+
+
+void RefreshPoolHeightResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  heights_.Clear();
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool RefreshPoolHeightResponse::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated uint64 heights = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 8u, input, this->mutable_heights())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_heights())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.block.protobuf.RefreshPoolHeightResponse)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.block.protobuf.RefreshPoolHeightResponse)
+  return false;
+#undef DO_
+}
+
+void RefreshPoolHeightResponse::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  for (int i = 0, n = this->heights_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      1, this->heights(i), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.block.protobuf.RefreshPoolHeightResponse)
+}
+
+::google::protobuf::uint8* RefreshPoolHeightResponse::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint64 heights = 1;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(1, this->heights_, target);
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.block.protobuf.RefreshPoolHeightResponse)
+  return target;
+}
+
+size_t RefreshPoolHeightResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint64 heights = 1;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->heights_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->heights_size());
+    total_size += data_size;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void RefreshPoolHeightResponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  const RefreshPoolHeightResponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const RefreshPoolHeightResponse>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.block.protobuf.RefreshPoolHeightResponse)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.block.protobuf.RefreshPoolHeightResponse)
+    MergeFrom(*source);
+  }
+}
+
+void RefreshPoolHeightResponse::MergeFrom(const RefreshPoolHeightResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  heights_.MergeFrom(from.heights_);
+}
+
+void RefreshPoolHeightResponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void RefreshPoolHeightResponse::CopyFrom(const RefreshPoolHeightResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.block.protobuf.RefreshPoolHeightResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RefreshPoolHeightResponse::IsInitialized() const {
+  return true;
+}
+
+void RefreshPoolHeightResponse::Swap(RefreshPoolHeightResponse* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void RefreshPoolHeightResponse::InternalSwap(RefreshPoolHeightResponse* other) {
+  using std::swap;
+  heights_.InternalSwap(&other->heights_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata RefreshPoolHeightResponse::GetMetadata() const {
+  protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void BlockMessage::InitAsDefaultInstance() {
   ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->block_req_ = const_cast< ::tenon::block::protobuf::GetTxBlockRequest*>(
       ::tenon::block::protobuf::GetTxBlockRequest::internal_default_instance());
@@ -6260,6 +6792,10 @@ void BlockMessage::InitAsDefaultInstance() {
       ::tenon::block::protobuf::UpdateVpnActiveRequest::internal_default_instance());
   ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->ad_reward_req_ = const_cast< ::tenon::block::protobuf::AdRewardRequest*>(
       ::tenon::block::protobuf::AdRewardRequest::internal_default_instance());
+  ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->ref_heights_req_ = const_cast< ::tenon::block::protobuf::RefreshPoolHeightRequest*>(
+      ::tenon::block::protobuf::RefreshPoolHeightRequest::internal_default_instance());
+  ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->ref_heights_res_ = const_cast< ::tenon::block::protobuf::RefreshPoolHeightResponse*>(
+      ::tenon::block::protobuf::RefreshPoolHeightResponse::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int BlockMessage::kBlockReqFieldNumber;
@@ -6274,6 +6810,8 @@ const int BlockMessage::kAccountInitReqFieldNumber;
 const int BlockMessage::kAccountInitResFieldNumber;
 const int BlockMessage::kVpnActiveReqFieldNumber;
 const int BlockMessage::kAdRewardReqFieldNumber;
+const int BlockMessage::kRefHeightsReqFieldNumber;
+const int BlockMessage::kRefHeightsResFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BlockMessage::BlockMessage()
@@ -6348,13 +6886,23 @@ BlockMessage::BlockMessage(const BlockMessage& from)
   } else {
     ad_reward_req_ = NULL;
   }
+  if (from.has_ref_heights_req()) {
+    ref_heights_req_ = new ::tenon::block::protobuf::RefreshPoolHeightRequest(*from.ref_heights_req_);
+  } else {
+    ref_heights_req_ = NULL;
+  }
+  if (from.has_ref_heights_res()) {
+    ref_heights_res_ = new ::tenon::block::protobuf::RefreshPoolHeightResponse(*from.ref_heights_res_);
+  } else {
+    ref_heights_res_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.BlockMessage)
 }
 
 void BlockMessage::SharedCtor() {
   ::memset(&block_req_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&ad_reward_req_) -
-      reinterpret_cast<char*>(&block_req_)) + sizeof(ad_reward_req_));
+      reinterpret_cast<char*>(&ref_heights_res_) -
+      reinterpret_cast<char*>(&block_req_)) + sizeof(ref_heights_res_));
 }
 
 BlockMessage::~BlockMessage() {
@@ -6375,6 +6923,8 @@ void BlockMessage::SharedDtor() {
   if (this != internal_default_instance()) delete account_init_res_;
   if (this != internal_default_instance()) delete vpn_active_req_;
   if (this != internal_default_instance()) delete ad_reward_req_;
+  if (this != internal_default_instance()) delete ref_heights_req_;
+  if (this != internal_default_instance()) delete ref_heights_res_;
 }
 
 void BlockMessage::SetCachedSize(int size) const {
@@ -6432,7 +6982,7 @@ void BlockMessage::Clear() {
       up_vpn_res_->Clear();
     }
   }
-  if (cached_has_bits & 3840u) {
+  if (cached_has_bits & 16128u) {
     if (cached_has_bits & 0x00000100u) {
       GOOGLE_DCHECK(account_init_req_ != NULL);
       account_init_req_->Clear();
@@ -6448,6 +6998,14 @@ void BlockMessage::Clear() {
     if (cached_has_bits & 0x00000800u) {
       GOOGLE_DCHECK(ad_reward_req_ != NULL);
       ad_reward_req_->Clear();
+    }
+    if (cached_has_bits & 0x00001000u) {
+      GOOGLE_DCHECK(ref_heights_req_ != NULL);
+      ref_heights_req_->Clear();
+    }
+    if (cached_has_bits & 0x00002000u) {
+      GOOGLE_DCHECK(ref_heights_res_ != NULL);
+      ref_heights_res_->Clear();
     }
   }
   _has_bits_.Clear();
@@ -6608,6 +7166,30 @@ bool BlockMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+      case 13: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(106u /* 106 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_ref_heights_req()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+      case 14: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(114u /* 114 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_ref_heights_res()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -6705,6 +7287,18 @@ void BlockMessage::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00000800u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       12, this->_internal_ad_reward_req(), output);
+  }
+
+  // optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+  if (cached_has_bits & 0x00001000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      13, this->_internal_ref_heights_req(), output);
+  }
+
+  // optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+  if (cached_has_bits & 0x00002000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      14, this->_internal_ref_heights_res(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -6806,6 +7400,20 @@ void BlockMessage::SerializeWithCachedSizes(
         12, this->_internal_ad_reward_req(), deterministic, target);
   }
 
+  // optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+  if (cached_has_bits & 0x00001000u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        13, this->_internal_ref_heights_req(), deterministic, target);
+  }
+
+  // optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+  if (cached_has_bits & 0x00002000u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        14, this->_internal_ref_heights_res(), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -6881,7 +7489,7 @@ size_t BlockMessage::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[8 / 32] & 3840u) {
+  if (_has_bits_[8 / 32] & 16128u) {
     // optional .tenon.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
     if (has_account_init_req()) {
       total_size += 1 +
@@ -6908,6 +7516,20 @@ size_t BlockMessage::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *ad_reward_req_);
+    }
+
+    // optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+    if (has_ref_heights_req()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *ref_heights_req_);
+    }
+
+    // optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+    if (has_ref_heights_res()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *ref_heights_res_);
     }
 
   }
@@ -6965,7 +7587,7 @@ void BlockMessage::MergeFrom(const BlockMessage& from) {
       mutable_up_vpn_res()->::tenon::block::protobuf::UpdateVpnCountResponse::MergeFrom(from.up_vpn_res());
     }
   }
-  if (cached_has_bits & 3840u) {
+  if (cached_has_bits & 16128u) {
     if (cached_has_bits & 0x00000100u) {
       mutable_account_init_req()->::tenon::block::protobuf::GetAccountInitInfoRequest::MergeFrom(from.account_init_req());
     }
@@ -6977,6 +7599,12 @@ void BlockMessage::MergeFrom(const BlockMessage& from) {
     }
     if (cached_has_bits & 0x00000800u) {
       mutable_ad_reward_req()->::tenon::block::protobuf::AdRewardRequest::MergeFrom(from.ad_reward_req());
+    }
+    if (cached_has_bits & 0x00001000u) {
+      mutable_ref_heights_req()->::tenon::block::protobuf::RefreshPoolHeightRequest::MergeFrom(from.ref_heights_req());
+    }
+    if (cached_has_bits & 0x00002000u) {
+      mutable_ref_heights_res()->::tenon::block::protobuf::RefreshPoolHeightResponse::MergeFrom(from.ref_heights_res());
     }
   }
 }
@@ -7017,6 +7645,8 @@ void BlockMessage::InternalSwap(BlockMessage* other) {
   swap(account_init_res_, other->account_init_res_);
   swap(vpn_active_req_, other->vpn_active_req_);
   swap(ad_reward_req_, other->ad_reward_req_);
+  swap(ref_heights_req_, other->ref_heights_req_);
+  swap(ref_heights_res_, other->ref_heights_res_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -7080,6 +7710,12 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::ElectSta
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::StatisticInfo* Arena::CreateMaybeMessage< ::tenon::block::protobuf::StatisticInfo >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::StatisticInfo >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::RefreshPoolHeightRequest* Arena::CreateMaybeMessage< ::tenon::block::protobuf::RefreshPoolHeightRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::block::protobuf::RefreshPoolHeightRequest >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::RefreshPoolHeightResponse* Arena::CreateMaybeMessage< ::tenon::block::protobuf::RefreshPoolHeightResponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::block::protobuf::RefreshPoolHeightResponse >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::BlockMessage* Arena::CreateMaybeMessage< ::tenon::block::protobuf::BlockMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::BlockMessage >(arena);

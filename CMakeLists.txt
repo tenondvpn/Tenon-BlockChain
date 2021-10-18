@@ -88,7 +88,7 @@ include_directories(SYSTEM
 
 # compile definitions
 add_definitions(
-    -DTENON_UNITTEST # for testing
+#    -DTENON_UNITTEST # for testing
     -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2r
 #    -DTEST_TRANSPORT_PERFOMANCE
     -DENABLE_CLIENT_MODE

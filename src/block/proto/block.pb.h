@@ -38,7 +38,7 @@ namespace protobuf_block_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[17];
+  static const ::google::protobuf::internal::ParseTable schema[19];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -81,6 +81,12 @@ extern GetTxBlockRequestDefaultTypeInternal _GetTxBlockRequest_default_instance_
 class GetTxBlockResponse;
 class GetTxBlockResponseDefaultTypeInternal;
 extern GetTxBlockResponseDefaultTypeInternal _GetTxBlockResponse_default_instance_;
+class RefreshPoolHeightRequest;
+class RefreshPoolHeightRequestDefaultTypeInternal;
+extern RefreshPoolHeightRequestDefaultTypeInternal _RefreshPoolHeightRequest_default_instance_;
+class RefreshPoolHeightResponse;
+class RefreshPoolHeightResponseDefaultTypeInternal;
+extern RefreshPoolHeightResponseDefaultTypeInternal _RefreshPoolHeightResponse_default_instance_;
 class StatisticInfo;
 class StatisticInfoDefaultTypeInternal;
 extern StatisticInfoDefaultTypeInternal _StatisticInfo_default_instance_;
@@ -115,6 +121,8 @@ template<> ::tenon::block::protobuf::GetAccountInitInfoRequest* Arena::CreateMay
 template<> ::tenon::block::protobuf::GetAccountInitInfoResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoResponse>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockRequest>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockResponse>(Arena*);
+template<> ::tenon::block::protobuf::RefreshPoolHeightRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::RefreshPoolHeightRequest>(Arena*);
+template<> ::tenon::block::protobuf::RefreshPoolHeightResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::RefreshPoolHeightResponse>(Arena*);
 template<> ::tenon::block::protobuf::StatisticInfo* Arena::CreateMaybeMessage<::tenon::block::protobuf::StatisticInfo>(Arena*);
 template<> ::tenon::block::protobuf::TxItem* Arena::CreateMaybeMessage<::tenon::block::protobuf::TxItem>(Arena*);
 template<> ::tenon::block::protobuf::UpdateVpnActiveRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::UpdateVpnActiveRequest>(Arena*);
@@ -2546,6 +2554,240 @@ class StatisticInfo : public ::google::protobuf::Message /* @@protoc_insertion_p
 };
 // -------------------------------------------------------------------
 
+class RefreshPoolHeightRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.RefreshPoolHeightRequest) */ {
+ public:
+  RefreshPoolHeightRequest();
+  virtual ~RefreshPoolHeightRequest();
+
+  RefreshPoolHeightRequest(const RefreshPoolHeightRequest& from);
+
+  inline RefreshPoolHeightRequest& operator=(const RefreshPoolHeightRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  RefreshPoolHeightRequest(RefreshPoolHeightRequest&& from) noexcept
+    : RefreshPoolHeightRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline RefreshPoolHeightRequest& operator=(RefreshPoolHeightRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RefreshPoolHeightRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const RefreshPoolHeightRequest* internal_default_instance() {
+    return reinterpret_cast<const RefreshPoolHeightRequest*>(
+               &_RefreshPoolHeightRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    16;
+
+  void Swap(RefreshPoolHeightRequest* other);
+  friend void swap(RefreshPoolHeightRequest& a, RefreshPoolHeightRequest& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RefreshPoolHeightRequest* New() const final {
+    return CreateMaybeMessage<RefreshPoolHeightRequest>(NULL);
+  }
+
+  RefreshPoolHeightRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<RefreshPoolHeightRequest>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const RefreshPoolHeightRequest& from);
+  void MergeFrom(const RefreshPoolHeightRequest& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RefreshPoolHeightRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint64 heights = 1;
+  int heights_size() const;
+  void clear_heights();
+  static const int kHeightsFieldNumber = 1;
+  ::google::protobuf::uint64 heights(int index) const;
+  void set_heights(int index, ::google::protobuf::uint64 value);
+  void add_heights(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      heights() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_heights();
+
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.RefreshPoolHeightRequest)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > heights_;
+  friend struct ::protobuf_block_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class RefreshPoolHeightResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.RefreshPoolHeightResponse) */ {
+ public:
+  RefreshPoolHeightResponse();
+  virtual ~RefreshPoolHeightResponse();
+
+  RefreshPoolHeightResponse(const RefreshPoolHeightResponse& from);
+
+  inline RefreshPoolHeightResponse& operator=(const RefreshPoolHeightResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  RefreshPoolHeightResponse(RefreshPoolHeightResponse&& from) noexcept
+    : RefreshPoolHeightResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline RefreshPoolHeightResponse& operator=(RefreshPoolHeightResponse&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RefreshPoolHeightResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const RefreshPoolHeightResponse* internal_default_instance() {
+    return reinterpret_cast<const RefreshPoolHeightResponse*>(
+               &_RefreshPoolHeightResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  void Swap(RefreshPoolHeightResponse* other);
+  friend void swap(RefreshPoolHeightResponse& a, RefreshPoolHeightResponse& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RefreshPoolHeightResponse* New() const final {
+    return CreateMaybeMessage<RefreshPoolHeightResponse>(NULL);
+  }
+
+  RefreshPoolHeightResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<RefreshPoolHeightResponse>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const RefreshPoolHeightResponse& from);
+  void MergeFrom(const RefreshPoolHeightResponse& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RefreshPoolHeightResponse* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint64 heights = 1;
+  int heights_size() const;
+  void clear_heights();
+  static const int kHeightsFieldNumber = 1;
+  ::google::protobuf::uint64 heights(int index) const;
+  void set_heights(int index, ::google::protobuf::uint64 value);
+  void add_heights(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      heights() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_heights();
+
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.RefreshPoolHeightResponse)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > heights_;
+  friend struct ::protobuf_block_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.BlockMessage) */ {
  public:
   BlockMessage();
@@ -2588,7 +2830,7 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_BlockMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    18;
 
   void Swap(BlockMessage* other);
   friend void swap(BlockMessage& a, BlockMessage& b) {
@@ -2784,6 +3026,30 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::block::protobuf::AdRewardRequest* mutable_ad_reward_req();
   void set_allocated_ad_reward_req(::tenon::block::protobuf::AdRewardRequest* ad_reward_req);
 
+  // optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+  bool has_ref_heights_req() const;
+  void clear_ref_heights_req();
+  static const int kRefHeightsReqFieldNumber = 13;
+  private:
+  const ::tenon::block::protobuf::RefreshPoolHeightRequest& _internal_ref_heights_req() const;
+  public:
+  const ::tenon::block::protobuf::RefreshPoolHeightRequest& ref_heights_req() const;
+  ::tenon::block::protobuf::RefreshPoolHeightRequest* release_ref_heights_req();
+  ::tenon::block::protobuf::RefreshPoolHeightRequest* mutable_ref_heights_req();
+  void set_allocated_ref_heights_req(::tenon::block::protobuf::RefreshPoolHeightRequest* ref_heights_req);
+
+  // optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+  bool has_ref_heights_res() const;
+  void clear_ref_heights_res();
+  static const int kRefHeightsResFieldNumber = 14;
+  private:
+  const ::tenon::block::protobuf::RefreshPoolHeightResponse& _internal_ref_heights_res() const;
+  public:
+  const ::tenon::block::protobuf::RefreshPoolHeightResponse& ref_heights_res() const;
+  ::tenon::block::protobuf::RefreshPoolHeightResponse* release_ref_heights_res();
+  ::tenon::block::protobuf::RefreshPoolHeightResponse* mutable_ref_heights_res();
+  void set_allocated_ref_heights_res(::tenon::block::protobuf::RefreshPoolHeightResponse* ref_heights_res);
+
   // @@protoc_insertion_point(class_scope:tenon.block.protobuf.BlockMessage)
  private:
   void set_has_block_req();
@@ -2810,6 +3076,10 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   void clear_has_vpn_active_req();
   void set_has_ad_reward_req();
   void clear_has_ad_reward_req();
+  void set_has_ref_heights_req();
+  void clear_has_ref_heights_req();
+  void set_has_ref_heights_res();
+  void clear_has_ref_heights_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2826,6 +3096,8 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::block::protobuf::GetAccountInitInfoResponse* account_init_res_;
   ::tenon::block::protobuf::UpdateVpnActiveRequest* vpn_active_req_;
   ::tenon::block::protobuf::AdRewardRequest* ad_reward_req_;
+  ::tenon::block::protobuf::RefreshPoolHeightRequest* ref_heights_req_;
+  ::tenon::block::protobuf::RefreshPoolHeightResponse* ref_heights_res_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // ===================================================================
@@ -5295,6 +5567,74 @@ StatisticInfo::elect_statistic() const {
 
 // -------------------------------------------------------------------
 
+// RefreshPoolHeightRequest
+
+// repeated uint64 heights = 1;
+inline int RefreshPoolHeightRequest::heights_size() const {
+  return heights_.size();
+}
+inline void RefreshPoolHeightRequest::clear_heights() {
+  heights_.Clear();
+}
+inline ::google::protobuf::uint64 RefreshPoolHeightRequest::heights(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.RefreshPoolHeightRequest.heights)
+  return heights_.Get(index);
+}
+inline void RefreshPoolHeightRequest::set_heights(int index, ::google::protobuf::uint64 value) {
+  heights_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.RefreshPoolHeightRequest.heights)
+}
+inline void RefreshPoolHeightRequest::add_heights(::google::protobuf::uint64 value) {
+  heights_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.RefreshPoolHeightRequest.heights)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+RefreshPoolHeightRequest::heights() const {
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.RefreshPoolHeightRequest.heights)
+  return heights_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+RefreshPoolHeightRequest::mutable_heights() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.RefreshPoolHeightRequest.heights)
+  return &heights_;
+}
+
+// -------------------------------------------------------------------
+
+// RefreshPoolHeightResponse
+
+// repeated uint64 heights = 1;
+inline int RefreshPoolHeightResponse::heights_size() const {
+  return heights_.size();
+}
+inline void RefreshPoolHeightResponse::clear_heights() {
+  heights_.Clear();
+}
+inline ::google::protobuf::uint64 RefreshPoolHeightResponse::heights(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.RefreshPoolHeightResponse.heights)
+  return heights_.Get(index);
+}
+inline void RefreshPoolHeightResponse::set_heights(int index, ::google::protobuf::uint64 value) {
+  heights_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.RefreshPoolHeightResponse.heights)
+}
+inline void RefreshPoolHeightResponse::add_heights(::google::protobuf::uint64 value) {
+  heights_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.RefreshPoolHeightResponse.heights)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+RefreshPoolHeightResponse::heights() const {
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.RefreshPoolHeightResponse.heights)
+  return heights_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+RefreshPoolHeightResponse::mutable_heights() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.RefreshPoolHeightResponse.heights)
+  return &heights_;
+}
+
+// -------------------------------------------------------------------
+
 // BlockMessage
 
 // optional .tenon.block.protobuf.GetTxBlockRequest block_req = 1;
@@ -5993,9 +6333,129 @@ inline void BlockMessage::set_allocated_ad_reward_req(::tenon::block::protobuf::
   // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.ad_reward_req)
 }
 
+// optional .tenon.block.protobuf.RefreshPoolHeightRequest ref_heights_req = 13;
+inline bool BlockMessage::has_ref_heights_req() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void BlockMessage::set_has_ref_heights_req() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void BlockMessage::clear_has_ref_heights_req() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void BlockMessage::clear_ref_heights_req() {
+  if (ref_heights_req_ != NULL) ref_heights_req_->Clear();
+  clear_has_ref_heights_req();
+}
+inline const ::tenon::block::protobuf::RefreshPoolHeightRequest& BlockMessage::_internal_ref_heights_req() const {
+  return *ref_heights_req_;
+}
+inline const ::tenon::block::protobuf::RefreshPoolHeightRequest& BlockMessage::ref_heights_req() const {
+  const ::tenon::block::protobuf::RefreshPoolHeightRequest* p = ref_heights_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.ref_heights_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::RefreshPoolHeightRequest*>(
+      &::tenon::block::protobuf::_RefreshPoolHeightRequest_default_instance_);
+}
+inline ::tenon::block::protobuf::RefreshPoolHeightRequest* BlockMessage::release_ref_heights_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.ref_heights_req)
+  clear_has_ref_heights_req();
+  ::tenon::block::protobuf::RefreshPoolHeightRequest* temp = ref_heights_req_;
+  ref_heights_req_ = NULL;
+  return temp;
+}
+inline ::tenon::block::protobuf::RefreshPoolHeightRequest* BlockMessage::mutable_ref_heights_req() {
+  set_has_ref_heights_req();
+  if (ref_heights_req_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::RefreshPoolHeightRequest>(GetArenaNoVirtual());
+    ref_heights_req_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.ref_heights_req)
+  return ref_heights_req_;
+}
+inline void BlockMessage::set_allocated_ref_heights_req(::tenon::block::protobuf::RefreshPoolHeightRequest* ref_heights_req) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete ref_heights_req_;
+  }
+  if (ref_heights_req) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      ref_heights_req = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, ref_heights_req, submessage_arena);
+    }
+    set_has_ref_heights_req();
+  } else {
+    clear_has_ref_heights_req();
+  }
+  ref_heights_req_ = ref_heights_req;
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.ref_heights_req)
+}
+
+// optional .tenon.block.protobuf.RefreshPoolHeightResponse ref_heights_res = 14;
+inline bool BlockMessage::has_ref_heights_res() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void BlockMessage::set_has_ref_heights_res() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void BlockMessage::clear_has_ref_heights_res() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void BlockMessage::clear_ref_heights_res() {
+  if (ref_heights_res_ != NULL) ref_heights_res_->Clear();
+  clear_has_ref_heights_res();
+}
+inline const ::tenon::block::protobuf::RefreshPoolHeightResponse& BlockMessage::_internal_ref_heights_res() const {
+  return *ref_heights_res_;
+}
+inline const ::tenon::block::protobuf::RefreshPoolHeightResponse& BlockMessage::ref_heights_res() const {
+  const ::tenon::block::protobuf::RefreshPoolHeightResponse* p = ref_heights_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.ref_heights_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::RefreshPoolHeightResponse*>(
+      &::tenon::block::protobuf::_RefreshPoolHeightResponse_default_instance_);
+}
+inline ::tenon::block::protobuf::RefreshPoolHeightResponse* BlockMessage::release_ref_heights_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.ref_heights_res)
+  clear_has_ref_heights_res();
+  ::tenon::block::protobuf::RefreshPoolHeightResponse* temp = ref_heights_res_;
+  ref_heights_res_ = NULL;
+  return temp;
+}
+inline ::tenon::block::protobuf::RefreshPoolHeightResponse* BlockMessage::mutable_ref_heights_res() {
+  set_has_ref_heights_res();
+  if (ref_heights_res_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::RefreshPoolHeightResponse>(GetArenaNoVirtual());
+    ref_heights_res_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.ref_heights_res)
+  return ref_heights_res_;
+}
+inline void BlockMessage::set_allocated_ref_heights_res(::tenon::block::protobuf::RefreshPoolHeightResponse* ref_heights_res) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete ref_heights_res_;
+  }
+  if (ref_heights_res) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      ref_heights_res = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, ref_heights_res, submessage_arena);
+    }
+    set_has_ref_heights_res();
+  } else {
+    clear_has_ref_heights_res();
+  }
+  ref_heights_res_ = ref_heights_res;
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.ref_heights_res)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
