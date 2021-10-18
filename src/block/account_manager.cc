@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "bft/dispatch_pool.h"
+#include "bft/gid_manager.h"
 #include "block/shard_statistic.h"
 #include "contract/contract_manager.h"
 #include "common/encode.h"
@@ -250,7 +251,8 @@ int AccountManager::HandleFinalStatisticBlock(
 
 int AccountManager::AddBlockItemToDb(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
-        db::DbWriteBach& db_batch) {
+        db::DbWriteBach& db_batch,
+        bool is_kv_sync) {
     const auto& tx_list = block_item->tx_list();
     if (tx_list.empty()) {
         BLOCK_ERROR("tx block tx list is empty.");
@@ -296,6 +298,17 @@ int AccountManager::AddBlockItemToDb(
                 common::Encode::HexEncode(account_id).c_str());
             assert(false);
             exit(0);
+        }
+
+        if (is_kv_sync) {
+            // reset tx gid and remove from tx pools
+            bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true);
+            bft::DispatchPool::Instance()->RemoveTx(
+                pool_idx,
+                tx_list[i].to_add(),
+                tx_list[i].type(),
+                tx_list[i].call_contract_step(),
+                tx_list[i].gid());
         }
 
         if (tx_list[i].type() == common::kConsensusCallContract ||

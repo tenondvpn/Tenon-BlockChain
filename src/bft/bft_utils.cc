@@ -72,12 +72,6 @@ uint32_t NewAccountGetNetworkId(const std::string& addr) {
         network::kConsensusShardBeginNetworkId;
 }
 
-std::string GetUniversalGid(bool to, const std::string& gid) {
-    return std::to_string(common::GlobalInfo::Instance()->network_id()) +
-        (to ? std::string("_t_") : std::string("_")) +
-        gid;
-}
-
 bool IsRootSingleBlockTx(uint32_t tx_type) {
     if (tx_type == common::kConsensusRootElectShard ||
             tx_type == common::kConsensusRootTimeBlock) {

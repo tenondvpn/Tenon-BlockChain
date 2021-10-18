@@ -59,7 +59,8 @@ public:
     int AddNewBlock(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch,
-        bool to_cache);
+        bool to_cache,
+        bool is_kv_sync);
     int GetBlockWithHeight(
         uint32_t network_id,
         uint32_t pool_index,

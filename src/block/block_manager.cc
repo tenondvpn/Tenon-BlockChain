@@ -597,7 +597,8 @@ void BlockManager::SendBlockResponse(
 int BlockManager::AddNewBlock(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch,
-        bool to_cache) {
+        bool to_cache,
+        bool is_kv_sync) {
     if (!block_hash_limit_set_.Push(block_item->hash())) {
         return kBlockSuccess;
     }
@@ -618,7 +619,7 @@ int BlockManager::AddNewBlock(
         AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
     }
 
-    AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch);
+    AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch, is_kv_sync);
     ShardStatistic::Instance()->AddStatistic(block_item);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {

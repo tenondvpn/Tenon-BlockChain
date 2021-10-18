@@ -30,7 +30,10 @@ std::string GidManager::GetUniversalGid(
     }
 }
 
-bool GidManager::NewGidTxValid(const std::string& gid, bft::protobuf::TxInfo& tx_info) {
+bool GidManager::NewGidTxValid(
+        const std::string& gid,
+        const bft::protobuf::TxInfo& tx_info,
+        bool save_to_db) {
     std::string tx_gid = GetUniversalGid(
         tx_info.to_add(),
         tx_info.type(),
@@ -49,10 +52,14 @@ bool GidManager::NewGidTxValid(const std::string& gid, bft::protobuf::TxInfo& tx
         return false;
     }
 
+    if (save_to_db) {
+        db::Db::Instance()->Put(db_for_gid, "");
+    }
+
     return true;
 }
 
-bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
+bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
     std::string tx_gid = GetUniversalGid(
         tx_ptr->tx.to_add(),
         tx_ptr->tx.type(),
@@ -73,7 +80,7 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
         return false;
     }
 
-    db::Db::Instance()->Put(db_for_gid, CreateTxInfo(tx_ptr));
+    db::Db::Instance()->Put(db_for_gid, "");
     return true;
 }
 
@@ -118,15 +125,6 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr tx_ptr) {
 // 
 //     return tx_ptr;
 // }
-
-std::string GidManager::CreateTxInfo(TxItemPtr tx_ptr) {
-    protobuf::TxInfo tx = tx_ptr->tx;
-    tx.set_gas_limit(0);
-    tx.set_gas_price(0);
-    tx.set_gas_used(0);
-    tx.set_status(kBftSuccess);
-    return tx.SerializeAsString();
-}
 
 }  // namespace bft
 

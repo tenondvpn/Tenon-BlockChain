@@ -25,7 +25,8 @@ public:
     static AccountManager* Instance();
     int AddBlockItemToDb(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
-        db::DbWriteBach& db_batch);
+        db::DbWriteBach& db_batch,
+        bool is_kv_sync);
     int AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);

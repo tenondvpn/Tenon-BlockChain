@@ -56,7 +56,12 @@ void BlsManager::ProcessNewElectBlock(
     }
 
     std::lock_guard<std::mutex> guard(mutex_);
-    waiting_bls_ = std::make_shared<bls::BlsDkg>();
+    waiting_bls_ = std::make_shared<bls::BlsDkg>(
+        0,
+        0,
+        libff::alt_bn128_Fr::zero(),
+        libff::alt_bn128_G2::zero(),
+        libff::alt_bn128_G2::zero());
     waiting_bls_->OnNewElectionBlock(elect_height, new_members);
 }
 

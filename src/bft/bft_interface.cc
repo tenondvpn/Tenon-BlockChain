@@ -151,7 +151,9 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     // keep the latest election
     if (elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id()) != bft_msg.elect_height()) {
-        BFT_ERROR("leader elect height not equal to local.");
+        BFT_ERROR("leader elect height not equal to local. "
+            "local elect height: %lu, leader elect height: %lu",
+            elect_height_, bft_msg.elect_height());
         return false;
     }
 
@@ -163,7 +165,9 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(mutex_);
     if (local_elect_height < bft_msg.elect_height()) {
-        BFT_ERROR("leader elect height not equal to local.");
+        BFT_ERROR("leader elect height not equal to local. "
+            "local elect height: %lu, leader elect height: %lu",
+            local_elect_height, bft_msg.elect_height());
         return false;
     }
 

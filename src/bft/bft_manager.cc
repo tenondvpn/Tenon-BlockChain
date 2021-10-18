@@ -71,12 +71,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-//     BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-//         header.id(),
-//         bft_msg.leader(),
-//         common::Encode::HexEncode(bft_msg.gid()).c_str(),
-//         bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-//         bft_msg.bft_step());
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -1300,7 +1300,11 @@ int BftManager::LeaderCallCommit(
 // only genesis call once
 int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block) {
     db::DbWriteBach db_batch;
-    if (block::BlockManager::Instance()->AddNewBlock(genesis_block, db_batch, true) != block::kBlockSuccess) {
+    if (block::BlockManager::Instance()->AddNewBlock(
+            genesis_block,
+            db_batch,
+            true,
+            false) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
     }
@@ -1765,6 +1769,7 @@ int BftManager::AddKeyValueSyncBlock(
         return kBftError;
     }
 
+    queue_item_ptr->is_kv_synced = true;
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     return kBftSuccess;
 }
@@ -1778,7 +1783,8 @@ void BftManager::BlockToDb() {
                 block::BlockManager::Instance()->AddNewBlock(
                     db_item_ptr->block_ptr,
                     db_item_ptr->db_batch,
-                    false);
+                    false,
+                    db_item_ptr->is_kv_synced);
             }
         }
     }
@@ -1815,7 +1821,7 @@ void BftManager::HandleSyncWaitingBlock(
     } else {
         db::DbWriteBach db_batch;
         block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
-        block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch);
+        block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
         db::Db::Instance()->Put(db_batch);
     }
     
@@ -1941,7 +1947,7 @@ void BftManager::HandleRootWaitingBlock(
         } else {
             db::DbWriteBach db_batch;
             block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
-            block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch);
+            block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
             db::Db::Instance()->Put(db_batch);
         }
         

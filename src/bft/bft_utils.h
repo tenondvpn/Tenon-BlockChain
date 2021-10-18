@@ -104,6 +104,7 @@ struct BlockToDbItem {
         : block_ptr(bptr) {}
     BlockPtr block_ptr;
     db::DbWriteBach db_batch;
+    bool is_kv_synced{ false };
 };
 
 struct WaitingBlockItem {

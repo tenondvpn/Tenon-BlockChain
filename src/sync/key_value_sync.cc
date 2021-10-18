@@ -388,7 +388,7 @@ int KeyValueSync::HandleExistsBlock(const std::string& key) {
     auto tenon_block = std::make_shared<bft::protobuf::Block>();
     if (tenon_block->ParseFromString(val) && tenon_block->hash() == key) {
         db::DbWriteBach db_batch;
-        block::BlockManager::Instance()->AddNewBlock(tenon_block, db_batch, true);
+        block::BlockManager::Instance()->AddNewBlock(tenon_block, db_batch, true, false);
         return kSyncSuccess;
     }
 
@@ -408,7 +408,7 @@ void KeyValueSync::ProcessSyncValueResponse(
         auto block_item = std::make_shared<bft::protobuf::Block>();
         if (block_item->ParseFromString(iter->value()) &&
                 (iter->has_height() || block_item->hash() == iter->key())) {
-            std::cout << "get block success height: " << iter->height() << std::endl;
+            SYNC_DEBUG("get block success height: %lu.", iter->height());
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());

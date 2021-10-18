@@ -77,7 +77,7 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
     tx_info->set_gas_limit(0llu);
     tx_info->set_amount(0);
     tx_info->set_network_id(network::kRootCongressNetworkId);
-    if (!bft::GidManager::Instance()->NewGidTxValid(gid, *tx_info)) {
+    if (!bft::GidManager::Instance()->NewGidTxValid(gid, *tx_info, false)) {
         BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu"
             "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
             common::Encode::HexEncode(gid).c_str(),
