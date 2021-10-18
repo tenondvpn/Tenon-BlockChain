@@ -243,8 +243,7 @@ void ElectManager::OnNewElectBlock(
 }
 
 void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
-    if (!elect_block.has_prev_members() ||
-        elect_block.prev_members().prev_elect_height() <= 0) {
+    if (!elect_block.has_prev_members() || elect_block.prev_members().prev_elect_height() <= 0) {
         ELECT_ERROR("not has prev network id: %u, elect: %lu",
             elect_block.shard_network_id(),
             elect_block.elect_height());

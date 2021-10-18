@@ -1790,6 +1790,13 @@ void BftManager::HandleSyncWaitingBlock(
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        block::AccountManager::Instance()->SetMaxHeight(
+            block.pool_index(),
+            block.height());
+        return;
+    }
+
     auto tmp_block_ptr = block_ptr;
     if (tmp_block_ptr == nullptr) {
         tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);

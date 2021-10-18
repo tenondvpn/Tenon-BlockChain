@@ -3,15 +3,16 @@
 
 #include <algorithm>
 
-#include "common/encode.h"
 #include "bft/dispatch_pool.h"
-#include "statistics/statistics.h"
+#include "block/shard_statistic.h"
 #include "contract/contract_manager.h"
+#include "common/encode.h"
 #include "db/db.h"
 #include "election/member_manager.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_manager.h"
-#include "block/shard_statistic.h"
+#include "statistics/statistics.h"
+#include "sync/key_value_sync.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
@@ -44,9 +45,11 @@ AccountManager* AccountManager::Instance() {
 
 AccountManager::AccountManager() {
     for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
-        network_block_[i] = new block::DbPoolInfo(i);
+        block_pools_[i] = new block::DbPoolInfo(i);
     }
 
+    srand(time(NULL));
+    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds() + rand() % 30;
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));
@@ -58,8 +61,8 @@ AccountManager::AccountManager() {
 AccountManager::~AccountManager() {
     {
         for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
-            if (network_block_[i] != nullptr) {
-                delete network_block_[i];
+            if (block_pools_[i] != nullptr) {
+                delete block_pools_[i];
             }
         }
     }
@@ -355,12 +358,12 @@ int AccountManager::AddBlockItemToDb(
         }
     }
 
-    network_block_[consistent_pool_index]->SetHeightTree(block_item->height());
+    block_pools_[consistent_pool_index]->SetHeightTree(block_item->height());
     return kBlockSuccess;
 }
 
 void AccountManager::SetMaxHeight(uint32_t pool_idx, uint64_t height) {
-    network_block_[pool_idx]->SetMaxHeight(height);
+    block_pools_[pool_idx]->SetMaxHeight(height);
 }
 
 int AccountManager::AddBlockItemToCache(
@@ -799,17 +802,17 @@ int AccountManager::GetBlockInfo(
         std::string* hash,
         uint64_t* tm_height,
         uint64_t* tm_with_block_height) {
-    int res = network_block_[pool_idx]->GetHeight(height);
+    int res = block_pools_[pool_idx]->GetHeight(height);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
         return res;
     }
 
-    if (network_block_[pool_idx]->GetHash(hash) != kBlockSuccess) {
+    if (block_pools_[pool_idx]->GetHash(hash) != kBlockSuccess) {
         return kBlockError;
     }
 
-    if (network_block_[pool_idx]->GetTimeBlockHeight(
+    if (block_pools_[pool_idx]->GetTimeBlockHeight(
             tm_height,
             tm_with_block_height) != kBlockSuccess) {
         return kBlockError;
@@ -823,15 +826,15 @@ void AccountManager::SetPool(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     uint64_t height = 0;
-    if (network_block_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
+    if (block_pools_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
             return;
         }
     }
 
-    network_block_[pool_index]->SetHash(block_item->hash(), db_batch);
-    network_block_[pool_index]->SetHeight(block_item->height(), db_batch);
-    network_block_[pool_index]->SetTimeBlockHeight(
+    block_pools_[pool_index]->SetHash(block_item->hash(), db_batch);
+    block_pools_[pool_index]->SetHeight(block_item->height(), db_batch);
+    block_pools_[pool_index]->SetTimeBlockHeight(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
@@ -843,18 +846,31 @@ void AccountManager::SetPool(
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
-    return network_block_[pool_index]->GetBaseAddr();
+    return block_pools_[pool_index]->GetBaseAddr();
 }
 
 void AccountManager::CheckMissingHeight() {
     uint32_t synced_height = 0;
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
         std::vector<uint64_t> missing_heights;
-        network_block_[i]->GetMissingHeights(&missing_heights);
+        block_pools_[i]->GetMissingHeights(&missing_heights);
 
         synced_height += missing_heights.size();
         for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
             std::cout << "missing height pool index: " << i << ", height: " << missing_heights[h_idx] << std::endl;
+            if (i == common::kImmutablePoolSize) {
+                sync::KeyValueSync::Instance()->AddSyncHeight(
+                    network::kRootCongressNetworkId,
+                    i,
+                    missing_heights[h_idx],
+                    sync::kSyncHighest);
+            } else {
+                sync::KeyValueSync::Instance()->AddSyncHeight(
+                    common::GlobalInfo::Instance()->network_id(),
+                    i,
+                    missing_heights[h_idx],
+                    sync::kSyncHighest);
+            }
         }
 
         if (synced_height > 64) {
@@ -868,17 +884,119 @@ void AccountManager::CheckMissingHeight() {
 }
 
 void AccountManager::PrintPoolHeightTree(uint32_t pool_idx) {
+    block_pools_[pool_idx]->PrintHeightTree();
 
 }
 
 void AccountManager::FlushPoolHeightTreeToDb() {
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
-        network_block_[i]->FlushTreeToDb();
+        block_pools_[i]->FlushTreeToDb();
     }
 
     flush_db_tick_.CutOff(
         kFushTreeToDbPeriod,
         std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
+}
+
+void AccountManager::RefreshPoolMaxHeight() {
+    auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+    if (now_tm_sec - prev_refresh_heights_tm_ > 10) {
+
+    }
+}
+
+void AccountManager::SendRefreshHeightsRequest() {
+    transport::protobuf::Header msg;
+    dht::BaseDhtPtr dht = nullptr;
+    dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+    if (!dht || dht->readonly_dht()->size() < 3) {
+        dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
+        if (des_net_id >= network::kConsensusShardEndNetworkId) {
+            des_net_id -= network::kConsensusWaitingShardOffset;
+        }
+    }
+
+    msg.set_src_dht_key(dht->local_node()->dht_key());
+    dht::DhtKeyManager dht_key(des_net_id, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_des_dht_key_hash(common::Hash::Hash64(dht_key.StrKey()));
+    msg.set_priority(transport::kTransportPriorityMiddle);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_universal(false);
+    msg.set_type(common::kBlockMessage);
+    msg.set_hop_count(0);
+    msg.set_client(false);
+    block::protobuf::BlockMessage block_msg;
+    auto ref_hegihts_req = block_msg.mutable_ref_heights_req();
+    for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        uint64_t height;
+        block_pools_[i]->GetHeight(&height);
+        ref_hegihts_req->add_heights(height);
+    }
+
+    msg.set_data(block_msg.SerializeAsString());
+    dht->SendToClosestNode(msg);
+}
+
+void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Header& header) {
+    transport::protobuf::Header msg;
+    dht::BaseDhtPtr dht = nullptr;
+    dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+    if (!dht || dht->readonly_dht()->size() < 3) {
+        dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
+        if (des_net_id >= network::kConsensusShardEndNetworkId) {
+            des_net_id -= network::kConsensusWaitingShardOffset;
+        }
+    }
+
+    msg.set_src_dht_key(dht->local_node()->dht_key());
+    dht::DhtKeyManager dht_key(des_net_id, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_des_dht_key_hash(common::Hash::Hash64(dht_key.StrKey()));
+    msg.set_priority(transport::kTransportPriorityMiddle);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_universal(false);
+    msg.set_type(common::kBlockMessage);
+    msg.set_hop_count(0);
+    msg.set_client(false);
+    block::protobuf::BlockMessage block_msg;
+    auto ref_hegihts_req = block_msg.mutable_ref_heights_res();
+    for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
+        uint64_t height;
+        block_pools_[i]->GetHeight(&height);
+        ref_hegihts_req->add_heights(height);
+    }
+
+    msg.set_data(block_msg.SerializeAsString());
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        header.from_ip(), header.from_port(), 0, msg);
+}
+
+int AccountManager::HandleRefreshHeightsReq(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg) {
+    for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
+        block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
+    }
+
+    SendRefreshHeightsResponse(header);
+    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
+    return kBlockSuccess;
+}
+
+int AccountManager::HandleRefreshHeightsRes(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg) {
+    for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
+        block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
+    }
+
+    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
+    return kBlockSuccess;
 }
 
 }  // namespace block

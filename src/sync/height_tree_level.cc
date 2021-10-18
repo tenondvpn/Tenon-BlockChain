@@ -288,6 +288,7 @@ void HeightTreeLevel::GetTreeData(std::vector<uint64_t>* data_vec) {
 }
 
 void HeightTreeLevel::PrintTree() {
+    std::cout << "max height: " << max_height_ << std::endl;
     uint32_t level_vec_index = 1;
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {

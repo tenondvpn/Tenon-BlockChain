@@ -103,6 +103,14 @@ message StatisticInfo {
     repeated ElectStatisticInfo elect_statistic = 3;
 }
 
+message RefreshPoolHeightRequest {
+    repeated uint64 heights = 1;
+}
+
+message RefreshPoolHeightResponse {
+    repeated uint64 heights = 1;
+}
+
 message BlockMessage {
     optional GetTxBlockRequest block_req = 1;
     optional GetTxBlockResponse block_res = 2;
@@ -116,4 +124,6 @@ message BlockMessage {
     optional GetAccountInitInfoResponse account_init_res = 10;
     optional UpdateVpnActiveRequest vpn_active_req = 11;
     optional AdRewardRequest ad_reward_req = 12;
+    optional RefreshPoolHeightRequest ref_heights_req = 13;
+    optional RefreshPoolHeightResponse ref_heights_res = 14;
 }

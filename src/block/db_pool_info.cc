@@ -163,7 +163,10 @@ int DbPoolInfo::SetHeight(uint64_t height, db::DbWriteBach& db_batch) {
 }
 
 int DbPoolInfo::SetMaxHeight(uint64_t max_height) {
-    max_height_ = max_height;
+    if (max_height != common::kInvalidUint64 && max_height_ < max_height) {
+        max_height_ = max_height;
+        std::cout << "set pool max height: " << pool_index_ << ", height: " << max_height << std::endl;
+    }
 }
 
 int DbPoolInfo::GetHeight(uint64_t* height) {

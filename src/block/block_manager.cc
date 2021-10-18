@@ -261,6 +261,16 @@ void BlockManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         HandleAdRewardRequest(header, block_msg);
         return;
     }
+    
+    if (block_msg.has_ref_heights_req()) {
+        AccountManager::Instance()->HandleRefreshHeightsReq(header, block_msg);
+        return;
+    }
+
+    if (block_msg.has_ref_heights_res()) {
+        AccountManager::Instance()->HandleRefreshHeightsRes(header, block_msg);
+        return;
+    }
 
     network::Route::Instance()->Send(header);
 }
