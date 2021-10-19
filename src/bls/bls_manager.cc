@@ -43,9 +43,6 @@ void BlsManager::ProcessNewElectBlock(
         uint32_t network_id,
         uint64_t elect_height,
         elect::MembersPtr& new_members) {
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        return;
-    }
     {
         std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
         auto iter = finish_networks_map_.find(network_id);

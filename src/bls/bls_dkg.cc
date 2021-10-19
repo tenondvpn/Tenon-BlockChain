@@ -91,12 +91,16 @@ void BlsDkg::OnNewElectionBlock(
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
         std::bind(&BlsDkg::BroadcastVerfify, this));
-//     dkg_swap_seckkey_timer_.CutOff(
-//         kDkgSwapSecKeyBeginUs + local_offset_us_,
-//         std::bind(&BlsDkg::SwapSecKey, this));
-//     dkg_finish_timer_.CutOff(
-//         kDkgFinishBeginUs + local_offset_us_,
-//         std::bind(&BlsDkg::Finish, this));
+    if (!common::GlobalInfo::Instance()->missing_node()) {
+        dkg_swap_seckkey_timer_.CutOff(
+            kDkgSwapSecKeyBeginUs + local_offset_us_,
+            std::bind(&BlsDkg::SwapSecKey, this));
+        dkg_finish_timer_.CutOff(
+            kDkgFinishBeginUs + local_offset_us_,
+            std::bind(&BlsDkg::Finish, this));
+    }
+
+    BLS_INFO("BlsDkg::OnNewElectionBlock coming: %lu, member size: %u", elect_height, members_->size());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -208,6 +212,8 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
+    BLS_DEBUG("receive verify broadcast local: %d, remote: %d, all: %d",
+        local_member_index_, bls_msg.index(), members_->size());
     for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
         auto x_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c0().c_str());
         auto x_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c1().c_str());
@@ -284,7 +290,8 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    BLS_ERROR("bls swaped sec key local: %d, remote: %d, all: %d", local_member_index_, bls_msg.index(), all_secret_key_contribution_.size());
+    BLS_ERROR("bls swaped sec key local: %d, remote: %d, all: %d",
+        local_member_index_, bls_msg.index(), all_secret_key_contribution_.size());
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -293,7 +300,6 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        all_verification_vector_[bls_msg.index()][0] = libff::alt_bn128_G2::zero();
         BLS_ERROR("dkg_instance_->Verification failed!elect height: %lu,"
             "local_member_index_: %d, remote idx: %d, %s:%d",
             elect_hegiht_,
@@ -406,8 +412,13 @@ void BlsDkg::SwapSecKey() try {
 //             common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
 //         return;
 //     }
-
     std::lock_guard<std::mutex> guard(mutex_);
+    for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
+        if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            return;
+        }
+    }
+
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
     }
@@ -533,6 +544,12 @@ void BlsDkg::Finish() try {
 //     }
 // 
     std::lock_guard<std::mutex> guard(mutex_);
+    for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
+        if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            return;
+        }
+    }
+
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
@@ -545,20 +562,28 @@ void BlsDkg::Finish() try {
     }
 
     common::Bitmap bitmap(bitmap_size);
-    local_sec_key_ = dkg_instance_->SecretKeyShareCreate(
-        all_secret_key_contribution_[local_member_index_]);
-    local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
     common_public_key_ = libff::alt_bn128_G2::zero();
+    std::vector<libff::alt_bn128_Fr> valid_seck_keys;
     for (size_t i = 0; i < members_->size(); ++i) {
         if (invalid_node_map_[i] >= min_aggree_member_count_ ||
-                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero() ||
+            all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero()) {
             continue;
         }
 
         bitmap.Set(i);
+        valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
         common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
     }
 
+    if (bitmap.valid_count() < members_->size() * kBlsMaxExchangeMembersRatio) {
+        return;
+    }
+
+    crypto::Dkg dkg(common::GetSignerCount(bitmap.valid_count()), bitmap.valid_count());
+    local_sec_key_ = dkg.SecretKeyShareCreate(
+        valid_seck_keys);
+    local_publick_key_ = dkg.GetPublicKeyFromSecretKey(local_sec_key_);
     DumpLocalPrivateKey();
     BroadcastFinish(bitmap);
     finished_ = true;
