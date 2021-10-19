@@ -329,8 +329,21 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
 
     uint32_t t = min_aggree_member_count_;
     uint32_t n = members_ptr_->size();
+    uint32_t invalid_idx = -1;
+    for (uint32_t i = 0; i < members_ptr_->size(); ++i) {
+        if ((*members_ptr_)[i]->id == common::Encode::HexDecode("09805e35f49739719e1830ec4a494bde9d868945")) {
+            invalid_idx = i;
+            std::cout << "get 09805e35f49739719e1830ec4a494bde9d868945 and ignore it." << std::endl;
+            break;
+        }
+    }
+
     std::vector<size_t> idx_vec;
     for (uint32_t i = 0; i < bit_size; ++i) {
+        if (i == invalid_idx) {
+            continue;
+        }
+
         if (!prepare_bitmap_.Valid(i)) {
             continue;
         }

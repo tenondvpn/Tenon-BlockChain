@@ -40,9 +40,9 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        return;
-    }
+//     if (common::GlobalInfo::Instance()->missing_node()) {
+//         return;
+//     }
 
 //     std::cout << "new election block: " << elect_height << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
@@ -91,12 +91,12 @@ void BlsDkg::OnNewElectionBlock(
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
         std::bind(&BlsDkg::BroadcastVerfify, this));
-    dkg_swap_seckkey_timer_.CutOff(
-        kDkgSwapSecKeyBeginUs + local_offset_us_,
-        std::bind(&BlsDkg::SwapSecKey, this));
-    dkg_finish_timer_.CutOff(
-        kDkgFinishBeginUs + local_offset_us_,
-        std::bind(&BlsDkg::Finish, this));
+//     dkg_swap_seckkey_timer_.CutOff(
+//         kDkgSwapSecKeyBeginUs + local_offset_us_,
+//         std::bind(&BlsDkg::SwapSecKey, this));
+//     dkg_finish_timer_.CutOff(
+//         kDkgFinishBeginUs + local_offset_us_,
+//         std::bind(&BlsDkg::Finish, this));
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -284,6 +284,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    BLS_ERROR("bls swaped sec key local: %d, remote: %d, all: %d", local_member_index_, bls_msg.index(), all_secret_key_contribution_.size());
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -294,10 +295,12 @@ void BlsDkg::HandleSwapSecKey(
             all_verification_vector_[bls_msg.index()])) {
         all_verification_vector_[bls_msg.index()][0] = libff::alt_bn128_G2::zero();
         BLS_ERROR("dkg_instance_->Verification failed!elect height: %lu,"
-            "local_member_index_: %d, remote idx: %d",
+            "local_member_index_: %d, remote idx: %d, %s:%d",
             elect_hegiht_,
             local_member_index_,
-            bls_msg.index());
+            bls_msg.index(),
+            header.from_ip().c_str(),
+            header.from_port());
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
             libff::alt_bn128_Fr::zero();
         // send against
