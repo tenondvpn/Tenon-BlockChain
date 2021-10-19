@@ -1,1 +1,0 @@
-../mpn/x86_64/coreihwl/mul_1.asm

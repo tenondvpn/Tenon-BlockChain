@@ -1,1 +1,0 @@
-/usr/local/gcc-8.3/bin/g++  -fPIC -std=c++11 -Wall -Wextra -Wfatal-errors -O3 -DNDEBUG  -rdynamic CMakeFiles/algebra_fields_test.dir/algebra/fields/tests/test_fields.cpp.o  -o algebra_fields_test libff.a /usr/lib64/libgmp.so ../depends/libzm.a 

@@ -1,1 +1,0 @@
-/usr/local/gcc-8.3/bin/g++  -fPIC -std=c++11 -Wall -Wextra -Wfatal-errors -O3 -DNDEBUG  -rdynamic CMakeFiles/multiexp_profile.dir/algebra/scalar_multiplication/multiexp_profile.cpp.o  -o multiexp_profile libff.a /usr/lib64/libgmp.so ../depends/libzm.a 
