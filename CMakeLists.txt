@@ -40,7 +40,6 @@ set(LINK_UUID )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LIB_DIR ${DEP_DIR}/libs/linux)
-    set(LIB_DIR ${DEP_DIR}/libs/linux/libbls)
     set(LINK_UUID uuid)
     find_package(OpenSSL REQUIRED)
     include_directories(${OPENSSL_INCLUDE_DIR})
@@ -82,6 +81,7 @@ if(MSVC)
 endif()
 include_directories(SYSTEM
     ${DEP_DIR}/include
+    ${DEP_DIR}/include/libbls
     ${DEP_DIR}/include/uv
     ${DEP_DIR}/include/sslib
     ${CURL_INCLUDE_DIRS} # for curl
