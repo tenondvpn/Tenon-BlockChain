@@ -207,6 +207,8 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
                 bft_item_ptr->bft_msg,
                 &sign_hash) == kBftSuccess) {
             HandleBftMessage(bft_ptr, bft_item_ptr->bft_msg, sign_hash, bft_item_ptr->header_ptr);
+        } else {
+            bft_ptr->not_aggree();
         }
     }
     
@@ -1218,12 +1220,12 @@ int BftManager::LeaderCallCommit(
         const transport::protobuf::Header& header,
         BftInterfacePtr& bft_ptr) {
     // TODO: remove just for test
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        block::AccountManager::Instance()->SetMaxHeight(
-            bft_ptr->pool_index(),
-            bft_ptr->prpare_block()->height());
-        return kBftError;
-    }
+//     if (common::GlobalInfo::Instance()->missing_node()) {
+//         block::AccountManager::Instance()->SetMaxHeight(
+//             bft_ptr->pool_index(),
+//             bft_ptr->prpare_block()->height());
+//         return kBftError;
+//     }
 
     // check pre-commit multi sign and leader commit
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());

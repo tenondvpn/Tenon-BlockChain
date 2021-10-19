@@ -152,7 +152,8 @@ int BlsManager::Sign(
     bn_sign.to_affine_coordinates();
     *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
     *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
-    
+    std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
+    BFT_DEBUG("sign data use sec key: %s", sec_key.c_str());
 //     BLSPublicKeyShare pkey(local_sec_key, t, n);
 //     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
 //     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
@@ -188,18 +189,17 @@ int BlsManager::Verify(
         return kBlsError;
     }
 
-//     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
-//     sign_ptr->to_affine_coordinates();
-//     auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-//     auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
-//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-//     pk->to_affine_coordinates();
-//     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
-//     auto strs = pk_ptr->toString();
-//     BFT_DEBUG("verify t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-//         strs->at(2).c_str(), strs->at(3).c_str(), sign_x.c_str(), sign_y.c_str(),
-//         common::Encode::HexEncode(sign_msg).c_str());
+    auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
+    sign_ptr->to_affine_coordinates();
+    auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
+    auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+    pk->to_affine_coordinates();
+    auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
+    auto strs = pk_ptr->toString();
+    BFT_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s",
+        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+        strs->at(2).c_str(), strs->at(3).c_str());
 
 //     std::cout << "verify t: " << t << ", n: " << n
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
@@ -321,6 +321,7 @@ void BlsManager::HandleFinish(
     }
 
     finish_item->all_public_keys[bls_msg.index()] = *pkey.getPublicKey();
+    finish_item->all_common_public_keys[bls_msg.index()] = *common_pkey.getPublicKey();
     auto cpk_iter = finish_item->max_public_pk_map.find(cpk_hash);
     if (cpk_iter == finish_item->max_public_pk_map.end()) {
         finish_item->max_public_pk_map[cpk_hash] = 1;
@@ -399,6 +400,22 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
+    uint32_t max_cpk_count = 0;
+    std::string max_cpk_hash;
+    for (auto max_cpk_count_iter = finish_item->max_public_pk_map.begin();
+        max_cpk_count_iter != finish_item->max_public_pk_map.end(); ++max_cpk_count_iter) {
+        if (max_cpk_count_iter->second > max_cpk_count) {
+            max_cpk_count = max_cpk_count_iter->second;
+            max_cpk_hash = max_cpk_count_iter->first;
+        }
+    }
+
+    auto common_pk_iter = finish_item->common_pk_map.find(max_cpk_hash);
+    if (common_pk_iter == finish_item->common_pk_map.end()) {
+        BLS_ERROR("finish_item->common_pk_map failed!");
+        return;
+    }
+
     auto pre_ec_members = ec_block.mutable_prev_members();
     uint32_t all_valid_count = 0;
     for (size_t i = 0; i < members->size(); ++i) {
@@ -412,6 +429,14 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         }
 
         if (finish_item->all_public_keys[i] == libff::alt_bn128_G2::zero()) {
+            mem_bls_pk->set_x_c0("");
+            mem_bls_pk->set_x_c1("");
+            mem_bls_pk->set_y_c0("");
+            mem_bls_pk->set_y_c1("");
+            continue;
+        }
+
+        if (finish_item->all_common_public_keys[i] != common_pk_iter->second) {
             mem_bls_pk->set_x_c0("");
             mem_bls_pk->set_x_c1("");
             mem_bls_pk->set_y_c0("");
@@ -436,25 +461,9 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         ++all_valid_count;
     }
 
-    if (all_valid_count < t) {
+    if (all_valid_count < members->size() * kBlsMaxExchangeMembersRatio) {
         ec_block.clear_prev_members();
-        BLS_ERROR("all_valid_count < t[%u][%u]", all_valid_count, t);
-        return;
-    }
-
-    uint32_t max_cpk_count = 0;
-    std::string max_cpk_hash;
-    for (auto max_cpk_count_iter = finish_item->max_public_pk_map.begin();
-            max_cpk_count_iter != finish_item->max_public_pk_map.end(); ++max_cpk_count_iter) {
-        if (max_cpk_count_iter->second > max_cpk_count) {
-            max_cpk_count = max_cpk_count_iter->second;
-            max_cpk_hash = max_cpk_count_iter->first;
-        }
-    }
-
-    auto common_pk_iter = finish_item->common_pk_map.find(max_cpk_hash);
-    if (common_pk_iter == finish_item->common_pk_map.end()) {
-        BLS_ERROR("finish_item->common_pk_map failed!");
+        BLS_ERROR("all_valid_count < t[%u][%u]", all_valid_count, members->size() * kBlsMaxExchangeMembersRatio);
         return;
     }
 
