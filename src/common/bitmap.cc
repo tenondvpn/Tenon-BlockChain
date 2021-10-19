@@ -16,13 +16,18 @@ Bitmap::Bitmap(uint32_t bit_count) {
     assert(!data_.empty());
 }
 
-Bitmap::Bitmap(const std::vector<uint64_t>& data) : data_(data) {}
+Bitmap::Bitmap(const std::vector<uint64_t>& data) : data_(data) {
+    for (uint32_t i = 0; i < data_.size() * 64; ++i) {
+        if (Valid(i)) {
+            ++valid_count_;
+        }
+    }
+}
 
 Bitmap::~Bitmap() {}
 
 Bitmap::Bitmap(const Bitmap& src) {
     data_ = src.data_;
-    hash_count_ = src.hash_count_;
     valid_count_ = src.valid_count_;
 }
 
@@ -66,7 +71,6 @@ Bitmap& Bitmap::operator=(const Bitmap& src) {
     }
 
     data_ = src.data_;
-    hash_count_ = src.hash_count_;
     valid_count_ = src.valid_count_;
     return *this;
 }
@@ -76,7 +80,7 @@ bool Bitmap::operator==(const Bitmap& r) const {
         return true;
     }
 
-    return (data_ == r.data_ && hash_count_ == r.hash_count_);
+    return (data_ == r.data_ && valid_count_ == r.valid_count_);
 }
 
 }  // namespace common

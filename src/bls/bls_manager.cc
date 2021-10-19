@@ -43,6 +43,9 @@ void BlsManager::ProcessNewElectBlock(
         uint32_t network_id,
         uint64_t elect_height,
         elect::MembersPtr& new_members) {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
     {
         std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
         auto iter = finish_networks_map_.find(network_id);
@@ -70,6 +73,10 @@ void BlsManager::SetUsedElectionBlock(
         uint32_t network_id,
         uint32_t member_count,
         const libff::alt_bn128_G2& common_public_key) try {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
         BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
@@ -153,10 +160,10 @@ int BlsManager::Sign(
     *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
     *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
-    BFT_DEBUG("sign data use sec key: %s", sec_key.c_str());
+    BLS_DEBUG("sign data use sec key: %s", sec_key.c_str());
 //     BLSPublicKeyShare pkey(local_sec_key, t, n);
 //     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
-//     BFT_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+//     BLS_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
 //         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
 //         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
 //         common::Encode::HexEncode(sign_msg).c_str());
@@ -197,7 +204,7 @@ int BlsManager::Verify(
     pk->to_affine_coordinates();
     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
     auto strs = pk_ptr->toString();
-    BFT_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s",
+    BLS_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s",
         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
         strs->at(2).c_str(), strs->at(3).c_str());
 
@@ -214,6 +221,10 @@ int BlsManager::Verify(
 }
 
 void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
     protobuf::BlsMessage bls_msg;
     if (!bls_msg.ParseFromString(header->data())) {
         BLS_ERROR("bls_msg.ParseFromString ParseFromString failed!");
@@ -350,6 +361,8 @@ void BlsManager::HandleFinish(
     }
 
     common::Bitmap bitmap(bitmap_data);
+    BLS_DEBUG("elect node valid count: %u, all nodes size: %u",
+        bitmap.valid_count(), members->size());
     auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
     finish_item->max_bls_members[msg_hash] = item;
     if (finish_item->max_finish_count == 0) {

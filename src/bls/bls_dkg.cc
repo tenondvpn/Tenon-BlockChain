@@ -40,6 +40,10 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
 //     std::cout << "new election block: " << elect_height << std::endl;
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
@@ -98,6 +102,10 @@ void BlsDkg::OnNewElectionBlock(
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try {
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(mutex_);
 //     if (finished_) {
 //         return;
@@ -284,6 +292,7 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
+        all_verification_vector_[bls_msg.index()][0] = libff::alt_bn128_G2::zero();
         BLS_ERROR("dkg_instance_->Verification failed!elect height: %lu,"
             "local_member_index_: %d, remote idx: %d",
             elect_hegiht_,
@@ -538,7 +547,8 @@ void BlsDkg::Finish() try {
     local_publick_key_ = dkg_instance_->GetPublicKeyFromSecretKey(local_sec_key_);
     common_public_key_ = libff::alt_bn128_G2::zero();
     for (size_t i = 0; i < members_->size(); ++i) {
-        if (invalid_node_map_[i] >= min_aggree_member_count_) {
+        if (invalid_node_map_[i] >= min_aggree_member_count_ ||
+                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
             continue;
         }
 

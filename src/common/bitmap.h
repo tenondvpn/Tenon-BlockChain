@@ -23,10 +23,6 @@ public:
         return data_;
     }
 
-    uint32_t hash_count() {
-        return hash_count_;
-    }
-
     uint32_t valid_count() {
         return valid_count_;
     }
@@ -41,7 +37,6 @@ public:
 
 private:
     std::vector<uint64_t> data_;
-    uint32_t hash_count_{ 1 };
     uint32_t valid_count_{ 0 };
 };
 
