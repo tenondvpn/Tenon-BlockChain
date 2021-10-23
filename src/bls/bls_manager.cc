@@ -426,8 +426,8 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
+    common::Bitmap bitmap(item_iter->second->bitmap.data().size() * 64);
     auto pre_ec_members = ec_block.mutable_prev_members();
-    uint32_t all_valid_count = 0;
     for (size_t i = 0; i < members->size(); ++i) {
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
         if (!item_iter->second->bitmap.Valid(i)) {
@@ -468,12 +468,14 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             i,
             mem_bls_pk->x_c0().c_str(), mem_bls_pk->x_c1().c_str(),
             mem_bls_pk->y_c0().c_str(), mem_bls_pk->y_c1().c_str());
-        ++all_valid_count;
+        bitmap.Set(i);
     }
 
-    if (all_valid_count < members->size() * kBlsMaxExchangeMembersRatio) {
+    if (bitmap.valid_count() < members->size() * kBlsMaxExchangeMembersRatio) {
         ec_block.clear_prev_members();
-        BLS_ERROR("all_valid_count < t[%u][%u]", all_valid_count, members->size() * kBlsMaxExchangeMembersRatio);
+        BLS_ERROR("all_valid_count < t[%u][%u]",
+            bitmap.valid_count(),
+            members->size() * kBlsMaxExchangeMembersRatio);
         return;
     }
 

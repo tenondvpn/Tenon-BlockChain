@@ -115,7 +115,6 @@ int GlobalInfo::Init(const common::Config& config) {
     }
     config.Get("tenon", "udp_window_size", udp_window_size_);
     config.Get("tenon", "missing_node", missing_node_);
-    std::cout << "missing_node_: " << missing_node_ << std::endl;
 
     return kCommonSuccess;
 }

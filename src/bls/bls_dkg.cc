@@ -258,6 +258,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+#ifndef TENON_UNITTEST
     if (dht->local_node()->dht_key() != header.des_dht_key()) {
         dht->SendToClosestNode(header);
         BLS_ERROR("local dht key: %s, des dht key: %s",
@@ -265,6 +266,7 @@ void BlsDkg::HandleSwapSecKey(
             common::Encode::HexEncode(header.des_dht_key()).c_str());
         return;
     }
+#endif
 
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
         (*members_)[bls_msg.index()]->pubkey,
@@ -290,8 +292,8 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    BLS_ERROR("bls swaped sec key local: %d, remote: %d, all: %d",
-        local_member_index_, bls_msg.index(), all_secret_key_contribution_.size());
+    BLS_DEBUG("bls swaped sec key local: %d, remote: %d, all: %d£¬ valid_sec_key_count_: %u",
+        local_member_index_, bls_msg.index(), all_secret_key_contribution_.size(), valid_sec_key_count_);
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -300,8 +302,9 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        BLS_ERROR("dkg_instance_->Verification failed!elect height: %lu,"
-            "local_member_index_: %d, remote idx: %d, %s:%d",
+//         assert(false);
+        TENON_DEBUG("dkg_instance_->Verification failed!elect height: %lu,"
+            "local_member_index_: %d, remote idx: %d, %s:%d\n",
             elect_hegiht_,
             local_member_index_,
             bls_msg.index(),
@@ -413,11 +416,11 @@ void BlsDkg::SwapSecKey() try {
 //         return;
 //     }
     std::lock_guard<std::mutex> guard(mutex_);
-    for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
-        if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
-            return;
-        }
-    }
+//     for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
+//         if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+//             return;
+//         }
+//     }
 
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -544,11 +547,11 @@ void BlsDkg::Finish() try {
 //     }
 // 
     std::lock_guard<std::mutex> guard(mutex_);
-    for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
-        if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
-            return;
-        }
-    }
+//     for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
+//         if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+//             return;
+//         }
+//     }
 
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
@@ -565,22 +568,22 @@ void BlsDkg::Finish() try {
     common_public_key_ = libff::alt_bn128_G2::zero();
     std::vector<libff::alt_bn128_Fr> valid_seck_keys;
     for (size_t i = 0; i < members_->size(); ++i) {
-        if (invalid_node_map_[i] >= min_aggree_member_count_ ||
-                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero() ||
-            all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero()) {
-            continue;
+        if (all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero() ||
+                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
+            common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
+        } else {
+            valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
+            common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
+            bitmap.Set(i);
         }
-
-        bitmap.Set(i);
-        valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
-        common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
     }
 
     if (bitmap.valid_count() < members_->size() * kBlsMaxExchangeMembersRatio) {
         return;
     }
 
-    crypto::Dkg dkg(common::GetSignerCount(bitmap.valid_count()), bitmap.valid_count());
+    crypto::Dkg dkg(min_aggree_member_count_, members_->size());
     local_sec_key_ = dkg.SecretKeyShareCreate(
         valid_seck_keys);
     local_publick_key_ = dkg.GetPublicKeyFromSecretKey(local_sec_key_);
@@ -634,14 +637,17 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     common_pk->set_y_c1(
         crypto::ThresholdUtils::fieldElementToString(common_public_key_.Y.c1));
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+
+#ifndef TENON_UNITTEST
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);
+#endif
 
     {
         std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key_);
-        BLS_INFO("local bls info sec key: %s, "
+        TENON_DEBUG("local bls info sec key: %s, "
             "local public key: %s, %s, %s, %s, "
-            "common public key: %s, %s, %s, %s",
+            "common public key: %s, %s, %s, %s\n",
             sec_key.c_str(),
             local_pk->x_c0().c_str(),
             local_pk->x_c1().c_str(),
