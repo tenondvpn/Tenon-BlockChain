@@ -316,7 +316,8 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         ++member_index;
     }
 
-    UpdatePrevElectMembers(shard_members_ptr, elect_block, elected);
+    std::vector<std::string> pk_vec;
+    UpdatePrevElectMembers(shard_members_ptr, elect_block, elected, &pk_vec);
 
     {
         Members tmp_leaders;
@@ -407,6 +408,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         elect_block.prev_members().prev_elect_height(),
         prev_elect_block.shard_network_id(),
         shard_members_ptr);
+    auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(pk_vec));
+    height_with_block_.SetCommonPublicKey(
+        elect_block.prev_members().prev_elect_height(),
+        elect_block.shard_network_id(),
+        *common_pk.getPublicKey());
     if (elect_net_heights_map_[prev_elect_block.shard_network_id()] == common::kInvalidUint64 ||
             elect_block.prev_members().prev_elect_height() >
             elect_net_heights_map_[prev_elect_block.shard_network_id()]) {
@@ -467,7 +473,8 @@ void ElectManager::ProcessNewElectBlock(
 void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
-        bool* elected) {
+        bool* elected,
+        std::vector<std::string>* pkey_str_vect) {
 //     std::cout << "DDDDDDDDDDDD " << members->size() << ":" << (uint32_t)elect_block.prev_members().bls_pubkey_size() << std::endl;
     if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
@@ -502,7 +509,8 @@ void ElectManager::UpdatePrevElectMembers(
         (*iter)->bls_publick_key = *pkey.getPublicKey();
     }
 
-    std::vector<std::string> pkey_str = {
+    std::cout << "elected: " << *elected << ", network: " << elect_block.shard_network_id() << ", common_pubkey: " << elect_block.prev_members().common_pubkey().x_c0() << std::endl;
+    *pkey_str_vect = std::vector<std::string>{
             elect_block.prev_members().common_pubkey().x_c0(),
             elect_block.prev_members().common_pubkey().x_c1(),
             elect_block.prev_members().common_pubkey().y_c0(),
@@ -515,17 +523,13 @@ void ElectManager::UpdatePrevElectMembers(
 //         << ", " << elect_block.prev_members().common_pubkey().y_c1()
 //         << std::endl;
 
-    BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str));
-    height_with_block_.SetCommonPublicKey(
-        elect_block.prev_members().prev_elect_height(),
-        elect_block.shard_network_id(),
-        *pkey.getPublicKey());
-    if (elected) {
+    auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(*pkey_str_vect));
+    if (*elected) {
         bls::BlsManager::Instance()->SetUsedElectionBlock(
             elect_block.prev_members().prev_elect_height(),
             elect_block.shard_network_id(),
             members->size(),
-            *pkey.getPublicKey());
+            *common_pk.getPublicKey());
         ELECT_DEBUG("use common public key: %s, %s, %s, %s",
             elect_block.prev_members().common_pubkey().x_c0().c_str(),
             elect_block.prev_members().common_pubkey().x_c1().c_str(),

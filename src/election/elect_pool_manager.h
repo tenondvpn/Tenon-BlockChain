@@ -3,11 +3,12 @@
 #include <random>
 #include <map>
 
-#include "election/elect_pool.h"
-#include "election/proto/elect.pb.h"
 #include "bft/proto/bft.pb.h"
 #include "block/proto/block.pb.h"
-#include "elect_waiting_nodes.h"
+#include "common/bitmap.h"
+#include "election/elect_pool.h"
+#include "election/proto/elect.pb.h"
+#include "election/elect_waiting_nodes.h"
 
 namespace tenon {
 

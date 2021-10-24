@@ -117,7 +117,8 @@ private:
     void UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
-        bool* elected);
+        bool* elected,
+        std::vector<std::string>* pkey_str_vect);
     void ProcessPrevElectMembers(
         protobuf::ElectBlock& elect_block,
         bool* elected);

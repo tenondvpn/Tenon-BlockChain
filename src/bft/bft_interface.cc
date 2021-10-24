@@ -353,17 +353,27 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
         }
 
+        auto common_pk = elect::ElectManager::Instance()->GetCommonPublicKey(
+            elect_height_,
+            network_id_);
+        if (common_pk == libff::alt_bn128_G2::zero()) {
+            assert(false);
+        }
+        {
+            common_pk.to_affine_coordinates();
+            auto cpk = std::make_shared<BLSPublicKey>(common_pk);
+            auto cpk_strs = cpk->toString();
+            BFT_DEBUG("leader verify leader precommit agg sign failed! t: %u, n: %u,"
+                "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
+                t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
+                elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
+        }
         precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
-                elect::ElectManager::Instance()->GetCommonPublicKey(
-                elect_height_,
-                network_id_),
+                common_pk,
                 *bls_precommit_agg_sign_,
                 prepare_hash_) != bls::kBlsSuccess) {
-            auto common_pk = elect::ElectManager::Instance()->GetCommonPublicKey(
-                elect_height_,
-                network_id_);
             common_pk.to_affine_coordinates();
             auto cpk = std::make_shared<BLSPublicKey>(common_pk);
             auto cpk_strs = cpk->toString();
@@ -374,7 +384,8 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
             return kBftError;
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
-    } catch (...) {
+    } catch (std::exception& e) {
+        BFT_ERROR("catch bls exception: %s", e.what());
         return kBftError;
     }
 
