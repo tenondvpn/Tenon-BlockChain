@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "common/bitmap.h"
 #include "bls/bls_dkg.h"
 #include "bls/bls_utils.h"
 #include "election/proto/elect.pb.h"
@@ -43,7 +44,7 @@ public:
         const libff::alt_bn128_G2& pubkey,
         const libff::alt_bn128_G1& sign,
         const std::string& sign_msg);
-    void AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block, common::Bitmap* bitmap);
+    int AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block, common::Bitmap* bitmap);
 
     libff::alt_bn128_Fr local_sec_key() {
         if (used_bls_ == nullptr) {

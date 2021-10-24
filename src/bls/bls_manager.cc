@@ -473,6 +473,7 @@ int BlsManager::AddBlsConsensusInfo(
         bitmap->Set(i);
     }
 
+    std::cout << "bitmap->valid_count(): " << bitmap->valid_count() << std::endl;
     if (bitmap->valid_count() < members->size() * kBlsMaxExchangeMembersRatio) {
         ec_block.clear_prev_members();
         BLS_ERROR("all_valid_count < t[%u][%u]",

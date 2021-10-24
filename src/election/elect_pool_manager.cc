@@ -166,10 +166,14 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
     common::Bitmap bitmap;
-    if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) == bls::kBlsSuccess) {
-        if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
-            return kElectError;
-        }
+    if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) != bls::kBlsSuccess) {
+        BLS_ERROR("add bls consensus info failed!");
+        return kElectError;
+    }
+     
+    if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
+        BLS_ERROR("SelectLeader info failed!");
+        return kElectError;
     }
 
     auto ec_block_attr = tx_info.add_attr();
@@ -568,11 +572,16 @@ int ElectPoolManager::SelectLeader(
         leader_mode_idx_map[(*iter)->id] = mode_idx++;
     }
 
+    if (leader_mode_idx_map.size() != expect_leader_count) {
+        return kElectError;
+    }
+
     auto in_members = ec_block->mutable_in();
     for (auto iter = in_members->begin(); iter != in_members->end(); ++iter) {
         auto find_iter = leader_mode_idx_map.find((*iter).id());
         if (find_iter != leader_mode_idx_map.end()) {
             (*iter).set_pool_idx_mod_num(find_iter->second);
+            std::cout << "set leader: " << common::Encode::HexEncode((*iter).id()) << ", set_pool_idx_mod_num: " << find_iter->second << std::endl;
         }
     }
 
