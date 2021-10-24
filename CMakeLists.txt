@@ -16,7 +16,7 @@ if(NOT BUILD_CLIENT)
 endif()
 
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -90,6 +90,7 @@ include_directories(SYSTEM
 # compile definitions
 add_definitions(
 #    -DTENON_UNITTEST # for testing
+#    -DFOR_CONSOLE_DEBUG
     -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2r
 #    -DTEST_TRANSPORT_PERFOMANCE
     -DENABLE_CLIENT_MODE
@@ -248,5 +249,6 @@ else()
         add_subdirectory(${SRC_DIR}/security/tests security_test )
         add_subdirectory(${SRC_DIR}/tvm/tests tvm_test)
         add_subdirectory(${SRC_DIR}/bft/tests bft_test)
+        add_subdirectory(${SRC_DIR}/bls/tests bls_test)
     endif()
 endif()
