@@ -368,21 +368,21 @@ void BlsManager::HandleFinish(
     }
 }
 
-void BlsManager::AddBlsConsensusInfo(
+int BlsManager::AddBlsConsensusInfo(
         elect::protobuf::ElectBlock& ec_block,
         common::Bitmap* bitmap) {
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
     auto iter = finish_networks_map_.find(ec_block.shard_network_id());
     if (iter == finish_networks_map_.end()) {
         BLS_ERROR("find finish_networks_map_ failed![%u]", ec_block.shard_network_id());
-        return;
+        return kBlsError;
     }
 
     auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(
         ec_block.shard_network_id());
     if (members == nullptr) {
         BLS_ERROR("get waiting members failed![%u]", ec_block.shard_network_id());
-        return;
+        return kBlsError;
     }
 
     // At least so many nodes are required to successfully exchange keys
@@ -397,19 +397,19 @@ void BlsManager::AddBlsConsensusInfo(
         BLS_ERROR("network: %u, finish_item->max_finish_count < t[%u][%u]",
             ec_block.shard_network_id(),
             finish_item->max_finish_count, exchange_member_count);
-        return;
+        return kBlsError;
     }
 
     auto item_iter = finish_item->max_bls_members.find(finish_item->max_finish_hash);
     if (item_iter == finish_item->max_bls_members.end()) {
         BLS_ERROR("finish_item->max_bls_members failed");
-        return;
+        return kBlsError;
     }
 
     uint32_t max_mem_size = item_iter->second->bitmap.data().size() * 64;
     if (max_mem_size < members->size()) {
         BLS_ERROR("max_mem_size < members->size()[%u][%u]", max_mem_size, members->size());
-        return;
+        return kBlsError;
     }
 
     uint32_t max_cpk_count = 0;
@@ -425,7 +425,7 @@ void BlsManager::AddBlsConsensusInfo(
     auto common_pk_iter = finish_item->common_pk_map.find(max_cpk_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
         BLS_ERROR("finish_item->common_pk_map failed!");
-        return;
+        return kBlsError;
     }
 
     *bitmap = common::Bitmap(item_iter->second->bitmap.data().size() * 64);
@@ -478,7 +478,7 @@ void BlsManager::AddBlsConsensusInfo(
         BLS_ERROR("all_valid_count < t[%u][%u]",
             bitmap->valid_count(),
             members->size() * kBlsMaxExchangeMembersRatio);
-        return;
+        return kBlsError;
     }
 
     common_pk_iter->second.to_affine_coordinates();
@@ -506,6 +506,7 @@ void BlsManager::AddBlsConsensusInfo(
 //         << ", " << common_pk->y_c0()
 //         << ", " << common_pk->y_c1()
 //         << std::endl;
+    return kBlsSuccess;
 }
 
 BlsManager::BlsManager() {

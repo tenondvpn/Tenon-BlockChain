@@ -166,9 +166,10 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
     common::Bitmap bitmap;
-    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap);
-    if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
-        return kElectError;
+    if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) == bls::kBlsSuccess) {
+        if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
+            return kElectError;
+        }
     }
 
     auto ec_block_attr = tx_info.add_attr();
