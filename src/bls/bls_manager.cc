@@ -368,7 +368,9 @@ void BlsManager::HandleFinish(
     }
 }
 
-void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
+void BlsManager::AddBlsConsensusInfo(
+        elect::protobuf::ElectBlock& ec_block,
+        common::Bitmap* bitmap) {
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
     auto iter = finish_networks_map_.find(ec_block.shard_network_id());
     if (iter == finish_networks_map_.end()) {
@@ -426,7 +428,7 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
         return;
     }
 
-    common::Bitmap bitmap(item_iter->second->bitmap.data().size() * 64);
+    *bitmap = common::Bitmap(item_iter->second->bitmap.data().size() * 64);
     auto pre_ec_members = ec_block.mutable_prev_members();
     for (size_t i = 0; i < members->size(); ++i) {
         auto mem_bls_pk = pre_ec_members->add_bls_pubkey();
@@ -468,13 +470,13 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
             i,
             mem_bls_pk->x_c0().c_str(), mem_bls_pk->x_c1().c_str(),
             mem_bls_pk->y_c0().c_str(), mem_bls_pk->y_c1().c_str());
-        bitmap.Set(i);
+        bitmap->Set(i);
     }
 
-    if (bitmap.valid_count() < members->size() * kBlsMaxExchangeMembersRatio) {
+    if (bitmap->valid_count() < members->size() * kBlsMaxExchangeMembersRatio) {
         ec_block.clear_prev_members();
         BLS_ERROR("all_valid_count < t[%u][%u]",
-            bitmap.valid_count(),
+            bitmap->valid_count(),
             members->size() * kBlsMaxExchangeMembersRatio);
         return;
     }
@@ -494,7 +496,7 @@ void BlsManager::AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block) {
     BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"
         "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
         ec_block.shard_network_id(),
-        all_valid_count, members->size(),
+        bitmap->valid_count(), members->size(),
         common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
         common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
 //     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count

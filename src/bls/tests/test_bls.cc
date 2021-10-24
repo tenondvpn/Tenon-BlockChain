@@ -359,6 +359,133 @@ TEST_F(TestBls, FinishWithMissingNodesNoVerify) {
     }
 }
 
+TEST_F(TestBls, FinishWithMissingNodesNoVerify5) {
+    // t = 7, n = 10
+    static uint32_t t = 4;
+    static uint32_t n = 5;
+
+    BlsDkg dkg[5] = {
+        {0, 0, libff::alt_bn128_Fr::zero(), libff::alt_bn128_G2::zero(), libff::alt_bn128_G2::zero()},
+        {0, 0, libff::alt_bn128_Fr::zero(), libff::alt_bn128_G2::zero(), libff::alt_bn128_G2::zero()},
+        {0, 0, libff::alt_bn128_Fr::zero(), libff::alt_bn128_G2::zero(), libff::alt_bn128_G2::zero()},
+        {0, 0, libff::alt_bn128_Fr::zero(), libff::alt_bn128_G2::zero(), libff::alt_bn128_G2::zero()},
+        {0, 0, libff::alt_bn128_Fr::zero(), libff::alt_bn128_G2::zero(), libff::alt_bn128_G2::zero()},
+    };
+    elect::MembersPtr members = std::make_shared<elect::Members>();
+    std::vector<std::string> pri_vec;
+    for (uint32_t i = 0; i < n; ++i) {
+        pri_vec.push_back(common::Random::RandomString(32));
+    }
+
+    for (uint32_t i = 0; i < pri_vec.size(); ++i) {
+        security::PrivateKey prikey(pri_vec[i]);
+        security::PublicKey pubkey(prikey);
+        std::string pubkey_str;
+        ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+        std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+        auto member = std::make_shared<elect::BftMember>(
+            network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1);
+        member->public_ip = "127.0.0.1";
+        member->public_port = 123;
+        members->push_back(member);
+    }
+
+    std::vector<transport::protobuf::Header> verify_brd_msgs;
+    for (uint32_t i = 0; i < n; ++i) {
+        SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
+        dkg[i].OnNewElectionBlock(1, members);
+        dkg[i].dkg_verify_brd_timer_.Destroy();
+        dkg[i].dkg_swap_seckkey_timer_.Destroy();
+        dkg[i].dkg_finish_timer_.Destroy();
+        dkg[i].local_member_index_ = i;
+        dkg[i].BroadcastVerfify();
+        verify_brd_msgs.push_back(dkg[i].ver_brd_msg_);
+        dkg[i].DumpContribution();
+    }
+
+    static const uint32_t kInvalidNodeIndex = 3;
+    for (uint32_t i = 0; i < n; ++i) {
+        for (uint32_t j = 0; j < n; ++j) {
+            if (i == j) {
+                continue;
+            }
+
+            SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(
+                verify_brd_msgs[i]);
+            if (i == kInvalidNodeIndex) {
+                continue;
+            }
+
+            dkg[j].HandleMessage(msg_ptr);
+        }
+    }
+
+    // swap sec key
+    for (uint32_t i = 0; i < n; ++i) {
+        SetGloableInfo(pri_vec[i], network::kConsensusShardBeginNetworkId);
+        dkg[i].SwapSecKey();
+    }
+
+    for (uint32_t i = 0; i < n; ++i) {
+        for (uint32_t j = 0; j < n; ++j) {
+            if (i == j) {
+                continue;
+            }
+
+            SetGloableInfo(pri_vec[j], network::kConsensusShardBeginNetworkId);
+            auto msg_ptr = std::make_shared<transport::protobuf::Header>(
+                dkg[i].sec_swap_msgs_[j]);
+            dkg[j].HandleMessage(msg_ptr);
+        }
+    }
+
+    // sign and verify
+    auto hash = common::Hash::Sha256("hello world");
+    for (uint32_t i = 0; i < n; ++i) {
+        dkg[i].Finish();
+        if (i != kInvalidNodeIndex) {
+            ASSERT_TRUE(dkg[i].finished_);
+        }
+    }
+
+    std::vector<libff::alt_bn128_G1> all_signs;
+    std::vector<size_t> idx_vec(t);
+    for (size_t i = 0; i < n; ++i) {
+        if (i == kInvalidNodeIndex) {
+            continue;
+        }
+
+        BlsSign bls_sign;
+        libff::alt_bn128_G1 sign;
+        bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign);
+        ASSERT_EQ(
+            bls_sign.Verify(t, n, sign, hash, dkg[i].local_publick_key_),
+            kBlsSuccess);
+        all_signs.push_back(sign);
+        idx_vec[all_signs.size() - 1] = i + 1;
+        if (all_signs.size() >= t) {
+            break;
+        }
+    }
+
+    crypto::Bls bls_instance = crypto::Bls(t, n);
+    auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+    libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
+        all_signs,
+        lagrange_coeffs);
+    for (uint32_t i = 0; i < n; ++i) {
+        if (i == kInvalidNodeIndex) {
+            continue;
+        }
+
+        BlsSign bls_sign;
+        EXPECT_EQ(
+            bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_),
+            kBlsSuccess);
+    }
+}
+
 TEST_F(TestBls, ThreeRatioFailFine) {
     // t = 7, n = 10
     static const uint32_t t = 7;

@@ -88,10 +88,10 @@ void BlsDkg::OnNewElectionBlock(
 
     auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
     local_offset_us_ = each_member_offset_us * local_member_index_;
-    dkg_verify_brd_timer_.CutOff(
-        kDkgVerifyBrdBeginUs + local_offset_us_,
-        std::bind(&BlsDkg::BroadcastVerfify, this));
     if (!common::GlobalInfo::Instance()->missing_node()) {
+        dkg_verify_brd_timer_.CutOff(
+            kDkgVerifyBrdBeginUs + local_offset_us_,
+            std::bind(&BlsDkg::BroadcastVerfify, this));
         dkg_swap_seckkey_timer_.CutOff(
             kDkgSwapSecKeyBeginUs + local_offset_us_,
             std::bind(&BlsDkg::SwapSecKey, this));
@@ -292,7 +292,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    BLS_DEBUG("bls swaped sec key local: %d, remote: %d, all: %d£¬ valid_sec_key_count_: %u",
+    BLS_DEBUG("bls swaped sec key local: %d, remote: %d, all: %d, valid_sec_key_count_: %u",
         local_member_index_, bls_msg.index(), all_secret_key_contribution_.size(), valid_sec_key_count_);
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
@@ -584,8 +584,7 @@ void BlsDkg::Finish() try {
     }
 
     crypto::Dkg dkg(min_aggree_member_count_, members_->size());
-    local_sec_key_ = dkg.SecretKeyShareCreate(
-        valid_seck_keys);
+    local_sec_key_ = dkg.SecretKeyShareCreate(valid_seck_keys);
     local_publick_key_ = dkg.GetPublicKeyFromSecretKey(local_sec_key_);
     DumpLocalPrivateKey();
     BroadcastFinish(bitmap);

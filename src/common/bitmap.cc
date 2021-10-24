@@ -55,13 +55,14 @@ void Bitmap::UnSet(uint32_t index) {
     --valid_count_;
 }
 
-bool Bitmap::Valid(uint32_t index) {
+bool Bitmap::Valid(uint32_t index) const {
     assert(index < (data_.size() * 64));
     uint32_t vec_index = (index % (64 * data_.size())) / 64;
     uint32_t bit_index = (index % (64 * data_.size())) % 64;
     if ((data_[vec_index] & ((uint64_t)((uint64_t)(1) << bit_index))) == 0ull) {
         return false;
     }
+
     return true;
 }
 

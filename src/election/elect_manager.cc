@@ -313,13 +313,10 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(prev_elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
-        if (id == common::GlobalInfo::Instance()->id()) {
-            *elected = true;
-            local_node_member_index_ = i;
-        }
-
         ++member_index;
     }
+
+    UpdatePrevElectMembers(shard_members_ptr, elect_block, elected);
 
     {
         Members tmp_leaders;
@@ -416,8 +413,6 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         elect_net_heights_map_[prev_elect_block.shard_network_id()] =
             elect_block.prev_members().prev_elect_height();
     }
-
-    UpdatePrevElectMembers(shard_members_ptr, elect_block, *elected);
 }
 
 void ElectManager::ProcessNewElectBlock(
@@ -472,7 +467,7 @@ void ElectManager::ProcessNewElectBlock(
 void ElectManager::UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
-        bool elected) {
+        bool* elected) {
 //     std::cout << "DDDDDDDDDDDD " << members->size() << ":" << (uint32_t)elect_block.prev_members().bls_pubkey_size() << std::endl;
     if (members->size() != (uint32_t)elect_block.prev_members().bls_pubkey_size()) {
         return;
@@ -492,6 +487,11 @@ void ElectManager::UpdatePrevElectMembers(
             elect_block.prev_members().bls_pubkey(i).y_c0(),
             elect_block.prev_members().bls_pubkey(i).y_c1()
         };
+
+        if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+            *elected = true;
+            local_node_member_index_ = i;
+        }
 
 //         std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
 //             << ", " << elect_block.prev_members().bls_pubkey(i).x_c1()

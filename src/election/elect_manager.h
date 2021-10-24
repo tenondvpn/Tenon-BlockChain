@@ -117,7 +117,7 @@ private:
     void UpdatePrevElectMembers(
         const elect::MembersPtr& members,
         protobuf::ElectBlock& elect_block,
-        bool elected);
+        bool* elected);
     void ProcessPrevElectMembers(
         protobuf::ElectBlock& elect_block,
         bool* elected);

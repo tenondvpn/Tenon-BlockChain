@@ -165,7 +165,12 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
 
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
-    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block);
+    common::Bitmap bitmap;
+    bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap);
+    if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
+        return kElectError;
+    }
+
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
@@ -500,14 +505,49 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
+    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
+        elected_nodes.push_back(*iter);
+    }
+
+    return kElectSuccess;
+}
+
+int ElectPoolManager::SelectLeader(
+        uint32_t network_id,
+        const common::Bitmap& bitmap,
+        elect::protobuf::ElectBlock* ec_block) {
+    auto members = elect::ElectManager::Instance()->GetWaitingNetworkMembers(network_id);
+    if (members == nullptr) {
+        BLS_ERROR("get waiting members failed![%u]", network_id);
+        return kElectError;
+    }
+
     int32_t expect_leader_count = (int32_t)pow(
         2.0,
-        (double)((int32_t)log2(double(elected_nodes.size() / 3))));
+        (double)((int32_t)log2(double(members->size() / 3))));
     if (expect_leader_count > (int32_t)common::kImmutablePoolSize) {
         expect_leader_count = (int32_t)common::kImmutablePoolSize;
     }
 
     common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
+    std::vector<NodeDetailPtr> elected_nodes;
+    uint32_t mem_idx = 0;
+    for (auto iter = members->begin(); iter != members->end(); ++iter, ++mem_idx) {
+        if (!bitmap.Valid(mem_idx)) {
+            continue;
+        }
+
+        auto elect_node = std::make_shared<ElectNodeDetail>();
+        elect_node->id = (*iter)->id;
+        elect_node->public_ip = (*iter)->public_ip;
+        elect_node->public_port = (*iter)->public_port;
+        elect_node->dht_key = (*iter)->dht_key;
+        std::string pubkey_str;
+        (*iter)->pubkey.Serialize(pubkey_str);
+        elect_node->public_key = pubkey_str;
+        elected_nodes.push_back(elect_node);
+    }
+
     std::vector<NodeDetailPtr> leader_nodes;
     FtsGetNodes(
         false,
@@ -520,19 +560,23 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         return kElectError;
     }
 
-    *leader_count = leader_nodes.size();
+    ec_block->set_leader_count(leader_nodes.size());
     int32_t mode_idx = 0;
+    std::unordered_map<std::string, int32_t> leader_mode_idx_map;
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
-        (*iter)->init_pool_index_mod_num = mode_idx++;
+        leader_mode_idx_map[(*iter)->id] = mode_idx++;
     }
 
-    for (auto iter = pick_in_vec.begin(); iter != pick_in_vec.end(); ++iter) {
-        elected_nodes.push_back(*iter);
+    auto in_members = ec_block->mutable_in();
+    for (auto iter = in_members->begin(); iter != in_members->end(); ++iter) {
+        auto find_iter = leader_mode_idx_map.find((*iter).id());
+        if (find_iter != leader_mode_idx_map.end()) {
+            (*iter).set_pool_idx_mod_num(find_iter->second);
+        }
     }
 
     return kElectSuccess;
 }
-
 void ElectPoolManager::FtsGetNodes(
         bool weed_out,
         uint32_t count,

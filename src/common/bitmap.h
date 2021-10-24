@@ -9,13 +9,14 @@ namespace common {
 
 class Bitmap {
 public:
+    Bitmap() {}
     Bitmap(uint32_t bit_count);
     Bitmap(const std::vector<uint64_t>& data);
     Bitmap(const Bitmap& src);
     ~Bitmap();
     void Set(uint32_t bit_index);
     void UnSet(uint32_t bit_index);
-    bool Valid(uint32_t bit_index);
+    bool Valid(uint32_t bit_index) const;
     Bitmap& operator=(const Bitmap& src);
     bool operator==(const Bitmap& r) const;
 
