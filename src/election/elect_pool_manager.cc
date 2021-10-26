@@ -166,16 +166,13 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
     common::Bitmap bitmap;
-    if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) != bls::kBlsSuccess) {
-        BLS_ERROR("add bls consensus info failed!");
-        return kElectError;
+    if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) == bls::kBlsSuccess) {
+        if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
+            BLS_ERROR("SelectLeader info failed!");
+            return kElectError;
+        }
     }
-     
-    if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
-        BLS_ERROR("SelectLeader info failed!");
-        return kElectError;
-    }
-
+    
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
@@ -191,6 +188,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         tmblock::TimeBlockManager::Instance()->LatestTimestampHeight(),
         tmblock::TimeBlockManager::Instance()->LatestTimestamp(),
         vss::VssManager::Instance()->EpochRandom());
+
     return kElectSuccess;
 }
 
@@ -534,6 +532,7 @@ int ElectPoolManager::SelectLeader(
         expect_leader_count = (int32_t)common::kImmutablePoolSize;
     }
 
+    assert(expect_leader_count > 0);
     common::BloomFilter tmp_filter(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> elected_nodes;
     uint32_t mem_idx = 0;
@@ -543,6 +542,7 @@ int ElectPoolManager::SelectLeader(
         }
 
         auto elect_node = std::make_shared<ElectNodeDetail>();
+        elect_node->index = mem_idx;
         elect_node->id = (*iter)->id;
         elect_node->public_ip = (*iter)->public_ip;
         elect_node->public_port = (*iter)->public_port;
@@ -568,21 +568,18 @@ int ElectPoolManager::SelectLeader(
     ec_block->set_leader_count(leader_nodes.size());
     int32_t mode_idx = 0;
     std::unordered_map<std::string, int32_t> leader_mode_idx_map;
+    auto pre_ec_members = ec_block->mutable_prev_members();
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
-        leader_mode_idx_map[(*iter)->id] = mode_idx++;
-    }
-
-    if (leader_mode_idx_map.size() != expect_leader_count) {
-        return kElectError;
-    }
-
-    auto in_members = ec_block->mutable_in();
-    for (auto iter = in_members->begin(); iter != in_members->end(); ++iter) {
-        auto find_iter = leader_mode_idx_map.find((*iter).id());
-        if (find_iter != leader_mode_idx_map.end()) {
-            (*iter).set_pool_idx_mod_num(find_iter->second);
-            std::cout << "set leader: " << common::Encode::HexEncode((*iter).id()) << ", set_pool_idx_mod_num: " << find_iter->second << std::endl;
+        if (pre_ec_members->bls_pubkey_size() <= (*iter)->index) {
+            return kElectError;
         }
+
+        pre_ec_members->mutable_bls_pubkey((*iter)->index)->set_pool_idx_mod_num(mode_idx++);
+    }
+
+    if (mode_idx != expect_leader_count) {
+        assert(false);
+        return kElectError;
     }
 
     return kElectSuccess;
