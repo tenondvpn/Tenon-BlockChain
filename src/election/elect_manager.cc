@@ -246,7 +246,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     if (!elect_block.has_prev_members() || elect_block.prev_members().prev_elect_height() <= 0) {
         ELECT_ERROR("not has prev network id: %u, elect: %lu",
             elect_block.shard_network_id(),
-            elect_block.elect_height());
+            elect_block.prev_members().prev_elect_height());
         return;
     }
 
@@ -291,7 +291,6 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     latest_member_count_[prev_elect_block.shard_network_id()] = prev_elect_block.in_size();
-    latest_leader_count_[prev_elect_block.shard_network_id()] = prev_elect_block.leader_count();
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
     auto& in = prev_elect_block.in();
@@ -301,6 +300,13 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         std::unordered_map<std::string, uint32_t>>();
     uint32_t member_index = 0;
     ClearExistsNetwork(prev_elect_block.shard_network_id());
+    auto& prev_members_bls = elect_block.prev_members().bls_pubkey();
+    if (prev_members_bls.size() != in.size()) {
+        assert(false);
+        return;
+    }
+
+    uint32_t leader_count = 0;
     for (int32_t i = 0; i < in.size(); ++i) {
         security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
@@ -310,12 +316,18 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             in[i].pubkey(),
             member_index,
             in[i].dht_key(),
-            in[i].pool_idx_mod_num()));
+            prev_members_bls[i].pool_idx_mod_num()));
+        if (prev_members_bls[i].pool_idx_mod_num() >= 0) {
+            ++leader_count;
+        }
+
         AddNewNodeWithIdAndIp(prev_elect_block.shard_network_id(), id, in[i].public_ip());
         (*shard_members_index_ptr)[id] = member_index;
         ++member_index;
     }
 
+    assert(leader_count > 0);
+    latest_leader_count_[prev_elect_block.shard_network_id()] = leader_count;
     std::vector<std::string> pk_vec;
     UpdatePrevElectMembers(shard_members_ptr, elect_block, elected, &pk_vec);
 

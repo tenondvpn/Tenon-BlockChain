@@ -565,7 +565,6 @@ int ElectPoolManager::SelectLeader(
         return kElectError;
     }
 
-    ec_block->set_leader_count(leader_nodes.size());
     int32_t mode_idx = 0;
     std::unordered_map<std::string, int32_t> leader_mode_idx_map;
     auto pre_ec_members = ec_block->mutable_prev_members();

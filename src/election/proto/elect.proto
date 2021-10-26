@@ -34,9 +34,8 @@ message ElectBlock {
 	repeated member in = 1;
 	optional bytes acc_pubkey = 2;
 	optional bytes acc_sign = 3;
-	optional int32 leader_count = 4;
-	optional uint32 shard_network_id = 5;
-	optional PrevMembers prev_members = 6;
+	optional uint32 shard_network_id = 4;
+	optional PrevMembers prev_members = 5;
 }
 
 message WaitingNodesMessage {
