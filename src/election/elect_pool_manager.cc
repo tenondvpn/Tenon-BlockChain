@@ -163,7 +163,6 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         in->set_pool_idx_mod_num(-1);
     }
 
-    ec_block.set_leader_count(leader_count);
     ec_block.set_shard_network_id(tx_info.network_id());
     common::Bitmap bitmap;
     if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) == bls::kBlsSuccess) {

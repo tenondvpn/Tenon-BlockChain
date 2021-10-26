@@ -160,7 +160,6 @@ int GenesisBlockInit::CreateElectBlock(
         ++node_idx;
     }
 
-    ec_block.set_leader_count(expect_leader_count);
     ec_block.set_shard_network_id(shard_netid);
     if (prev_height != common::kInvalidUint64) {
         std::vector<std::shared_ptr<BLSPrivateKeyShare>> skeys;
