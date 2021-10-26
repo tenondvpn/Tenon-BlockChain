@@ -226,12 +226,6 @@ int ElectPoolManager::BackupCheckElectionBlockTx(
         return kElectError;
     }
 
-    if (leader_ec_block.leader_count() != local_ec_block.leader_count()) {
-        ELECT_ERROR("leader_ec_block.leader_count()[%d] != leader_count[%d]!",
-            leader_ec_block.leader_count(), local_ec_block.leader_count());
-        return kElectError;
-    }
-
     // exists shard nodes must equal
     if (local_cons_all != leader_cons_all) {
         ELECT_ERROR("local_cons_all != leader_cons_all!");

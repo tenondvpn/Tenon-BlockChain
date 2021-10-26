@@ -408,7 +408,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         prev_elect_block.shard_network_id(),
         shard_members_ptr,
         shard_members_index_ptr,
-        prev_elect_block.leader_count());
+        leader_count);
     node_index_map_[prev_elect_block.shard_network_id()] = shard_members_index_ptr;
     mem_manager_ptr_[prev_elect_block.shard_network_id()] = member_ptr;
     {
