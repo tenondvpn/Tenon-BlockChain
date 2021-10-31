@@ -22,7 +22,8 @@ namespace tenon {
 
 namespace tmblock {
 
-static const std::string kTimeBlockGidPrefix = common::Encode::HexDecode("c575ff0d3eea61205e3433495431e312056d0d51a64c6badfd4ad8cc092b7daa");
+static const std::string kTimeBlockGidPrefix = common::Encode::HexDecode(
+    "c575ff0d3eea61205e3433495431e312056d0d51a64c6badfd4ad8cc092b7daa");
 TimeBlockManager* TimeBlockManager::Instance() {
     static TimeBlockManager ins;
     return &ins;

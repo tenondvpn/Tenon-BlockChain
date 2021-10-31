@@ -123,14 +123,15 @@ void MultiThreadHandler::Destroy() {
 void MultiThreadHandler::HandleMessage(const protobuf::Header& msg) {
     // just local message
     auto message_ptr = std::make_shared<transport::protobuf::Header>(msg);
-    {
-        std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-        uint32_t priority = kTransportPriorityLowest;
-        if (message_ptr->has_priority() && (message_ptr->priority() < kTransportPriorityLowest)) {
-            priority = message_ptr->priority();
-        }
-        priority_queue_map_[priority].push(message_ptr);
-    }
+//     {
+//         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
+//         uint32_t priority = kTransportPriorityLowest;
+//         if (message_ptr->has_priority() && (message_ptr->priority() < kTransportPriorityLowest)) {
+//             priority = message_ptr->priority();
+//         }
+//         priority_queue_map_[priority].push(message_ptr);
+//     }
+    local_queue_.push(message_ptr);
 }
 
 void MultiThreadHandler::HandleMessage(
@@ -283,8 +284,8 @@ void MultiThreadHandler::HandleRemoteMessage(
 // 			priority = message_ptr->priority();
 // 		}
         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
-        TRANSPORT_DEBUG("priority: %u", priority);
-        std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
+        TRANSPORT_DEBUG("priority: %u, %u", priority, priority_queue_map_[priority].size());
+//         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         priority_queue_map_[priority].push(message_ptr);
 //         if (!message_ptr->debug().empty()) {
 //             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
@@ -363,6 +364,12 @@ std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue(uint32
     std::shared_ptr<protobuf::Header> item = nullptr;
     if (priority_queue_map_[thread_idx].pop(&item)) {
         return item;
+    }
+
+    if (thread_idx == 0) {
+        if (local_queue_.pop(&item)) {
+            return item;
+        }
     }
 
     return nullptr;

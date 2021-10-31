@@ -82,6 +82,7 @@ private:
     static const int kQueueObjectCount = 1024 * 1024;
 
     common::ThreadSafeQueue<std::shared_ptr<protobuf::Header>, kQueueObjectCount> priority_queue_map_[kMessageHandlerThreadCount];
+    common::ThreadSafeQueue<std::shared_ptr<protobuf::Header>, kQueueObjectCount> local_queue_;
 //     std::map<uint32_t, common::ThreadSafeQueue<std::shared_ptr<protobuf::Header>, kQueueObjectCount>> priority_queue_map_;
     std::mutex priority_queue_map_mutex_;
     std::vector<ThreadHandlerPtr> thread_vec_;
