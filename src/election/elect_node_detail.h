@@ -72,6 +72,7 @@ struct BftMember {
             public_ip(""),
             public_port(0),
             dht_key(dhtkey) {
+        assert(pubkey.ec_point());
         for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
             pool_index_mod_num[i] = -1;
         }

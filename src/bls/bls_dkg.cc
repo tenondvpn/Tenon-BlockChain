@@ -50,7 +50,6 @@ void BlsDkg::OnNewElectionBlock(
     dkg_verify_brd_timer_.Destroy();
     dkg_swap_seckkey_timer_.Destroy();
     dkg_finish_timer_.Destroy();
-
     max_finish_count_ = 0;
     max_finish_hash_ = "";
     valid_sec_key_count_ = 0;

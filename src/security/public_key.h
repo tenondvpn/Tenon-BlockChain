@@ -31,7 +31,7 @@ public:
     int Deserialize(const std::string& src);
 
 private:
-    std::shared_ptr<EC_POINT> ec_point_;
+    std::shared_ptr<EC_POINT> ec_point_{ nullptr };
 
 };
 
