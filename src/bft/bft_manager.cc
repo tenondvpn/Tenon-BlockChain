@@ -322,22 +322,6 @@ void BftManager::BackupSendOppose(
     bft_msg.set_bft_step(from_bft_msg.bft_step());
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
-//     auto member_count = elect::ElectManager::Instance()->GetMemberCount(from_bft_msg.net_id());
-//     auto t = common::GetSignerCount(member_count);
-//     std::string bls_sign_x;
-//     std::string bls_sign_y;
-//     if (bls::BlsManager::Instance()->Sign(
-//             t,
-//             member_count,
-//             bls::BlsManager::Instance()->local_sec_key(),
-//             from_bft_msg.prepare_hash(),
-//             &bls_sign_x,
-//             &bls_sign_y) != bls::kBlsSuccess) {
-//         return;
-//     }
-// 
-//     bft_msg.set_bls_sign_x(bls_sign_x);
-//     bft_msg.set_bls_sign_y(bls_sign_y);
     security::Signature sign;
     std::string msg_to_hash = common::Hash::Hash256(
         bft_msg.gid() +
