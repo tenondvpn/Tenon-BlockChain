@@ -465,6 +465,7 @@ int BlsManager::AddBlsConsensusInfo(
             crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c0));
         mem_bls_pk->set_y_c1(
             crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c1));
+        mem_bls_pk->set_pool_idx_mod_num(-1);
         BLS_DEBUG("AddBlsConsensusInfo success node index: %d,"
             "x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
             i,

@@ -560,13 +560,21 @@ int ElectPoolManager::SelectLeader(
 
     int32_t mode_idx = 0;
     std::unordered_map<std::string, int32_t> leader_mode_idx_map;
-    auto pre_ec_members = ec_block->mutable_prev_members();
+    ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d",
+        expect_leader_count, leader_nodes.size(), members->size());
+    for (int32_t i = 0; i < ec_block->prev_members().bls_pubkey_size(); ++i) {
+        ec_block->mutable_prev_members()->mutable_bls_pubkey(i)->set_pool_idx_mod_num(-1);
+    }
+
     for (auto iter = leader_nodes.begin(); iter != leader_nodes.end(); ++iter) {
-        if (pre_ec_members->bls_pubkey_size() <= (*iter)->index) {
+        if (ec_block->prev_members().bls_pubkey_size() <= (*iter)->index) {
             return kElectError;
         }
 
-        pre_ec_members->mutable_bls_pubkey((*iter)->index)->set_pool_idx_mod_num(mode_idx++);
+        auto* bls_key = ec_block->mutable_prev_members()->mutable_bls_pubkey((*iter)->index);
+        bls_key->set_pool_idx_mod_num(mode_idx++);
+        ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, index: %d",
+            expect_leader_count, leader_nodes.size(), members->size(), (*iter)->index);
     }
 
     if (mode_idx != expect_leader_count) {

@@ -6,7 +6,7 @@ namespace tenon {
 
 namespace common {
 
-template<class T>
+template<class T, uint32_t kMaxCount=1024>
 class ThreadSafeQueue {
 public:
     ThreadSafeQueue() {}
@@ -26,7 +26,7 @@ public:
     }
 
 private:
-    moodycamel::ReaderWriterQueue<T, 1024> rw_queue_;
+    moodycamel::ReaderWriterQueue<T, kMaxCount> rw_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(ThreadSafeQueue);
 };

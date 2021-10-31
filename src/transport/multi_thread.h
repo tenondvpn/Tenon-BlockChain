@@ -11,6 +11,7 @@
 #include <condition_variable>
 #include <queue>
 
+#include "common/thread_safe_queue.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport.h"
 
@@ -79,7 +80,8 @@ private:
 
     static const int kQueueObjectCount = 1024 * 1024;
 
-    std::map<uint32_t, std::queue<std::shared_ptr<protobuf::Header>>> priority_queue_map_;
+    common::ThreadSafeQueue<std::shared_ptr<protobuf::Header>, kQueueObjectCount> priority_queue_map_[kMessageHandlerThreadCount];
+//     std::map<uint32_t, common::ThreadSafeQueue<std::shared_ptr<protobuf::Header>, kQueueObjectCount>> priority_queue_map_;
     std::mutex priority_queue_map_mutex_;
     std::vector<ThreadHandlerPtr> thread_vec_;
     bool inited_{ false };

@@ -179,6 +179,11 @@ int GenesisBlockInit::CreateElectBlock(
             mem_pk->set_x_c1(pkeys_str->at(1));
             mem_pk->set_y_c0(pkeys_str->at(2));
             mem_pk->set_y_c1(pkeys_str->at(3));
+            if (i == 0) {
+                mem_pk->set_pool_idx_mod_num(0);
+            } else {
+                mem_pk->set_pool_idx_mod_num(-1);
+            }
             DumpLocalPrivateKey(
                 shard_netid,
                 prev_height,
