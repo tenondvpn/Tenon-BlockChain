@@ -14,6 +14,7 @@
 #include "common/thread_safe_queue.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
