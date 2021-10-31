@@ -121,6 +121,7 @@ private:
     std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members_;
     std::string max_finish_hash_;
     uint32_t max_finish_count_{ 0 };
+    std::unordered_set<uint32_t> valid_swapkey_set_;
     std::mutex mutex_;
 
 #ifdef TENON_UNITTEST

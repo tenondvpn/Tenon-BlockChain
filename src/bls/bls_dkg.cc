@@ -60,6 +60,7 @@ void BlsDkg::OnNewElectionBlock(
     max_finish_hash_ = "";
     valid_sec_key_count_ = 0;
     members_ = members;
+    valid_swapkey_set_.clear();
     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
     member_count_ = members_->size();
@@ -88,10 +89,10 @@ void BlsDkg::OnNewElectionBlock(
 
     auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
     local_offset_us_ = each_member_offset_us * local_member_index_;
+    dkg_verify_brd_timer_.CutOff(
+        kDkgVerifyBrdBeginUs + local_offset_us_,
+        std::bind(&BlsDkg::BroadcastVerfify, this));
     if (!common::GlobalInfo::Instance()->missing_node()) {
-        dkg_verify_brd_timer_.CutOff(
-            kDkgVerifyBrdBeginUs + local_offset_us_,
-            std::bind(&BlsDkg::BroadcastVerfify, this));
         dkg_swap_seckkey_timer_.CutOff(
             kDkgSwapSecKeyBeginUs + local_offset_us_,
             std::bind(&BlsDkg::SwapSecKey, this));
@@ -333,6 +334,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -568,13 +570,15 @@ void BlsDkg::Finish() try {
     common_public_key_ = libff::alt_bn128_G2::zero();
     std::vector<libff::alt_bn128_Fr> valid_seck_keys;
     for (size_t i = 0; i < members_->size(); ++i) {
-        if (all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero() ||
-                all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+        auto iter = valid_swapkey_set_.find(i);
+        if (iter == valid_swapkey_set_.end()) {
+            BLS_INFO("TTTTTTTTTTTTTTTT invalid: %d", i);
             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
         } else {
             valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
             common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
+            BLS_INFO("TTTTTTTTTTTTTTTT valid: %d", i);
             bitmap.Set(i);
         }
     }
