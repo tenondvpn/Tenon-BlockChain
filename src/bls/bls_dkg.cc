@@ -670,6 +670,7 @@ void BlsDkg::CreateContribution() {
         dkg_instance_->SecretKeyContribution(polynomial);
     local_src_secret_key_contribution_ = all_secret_key_contribution_[local_member_index_];
     all_verification_vector_[local_member_index_] = dkg_instance_->VerificationVector(polynomial);
+    valid_swapkey_set_.insert(local_member_index_);
     ++valid_sec_key_count_;
 }
 

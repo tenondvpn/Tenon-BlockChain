@@ -495,6 +495,10 @@ void ElectManager::UpdatePrevElectMembers(
     auto t = common::GetSignerCount(members->size());
     int32_t i = 0;
     for (auto iter = members->begin(); iter != members->end(); ++iter, ++i) {
+        if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+            local_node_member_index_ = i;
+        }
+
         if (elect_block.prev_members().bls_pubkey(i).x_c0().empty()) {
             (*iter)->bls_publick_key = libff::alt_bn128_G2::zero();
             continue;
@@ -509,7 +513,6 @@ void ElectManager::UpdatePrevElectMembers(
 
         if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
             *elected = true;
-            local_node_member_index_ = i;
         }
 
 //         std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
