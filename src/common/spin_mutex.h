@@ -80,6 +80,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(AutoSpinLock);
 };
 
-};  // namespace tenon
+};  // namespace common
 
-};  // namespace dag
+};  // namespace tenon

@@ -131,6 +131,7 @@ void MultiThreadHandler::HandleMessage(const protobuf::Header& msg) {
 //         }
 //         priority_queue_map_[priority].push(message_ptr);
 //     }
+    common::AutoSpinLock auto_lock(local_queue_mutex_);
     local_queue_.push(message_ptr);
 }
 
