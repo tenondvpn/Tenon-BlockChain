@@ -57,10 +57,6 @@ private:
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
-    void RootLeaderCreateConsensusBlock(
-        uint32_t pool_idx,
-        std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootLeaderCreateFinalStatistic(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
@@ -127,14 +123,10 @@ private:
         TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map);
-    int BackupCheckStatistic(
-        TxItemPtr local_tx_ptr,
-        const protobuf::TxInfo& tx_info);
     int BackupCheckFinalStatistic(
         TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info);
     int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
-
     int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);

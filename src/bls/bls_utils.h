@@ -46,12 +46,14 @@ struct BlsFinishItem {
     }
 
     libff::alt_bn128_G2 all_public_keys[common::kEachShardMaxNodeCount];
+    libff::alt_bn128_G1 all_bls_signs[common::kEachShardMaxNodeCount];
     libff::alt_bn128_G2 all_common_public_keys[common::kEachShardMaxNodeCount];
     uint32_t max_finish_count{ 0 };
     std::string max_finish_hash;
     std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members;
     std::unordered_map<std::string, uint32_t> max_public_pk_map;
     std::unordered_map<std::string, libff::alt_bn128_G2> common_pk_map;
+    std::vector<libff::alt_bn128_G1> verify_t_signs;
 };
 
 typedef std::shared_ptr<BlsFinishItem> BlsFinishItemPtr;

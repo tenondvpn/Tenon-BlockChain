@@ -359,15 +359,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         if (common_pk == libff::alt_bn128_G2::zero()) {
             assert(false);
         }
-        {
-            common_pk.to_affine_coordinates();
-            auto cpk = std::make_shared<BLSPublicKey>(common_pk);
-            auto cpk_strs = cpk->toString();
-            BFT_DEBUG("leader verify leader precommit agg sign failed! t: %u, n: %u,"
-                "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
-                t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
-                elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
-        }
+
         precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
@@ -381,7 +373,15 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
                 t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
                 elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
+            assert(false);
             return kBftError;
+        } else {            common_pk.to_affine_coordinates();
+            auto cpk = std::make_shared<BLSPublicKey>(common_pk);
+            auto cpk_strs = cpk->toString();
+            BFT_DEBUG("leader verify leader precommit agg sign success! t: %u, n: %u,"
+                "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
+                t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
+                elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
     } catch (std::exception& e) {

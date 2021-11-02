@@ -493,7 +493,7 @@ int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
     }
 
     if (BackupCheckFinalStatistic(local_tx_info, tx_info) != kBftSuccess) {
-        BFT_ERROR("BackupCheckStatistic error.");
+        BFT_ERROR("BackupCheckFinalStatistic error.");
         return kBftError;
     }
 
@@ -609,7 +609,10 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
                 break;
             }
             case contract::kCallStepCallerInited: {
-                int check_res = BackupCheckContractExceute(local_tx_info, tx_info, acc_balance_map);
+                int check_res = BackupCheckContractExceute(
+                    local_tx_info,
+                    tx_info,
+                    acc_balance_map);
                 if (check_res != kBftSuccess) {
                     BFT_ERROR("BackupCheckContractExceute transaction failed![%d]", tmp_res);
                     return check_res;
@@ -693,7 +696,9 @@ int TxBft::BackupCheckFinalStatistic(
     for (int32_t i = 0; i < local_tx_info->tx.attr_size(); ++i) {
         if (local_tx_info->tx.attr(i).key() == tmblock::kAttrTimerBlockHeight) {
             uint64_t timeblock_height = 0;
-            if (common::StringUtil::ToUint64(local_tx_info->tx.attr(i).value(), &timeblock_height)) {
+            if (common::StringUtil::ToUint64(
+                    local_tx_info->tx.attr(i).value(),
+                    &timeblock_height)) {
                 block::ShardStatistic::Instance()->GetStatisticInfo(
                     timeblock_height,
                     &local_statistic_info);

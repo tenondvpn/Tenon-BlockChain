@@ -7,6 +7,7 @@
 #include <dkg/dkg.h>
 
 #include "bls/bls_utils.h"
+#include "bls/bls_manager.h"
 #include "common/global_info.h"
 #include "common/db_key_prefix.h"
 #include "dht/dht_key.h"
@@ -571,6 +572,20 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
         crypto::ThresholdUtils::fieldElementToString(common_public_key_.Y.c0));
     common_pk->set_y_c1(
         crypto::ThresholdUtils::fieldElementToString(common_public_key_.Y.c1));
+    std::string sign_x;
+    std::string sign_y;
+    if (BlsManager::Instance()->Sign(
+            min_aggree_member_count_,
+            member_count_,
+            local_sec_key_,
+            message_hash,
+            &sign_x,
+            &sign_y) != kBlsSuccess) {
+        return;
+    }
+
+    finish_msg->set_bls_sign_x(sign_x);
+    finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
 #ifndef TENON_UNITTEST
     network::Route::Instance()->Send(msg);
