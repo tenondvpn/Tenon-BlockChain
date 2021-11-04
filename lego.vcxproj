@@ -540,6 +540,7 @@
     <ClInclude Include="src\common\limit_heap.h" />
     <ClInclude Include="src\common\parse_args.h" />
     <ClInclude Include="src\common\random.h" />
+    <ClInclude Include="src\common\spin_mutex.h" />
     <ClInclude Include="src\common\split.h" />
     <ClInclude Include="src\common\spsc_queue.h" />
     <ClInclude Include="src\common\state_lock.h" />
@@ -1979,6 +1980,7 @@
     <ClCompile Include="src\common\tests\test_limit_heap.cc" />
     <ClCompile Include="src\common\tests\test_parse_args.cc" />
     <ClCompile Include="src\common\tests\test_random.cc" />
+    <ClCompile Include="src\common\tests\test_spin_mutex.cc" />
     <ClCompile Include="src\common\tests\test_split.cc" />
     <ClCompile Include="src\common\tests\test_string_utils.cc" />
     <ClCompile Include="src\common\tests\test_thread_safe_queue.cc" />

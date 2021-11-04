@@ -27,8 +27,6 @@ typedef std::shared_ptr<ElectNode> ElectNodePtr;
 class ElectManager {
 public:
     static ElectManager* Instance();
-    int Join(uint32_t network_id);
-    int Quit(uint32_t network_id);
     uint64_t latest_height(uint32_t network_id);
     int CreateElectTransaction(
         uint32_t shard_netid,
@@ -53,6 +51,8 @@ public:
     int32_t GetNetworkLeaderCount(uint32_t network_id);
     std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
     elect::MembersPtr GetWaitingNetworkMembers(uint32_t network_id);
+    bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
+    bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
 
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         return height_with_block_.GetCommonPublicKey(height, network_id);
@@ -78,15 +78,15 @@ public:
         return false;
     }
 
-    bool LocalNodeIsSuperLeader() {
+    bool LocalNodeIsSuperLeader() const {
         return local_node_is_super_leader_;
     }
 
-    int32_t local_node_pool_mod_num() {
+    int32_t local_node_pool_mod_num() const {
         return local_node_pool_mod_num_;
     }
 
-    int32_t local_node_member_index() {
+    int32_t local_node_member_index() const {
         return local_node_member_index_;
     }
 
@@ -94,13 +94,11 @@ public:
         return local_mem_ptr_[network_id];
     }
 
-    std::unordered_set<uint32_t> valid_shard_networks() {
+    std::unordered_set<uint32_t> valid_shard_networks() const {
         std::lock_guard<std::mutex> guard(valid_shard_networks_mutex_);
         return valid_shard_networks_;
     }
 
-    bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
-    bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
     uint64_t waiting_elect_height(uint32_t network_id) {
         return waiting_elect_height_[network_id];
     }
@@ -109,6 +107,8 @@ private:
     ElectManager();
     ~ElectManager();
 
+    int Join(uint32_t network_id);
+    int Quit(uint32_t network_id);
     void HandleMessage(const transport::TransportMessagePtr& header);
     void WaitingNodeSendHeartbeat();
     void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
@@ -156,7 +156,7 @@ private:
     uint64_t waiting_elect_height_[network::kConsensusShardEndNetworkId];
     std::shared_ptr<MemberManager> mem_manager_ptr_[network::kConsensusShardEndNetworkId];
     int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
-    int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
+//     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
     elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
     elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
     HeightWithElectBlock height_with_block_;

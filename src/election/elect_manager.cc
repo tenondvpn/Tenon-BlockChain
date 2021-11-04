@@ -30,7 +30,7 @@ ElectManager::ElectManager() {
     network::Route::Instance()->RegisterMessage(
         common::kElectMessage,
         std::bind(&ElectManager::HandleMessage, this, std::placeholders::_1));
-    memset(latest_leader_count_, 0, sizeof(latest_leader_count_));
+//     memset(latest_leader_count_, 0, sizeof(latest_leader_count_));
     memset(latest_member_count_, 0, sizeof(latest_member_count_));
     for (uint32_t i = 0; i < network::kConsensusShardEndNetworkId; ++i) {
         elect_net_heights_map_[i] = common::kInvalidUint64;
@@ -193,6 +193,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
 void ElectManager::OnNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block) {
+    std::lock_guard<std::mutex> guard(elect_members_mutex_);
     if (elect_block.shard_network_id() >= network::kConsensusShardEndNetworkId ||
             elect_block.shard_network_id() < network::kRootCongressNetworkId) {
         return;
@@ -250,7 +251,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         return;
     }
 
-//     std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
+    std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
     bft::protobuf::Block block_item;
     if (block::BlockManager::Instance()->GetBlockWithHeight(
             network::kRootCongressNetworkId,
@@ -279,16 +280,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         return;
     }
 
-    std::lock_guard<std::mutex> guard(elect_members_mutex_);
     if (added_height_.find(elect_block.prev_members().prev_elect_height()) != added_height_.end()) {
         return;
     }
 
     added_height_.insert(elect_block.prev_members().prev_elect_height());
-    if (common::GlobalInfo::Instance()->network_id() == prev_elect_block.shard_network_id()) {
-        local_node_pool_mod_num_ = -1;
-        local_node_is_super_leader_ = false;
-    }
 
     latest_member_count_[prev_elect_block.shard_network_id()] = prev_elect_block.in_size();
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
@@ -327,7 +323,8 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     assert(leader_count > 0);
-    latest_leader_count_[prev_elect_block.shard_network_id()] = leader_count;
+    bool local_node_is_super_leader = false;
+//     latest_leader_count_[prev_elect_block.shard_network_id()] = leader_count;
     std::vector<std::string> pk_vec;
     UpdatePrevElectMembers(shard_members_ptr, elect_block, elected, &pk_vec);
     int32_t local_node_pool_mod_num = -1;
@@ -355,12 +352,6 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
                 prev_elect_block.shard_network_id(),
                 common::Encode::HexEncode((*iter)->id).c_str(),
                 (*iter)->pool_index_mod_num[0]);
-//             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
-//                 << prev_elect_block.shard_network_id()
-//                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num[0]
-//                 << ", leader count: " << prev_elect_block.leader_count()
-//                 << std::endl;
         }
 
         std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
@@ -375,7 +366,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
                 leaders.size() < common::kEatchShardMaxSupperLeaderCount; ++iter) {
             leaders.insert(tmp_leaders[*iter]->id);
             if (tmp_leaders[*iter]->id == common::GlobalInfo::Instance()->id()) {
-                local_node_is_super_leader_ = true;
+                local_node_is_super_leader = true;
             }
         }
 
@@ -434,6 +425,12 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     if (*elected) {
         local_node_pool_mod_num_ = local_node_pool_mod_num;
+        local_node_is_super_leader_ = local_node_is_super_leader;
+    } else {
+        if (common::GlobalInfo::Instance()->network_id() == prev_elect_block.shard_network_id()) {
+            local_node_pool_mod_num_ = -1;
+            local_node_is_super_leader_ = false;
+        }
     }
 }
 
@@ -441,7 +438,6 @@ void ElectManager::ProcessNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block,
         bool* elected) {
-    std::lock_guard<std::mutex> guard(elect_members_mutex_);
     auto& in = elect_block.in();
     auto shard_members_ptr = std::make_shared<Members>();
     uint32_t member_index = 0;
@@ -542,19 +538,19 @@ void ElectManager::UpdatePrevElectMembers(
 //         << ", " << elect_block.prev_members().common_pubkey().y_c1()
 //         << std::endl;
 
-    auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(*pkey_str_vect));
-    if (*elected) {
-        bls::BlsManager::Instance()->SetUsedElectionBlock(
-            elect_block.prev_members().prev_elect_height(),
-            elect_block.shard_network_id(),
-            members->size(),
-            *common_pk.getPublicKey());
-        ELECT_DEBUG("use common public key: %s, %s, %s, %s",
-            elect_block.prev_members().common_pubkey().x_c0().c_str(),
-            elect_block.prev_members().common_pubkey().x_c1().c_str(),
-            elect_block.prev_members().common_pubkey().y_c0().c_str(),
-            elect_block.prev_members().common_pubkey().y_c1().c_str());
-    }
+//     auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(*pkey_str_vect));
+//     if (*elected) {
+//         bls::BlsManager::Instance()->SetUsedElectionBlock(
+//             elect_block.prev_members().prev_elect_height(),
+//             elect_block.shard_network_id(),
+//             members->size(),
+//             *common_pk.getPublicKey());
+//         ELECT_DEBUG("use common public key: %s, %s, %s, %s",
+//             elect_block.prev_members().common_pubkey().x_c0().c_str(),
+//             elect_block.prev_members().common_pubkey().x_c1().c_str(),
+//             elect_block.prev_members().common_pubkey().y_c0().c_str(),
+//             elect_block.prev_members().common_pubkey().y_c1().c_str());
+//     }
 }
 
 int ElectManager::BackupCheckElectionBlockTx(

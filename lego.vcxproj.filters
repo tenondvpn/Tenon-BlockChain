@@ -5217,6 +5217,9 @@
     <ClInclude Include="third_party\depends\include\dkg-o\DKGTEWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\spin_mutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common\tick\thread_pool.cc">
@@ -11043,6 +11046,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\bls\proto\bls.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\tests\test_spin_mutex.cc">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
