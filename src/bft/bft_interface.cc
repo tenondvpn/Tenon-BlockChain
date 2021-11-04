@@ -30,6 +30,7 @@ int BftInterface::Init() {
 
     local_sec_key_ = bls::BlsManager::Instance()->local_sec_key();
     if (local_sec_key_ == libff::alt_bn128_Fr::zero()) {
+        BFT_ERROR("local sec key is zero!");
         return kBftError;
     }
 

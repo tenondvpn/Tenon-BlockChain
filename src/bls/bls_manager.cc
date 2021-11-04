@@ -70,57 +70,57 @@ void BlsManager::SetUsedElectionBlock(
         uint32_t network_id,
         uint32_t member_count,
         const libff::alt_bn128_G2& common_public_key) try {
-//     if (common::GlobalInfo::Instance()->missing_node()) {
-//         return;
-//     }
-// 
-//     std::lock_guard<std::mutex> guard(mutex_);
-//     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
-//         BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
-//         return;
-//     }
-// 
-//     max_height_ = elect_height;
-//     std::string key = common::kBlsPrivateKeyPrefix +
-//         std::to_string(elect_height) + "_" +
-//         std::to_string(network_id) + "_" +
-//         common::GlobalInfo::Instance()->id();
-//     std::string val;
-//     auto st = db::Db::Instance()->Get(key, &val);
-//     if (!st.ok()) {
-//         BLS_ERROR("get bls private key failed![%s]", key.c_str());
-//         return;
-//     }
-// 
-//     std::string dec_data;
-//     if (elect_height <= 4) {
-//         // for genesis block with sure encrypt key
-//         if (security::Crypto::Instance()->GetDecryptData(
-//                 init::kGenesisElectPrikeyEncryptKey,
-//                 val,
-//                 &dec_data) != security::kSecuritySuccess) {
-//             return;
-//         }
-//     } else {
-//         if (security::Crypto::Instance()->GetDecryptData(
-//                 security::Schnorr::Instance()->str_prikey(),
-//                 val,
-//                 &dec_data) != security::kSecuritySuccess) {
-//             return;
-//         }
-//     }
-//     
-//     libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
-//     auto t = common::GetSignerCount(member_count);
-//     crypto::Dkg dkg(t, member_count);
-//     libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
-//     used_bls_ = std::make_shared<bls::BlsDkg>(
-//         t,
-//         member_count,
-//         local_sec_key,
-//         local_publick_key,
-//         common_public_key);
-//     BLS_INFO("used sec key: %s", dec_data.c_str());
+    if (common::GlobalInfo::Instance()->missing_node()) {
+        return;
+    }
+
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
+        BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
+        return;
+    }
+
+    max_height_ = elect_height;
+    std::string key = common::kBlsPrivateKeyPrefix +
+        std::to_string(elect_height) + "_" +
+        std::to_string(network_id) + "_" +
+        common::GlobalInfo::Instance()->id();
+    std::string val;
+    auto st = db::Db::Instance()->Get(key, &val);
+    if (!st.ok()) {
+        BLS_ERROR("get bls private key failed![%s]", key.c_str());
+        return;
+    }
+
+    std::string dec_data;
+    if (elect_height <= 4) {
+        // for genesis block with sure encrypt key
+        if (security::Crypto::Instance()->GetDecryptData(
+                init::kGenesisElectPrikeyEncryptKey,
+                val,
+                &dec_data) != security::kSecuritySuccess) {
+            return;
+        }
+    } else {
+        if (security::Crypto::Instance()->GetDecryptData(
+                security::Schnorr::Instance()->str_prikey(),
+                val,
+                &dec_data) != security::kSecuritySuccess) {
+            return;
+        }
+    }
+    
+    libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
+    auto t = common::GetSignerCount(member_count);
+    crypto::Dkg dkg(t, member_count);
+    libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
+    used_bls_ = std::make_shared<bls::BlsDkg>(
+        t,
+        member_count,
+        local_sec_key,
+        local_publick_key,
+        common_public_key);
+    BLS_INFO("used sec key: %s", dec_data.c_str());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -131,9 +131,9 @@ int BlsManager::Sign(
         const libff::alt_bn128_Fr& local_sec_key,
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign) {
-//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
-//         return kBlsError;
-//     }
+    if (used_bls_ == nullptr || used_bls_->n() == 0) {
+        return kBlsError;
+    }
 
     BlsSign::Sign(t, n, local_sec_key, sign_msg, bn_sign);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
@@ -148,10 +148,10 @@ int BlsManager::Sign(
         const std::string& sign_msg,
         std::string* sign_x,
         std::string* sign_y) try {
-//     std::lock_guard<std::mutex> guard(sign_mutex_);
-//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
-//         return kBlsError;
-//     }
+    std::lock_guard<std::mutex> guard(sign_mutex_);
+    if (used_bls_ == nullptr || used_bls_->n() == 0) {
+        return kBlsError;
+    }
 
     libff::alt_bn128_G1 bn_sign;
     BlsSign::Sign(t, n, local_sec_key, sign_msg, &bn_sign);
