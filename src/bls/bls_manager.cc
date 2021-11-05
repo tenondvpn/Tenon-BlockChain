@@ -70,10 +70,6 @@ void BlsManager::SetUsedElectionBlock(
         uint32_t network_id,
         uint32_t member_count,
         const libff::alt_bn128_G2& common_public_key) try {
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        return;
-    }
-
     std::lock_guard<std::mutex> guard(mutex_);
     if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
         BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
@@ -220,10 +216,6 @@ int BlsManager::Verify(
 }
 
 void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        return;
-    }
-
     protobuf::BlsMessage bls_msg;
     if (!bls_msg.ParseFromString(header->data())) {
         BLS_ERROR("bls_msg.ParseFromString ParseFromString failed!");

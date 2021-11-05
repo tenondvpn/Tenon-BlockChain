@@ -928,15 +928,15 @@ void AccountManager::RefreshPoolMaxHeight() {
 void AccountManager::SendRefreshHeightsRequest() {
     transport::protobuf::Header msg;
     dht::BaseDhtPtr dht = nullptr;
-    dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
+//     dht = network::DhtManager::Instance()->GetDht(
+//         common::GlobalInfo::Instance()->network_id());
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-    if (!dht || dht->readonly_dht()->size() < 3) {
+//     if (!dht || dht->readonly_dht()->size() < 3) {
         dht = network::UniversalManager::Instance()->GetUniversal(network::kUniversalNetworkId);
         if (des_net_id >= network::kConsensusShardEndNetworkId) {
             des_net_id -= network::kConsensusWaitingShardOffset;
         }
-    }
+//     }
 
     msg.set_src_dht_key(dht->local_node()->dht_key());
     dht::DhtKeyManager dht_key(des_net_id, 0);
