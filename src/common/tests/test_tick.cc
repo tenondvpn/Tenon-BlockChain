@@ -28,13 +28,16 @@ public:
         called_times4_ = 0;
         called_times5_ = 0;
         called_times6_ = 0;
-        tick_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall, this));
-        tick1_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall1, this));
-        tick2_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall2, this));
-        tick3_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall3, this));
-        tick4_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall4, this));
-        tick5_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall5, this));
-        tick6_.CutOff(15 * 1000, std::bind(&TestTick::TimerCall6, this));
+        const uint32_t kPeriod = 1000;
+        for (int32_t i = 0; i < 100; ++i) {
+            tick_.CutOff(kPeriod, std::bind(&TestTick::TimerCall, this));
+            tick1_.CutOff(kPeriod, std::bind(&TestTick::TimerCall1, this));
+            tick2_.CutOff(kPeriod, std::bind(&TestTick::TimerCall2, this));
+            tick3_.CutOff(kPeriod, std::bind(&TestTick::TimerCall3, this));
+            tick4_.CutOff(kPeriod, std::bind(&TestTick::TimerCall4, this));
+            tick5_.CutOff(kPeriod, std::bind(&TestTick::TimerCall5, this));
+            tick6_.CutOff(kPeriod, std::bind(&TestTick::TimerCall6, this));
+        }
     }
 
     virtual void TearDown() {

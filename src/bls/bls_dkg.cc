@@ -87,14 +87,12 @@ void BlsDkg::OnNewElectionBlock(
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
         std::bind(&BlsDkg::BroadcastVerfify, this));
-    if (!common::GlobalInfo::Instance()->missing_node()) {
-        dkg_swap_seckkey_timer_.CutOff(
-            kDkgSwapSecKeyBeginUs + local_offset_us_,
-            std::bind(&BlsDkg::SwapSecKey, this));
-        dkg_finish_timer_.CutOff(
-            kDkgFinishBeginUs + local_offset_us_,
-            std::bind(&BlsDkg::Finish, this));
-    }
+    dkg_swap_seckkey_timer_.CutOff(
+        kDkgSwapSecKeyBeginUs + local_offset_us_,
+        std::bind(&BlsDkg::SwapSecKey, this));
+    dkg_finish_timer_.CutOff(
+        kDkgFinishBeginUs + local_offset_us_,
+        std::bind(&BlsDkg::Finish, this));
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -489,10 +487,12 @@ void BlsDkg::DumpLocalPrivateKey() {
 }
 
 void BlsDkg::Finish() try {
+    BLS_INFO("valid count.valid_sec_key_count_: %d", valid_sec_key_count_);
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
+        BLS_ERROR("valid count error.valid_sec_key_count_: %d", valid_sec_key_count_);
         return;
     }
 
@@ -517,6 +517,8 @@ void BlsDkg::Finish() try {
     }
 
     if (bitmap.valid_count() < members_->size() * kBlsMaxExchangeMembersRatio) {
+        BLS_ERROR("bitmap.valid_count: %d < :%d",
+            bitmap.valid_count(), members_->size() * kBlsMaxExchangeMembersRatio);
         return;
     }
 
@@ -587,6 +589,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     finish_msg->set_bls_sign_x(sign_x);
     finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    BLS_INFO("broadcast finish valid_sec_key_count_: %d", valid_sec_key_count_);
 #ifndef TENON_UNITTEST
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);

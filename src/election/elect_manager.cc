@@ -437,8 +437,6 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         local_node_pool_mod_num_ = local_node_pool_mod_num;
         local_node_is_super_leader_ = local_node_is_super_leader;
     }
-
-    std::cout << "elected: " << *elected << ", local_node_pool_mod_num_: " << local_node_pool_mod_num_ << std::endl;
 }
 
 void ElectManager::ProcessNewElectBlock(

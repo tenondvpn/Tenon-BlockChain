@@ -131,9 +131,9 @@ int BlsManager::Sign(
         const libff::alt_bn128_Fr& local_sec_key,
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign) {
-    if (used_bls_ == nullptr || used_bls_->n() == 0) {
-        return kBlsError;
-    }
+//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
+//         return kBlsError;
+//     }
 
     BlsSign::Sign(t, n, local_sec_key, sign_msg, bn_sign);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
@@ -149,9 +149,9 @@ int BlsManager::Sign(
         std::string* sign_x,
         std::string* sign_y) try {
     std::lock_guard<std::mutex> guard(sign_mutex_);
-    if (used_bls_ == nullptr || used_bls_->n() == 0) {
-        return kBlsError;
-    }
+//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
+//         return kBlsError;
+//     }
 
     libff::alt_bn128_G1 bn_sign;
     BlsSign::Sign(t, n, local_sec_key, sign_msg, &bn_sign);
@@ -352,6 +352,7 @@ void BlsManager::HandleFinish(
         finish_item->max_public_pk_map[cpk_hash] = 1;
     } else {
         ++cpk_iter->second;
+        BLS_INFO("network id: %d, all finish count: %d", bls_msg.finish_req().network_id(), cpk_iter->second);
     }
 
     auto max_iter = finish_item->max_bls_members.find(msg_hash);
