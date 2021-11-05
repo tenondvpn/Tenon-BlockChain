@@ -283,10 +283,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, common_pubkey_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, network_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, bls_sign_x_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::FinishBroadcast, bls_sign_y_),
   ~0u,
+  2,
+  3,
+  4,
   0,
   1,
-  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bls::protobuf::BlsMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -318,8 +322,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 41, 48, sizeof(::tenon::bls::protobuf::VerifyVecBrdRes)},
   { 50, 57, sizeof(::tenon::bls::protobuf::SwapSecKeyReq)},
   { 59, 65, sizeof(::tenon::bls::protobuf::AgainstParticipant)},
-  { 66, 75, sizeof(::tenon::bls::protobuf::FinishBroadcast)},
-  { 79, 93, sizeof(::tenon::bls::protobuf::BlsMessage)},
+  { 66, 77, sizeof(::tenon::bls::protobuf::FinishBroadcast)},
+  { 83, 97, sizeof(::tenon::bls::protobuf::BlsMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -365,11 +369,12 @@ void AddDescriptorsImpl() {
       "\n\017VerifyVecBrdRes\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013"
       "public_port\030\002 \001(\r\"5\n\rSwapSecKeyReq\022\017\n\007se"
       "c_key\030\001 \001(\014\022\023\n\013sec_key_len\030\002 \001(\r\"+\n\022Agai"
-      "nstParticipant\022\025\n\ragainst_index\030\001 \001(\r\"\240\001"
+      "nstParticipant\022\025\n\ragainst_index\030\001 \001(\r\"\310\001"
       "\n\017FinishBroadcast\022\016\n\006bitmap\030\001 \003(\004\0220\n\006pub"
       "key\030\002 \001(\0132 .tenon.bls.protobuf.BlsPublic"
       "Key\0227\n\rcommon_pubkey\030\003 \001(\0132 .tenon.bls.p"
       "rotobuf.BlsPublicKey\022\022\n\nnetwork_id\030\004 \001(\r"
+      "\022\022\n\nbls_sign_x\030\005 \001(\014\022\022\n\nbls_sign_y\030\006 \001(\014"
       "\"\361\002\n\nBlsMessage\0227\n\nverify_brd\030\001 \001(\0132#.te"
       "non.bls.protobuf.VerifyVecBrdReq\0223\n\010swap"
       "_req\030\002 \001(\0132!.tenon.bls.protobuf.SwapSecK"
@@ -382,7 +387,7 @@ void AddDescriptorsImpl() {
       "height\030\t \001(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1012);
+      descriptor, 1052);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bls.proto", &protobuf_RegisterTypes);
 }
@@ -2411,6 +2416,8 @@ const int FinishBroadcast::kBitmapFieldNumber;
 const int FinishBroadcast::kPubkeyFieldNumber;
 const int FinishBroadcast::kCommonPubkeyFieldNumber;
 const int FinishBroadcast::kNetworkIdFieldNumber;
+const int FinishBroadcast::kBlsSignXFieldNumber;
+const int FinishBroadcast::kBlsSignYFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 FinishBroadcast::FinishBroadcast()
@@ -2426,6 +2433,14 @@ FinishBroadcast::FinishBroadcast(const FinishBroadcast& from)
       _has_bits_(from._has_bits_),
       bitmap_(from.bitmap_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  bls_sign_x_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_bls_sign_x()) {
+    bls_sign_x_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.bls_sign_x_);
+  }
+  bls_sign_y_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_bls_sign_y()) {
+    bls_sign_y_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.bls_sign_y_);
+  }
   if (from.has_pubkey()) {
     pubkey_ = new ::tenon::bls::protobuf::BlsPublicKey(*from.pubkey_);
   } else {
@@ -2441,6 +2456,8 @@ FinishBroadcast::FinishBroadcast(const FinishBroadcast& from)
 }
 
 void FinishBroadcast::SharedCtor() {
+  bls_sign_x_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  bls_sign_y_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&pubkey_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&network_id_) -
       reinterpret_cast<char*>(&pubkey_)) + sizeof(network_id_));
@@ -2452,6 +2469,8 @@ FinishBroadcast::~FinishBroadcast() {
 }
 
 void FinishBroadcast::SharedDtor() {
+  bls_sign_x_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  bls_sign_y_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete pubkey_;
   if (this != internal_default_instance()) delete common_pubkey_;
 }
@@ -2478,12 +2497,18 @@ void FinishBroadcast::Clear() {
 
   bitmap_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
+      bls_sign_x_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      bls_sign_y_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000004u) {
       GOOGLE_DCHECK(pubkey_ != NULL);
       pubkey_->Clear();
     }
-    if (cached_has_bits & 0x00000002u) {
+    if (cached_has_bits & 0x00000008u) {
       GOOGLE_DCHECK(common_pubkey_ != NULL);
       common_pubkey_->Clear();
     }
@@ -2560,6 +2585,30 @@ bool FinishBroadcast::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes bls_sign_x = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_bls_sign_x()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes bls_sign_y = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_bls_sign_y()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2594,20 +2643,32 @@ void FinishBroadcast::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.bls.protobuf.BlsPublicKey pubkey = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->_internal_pubkey(), output);
   }
 
   // optional .tenon.bls.protobuf.BlsPublicKey common_pubkey = 3;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->_internal_common_pubkey(), output);
   }
 
   // optional uint32 network_id = 4;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->network_id(), output);
+  }
+
+  // optional bytes bls_sign_x = 5;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      5, this->bls_sign_x(), output);
+  }
+
+  // optional bytes bls_sign_y = 6;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      6, this->bls_sign_y(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2630,22 +2691,36 @@ void FinishBroadcast::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional .tenon.bls.protobuf.BlsPublicKey pubkey = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         2, this->_internal_pubkey(), deterministic, target);
   }
 
   // optional .tenon.bls.protobuf.BlsPublicKey common_pubkey = 3;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         3, this->_internal_common_pubkey(), deterministic, target);
   }
 
   // optional uint32 network_id = 4;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->network_id(), target);
+  }
+
+  // optional bytes bls_sign_x = 5;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        5, this->bls_sign_x(), target);
+  }
+
+  // optional bytes bls_sign_y = 6;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        6, this->bls_sign_y(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2674,7 +2749,21 @@ size_t FinishBroadcast::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 31u) {
+    // optional bytes bls_sign_x = 5;
+    if (has_bls_sign_x()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->bls_sign_x());
+    }
+
+    // optional bytes bls_sign_y = 6;
+    if (has_bls_sign_y()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->bls_sign_y());
+    }
+
     // optional .tenon.bls.protobuf.BlsPublicKey pubkey = 2;
     if (has_pubkey()) {
       total_size += 1 +
@@ -2726,14 +2815,22 @@ void FinishBroadcast::MergeFrom(const FinishBroadcast& from) {
 
   bitmap_.MergeFrom(from.bitmap_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
-      mutable_pubkey()->::tenon::bls::protobuf::BlsPublicKey::MergeFrom(from.pubkey());
+      set_has_bls_sign_x();
+      bls_sign_x_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.bls_sign_x_);
     }
     if (cached_has_bits & 0x00000002u) {
-      mutable_common_pubkey()->::tenon::bls::protobuf::BlsPublicKey::MergeFrom(from.common_pubkey());
+      set_has_bls_sign_y();
+      bls_sign_y_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.bls_sign_y_);
     }
     if (cached_has_bits & 0x00000004u) {
+      mutable_pubkey()->::tenon::bls::protobuf::BlsPublicKey::MergeFrom(from.pubkey());
+    }
+    if (cached_has_bits & 0x00000008u) {
+      mutable_common_pubkey()->::tenon::bls::protobuf::BlsPublicKey::MergeFrom(from.common_pubkey());
+    }
+    if (cached_has_bits & 0x00000010u) {
       network_id_ = from.network_id_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -2765,6 +2862,10 @@ void FinishBroadcast::Swap(FinishBroadcast* other) {
 void FinishBroadcast::InternalSwap(FinishBroadcast* other) {
   using std::swap;
   bitmap_.InternalSwap(&other->bitmap_);
+  bls_sign_x_.Swap(&other->bls_sign_x_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  bls_sign_y_.Swap(&other->bls_sign_y_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(pubkey_, other->pubkey_);
   swap(common_pubkey_, other->common_pubkey_);
   swap(network_id_, other->network_id_);
