@@ -24,7 +24,8 @@ int BftInterface::Init() {
     leader_mem_ptr_ = elect::ElectManager::Instance()->local_mem_ptr(
         common::GlobalInfo::Instance()->network_id());
     if (leader_mem_ptr_ == nullptr) {
-        BFT_ERROR("get leader bft member failed!");
+        BFT_ERROR("get leader bft member failed! network_id: %d",
+            common::GlobalInfo::Instance()->network_id());
         return kBftError;
     }
 

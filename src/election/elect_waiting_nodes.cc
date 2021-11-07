@@ -107,6 +107,8 @@ void ElectWaitingNodes::GetAllValidNodes(
     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
     auto iter = waiting_nodes.begin();
     for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+        ELECT_ERROR("all_nodes_waiting_map_ size: %d, waiting_shard_id_: %d, id: %s",
+            (*iter)->nodes_vec.size(), waiting_shard_id_, common::Encode::HexEncode((*siter)->id).c_str());
         if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
             waiting_shard_id_ - network::kConsensusWaitingShardOffset,
             (*siter)->id)) {

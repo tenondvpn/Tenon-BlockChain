@@ -348,6 +348,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
             if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
                 local_mem_ptr_[prev_elect_block.shard_network_id()] = *iter;
+                ELECT_ERROR("network set member: %d", prev_elect_block.shard_network_id());
             }
 
             now_elected_ids_.insert((*iter)->id);
