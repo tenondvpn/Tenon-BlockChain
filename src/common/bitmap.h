@@ -24,7 +24,7 @@ public:
         return data_;
     }
 
-    uint32_t valid_count() {
+    uint32_t valid_count() const {
         return valid_count_;
     }
 
