@@ -78,6 +78,13 @@ private:
         BlsFinishItemPtr& finish_item,
         std::vector<libff::alt_bn128_G1>& all_signs,
         std::vector<size_t>& idx_vec);
+    bool CheckAndVerifyAll(
+        uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_G2& common_pk,
+        BlsFinishItemPtr& finish_item,
+        std::vector<libff::alt_bn128_G1>& all_signs,
+        std::vector<size_t>& idx_vec);
 
     std::shared_ptr<bls::BlsDkg> used_bls_{ nullptr };
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };

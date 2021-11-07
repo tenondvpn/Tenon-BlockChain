@@ -45,22 +45,22 @@ void ThreadHandler::HandleMessage() {
                 break;
             }
 
-//             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
+            msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
             msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
             msg_ptr->set_thread_idx(thread_idx_);
-//             auto btime = common::TimeUtils::TimestampUs();
+            auto btime = common::TimeUtils::TimestampUs();
             Processor::Instance()->HandleMessage(msg_ptr);
-//             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
-//             std::string tmp_str = std::to_string(msg_ptr->timestamps(0));
-//             for (uint32_t i = 2; i < msg_ptr->timestamps_size(); ++i) {
-//                 tmp_str += " " + std::to_string(msg_ptr->timestamps(i) - msg_ptr->timestamps(i - 1));
-//             }
-// 
-//             TRANSPORT_ERROR("msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu, use time list: %s",
-//                 msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
-//                 msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
-//                 (common::TimeUtils::TimestampUs() - btime),
-//                 tmp_str.c_str());
+            msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
+            std::string tmp_str = std::to_string(msg_ptr->timestamps(0));
+            for (uint32_t i = 2; i < msg_ptr->timestamps_size(); ++i) {
+                tmp_str += " " + std::to_string(msg_ptr->timestamps(i) - msg_ptr->timestamps(i - 1));
+            }
+
+            TRANSPORT_ERROR("msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu, use time list: %s",
+                msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+                (common::TimeUtils::TimestampUs() - btime),
+                tmp_str.c_str());
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -287,7 +287,6 @@ void MultiThreadHandler::HandleRemoteMessage(
 // 		}
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
-        TRANSPORT_DEBUG("priority: %u, %u", priority, priority_queue_map_[priority].size());
         priority_queue_map_[priority].push(message_ptr);
 //         if (!message_ptr->debug().empty()) {
 //             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
