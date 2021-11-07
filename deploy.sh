@@ -12,6 +12,17 @@ mkdir -p /root/nodes/s4/log
 mkdir -p /root/nodes/s5/log
 mkdir -p /root/nodes/s6/log
 mkdir -p /root/nodes/s7/log
+mkdir -p /root/nodes/s8/log
+mkdir -p /root/nodes/s9/log
+mkdir -p /root/nodes/s10/log
+mkdir -p /root/nodes/s11/log
+mkdir -p /root/nodes/s12/log
+mkdir -p /root/nodes/s13/log
+mkdir -p /root/nodes/s14/log
+mkdir -p /root/nodes/s15/log
+mkdir -p /root/nodes/s16/log
+mkdir -p /root/nodes/s17/log
+mkdir -p /root/nodes/s18/log
 mkdir -p /root/nodes/r1/log
 mkdir -p /root/nodes/r2/log
 mkdir -p /root/nodes/r3/log
@@ -28,6 +39,17 @@ cp -rf ./cbuild_Debug/tenon /root/nodes/s4
 cp -rf ./cbuild_Debug/tenon /root/nodes/s5
 cp -rf ./cbuild_Debug/tenon /root/nodes/s6
 cp -rf ./cbuild_Debug/tenon /root/nodes/s7
+cp -rf ./cbuild_Debug/tenon /root/nodes/s8
+cp -rf ./cbuild_Debug/tenon /root/nodes/s9
+cp -rf ./cbuild_Debug/tenon /root/nodes/s10
+cp -rf ./cbuild_Debug/tenon /root/nodes/s11
+cp -rf ./cbuild_Debug/tenon /root/nodes/s12
+cp -rf ./cbuild_Debug/tenon /root/nodes/s13
+cp -rf ./cbuild_Debug/tenon /root/nodes/s14
+cp -rf ./cbuild_Debug/tenon /root/nodes/s15
+cp -rf ./cbuild_Debug/tenon /root/nodes/s16
+cp -rf ./cbuild_Debug/tenon /root/nodes/s17
+cp -rf ./cbuild_Debug/tenon /root/nodes/s18
 cp -rf ./cbuild_Debug/tenon /root/nodes/r1
 cp -rf ./cbuild_Debug/tenon /root/nodes/r2
 cp -rf ./cbuild_Debug/tenon /root/nodes/r3
@@ -53,3 +75,14 @@ cp -rf /root/nodes/tenon/shard_db /root/nodes/s4/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s5/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s6/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s7/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s8/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s9/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s10/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s11/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s12/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s13/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s14/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s15/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s16/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s17/db
+cp -rf /root/nodes/tenon/shard_db /root/nodes/s18/db
