@@ -222,6 +222,7 @@ void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
         return;
     }
 
+    BLS_INFO("handle bls message coming. %d", bls_msg.has_finish_req());
     if (bls_msg.has_finish_req()) {
         HandleFinish(*header, bls_msg);
         return;
@@ -331,6 +332,11 @@ void BlsManager::HandleFinish(
         finish_item = iter->second;
     }
 
+    if (finish_item->verified[bls_msg.index()]) {
+        return;
+    }
+
+    finish_item->verified[bls_msg.index()] = true;
     auto common_pk_iter = finish_item->common_pk_map.find(msg_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
         finish_item->common_pk_map[cpk_hash] = *common_pkey.getPublicKey();
@@ -344,7 +350,17 @@ void BlsManager::HandleFinish(
         finish_item->max_public_pk_map[cpk_hash] = 1;
     } else {
         ++cpk_iter->second;
-        BLS_INFO("network id: %d, all finish count: %d", bls_msg.finish_req().network_id(), cpk_iter->second);
+        if (cpk_iter->second >= t) {
+            CheckAggSignValid(
+                t,
+                members->size(),
+                *common_pkey.getPublicKey(),
+                finish_item,
+                bls_msg.index());
+        }
+
+        BLS_INFO("network id: %d, all finish count: %d",
+            bls_msg.finish_req().network_id(), cpk_iter->second);
     }
 
     auto max_iter = finish_item->max_bls_members.find(msg_hash);
@@ -376,6 +392,151 @@ void BlsManager::HandleFinish(
         finish_item->max_finish_count = 1;
         finish_item->max_finish_hash = msg_hash;
     }
+}
+
+void BlsManager::CheckAggSignValid(
+        uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_G2& common_pk,
+        BlsFinishItemPtr& finish_item,
+        uint32_t member_idx) {
+    if (!finish_item->verified_valid_signs.empty()) {
+        std::vector<libff::alt_bn128_G1> tmp_all_signs;
+        std::vector<size_t> tmp_idx_vec;
+        for (uint32_t i = 0; i < finish_item->verified_valid_index.size(); ++i) {
+            if (member_idx + 1 < finish_item->verified_valid_index[i] ||
+                    member_idx + 1 > finish_item->verified_valid_index[i]) {
+                tmp_all_signs.push_back(finish_item->all_bls_signs[member_idx]);
+                tmp_idx_vec.push_back(member_idx + 1);
+            } else {
+                tmp_all_signs.push_back(finish_item->verified_valid_signs[i]);
+                tmp_idx_vec.push_back(finish_item->verified_valid_index[i]);
+            }
+        }
+
+        std::vector<libff::alt_bn128_G1> tmp_all_signs = finish_item->verified_valid_signs;
+        std::vector<size_t> tmp_idx_vec = finish_item->verified_valid_index;
+        if (!VerifyAggSignValid(
+                t,
+                n,
+                common_pk,
+                finish_item,
+                member_idx,
+                tmp_all_signs,
+                tmp_idx_vec)) {
+            finish_item->all_common_public_keys[member_idx] = libff::alt_bn128_G2::zero();
+        }
+
+        return;
+    }
+
+    // choose finished item t to verify
+    std::deque<libff::alt_bn128_G1> all_signs;
+    std::deque<size_t> idx_vec;
+    uint32_t start_pos = rand() % n;
+    uint32_t i = start_pos;
+    while (++i != start_pos) {
+        if (i >= n) {
+            i = 0;
+        }
+
+        if (finish_item->all_common_public_keys[i] != common_pk) {
+            continue;
+        }
+
+        all_signs.push_back(finish_item->all_bls_signs[i]);
+        idx_vec.push_back(i + 1);
+        if (idx_vec.size() >= t) {
+            std::vector<libff::alt_bn128_G1> tmp_all_signs(all_signs.begin(), all_signs.end());
+            std::vector<size_t> tmp_idx_vec(idx_vec.begin(), idx_vec.end());
+            uint32_t min_idx = idx_vec[0] - 1;
+            uint32_t max_idx = idx_vec[idx_vec.size() - 1] - 1;
+            if (VerifyAggSignValid(
+                    t,
+                    n,
+                    common_pk,
+                    finish_item,
+                    member_idx,
+                    tmp_all_signs,
+                    tmp_idx_vec)) {
+                // verify all left members
+                for (uint32_t item_idx = 0; item_idx < n; ++i) {
+                    if (finish_item->all_bls_signs[item_idx] == libff::alt_bn128_G1::zero() ||
+                            finish_item->all_public_keys[item_idx] == libff::alt_bn128_G2::zero()) {
+                        continue;
+                    }
+
+                    if (item_idx < min_idx) {
+                        idx_vec.pop_front();
+                        all_signs.pop_front();
+                        all_signs.push_front(finish_item->all_bls_signs[item_idx]);
+                        idx_vec.push_front(item_idx + 1);
+                    } else if (item_idx > max_idx) {
+                        idx_vec.pop_back();
+                        all_signs.pop_back();
+                        all_signs.push_back(finish_item->all_bls_signs[item_idx]);
+                        idx_vec.push_back(item_idx + 1);
+                    } else {
+                        continue;
+                    }
+
+                    std::vector<libff::alt_bn128_G1> tmp_all_signs(all_signs.begin(), all_signs.end());
+                    std::vector<size_t> tmp_idx_vec(idx_vec.begin(), idx_vec.end());
+                    if (!VerifyAggSignValid(
+                            t,
+                            n,
+                            common_pk,
+                            finish_item,
+                            member_idx,
+                            tmp_all_signs,
+                            tmp_idx_vec)) {
+                        finish_item->all_common_public_keys[item_idx] = libff::alt_bn128_G2::zero();
+                        finish_item->all_public_keys[item_idx] == libff::alt_bn128_G2::zero();
+                    }
+                }
+
+                break;
+            }
+        } else {
+            all_signs.pop_front();
+            idx_vec.pop_front();
+        }
+    }
+}
+
+bool BlsManager::VerifyAggSignValid(
+        uint32_t t,
+        uint32_t n,
+        const libff::alt_bn128_G2& common_pk,
+        BlsFinishItemPtr& finish_item,
+        uint32_t member_idx,
+        std::vector<libff::alt_bn128_G1>& all_signs,
+        std::vector<size_t>& idx_vec) {
+    try {
+        crypto::Bls bls_instance = crypto::Bls(t, n);
+        auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+        auto bls_agg_sign = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
+            all_signs,
+            lagrange_coeffs));
+        if (bls::BlsManager::Instance()->Verify(
+                t,
+                n,
+                common_pk,
+                *bls_agg_sign,
+                finish_item->max_finish_hash) != bls::kBlsSuccess) {
+            BFT_ERROR("verify agg sign failed!");
+            return false;
+        }
+
+        if (finish_item->verified_valid_signs.empty()) {
+            finish_item->verified_valid_signs.swap(all_signs);
+            finish_item->verified_valid_index.swap(idx_vec);
+            return true;
+        }
+    } catch (...) {
+    }
+
+    return false;
 }
 
 int BlsManager::AddBlsConsensusInfo(

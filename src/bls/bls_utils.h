@@ -39,21 +39,18 @@ struct MaxBlsMemberItem {
 };
 
 struct BlsFinishItem {
-    BlsFinishItem() {
-        for (uint32_t i = 0; i < common::kEachShardMaxNodeCount; ++i) {
-            all_public_keys[i] = libff::alt_bn128_G2::zero();
-        }
-    }
-
-    libff::alt_bn128_G2 all_public_keys[common::kEachShardMaxNodeCount];
-    libff::alt_bn128_G1 all_bls_signs[common::kEachShardMaxNodeCount];
-    libff::alt_bn128_G2 all_common_public_keys[common::kEachShardMaxNodeCount];
+    libff::alt_bn128_G2 all_public_keys[common::kEachShardMaxNodeCount] = { libff::alt_bn128_G2::zero() };
+    libff::alt_bn128_G1 all_bls_signs[common::kEachShardMaxNodeCount] = { libff::alt_bn128_G1::zero() };
+    libff::alt_bn128_G2 all_common_public_keys[common::kEachShardMaxNodeCount] = { libff::alt_bn128_G2::zero() };
     uint32_t max_finish_count{ 0 };
     std::string max_finish_hash;
     std::unordered_map<std::string, std::shared_ptr<MaxBlsMemberItem>> max_bls_members;
     std::unordered_map<std::string, uint32_t> max_public_pk_map;
     std::unordered_map<std::string, libff::alt_bn128_G2> common_pk_map;
     std::vector<libff::alt_bn128_G1> verify_t_signs;
+    std::vector<libff::alt_bn128_G1> verified_valid_signs;
+    std::vector<size_t> verified_valid_index;
+    bool verified[common::kEachShardMaxNodeCount] = { false };
 };
 
 typedef std::shared_ptr<BlsFinishItem> BlsFinishItemPtr;

@@ -268,9 +268,6 @@ int DbPoolInfo::GetTimeBlockHeight(uint64_t* tmblock_height, uint64_t* block_hei
 void DbPoolInfo::SetHeightTree(uint64_t height) {
     std::lock_guard<std::mutex> guard(height_tree_mutex_);
     height_tree_ptr_->Set(height);
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        std::cout << "set pool: " << dict_key_ << " missing max height: " << height << std::endl;
-    }
 }
 
 void DbPoolInfo::GetMissingHeights(std::vector<uint64_t>* heights) {

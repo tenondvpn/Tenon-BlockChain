@@ -485,8 +485,8 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     }
 
     SetConsensusFinalRandomNum(id, vss_msg.random());
-//     VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
-//         common::Encode::HexEncode(id).c_str(), vss_msg.random());
+    VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
+        common::Encode::HexEncode(id).c_str(), vss_msg.random());
 }
 
 }  // namespace vss

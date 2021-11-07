@@ -131,7 +131,8 @@ void MultiThreadHandler::HandleMessage(const protobuf::Header& msg) {
 //         }
 //         priority_queue_map_[priority].push(message_ptr);
 //     }
-    common::AutoSpinLock auto_lock(local_queue_mutex_);
+//     common::AutoSpinLock auto_lock(local_queue_mutex_);
+    std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
     local_queue_.push(message_ptr);
 }
 
@@ -284,9 +285,9 @@ void MultiThreadHandler::HandleRemoteMessage(
 // 			    (message_ptr->priority() < kTransportPriorityLowest)) {
 // 			priority = message_ptr->priority();
 // 		}
+        std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         TRANSPORT_DEBUG("priority: %u, %u", priority, priority_queue_map_[priority].size());
-//         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         priority_queue_map_[priority].push(message_ptr);
 //         if (!message_ptr->debug().empty()) {
 //             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
@@ -362,13 +363,18 @@ std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue(uint32
 //             return msg_obj;
 //         }
 //     }
+    std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
     std::shared_ptr<protobuf::Header> item = nullptr;
-    if (priority_queue_map_[thread_idx].pop(&item)) {
+    if (!priority_queue_map_[thread_idx].empty()) {
+        item = priority_queue_map_[thread_idx].front();
+        priority_queue_map_[thread_idx].pop();
         return item;
     }
 
     if (thread_idx == 0) {
-        if (local_queue_.pop(&item)) {
+        if (!local_queue_.empty()) {
+            item = local_queue_.front();
+            local_queue_.pop();
             return item;
         }
     }
