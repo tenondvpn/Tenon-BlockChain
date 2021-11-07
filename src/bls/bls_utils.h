@@ -51,6 +51,7 @@ struct BlsFinishItem {
     std::vector<libff::alt_bn128_G1> verified_valid_signs;
     std::vector<size_t> verified_valid_index;
     bool verified[common::kEachShardMaxNodeCount] = { false };
+    bool success_verified{ false };
 };
 
 typedef std::shared_ptr<BlsFinishItem> BlsFinishItemPtr;

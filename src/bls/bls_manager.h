@@ -76,7 +76,6 @@ private:
         uint32_t n,
         const libff::alt_bn128_G2& common_pk,
         BlsFinishItemPtr& finish_item,
-        uint32_t member_idx,
         std::vector<libff::alt_bn128_G1>& all_signs,
         std::vector<size_t>& idx_vec);
 

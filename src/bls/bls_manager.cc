@@ -400,41 +400,44 @@ void BlsManager::CheckAggSignValid(
         const libff::alt_bn128_G2& common_pk,
         BlsFinishItemPtr& finish_item,
         uint32_t member_idx) {
-    if (!finish_item->verified_valid_signs.empty()) {
-        std::vector<libff::alt_bn128_G1> tmp_all_signs;
-        std::vector<size_t> tmp_idx_vec;
-        for (uint32_t i = 0; i < finish_item->verified_valid_index.size(); ++i) {
-            if (member_idx + 1 < finish_item->verified_valid_index[i] ||
-                    member_idx + 1 > finish_item->verified_valid_index[i]) {
-                tmp_all_signs.push_back(finish_item->all_bls_signs[member_idx]);
-                tmp_idx_vec.push_back(member_idx + 1);
-            } else {
-                tmp_all_signs.push_back(finish_item->verified_valid_signs[i]);
-                tmp_idx_vec.push_back(finish_item->verified_valid_index[i]);
+    if (finish_item->success_verified) {
+        std::vector<libff::alt_bn128_G1> tmp_all_signs = finish_item->verified_valid_signs;
+        std::vector<size_t> tmp_idx_vec = finish_item->verified_valid_index;
+        tmp_all_signs[member_idx] = finish_item->all_bls_signs[member_idx];
+        tmp_idx_vec[member_idx] = member_idx + 1;
+        uint32_t tmp_idx = member_idx + 1;
+        while (true) {
+            if (tmp_idx >= n) {
+                tmp_idx = 0;
+            }
+
+            if (tmp_idx_vec[tmp_idx] != 0) {
+                tmp_idx_vec[tmp_idx] = 0;
+                tmp_all_signs[tmp_idx] = libff::alt_bn128_G1::zero();
+                break;
             }
         }
 
-        std::vector<libff::alt_bn128_G1> tmp_all_signs = finish_item->verified_valid_signs;
-        std::vector<size_t> tmp_idx_vec = finish_item->verified_valid_index;
         if (!VerifyAggSignValid(
                 t,
                 n,
                 common_pk,
                 finish_item,
-                member_idx,
                 tmp_all_signs,
                 tmp_idx_vec)) {
             finish_item->all_common_public_keys[member_idx] = libff::alt_bn128_G2::zero();
+            BLS_ERROR("invalid bls item index: %d", member_idx);
         }
 
         return;
     }
 
     // choose finished item t to verify
-    std::deque<libff::alt_bn128_G1> all_signs;
-    std::deque<size_t> idx_vec;
+    std::vector<libff::alt_bn128_G1> all_signs(n, libff::alt_bn128_G1::zero());
+    std::vector<size_t> idx_vec(n, 0);
     uint32_t start_pos = rand() % n;
     uint32_t i = start_pos;
+    uint32_t valid_count = 0;
     while (++i != start_pos) {
         if (i >= n) {
             i = 0;
@@ -444,62 +447,60 @@ void BlsManager::CheckAggSignValid(
             continue;
         }
 
-        all_signs.push_back(finish_item->all_bls_signs[i]);
-        idx_vec.push_back(i + 1);
-        if (idx_vec.size() >= t) {
-            std::vector<libff::alt_bn128_G1> tmp_all_signs(all_signs.begin(), all_signs.end());
-            std::vector<size_t> tmp_idx_vec(idx_vec.begin(), idx_vec.end());
-            uint32_t min_idx = idx_vec[0] - 1;
-            uint32_t max_idx = idx_vec[idx_vec.size() - 1] - 1;
+        all_signs[i] = finish_item->all_bls_signs[i];
+        idx_vec[i] = i + 1;
+        ++valid_count;
+        if (valid_count >= t) {
             if (VerifyAggSignValid(
                     t,
                     n,
                     common_pk,
                     finish_item,
-                    member_idx,
-                    tmp_all_signs,
-                    tmp_idx_vec)) {
+                    all_signs,
+                    idx_vec)) {
+                finish_item->success_verified = true;
+                finish_item->verified_valid_signs = all_signs;
+                finish_item->verified_valid_index = idx_vec;
                 // verify all left members
-                for (uint32_t item_idx = 0; item_idx < n; ++i) {
-                    if (finish_item->all_bls_signs[item_idx] == libff::alt_bn128_G1::zero() ||
-                            finish_item->all_public_keys[item_idx] == libff::alt_bn128_G2::zero()) {
+                for (uint32_t member_idx = 0; member_idx < n; ++i) {
+                    if (finish_item->all_bls_signs[member_idx] == libff::alt_bn128_G1::zero() ||
+                            finish_item->all_public_keys[member_idx] == libff::alt_bn128_G2::zero() ||
+                            finish_item->verified_valid_index[member_idx] != 0) {
                         continue;
                     }
 
-                    if (item_idx < min_idx) {
-                        idx_vec.pop_front();
-                        all_signs.pop_front();
-                        all_signs.push_front(finish_item->all_bls_signs[item_idx]);
-                        idx_vec.push_front(item_idx + 1);
-                    } else if (item_idx > max_idx) {
-                        idx_vec.pop_back();
-                        all_signs.pop_back();
-                        all_signs.push_back(finish_item->all_bls_signs[item_idx]);
-                        idx_vec.push_back(item_idx + 1);
-                    } else {
-                        continue;
+                    std::vector<libff::alt_bn128_G1> tmp_all_signs = finish_item->verified_valid_signs;
+                    std::vector<size_t> tmp_idx_vec = finish_item->verified_valid_index;
+                    tmp_all_signs[member_idx] = finish_item->all_bls_signs[member_idx];
+                    tmp_idx_vec[member_idx] = member_idx + 1;
+                    uint32_t tmp_idx = member_idx + 1;
+                    while (true) {
+                        if (tmp_idx >= n) {
+                            tmp_idx = 0;
+                        }
+
+                        if (tmp_idx_vec[tmp_idx] != 0) {
+                            tmp_idx_vec[tmp_idx] = 0;
+                            tmp_all_signs[tmp_idx] = libff::alt_bn128_G1::zero();
+                            break;
+                        }
                     }
 
-                    std::vector<libff::alt_bn128_G1> tmp_all_signs(all_signs.begin(), all_signs.end());
-                    std::vector<size_t> tmp_idx_vec(idx_vec.begin(), idx_vec.end());
                     if (!VerifyAggSignValid(
                             t,
                             n,
                             common_pk,
                             finish_item,
-                            member_idx,
                             tmp_all_signs,
                             tmp_idx_vec)) {
-                        finish_item->all_common_public_keys[item_idx] = libff::alt_bn128_G2::zero();
-                        finish_item->all_public_keys[item_idx] == libff::alt_bn128_G2::zero();
+                        finish_item->all_common_public_keys[member_idx] = libff::alt_bn128_G2::zero();
+                        finish_item->all_public_keys[member_idx] == libff::alt_bn128_G2::zero();
+                        BLS_ERROR("invalid bls item index: %d", i);
                     }
                 }
 
                 break;
             }
-        } else {
-            all_signs.pop_front();
-            idx_vec.pop_front();
         }
     }
 }
@@ -509,9 +510,17 @@ bool BlsManager::VerifyAggSignValid(
         uint32_t n,
         const libff::alt_bn128_G2& common_pk,
         BlsFinishItemPtr& finish_item,
-        uint32_t member_idx,
-        std::vector<libff::alt_bn128_G1>& all_signs,
-        std::vector<size_t>& idx_vec) {
+        std::vector<libff::alt_bn128_G1>& in_all_signs,
+        std::vector<size_t>& in_idx_vec) {
+    std::vector<libff::alt_bn128_G1> all_signs;
+    std::vector<size_t> idx_vec;
+    for (uint32_t i = 0; i < in_idx_vec.size(); ++i) {
+        if (in_idx_vec[i] != 0) {
+            idx_vec.push_back(in_idx_vec[i]);
+            all_signs.push_back(in_all_signs[i]);
+        }
+    }
+
     try {
         crypto::Bls bls_instance = crypto::Bls(t, n);
         auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
@@ -526,12 +535,6 @@ bool BlsManager::VerifyAggSignValid(
                 finish_item->max_finish_hash) != bls::kBlsSuccess) {
             BFT_ERROR("verify agg sign failed!");
             return false;
-        }
-
-        if (finish_item->verified_valid_signs.empty()) {
-            finish_item->verified_valid_signs.swap(all_signs);
-            finish_item->verified_valid_index.swap(idx_vec);
-            return true;
         }
     } catch (...) {
     }
