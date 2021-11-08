@@ -217,8 +217,10 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
-    if (all_verification_vector_[bls_msg.index()].size() != bls_msg.verify_brd().verify_vec_size()) {
-        BLS_ERROR("all_verification_vector_[bls_msg.index()].size() != bls_msg.verify_brd().verify_vec_size()[%d: %d]",
+    if (all_verification_vector_[bls_msg.index()].size() !=
+            (uint32_t)bls_msg.verify_brd().verify_vec_size()) {
+        BLS_ERROR("all_verification_vector_[bls_msg.index()].size() != "
+            "bls_msg.verify_brd().verify_vec_size()[%d: %d]",
             all_verification_vector_[bls_msg.index()].size(),
             bls_msg.verify_brd().verify_vec_size());
         assert(false);

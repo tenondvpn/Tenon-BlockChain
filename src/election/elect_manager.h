@@ -168,7 +168,6 @@ private:
     BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];
     std::set<std::string> prev_elected_ids_;
     std::set<std::string> now_elected_ids_;
-    volatile uint32_t joined_consensus_network_id_{ common::kInvalidUint32 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

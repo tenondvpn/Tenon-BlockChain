@@ -248,7 +248,10 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
             }
 
             auto dht = network::DhtManager::Instance()->GetDht(local_netid);
-            dht->Drop(erase_nodes);
+            if (dht != nullptr) {
+                dht->Drop(erase_nodes);
+            }
+
             prev_elected_ids_ = now_elected_ids_;
         }
     }
