@@ -105,10 +105,6 @@ public:
         return waiting_elect_height_[network_id];
     }
 
-    uint32_t joined_consensus_network_id() const {
-        return joined_consensus_network_id_;
-    }
-
 private:
     ElectManager();
     ~ElectManager();
