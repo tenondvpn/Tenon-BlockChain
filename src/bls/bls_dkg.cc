@@ -100,6 +100,10 @@ void BlsDkg::OnNewElectionBlock(
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try {
+//     if (common::GlobalInfo::Instance()->missing_node()) {
+//         return;
+//     }
+
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
@@ -115,6 +119,12 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
+    if (members_->size() <= bls_msg.index()) {
+        BLS_ERROR("members_->size() <= bls_msg.index(): %d, %d",
+            members_->size(), bls_msg.index());
+        return;
+    }
+
     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
@@ -124,7 +134,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-    if (bls_msg.elect_height() != elect_hegiht_) {
+    if (bls_msg.elect_height() == 0 || bls_msg.elect_height() != elect_hegiht_) {
         BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
             bls_msg.elect_height(), elect_hegiht_);
         return;
@@ -202,6 +212,19 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
+    if (all_verification_vector_.size() <= bls_msg.index()) {
+        assert(false);
+        return;
+    }
+
+    if (all_verification_vector_[bls_msg.index()].size() != bls_msg.verify_brd().verify_vec_size()) {
+        BLS_ERROR("all_verification_vector_[bls_msg.index()].size() != bls_msg.verify_brd().verify_vec_size()[%d: %d]",
+            all_verification_vector_[bls_msg.index()].size(),
+            bls_msg.verify_brd().verify_vec_size());
+        assert(false);
+        return;
+    }
+
     for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
         auto x_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c0().c_str());
         auto x_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c1().c_str());
@@ -228,6 +251,11 @@ void BlsDkg::HandleVerifyBroadcast(
 void BlsDkg::HandleVerifyBroadcastRes(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    if (members_ == nullptr || members_->size() <= bls_msg.index()) {
+        assert(false);
+        return;
+    }
+
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
         return;
@@ -240,6 +268,22 @@ void BlsDkg::HandleVerifyBroadcastRes(
 void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
+    if (local_member_index_ == common::kInvalidUint32) {
+        assert(false);
+        return;
+    }
+
+    if (all_secret_key_contribution_.size() <= local_member_index_) {
+        assert(false);
+        return;
+    }
+
+    if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index()) {
+        BLS_ERROR("all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index(): %d, %d",
+            all_secret_key_contribution_[local_member_index_].size(), bls_msg.index());
+        return;
+    }
+
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -318,6 +362,16 @@ void BlsDkg::HandleSwapSecKey(
 void BlsDkg::HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    if (all_secret_key_contribution_.size() <= local_member_index_) {
+        assert(false);
+        return;
+    }
+
+    if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.against_req().against_index()) {
+        assert(false);
+        return;
+    }
+
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
         return;

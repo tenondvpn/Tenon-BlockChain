@@ -90,7 +90,7 @@ public:
 		network_id_ = netid;
 	}
 
-	uint32_t network_id() {
+	uint32_t network_id() const {
 		return network_id_;
 	}
 
@@ -101,7 +101,6 @@ public:
 	uint32_t consensus_shard_count() {
 		return consensus_shard_count_;
 	}
-
     void set_genesis_start() {
         genesis_start_ = true;
     }

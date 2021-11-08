@@ -160,10 +160,6 @@ void Route::HandleDhtMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     auto dht = GetDht(header.des_dht_key(), header.universal());
     if (!dht) {
-        return;
-    }
-
-    if (!dht) {
         NETWORK_ERROR("get dht failed!");
         return;
     }

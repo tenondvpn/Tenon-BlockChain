@@ -201,12 +201,23 @@ void ElectManager::OnNewElectBlock(
 
     bool elected = false;
     now_elected_ids_.clear();
-    ProcessPrevElectMembers(elect_block, &elected);
+    bool cons_elect_valid = ProcessPrevElectMembers(elect_block, &elected);
     ProcessNewElectBlock(height, elect_block, &elected);
+    if (!cons_elect_valid && !elected) {
+        if (common::GlobalInfo::Instance()->network_id() == elect_block.shard_network_id()) {
+            elected = true;
+        }
+    }
+
+    ElectedToConsensusShard(elect_block, elected);
+}
+
+void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bool cons_elected) {
     auto local_netid = common::GlobalInfo::Instance()->network_id();
-    if (!elected) {
+    if (!cons_elected) {
         if (local_netid == elect_block.shard_network_id()) {
 //             Quit(local_netid);
+            local_mem_ptr_[local_netid] = nullptr;
             if (Join(local_netid + network::kConsensusWaitingShardOffset) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]",
                     local_netid + network::kConsensusWaitingShardOffset);
@@ -243,12 +254,12 @@ void ElectManager::OnNewElectBlock(
     }
 }
 
-void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
+bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
     if (!elect_block.has_prev_members() || elect_block.prev_members().prev_elect_height() <= 0) {
         ELECT_ERROR("not has prev network id: %u, elect: %lu",
             elect_block.shard_network_id(),
             elect_block.prev_members().prev_elect_height());
-        return;
+        return false;
     }
 
 //     std::cout << "ProcessPrevElectMembers now get prev block " << elect_block.prev_members().prev_elect_height() << std::endl;
@@ -258,11 +269,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             common::kRootChainPoolIndex,
             elect_block.prev_members().prev_elect_height(),
             block_item) != block::kBlockSuccess) {
-        return;
+        return false;
     }
 
     if (block_item.tx_list_size() != 1) {
-        return;
+        return false;
     }
 
     elect::protobuf::ElectBlock prev_elect_block;
@@ -277,11 +288,11 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     if (!ec_block_loaded) {
         assert(false);
-        return;
+        return false;
     }
 
     if (added_height_.find(elect_block.prev_members().prev_elect_height()) != added_height_.end()) {
-        return;
+        return false;
     }
 
     added_height_.insert(elect_block.prev_members().prev_elect_height());
@@ -303,7 +314,7 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     auto& prev_members_bls = elect_block.prev_members().bls_pubkey();
     if (prev_members_bls.size() != in.size()) {
         assert(false);
-        return;
+        return false;
     }
 
     uint32_t leader_count = 0;
@@ -438,6 +449,8 @@ void ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         local_node_pool_mod_num_ = local_node_pool_mod_num;
         local_node_is_super_leader_ = local_node_is_super_leader;
     }
+
+    return true;
 }
 
 void ElectManager::ProcessNewElectBlock(

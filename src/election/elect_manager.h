@@ -105,6 +105,10 @@ public:
         return waiting_elect_height_[network_id];
     }
 
+    uint32_t joined_consensus_network_id() const {
+        return joined_consensus_network_id_;
+    }
+
 private:
     ElectManager();
     ~ElectManager();
@@ -119,7 +123,7 @@ private:
         protobuf::ElectBlock& elect_block,
         bool* elected,
         std::vector<std::string>* pkey_str_vect);
-    void ProcessPrevElectMembers(
+    bool ProcessPrevElectMembers(
         protobuf::ElectBlock& elect_block,
         bool* elected);
     void ProcessNewElectBlock(
@@ -127,6 +131,7 @@ private:
         protobuf::ElectBlock& elect_block,
         bool* elected);
     bool NodeHasElected(uint32_t network_id, const std::string& node_id);
+    void ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bool elected);
 
     static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
 
@@ -163,6 +168,7 @@ private:
     BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];
     std::set<std::string> prev_elected_ids_;
     std::set<std::string> now_elected_ids_;
+    volatile uint32_t joined_consensus_network_id_{ common::kInvalidUint32 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

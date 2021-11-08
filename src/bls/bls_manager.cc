@@ -612,6 +612,8 @@ bool BlsManager::VerifyAggSignValid(
             BFT_ERROR("verify agg sign failed!");
             return false;
         }
+
+        return true;
     } catch (...) {
     }
 
@@ -626,6 +628,11 @@ int BlsManager::AddBlsConsensusInfo(
     auto iter = finish_networks_map_.find(ec_block.shard_network_id());
     if (iter == finish_networks_map_.end()) {
         BLS_ERROR("find finish_networks_map_ failed![%u]", ec_block.shard_network_id());
+        return kBlsError;
+    }
+
+    if (!iter->second->success_verified) {
+        BLS_ERROR("success_verified failed![%u]", ec_block.shard_network_id());
         return kBlsError;
     }
 
