@@ -92,24 +92,20 @@ public:
 
         if (members_ptrs_[network_id][0] != nullptr &&
                 members_ptrs_[network_id][0]->height == height) {
-            std::cout << "0 GetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (members_ptrs_[network_id][0]->common_bls_publick_key == libff::alt_bn128_G2::zero()) << std::endl;
             return members_ptrs_[network_id][0]->common_bls_publick_key;
         }
 
         if (members_ptrs_[network_id][1] != nullptr &&
                 members_ptrs_[network_id][1]->height == height) {
-            std::cout << "1 GetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (members_ptrs_[network_id][1]->common_bls_publick_key == libff::alt_bn128_G2::zero()) << std::endl;
             return members_ptrs_[network_id][1]->common_bls_publick_key;
         }
 
         if (members_ptrs_[network_id][2] != nullptr &&
                 members_ptrs_[network_id][2]->height == height) {
-            std::cout << "2 GetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (members_ptrs_[network_id][2]->common_bls_publick_key == libff::alt_bn128_G2::zero()) << std::endl;
             return members_ptrs_[network_id][2]->common_bls_publick_key;
         }
 
         std::lock_guard<std::mutex> guard(height_with_members_mutex_);
-        std::cout << "3 GetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (height_with_common_pks_[network_id][height] == libff::alt_bn128_G2::zero()) << std::endl;
         return height_with_common_pks_[network_id][height];
     }
 
@@ -124,26 +120,22 @@ public:
         if (members_ptrs_[network_id][0] != nullptr &&
                 members_ptrs_[network_id][0]->height == height) {
             members_ptrs_[network_id][0]->common_bls_publick_key = common_pk;
-            std::cout << "0 SetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (common_pk == libff::alt_bn128_G2::zero()) << std::endl;
             return;
         }
 
         if (members_ptrs_[network_id][1] != nullptr &&
                 members_ptrs_[network_id][1]->height == height) {
             members_ptrs_[network_id][1]->common_bls_publick_key = common_pk;
-            std::cout << "1 SetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (common_pk == libff::alt_bn128_G2::zero()) << std::endl;
             return;
         }
 
         if (members_ptrs_[network_id][2] != nullptr &&
                 members_ptrs_[network_id][2]->height == height) {
             members_ptrs_[network_id][2]->common_bls_publick_key = common_pk;
-            std::cout << "2 SetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (common_pk == libff::alt_bn128_G2::zero()) << std::endl;
             return;
         }
 
         std::lock_guard<std::mutex> guard(height_with_members_mutex_);
-        std::cout << "3 SetCommonPublicKey height: " << height << ", network_id: " << network_id << ", is zero: " << (common_pk == libff::alt_bn128_G2::zero()) << std::endl;
         height_with_common_pks_[network_id][height] = common_pk;
     }
 

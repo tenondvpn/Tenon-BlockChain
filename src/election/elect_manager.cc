@@ -546,7 +546,6 @@ void ElectManager::UpdatePrevElectMembers(
         (*iter)->bls_publick_key = *pkey.getPublicKey();
     }
 
-    std::cout << "elected: " << *elected << ", network: " << elect_block.shard_network_id() << ", common_pubkey: " << elect_block.prev_members().common_pubkey().x_c0() << std::endl;
     *pkey_str_vect = std::vector<std::string>{
             elect_block.prev_members().common_pubkey().x_c0(),
             elect_block.prev_members().common_pubkey().x_c1(),

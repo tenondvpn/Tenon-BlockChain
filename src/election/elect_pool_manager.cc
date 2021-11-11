@@ -495,7 +495,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     std::vector<NodeDetailPtr> elected_nodes;
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
         if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
-            std::cout << "weed out id: " << common::Encode::HexEncode((*iter)->id) << std::endl;
             continue;
         }
 

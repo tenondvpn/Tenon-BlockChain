@@ -873,7 +873,6 @@ void AccountManager::CheckMissingHeight() {
 
         synced_height += missing_heights.size();
         for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
-            std::cout << "missing height pool index: " << i << ", height: " << missing_heights[h_idx] << std::endl;
             if (i == common::kImmutablePoolSize) {
                 sync::KeyValueSync::Instance()->AddSyncHeight(
                     network::kRootCongressNetworkId,
@@ -958,10 +957,6 @@ void AccountManager::SendRefreshHeightsRequest() {
 
     msg.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(msg);
-    std::cout << "now_tm_sec: " << common::TimeUtils::TimestampSeconds()
-        << ", prev_refresh_heights_tm_: " << prev_refresh_heights_tm_
-        << ", des_net_id: " << des_net_id
-        << std::endl;
 }
 
 void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Header& header) {
@@ -990,7 +985,6 @@ void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Heade
 int AccountManager::HandleRefreshHeightsReq(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
-    std::cout << "HandleRefreshHeightsReq coming." << header.from_ip() << ":" << header.from_port() << std::endl;
     for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
     }
@@ -1003,7 +997,6 @@ int AccountManager::HandleRefreshHeightsReq(
 int AccountManager::HandleRefreshHeightsRes(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
-    std::cout << "HandleRefreshHeightsRes coming." << header.from_ip() << ":" << header.from_port() << std::endl;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
     }

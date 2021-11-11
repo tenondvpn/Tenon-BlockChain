@@ -229,7 +229,6 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
             return dht::kDhtError;
         }
 
-        std::cout << "LLLLLLLLL join success." << std::endl;
         return dht::kDhtSuccess;
     }
 

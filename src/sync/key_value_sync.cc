@@ -90,7 +90,6 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
     {
         std::lock_guard<std::mutex> guard(prio_sync_queue_[priority].mutex);
         prio_sync_queue_[priority].sync_queue.push(item);
-        std::cout << "AddSyncHeight item->height: " << item->height << std::endl;
     }
 
     return kSyncSuccess;
@@ -145,7 +144,6 @@ void KeyValueSync::CheckSyncItem() {
                         item->network_id,
                         sync_dht_map[item->network_id],
                         sended_neigbors);
-                std::cout << "SendSyncRequest choose node id hash: " << choose_node << std::endl;
                 if (choose_node != 0) {
                     sended_neigbors.insert(choose_node);
                 }
@@ -185,7 +183,6 @@ void KeyValueSync::CheckSyncItem() {
                 iter->first,
                 iter->second,
                 sended_neigbors);
-            std::cout << "SendSyncRequest choose node id hash: " << choose_node << std::endl;
             if (choose_node != 0) {
                 sended_neigbors.insert(choose_node);
             }
@@ -284,7 +281,6 @@ void KeyValueSync::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
-    std::cout << "HandleMessage sync_msg.has_sync_value_req(): " << sync_msg.has_sync_value_req() << ", sync_msg.has_sync_value_res(): " << sync_msg.has_sync_value_res() << std::endl;
     if (sync_msg.has_sync_value_req()) {
         ProcessSyncValueRequest(header, sync_msg);
     }
@@ -402,7 +398,6 @@ void KeyValueSync::ProcessSyncValueResponse(
     auto& res_arr = sync_msg.sync_value_res().res();
 //     SYNC_DEBUG("recv sync response from[%s:%d] key size: %u",
 //         header.from_ip().c_str(), header.from_port(), res_arr.size());
-    std::cout << "ProcessSyncValueResponse called." << std::endl;
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
 //         SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
