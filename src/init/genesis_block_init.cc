@@ -579,12 +579,14 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
         const std::vector<dht::NodePtr>& root_genesis_nodes,
         const std::vector<dht::NodePtr>& cons_genesis_nodes) {
     GenerateRootAccounts();
+    InitGenesisAccount();
     uint64_t genesis_account_balance = 0llu;
     uint64_t all_balance = 0llu;
     for (uint32_t i = 0; i < common::kImmutablePoolSize; ++i) {
         auto tenon_block = std::make_shared<bft::protobuf::Block>();
         auto tx_list = tenon_block->mutable_tx_list();
         auto iter = root_account_with_pool_index_map_.find(i);
+        auto shard_iter = pool_index_map_.find(i);
         std::string address = iter->second;
         {
             auto tx_info = tx_list->Add();
@@ -633,7 +635,22 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kRootCongressNetworkId);
         }
-        
+
+        {
+            auto tx_info = tx_list->Add();
+            tx_info->set_version(common::kTransactionVersion);
+            tx_info->set_gid(common::CreateGID(""));
+            tx_info->set_from(shard_iter->second);
+            tx_info->set_from_pubkey("");
+            tx_info->set_from_sign("");
+            tx_info->set_to("");
+            tx_info->set_amount(genesis_account_balance);
+            tx_info->set_balance(genesis_account_balance);
+            tx_info->set_gas_limit(0);
+            tx_info->set_type(common::kConsensusCreateGenesisAcount);
+            tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
+        }
+
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
         tenon_block->set_pool_index(iter->first);
@@ -759,21 +776,6 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         }
         
-//         std::string pool_hash;
-//         uint64_t pool_height = 0;
-//         uint64_t tm_height;
-//         uint64_t tm_with_block_height;
-//         int res = block::AccountManager::Instance()->GetBlockInfo(
-//             iter->first,
-//             &pool_height,
-//             &pool_hash,
-//             &tm_height,
-//             &tm_with_block_height);
-//         if (res != block::kBlockSuccess) {
-//             INIT_ERROR("GetBlockInfo error.");
-//             return kInitError;
-//         }
-
         tenon_block->set_prehash("");
         tenon_block->set_version(common::kTransactionVersion);
         tenon_block->set_pool_index(iter->first);
@@ -787,6 +789,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tenon_block->set_electblock_height(2);
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
+        INIT_DEBUG("add genesis block account id: %s", common::Encode::HexEncode(address).c_str());
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
             return kInitError;

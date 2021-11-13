@@ -1,11 +1,15 @@
 #pragma once
 
+#include "block/proto/block.pb.h"
 #include "common/utils.h"
-#include "transport/proto/transport.pb.h"
-#include "transport/transport_utils.h"
+#include "common/global_info.h"
 #include "dht/dht_utils.h"
 #include "dht/dht_key.h"
-#include "block/proto/block.pb.h"
+#include "network/network_utils.h"
+#include "network/universal.h"
+#include "network/universal_manager.h"
+#include "transport/proto/transport.pb.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
@@ -83,6 +87,7 @@ public:
         msg.set_id(common::GlobalInfo::Instance()->MessageId());
         msg.set_type(common::kBlockMessage);
         msg.set_client(false);
+        msg.set_version(common::GlobalInfo::Instance()->version());
         msg.set_hop_count(0);
         block::protobuf::BlockMessage block_msg;
         auto acc_shard_req = block_msg.mutable_acc_shard_req();
@@ -92,6 +97,7 @@ public:
 
     static void CreateAccountShardResponse(
             const transport::protobuf::Header& header,
+            const std::string& req_id,
             uint32_t shard_id,
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(header.des_dht_key());
@@ -103,7 +109,7 @@ public:
         msg.set_hop_count(0);
         block::protobuf::BlockMessage block_msg;
         auto acc_shard_req = block_msg.mutable_acc_shard_res();
-        acc_shard_req->set_id(common::GlobalInfo::Instance()->id());
+        acc_shard_req->set_id(req_id);
         acc_shard_req->set_shard_id(shard_id);
         msg.set_data(block_msg.SerializeAsString());
     }

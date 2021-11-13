@@ -122,8 +122,10 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         acc_map_[acc_id] = account_info;
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());
         account_info->set_heap_index(acc_limit_heap_.push(account_info));
-//         BLOCK_DEBUG("now account size: %u", acc_map_.size());
+        BLOCK_DEBUG("now account size: %u, acc_id: %s", acc_map_.size(), common::Encode::HexEncode(acc_id).c_str());
         return account_info;
+    } else {
+        BLOCK_DEBUG("not exists account acc_id: %s", common::Encode::HexEncode(acc_id).c_str());
     }
 
     return nullptr;
@@ -287,6 +289,7 @@ int AccountManager::AddBlockItemToDb(
             account_id = tx_list[i].from();
         }
 
+        BLOCK_DEBUG("add block account: %s", common::Encode::HexEncode(account_id).c_str());
         uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (consistent_pool_index == common::kInvalidPoolIndex) {
             consistent_pool_index = pool_idx;
@@ -576,6 +579,7 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
+    BLOCK_DEBUG("Add new account success: %s", common::Encode::HexEncode(account_id).c_str());
     return kBlockSuccess;
 }
 
@@ -605,7 +609,7 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
-//     BLOCK_DEBUG("genesis add new block account[%s].", common::Encode::HexEncode(account_id).c_str());
+    BLOCK_DEBUG("genesis add new block account[%s].", common::Encode::HexEncode(account_id).c_str());
     return kBlockSuccess;
 }
 
@@ -630,8 +634,8 @@ int AccountManager::UpdateAccountInfo(
             account_info = std::make_shared<block::DbAccountInfo>(account_id);
             if (!block::DbAccountInfo::AccountExists(account_id)) {
                 if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
-                    bft::IsRootSingleBlockTx(tx_info.type()) ||
-                    common::IsBaseAddress(account_id)) {
+                        bft::IsRootSingleBlockTx(tx_info.type()) ||
+                        common::IsBaseAddress(account_id)) {
                     if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
                         return kBlockError;
                     }

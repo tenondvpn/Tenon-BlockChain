@@ -31,6 +31,7 @@ public:
     int AddKeyValueSyncBlock(
         const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr);
+    void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
 
 private:
     BftManager();
@@ -98,7 +99,6 @@ private:
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
     bool AggSignValid(uint32_t thread_idx, uint32_t type, const bft::protobuf::Block& block);
-    void RootCommitAddNewAccount(const bft::protobuf::Block& block, db::DbWriteBach& db_batch);
     int LeaderCallPrecommit(BftInterfacePtr& bft_ptr);
     int LeaderCallCommit(const transport::protobuf::Header& header, BftInterfacePtr& bft_ptr);
     void HandleOpposeNodeMsg(bft::protobuf::BftMessage& bft_msg, BftInterfacePtr& bft_ptr);

@@ -160,7 +160,7 @@ void Command::AddBaseCommands() {
         }
     });
     AddCommand("b", [this](const std::vector<std::string>& args) {
-        std::cout << "balance: " << client::VpnClient::Instance()->GetBalance() << std::endl;
+        std::cout << common::GlobalInfo::Instance()->consensus_shard_net_id() << ", balance: " << client::VpnClient::Instance()->GetBalance() << std::endl;
     });
     AddCommand("rc", [this](const std::vector<std::string>& args) {
         CheckAllNodePortValid();

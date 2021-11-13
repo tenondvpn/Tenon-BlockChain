@@ -295,15 +295,22 @@ void BlockManager::HandleAccountShardRequest(
     }
 
     transport::protobuf::Header msg;
-    std::string gid = BlockProto::CreateAccountShardResponse(
+    uint32_t net_id = common::kInvalidUint32;
+    if (account_ptr->GetConsensuseNetId(&net_id) != block::kBlockSuccess) {
+        return;
+    }
+
+    BlockProto::CreateAccountShardResponse(
             header,
-            account_ptr->consensuse_net_id(),
+            block_msg.acc_shard_req().id(),
+            net_id,
             msg);
     if (msg.data().empty()) {
         return;
     }
 
-    network::Route::Instance()->Send(msg);
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        header.from_ip(), header.from_port(), 0, msg);
 }
 
 void BlockManager::HandleAccountShardResponse(
@@ -639,6 +646,7 @@ int BlockManager::AddNewBlock(
         db::DbWriteBach& db_batch,
         bool to_cache,
         bool is_kv_sync) {
+    BLOCK_DEBUG("AddNewBlock hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     if (!block_hash_limit_set_.Push(block_item->hash())) {
         return kBlockSuccess;
     }

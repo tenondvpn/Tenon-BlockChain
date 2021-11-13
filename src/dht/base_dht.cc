@@ -358,7 +358,6 @@ void BaseDht::SendToClosestNode(const transport::protobuf::Header& message) {
                 kSendToClosestNodeCount);
     }
 
-    LEGO_NETWORK_DEBUG_FOR_PROTOMESSAGE(message, "to close get node count: " + std::to_string(closest_nodes.size()));
     for (uint32_t i = 0; i < closest_nodes.size(); ++i) {
         if (closest_nodes[i]->public_ip() == local_node_->public_ip() &&
                 closest_nodes[i]->local_port == local_node_->public_port) {
@@ -871,7 +870,6 @@ bool BaseDht::NodeValid(NodePtr& node) {
 
     auto dht_key_country_code = DhtKeyManager::DhtKeyGetCountry(node->dht_key());
     if (dht_key_country_code > common::CountryCode::FX) {
-        std::cout << "invalid dht key country code: " << dht_key_country_code << std::endl;
         return false;
     }
 

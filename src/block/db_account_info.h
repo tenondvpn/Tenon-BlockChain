@@ -87,10 +87,6 @@ public:
         heap_index_ = heap_index;
     }
 
-    uint32_t consensuse_net_id() const {
-        return consensuse_net_id_;
-    }
-
 private:
     static std::unordered_set<std::string> account_id_set_;
     static std::mutex account_id_set_mutex_;

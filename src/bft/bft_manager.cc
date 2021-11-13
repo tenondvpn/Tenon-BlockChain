@@ -572,12 +572,8 @@ void BftManager::RootCommitAddNewAccount(
                 block.height(),
                 block.hash(),
                 db_batch) != block::kBlockSuccess) {
+            BFT_ERROR("add new account failed");
             continue;
-        }
-
-        auto st = db::Db::Instance()->Put(db_batch);
-        if (!st.ok()) {
-            exit(0);
         }
     }
 }

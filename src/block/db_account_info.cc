@@ -66,12 +66,6 @@ bool DbAccountInfo::AddNewAccountToDb(
         db_batch.Put(key, tmp_val);
     }
 
-    {
-        std::string key = db::kGlobalDickKeyAccountIdExists + "_" + uni_account_id;
-        std::string tmp_val("1");
-        db_batch.Put(key, tmp_val);
-    }
-
     std::lock_guard<std::mutex> guard(account_id_set_mutex_);
     account_id_set_.insert(uni_account_id);
     return true;

@@ -1462,6 +1462,7 @@ void VpnClient::GetConsensusShard() {
         auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
             network::kUniversalNetworkId);
         if (uni_dht != nullptr) {
+            msg.set_client(common::GlobalInfo::Instance()->is_client());
             uni_dht->SendToClosestNode(msg);
         }
     }
