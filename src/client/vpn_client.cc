@@ -1117,6 +1117,10 @@ std::string VpnClient::Transaction(const std::string& to, uint64_t amount, std::
 }
 
 void VpnClient::CheckTxExists() {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
+        return;
+    }
+
     auto now_tm = common::TimeUtils::TimestampMs();
     if (now_tm - prv_get_init_tm_ < 3000llu) {
         return;
@@ -1144,12 +1148,13 @@ void VpnClient::GetTxBlocksFromBftNetwork() {
     message.set_src_dht_key(dht->local_node()->dht_key());
     message.set_id(common::GlobalInfo::Instance()->MessageId());
     auto dht_key_mgr = dht::DhtKeyManager(
-        network::kConsensusShardBeginNetworkId,
+        common::GlobalInfo::Instance()->consensus_shard_net_id(),
         0,
         common::GlobalInfo::Instance()->id());
     message.set_des_dht_key(dht_key_mgr.StrKey());
     message.set_priority(transport::kTransportPriorityLow);
     message.set_type(common::kBlockMessage);
+    message.set_version(common::GlobalInfo::Instance()->version());
     block::protobuf::BlockMessage block_msg;
     auto attr_req = block_msg.mutable_account_init_req();
     attr_req->set_id(common::GlobalInfo::Instance()->id());

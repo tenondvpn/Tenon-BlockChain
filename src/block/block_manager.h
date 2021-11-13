@@ -88,7 +88,10 @@ private:
     void HandleAccountShardRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
-    void HandleAccountShardResponse(
+    void HandleAccountShardRequest(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg);
+    void HandleGetAccountInitRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(const transport::protobuf::Header& header);
