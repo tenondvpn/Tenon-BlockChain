@@ -66,7 +66,7 @@ message GetAccountInitInfoRequest {
 
 message GetAccountInitInfoResponse {
     optional uint64 balance = 1;
-    repeated tenon.bft.protobuf.TxInfo tx_list = 2;
+    repeated bft.protobuf.TxInfo tx_list = 2;
     optional bytes id = 3;
 }
 
