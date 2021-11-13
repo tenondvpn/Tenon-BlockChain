@@ -64,22 +64,9 @@ message GetAccountInitInfoRequest {
     optional uint64 index = 5;
 }
 
-message TxItem {
-    optional bytes from = 1;
-    optional bytes to = 2;
-    optional uint64 amount = 3;
-    optional uint64 timestamp = 4;
-    optional uint64 height = 5;
-    optional uint64 balance = 6;
-    optional bytes gid = 7;
-    optional uint32 type = 8;
-    optional uint32 status = 9;
-    optional uint32 version = 10;
-}
-
 message GetAccountInitInfoResponse {
     optional uint64 balance = 1;
-    repeated TxItem tx_list = 2;
+    repeated tenon.bft.protobuf.TxInfo tx_list = 2;
     optional bytes id = 3;
 }
 
