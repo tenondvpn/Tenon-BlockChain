@@ -56,35 +56,6 @@ enum VipLevel {
     kVipLevel5 = 5,
 };
 
-struct BlockItem {
-    uint64_t height;
-    std::string gid;
-    std::string block_hash;
-    std::string from;
-    std::string to;
-    uint32_t type;
-    uint64_t balance;
-    uint64_t amount;
-    uint64_t timestamp;
-    uint32_t status;
-    uint32_t version;
-};
-
-struct BlockItemPtr {
-    BlockItem* item;
-};
-
-bool operator<(BlockItem& lhs, BlockItem& rhs);
-bool operator<(BlockItemPtr& lhs, BlockItemPtr& rhs);
-bool operator==(const BlockItemPtr& lhs, const BlockItemPtr& rhs);
-
-template<>
-uint64_t MinHeapUniqueVal(const tenon::common::BlockItemPtr& val);
-
-template<>
-uint64_t MinHeapUniqueVal(const tenon::common::BlockItem& val);
-
-
 static const std::string kClientFreeBandwidthOver = "bwo";
 static const std::string kServerClientOverload = "sol";
 static const std::string kCountryInvalid = "cni";

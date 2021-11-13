@@ -13,6 +13,20 @@
 
 namespace tenon {
 
+namespace common {
+
+template<>
+uint64_t MinHeapUniqueVal(const bft::protobuf::TxInfo& val) {
+    return common::Hash::Hash64(val.gid());
+}
+
+bool operator<(bft::protobuf::TxInfo& lhs, bft::protobuf::TxInfo& rhs) {
+    return lhs.height() < rhs.height();
+}
+
+}  // namespace common
+
+
 namespace init {
 
 typedef client::VpnServerNode VpnServerNode;

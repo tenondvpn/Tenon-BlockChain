@@ -35,36 +35,6 @@
 namespace tenon {
 
 namespace common {
-
-template<>
-uint64_t MinHeapUniqueVal(const tenon::common::BlockItemPtr& val) {
-    return common::Hash::Hash64(val.item->gid + std::to_string(val.item->timestamp));
-}
-
-template<>
-uint64_t MinHeapUniqueVal(const tenon::common::BlockItem& val) {
-    return common::Hash::Hash64(val.gid + std::to_string(val.timestamp));
-}
-
-bool operator<(BlockItemPtr& lhs, BlockItemPtr& rhs) {
-    return lhs.item->height < rhs.item->height;
-}
-
-bool operator<(BlockItem& lhs, BlockItem& rhs) {
-    return lhs.height < rhs.height;
-}
-
-bool operator==(const BlockItemPtr& lhs, const BlockItemPtr& rhs) {
-    return lhs.item->height == rhs.item->height;
-}
-
-}  // namespace common
-
-}  // namespace tenon
-
-namespace tenon {
-
-namespace common {
     
 volatile bool global_stop = false;
 
@@ -220,10 +190,10 @@ uint16_t GetUdpRoutePort(
 bool IsVlanIp(const std::string& ip_str)
 {
     /*-----------------------------------------
-    ¾ÖÓòÍøIPµØÖ··¶Î§
-    AÀà£º10.0.0.0-10.255.255.255
-    BÀà£º172.16.0.0-172.31.255.255
-    CÀà£º192.168.0.0-192.168.255.255
+    å±€åŸŸç½‘IPåœ°å€èŒƒå›´
+    Aç±»ï¼š10.0.0.0-10.255.255.255
+    Bç±»ï¼š172.16.0.0-172.31.255.255
+    Cç±»ï¼š192.168.0.0-192.168.255.255
     -------------------------------------------*/
     common::Split<> ip_dot(ip_str.c_str(), '.', ip_str.size());
     if (ip_dot.Count() != 4) {
