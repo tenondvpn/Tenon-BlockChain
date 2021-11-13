@@ -26,6 +26,11 @@ int TransactionClient::Transaction(
         const std::map<std::string, std::string>& attrs,
         uint32_t type,
         std::string& tx_gid) {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
+        CLIENT_ERROR("Transaction error, consensus shard network id invalid.");
+        return kClientError;
+    }
+
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
     auto uni_dht = network::UniversalManager::Instance()->GetUniversal(

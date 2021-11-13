@@ -4,6 +4,7 @@
 
 #include <cassert>
 
+#include "block/proto/block_proto.h"
 #include "common/log.h"
 #include "common/utils.h"
 #include "common/config.h"
@@ -59,6 +60,7 @@ static const std::string kClientDownloadUrl = (
 		"mac;1.0.3;");
 
 VpnClient::VpnClient() {
+    get_consensus_shard_tick_ = std::make_shared<common::Tick>();
 	check_tx_tick_ = std::make_shared<common::Tick>();
 	vpn_nodes_tick_ = std::make_shared<common::Tick>();
 	dump_config_tick_ = std::make_shared<common::Tick>();
@@ -221,6 +223,13 @@ void VpnClient::HandleBlockMessage(const transport::protobuf::Header& header) {
 
     if (block_msg.has_account_init_res()) {
         init::UpdateVpnInit::Instance()->UpdateAccountBlockInfo(header.data());
+    }
+
+    if (block_msg.has_acc_shard_res()) {
+        if (block_msg.acc_shard_res().id() == common::GlobalInfo::Instance()->id()) {
+            common::GlobalInfo::Instance()->set_consensus_shard_net_id(
+                block_msg.acc_shard_res().shard_id());
+        }
     }
 }
 
@@ -711,6 +720,7 @@ std::string VpnClient::Init(
     }
 #endif
 
+    GetConsensusShard();
     return (common::global_code_to_country_map[common::GlobalInfo::Instance()->country()] +
             "," +
             common::Encode::HexEncode(common::GlobalInfo::Instance()->id()) +
@@ -1054,6 +1064,11 @@ void VpnClient::SendGetAccountAttrLastBlock(
 }
 
 std::string VpnClient::Transaction(const std::string& to, uint64_t amount, std::string& tx_gid) {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
+        CLIENT_ERROR("Transaction error, consensus shard network id invalid.");
+        return "ERROR";
+    }
+
     transport::protobuf::Header msg;
     uint64_t rand_num = 0;
     auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
@@ -1434,6 +1449,24 @@ std::string VpnClient::GetDefaultRouting() {
     std::string def_conf;
     config.Get("route", "def_routing", def_conf);
     return def_conf;
+}
+
+void VpnClient::GetConsensusShard() {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() != common::kInvalidUint32) {
+        return;
+    }
+
+    transport::protobuf::Header msg;
+    block::BlockProto::CreateAccountShardRequest(msg);
+    if (!msg.data().empty()) {
+        auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+            network::kUniversalNetworkId);
+        if (uni_dht != nullptr) {
+            uni_dht->SendToClosestNode(msg);
+        }
+    }
+
+    get_consensus_shard_tick_->CutOff(3000000l, std::bind(&VpnClient::GetConsensusShard, this));
 }
 
 }  // namespace client

@@ -628,8 +628,11 @@ int TcpTransport::Send(
         FreeConnection(des_ip, des_port);
         return kTransportError;
     }
-//     TRANSPORT_ERROR("send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
-//         message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
+
+    if (common::GlobalInfo::Instance()->is_client()) {
+        TRANSPORT_ERROR("send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
+            message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
+    }
     return kTransportSuccess;
 }
 

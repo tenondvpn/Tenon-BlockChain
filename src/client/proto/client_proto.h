@@ -61,13 +61,18 @@ public:
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
                 security::Schnorr::Instance()->str_pubkey_uncompress());
         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
+        if (des_net_id >= network::kConsensusShardEndNetworkId) {
+            des_net_id = 0;
+        }
+
         dht::DhtKeyManager dht_key(des_net_id, 0);
         msg.set_des_dht_key(dht_key.StrKey());
         msg.set_priority(transport::kTransportPriorityLowest);
         msg.set_id(common::GlobalInfo::Instance()->MessageId());
         msg.set_type(common::kBftMessage);
-        msg.set_client(false);
+        msg.set_client(common::GlobalInfo::Instance()->is_client());
         msg.set_hop_count(0);
+        msg.set_version(common::GlobalInfo::Instance()->version());
         auto broad_param = msg.mutable_broadcast();
         SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;

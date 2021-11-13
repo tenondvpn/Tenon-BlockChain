@@ -67,6 +67,47 @@ public:
         msg.set_data(block_msg.SerializeAsString());
     }
 
+    static void CreateAccountShardRequest(transport::protobuf::Header& msg) {
+        auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
+            network::UniversalManager::Instance()->GetUniversal(
+                network::kUniversalNetworkId));
+        if (!uni_dht) {
+            return;
+        }
+
+        msg.set_src_dht_key(uni_dht->local_node()->dht_key());
+        uint32_t des_net_id = network::kRootCongressNetworkId;
+        dht::DhtKeyManager dht_key(des_net_id, 0);
+        msg.set_des_dht_key(dht_key.StrKey());
+        msg.set_priority(transport::kTransportPriorityHighest);
+        msg.set_id(common::GlobalInfo::Instance()->MessageId());
+        msg.set_type(common::kBlockMessage);
+        msg.set_client(false);
+        msg.set_hop_count(0);
+        block::protobuf::BlockMessage block_msg;
+        auto acc_shard_req = block_msg.mutable_acc_shard_req();
+        acc_shard_req->set_id(common::GlobalInfo::Instance()->id());
+        msg.set_data(block_msg.SerializeAsString());
+    }
+
+    static void CreateAccountShardResponse(
+            const transport::protobuf::Header& header,
+            uint32_t shard_id,
+            transport::protobuf::Header& msg) {
+        msg.set_src_dht_key(header.des_dht_key());
+        msg.set_des_dht_key(header.src_dht_key());
+        msg.set_priority(transport::kTransportPriorityHighest);
+        msg.set_id(common::GlobalInfo::Instance()->MessageId());
+        msg.set_type(common::kBlockMessage);
+        msg.set_client(false);
+        msg.set_hop_count(0);
+        block::protobuf::BlockMessage block_msg;
+        auto acc_shard_req = block_msg.mutable_acc_shard_res();
+        acc_shard_req->set_id(common::GlobalInfo::Instance()->id());
+        acc_shard_req->set_shard_id(shard_id);
+        msg.set_data(block_msg.SerializeAsString());
+    }
+
 private:
     BlockProto();
     ~BlockProto();

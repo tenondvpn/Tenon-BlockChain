@@ -111,6 +111,15 @@ message RefreshPoolHeightResponse {
     repeated uint64 heights = 1;
 }
 
+message GetAccountShardRequest {
+    optional bytes id = 1;
+}
+
+message GetAccountShardReponse {
+    optional bytes id = 1;
+    optional uint32 shard_id = 2;
+}
+
 message BlockMessage {
     optional GetTxBlockRequest block_req = 1;
     optional GetTxBlockResponse block_res = 2;
@@ -126,4 +135,6 @@ message BlockMessage {
     optional AdRewardRequest ad_reward_req = 12;
     optional RefreshPoolHeightRequest ref_heights_req = 13;
     optional RefreshPoolHeightResponse ref_heights_res = 14;
+    optional GetAccountShardRequest acc_shard_req = 15;
+    optional GetAccountShardReponse acc_shard_res = 16;
 }

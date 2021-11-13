@@ -85,6 +85,12 @@ private:
     void HandleAdRewardRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
+    void HandleAccountShardRequest(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg);
+    void HandleAccountShardResponse(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(const transport::protobuf::Header& header);
     void SendBlockResponse(
         const transport::protobuf::Header& header,

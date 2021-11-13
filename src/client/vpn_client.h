@@ -238,6 +238,7 @@ private:
     void SendGetBlockWithGid(const std::string& str, bool is_gid);
     void SendGetAccountAttrUsedBandwidth();
     void GetTxBlocksFromBftNetwork();
+    void GetConsensusShard();
 
     static const uint32_t kDefaultUdpSendBufferSize = 2u * 1024u * 1024u;
     static const uint32_t kDefaultUdpRecvBufferSize = 2u * 1024u * 1024u;
@@ -281,7 +282,8 @@ private:
     uint32_t paied_vip_valid_idx_{ 0 };
     int32_t today_used_bandwidth_{ -1 };
 
-	std::shared_ptr<common::Tick> check_tx_tick_{ nullptr };
+    std::shared_ptr<common::Tick> get_consensus_shard_tick_{ nullptr };
+    std::shared_ptr<common::Tick> check_tx_tick_{ nullptr };
 	std::shared_ptr<common::Tick>  vpn_nodes_tick_{ nullptr };
 	std::shared_ptr<common::Tick>  dump_config_tick_{ nullptr };
 	std::shared_ptr<common::Tick>  dump_bootstrap_tick_{ nullptr };

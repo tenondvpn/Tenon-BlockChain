@@ -53,6 +53,7 @@ public:
     size_t VmCodeSize();
     std::string VmCodeHash();
     std::string GetCode();
+    void ClearAttr(const std::string& attr_key);
 
     std::string& account_id() {
         return account_id_;
@@ -86,7 +87,9 @@ public:
         heap_index_ = heap_index;
     }
 
-    void ClearAttr(const std::string& attr_key);
+    uint32_t consensuse_net_id() const {
+        return consensuse_net_id_;
+    }
 
 private:
     static std::unordered_set<std::string> account_id_set_;

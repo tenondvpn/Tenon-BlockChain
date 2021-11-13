@@ -272,7 +272,47 @@ void BlockManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
+    if (block_msg.has_acc_shard_req()) {
+        HandleAccountShardRequest(header, block_msg);
+        return;
+    }
+
+    if (block_msg.has_acc_shard_res()) {
+        HandleAccountShardResponse(header, block_msg);
+        return;
+    }
+
     network::Route::Instance()->Send(header);
+}
+
+void BlockManager::HandleAccountShardRequest(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg) {
+    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
+        block_msg.acc_shard_req().id());
+    if (account_ptr == nullptr) {
+        return;
+    }
+
+    transport::protobuf::Header msg;
+    std::string gid = BlockProto::CreateAccountShardResponse(
+            header,
+            account_ptr->consensuse_net_id(),
+            msg);
+    if (msg.data().empty()) {
+        return;
+    }
+
+    network::Route::Instance()->Send(msg);
+}
+
+void BlockManager::HandleAccountShardResponse(
+        const transport::protobuf::Header& header,
+        protobuf::BlockMessage& block_msg) {
+    if (block_msg.acc_shard_res().id() == common::GlobalInfo::Instance()->id()) {
+        common::GlobalInfo::Instance()->set_consensus_shard_net_id(
+            block_msg.acc_shard_res().shard_id());
+    }
 }
 
 void BlockManager::HandleAdRewardRequest(

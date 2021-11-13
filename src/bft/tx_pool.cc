@@ -41,6 +41,22 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
+    if (!tx_ptr->tx.to().empty()) {
+        printf("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
+            "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!\n",
+            tx_index,
+            tx_ptr->tx.to_add(),
+            pool_index_,
+            tx_ptr->tx.type(),
+            tx_ptr->tx.call_contract_step(),
+            common::Encode::HexEncode(tx_ptr->tx.from()).c_str(),
+            common::Encode::HexEncode(tx_ptr->tx.to()).c_str(),
+            common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(),
+            common::Encode::HexEncode(uni_gid).c_str(),
+            tx_pool_.size(),
+            added_tx_map_.size());
+    }
+
     BFT_DEBUG("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
         "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!",
         tx_index,
