@@ -112,12 +112,3 @@ static inline bool IsBaseAddress(const std::string& address) {
 
 }  // namespace tenon 
 
-namespace std {
-    template<>
-    struct hash<tenon::common::BlockItemPtr> {
-        size_t operator()(const tenon::common::BlockItemPtr& _Keyval) const noexcept {
-            return _Keyval.item->height;
-        }
-    };
-}
-
