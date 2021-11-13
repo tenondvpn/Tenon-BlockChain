@@ -27,6 +27,8 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::inter
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_AdRewardRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_ElectStatisticInfo;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountInitInfoRequest;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountShardReponse;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountShardRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_GetTxBlockResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_block_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightRequest;
@@ -131,6 +133,16 @@ class RefreshPoolHeightResponseDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<RefreshPoolHeightResponse>
       _instance;
 } _RefreshPoolHeightResponse_default_instance_;
+class GetAccountShardRequestDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<GetAccountShardRequest>
+      _instance;
+} _GetAccountShardRequest_default_instance_;
+class GetAccountShardReponseDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<GetAccountShardReponse>
+      _instance;
+} _GetAccountShardReponse_default_instance_;
 class BlockMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<BlockMessage>
@@ -395,6 +407,34 @@ static void InitDefaultsRefreshPoolHeightResponse() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshPoolHeightResponse =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsRefreshPoolHeightResponse}, {}};
 
+static void InitDefaultsGetAccountShardRequest() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::block::protobuf::_GetAccountShardRequest_default_instance_;
+    new (ptr) ::tenon::block::protobuf::GetAccountShardRequest();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::block::protobuf::GetAccountShardRequest::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountShardRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsGetAccountShardRequest}, {}};
+
+static void InitDefaultsGetAccountShardReponse() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::block::protobuf::_GetAccountShardReponse_default_instance_;
+    new (ptr) ::tenon::block::protobuf::GetAccountShardReponse();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::block::protobuf::GetAccountShardReponse::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_GetAccountShardReponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsGetAccountShardReponse}, {}};
+
 static void InitDefaultsBlockMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -406,8 +446,8 @@ static void InitDefaultsBlockMessage() {
   ::tenon::block::protobuf::BlockMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<14> scc_info_BlockMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 14, InitDefaultsBlockMessage}, {
+::google::protobuf::internal::SCCInfo<16> scc_info_BlockMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 16, InitDefaultsBlockMessage}, {
       &protobuf_block_2eproto::scc_info_GetTxBlockRequest.base,
       &protobuf_block_2eproto::scc_info_GetTxBlockResponse.base,
       &protobuf_block_2eproto::scc_info_AccountHeightRequest.base,
@@ -421,7 +461,9 @@ static void InitDefaultsBlockMessage() {
       &protobuf_block_2eproto::scc_info_UpdateVpnActiveRequest.base,
       &protobuf_block_2eproto::scc_info_AdRewardRequest.base,
       &protobuf_block_2eproto::scc_info_RefreshPoolHeightRequest.base,
-      &protobuf_block_2eproto::scc_info_RefreshPoolHeightResponse.base,}};
+      &protobuf_block_2eproto::scc_info_RefreshPoolHeightResponse.base,
+      &protobuf_block_2eproto::scc_info_GetAccountShardRequest.base,
+      &protobuf_block_2eproto::scc_info_GetAccountShardReponse.base,}};
 
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_GetTxBlockRequest.base);
@@ -442,10 +484,12 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_StatisticInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_RefreshPoolHeightRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_RefreshPoolHeightResponse.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_GetAccountShardRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_GetAccountShardReponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_BlockMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[19];
+::google::protobuf::Metadata file_level_metadata[21];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetTxBlockRequest, _has_bits_),
@@ -648,6 +692,22 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::RefreshPoolHeightResponse, heights_),
   ~0u,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardRequest, id_),
+  0,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardReponse, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardReponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardReponse, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountShardReponse, shard_id_),
+  0,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -667,6 +727,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ad_reward_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ref_heights_req_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, ref_heights_res_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, acc_shard_req_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::BlockMessage, acc_shard_res_),
   0,
   1,
   2,
@@ -681,6 +743,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   11,
   12,
   13,
+  14,
+  15,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 10, sizeof(::tenon::block::protobuf::GetTxBlockRequest)},
@@ -701,7 +765,9 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 175, 183, sizeof(::tenon::block::protobuf::StatisticInfo)},
   { 186, 192, sizeof(::tenon::block::protobuf::RefreshPoolHeightRequest)},
   { 193, 199, sizeof(::tenon::block::protobuf::RefreshPoolHeightResponse)},
-  { 200, 219, sizeof(::tenon::block::protobuf::BlockMessage)},
+  { 200, 206, sizeof(::tenon::block::protobuf::GetAccountShardRequest)},
+  { 207, 214, sizeof(::tenon::block::protobuf::GetAccountShardReponse)},
+  { 216, 237, sizeof(::tenon::block::protobuf::BlockMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -723,6 +789,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_StatisticInfo_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_RefreshPoolHeightRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_RefreshPoolHeightResponse_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_GetAccountShardRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_GetAccountShardReponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::block::protobuf::_BlockMessage_default_instance_),
 };
 
@@ -741,7 +809,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 19);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 21);
 }
 
 void AddDescriptorsImpl() {
@@ -783,34 +851,40 @@ void AddDescriptorsImpl() {
       "\022A\n\017elect_statistic\030\003 \003(\0132(.tenon.block."
       "protobuf.ElectStatisticInfo\"+\n\030RefreshPo"
       "olHeightRequest\022\017\n\007heights\030\001 \003(\004\",\n\031Refr"
-      "eshPoolHeightResponse\022\017\n\007heights\030\001 \003(\004\"\272"
-      "\007\n\014BlockMessage\022:\n\tblock_req\030\001 \001(\0132\'.ten"
-      "on.block.protobuf.GetTxBlockRequest\022;\n\tb"
-      "lock_res\030\002 \001(\0132(.tenon.block.protobuf.Ge"
-      "tTxBlockResponse\022>\n\nheight_req\030\003 \001(\0132*.t"
-      "enon.block.protobuf.AccountHeightRequest"
-      "\022\?\n\nheight_res\030\004 \001(\0132+.tenon.block.proto"
-      "buf.AccountHeightResponse\022>\n\014acc_attr_re"
-      "q\030\005 \001(\0132(.tenon.block.protobuf.AccountAt"
-      "trRequest\022\?\n\014acc_attr_res\030\006 \001(\0132).tenon."
-      "block.protobuf.AccountAttrResponse\022\?\n\nup"
-      "_vpn_req\030\007 \001(\0132+.tenon.block.protobuf.Up"
-      "dateVpnCountRequest\022@\n\nup_vpn_res\030\010 \001(\0132"
-      ",.tenon.block.protobuf.UpdateVpnCountRes"
-      "ponse\022I\n\020account_init_req\030\t \001(\0132/.tenon."
-      "block.protobuf.GetAccountInitInfoRequest"
-      "\022J\n\020account_init_res\030\n \001(\01320.tenon.block"
-      ".protobuf.GetAccountInitInfoResponse\022D\n\016"
-      "vpn_active_req\030\013 \001(\0132,.tenon.block.proto"
-      "buf.UpdateVpnActiveRequest\022<\n\rad_reward_"
-      "req\030\014 \001(\0132%.tenon.block.protobuf.AdRewar"
-      "dRequest\022G\n\017ref_heights_req\030\r \001(\0132..teno"
-      "n.block.protobuf.RefreshPoolHeightReques"
-      "t\022H\n\017ref_heights_res\030\016 \001(\0132/.tenon.block"
-      ".protobuf.RefreshPoolHeightResponse"
+      "eshPoolHeightResponse\022\017\n\007heights\030\001 \003(\004\"$"
+      "\n\026GetAccountShardRequest\022\n\n\002id\030\001 \001(\014\"6\n\026"
+      "GetAccountShardReponse\022\n\n\002id\030\001 \001(\014\022\020\n\010sh"
+      "ard_id\030\002 \001(\r\"\304\010\n\014BlockMessage\022:\n\tblock_r"
+      "eq\030\001 \001(\0132\'.tenon.block.protobuf.GetTxBlo"
+      "ckRequest\022;\n\tblock_res\030\002 \001(\0132(.tenon.blo"
+      "ck.protobuf.GetTxBlockResponse\022>\n\nheight"
+      "_req\030\003 \001(\0132*.tenon.block.protobuf.Accoun"
+      "tHeightRequest\022\?\n\nheight_res\030\004 \001(\0132+.ten"
+      "on.block.protobuf.AccountHeightResponse\022"
+      ">\n\014acc_attr_req\030\005 \001(\0132(.tenon.block.prot"
+      "obuf.AccountAttrRequest\022\?\n\014acc_attr_res\030"
+      "\006 \001(\0132).tenon.block.protobuf.AccountAttr"
+      "Response\022\?\n\nup_vpn_req\030\007 \001(\0132+.tenon.blo"
+      "ck.protobuf.UpdateVpnCountRequest\022@\n\nup_"
+      "vpn_res\030\010 \001(\0132,.tenon.block.protobuf.Upd"
+      "ateVpnCountResponse\022I\n\020account_init_req\030"
+      "\t \001(\0132/.tenon.block.protobuf.GetAccountI"
+      "nitInfoRequest\022J\n\020account_init_res\030\n \001(\013"
+      "20.tenon.block.protobuf.GetAccountInitIn"
+      "foResponse\022D\n\016vpn_active_req\030\013 \001(\0132,.ten"
+      "on.block.protobuf.UpdateVpnActiveRequest"
+      "\022<\n\rad_reward_req\030\014 \001(\0132%.tenon.block.pr"
+      "otobuf.AdRewardRequest\022G\n\017ref_heights_re"
+      "q\030\r \001(\0132..tenon.block.protobuf.RefreshPo"
+      "olHeightRequest\022H\n\017ref_heights_res\030\016 \001(\013"
+      "2/.tenon.block.protobuf.RefreshPoolHeigh"
+      "tResponse\022C\n\racc_shard_req\030\017 \001(\0132,.tenon"
+      ".block.protobuf.GetAccountShardRequest\022C"
+      "\n\racc_shard_res\030\020 \001(\0132,.tenon.block.prot"
+      "obuf.GetAccountShardReponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2435);
+      descriptor, 2667);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "block.proto", &protobuf_RegisterTypes);
 }
@@ -6767,6 +6841,527 @@ void RefreshPoolHeightResponse::InternalSwap(RefreshPoolHeightResponse* other) {
 
 // ===================================================================
 
+void GetAccountShardRequest::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int GetAccountShardRequest::kIdFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+GetAccountShardRequest::GetAccountShardRequest()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_block_2eproto::scc_info_GetAccountShardRequest.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.block.protobuf.GetAccountShardRequest)
+}
+GetAccountShardRequest::GetAccountShardRequest(const GetAccountShardRequest& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_id()) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.GetAccountShardRequest)
+}
+
+void GetAccountShardRequest::SharedCtor() {
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+GetAccountShardRequest::~GetAccountShardRequest() {
+  // @@protoc_insertion_point(destructor:tenon.block.protobuf.GetAccountShardRequest)
+  SharedDtor();
+}
+
+void GetAccountShardRequest::SharedDtor() {
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void GetAccountShardRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* GetAccountShardRequest::descriptor() {
+  ::protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const GetAccountShardRequest& GetAccountShardRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_block_2eproto::scc_info_GetAccountShardRequest.base);
+  return *internal_default_instance();
+}
+
+
+void GetAccountShardRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.block.protobuf.GetAccountShardRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    id_.ClearNonDefaultToEmptyNoArena();
+  }
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool GetAccountShardRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.block.protobuf.GetAccountShardRequest)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.block.protobuf.GetAccountShardRequest)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.block.protobuf.GetAccountShardRequest)
+  return false;
+#undef DO_
+}
+
+void GetAccountShardRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.block.protobuf.GetAccountShardRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->id(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.block.protobuf.GetAccountShardRequest)
+}
+
+::google::protobuf::uint8* GetAccountShardRequest::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.block.protobuf.GetAccountShardRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->id(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.block.protobuf.GetAccountShardRequest)
+  return target;
+}
+
+size_t GetAccountShardRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.block.protobuf.GetAccountShardRequest)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // optional bytes id = 1;
+  if (has_id()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->id());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void GetAccountShardRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.block.protobuf.GetAccountShardRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const GetAccountShardRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const GetAccountShardRequest>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.block.protobuf.GetAccountShardRequest)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.block.protobuf.GetAccountShardRequest)
+    MergeFrom(*source);
+  }
+}
+
+void GetAccountShardRequest::MergeFrom(const GetAccountShardRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.block.protobuf.GetAccountShardRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.has_id()) {
+    set_has_id();
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+}
+
+void GetAccountShardRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.block.protobuf.GetAccountShardRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void GetAccountShardRequest::CopyFrom(const GetAccountShardRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.block.protobuf.GetAccountShardRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool GetAccountShardRequest::IsInitialized() const {
+  return true;
+}
+
+void GetAccountShardRequest::Swap(GetAccountShardRequest* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void GetAccountShardRequest::InternalSwap(GetAccountShardRequest* other) {
+  using std::swap;
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata GetAccountShardRequest::GetMetadata() const {
+  protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void GetAccountShardReponse::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int GetAccountShardReponse::kIdFieldNumber;
+const int GetAccountShardReponse::kShardIdFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+GetAccountShardReponse::GetAccountShardReponse()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_block_2eproto::scc_info_GetAccountShardReponse.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.block.protobuf.GetAccountShardReponse)
+}
+GetAccountShardReponse::GetAccountShardReponse(const GetAccountShardReponse& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_id()) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  shard_id_ = from.shard_id_;
+  // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.GetAccountShardReponse)
+}
+
+void GetAccountShardReponse::SharedCtor() {
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  shard_id_ = 0u;
+}
+
+GetAccountShardReponse::~GetAccountShardReponse() {
+  // @@protoc_insertion_point(destructor:tenon.block.protobuf.GetAccountShardReponse)
+  SharedDtor();
+}
+
+void GetAccountShardReponse::SharedDtor() {
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void GetAccountShardReponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* GetAccountShardReponse::descriptor() {
+  ::protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const GetAccountShardReponse& GetAccountShardReponse::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_block_2eproto::scc_info_GetAccountShardReponse.base);
+  return *internal_default_instance();
+}
+
+
+void GetAccountShardReponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.block.protobuf.GetAccountShardReponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    id_.ClearNonDefaultToEmptyNoArena();
+  }
+  shard_id_ = 0u;
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool GetAccountShardReponse::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.block.protobuf.GetAccountShardReponse)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 shard_id = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_shard_id();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &shard_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.block.protobuf.GetAccountShardReponse)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.block.protobuf.GetAccountShardReponse)
+  return false;
+#undef DO_
+}
+
+void GetAccountShardReponse::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.block.protobuf.GetAccountShardReponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->id(), output);
+  }
+
+  // optional uint32 shard_id = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->shard_id(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.block.protobuf.GetAccountShardReponse)
+}
+
+::google::protobuf::uint8* GetAccountShardReponse::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.block.protobuf.GetAccountShardReponse)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->id(), target);
+  }
+
+  // optional uint32 shard_id = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->shard_id(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.block.protobuf.GetAccountShardReponse)
+  return target;
+}
+
+size_t GetAccountShardReponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.block.protobuf.GetAccountShardReponse)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional bytes id = 1;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->id());
+    }
+
+    // optional uint32 shard_id = 2;
+    if (has_shard_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->shard_id());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void GetAccountShardReponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.block.protobuf.GetAccountShardReponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  const GetAccountShardReponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const GetAccountShardReponse>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.block.protobuf.GetAccountShardReponse)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.block.protobuf.GetAccountShardReponse)
+    MergeFrom(*source);
+  }
+}
+
+void GetAccountShardReponse::MergeFrom(const GetAccountShardReponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.block.protobuf.GetAccountShardReponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_id();
+      id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      shard_id_ = from.shard_id_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void GetAccountShardReponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.block.protobuf.GetAccountShardReponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void GetAccountShardReponse::CopyFrom(const GetAccountShardReponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.block.protobuf.GetAccountShardReponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool GetAccountShardReponse::IsInitialized() const {
+  return true;
+}
+
+void GetAccountShardReponse::Swap(GetAccountShardReponse* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void GetAccountShardReponse::InternalSwap(GetAccountShardReponse* other) {
+  using std::swap;
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(shard_id_, other->shard_id_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata GetAccountShardReponse::GetMetadata() const {
+  protobuf_block_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_block_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void BlockMessage::InitAsDefaultInstance() {
   ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->block_req_ = const_cast< ::tenon::block::protobuf::GetTxBlockRequest*>(
       ::tenon::block::protobuf::GetTxBlockRequest::internal_default_instance());
@@ -6796,6 +7391,10 @@ void BlockMessage::InitAsDefaultInstance() {
       ::tenon::block::protobuf::RefreshPoolHeightRequest::internal_default_instance());
   ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->ref_heights_res_ = const_cast< ::tenon::block::protobuf::RefreshPoolHeightResponse*>(
       ::tenon::block::protobuf::RefreshPoolHeightResponse::internal_default_instance());
+  ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->acc_shard_req_ = const_cast< ::tenon::block::protobuf::GetAccountShardRequest*>(
+      ::tenon::block::protobuf::GetAccountShardRequest::internal_default_instance());
+  ::tenon::block::protobuf::_BlockMessage_default_instance_._instance.get_mutable()->acc_shard_res_ = const_cast< ::tenon::block::protobuf::GetAccountShardReponse*>(
+      ::tenon::block::protobuf::GetAccountShardReponse::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int BlockMessage::kBlockReqFieldNumber;
@@ -6812,6 +7411,8 @@ const int BlockMessage::kVpnActiveReqFieldNumber;
 const int BlockMessage::kAdRewardReqFieldNumber;
 const int BlockMessage::kRefHeightsReqFieldNumber;
 const int BlockMessage::kRefHeightsResFieldNumber;
+const int BlockMessage::kAccShardReqFieldNumber;
+const int BlockMessage::kAccShardResFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BlockMessage::BlockMessage()
@@ -6896,13 +7497,23 @@ BlockMessage::BlockMessage(const BlockMessage& from)
   } else {
     ref_heights_res_ = NULL;
   }
+  if (from.has_acc_shard_req()) {
+    acc_shard_req_ = new ::tenon::block::protobuf::GetAccountShardRequest(*from.acc_shard_req_);
+  } else {
+    acc_shard_req_ = NULL;
+  }
+  if (from.has_acc_shard_res()) {
+    acc_shard_res_ = new ::tenon::block::protobuf::GetAccountShardReponse(*from.acc_shard_res_);
+  } else {
+    acc_shard_res_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.BlockMessage)
 }
 
 void BlockMessage::SharedCtor() {
   ::memset(&block_req_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&ref_heights_res_) -
-      reinterpret_cast<char*>(&block_req_)) + sizeof(ref_heights_res_));
+      reinterpret_cast<char*>(&acc_shard_res_) -
+      reinterpret_cast<char*>(&block_req_)) + sizeof(acc_shard_res_));
 }
 
 BlockMessage::~BlockMessage() {
@@ -6925,6 +7536,8 @@ void BlockMessage::SharedDtor() {
   if (this != internal_default_instance()) delete ad_reward_req_;
   if (this != internal_default_instance()) delete ref_heights_req_;
   if (this != internal_default_instance()) delete ref_heights_res_;
+  if (this != internal_default_instance()) delete acc_shard_req_;
+  if (this != internal_default_instance()) delete acc_shard_res_;
 }
 
 void BlockMessage::SetCachedSize(int size) const {
@@ -6982,7 +7595,7 @@ void BlockMessage::Clear() {
       up_vpn_res_->Clear();
     }
   }
-  if (cached_has_bits & 16128u) {
+  if (cached_has_bits & 65280u) {
     if (cached_has_bits & 0x00000100u) {
       GOOGLE_DCHECK(account_init_req_ != NULL);
       account_init_req_->Clear();
@@ -7007,6 +7620,14 @@ void BlockMessage::Clear() {
       GOOGLE_DCHECK(ref_heights_res_ != NULL);
       ref_heights_res_->Clear();
     }
+    if (cached_has_bits & 0x00004000u) {
+      GOOGLE_DCHECK(acc_shard_req_ != NULL);
+      acc_shard_req_->Clear();
+    }
+    if (cached_has_bits & 0x00008000u) {
+      GOOGLE_DCHECK(acc_shard_res_ != NULL);
+      acc_shard_res_->Clear();
+    }
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -7018,7 +7639,7 @@ bool BlockMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:tenon.block.protobuf.BlockMessage)
   for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -7190,6 +7811,30 @@ bool BlockMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+      case 15: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(122u /* 122 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_acc_shard_req()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+      case 16: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(130u /* 130 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_acc_shard_res()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -7299,6 +7944,18 @@ void BlockMessage::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00002000u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       14, this->_internal_ref_heights_res(), output);
+  }
+
+  // optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+  if (cached_has_bits & 0x00004000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      15, this->_internal_acc_shard_req(), output);
+  }
+
+  // optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+  if (cached_has_bits & 0x00008000u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      16, this->_internal_acc_shard_res(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -7414,6 +8071,20 @@ void BlockMessage::SerializeWithCachedSizes(
         14, this->_internal_ref_heights_res(), deterministic, target);
   }
 
+  // optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+  if (cached_has_bits & 0x00004000u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        15, this->_internal_acc_shard_req(), deterministic, target);
+  }
+
+  // optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+  if (cached_has_bits & 0x00008000u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        16, this->_internal_acc_shard_res(), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -7489,7 +8160,7 @@ size_t BlockMessage::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[8 / 32] & 16128u) {
+  if (_has_bits_[8 / 32] & 65280u) {
     // optional .tenon.block.protobuf.GetAccountInitInfoRequest account_init_req = 9;
     if (has_account_init_req()) {
       total_size += 1 +
@@ -7530,6 +8201,20 @@ size_t BlockMessage::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *ref_heights_res_);
+    }
+
+    // optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+    if (has_acc_shard_req()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *acc_shard_req_);
+    }
+
+    // optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+    if (has_acc_shard_res()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *acc_shard_res_);
     }
 
   }
@@ -7587,7 +8272,7 @@ void BlockMessage::MergeFrom(const BlockMessage& from) {
       mutable_up_vpn_res()->::tenon::block::protobuf::UpdateVpnCountResponse::MergeFrom(from.up_vpn_res());
     }
   }
-  if (cached_has_bits & 16128u) {
+  if (cached_has_bits & 65280u) {
     if (cached_has_bits & 0x00000100u) {
       mutable_account_init_req()->::tenon::block::protobuf::GetAccountInitInfoRequest::MergeFrom(from.account_init_req());
     }
@@ -7605,6 +8290,12 @@ void BlockMessage::MergeFrom(const BlockMessage& from) {
     }
     if (cached_has_bits & 0x00002000u) {
       mutable_ref_heights_res()->::tenon::block::protobuf::RefreshPoolHeightResponse::MergeFrom(from.ref_heights_res());
+    }
+    if (cached_has_bits & 0x00004000u) {
+      mutable_acc_shard_req()->::tenon::block::protobuf::GetAccountShardRequest::MergeFrom(from.acc_shard_req());
+    }
+    if (cached_has_bits & 0x00008000u) {
+      mutable_acc_shard_res()->::tenon::block::protobuf::GetAccountShardReponse::MergeFrom(from.acc_shard_res());
     }
   }
 }
@@ -7647,6 +8338,8 @@ void BlockMessage::InternalSwap(BlockMessage* other) {
   swap(ad_reward_req_, other->ad_reward_req_);
   swap(ref_heights_req_, other->ref_heights_req_);
   swap(ref_heights_res_, other->ref_heights_res_);
+  swap(acc_shard_req_, other->acc_shard_req_);
+  swap(acc_shard_res_, other->acc_shard_res_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -7716,6 +8409,12 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::RefreshP
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::RefreshPoolHeightResponse* Arena::CreateMaybeMessage< ::tenon::block::protobuf::RefreshPoolHeightResponse >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::RefreshPoolHeightResponse >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::GetAccountShardRequest* Arena::CreateMaybeMessage< ::tenon::block::protobuf::GetAccountShardRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::block::protobuf::GetAccountShardRequest >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::GetAccountShardReponse* Arena::CreateMaybeMessage< ::tenon::block::protobuf::GetAccountShardReponse >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::block::protobuf::GetAccountShardReponse >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::block::protobuf::BlockMessage* Arena::CreateMaybeMessage< ::tenon::block::protobuf::BlockMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::block::protobuf::BlockMessage >(arena);

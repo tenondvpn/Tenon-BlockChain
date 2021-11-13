@@ -38,7 +38,7 @@ namespace protobuf_block_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[19];
+  static const ::google::protobuf::internal::ParseTable schema[21];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -75,6 +75,12 @@ extern GetAccountInitInfoRequestDefaultTypeInternal _GetAccountInitInfoRequest_d
 class GetAccountInitInfoResponse;
 class GetAccountInitInfoResponseDefaultTypeInternal;
 extern GetAccountInitInfoResponseDefaultTypeInternal _GetAccountInitInfoResponse_default_instance_;
+class GetAccountShardReponse;
+class GetAccountShardReponseDefaultTypeInternal;
+extern GetAccountShardReponseDefaultTypeInternal _GetAccountShardReponse_default_instance_;
+class GetAccountShardRequest;
+class GetAccountShardRequestDefaultTypeInternal;
+extern GetAccountShardRequestDefaultTypeInternal _GetAccountShardRequest_default_instance_;
 class GetTxBlockRequest;
 class GetTxBlockRequestDefaultTypeInternal;
 extern GetTxBlockRequestDefaultTypeInternal _GetTxBlockRequest_default_instance_;
@@ -119,6 +125,8 @@ template<> ::tenon::block::protobuf::BlockMessage* Arena::CreateMaybeMessage<::t
 template<> ::tenon::block::protobuf::ElectStatisticInfo* Arena::CreateMaybeMessage<::tenon::block::protobuf::ElectStatisticInfo>(Arena*);
 template<> ::tenon::block::protobuf::GetAccountInitInfoRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoRequest>(Arena*);
 template<> ::tenon::block::protobuf::GetAccountInitInfoResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountInitInfoResponse>(Arena*);
+template<> ::tenon::block::protobuf::GetAccountShardReponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountShardReponse>(Arena*);
+template<> ::tenon::block::protobuf::GetAccountShardRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetAccountShardRequest>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockRequest>(Arena*);
 template<> ::tenon::block::protobuf::GetTxBlockResponse* Arena::CreateMaybeMessage<::tenon::block::protobuf::GetTxBlockResponse>(Arena*);
 template<> ::tenon::block::protobuf::RefreshPoolHeightRequest* Arena::CreateMaybeMessage<::tenon::block::protobuf::RefreshPoolHeightRequest>(Arena*);
@@ -2788,6 +2796,260 @@ class RefreshPoolHeightResponse : public ::google::protobuf::Message /* @@protoc
 };
 // -------------------------------------------------------------------
 
+class GetAccountShardRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetAccountShardRequest) */ {
+ public:
+  GetAccountShardRequest();
+  virtual ~GetAccountShardRequest();
+
+  GetAccountShardRequest(const GetAccountShardRequest& from);
+
+  inline GetAccountShardRequest& operator=(const GetAccountShardRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  GetAccountShardRequest(GetAccountShardRequest&& from) noexcept
+    : GetAccountShardRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline GetAccountShardRequest& operator=(GetAccountShardRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetAccountShardRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GetAccountShardRequest* internal_default_instance() {
+    return reinterpret_cast<const GetAccountShardRequest*>(
+               &_GetAccountShardRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    18;
+
+  void Swap(GetAccountShardRequest* other);
+  friend void swap(GetAccountShardRequest& a, GetAccountShardRequest& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GetAccountShardRequest* New() const final {
+    return CreateMaybeMessage<GetAccountShardRequest>(NULL);
+  }
+
+  GetAccountShardRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<GetAccountShardRequest>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const GetAccountShardRequest& from);
+  void MergeFrom(const GetAccountShardRequest& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GetAccountShardRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes id = 1;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetAccountShardRequest)
+ private:
+  void set_has_id();
+  void clear_has_id();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
+  friend struct ::protobuf_block_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class GetAccountShardReponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.GetAccountShardReponse) */ {
+ public:
+  GetAccountShardReponse();
+  virtual ~GetAccountShardReponse();
+
+  GetAccountShardReponse(const GetAccountShardReponse& from);
+
+  inline GetAccountShardReponse& operator=(const GetAccountShardReponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  GetAccountShardReponse(GetAccountShardReponse&& from) noexcept
+    : GetAccountShardReponse() {
+    *this = ::std::move(from);
+  }
+
+  inline GetAccountShardReponse& operator=(GetAccountShardReponse&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GetAccountShardReponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const GetAccountShardReponse* internal_default_instance() {
+    return reinterpret_cast<const GetAccountShardReponse*>(
+               &_GetAccountShardReponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    19;
+
+  void Swap(GetAccountShardReponse* other);
+  friend void swap(GetAccountShardReponse& a, GetAccountShardReponse& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GetAccountShardReponse* New() const final {
+    return CreateMaybeMessage<GetAccountShardReponse>(NULL);
+  }
+
+  GetAccountShardReponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<GetAccountShardReponse>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const GetAccountShardReponse& from);
+  void MergeFrom(const GetAccountShardReponse& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GetAccountShardReponse* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes id = 1;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // optional uint32 shard_id = 2;
+  bool has_shard_id() const;
+  void clear_shard_id();
+  static const int kShardIdFieldNumber = 2;
+  ::google::protobuf::uint32 shard_id() const;
+  void set_shard_id(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetAccountShardReponse)
+ private:
+  void set_has_id();
+  void clear_has_id();
+  void set_has_shard_id();
+  void clear_has_shard_id();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
+  ::google::protobuf::uint32 shard_id_;
+  friend struct ::protobuf_block_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.block.protobuf.BlockMessage) */ {
  public:
   BlockMessage();
@@ -2830,7 +3092,7 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_BlockMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    20;
 
   void Swap(BlockMessage* other);
   friend void swap(BlockMessage& a, BlockMessage& b) {
@@ -3050,6 +3312,30 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::block::protobuf::RefreshPoolHeightResponse* mutable_ref_heights_res();
   void set_allocated_ref_heights_res(::tenon::block::protobuf::RefreshPoolHeightResponse* ref_heights_res);
 
+  // optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+  bool has_acc_shard_req() const;
+  void clear_acc_shard_req();
+  static const int kAccShardReqFieldNumber = 15;
+  private:
+  const ::tenon::block::protobuf::GetAccountShardRequest& _internal_acc_shard_req() const;
+  public:
+  const ::tenon::block::protobuf::GetAccountShardRequest& acc_shard_req() const;
+  ::tenon::block::protobuf::GetAccountShardRequest* release_acc_shard_req();
+  ::tenon::block::protobuf::GetAccountShardRequest* mutable_acc_shard_req();
+  void set_allocated_acc_shard_req(::tenon::block::protobuf::GetAccountShardRequest* acc_shard_req);
+
+  // optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+  bool has_acc_shard_res() const;
+  void clear_acc_shard_res();
+  static const int kAccShardResFieldNumber = 16;
+  private:
+  const ::tenon::block::protobuf::GetAccountShardReponse& _internal_acc_shard_res() const;
+  public:
+  const ::tenon::block::protobuf::GetAccountShardReponse& acc_shard_res() const;
+  ::tenon::block::protobuf::GetAccountShardReponse* release_acc_shard_res();
+  ::tenon::block::protobuf::GetAccountShardReponse* mutable_acc_shard_res();
+  void set_allocated_acc_shard_res(::tenon::block::protobuf::GetAccountShardReponse* acc_shard_res);
+
   // @@protoc_insertion_point(class_scope:tenon.block.protobuf.BlockMessage)
  private:
   void set_has_block_req();
@@ -3080,6 +3366,10 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   void clear_has_ref_heights_req();
   void set_has_ref_heights_res();
   void clear_has_ref_heights_res();
+  void set_has_acc_shard_req();
+  void clear_has_acc_shard_req();
+  void set_has_acc_shard_res();
+  void clear_has_acc_shard_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -3098,6 +3388,8 @@ class BlockMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::block::protobuf::AdRewardRequest* ad_reward_req_;
   ::tenon::block::protobuf::RefreshPoolHeightRequest* ref_heights_req_;
   ::tenon::block::protobuf::RefreshPoolHeightResponse* ref_heights_res_;
+  ::tenon::block::protobuf::GetAccountShardRequest* acc_shard_req_;
+  ::tenon::block::protobuf::GetAccountShardReponse* acc_shard_res_;
   friend struct ::protobuf_block_2eproto::TableStruct;
 };
 // ===================================================================
@@ -5635,6 +5927,170 @@ RefreshPoolHeightResponse::mutable_heights() {
 
 // -------------------------------------------------------------------
 
+// GetAccountShardRequest
+
+// optional bytes id = 1;
+inline bool GetAccountShardRequest::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetAccountShardRequest::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetAccountShardRequest::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetAccountShardRequest::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& GetAccountShardRequest::id() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountShardRequest.id)
+  return id_.GetNoArena();
+}
+inline void GetAccountShardRequest::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountShardRequest.id)
+}
+#if LANG_CXX11
+inline void GetAccountShardRequest::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetAccountShardRequest.id)
+}
+#endif
+inline void GetAccountShardRequest::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetAccountShardRequest.id)
+}
+inline void GetAccountShardRequest::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetAccountShardRequest.id)
+}
+inline ::std::string* GetAccountShardRequest::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountShardRequest.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* GetAccountShardRequest::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetAccountShardRequest.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void GetAccountShardRequest::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetAccountShardRequest.id)
+}
+
+// -------------------------------------------------------------------
+
+// GetAccountShardReponse
+
+// optional bytes id = 1;
+inline bool GetAccountShardReponse::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GetAccountShardReponse::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GetAccountShardReponse::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GetAccountShardReponse::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& GetAccountShardReponse::id() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountShardReponse.id)
+  return id_.GetNoArena();
+}
+inline void GetAccountShardReponse::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountShardReponse.id)
+}
+#if LANG_CXX11
+inline void GetAccountShardReponse::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.block.protobuf.GetAccountShardReponse.id)
+}
+#endif
+inline void GetAccountShardReponse::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.block.protobuf.GetAccountShardReponse.id)
+}
+inline void GetAccountShardReponse::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.block.protobuf.GetAccountShardReponse.id)
+}
+inline ::std::string* GetAccountShardReponse::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountShardReponse.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* GetAccountShardReponse::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.GetAccountShardReponse.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void GetAccountShardReponse::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetAccountShardReponse.id)
+}
+
+// optional uint32 shard_id = 2;
+inline bool GetAccountShardReponse::has_shard_id() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GetAccountShardReponse::set_has_shard_id() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GetAccountShardReponse::clear_has_shard_id() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void GetAccountShardReponse::clear_shard_id() {
+  shard_id_ = 0u;
+  clear_has_shard_id();
+}
+inline ::google::protobuf::uint32 GetAccountShardReponse::shard_id() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountShardReponse.shard_id)
+  return shard_id_;
+}
+inline void GetAccountShardReponse::set_shard_id(::google::protobuf::uint32 value) {
+  set_has_shard_id();
+  shard_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountShardReponse.shard_id)
+}
+
+// -------------------------------------------------------------------
+
 // BlockMessage
 
 // optional .tenon.block.protobuf.GetTxBlockRequest block_req = 1;
@@ -6449,9 +6905,129 @@ inline void BlockMessage::set_allocated_ref_heights_res(::tenon::block::protobuf
   // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.ref_heights_res)
 }
 
+// optional .tenon.block.protobuf.GetAccountShardRequest acc_shard_req = 15;
+inline bool BlockMessage::has_acc_shard_req() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void BlockMessage::set_has_acc_shard_req() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void BlockMessage::clear_has_acc_shard_req() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void BlockMessage::clear_acc_shard_req() {
+  if (acc_shard_req_ != NULL) acc_shard_req_->Clear();
+  clear_has_acc_shard_req();
+}
+inline const ::tenon::block::protobuf::GetAccountShardRequest& BlockMessage::_internal_acc_shard_req() const {
+  return *acc_shard_req_;
+}
+inline const ::tenon::block::protobuf::GetAccountShardRequest& BlockMessage::acc_shard_req() const {
+  const ::tenon::block::protobuf::GetAccountShardRequest* p = acc_shard_req_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.acc_shard_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetAccountShardRequest*>(
+      &::tenon::block::protobuf::_GetAccountShardRequest_default_instance_);
+}
+inline ::tenon::block::protobuf::GetAccountShardRequest* BlockMessage::release_acc_shard_req() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.acc_shard_req)
+  clear_has_acc_shard_req();
+  ::tenon::block::protobuf::GetAccountShardRequest* temp = acc_shard_req_;
+  acc_shard_req_ = NULL;
+  return temp;
+}
+inline ::tenon::block::protobuf::GetAccountShardRequest* BlockMessage::mutable_acc_shard_req() {
+  set_has_acc_shard_req();
+  if (acc_shard_req_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetAccountShardRequest>(GetArenaNoVirtual());
+    acc_shard_req_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.acc_shard_req)
+  return acc_shard_req_;
+}
+inline void BlockMessage::set_allocated_acc_shard_req(::tenon::block::protobuf::GetAccountShardRequest* acc_shard_req) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete acc_shard_req_;
+  }
+  if (acc_shard_req) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      acc_shard_req = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, acc_shard_req, submessage_arena);
+    }
+    set_has_acc_shard_req();
+  } else {
+    clear_has_acc_shard_req();
+  }
+  acc_shard_req_ = acc_shard_req;
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.acc_shard_req)
+}
+
+// optional .tenon.block.protobuf.GetAccountShardReponse acc_shard_res = 16;
+inline bool BlockMessage::has_acc_shard_res() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+inline void BlockMessage::set_has_acc_shard_res() {
+  _has_bits_[0] |= 0x00008000u;
+}
+inline void BlockMessage::clear_has_acc_shard_res() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+inline void BlockMessage::clear_acc_shard_res() {
+  if (acc_shard_res_ != NULL) acc_shard_res_->Clear();
+  clear_has_acc_shard_res();
+}
+inline const ::tenon::block::protobuf::GetAccountShardReponse& BlockMessage::_internal_acc_shard_res() const {
+  return *acc_shard_res_;
+}
+inline const ::tenon::block::protobuf::GetAccountShardReponse& BlockMessage::acc_shard_res() const {
+  const ::tenon::block::protobuf::GetAccountShardReponse* p = acc_shard_res_;
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.BlockMessage.acc_shard_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::block::protobuf::GetAccountShardReponse*>(
+      &::tenon::block::protobuf::_GetAccountShardReponse_default_instance_);
+}
+inline ::tenon::block::protobuf::GetAccountShardReponse* BlockMessage::release_acc_shard_res() {
+  // @@protoc_insertion_point(field_release:tenon.block.protobuf.BlockMessage.acc_shard_res)
+  clear_has_acc_shard_res();
+  ::tenon::block::protobuf::GetAccountShardReponse* temp = acc_shard_res_;
+  acc_shard_res_ = NULL;
+  return temp;
+}
+inline ::tenon::block::protobuf::GetAccountShardReponse* BlockMessage::mutable_acc_shard_res() {
+  set_has_acc_shard_res();
+  if (acc_shard_res_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::block::protobuf::GetAccountShardReponse>(GetArenaNoVirtual());
+    acc_shard_res_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.BlockMessage.acc_shard_res)
+  return acc_shard_res_;
+}
+inline void BlockMessage::set_allocated_acc_shard_res(::tenon::block::protobuf::GetAccountShardReponse* acc_shard_res) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete acc_shard_res_;
+  }
+  if (acc_shard_res) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      acc_shard_res = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, acc_shard_res, submessage_arena);
+    }
+    set_has_acc_shard_res();
+  } else {
+    clear_has_acc_shard_res();
+  }
+  acc_shard_res_ = acc_shard_res;
+  // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.BlockMessage.acc_shard_res)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

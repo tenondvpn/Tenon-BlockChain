@@ -14,3 +14,4 @@ cmake .. -DCMAKE_BUILD_TYPE=$TARGET -DOPENSSL_ROOT_DIR=./third_party/depends/inc
 
 # make
 make -j4 tenon
+make -j4 vpn_client
