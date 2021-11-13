@@ -83,7 +83,7 @@ public:
         return max_height_;
     }
 
-    common::LimitHeap<common::BlockItem> GetTxBlocks() {
+    common::LimitHeap<bft::protobuf::TxInfo> GetTxBlocks() {
         std::lock_guard<std::mutex> guard(init_blocks_mutex_);
         return init_blocks_;
     }

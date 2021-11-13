@@ -485,6 +485,7 @@ void BlockManager::HandleGetAccountInitRequest(
                     block_item.tx_list(tx_idx).to() == block_msg.account_init_req().id()) {
                 auto tx_info = account_init_res->add_tx_list();
                 *tx_info = block_item.tx_list(i);
+                tx_info->set_timestamp(block_item.timestamp());
             }
         }
     }
