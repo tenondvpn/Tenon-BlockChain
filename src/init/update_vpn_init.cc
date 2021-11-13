@@ -861,8 +861,9 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
 //                 block_item.version = init_blocks.account_init_res().tx_list(i).version();
                 std::cout << "get block item: " << common::Encode::HexEncode(init_blocks.account_init_res().tx_list(i).from()) << ", " << common::Encode::HexEncode(init_blocks.account_init_res().tx_list(i).to())
                     << ", " << init_blocks.account_init_res().tx_list(i).balance() << ", " << init_blocks.account_init_res().tx_list(i).amount() << std::endl;
+                auto tx_info_ptr = std::make_shared<bft::protobuf::TxInfo>(init_blocks.account_init_res().tx_list(i));
                 std::lock_guard<std::mutex> guard(init_blocks_mutex_);
-                init_blocks_.push(init_blocks.account_init_res().tx_list(i));
+                init_blocks_.push(tx_info_ptr);
             }
         }
     }

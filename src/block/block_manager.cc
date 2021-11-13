@@ -439,7 +439,7 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
 }
 
 void BlockManager::HandleGetAccountInitRequest(
-        transport::protobuf::Header& header,
+        const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
     BLOCK_DEBUG("get account init request coming: %s",
         common::Encode::HexEncode(block_msg.account_init_req().id()).c_str());

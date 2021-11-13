@@ -13,15 +13,21 @@
 
 namespace tenon {
 
+namespace init {
+
+typedef std::shared_ptr<bft::protobuf::TxInfo> TxInfoPtr;
+
+}; // namespace init
+
 namespace common {
 
 template<>
-inline uint64_t MinHeapUniqueVal(const bft::protobuf::TxInfo& val) {
-    return common::Hash::Hash64(val.gid());
+inline uint64_t MinHeapUniqueVal(const init::TxInfoPtr& val) {
+    return common::Hash::Hash64(val->gid());
 }
 
-inline bool operator<(bft::protobuf::TxInfo& lhs, bft::protobuf::TxInfo& rhs) {
-    return lhs.height() < rhs.height();
+inline bool operator<(init::TxInfoPtr& lhs, init::TxInfoPtr& rhs) {
+    return lhs->height() < rhs->height();
 }
 
 }  // namespace common
@@ -97,7 +103,7 @@ public:
         return max_height_;
     }
 
-    common::LimitHeap<bft::protobuf::TxInfo> GetTxBlocks() {
+    common::LimitHeap<TxInfoPtr> GetTxBlocks() {
         std::lock_guard<std::mutex> guard(init_blocks_mutex_);
         return init_blocks_;
     }
@@ -218,7 +224,7 @@ private:
     std::string local_vpn_count_direct_info_;
     std::atomic<int64_t> init_balance_{ -1 };
     std::atomic<uint64_t> max_height_{ 0 };
-    common::LimitHeap<bft::protobuf::TxInfo> init_blocks_{ true, 1024 };
+    common::LimitHeap<TxInfoPtr> init_blocks_{ true, 1024 };
     std::mutex init_blocks_mutex_;
     std::atomic<uint64_t> max_pay_for_vpn_height_{ 0 };
     std::atomic<uint64_t> max_pay_for_vpn_tm_{ 0 };
