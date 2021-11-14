@@ -479,7 +479,7 @@ std::string VpnClient::Transactions(uint32_t begin, uint32_t len) {
     auto& mining_accounts = common::GlobalInfo::Instance()->vpn_minning_accounts();
     while (!blocks_heap.empty()) {
         auto& tx_info = blocks_heap.top()->tx_info;
-        auto timestamp = common::MicTimestampToLiteDatetime(tx_info.timestamp());
+        auto timestamp = common::MicTimestampToLiteDatetime(blocks_heap.top()->timestamp);
         std::string tx_item;
         if (tx_info.from() == common::GlobalInfo::Instance()->id()) {
             std::string type("2");
