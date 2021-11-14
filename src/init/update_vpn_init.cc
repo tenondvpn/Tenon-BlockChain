@@ -845,19 +845,21 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
 
                     if (tx_info.height() >= max_height_ ||
                         max_height_ == common::kInvalidUint64) {
-                        max_height_ = tx_info.height();
+                        max_height_ = init_blocks.account_init_res().block_list(i).height();
                         init_balance_ = init_blocks.account_init_res().balance();
                     }
 
                     if (tx_info.type() == common::kConsensusPayForCommonVpn &&
                         tx_info.height() >= max_pay_for_vpn_height_) {
-                        max_pay_for_vpn_tm_ = tx_info.timestamp();
+                        max_pay_for_vpn_tm_ = init_blocks.account_init_res().block_list(i).timestamp();
                         max_pay_for_vpn_amount_ = tx_info.amount();
                         max_pay_for_vpn_height_ = tx_info.height();
                     }
                     std::cout << "get block item: " << common::Encode::HexEncode(tx_info.from()) << ", " << common::Encode::HexEncode(tx_info.to())
                         << ", " << tx_info.balance() << ", " << tx_info.amount() << std::endl;
-                    auto tx_info_ptr = std::make_shared<bft::protobuf::TxInfo>(tx_info);
+                    auto tx_info_ptr = std::make_shared<TxinfoItem>({
+                        tx_info,
+                        init_blocks.account_init_res().block_list(i).height() });
                     std::lock_guard<std::mutex> guard(init_blocks_mutex_);
                     init_blocks_.push(tx_info_ptr);
                 }

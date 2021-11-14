@@ -15,19 +15,18 @@ namespace tenon {
 
 namespace init {
 
-typedef std::shared_ptr<bft::protobuf::TxInfo> TxInfoPtr;
+struct TxinfoItem {
+    bft::protobuf::TxInfo tx_info;
+    uint64_t timestamp;
+};
+typedef std::shared_ptr<TxinfoItem> TxInfoPtr;
 
 }; // namespace init
 
 namespace common {
 
-template<>
-inline uint64_t MinHeapUniqueVal(const init::TxInfoPtr& val) {
-    return common::Hash::Hash64(val->gid());
-}
-
 inline bool operator<(init::TxInfoPtr& lhs, init::TxInfoPtr& rhs) {
-    return lhs->height() < rhs->height();
+    return lhs->tx_info.height() < rhs->tx_info.height();
 }
 
 }  // namespace common
