@@ -139,7 +139,7 @@ void KeyValueSync::CheckSyncItem() {
                 sync_req->add_keys(item->key);
             }
 
-            if (sync_req->keys_size() + sync_req->heights_size() > kMaxSyncKeyCount) {
+            if (sync_req->keys_size() + sync_req->heights_size() > (int32_t)kMaxSyncKeyCount) {
                 uint64_t choose_node = SendSyncRequest(
                         item->network_id,
                         sync_dht_map[item->network_id],

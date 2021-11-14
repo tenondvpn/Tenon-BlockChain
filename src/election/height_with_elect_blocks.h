@@ -38,8 +38,6 @@ public:
     ~HeightWithElectBlock() {}
     // elect block is always coming in order or one time just one block, so no need to lock it
     void AddNewHeightBlock(uint64_t height, uint32_t network_id, MembersPtr& members_ptr) {
-        ELECT_INFO("AddNewHeightBlock height: %lu, network_id: %u", height, network_id);
-        printf("AddNewHeightBlock height: %lu, network_id: %u\n", height, network_id);
         if (network_id >= network::kConsensusShardEndNetworkId) {
             return;
         }
