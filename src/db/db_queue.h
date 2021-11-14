@@ -26,6 +26,8 @@ public:
 
 private:
     std::string db_name_;
+    std::string db_bindex_name_;
+    std::string db_eindex_name_;
     uint64_t begin_index_{ 0 };
     uint64_t end_index_{ 0 };
     uint64_t max_size_{ 0 };

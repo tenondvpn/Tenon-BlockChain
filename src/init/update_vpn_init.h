@@ -223,7 +223,7 @@ private:
     std::string vpn_count_direct_info_;
     std::string local_vpn_count_direct_info_;
     std::atomic<int64_t> init_balance_{ -1 };
-    std::atomic<uint64_t> max_height_{ 0 };
+    std::atomic<uint64_t> max_height_{ common::kInvalidUint64 };
     common::LimitHeap<TxInfoPtr> init_blocks_{ true, 1024 };
     std::mutex init_blocks_mutex_;
     std::atomic<uint64_t> max_pay_for_vpn_height_{ 0 };

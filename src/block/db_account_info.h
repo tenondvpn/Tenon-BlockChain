@@ -26,7 +26,7 @@ public:
     int SetBalance(uint64_t balance, db::DbWriteBach& db_batch);
     int GetBalance(uint64_t* balance);
     void NewHeight(uint64_t height, db::DbWriteBach& db_batch);
-    void GetHeights(int64_t index, int32_t count, std::vector<uint64_t>* res);
+    void GetHeights(uint64_t index, int32_t count, std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
     int SetConsensuseNetid(uint32_t network_id, db::DbWriteBach& db_batch);

@@ -296,6 +296,7 @@ private:
     std::mutex vpn_node_info_mutex_;
     std::condition_variable vpn_node_info_con_;
     uint64_t prv_get_init_tm_{ 0 };
+    uint64_t tx_index_{ common::kInvalidUint64 };
 };
 
 }  // namespace client

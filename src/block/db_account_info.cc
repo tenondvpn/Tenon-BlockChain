@@ -182,12 +182,14 @@ int DbAccountInfo::GetBalance(uint64_t* balance) {
 
 void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
     tx_queue_.push(std::to_string(height), db_batch);
+    BLOCK_DEBUG("account push height: %s, %lu",
+        common::Encode::HexEncode(account_id_).c_str(), height);
 }
 
 // get from end to begin, count's heights, one time max: 1024
-void DbAccountInfo::GetHeights(int64_t index, int32_t count, std::vector<uint64_t>* res) {
-    if (index > (int64_t)tx_queue_.size()) {
-        index = tx_queue_.size();
+void DbAccountInfo::GetHeights(uint64_t index, int32_t count, std::vector<uint64_t>* res) {
+    if (index >= (uint64_t)tx_queue_.size()) {
+        index = tx_queue_.size() - 1;
     }
 
     static const int32_t kMaxCount = 1024;

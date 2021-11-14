@@ -502,6 +502,7 @@ int AccountManager::AddNewAccount(
         }
 
         account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
+        BLOCK_ERROR("DDDDDDDDDDDDDD NewHeight: %s, %lu", common::Encode::HexEncode(account_id).c_str(), tmp_now_height);
         account_info->NewHeight(tmp_now_height, db_batch);
         int res = account_info->SetBalance(0, db_batch);
 //         res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
@@ -555,7 +556,6 @@ int AccountManager::AddNewAccount(
 //         return kBlockError;
 //     }
 
-    account_info->NewHeight(tmp_now_height, db_batch);
     if (SetAccountAttrs(
             account_id,
             tx_info,
@@ -594,7 +594,6 @@ int AccountManager::GenesisAddAccountInfo(
     }
 
     account_info->SetMaxHeightHash(0, "", db_batch);
-    account_info->NewHeight(0, db_batch);
     int res = account_info->SetBalance(0, db_batch);
 //     res += account_info->SetCreateAccountHeight(0, db_batch);
 //     if (res != 0) {
@@ -609,7 +608,6 @@ int AccountManager::GenesisAddAccountInfo(
         return kBlockError;
     }
 
-    BLOCK_DEBUG("genesis add new block account[%s].", common::Encode::HexEncode(account_id).c_str());
     return kBlockSuccess;
 }
 
@@ -618,7 +616,7 @@ int AccountManager::UpdateAccountInfo(
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_DEBUG("add new account: %s", common::Encode::HexEncode(account_id).c_str());
+    BLOCK_DEBUG("add new account: %s, height: %lu", common::Encode::HexEncode(account_id).c_str(), block_item->height());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
             tx_info.type() != common::kConsensusCreateContract) {
@@ -666,6 +664,7 @@ int AccountManager::UpdateAccountInfo(
         return kBlockError;
     }
 
+    BLOCK_ERROR("1 DDDDDDDDDDDDDD NewHeight: %s, %lu", common::Encode::HexEncode(account_id).c_str(), block_item->height());
     account_info->NewHeight(block_item->height(), db_batch);
     if (exist_height <= block_item->height()) {
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);

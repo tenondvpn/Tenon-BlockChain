@@ -441,15 +441,18 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
 void BlockManager::HandleGetAccountInitRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
-    BLOCK_DEBUG("get account init request coming: %s",
-        common::Encode::HexEncode(block_msg.account_init_req().id()).c_str());
+    BLOCK_DEBUG("get account init request coming: %s, net_id: %u, local net id: %u",
+        common::Encode::HexEncode(block_msg.account_init_req().id()).c_str(),
+        block_msg.account_init_req().net_id(), common::GlobalInfo::Instance()->network_id());
     if (block_msg.account_init_req().net_id() != common::GlobalInfo::Instance()->network_id()) {
+        BLOCK_DEBUG("get account init request net id error");
         return;
     }
 
     auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
             block_msg.account_init_req().id());
     if (account_ptr == nullptr) {
+        BLOCK_DEBUG("get account init request id error");
         return;
     }
 
@@ -467,7 +470,10 @@ void BlockManager::HandleGetAccountInitRequest(
         &heights);
     uint32_t pool_idx = common::GetPoolIndex(block_msg.account_init_req().id());
     for (uint32_t i = 0; i < heights.size(); ++i) {
-        if (heights[i] <= block_msg.account_init_req().height()) {
+        if (block_msg.account_init_req().height() != common::kInvalidUint64 &&
+                heights[i] <= block_msg.account_init_req().height()) {
+            BLOCK_DEBUG("get account init request height error: %lu, %lu",
+                block_msg.account_init_req().height(), heights[i]);
             continue;
         }
 
@@ -477,6 +483,7 @@ void BlockManager::HandleGetAccountInitRequest(
                 pool_idx,
                 heights[i],
                 block_item) != kBlockSuccess) {
+            BLOCK_DEBUG("get account init request get block error");
             return;
         }
 
@@ -493,6 +500,7 @@ void BlockManager::HandleGetAccountInitRequest(
 
     DHT_ERROR("get account tx list size: %u", account_init_res->tx_list_size());
     if (account_init_res->tx_list_size() <= 0) {
+        BLOCK_DEBUG("get account init request get tx_list_size error");
         return;
     }
 
