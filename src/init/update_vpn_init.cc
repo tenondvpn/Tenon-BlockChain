@@ -859,6 +859,7 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
                         << ", " << tx_info.balance() << ", " << tx_info.amount() << std::endl;
                     auto tx_info_ptr = std::make_shared<TxinfoItem>({
                         tx_info,
+                        init_blocks.account_init_res().block_list(i).timestamp(),
                         init_blocks.account_init_res().block_list(i).height() });
                     std::lock_guard<std::mutex> guard(init_blocks_mutex_);
                     init_blocks_.push(tx_info_ptr);

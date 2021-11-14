@@ -18,6 +18,7 @@ namespace init {
 struct TxinfoItem {
     bft::protobuf::TxInfo tx_info;
     uint64_t timestamp;
+    uint64_t height;
 };
 typedef std::shared_ptr<TxinfoItem> TxInfoPtr;
 
@@ -26,7 +27,7 @@ typedef std::shared_ptr<TxinfoItem> TxInfoPtr;
 namespace common {
 
 inline bool operator<(init::TxInfoPtr& lhs, init::TxInfoPtr& rhs) {
-    return lhs->tx_info.height() < rhs->tx_info.height();
+    return lhs->height < rhs->height;
 }
 
 }  // namespace common
