@@ -30,8 +30,6 @@ Queue::Queue(const std::string& name, uint64_t max_size) {
         end_index_ = tmp_index;
         ++end_index_;
     }
-
-    std::cout << "init queue name: " << common::Encode::HexEncode(db_name_) << ", begin_index_: " << begin_index_ << ", end_index_: " << end_index_ << std::endl;
 }
 
 Queue::~Queue() {}
@@ -47,7 +45,6 @@ bool Queue::push(const std::string& value, db::DbWriteBach& db_batch) {
     }
 
     ++end_index_;
-    std::cout << "push queue name: " << common::Encode::HexEncode(queue_name) << ", begin_index_: " << begin_index_ << ", end_index_: " << end_index_ << std::endl;
     return true;
 }
 
@@ -61,7 +58,6 @@ bool Queue::pop(std::string* value, db::DbWriteBach& db_batch) {
     std::string queue_name = db_name_ + "_" + std::to_string(begin_index);
     db_batch.Delete(queue_name);
     ++begin_index_;
-    std::cout << "pop queue name: " << common::Encode::HexEncode(queue_name) << ", begin_index_: " << begin_index_ << ", end_index_: " << end_index_ << std::endl;
     return true;
 }
 
@@ -69,7 +65,6 @@ bool Queue::get(uint64_t index, std::string* value) {
     uint64_t begin_index = begin_index_ + index;
     std::string queue_name = db_name_ + "_" + std::to_string(begin_index);
     auto res = Db::Instance()->Get(queue_name, value);
-    std::cout << "get queue name: " << common::Encode::HexEncode(queue_name) << ", begin_index_: " << begin_index_ << ", end_index_: " << end_index_ << std::endl;
     if (!res.ok()) {
         return false;
     }

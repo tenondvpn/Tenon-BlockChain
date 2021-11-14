@@ -1165,7 +1165,6 @@ void VpnClient::GetTxBlocksFromBftNetwork() {
     attr_req->set_height(init::UpdateVpnInit::Instance()->GetMaxHeight());
     message.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(message);
-    std::cout << "send get tx list." << std::endl;
 }
 
 int VpnClient::VpnLogin(

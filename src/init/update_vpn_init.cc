@@ -845,8 +845,7 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
                         max_pay_for_vpn_amount_ = tx_info.amount();
                         max_pay_for_vpn_height_ = init_blocks.account_init_res().block_list(i).height();
                     }
-                    std::cout << "get block item: " << common::Encode::HexEncode(tx_info.from()) << ", " << common::Encode::HexEncode(tx_info.to())
-                        << ", " << tx_info.balance() << ", " << tx_info.amount() << std::endl;
+                    
                     auto tx_info_ptr = std::make_shared<TxinfoItem>(
                         tx_info,
                         init_blocks.account_init_res().block_list(i).timestamp(),

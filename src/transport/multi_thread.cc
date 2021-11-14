@@ -200,10 +200,6 @@ void MultiThreadHandler::HandleRemoteMessage(
 	}
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
-    if (message_ptr->client()) {
-        std::cout << "client message coming. 0, type: " << message_ptr->type() << ", version: " << message_ptr->version() << std::endl;
-    }
-
 #ifndef LEGO_TRACE_MESSAGE
     message_ptr->clear_debug();
 #endif
@@ -240,10 +236,6 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 	}
 
-    if (message_ptr->client()) {
-        std::cout << "client message coming. 1" << std::endl;
-    }
-
     message_ptr->set_transport_type(transport_type);
     message_ptr->set_from_ip(from_ip);
     message_ptr->set_from_port(from_port);
@@ -254,17 +246,9 @@ void MultiThreadHandler::HandleRemoteMessage(
 		}
 	}
 
-    if (message_ptr->client()) {
-        std::cout << "client message coming. 2" << std::endl;
-    }
-
     if (common::GlobalInfo::Instance()->is_client()) {
         Processor::Instance()->HandleMessage(message_ptr);
         return;
-    }
-
-    if (message_ptr->client()) {
-        std::cout << "client message coming. 3" << std::endl;
     }
 
     {
@@ -276,11 +260,11 @@ void MultiThreadHandler::HandleRemoteMessage(
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
-        if (message_ptr->client()) {
-            TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
-                message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-                from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
-        }
+//         if (message_ptr->client()) {
+//             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
+//                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//                 from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
+//         }
 	}
 }
 
@@ -298,7 +282,6 @@ int MultiThreadHandler::HandleClientMessage(
         dht::BaseDhtPtr dht = nullptr;
         uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(message_ptr->des_dht_key());
         if (net_id >= common::kNetworkMaxDhtCount) {
-            std::cout << "net_id error: " << net_id << std::endl;
             return kTransportError;
         }
 
@@ -314,7 +297,6 @@ int MultiThreadHandler::HandleClientMessage(
 
         if (dht == nullptr) {
             assert(dht != nullptr);
-            std::cout << "dht error: " << net_id << std::endl;
             return kTransportError;
         }
 
@@ -329,7 +311,6 @@ int MultiThreadHandler::HandleClientMessage(
                 message_ptr->set_des_dht_key(client_node->client_dht_key);
                 auto& msg = *message_ptr;
                 if (client_node->transport_type == transport::kTcp) {
-                    std::cout << "send message to client: " << client_node->ip << ":" << client_node->port << std::endl;
                     tcp_transport_->Send(client_node->ip, client_node->port, 0, msg);
                 } else {
                     transport_->Send(client_node->ip, client_node->port, 0, msg);

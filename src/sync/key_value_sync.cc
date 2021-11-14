@@ -277,7 +277,6 @@ void KeyValueSync::HandleMessage(const transport::TransportMessagePtr& header_pt
     protobuf::SyncMessage sync_msg;
     if (!sync_msg.ParseFromString(header.data())) {
         DHT_ERROR("protobuf::DhtMessage ParseFromString failed!");
-        std::cout << "parse failed!" << std::endl;
         return;
     }
 

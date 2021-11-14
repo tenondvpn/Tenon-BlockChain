@@ -167,12 +167,9 @@ int GenesisBlockInit::CreateElectBlock(
         libff::alt_bn128_G2 common_public_key;
         CreateBlsGenesisKeys(&skeys, &pkeys, &common_public_key);
         auto prev_members = ec_block.mutable_prev_members();
-        std::cout << "prikey with network: " << shard_netid
-            << ", elect height: " << prev_height << std::endl;
         FILE* bls_fd = fopen("./bls_pri", "w");
         assert(bls_fd != nullptr);
         for (uint32_t i = 0; i < genesis_nodes.size(); ++i) {
-            std::cout << *skeys[i]->toString() << std::endl;
             auto mem_pk = prev_members->add_bls_pubkey();
             auto pkeys_str = pkeys[i]->toString();
             mem_pk->set_x_c0(pkeys_str->at(0));
@@ -195,7 +192,6 @@ int GenesisBlockInit::CreateElectBlock(
 
         fclose(bls_fd);
 
-        std::cout << std::endl;
         auto common_pk_ptr = std::make_shared<BLSPublicKey>(common_public_key);
         auto common_pk_strs = common_pk_ptr->toString();
         auto common_pk = prev_members->mutable_common_pubkey();
@@ -387,7 +383,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
         auto vss_random_attr = tx_info->add_attr();
         vss_random_attr->set_key(tmblock::kVssRandomAttr);
         vss_random_attr->set_value(std::to_string(now_tm));
-        std::cout << "set init timestamp: " << now_tm << std::endl;
         tenon_block->set_prehash(root_pre_hash);
         tenon_block->set_version(common::kTransactionVersion);
         tenon_block->set_pool_index(common::kRootChainPoolIndex);
@@ -494,7 +489,6 @@ int GenesisBlockInit::GenerateRootSingleBlock(
     }
 
     fclose(root_gens_init_block_file);
-    std::cout << "create root genesis blocks success." << std::endl;
     return kInitSuccess;
 }
 
@@ -556,7 +550,6 @@ int GenesisBlockInit::GenerateShardSingleBlock() {
     }
 
     ReloadBlsPri();
-    std::cout << "create shard genesis blocks success." << std::endl;
     return kInitSuccess;
 }
 
