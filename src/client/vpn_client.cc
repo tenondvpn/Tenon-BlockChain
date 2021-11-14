@@ -1108,9 +1108,63 @@ std::string VpnClient::Transaction(const std::string& to, uint64_t amount, std::
             type,
             msg);
     network::Route::Instance()->Send(msg);
-    tx_gid = common::Encode::HexEncode(tx_gid);
     CLIENT_ERROR("transaction gid: %s, from: %s, to: %s, amount: %llu",
-        tx_gid.c_str(),
+        common::Encode::HexEncode(tx_gid).c_str(),
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+        common::Encode::HexEncode(to_addr).c_str(),
+        amount);
+    return "OK";
+}
+
+std::string VpnClient::Transaction(
+        const std::string& to,
+        uint64_t amount,
+        uint64_t gas_limit,
+        uint32_t tx_type,
+        const std::map<std::string, std::string>& attrs,
+        std::string& tx_gid) {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
+        CLIENT_ERROR("Transaction error, consensus shard network id invalid.");
+        return "ERROR";
+    }
+
+    transport::protobuf::Header msg;
+    uint64_t rand_num = 0;
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+            network::kUniversalNetworkId);
+    if (uni_dht == nullptr) {
+        CLIENT_ERROR("Transaction end error");
+        return "ERROR";
+    }
+
+    if (tx_gid.size() == 32 * 2) {
+        tx_gid = common::Encode::HexDecode(tx_gid);
+    } else {
+        if (!to.empty()) {
+            tx_gid = common::CreateGID(common::GlobalInfo::Instance()->id());
+        } else {
+            tx_gid = common::GlobalInfo::Instance()->id();
+        }
+    }
+
+    std::string to_addr;
+    if (!to.empty()) {
+        to_addr = common::Encode::HexDecode(to);
+    }
+
+    ClientProto::CreateTxRequest(
+            uni_dht->local_node(),
+            tx_gid,
+            to_addr,
+            amount,
+            gas_limit,
+            rand_num,
+            tx_type,
+            attrs,
+            msg);
+    network::Route::Instance()->Send(msg);
+    CLIENT_ERROR("transaction gid: %s, from: %s, to: %s, amount: %llu",
+        common::Encode::HexEncode(tx_gid).c_str(),
         common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
         common::Encode::HexEncode(to_addr).c_str(),
         amount);
@@ -1162,6 +1216,7 @@ void VpnClient::GetTxBlocksFromBftNetwork() {
     attr_req->set_index(tx_index_);
     attr_req->set_net_id(common::GlobalInfo::Instance()->consensus_shard_net_id());
     attr_req->set_count(64);
+    std::cout << "init::UpdateVpnInit::Instance()->GetMaxHeight(): " << init::UpdateVpnInit::Instance()->GetMaxHeight() << std::endl;
     attr_req->set_height(init::UpdateVpnInit::Instance()->GetMaxHeight());
     message.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(message);
@@ -1476,6 +1531,32 @@ void VpnClient::GetConsensusShard() {
     }
 
     get_consensus_shard_tick_->CutOff(3000000l, std::bind(&VpnClient::GetConsensusShard, this));
+}
+
+int VpnClient::CreateContract(
+        const std::string& bytes_code,
+        uint64_t amount,
+        uint64_t gas_limit,
+        std::string* contract_address) {
+    uint64_t all_gas = 0;
+    all_gas += bft::kTransferGas + bft::kCallContractDefaultUseGas;
+    std::map<std::string, std::string> attrs;
+    attrs.insert(std::make_pair(bft::kContractBytesCode, bytes_code));
+    all_gas += (bft::kContractBytesCode.size() + bytes_code.size()) * bft::kKeyValueStorageEachBytes;
+    all_gas += gas_limit;
+    std::string gid = common::CreateGID("");
+    *contract_address = security::Secp256k1::Instance()->GetContractAddress(
+        common::GlobalInfo::Instance()->id(),
+        gid,
+        bytes_code);
+    Transaction(
+        *contract_address,
+        amount,
+        all_gas,
+        common::kConsensusCreateContract,
+        attrs,
+        gid);
+    return kClientSuccess;
 }
 
 }  // namespace client

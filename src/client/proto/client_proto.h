@@ -11,6 +11,7 @@
 #include "services/proto/service.pb.h"
 #include "block/proto/block.pb.h"
 #include "bft/proto/bft.pb.h"
+#include "bft/bft_utils.h"
 #include "client/client_utils.h"
 
 namespace tenon {
@@ -54,18 +55,13 @@ public:
             const std::string& gid,
             const std::string& to,
             uint64_t amount,
+            uint64_t gas_limit,
             uint64_t rand_num,
             uint32_t type,
+            const std::map<std::string, std::string>& attrs,
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
-        std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-                security::Schnorr::Instance()->str_pubkey_uncompress());
-        uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
-        if (des_net_id >= network::kConsensusShardEndNetworkId) {
-            des_net_id = 0;
-        }
-
-        dht::DhtKeyManager dht_key(des_net_id, 0);
+        dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->consensus_shard_net_id(), 0);
         msg.set_des_dht_key(dht_key.StrKey());
         msg.set_priority(transport::kTransportPriorityLowest);
         msg.set_id(common::GlobalInfo::Instance()->MessageId());
@@ -79,20 +75,25 @@ public:
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
         bft_msg.set_leader(false);
-        bft_msg.set_net_id(des_net_id);
+        bft_msg.set_net_id(common::GlobalInfo::Instance()->consensus_shard_net_id());
         bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
-        new_tx->set_from(account_address);
+        new_tx->set_from(common::GlobalInfo::Instance()->id());
         new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
         new_tx->set_to(to);
         new_tx->set_amount(amount);
         new_tx->set_type(type);
+        new_tx->set_gas_limit(gas_limit);
+        for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
+            auto attr = new_tx->add_attr();
+            attr->set_key(iter->first);
+            attr->set_value(iter->second);
+        }
         auto data = tx_bft.SerializeAsString();
         bft_msg.set_data(data);
-        auto hash128 = common::Hash::Hash128(data);
-        
+        auto hash128 = bft::GetTxMessageHash(*new_tx);// common::Hash::Hash128(data);
         security::Signature sign;
         auto& prikey = *security::Schnorr::Instance()->prikey();
         auto& pubkey = *security::Schnorr::Instance()->pubkey();

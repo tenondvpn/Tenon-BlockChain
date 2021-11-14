@@ -1385,11 +1385,13 @@ int BftManager::BackupCommit(
 }
 
 void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader) {
+    std::cout << "broadcast LocalNodeIsSuperLeader 0" << std::endl;
     // broadcast to this consensus shard and waiting pool shard
     if (!is_bft_leader && !elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
         return;
     }
 
+    std::cout << "broadcast LocalNodeIsSuperLeader 1" << std::endl;
     const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);
@@ -1442,6 +1444,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
         return;
     }
 
+    std::cout << "broadcast LocalNodeIsSuperLeader 2" << std::endl;
     std::set<uint32_t> broadcast_nets;
     auto tx_list = block_ptr->tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
@@ -1451,6 +1454,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             continue;
         }
 
+        std::cout << "tx_list[i].type(): " << tx_list[i].type() << ", tx_list[i].status(): " << tx_list[i].status() << std::endl;
         // contract must unlock caller
         if (tx_list[i].status() != kBftSuccess &&
                 (tx_list[i].type() != common::kConsensusCreateContract &&
@@ -1468,6 +1472,9 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
                 account_ptr->GetConsensuseNetId(&network_id);
             }
 
+            if (tx_list[i].amount() > 0) {
+                std::cout << "broadcast tranaction to to network: " << network_id << std::endl;
+            }
             broadcast_nets.insert(network_id);
         }
 
@@ -1496,6 +1503,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
         }
     }
 
+    std::cout << "broadcast LocalNodeIsSuperLeader 3: " << broadcast_nets.size() << std::endl;
     for (auto iter = broadcast_nets.begin(); iter != broadcast_nets.end(); ++iter) {
         transport::protobuf::Header msg;
         BftProto::CreateLeaderBroadcastToAccount(

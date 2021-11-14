@@ -837,6 +837,7 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
                             max_height_ == common::kInvalidUint64) {
                         max_height_ = init_blocks.account_init_res().block_list(i).height();
                         init_balance_ = init_blocks.account_init_res().balance();
+                        std::cout << "get init balance: " << init_balance_ << std::endl;
                     }
 
                     if (tx_info.type() == common::kConsensusPayForCommonVpn &&

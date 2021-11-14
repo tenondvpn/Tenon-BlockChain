@@ -158,6 +158,13 @@ public:
             bool is_vip,
             std::vector<VpnServerNodePtr>& nodes);
     std::string Transaction(const std::string& to, uint64_t amount, std::string& tx_gid);
+    std::string Transaction(
+        const std::string& to,
+        uint64_t amount,
+        uint64_t gas_limit,
+        uint32_t tx_type,
+        const std::map<std::string, std::string>& attrs,
+        std::string& tx_gid);
     bft::protobuf::BlockPtr GetBlockWithGid(const std::string& gid);
     bft::protobuf::BlockPtr GetBlockWithHash(const std::string& block_hash);
     int GetSocket();
@@ -195,6 +202,7 @@ public:
     std::string VpnConnected();
     void AdReward(const std::string& gid);
     void UpdateCountryCode(const std::string& country);
+    int CreateContract(const std::string& bytes_code, uint64_t amount, uint64_t gas_limit, std::string* contract_address);
 
 private:
     VpnClient();
