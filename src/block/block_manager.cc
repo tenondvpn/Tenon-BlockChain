@@ -514,13 +514,8 @@ void BlockManager::HandleGetAccountInitRequest(
             msg);
     DHT_ERROR("get account block_list size: %u, from: %s:%d",
         account_init_res->block_list_size(), header.from_ip().c_str(), header.from_port());
-    if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    } else {
-        transport::MultiThreadHandler::Instance()->transport()->Send(
-                header.from_ip(), header.from_port(), 0, msg);
-    }
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        header.from_ip(), header.from_port(), 0, msg);
 }
 
 void BlockManager::HandleGetHeightRequest(

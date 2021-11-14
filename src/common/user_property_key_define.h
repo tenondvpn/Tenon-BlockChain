@@ -92,7 +92,7 @@ static const uint64_t kTenonMiniTransportUnit = 100000000llu;
 static const uint64_t kTenonMaxAmount = 210llu * 100000000llu * kTenonMiniTransportUnit;
 static const uint32_t kTransactionNoVersion = 0u;
 static const uint32_t kTransactionVersion = 1u;
-static const uint64_t kGenesisFoundationMaxTenon = common::kTenonMaxAmount * 35llu / 100llu;
+static const uint64_t kGenesisFoundationMaxTenon = kTenonMaxAmount / 100llu * 35llu;
 
 static const uint64_t kVpnVipMinPayfor = 66llu * kTenonMiniTransportUnit;
 static const uint64_t kVpnVipMaxPayfor = 2000u * kTenonMiniTransportUnit;

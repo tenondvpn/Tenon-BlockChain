@@ -203,38 +203,10 @@ void MultiThreadHandler::HandleRemoteMessage(
     if (message_ptr->client()) {
         std::cout << "client message coming. 0, type: " << message_ptr->type() << ", version: " << message_ptr->version() << std::endl;
     }
-// #ifndef LEGO_TRACE_MESSAGE
-//     message_ptr->clear_debug();
-// #endif
 
-    if (!common::GlobalInfo::Instance()->is_client() && message_ptr->client()) {
-        if (!message_ptr->has_version()) {
-            message_ptr->clear_debug();
-#ifdef ENABLE_CLIENT_MODE
-            if (message_ptr->type() == common::kBlockMessage) {
-                block::protobuf::BlockMessage block_msg;
-                if (!block_msg.ParseFromString(message_ptr->data())) {
-                    return;
-                }
-
-                if (!block_msg.has_up_vpn_req()) {
-                    return;
-                }
-            } else if (message_ptr->type() == common::kDhtMessage) {
-                dht::protobuf::DhtMessage dht_msg;
-                if (!dht_msg.ParseFromString(message_ptr->data())) {
-                    return;
-                }
-
-                if (!dht_msg.has_bootstrap_req()) {
-                    return;
-                }
-            } else {
-                return;
-            }
+#ifndef LEGO_TRACE_MESSAGE
+    message_ptr->clear_debug();
 #endif
-        }
-    }
 
 #ifdef ENABLE_CLIENT_MODE
     if (message_ptr->des_dht_key().size() != dht::kDhtKeySize) {
@@ -357,9 +329,9 @@ int MultiThreadHandler::HandleClientMessage(
                 message_ptr->set_des_dht_key(client_node->client_dht_key);
                 auto& msg = *message_ptr;
                 if (client_node->transport_type == transport::kTcp) {
+                    std::cout << "send message to client: " << client_node->ip << ":" << client_node->port << std::endl;
                     tcp_transport_->Send(client_node->ip, client_node->port, 0, msg);
-                }
-                else {
+                } else {
                     transport_->Send(client_node->ip, client_node->port, 0, msg);
                 }
 
