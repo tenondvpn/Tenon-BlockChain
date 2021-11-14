@@ -16,10 +16,13 @@ namespace tenon {
 namespace init {
 
 struct TxinfoItem {
+    TxinfoItem(const bft::protobuf::TxInfo& tx, uint64_t tm, uint64_t h)
+        : tx_info(tx), timestamp(tm), height(h) {}
     bft::protobuf::TxInfo tx_info;
     uint64_t timestamp;
     uint64_t height;
 };
+
 typedef std::shared_ptr<TxinfoItem> TxInfoPtr;
 
 }; // namespace init

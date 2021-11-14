@@ -368,16 +368,6 @@ void UpdateVpnInit::GetInitMessage(
     if (!block_init_res.empty()) {
         block::protobuf::BlockMessage block_msg;
         if (!block_msg.ParseFromString(block_init_res)) {
-            auto account_init_res = block_msg.mutable_account_init_res();
-            if (trans_version < transport::kTransportVersionNum) {
-                account_init_res->set_balance(account_init_res->balance());
-            }
-
-            for (int32_t i = 0; i < account_init_res->tx_list_size(); ++i) {
-                auto tx_item = account_init_res->mutable_tx_list(i);
-                tx_item->set_amount(account_init_res->tx_list(i).amount());
-            }
-
             block_init_res = block_msg.SerializeAsString();
         }
 
