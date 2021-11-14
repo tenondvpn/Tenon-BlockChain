@@ -26,6 +26,11 @@ typedef std::shared_ptr<TxinfoItem> TxInfoPtr;
 
 namespace common {
 
+template<>
+inline uint64_t MinHeapUniqueVal(const init::TxInfoPtr& val) {
+    return common::Hash::Hash64(val->tx_info.gid());
+}
+
 inline bool operator<(init::TxInfoPtr& lhs, init::TxInfoPtr& rhs) {
     return lhs->height < rhs->height;
 }
