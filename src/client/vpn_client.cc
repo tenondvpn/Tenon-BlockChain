@@ -478,51 +478,51 @@ std::string VpnClient::Transactions(uint32_t begin, uint32_t len) {
     auto& ad_accounts = common::GlobalInfo::Instance()->watch_ad_reward_accounts();
     auto& mining_accounts = common::GlobalInfo::Instance()->vpn_minning_accounts();
     while (!blocks_heap.empty()) {
-        auto tx_info = blocks_heap.top();
-        auto timestamp = common::MicTimestampToLiteDatetime(tx_info->timestamp());
+        auto& tx_info = blocks_heap.top()->tx_info;
+        auto timestamp = common::MicTimestampToLiteDatetime(tx_info.timestamp());
         std::string tx_item;
-        if (tx_info->from() == common::GlobalInfo::Instance()->id()) {
+        if (tx_info.from() == common::GlobalInfo::Instance()->id()) {
             std::string type("2");
-            if (tx_info->type() == common::kConsensusPayForCommonVpn) {
+            if (tx_info.type() == common::kConsensusPayForCommonVpn) {
                 type = "1";  // pay for vpn
             }
 
             tx_item = (timestamp + "," +
                     type + "," +
-                    "-" + std::to_string(tx_info->amount()) + "," +
-                    std::to_string(tx_info->balance()) + "," +
-                    common::Encode::HexEncode(tx_info->gid()) + "," +
-                    std::to_string(tx_info->type()) + "," +
-                    std::to_string(tx_info->status()));
+                    "-" + std::to_string(tx_info.amount()) + "," +
+                    std::to_string(tx_info.balance()) + "," +
+                    common::Encode::HexEncode(tx_info.gid()) + "," +
+                    std::to_string(tx_info.type()) + "," +
+                    std::to_string(tx_info.status()));
         } else {
             std::string type("4");  // transfer in
-            auto iter = accounts_map.find(tx_info->from());
+            auto iter = accounts_map.find(tx_info.from());
             if (iter != accounts_map.end()) {
                 type = "3";  // charge to account
             }
 
-            auto share_iter = share_accounts.find(tx_info->from());
+            auto share_iter = share_accounts.find(tx_info.from());
             if (share_iter != share_accounts.end()) {
                 type = "5";  // share reward
             }
 
-            auto ad_iter = ad_accounts.find(tx_info->from());
+            auto ad_iter = ad_accounts.find(tx_info.from());
             if (ad_iter != ad_accounts.end()) {
                 type = "6";  // watch ad reward
             }
 
-            auto minning_iter = mining_accounts.find(tx_info->from());
+            auto minning_iter = mining_accounts.find(tx_info.from());
             if (minning_iter != mining_accounts.end()) {
                 type = "7";  // minning reward
             }
 
             tx_item = (timestamp + "," +
                     type + "," +
-                    std::to_string(tx_info->amount()) + "," +
-                    std::to_string(tx_info->balance()) + "," +
-                    common::Encode::HexEncode(tx_info->gid()) + "," +
-                    std::to_string(tx_info->type()) + "," +
-                    std::to_string(tx_info->status()));
+                    std::to_string(tx_info.amount()) + "," +
+                    std::to_string(tx_info.balance()) + "," +
+                    common::Encode::HexEncode(tx_info.gid()) + "," +
+                    std::to_string(tx_info.type()) + "," +
+                    std::to_string(tx_info.status()));
         }
 
         all_tx_vec.push_back(tx_item);
