@@ -396,8 +396,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TxInfo, call_contract_step_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TxInfo, storages_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TxInfo, transfers_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TxInfo, timestamp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TxInfo, height_),
   6,
   0,
   1,
@@ -418,8 +416,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   16,
   ~0u,
   ~0u,
-  17,
-  18,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::Block, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::Block, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -579,17 +575,17 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 0, 7, sizeof(::tenon::bft::protobuf::AccountAttributes)},
   { 9, 17, sizeof(::tenon::bft::protobuf::StorageItem)},
   { 20, 28, sizeof(::tenon::bft::protobuf::TransferItem)},
-  { 31, 58, sizeof(::tenon::bft::protobuf::TxInfo)},
-  { 80, 100, sizeof(::tenon::bft::protobuf::Block)},
-  { 115, 122, sizeof(::tenon::bft::protobuf::TxPrepareItem)},
-  { 124, 131, sizeof(::tenon::bft::protobuf::LeaderTxPrepare)},
-  { 133, 139, sizeof(::tenon::bft::protobuf::BackupTxPrepare)},
-  { 140, 146, sizeof(::tenon::bft::protobuf::LeaderTxPreCommit)},
-  { 147, 153, sizeof(::tenon::bft::protobuf::BackupTxPreCommit)},
-  { 154, 160, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
-  { 161, 167, sizeof(::tenon::bft::protobuf::ToAccountTx)},
-  { 168, 180, sizeof(::tenon::bft::protobuf::TxBft)},
-  { 187, 213, sizeof(::tenon::bft::protobuf::BftMessage)},
+  { 31, 56, sizeof(::tenon::bft::protobuf::TxInfo)},
+  { 76, 96, sizeof(::tenon::bft::protobuf::Block)},
+  { 111, 118, sizeof(::tenon::bft::protobuf::TxPrepareItem)},
+  { 120, 127, sizeof(::tenon::bft::protobuf::LeaderTxPrepare)},
+  { 129, 135, sizeof(::tenon::bft::protobuf::BackupTxPrepare)},
+  { 136, 142, sizeof(::tenon::bft::protobuf::LeaderTxPreCommit)},
+  { 143, 149, sizeof(::tenon::bft::protobuf::BackupTxPreCommit)},
+  { 150, 156, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
+  { 157, 163, sizeof(::tenon::bft::protobuf::ToAccountTx)},
+  { 164, 176, sizeof(::tenon::bft::protobuf::TxBft)},
+  { 183, 209, sizeof(::tenon::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -635,7 +631,7 @@ void AddDescriptorsImpl() {
       "alue\030\002 \001(\014\"5\n\013StorageItem\022\n\n\002id\030\001 \001(\014\022\013\n"
       "\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(\014\"8\n\014TransferIte"
       "m\022\014\n\004from\030\001 \001(\014\022\n\n\002to\030\002 \001(\014\022\016\n\006amount\030\003 "
-      "\001(\004\"\360\003\n\006TxInfo\022\017\n\007version\030\001 \001(\r\022\013\n\003gid\030\002"
+      "\001(\004\"\315\003\n\006TxInfo\022\017\n\007version\030\001 \001(\r\022\013\n\003gid\030\002"
       " \001(\014\022\014\n\004from\030\003 \001(\014\022\023\n\013from_pubkey\030\004 \001(\014\022"
       "\021\n\tfrom_sign\030\005 \001(\014\022\n\n\002to\030\006 \001(\014\022\016\n\006amount"
       "\030\007 \001(\004\022\021\n\tgas_limit\030\010 \001(\004\022\020\n\010gas_used\030\t "
@@ -646,49 +642,48 @@ void AddDescriptorsImpl() {
       "etwork_id\030\021 \001(\r\022\032\n\022call_contract_step\030\022 "
       "\001(\r\0221\n\010storages\030\023 \003(\0132\037.tenon.bft.protob"
       "uf.StorageItem\0223\n\ttransfers\030\024 \003(\0132 .teno"
-      "n.bft.protobuf.TransferItem\022\021\n\ttimestamp"
-      "\030\025 \001(\004\022\016\n\006height\030\026 \001(\004\"\327\002\n\005Block\022\022\n\nnetw"
-      "ork_id\030\001 \001(\r\022\022\n\npool_index\030\002 \001(\r\022\017\n\007preh"
-      "ash\030\003 \001(\014\022\014\n\004hash\030\004 \001(\014\022\017\n\007version\030\005 \001(\r"
-      "\022\016\n\006height\030\006 \001(\004\022\032\n\022consistency_random\030\007"
-      " \001(\004\022\031\n\021electblock_height\030\010 \001(\r\022\016\n\006bitma"
-      "p\030\t \003(\004\022+\n\007tx_list\030\n \003(\0132\032.tenon.bft.pro"
-      "tobuf.TxInfo\022\021\n\ttimestamp\030\013 \001(\004\022\030\n\020timeb"
-      "lock_height\030\014 \001(\004\022\026\n\016bls_agg_sign_x\030\r \001("
-      "\014\022\026\n\016bls_agg_sign_y\030\016 \001(\014\022\025\n\rcommit_bitm"
-      "ap\030\017 \003(\004\".\n\rTxPrepareItem\022\020\n\010acc_addr\030\001 "
-      "\001(\014\022\013\n\003gid\030\002 \001(\014\"k\n\017LeaderTxPrepare\022.\n\003t"
-      "xs\030\001 \003(\0132!.tenon.bft.protobuf.TxPrepareI"
-      "tem\022(\n\005block\030\002 \001(\0132\031.tenon.bft.protobuf."
-      "Block\"!\n\017BackupTxPrepare\022\016\n\006status\030\001 \001(\005"
-      "\"#\n\021LeaderTxPreCommit\022\016\n\006status\030\001 \001(\005\"#\n"
-      "\021BackupTxPreCommit\022\016\n\006status\030\001 \001(\005\" \n\016Le"
-      "aderTxCommit\022\016\n\006status\030\001 \001(\005\"7\n\013ToAccoun"
-      "tTx\022(\n\005block\030\001 \001(\0132\031.tenon.bft.protobuf."
-      "Block\"\213\003\n\005TxBft\022*\n\006new_tx\030\001 \001(\0132\032.tenon."
-      "bft.protobuf.TxInfo\022.\n\005to_tx\030\002 \001(\0132\037.ten"
-      "on.bft.protobuf.ToAccountTx\0228\n\013ltx_prepa"
-      "re\030\003 \001(\0132#.tenon.bft.protobuf.LeaderTxPr"
-      "epare\0228\n\013btx_prepare\030\004 \001(\0132#.tenon.bft.p"
-      "rotobuf.BackupTxPrepare\022<\n\rltx_precommit"
-      "\030\005 \001(\0132%.tenon.bft.protobuf.LeaderTxPreC"
-      "ommit\022<\n\rbtx_precommit\030\006 \001(\0132%.tenon.bft"
-      ".protobuf.BackupTxPreCommit\0226\n\nltx_commi"
-      "t\030\007 \001(\0132\".tenon.bft.protobuf.LeaderTxCom"
-      "mit\"\230\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\020\n\010bft_s"
-      "tep\030\002 \001(\005\022\016\n\006leader\030\003 \001(\010\022\016\n\006net_id\030\004 \001("
-      "\r\022\026\n\016sign_challenge\030\005 \001(\014\022\025\n\rsign_respon"
-      "se\030\006 \001(\014\022\016\n\006bitmap\030\007 \003(\004\022\r\n\005agree\030\010 \001(\010\022"
-      "\022\n\npool_index\030\t \001(\r\022\014\n\004data\030\n \001(\014\022\024\n\014pre"
-      "pare_hash\030\013 \001(\014\022\017\n\007node_ip\030\014 \001(\014\022\021\n\tnode"
-      "_port\030\r \001(\r\022\r\n\005epoch\030\016 \001(\r\022\024\n\014member_ind"
-      "ex\030\017 \001(\r\022\016\n\006pubkey\030\020 \001(\014\022\027\n\017backup_enc_d"
-      "ata\030\021 \001(\014\022\024\n\014elect_height\030\022 \001(\004\022\022\n\nbls_s"
-      "ign_x\030\023 \001(\014\022\022\n\nbls_sign_y\030\024 \001(\014\022\025\n\rcommi"
-      "t_bitmap\030\025 \003(\004"
+      "n.bft.protobuf.TransferItem\"\327\002\n\005Block\022\022\n"
+      "\nnetwork_id\030\001 \001(\r\022\022\n\npool_index\030\002 \001(\r\022\017\n"
+      "\007prehash\030\003 \001(\014\022\014\n\004hash\030\004 \001(\014\022\017\n\007version\030"
+      "\005 \001(\r\022\016\n\006height\030\006 \001(\004\022\032\n\022consistency_ran"
+      "dom\030\007 \001(\004\022\031\n\021electblock_height\030\010 \001(\r\022\016\n\006"
+      "bitmap\030\t \003(\004\022+\n\007tx_list\030\n \003(\0132\032.tenon.bf"
+      "t.protobuf.TxInfo\022\021\n\ttimestamp\030\013 \001(\004\022\030\n\020"
+      "timeblock_height\030\014 \001(\004\022\026\n\016bls_agg_sign_x"
+      "\030\r \001(\014\022\026\n\016bls_agg_sign_y\030\016 \001(\014\022\025\n\rcommit"
+      "_bitmap\030\017 \003(\004\".\n\rTxPrepareItem\022\020\n\010acc_ad"
+      "dr\030\001 \001(\014\022\013\n\003gid\030\002 \001(\014\"k\n\017LeaderTxPrepare"
+      "\022.\n\003txs\030\001 \003(\0132!.tenon.bft.protobuf.TxPre"
+      "pareItem\022(\n\005block\030\002 \001(\0132\031.tenon.bft.prot"
+      "obuf.Block\"!\n\017BackupTxPrepare\022\016\n\006status\030"
+      "\001 \001(\005\"#\n\021LeaderTxPreCommit\022\016\n\006status\030\001 \001"
+      "(\005\"#\n\021BackupTxPreCommit\022\016\n\006status\030\001 \001(\005\""
+      " \n\016LeaderTxCommit\022\016\n\006status\030\001 \001(\005\"7\n\013ToA"
+      "ccountTx\022(\n\005block\030\001 \001(\0132\031.tenon.bft.prot"
+      "obuf.Block\"\213\003\n\005TxBft\022*\n\006new_tx\030\001 \001(\0132\032.t"
+      "enon.bft.protobuf.TxInfo\022.\n\005to_tx\030\002 \001(\0132"
+      "\037.tenon.bft.protobuf.ToAccountTx\0228\n\013ltx_"
+      "prepare\030\003 \001(\0132#.tenon.bft.protobuf.Leade"
+      "rTxPrepare\0228\n\013btx_prepare\030\004 \001(\0132#.tenon."
+      "bft.protobuf.BackupTxPrepare\022<\n\rltx_prec"
+      "ommit\030\005 \001(\0132%.tenon.bft.protobuf.LeaderT"
+      "xPreCommit\022<\n\rbtx_precommit\030\006 \001(\0132%.teno"
+      "n.bft.protobuf.BackupTxPreCommit\0226\n\nltx_"
+      "commit\030\007 \001(\0132\".tenon.bft.protobuf.Leader"
+      "TxCommit\"\230\003\n\nBftMessage\022\013\n\003gid\030\001 \001(\014\022\020\n\010"
+      "bft_step\030\002 \001(\005\022\016\n\006leader\030\003 \001(\010\022\016\n\006net_id"
+      "\030\004 \001(\r\022\026\n\016sign_challenge\030\005 \001(\014\022\025\n\rsign_r"
+      "esponse\030\006 \001(\014\022\016\n\006bitmap\030\007 \003(\004\022\r\n\005agree\030\010"
+      " \001(\010\022\022\n\npool_index\030\t \001(\r\022\014\n\004data\030\n \001(\014\022\024"
+      "\n\014prepare_hash\030\013 \001(\014\022\017\n\007node_ip\030\014 \001(\014\022\021\n"
+      "\tnode_port\030\r \001(\r\022\r\n\005epoch\030\016 \001(\r\022\024\n\014membe"
+      "r_index\030\017 \001(\r\022\016\n\006pubkey\030\020 \001(\014\022\027\n\017backup_"
+      "enc_data\030\021 \001(\014\022\024\n\014elect_height\030\022 \001(\004\022\022\n\n"
+      "bls_sign_x\030\023 \001(\014\022\022\n\nbls_sign_y\030\024 \001(\014\022\025\n\r"
+      "commit_bitmap\030\025 \003(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2214);
+      descriptor, 2179);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft/proto/bft.proto", &protobuf_RegisterTypes);
 }
@@ -1700,8 +1695,6 @@ const int TxInfo::kNetworkIdFieldNumber;
 const int TxInfo::kCallContractStepFieldNumber;
 const int TxInfo::kStoragesFieldNumber;
 const int TxInfo::kTransfersFieldNumber;
-const int TxInfo::kTimestampFieldNumber;
-const int TxInfo::kHeightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TxInfo::TxInfo()
@@ -1744,8 +1737,8 @@ TxInfo::TxInfo(const TxInfo& from)
     tx_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tx_hash_);
   }
   ::memcpy(&version_, &from.version_,
-    static_cast<size_t>(reinterpret_cast<char*>(&height_) -
-    reinterpret_cast<char*>(&version_)) + sizeof(height_));
+    static_cast<size_t>(reinterpret_cast<char*>(&call_contract_step_) -
+    reinterpret_cast<char*>(&version_)) + sizeof(call_contract_step_));
   // @@protoc_insertion_point(copy_constructor:tenon.bft.protobuf.TxInfo)
 }
 
@@ -1757,8 +1750,8 @@ void TxInfo::SharedCtor() {
   to_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   tx_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&version_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&height_) -
-      reinterpret_cast<char*>(&version_)) + sizeof(height_));
+      reinterpret_cast<char*>(&call_contract_step_) -
+      reinterpret_cast<char*>(&version_)) + sizeof(call_contract_step_));
 }
 
 TxInfo::~TxInfo() {
@@ -1829,11 +1822,7 @@ void TxInfo::Clear() {
         reinterpret_cast<char*>(&network_id_) -
         reinterpret_cast<char*>(&amount_)) + sizeof(network_id_));
   }
-  if (cached_has_bits & 458752u) {
-    ::memset(&call_contract_step_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&height_) -
-        reinterpret_cast<char*>(&call_contract_step_)) + sizeof(height_));
-  }
+  call_contract_step_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -2110,34 +2099,6 @@ bool TxInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 timestamp = 21;
-      case 21: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(168u /* 168 & 0xFF */)) {
-          set_has_timestamp();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &timestamp_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional uint64 height = 22;
-      case 22: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(176u /* 176 & 0xFF */)) {
-          set_has_height();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &height_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2283,16 +2244,6 @@ void TxInfo::SerializeWithCachedSizes(
       output);
   }
 
-  // optional uint64 timestamp = 21;
-  if (cached_has_bits & 0x00020000u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(21, this->timestamp(), output);
-  }
-
-  // optional uint64 height = 22;
-  if (cached_has_bits & 0x00040000u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(22, this->height(), output);
-  }
-
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -2427,16 +2378,6 @@ void TxInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         20, this->transfers(static_cast<int>(i)), deterministic, target);
-  }
-
-  // optional uint64 timestamp = 21;
-  if (cached_has_bits & 0x00020000u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(21, this->timestamp(), target);
-  }
-
-  // optional uint64 height = 22;
-  if (cached_has_bits & 0x00040000u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(22, this->height(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2603,29 +2544,13 @@ size_t TxInfo::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[16 / 32] & 458752u) {
-    // optional uint32 call_contract_step = 18;
-    if (has_call_contract_step()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->call_contract_step());
-    }
-
-    // optional uint64 timestamp = 21;
-    if (has_timestamp()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->timestamp());
-    }
-
-    // optional uint64 height = 22;
-    if (has_height()) {
-      total_size += 2 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->height());
-    }
-
+  // optional uint32 call_contract_step = 18;
+  if (has_call_contract_step()) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->call_contract_step());
   }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -2717,17 +2642,8 @@ void TxInfo::MergeFrom(const TxInfo& from) {
     }
     _has_bits_[0] |= cached_has_bits;
   }
-  if (cached_has_bits & 458752u) {
-    if (cached_has_bits & 0x00010000u) {
-      call_contract_step_ = from.call_contract_step_;
-    }
-    if (cached_has_bits & 0x00020000u) {
-      timestamp_ = from.timestamp_;
-    }
-    if (cached_has_bits & 0x00040000u) {
-      height_ = from.height_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  if (cached_has_bits & 0x00010000u) {
+    set_call_contract_step(from.call_contract_step());
   }
 }
 
@@ -2781,8 +2697,6 @@ void TxInfo::InternalSwap(TxInfo* other) {
   swap(status_, other->status_);
   swap(network_id_, other->network_id_);
   swap(call_contract_step_, other->call_contract_step_);
-  swap(timestamp_, other->timestamp_);
-  swap(height_, other->height_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }

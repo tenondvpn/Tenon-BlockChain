@@ -862,20 +862,6 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 call_contract_step() const;
   void set_call_contract_step(::google::protobuf::uint32 value);
 
-  // optional uint64 timestamp = 21;
-  bool has_timestamp() const;
-  void clear_timestamp();
-  static const int kTimestampFieldNumber = 21;
-  ::google::protobuf::uint64 timestamp() const;
-  void set_timestamp(::google::protobuf::uint64 value);
-
-  // optional uint64 height = 22;
-  bool has_height() const;
-  void clear_height();
-  static const int kHeightFieldNumber = 22;
-  ::google::protobuf::uint64 height() const;
-  void set_height(::google::protobuf::uint64 value);
-
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.TxInfo)
  private:
   void set_has_version();
@@ -912,10 +898,6 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_network_id();
   void set_has_call_contract_step();
   void clear_has_call_contract_step();
-  void set_has_timestamp();
-  void clear_has_timestamp();
-  void set_has_height();
-  void clear_has_height();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -940,8 +922,6 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 status_;
   ::google::protobuf::uint32 network_id_;
   ::google::protobuf::uint32 call_contract_step_;
-  ::google::protobuf::uint64 timestamp_;
-  ::google::protobuf::uint64 height_;
   friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -3952,54 +3932,6 @@ inline const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Trans
 TxInfo::transfers() const {
   // @@protoc_insertion_point(field_list:tenon.bft.protobuf.TxInfo.transfers)
   return transfers_;
-}
-
-// optional uint64 timestamp = 21;
-inline bool TxInfo::has_timestamp() const {
-  return (_has_bits_[0] & 0x00020000u) != 0;
-}
-inline void TxInfo::set_has_timestamp() {
-  _has_bits_[0] |= 0x00020000u;
-}
-inline void TxInfo::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00020000u;
-}
-inline void TxInfo::clear_timestamp() {
-  timestamp_ = GOOGLE_ULONGLONG(0);
-  clear_has_timestamp();
-}
-inline ::google::protobuf::uint64 TxInfo::timestamp() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TxInfo.timestamp)
-  return timestamp_;
-}
-inline void TxInfo::set_timestamp(::google::protobuf::uint64 value) {
-  set_has_timestamp();
-  timestamp_ = value;
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TxInfo.timestamp)
-}
-
-// optional uint64 height = 22;
-inline bool TxInfo::has_height() const {
-  return (_has_bits_[0] & 0x00040000u) != 0;
-}
-inline void TxInfo::set_has_height() {
-  _has_bits_[0] |= 0x00040000u;
-}
-inline void TxInfo::clear_has_height() {
-  _has_bits_[0] &= ~0x00040000u;
-}
-inline void TxInfo::clear_height() {
-  height_ = GOOGLE_ULONGLONG(0);
-  clear_has_height();
-}
-inline ::google::protobuf::uint64 TxInfo::height() const {
-  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TxInfo.height)
-  return height_;
-}
-inline void TxInfo::set_height(::google::protobuf::uint64 value) {
-  set_has_height();
-  height_ = value;
-  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TxInfo.height)
 }
 
 // -------------------------------------------------------------------

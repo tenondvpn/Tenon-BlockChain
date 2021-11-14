@@ -1738,17 +1738,17 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
 
   // accessors -------------------------------------------------------
 
-  // repeated .tenon.bft.protobuf.TxInfo tx_list = 2;
-  int tx_list_size() const;
-  void clear_tx_list();
-  static const int kTxListFieldNumber = 2;
-  ::tenon::bft::protobuf::TxInfo* mutable_tx_list(int index);
-  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >*
-      mutable_tx_list();
-  const ::tenon::bft::protobuf::TxInfo& tx_list(int index) const;
-  ::tenon::bft::protobuf::TxInfo* add_tx_list();
-  const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >&
-      tx_list() const;
+  // repeated .tenon.bft.protobuf.Block block_list = 2;
+  int block_list_size() const;
+  void clear_block_list();
+  static const int kBlockListFieldNumber = 2;
+  ::tenon::bft::protobuf::Block* mutable_block_list(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block >*
+      mutable_block_list();
+  const ::tenon::bft::protobuf::Block& block_list(int index) const;
+  ::tenon::bft::protobuf::Block* add_block_list();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block >&
+      block_list() const;
 
   // optional bytes id = 3;
   bool has_id() const;
@@ -1782,7 +1782,7 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo > tx_list_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block > block_list_;
   ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::uint64 balance_;
   friend struct ::protobuf_block_2fproto_2fblock_2eproto::TableStruct;
@@ -4750,31 +4750,31 @@ inline void GetAccountInitInfoResponse::set_balance(::google::protobuf::uint64 v
   // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoResponse.balance)
 }
 
-// repeated .tenon.bft.protobuf.TxInfo tx_list = 2;
-inline int GetAccountInitInfoResponse::tx_list_size() const {
-  return tx_list_.size();
+// repeated .tenon.bft.protobuf.Block block_list = 2;
+inline int GetAccountInitInfoResponse::block_list_size() const {
+  return block_list_.size();
 }
-inline ::tenon::bft::protobuf::TxInfo* GetAccountInitInfoResponse::mutable_tx_list(int index) {
-  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
-  return tx_list_.Mutable(index);
+inline ::tenon::bft::protobuf::Block* GetAccountInitInfoResponse::mutable_block_list(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.block.protobuf.GetAccountInitInfoResponse.block_list)
+  return block_list_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >*
-GetAccountInitInfoResponse::mutable_tx_list() {
-  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
-  return &tx_list_;
+inline ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block >*
+GetAccountInitInfoResponse::mutable_block_list() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.GetAccountInitInfoResponse.block_list)
+  return &block_list_;
 }
-inline const ::tenon::bft::protobuf::TxInfo& GetAccountInitInfoResponse::tx_list(int index) const {
-  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
-  return tx_list_.Get(index);
+inline const ::tenon::bft::protobuf::Block& GetAccountInitInfoResponse::block_list(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.block_list)
+  return block_list_.Get(index);
 }
-inline ::tenon::bft::protobuf::TxInfo* GetAccountInitInfoResponse::add_tx_list() {
-  // @@protoc_insertion_point(field_add:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
-  return tx_list_.Add();
+inline ::tenon::bft::protobuf::Block* GetAccountInitInfoResponse::add_block_list() {
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.GetAccountInitInfoResponse.block_list)
+  return block_list_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxInfo >&
-GetAccountInitInfoResponse::tx_list() const {
-  // @@protoc_insertion_point(field_list:tenon.block.protobuf.GetAccountInitInfoResponse.tx_list)
-  return tx_list_;
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block >&
+GetAccountInitInfoResponse::block_list() const {
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.GetAccountInitInfoResponse.block_list)
+  return block_list_;
 }
 
 // optional bytes id = 3;
