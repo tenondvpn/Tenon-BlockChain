@@ -830,41 +830,37 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
                 init_balance_ = init_blocks.account_init_res().balance();
             }
 
-            for (int32_t i = 0; i < init_blocks.account_init_res().tx_list_size(); ++i) {
-                if (init_blocks.account_init_res().tx_list(i).type() == common::kConsensusPayForCommonVpn &&
-                        init_blocks.account_init_res().tx_list(i).status() != 0) {
-                    continue;
-                }
+            for (int32_t i = 0; i < init_blocks.account_init_res().block_list_size(); ++i) {
+                for (int32_t tx_idx = 0; tx_idx < init_blocks.account_init_res().block_list(i).tx_list_size(); ++tx_idx) {
+                    auto& tx_info = init_blocks.account_init_res().block_list(i).tx_list(tx_idx);
+                    if (tx_info.from() != common::GlobalInfo::Instance()->id() &&
+                            tx_info.to() != common::GlobalInfo::Instance()->id()) {
+                        continue;
+                    }
 
-//                 common::BlockItem block_item;
-//                 block_item.height = init_blocks.account_init_res().tx_list(i).height();
-                if (init_blocks.account_init_res().tx_list(i).height() >= max_height_ ||
+                    if (tx_info.type() == common::kConsensusPayForCommonVpn &&
+                        tx_info.status() != 0) {
+                        continue;
+                    }
+
+                    if (tx_info.height() >= max_height_ ||
                         max_height_ == common::kInvalidUint64) {
-                    max_height_ = init_blocks.account_init_res().tx_list(i).height();
-                    init_balance_ = init_blocks.account_init_res().balance();
-                }
+                        max_height_ = tx_info.height();
+                        init_balance_ = init_blocks.account_init_res().balance();
+                    }
 
-                if (init_blocks.account_init_res().tx_list(i).type() == common::kConsensusPayForCommonVpn &&
-                        init_blocks.account_init_res().tx_list(i).height() >= max_pay_for_vpn_height_) {
-                    max_pay_for_vpn_tm_ = init_blocks.account_init_res().tx_list(i).timestamp();
-                    max_pay_for_vpn_amount_ = init_blocks.account_init_res().tx_list(i).amount();
-                    max_pay_for_vpn_height_ = init_blocks.account_init_res().tx_list(i).height();
+                    if (tx_info.type() == common::kConsensusPayForCommonVpn &&
+                        tx_info.height() >= max_pay_for_vpn_height_) {
+                        max_pay_for_vpn_tm_ = tx_info.timestamp();
+                        max_pay_for_vpn_amount_ = tx_info.amount();
+                        max_pay_for_vpn_height_ = tx_info.height();
+                    }
+                    std::cout << "get block item: " << common::Encode::HexEncode(tx_info.from()) << ", " << common::Encode::HexEncode(tx_info.to())
+                        << ", " << tx_info.balance() << ", " << tx_info.amount() << std::endl;
+                    auto tx_info_ptr = std::make_shared<bft::protobuf::TxInfo>(tx_info);
+                    std::lock_guard<std::mutex> guard(init_blocks_mutex_);
+                    init_blocks_.push(tx_info_ptr);
                 }
-// 
-//                 block_item.from = init_blocks.account_init_res().tx_list(i).from();
-//                 block_item.to = init_blocks.account_init_res().tx_list(i).to();
-//                 block_item.gid = init_blocks.account_init_res().tx_list(i).gid();
-//                 block_item.timestamp = init_blocks.account_init_res().tx_list(i).timestamp();
-//                 block_item.balance = init_blocks.account_init_res().tx_list(i).balance();
-//                 block_item.amount = init_blocks.account_init_res().tx_list(i).amount();
-//                 block_item.type = init_blocks.account_init_res().tx_list(i).type();
-//                 block_item.status = init_blocks.account_init_res().tx_list(i).status();
-//                 block_item.version = init_blocks.account_init_res().tx_list(i).version();
-                std::cout << "get block item: " << common::Encode::HexEncode(init_blocks.account_init_res().tx_list(i).from()) << ", " << common::Encode::HexEncode(init_blocks.account_init_res().tx_list(i).to())
-                    << ", " << init_blocks.account_init_res().tx_list(i).balance() << ", " << init_blocks.account_init_res().tx_list(i).amount() << std::endl;
-                auto tx_info_ptr = std::make_shared<bft::protobuf::TxInfo>(init_blocks.account_init_res().tx_list(i));
-                std::lock_guard<std::mutex> guard(init_blocks_mutex_);
-                init_blocks_.push(tx_info_ptr);
             }
         }
     }

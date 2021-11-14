@@ -490,17 +490,16 @@ void BlockManager::HandleGetAccountInitRequest(
         for (int32_t tx_idx = 0; tx_idx < block_item.tx_list_size(); ++tx_idx) {
             if (block_item.tx_list(tx_idx).from() == block_msg.account_init_req().id() ||
                     block_item.tx_list(tx_idx).to() == block_msg.account_init_req().id()) {
-                auto tx_info = account_init_res->add_tx_list();
-                *tx_info = block_item.tx_list(i);
-                tx_info->set_timestamp(block_item.timestamp());
-                tx_info->set_height(block_item.height());
+                auto res_block = account_init_res->add_block_list();
+                *res_block = block_item;
+                break;
             }
         }
     }
 
-    DHT_ERROR("get account tx list size: %u", account_init_res->tx_list_size());
-    if (account_init_res->tx_list_size() <= 0) {
-        BLOCK_DEBUG("get account init request get tx_list_size error");
+    DHT_ERROR("get account tx list size: %u", account_init_res->block_list_size());
+    if (account_init_res->block_list_size() <= 0) {
+        BLOCK_DEBUG("get account init request get block_list_size error");
         return;
     }
 
@@ -513,8 +512,8 @@ void BlockManager::HandleGetAccountInitRequest(
             header,
             block_res.SerializeAsString(),
             msg);
-    DHT_ERROR("get account tx list size: %u, from: %s:%d",
-        account_init_res->tx_list_size(), header.from_ip().c_str(), header.from_port());
+    DHT_ERROR("get account block_list size: %u, from: %s:%d",
+        account_init_res->block_list_size(), header.from_ip().c_str(), header.from_port());
     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                 header.from_ip(), header.from_port(), 0, msg);

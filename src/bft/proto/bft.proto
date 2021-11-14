@@ -40,8 +40,6 @@ message TxInfo {
     optional uint32 call_contract_step = 18;
     repeated StorageItem storages = 19;
     repeated TransferItem transfers = 20;
-	optional uint64 timestamp = 21;
-	optional uint64 height = 22;
 }
 
 message Block {
