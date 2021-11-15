@@ -1099,13 +1099,16 @@ std::string VpnClient::Transaction(const std::string& to, uint64_t amount, std::
         type = common::kConsensusCreateAcount;
     }
 
+    std::map<std::string, std::string> attrs;
     ClientProto::CreateTxRequest(
             uni_dht->local_node(),
             tx_gid,
             to_addr,
             amount,
+            10000000,
             rand_num,
             type,
+            attrs,
             msg);
     network::Route::Instance()->Send(msg);
     CLIENT_ERROR("transaction gid: %s, from: %s, to: %s, amount: %llu",
@@ -1556,7 +1559,6 @@ int VpnClient::CreateContract(
         common::kConsensusCreateContract,
         attrs,
         gid);
-    return kClientSuccess;
 }
 
 }  // namespace client

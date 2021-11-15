@@ -30,7 +30,7 @@
 #include "statistics/statistics.h"
 // #include "services/vpn_server/server.h"
 // #include "services/vpn_server/vpn_server.h"
-
+#undef _WIN32
 #ifndef _WIN32
 #include "security/private_key.h"
 #include "security/public_key.h"
@@ -161,6 +161,26 @@ void Command::AddBaseCommands() {
     });
     AddCommand("b", [this](const std::vector<std::string>& args) {
         std::cout << common::GlobalInfo::Instance()->consensus_shard_net_id() << ", balance: " << client::VpnClient::Instance()->GetBalance() << std::endl;
+    });
+    AddCommand("cc", [this](const std::vector<std::string>& args) {
+        if (args.size() <= 0) {
+            return;
+        }
+
+        std::string bytes_code = common::Encode::HexDecode(args[0]);
+        uint64_t amount = 0;
+        if (args.size() > 1) {
+            common::StringUtil::ToUint64(args[1], &amount);
+        }
+
+        uint64_t gas_limit = 10000000;
+        if (args.size() > 2) {
+            common::StringUtil::ToUint64(args[2], &gas_limit);
+        }
+
+        std::string contract_address;
+        client::VpnClient::Instance()->CreateContract(bytes_code, amount, gas_limit, &contract_address);
+        std::cout << "contract_address: " << common::Encode::HexEncode(contract_address) << std::endl;
     });
     AddCommand("rc", [this](const std::vector<std::string>& args) {
         CheckAllNodePortValid();
