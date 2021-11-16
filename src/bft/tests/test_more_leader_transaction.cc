@@ -3533,7 +3533,7 @@ TEST_F(TestMoreLeaderTransaction, TestCallContractBallotSuccess) {
         ASSERT_FALSE(caller_info->locked());
     }
 
-    // call set voter
+    // call set delegaters
     for (int32_t i = 0; i < 2; ++i) {
         transport::protobuf::Header broadcast_msg;
         std::string from_prikey = common::Encode::HexDecode(

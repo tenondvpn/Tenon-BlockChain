@@ -56,6 +56,11 @@ private:
     int LoadAllNodesAndCheckPort();
     int CheckAllNodePortValid();
     int PrivateKeyToPublicKey(const std::string& file);
+    // test ContractBallot
+    std::string CreateContractBallot();
+    void ChairmanSetVoters(const std::string& contract_addr);
+    void VoterSetDelegate(const std::string& contract_addr, const std::string& dest);
+    void Vote(const std::string& contract_addr);
 
     static const uint32_t kTransportTestPeriod = 1000 * 1000;
     std::map<std::string, CommandFunction> cmd_map_;

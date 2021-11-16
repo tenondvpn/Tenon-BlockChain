@@ -165,6 +165,13 @@ public:
         uint32_t tx_type,
         const std::map<std::string, std::string>& attrs,
         std::string& tx_gid);
+    std::string TransactionEx(
+        const std::string& to,
+        uint64_t amount,
+        uint64_t gas_limit,
+        uint32_t tx_type,
+        const std::map<std::string, std::string>& attrs,
+        std::string& tx_gid);
     bft::protobuf::BlockPtr GetBlockWithGid(const std::string& gid);
     bft::protobuf::BlockPtr GetBlockWithHash(const std::string& block_hash);
     int GetSocket();

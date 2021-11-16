@@ -1174,6 +1174,50 @@ std::string VpnClient::Transaction(
     return "OK";
 }
 
+std::string VpnClient::TransactionEx(
+        const std::string& to,
+        uint64_t amount,
+        uint64_t gas_limit,
+        uint32_t tx_type,
+        const std::map<std::string, std::string>& attrs,
+        std::string& tx_gid) {
+    if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
+        CLIENT_ERROR("Transaction error, consensus shard network id invalid.");
+        return "ERROR";
+    }
+
+    transport::protobuf::Header msg;
+    uint64_t rand_num = 0;
+    auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
+            network::kUniversalNetworkId);
+    if (uni_dht == nullptr) {
+        CLIENT_ERROR("Transaction end error");
+        return "ERROR";
+    }
+
+    if (tx_gid.empty()) {
+        tx_gid = common::CreateGID("");
+    }
+
+    ClientProto::CreateTxRequest(
+            uni_dht->local_node(),
+            tx_gid,
+            to,
+            amount,
+            gas_limit,
+            rand_num,
+            tx_type,
+            attrs,
+            msg);
+    network::Route::Instance()->Send(msg);
+    CLIENT_ERROR("transaction gid: %s, from: %s, to: %s, amount: %llu",
+        common::Encode::HexEncode(tx_gid).c_str(),
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+        common::Encode::HexEncode(to).c_str(),
+        amount);
+    return "OK";
+}
+
 void VpnClient::CheckTxExists() {
     if (common::GlobalInfo::Instance()->consensus_shard_net_id() == common::kInvalidUint32) {
         return;
