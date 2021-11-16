@@ -20,7 +20,7 @@ namespace bignum {
 
 namespace test {
 
-class TestSnark : public testing::Test {
+class TestContractManager : public testing::Test {
 public:
     static void WriteDefaultLogConf(
         const std::string& log_conf_path,
@@ -68,7 +68,7 @@ public:
     }
 };
 
-TEST_F(TestSnark, modexpFermatTheorem) {
+TEST_F(TestContractManager, modexpFermatTheorem) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -98,7 +98,7 @@ TEST_F(TestSnark, modexpFermatTheorem) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpZeroBase) {
+TEST_F(TestContractManager, modexpZeroBase) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -127,7 +127,7 @@ TEST_F(TestSnark, modexpZeroBase) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpExtraByteIgnored) {
+TEST_F(TestContractManager, modexpExtraByteIgnored) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -158,7 +158,7 @@ TEST_F(TestSnark, modexpExtraByteIgnored) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpRightPadding) {
+TEST_F(TestContractManager, modexpRightPadding) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -189,7 +189,7 @@ TEST_F(TestSnark, modexpRightPadding) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpMissingValues) {
+TEST_F(TestContractManager, modexpMissingValues) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -217,7 +217,7 @@ TEST_F(TestSnark, modexpMissingValues) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpEmptyValue) {
+TEST_F(TestContractManager, modexpEmptyValue) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -246,7 +246,7 @@ TEST_F(TestSnark, modexpEmptyValue) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpZeroPowerZero) {
+TEST_F(TestContractManager, modexpZeroPowerZero) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -276,7 +276,7 @@ TEST_F(TestSnark, modexpZeroPowerZero) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpZeroPowerZeroModZero) {
+TEST_F(TestContractManager, modexpZeroPowerZeroModZero) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -306,7 +306,7 @@ TEST_F(TestSnark, modexpZeroPowerZeroModZero) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexpModLengthZero) {
+TEST_F(TestContractManager, modexpModLengthZero) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -336,7 +336,7 @@ TEST_F(TestSnark, modexpModLengthZero) {
 }
 
 // call gas price test
-TEST_F(TestSnark, modexpCostFermatTheorem) {
+TEST_F(TestContractManager, modexpCostFermatTheorem) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -356,7 +356,7 @@ TEST_F(TestSnark, modexpCostFermatTheorem) {
     ASSERT_EQ(gas_used, 13056);
 }
 
-TEST_F(TestSnark, modexpCostTooLarge) {
+TEST_F(TestContractManager, modexpCostTooLarge) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -375,7 +375,7 @@ TEST_F(TestSnark, modexpCostTooLarge) {
     ASSERT_EQ(gas_used, 922337203685477120);
 }
 
-TEST_F(TestSnark, modexpCostEmptyExponent) {
+TEST_F(TestContractManager, modexpCostEmptyExponent) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -396,7 +396,7 @@ TEST_F(TestSnark, modexpCostEmptyExponent) {
     ASSERT_EQ(gas_used, 12);
 }
 
-TEST_F(TestSnark, modexpCostZeroExponent) {
+TEST_F(TestContractManager, modexpCostZeroExponent) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -416,7 +416,7 @@ TEST_F(TestSnark, modexpCostZeroExponent) {
     ASSERT_EQ(gas_used, 5);
 }
 
-TEST_F(TestSnark, modexpCostApproximated) {
+TEST_F(TestContractManager, modexpCostApproximated) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -436,7 +436,7 @@ TEST_F(TestSnark, modexpCostApproximated) {
     ASSERT_EQ(gas_used, 1315);
 }
 
-TEST_F(TestSnark, modexpCostApproximatedPartialByte) {
+TEST_F(TestContractManager, modexpCostApproximatedPartialByte) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -456,7 +456,7 @@ TEST_F(TestSnark, modexpCostApproximatedPartialByte) {
     ASSERT_EQ(gas_used, 1285);
 }
 
-TEST_F(TestSnark, modexpCostApproximatedGhost) {
+TEST_F(TestContractManager, modexpCostApproximatedGhost) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -476,7 +476,7 @@ TEST_F(TestSnark, modexpCostApproximatedGhost) {
     ASSERT_EQ(gas_used, 40);
 }
 
-TEST_F(TestSnark, modexpCostMidRange) {
+TEST_F(TestContractManager, modexpCostMidRange) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -496,7 +496,7 @@ TEST_F(TestSnark, modexpCostMidRange) {
     ASSERT_EQ(gas_used, ((74 * 74 / 4 + 96 * 74 - 3072) * 8) / 20);
 }
 
-TEST_F(TestSnark, modexpCostHighRange) {
+TEST_F(TestContractManager, modexpCostHighRange) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -516,7 +516,7 @@ TEST_F(TestSnark, modexpCostHighRange) {
     ASSERT_EQ(gas_used, ((1025 * 1025 / 16 + 480 * 1025 - 199680) * 8) / 20);
 }
 
-TEST_F(TestSnark, ecrecover) {
+TEST_F(TestContractManager, ecrecover) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -541,7 +541,7 @@ TEST_F(TestSnark, ecrecover) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, modexp) {
+TEST_F(TestContractManager, modexp) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -571,7 +571,7 @@ TEST_F(TestSnark, modexp) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, bn256Add) {
+TEST_F(TestContractManager, bn256Add) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -596,7 +596,7 @@ TEST_F(TestSnark, bn256Add) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, bn256ScalarMul) {
+TEST_F(TestContractManager, bn256ScalarMul) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -621,7 +621,7 @@ TEST_F(TestSnark, bn256ScalarMul) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, bn256Pairing) {
+TEST_F(TestContractManager, bn256Pairing) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -646,7 +646,7 @@ TEST_F(TestSnark, bn256Pairing) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, blake2compression) {
+TEST_F(TestContractManager, blake2compression) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;
@@ -677,7 +677,7 @@ TEST_F(TestSnark, blake2compression) {
     ASSERT_EQ(res, output);
 }
 
-TEST_F(TestSnark, blake2compressionFail) {
+TEST_F(TestContractManager, blake2compressionFail) {
     contract::CallParameters params;
     params.gas = 100000000;
     params.apparent_value = 0;

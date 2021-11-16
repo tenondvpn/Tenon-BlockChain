@@ -1673,13 +1673,19 @@ int TxBft::CheckTxInfo(
                 }
             }
 
-            if (security::Secp256k1::Instance()->GetContractAddress(
-                    local_tx_info->tx.from(),
-                    local_tx_info->tx.gid(),
-                    local_tx_info->attr_map[kContractBytesCode]) != local_tx_info->tx.to()) {
+            auto contract_addr = security::Secp256k1::Instance()->GetContractAddress(
+                local_tx_info->tx.from(),
+                local_tx_info->tx.gid(),
+                local_tx_info->attr_map[kContractBytesCode]);
+            if (contract_addr != local_tx_info->tx.to()) {
                 if (tx_info.status() != kBftCreateContractKeyError) {
-                    BFT_ERROR("local tx bft status[%d] not equal to leader status[%d]!",
-                        kBftCreateContractKeyError, tx_info.status());
+                    BFT_ERROR("local tx bft status[%d] not equal to leader status[%d]! from: %s, gid: %s, bytes_code: %s, cpaddr: %s, to: %s",
+                        kBftCreateContractKeyError, tx_info.status(),
+                        common::Encode::HexEncode(local_tx_info->tx.from()).c_str(),
+                        common::Encode::HexEncode(local_tx_info->tx.gid()).c_str(),
+                        common::Encode::HexEncode(local_tx_info->attr_map[kContractBytesCode]).c_str(),
+                        common::Encode::HexEncode(contract_addr).c_str(),
+                        common::Encode::HexEncode(local_tx_info->tx.to()).c_str());
                     return kBftLeaderTxInfoInvalid;
                 }
             }

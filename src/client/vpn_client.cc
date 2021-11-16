@@ -830,8 +830,8 @@ void VpnClient::WriteDefaultLogConf(
         return;
     }
     std::string log_str = ("# log4cpp.properties\n"
-        "log4cpp.rootCategory = WARN\n"
-        "log4cpp.category.sub1 = WARN, programLog\n"
+        "log4cpp.rootCategory = DEBUG\n"
+        "log4cpp.category.sub1 = DEBUG, programLog\n"
         "log4cpp.appender.rootAppender = ConsoleAppender\n"
         "log4cpp.appender.rootAppender.layout = PatternLayout\n"
         "log4cpp.appender.rootAppender.layout.ConversionPattern = %d [%p] %m%n\n"
@@ -1536,7 +1536,7 @@ void VpnClient::GetConsensusShard() {
     get_consensus_shard_tick_->CutOff(3000000l, std::bind(&VpnClient::GetConsensusShard, this));
 }
 
-int VpnClient::CreateContract(
+void VpnClient::CreateContract(
         const std::string& bytes_code,
         uint64_t amount,
         uint64_t gas_limit,
@@ -1552,8 +1552,14 @@ int VpnClient::CreateContract(
         common::GlobalInfo::Instance()->id(),
         gid,
         bytes_code);
+    gid = common::Encode::HexEncode(gid);
+    BFT_ERROR("CreateContract from: %s, gid: %s, bytes_code: %s, to: %s",
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+        gid.c_str(),
+        common::Encode::HexEncode(bytes_code).c_str(),
+        common::Encode::HexEncode(*contract_address).c_str());
     Transaction(
-        *contract_address,
+        common::Encode::HexEncode(*contract_address),
         amount,
         all_gas,
         common::kConsensusCreateContract,
