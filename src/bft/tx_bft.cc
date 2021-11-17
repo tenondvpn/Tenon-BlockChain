@@ -165,6 +165,11 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         LeaderCreateTxBlock(tx_vec, ltx_prepare);
     }
 
+    if (ltx_prepare.block().tx_list_size() <= 0) {
+        BFT_ERROR("all choosed tx invalid!");
+        return kBftNoNewTxs;
+    }
+
     members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
         common::GlobalInfo::Instance()->network_id());
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
@@ -2059,6 +2064,7 @@ void TxBft::LeaderCreateTxBlock(
                     acc_balance_map,
                     locked_account_map,
                     tx) != kBftSuccess) {
+                BFT_ERROR("leader call cotnract failed!");
                 continue;
             }
         } else if (tx.type() == common::kConsensusFinalStatistic) {
@@ -2094,6 +2100,10 @@ void TxBft::LeaderCreateTxBlock(
         push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();
         *add_tx = tx;
+    }
+
+    if (tx_list->empty()) {
+        return;
     }
 
     std::string pool_hash;
@@ -2668,6 +2678,8 @@ int TxBft::LeaderCallContractCalled(
 
     auto account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info->tx.from());
     if (!account_info->locked()) {
+        BFT_ERROR("account not locked for contrtact: %s",
+            common::Encode::HexEncode(tx_info->tx.to()).c_str());
         return kBftError;
     }
 
@@ -2675,7 +2687,9 @@ int TxBft::LeaderCallContractCalled(
     uint64_t caller_gas_used = 0;
     for (int32_t i = 0; i < tx_info->tx.storages_size(); ++i) {
         if (tx_info->tx.storages(i).key() == kContractCallerChangeAmount) {
-            if (!common::StringUtil::ToInt64(tx_info->tx.storages(i).value(), &caller_balance_add)) {
+            if (!common::StringUtil::ToInt64(
+                    tx_info->tx.storages(i).value(),
+                    &caller_balance_add)) {
                 return kBftError;
             }
 
