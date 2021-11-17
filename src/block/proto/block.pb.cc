@@ -596,9 +596,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountInitInfoResponse, balance_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountInitInfoResponse, block_list_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountInitInfoResponse, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::GetAccountInitInfoResponse, max_index_),
   1,
   ~0u,
   0,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::UpdateVpnActiveRequest, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::block::protobuf::UpdateVpnActiveRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -718,16 +720,16 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 83, 90, sizeof(::tenon::block::protobuf::VpnCountItem)},
   { 92, 98, sizeof(::tenon::block::protobuf::UpdateVpnCountResponse)},
   { 99, 109, sizeof(::tenon::block::protobuf::GetAccountInitInfoRequest)},
-  { 114, 122, sizeof(::tenon::block::protobuf::GetAccountInitInfoResponse)},
-  { 125, 132, sizeof(::tenon::block::protobuf::UpdateVpnActiveRequest)},
-  { 134, 142, sizeof(::tenon::block::protobuf::AdRewardRequest)},
-  { 145, 152, sizeof(::tenon::block::protobuf::ElectStatisticInfo)},
-  { 154, 162, sizeof(::tenon::block::protobuf::StatisticInfo)},
-  { 165, 171, sizeof(::tenon::block::protobuf::RefreshPoolHeightRequest)},
-  { 172, 178, sizeof(::tenon::block::protobuf::RefreshPoolHeightResponse)},
-  { 179, 185, sizeof(::tenon::block::protobuf::GetAccountShardRequest)},
-  { 186, 193, sizeof(::tenon::block::protobuf::GetAccountShardReponse)},
-  { 195, 216, sizeof(::tenon::block::protobuf::BlockMessage)},
+  { 114, 123, sizeof(::tenon::block::protobuf::GetAccountInitInfoResponse)},
+  { 127, 134, sizeof(::tenon::block::protobuf::UpdateVpnActiveRequest)},
+  { 136, 144, sizeof(::tenon::block::protobuf::AdRewardRequest)},
+  { 147, 154, sizeof(::tenon::block::protobuf::ElectStatisticInfo)},
+  { 156, 164, sizeof(::tenon::block::protobuf::StatisticInfo)},
+  { 167, 173, sizeof(::tenon::block::protobuf::RefreshPoolHeightRequest)},
+  { 174, 180, sizeof(::tenon::block::protobuf::RefreshPoolHeightResponse)},
+  { 181, 187, sizeof(::tenon::block::protobuf::GetAccountShardRequest)},
+  { 188, 195, sizeof(::tenon::block::protobuf::GetAccountShardReponse)},
+  { 197, 218, sizeof(::tenon::block::protobuf::BlockMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -795,53 +797,53 @@ void AddDescriptorsImpl() {
       "s\030\001 \003(\0132\".tenon.block.protobuf.VpnCountI"
       "tem\"e\n\031GetAccountInitInfoRequest\022\n\n\002id\030\001"
       " \001(\014\022\r\n\005count\030\002 \001(\r\022\016\n\006height\030\003 \001(\004\022\016\n\006n"
-      "et_id\030\004 \001(\004\022\r\n\005index\030\005 \001(\004\"h\n\032GetAccount"
+      "et_id\030\004 \001(\004\022\r\n\005index\030\005 \001(\004\"{\n\032GetAccount"
       "InitInfoResponse\022\017\n\007balance\030\001 \001(\004\022-\n\nblo"
       "ck_list\030\002 \003(\0132\031.tenon.bft.protobuf.Block"
-      "\022\n\n\002id\030\003 \001(\014\"0\n\026UpdateVpnActiveRequest\022\n"
-      "\n\002id\030\001 \001(\014\022\n\n\002ip\030\002 \001(\014\">\n\017AdRewardReques"
-      "t\022\n\n\002id\030\001 \001(\014\022\022\n\nreward_key\030\002 \001(\014\022\013\n\003gid"
-      "\030\003 \001(\014\"A\n\022ElectStatisticInfo\022\024\n\014elect_he"
-      "ight\030\001 \001(\004\022\025\n\rsucc_tx_count\030\002 \003(\r\"\202\001\n\rSt"
-      "atisticInfo\022\030\n\020timeblock_height\030\001 \001(\004\022\024\n"
-      "\014all_tx_count\030\002 \001(\r\022A\n\017elect_statistic\030\003"
-      " \003(\0132(.tenon.block.protobuf.ElectStatist"
-      "icInfo\"+\n\030RefreshPoolHeightRequest\022\017\n\007he"
-      "ights\030\001 \003(\004\",\n\031RefreshPoolHeightResponse"
-      "\022\017\n\007heights\030\001 \003(\004\"$\n\026GetAccountShardRequ"
-      "est\022\n\n\002id\030\001 \001(\014\"6\n\026GetAccountShardRepons"
-      "e\022\n\n\002id\030\001 \001(\014\022\020\n\010shard_id\030\002 \001(\r\"\304\010\n\014Bloc"
-      "kMessage\022:\n\tblock_req\030\001 \001(\0132\'.tenon.bloc"
-      "k.protobuf.GetTxBlockRequest\022;\n\tblock_re"
-      "s\030\002 \001(\0132(.tenon.block.protobuf.GetTxBloc"
-      "kResponse\022>\n\nheight_req\030\003 \001(\0132*.tenon.bl"
-      "ock.protobuf.AccountHeightRequest\022\?\n\nhei"
-      "ght_res\030\004 \001(\0132+.tenon.block.protobuf.Acc"
-      "ountHeightResponse\022>\n\014acc_attr_req\030\005 \001(\013"
-      "2(.tenon.block.protobuf.AccountAttrReque"
-      "st\022\?\n\014acc_attr_res\030\006 \001(\0132).tenon.block.p"
-      "rotobuf.AccountAttrResponse\022\?\n\nup_vpn_re"
-      "q\030\007 \001(\0132+.tenon.block.protobuf.UpdateVpn"
-      "CountRequest\022@\n\nup_vpn_res\030\010 \001(\0132,.tenon"
-      ".block.protobuf.UpdateVpnCountResponse\022I"
-      "\n\020account_init_req\030\t \001(\0132/.tenon.block.p"
-      "rotobuf.GetAccountInitInfoRequest\022J\n\020acc"
-      "ount_init_res\030\n \001(\01320.tenon.block.protob"
-      "uf.GetAccountInitInfoResponse\022D\n\016vpn_act"
-      "ive_req\030\013 \001(\0132,.tenon.block.protobuf.Upd"
-      "ateVpnActiveRequest\022<\n\rad_reward_req\030\014 \001"
-      "(\0132%.tenon.block.protobuf.AdRewardReques"
-      "t\022G\n\017ref_heights_req\030\r \001(\0132..tenon.block"
-      ".protobuf.RefreshPoolHeightRequest\022H\n\017re"
-      "f_heights_res\030\016 \001(\0132/.tenon.block.protob"
-      "uf.RefreshPoolHeightResponse\022C\n\racc_shar"
-      "d_req\030\017 \001(\0132,.tenon.block.protobuf.GetAc"
-      "countShardRequest\022C\n\racc_shard_res\030\020 \001(\013"
-      "2,.tenon.block.protobuf.GetAccountShardR"
-      "eponse"
+      "\022\n\n\002id\030\003 \001(\014\022\021\n\tmax_index\030\004 \001(\004\"0\n\026Updat"
+      "eVpnActiveRequest\022\n\n\002id\030\001 \001(\014\022\n\n\002ip\030\002 \001("
+      "\014\">\n\017AdRewardRequest\022\n\n\002id\030\001 \001(\014\022\022\n\nrewa"
+      "rd_key\030\002 \001(\014\022\013\n\003gid\030\003 \001(\014\"A\n\022ElectStatis"
+      "ticInfo\022\024\n\014elect_height\030\001 \001(\004\022\025\n\rsucc_tx"
+      "_count\030\002 \003(\r\"\202\001\n\rStatisticInfo\022\030\n\020timebl"
+      "ock_height\030\001 \001(\004\022\024\n\014all_tx_count\030\002 \001(\r\022A"
+      "\n\017elect_statistic\030\003 \003(\0132(.tenon.block.pr"
+      "otobuf.ElectStatisticInfo\"+\n\030RefreshPool"
+      "HeightRequest\022\017\n\007heights\030\001 \003(\004\",\n\031Refres"
+      "hPoolHeightResponse\022\017\n\007heights\030\001 \003(\004\"$\n\026"
+      "GetAccountShardRequest\022\n\n\002id\030\001 \001(\014\"6\n\026Ge"
+      "tAccountShardReponse\022\n\n\002id\030\001 \001(\014\022\020\n\010shar"
+      "d_id\030\002 \001(\r\"\304\010\n\014BlockMessage\022:\n\tblock_req"
+      "\030\001 \001(\0132\'.tenon.block.protobuf.GetTxBlock"
+      "Request\022;\n\tblock_res\030\002 \001(\0132(.tenon.block"
+      ".protobuf.GetTxBlockResponse\022>\n\nheight_r"
+      "eq\030\003 \001(\0132*.tenon.block.protobuf.AccountH"
+      "eightRequest\022\?\n\nheight_res\030\004 \001(\0132+.tenon"
+      ".block.protobuf.AccountHeightResponse\022>\n"
+      "\014acc_attr_req\030\005 \001(\0132(.tenon.block.protob"
+      "uf.AccountAttrRequest\022\?\n\014acc_attr_res\030\006 "
+      "\001(\0132).tenon.block.protobuf.AccountAttrRe"
+      "sponse\022\?\n\nup_vpn_req\030\007 \001(\0132+.tenon.block"
+      ".protobuf.UpdateVpnCountRequest\022@\n\nup_vp"
+      "n_res\030\010 \001(\0132,.tenon.block.protobuf.Updat"
+      "eVpnCountResponse\022I\n\020account_init_req\030\t "
+      "\001(\0132/.tenon.block.protobuf.GetAccountIni"
+      "tInfoRequest\022J\n\020account_init_res\030\n \001(\01320"
+      ".tenon.block.protobuf.GetAccountInitInfo"
+      "Response\022D\n\016vpn_active_req\030\013 \001(\0132,.tenon"
+      ".block.protobuf.UpdateVpnActiveRequest\022<"
+      "\n\rad_reward_req\030\014 \001(\0132%.tenon.block.prot"
+      "obuf.AdRewardRequest\022G\n\017ref_heights_req\030"
+      "\r \001(\0132..tenon.block.protobuf.RefreshPool"
+      "HeightRequest\022H\n\017ref_heights_res\030\016 \001(\0132/"
+      ".tenon.block.protobuf.RefreshPoolHeightR"
+      "esponse\022C\n\racc_shard_req\030\017 \001(\0132,.tenon.b"
+      "lock.protobuf.GetAccountShardRequest\022C\n\r"
+      "acc_shard_res\030\020 \001(\0132,.tenon.block.protob"
+      "uf.GetAccountShardReponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2566);
+      descriptor, 2585);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "block/proto/block.proto", &protobuf_RegisterTypes);
   ::protobuf_bft_2fproto_2fbft_2eproto::AddDescriptors();
@@ -4248,6 +4250,7 @@ void GetAccountInitInfoResponse::clear_block_list() {
 const int GetAccountInitInfoResponse::kBalanceFieldNumber;
 const int GetAccountInitInfoResponse::kBlockListFieldNumber;
 const int GetAccountInitInfoResponse::kIdFieldNumber;
+const int GetAccountInitInfoResponse::kMaxIndexFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 GetAccountInitInfoResponse::GetAccountInitInfoResponse()
@@ -4267,13 +4270,17 @@ GetAccountInitInfoResponse::GetAccountInitInfoResponse(const GetAccountInitInfoR
   if (from.has_id()) {
     id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
   }
-  balance_ = from.balance_;
+  ::memcpy(&balance_, &from.balance_,
+    static_cast<size_t>(reinterpret_cast<char*>(&max_index_) -
+    reinterpret_cast<char*>(&balance_)) + sizeof(max_index_));
   // @@protoc_insertion_point(copy_constructor:tenon.block.protobuf.GetAccountInitInfoResponse)
 }
 
 void GetAccountInitInfoResponse::SharedCtor() {
   id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  balance_ = GOOGLE_ULONGLONG(0);
+  ::memset(&balance_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&max_index_) -
+      reinterpret_cast<char*>(&balance_)) + sizeof(max_index_));
 }
 
 GetAccountInitInfoResponse::~GetAccountInitInfoResponse() {
@@ -4310,7 +4317,11 @@ void GetAccountInitInfoResponse::Clear() {
   if (cached_has_bits & 0x00000001u) {
     id_.ClearNonDefaultToEmptyNoArena();
   }
-  balance_ = GOOGLE_ULONGLONG(0);
+  if (cached_has_bits & 6u) {
+    ::memset(&balance_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&max_index_) -
+        reinterpret_cast<char*>(&balance_)) + sizeof(max_index_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -4357,6 +4368,20 @@ bool GetAccountInitInfoResponse::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 max_index = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          set_has_max_index();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &max_index_)));
         } else {
           goto handle_unusual;
         }
@@ -4410,6 +4435,11 @@ void GetAccountInitInfoResponse::SerializeWithCachedSizes(
       3, this->id(), output);
   }
 
+  // optional uint64 max_index = 4;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->max_index(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -4445,6 +4475,11 @@ void GetAccountInitInfoResponse::SerializeWithCachedSizes(
         3, this->id(), target);
   }
 
+  // optional uint64 max_index = 4;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->max_index(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -4473,7 +4508,7 @@ size_t GetAccountInitInfoResponse::ByteSizeLong() const {
     }
   }
 
-  if (_has_bits_[0 / 32] & 3u) {
+  if (_has_bits_[0 / 32] & 7u) {
     // optional bytes id = 3;
     if (has_id()) {
       total_size += 1 +
@@ -4486,6 +4521,13 @@ size_t GetAccountInitInfoResponse::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->balance());
+    }
+
+    // optional uint64 max_index = 4;
+    if (has_max_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->max_index());
     }
 
   }
@@ -4518,13 +4560,16 @@ void GetAccountInitInfoResponse::MergeFrom(const GetAccountInitInfoResponse& fro
 
   block_list_.MergeFrom(from.block_list_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_id();
       id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
     }
     if (cached_has_bits & 0x00000002u) {
       balance_ = from.balance_;
+    }
+    if (cached_has_bits & 0x00000004u) {
+      max_index_ = from.max_index_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -4558,6 +4603,7 @@ void GetAccountInitInfoResponse::InternalSwap(GetAccountInitInfoResponse* other)
   id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(balance_, other->balance_);
+  swap(max_index_, other->max_index_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }

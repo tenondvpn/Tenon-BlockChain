@@ -1772,12 +1772,21 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::uint64 balance() const;
   void set_balance(::google::protobuf::uint64 value);
 
+  // optional uint64 max_index = 4;
+  bool has_max_index() const;
+  void clear_max_index();
+  static const int kMaxIndexFieldNumber = 4;
+  ::google::protobuf::uint64 max_index() const;
+  void set_max_index(::google::protobuf::uint64 value);
+
   // @@protoc_insertion_point(class_scope:tenon.block.protobuf.GetAccountInitInfoResponse)
  private:
   void set_has_balance();
   void clear_has_balance();
   void set_has_id();
   void clear_has_id();
+  void set_has_max_index();
+  void clear_has_max_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1785,6 +1794,7 @@ class GetAccountInitInfoResponse : public ::google::protobuf::Message /* @@proto
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::Block > block_list_;
   ::google::protobuf::internal::ArenaStringPtr id_;
   ::google::protobuf::uint64 balance_;
+  ::google::protobuf::uint64 max_index_;
   friend struct ::protobuf_block_2fproto_2fblock_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -4841,6 +4851,30 @@ inline void GetAccountInitInfoResponse::set_allocated_id(::std::string* id) {
   }
   id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
   // @@protoc_insertion_point(field_set_allocated:tenon.block.protobuf.GetAccountInitInfoResponse.id)
+}
+
+// optional uint64 max_index = 4;
+inline bool GetAccountInitInfoResponse::has_max_index() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void GetAccountInitInfoResponse::set_has_max_index() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void GetAccountInitInfoResponse::clear_has_max_index() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void GetAccountInitInfoResponse::clear_max_index() {
+  max_index_ = GOOGLE_ULONGLONG(0);
+  clear_has_max_index();
+}
+inline ::google::protobuf::uint64 GetAccountInitInfoResponse::max_index() const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.GetAccountInitInfoResponse.max_index)
+  return max_index_;
+}
+inline void GetAccountInitInfoResponse::set_max_index(::google::protobuf::uint64 value) {
+  set_has_max_index();
+  max_index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.GetAccountInitInfoResponse.max_index)
 }
 
 // -------------------------------------------------------------------
