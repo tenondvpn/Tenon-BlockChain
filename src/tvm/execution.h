@@ -28,6 +28,7 @@ public:
     int InitEnvironment(tenon::tvm::TenonHost& tenon_host, evmc_message* msg);
 
 private:
+
     DISALLOW_COPY_AND_ASSIGN(Execution);
 };
 

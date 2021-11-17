@@ -57,6 +57,7 @@ struct TxItem {
     uint64_t time_valid{ 0 };
     uint32_t index{ common::kInvalidPoolIndex };
     std::string uni_gid;
+    bool valid{ false };
 
 };
 

@@ -926,7 +926,7 @@ void Command::ChairmanSetVoters(const std::string& contract_addr) {
     for (auto iter = voters.begin(); iter != voters.end(); ++iter) {
         std::map<std::string, std::string> attrs;
         attrs[bft::kContractInputCode] = common::Encode::HexDecode("9e7b8d61000000000000000000000000" + *iter);
-        uint64_t gas_usd = bft::kCallContractDefaultUseGas + + bft::kTransferGas + (
+        uint64_t gas_usd = 10000000l + bft::kCallContractDefaultUseGas + + bft::kTransferGas + (
             bft::kContractInputCode.size() +
             attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
         std::string gid;

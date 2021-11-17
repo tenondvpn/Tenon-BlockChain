@@ -151,11 +151,11 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         }
     }
 
-    for (uint32_t i = 0; i < tx_vec.size(); ++i) {
-        add_item_index_vec(tx_vec[i]->index);
-        push_bft_item_vec(tx_vec[i]->tx.gid());
-    }
-
+//     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
+//         add_item_index_vec(tx_vec[i]->index);
+//         push_bft_item_vec(tx_vec[i]->tx.gid());
+//     }
+// 
     set_pool_index(pool_index);
     bft::protobuf::TxBft tx_bft;
     auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
@@ -623,7 +623,7 @@ int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t*
             case contract::kCallStepContractCalled: {
                 int check_res = BackupCheckContractCalled(local_tx_info, tx_info, acc_balance_map);
                 if (check_res != kBftSuccess) {
-                    BFT_ERROR("BackupCheckContractCalled transaction failed![%d]", tmp_res);
+                    BFT_ERROR("BackupCheckContractCalled transaction failed![%d]", check_res);
                     return check_res;
                 }
 
@@ -1767,6 +1767,8 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
             tx.set_network_id(NewAccountGetNetworkId(tx.to()));
         }
 
+        add_item_index_vec(tx_vec[i]->index);
+        push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -1847,6 +1849,8 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
         return;
     }
 
+    add_item_index_vec(tx_vec[0]->index);
+    push_bft_item_vec(tx_vec[0]->tx.gid());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1939,6 +1943,8 @@ void TxBft::RootLeaderCreateFinalStatistic(
         return;
     }
 
+    add_item_index_vec(tx_vec[0]->index);
+    push_bft_item_vec(tx_vec[0]->tx.gid());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1990,6 +1996,8 @@ void TxBft::RootLeaderCreateTimerBlock(
         return;
     }
 
+    add_item_index_vec(tx_vec[0]->index);
+    push_bft_item_vec(tx_vec[0]->tx.gid());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -2042,8 +2050,10 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_version(common::kTransactionVersion);
         tx.set_gas_price(common::GlobalInfo::Instance()->gas_price());
         tx.set_status(kBftSuccess);
+        BFT_DEBUG("common::kConsensusCreateContract common::kConsensusCallContract call contract: %s, type: %d, bft step: %d",
+            common::Encode::HexEncode(tx.to()).c_str(), tx.type(), tx.call_contract_step());
         if (tx.type() == common::kConsensusCallContract ||
-            tx.type() == common::kConsensusCreateContract) {
+                tx.type() == common::kConsensusCreateContract) {
             if (LeaderAddCallContract(
                     tx_vec[i],
                     acc_balance_map,
@@ -2080,6 +2090,8 @@ void TxBft::LeaderCreateTxBlock(
             }
         }
 
+        add_item_index_vec(tx_vec[i]->index);
+        push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -2386,6 +2398,7 @@ int TxBft::LeaderCallContractExceute(
             }
         } else {
             if (tx_info->attr_map.find(kContractBytesCode) == tx_info->attr_map.end()) {
+                BFT_ERROR("kContractBytesCode find failed!");
                 tx.set_status(kBftCreateContractKeyError);
                 break;
             }
@@ -2394,6 +2407,7 @@ int TxBft::LeaderCallContractExceute(
                     tx_info->tx.from(),
                     tx_info->tx.gid(),
                     tx_info->attr_map[kContractBytesCode]) != tx_info->tx.to()) {
+                BFT_ERROR("contract address not eq!");
                 tx.set_status(kBftCreateContractKeyError);
                 break;
             }
@@ -2409,16 +2423,19 @@ int TxBft::LeaderCallContractExceute(
                 &res);
             gas_used += tx.gas_limit() - gas_used - res.gas_left;
             if (call_res != kBftSuccess) {
+                BFT_ERROR("CreateContractCallExcute error!");
                 tx.set_status(kBftCreateContractKeyError);
                 break;
             }
 
             if (res.status_code != EVMC_SUCCESS) {
+                BFT_ERROR("res.status_code != EVMC_SUCCESS!");
                 tx.set_status(kBftExecuteContractFailed);
                 break;
             }
 
             if (gas_used > tx_info->tx.gas_limit()) {
+                BFT_ERROR("gas_used > tx_info->tx.gas_limit()!");
                 tx.set_status(kBftUserSetGasLimitError);
                 break;
             }
@@ -2577,6 +2594,7 @@ int TxBft::CreateContractCallExcute(
         *tenon_host,
         out_res);
     if (exec_res != tvm::kTvmSuccess) {
+        BFT_ERROR("CreateContractCallExcute failed: %d", exec_res);
         return kBftError;
     }
 

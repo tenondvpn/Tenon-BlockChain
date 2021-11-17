@@ -37,15 +37,18 @@ int Execution::execute(
     evm = evmc::VM{ evmc_load_and_configure("./libevmone.so", &ec) };
     if (ec != EVMC_LOADER_SUCCESS) {
         const auto error = evmc_last_error_msg();
-        if (error != nullptr)
-            std::cerr << error << "\n";
-        else
-            std::cerr << "Loading error " << ec << "\n";
+        if (error != nullptr) {
+            TVM_ERROR("load libevmone.so error: %s", error);
+        } else {
+            TVM_ERROR("load libevmone.so error.");
+        }
+
         return static_cast<int>(ec);
     }
 
 
     if (evm.set_option("O", "0") != EVMC_SET_OPTION_SUCCESS) {
+        TVM_ERROR("evm.set_option error.");
         return kTvmError;
     }
 
@@ -74,7 +77,7 @@ int Execution::execute(
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
         create_msg.sender = msg.sender;
-        create_msg.destination = msg.destination;        create_msg.gas = create_gas;
+        create_msg.gas = create_gas;
         Uint64ToEvmcBytes32(create_msg.value, value);
         *out_res = evm.execute(
             host,
@@ -84,11 +87,8 @@ int Execution::execute(
             bytes_code.size());
         if (out_res->status_code != EVMC_SUCCESS) {
             const auto gas_used = create_msg.gas - out_res->gas_left;
-            std::cout << "\nResult:   " << out_res->status_code
-                << "\nGas used: " << gas_used 
-                << "\n gas limit: " << create_gas
-                << "\nbytes code: " << common::Encode::HexEncode(bytes_code)
-                << std::endl;
+            TVM_ERROR("out_res->status_code != EVMC_SUCCESS.nResult: %d, gas_used: %lu, gas limit: %lu",
+                out_res->status_code, gas_used, create_gas);
             return out_res->status_code;
         }
 
@@ -96,7 +96,7 @@ int Execution::execute(
         const auto gas_used = create_msg.gas - out_res->gas_left;
 //         TVM_DEBUG("gas_used: %lu", gas_used);
         if (call_mode == kJustCreate) {
-            return 0;
+            return kTvmSuccess;
         }
 
         auto& created_account = host.accounts_[msg.destination];
@@ -110,8 +110,8 @@ int Execution::execute(
 
     *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
-//     TVM_DEBUG("gas_used: %lu", gas_used);
-    return 0;
+    TVM_DEBUG("execute status: %d gas_used: %lu", out_res->status_code, gas_used);
+    return kTvmSuccess;
 }
 
 }  // namespace tvm
