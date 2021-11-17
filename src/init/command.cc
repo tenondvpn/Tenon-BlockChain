@@ -906,7 +906,7 @@ std::string Command::CreateContractBallot() {
     std::string contract_address;
     client::VpnClient::Instance()->CreateContract(bytes_code, amount, gas_limit, &contract_address);
     std::cout << "contract_address: " << common::Encode::HexEncode(contract_address) << std::endl;
-
+    return contract_address;
 }
 
 void Command::ChairmanSetVoters(const std::string& contract_addr) {
@@ -926,9 +926,17 @@ void Command::ChairmanSetVoters(const std::string& contract_addr) {
     for (auto iter = voters.begin(); iter != voters.end(); ++iter) {
         std::map<std::string, std::string> attrs;
         attrs[bft::kContractInputCode] = common::Encode::HexDecode("9e7b8d61000000000000000000000000" + *iter);
-        uint64_t gas_usd = (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
+        uint64_t gas_usd = bft::kCallContractDefaultUseGas + + bft::kTransferGas + (
+            bft::kContractInputCode.size() +
+            attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
         std::string gid;
-        client::VpnClient::Instance()->TransactionEx(contract_addr, 0, gas_usd, common::kConsensusCallContract, attrs, gid);
+        client::VpnClient::Instance()->TransactionEx(
+            contract_addr,
+            0,
+            gas_usd,
+            common::kConsensusCallContract,
+            attrs,
+            gid);
     }
 }
 

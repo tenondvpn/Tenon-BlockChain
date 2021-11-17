@@ -567,6 +567,7 @@ void BftManager::RootCommitAddNewAccount(
         }
 
         db::DbWriteBach db_batch;
+        BFT_DEBUG("AddNewAccount: %s", common::Encode::HexEncode(tx_list[i].to()).c_str());
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 block.height(),
@@ -1952,6 +1953,7 @@ void BftManager::HandleRootWaitingBlock(
         }
 
         db::DbWriteBach db_batch;
+        BFT_DEBUG("HandleRootWaitingBlock AddNewAccount: %s", common::Encode::HexEncode(tx_list[i].to()).c_str());
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 block.height(),

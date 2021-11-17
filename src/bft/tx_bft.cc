@@ -840,6 +840,7 @@ int TxBft::BackupCheckContractDefault(
         backup_status = tx_info.status();
     }
 
+    BFT_DEBUG("backup gid: %s balance: %lu", common::Encode::HexEncode(tx_info.gid()).c_str(), from_balance);
     if (tx_info.balance() != from_balance) {
         BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
         return kBftLeaderInfoInvalid;
@@ -868,6 +869,7 @@ int TxBft::BackupCheckContractDefault(
         return kBftLeaderInfoInvalid;
     }
     
+    acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     return kBftSuccess;
 }
 
@@ -2043,10 +2045,10 @@ void TxBft::LeaderCreateTxBlock(
         if (tx.type() == common::kConsensusCallContract ||
             tx.type() == common::kConsensusCreateContract) {
             if (LeaderAddCallContract(
-                tx_vec[i],
-                acc_balance_map,
-                locked_account_map,
-                tx) != kBftSuccess) {
+                    tx_vec[i],
+                    acc_balance_map,
+                    locked_account_map,
+                    tx) != kBftSuccess) {
                 continue;
             }
         } else if (tx.type() == common::kConsensusFinalStatistic) {
@@ -2283,6 +2285,7 @@ int TxBft::LeaderCallContractDefault(
         tx.set_status(kBftAccountBalanceError);
     }
     
+    BFT_DEBUG("gid: %s balance: %lu", common::Encode::HexEncode(tx_info->tx.gid()).c_str(), from_balance);
     acc_balance_map[tx_info->tx.from()] = from_balance;
     tx.set_balance(from_balance);
     tx.set_gas_used(gas_used);
@@ -2424,6 +2427,8 @@ int TxBft::LeaderCallContractExceute(
             bytes_code_attr->set_id(tx_info->tx.to());
             bytes_code_attr->set_key(kContractCreatedBytesCode);
             bytes_code_attr->set_value(tenon_host.create_bytes_code_);
+            BFT_DEBUG("create contract address: %s, set bytes code storages success.",
+                common::Encode::HexEncode(tx_info->tx.to()).c_str());
         }
     } while (0);
 
@@ -2596,7 +2601,8 @@ int TxBft::CallContract(
     }
 
     uint32_t address_type = block::kNormalAddress;
-    if (contract_info->GetAddressType(&address_type) != block::kBlockSuccess) {
+    if (contract_info->GetAddressType(&address_type) != block::kBlockSuccess  ||
+            address_type != block::kContractAddress) {
         BFT_ERROR("contract address not exists[%s]",
             common::Encode::HexEncode(tx_info->tx.to()).c_str());
         return kBftError;
@@ -2604,7 +2610,7 @@ int TxBft::CallContract(
 
     std::string bytes_code;
     if (contract_info->GetBytesCode(&bytes_code) != block::kBlockSuccess) {
-        BFT_ERROR("contract address not exists[%s]",
+        BFT_ERROR("contract bytes code not exists[%s]",
             common::Encode::HexEncode(tx_info->tx.to()).c_str());
         return kBftError;
     }

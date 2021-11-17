@@ -307,10 +307,12 @@ int DbAccountInfo::SetBytesCode(const std::string& bytes_code, db::DbWriteBach& 
         bytes_code_ = bytes_code;
     }
 
+    BLOCK_DEBUG("set bytes code addr: %s, bytescode: %s", common::Encode::HexEncode(account_id_).c_str(), common::Encode::HexEncode(bytes_code));
     return kBlockSuccess;
 }
 
 int DbAccountInfo::GetBytesCode(std::string* bytes_code) {
+    BLOCK_DEBUG("get bytes code addr: %s", common::Encode::HexEncode(account_id_).c_str());
     {
         std::lock_guard<std::mutex> guard(bytes_code_mutex_);
         if (!bytes_code_.empty()) {

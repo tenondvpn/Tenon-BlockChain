@@ -502,7 +502,7 @@ int AccountManager::AddNewAccount(
         }
 
         account_info->SetMaxHeightHash(tmp_now_height, create_hash, db_batch);
-        BLOCK_ERROR("DDDDDDDDDDDDDD NewHeight: %s, %lu", common::Encode::HexEncode(account_id).c_str(), tmp_now_height);
+        BLOCK_ERROR("DDDDDDDDDDDDDD NewHeight: %s, %lu, type: %d", common::Encode::HexEncode(account_id).c_str(), tmp_now_height, tx_info.type());
         account_info->NewHeight(tmp_now_height, db_batch);
         int res = account_info->SetBalance(0, db_batch);
 //         res += account_info->SetCreateAccountHeight(tmp_now_height, db_batch);
@@ -616,7 +616,8 @@ int AccountManager::UpdateAccountInfo(
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_DEBUG("add new account: %s, height: %lu", common::Encode::HexEncode(account_id).c_str(), block_item->height());
+    BLOCK_DEBUG("add new account: %s, height: %lu, type: %d",
+        common::Encode::HexEncode(account_id).c_str(), block_item->height(), tx_info.type());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
             tx_info.type() != common::kConsensusCreateContract) {

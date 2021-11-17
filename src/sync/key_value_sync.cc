@@ -92,6 +92,8 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
         prio_sync_queue_[priority].sync_queue.push(item);
     }
 
+    SYNC_DEBUG("add sync height network_id: %u, pool_idx: %u, height: %lu, priority: %u",
+        network_id, pool_idx, height, priority);
     return kSyncSuccess;
 }
 
