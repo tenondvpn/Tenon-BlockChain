@@ -189,15 +189,15 @@ void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
 // get from end to begin, count's heights, one time max: 1024
 void DbAccountInfo::GetHeights(uint64_t index, int32_t count, std::vector<uint64_t>* res) {
     if (index >= (uint64_t)tx_queue_.size()) {
-        index = tx_queue_.size() - 1;
+        return;
     }
 
-    static const int32_t kMaxCount = 1024;
+    static const int32_t kMaxCount = 64;
     if (count > kMaxCount) {
         count = kMaxCount;
     }
 
-    for (int64_t i = index; i >= 0 && count >= 0; --i, --count) {
+    for (uint64_t i = index; i < index + count; ++i) {
         std::string value;
         if (tx_queue_.get(i, &value)) {
             uint64_t height = 0;
@@ -205,6 +205,40 @@ void DbAccountInfo::GetHeights(uint64_t index, int32_t count, std::vector<uint64
                 res->push_back(height);
             }
         }
+    }
+}
+
+void DbAccountInfo::GetLatestHeights(
+        uint64_t min_height,
+        uint32_t count,
+        std::vector<uint64_t>* res) {
+    static const int32_t kMaxCount = 64;
+    if (count > kMaxCount) {
+        count = kMaxCount;
+    }
+
+    uint32_t got_count = 0;
+    for (int64_t i = tx_queue_.size() - 1; i >= 0; --i) {
+        if (got_count >= count) {
+            break;
+        }
+
+        std::string value;
+        if (!tx_queue_.get(i, &value)) {
+            break;
+        }
+
+        uint64_t height = 0;
+        if (!common::StringUtil::ToUint64(value, &height)) {
+            break;
+        }
+        
+        if (min_height != common::kInvalidUint64 && height <= min_height) {
+            break;
+        }
+
+        res->push_back(height);
+        ++got_count;
     }
 }
 

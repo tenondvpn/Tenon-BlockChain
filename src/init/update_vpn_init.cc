@@ -833,6 +833,7 @@ void UpdateVpnInit::UpdateAccountBlockInfo(const std::string& block_str) {
                         continue;
                     }
 
+                    max_index_ = init_blocks.account_init_res().max_index();
                     if (init_blocks.account_init_res().block_list(i).height() >= max_height_ ||
                             max_height_ == common::kInvalidUint64) {
                         max_height_ = init_blocks.account_init_res().block_list(i).height();

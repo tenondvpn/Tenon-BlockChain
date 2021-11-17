@@ -184,7 +184,6 @@ void Command::AddBaseCommands() {
     });
     AddCommand("cballot", [this](const std::vector<std::string>& args) {
         std::string contract_addr = CreateContractBallot();
-        sleep(3);
         ChairmanSetVoters(contract_addr);
     });
     AddCommand("rc", [this](const std::vector<std::string>& args) {

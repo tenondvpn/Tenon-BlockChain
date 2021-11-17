@@ -27,6 +27,7 @@ public:
     int GetBalance(uint64_t* balance);
     void NewHeight(uint64_t height, db::DbWriteBach& db_batch);
     void GetHeights(uint64_t index, int32_t count, std::vector<uint64_t>* res);
+    void GetLatestHeights(uint64_t min_height, uint32_t count, std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
     int SetConsensuseNetid(uint32_t network_id, db::DbWriteBach& db_batch);
@@ -48,7 +49,11 @@ public:
         uint32_t network_id,
         uint64_t* height,
         std::string* elect_block_str);
-    int AddNewTimeBlock(uint64_t height, uint64_t block_tm, uint64_t vss_random, db::DbWriteBach& db_batch);
+    int AddNewTimeBlock(
+        uint64_t height,
+        uint64_t block_tm,
+        uint64_t vss_random,
+        db::DbWriteBach& db_batch);
     int GetLatestTimeBlock(uint64_t* height, uint64_t* block_tm, uint64_t* vss_random);
     size_t VmCodeSize();
     std::string VmCodeHash();
@@ -85,6 +90,10 @@ public:
 
     void set_heap_index(int32_t heap_index) {
         heap_index_ = heap_index;
+    }
+
+    uint64_t max_index() {
+        return tx_queue_.size();
     }
 
 private:

@@ -462,10 +462,11 @@ void BlockManager::HandleGetAccountInitRequest(
     account_ptr->GetBalance(&balance);
     account_init_res->set_balance(balance);
     account_init_res->set_id(block_msg.account_init_req().id());
+    account_init_res->set_max_index(account_ptr->max_index());
     uint32_t count = 0;
     std::vector<uint64_t> heights;
-    account_ptr->GetHeights(
-        block_msg.account_init_req().index(),
+    account_ptr->GetLatestHeights(
+        block_msg.account_init_req().height(),
         block_msg.account_init_req().count(),
         &heights);
     uint32_t pool_idx = common::GetPoolIndex(block_msg.account_init_req().id());

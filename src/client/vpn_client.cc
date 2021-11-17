@@ -1260,10 +1260,9 @@ void VpnClient::GetTxBlocksFromBftNetwork() {
     block::protobuf::BlockMessage block_msg;
     auto attr_req = block_msg.mutable_account_init_req();
     attr_req->set_id(common::GlobalInfo::Instance()->id());
-    attr_req->set_index(tx_index_);
+    attr_req->set_index(init::UpdateVpnInit::Instance()->max_index());
     attr_req->set_net_id(common::GlobalInfo::Instance()->consensus_shard_net_id());
     attr_req->set_count(64);
-    std::cout << "init::UpdateVpnInit::Instance()->GetMaxHeight(): " << init::UpdateVpnInit::Instance()->GetMaxHeight() << std::endl;
     attr_req->set_height(init::UpdateVpnInit::Instance()->GetMaxHeight());
     message.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(message);

@@ -870,6 +870,7 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 }
 
 void AccountManager::CheckMissingHeight() {
+    return;
     uint32_t synced_height = 0;
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
         std::vector<uint64_t> missing_heights;

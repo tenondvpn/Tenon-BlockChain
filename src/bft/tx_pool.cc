@@ -106,6 +106,18 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 continue;
             }
 
+            if (iter->second->tx.type() == common::kConsensusCallContract) {
+                auto contract_add = block::AccountManager::Instance()->GetAcountInfo(
+                    iter->second->tx.to());
+                uint32_t contract_type = block::kNormalAddress;
+                if (contract_add == nullptr ||
+                        contract_add->GetAddressType(&contract_type) != block::kBlockSuccess ||
+                        contract_type != block::kContractAddress) {
+                    ++iter;
+                    continue;
+                }
+            }
+
             if (iter->second->time_valid <= timestamp_now) {
                 if (IsTxContractLocked(iter->second)) {
                     ++iter;
@@ -177,14 +189,6 @@ bool TxPool::IsTxValid(TxItemPtr tx_ptr) {
         }
 
         return false;
-    } else if (tx_ptr->tx.type() == common::kConsensusCallContract) {
-        auto contract_add = block::AccountManager::Instance()->GetAcountInfo(tx_ptr->tx.to());
-        uint32_t contract_type = block::kNormalAddress;
-        if (contract_add == nullptr ||
-                contract_add->GetAddressType(&contract_type) != block::kBlockSuccess ||
-                contract_type != block::kContractAddress) {
-            return false;
-        }
     }
 
     return true;
