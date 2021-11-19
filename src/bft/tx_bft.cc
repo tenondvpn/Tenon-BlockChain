@@ -2368,7 +2368,6 @@ int TxBft::LeaderCallContractExceute(
         &contract_balance);
     if (balance_status != kBftSuccess) {
         tx.set_status(balance_status);
-        assert(false);
         return kBftError;
     }
 

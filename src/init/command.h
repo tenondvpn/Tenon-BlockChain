@@ -58,7 +58,7 @@ private:
     int PrivateKeyToPublicKey(const std::string& file);
     // test ContractBallot
     std::string CreateContractBallot();
-    void ChairmanSetVoters(const std::string& contract_addr);
+    void ChairmanSetVoter(const std::string& contract_addr, const std::string& dest);
     void VoterSetDelegate(const std::string& contract_addr, const std::string& dest);
     void Vote(const std::string& contract_addr);
     void GetWinner(const std::string& contract_addr);

@@ -24,6 +24,12 @@ evmc::bytes32 TenonHost::get_storage(
     if (account_iter != accounts_.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
         if (storage_iter != account_iter->second.storage.end()) {
+            std::string val_str((char*)storage_iter->second.value.bytes, sizeof(storage_iter->second.value.bytes));
+            std::cout << "0 tvm get storage called, id: " << common::Encode::HexEncode(id)
+                << ", key: " << common::Encode::HexEncode(key_str)
+                << ", value: " << common::Encode::HexEncode(val_str)
+                << std::endl;
+
             return storage_iter->second.value;
         }
     }
@@ -46,6 +52,11 @@ evmc::bytes32 TenonHost::get_storage(
             length = val.size();
         }
 
+        std::cout << "1 tvm get storage called, id: " << common::Encode::HexEncode(id)
+            << ", key: " << common::Encode::HexEncode(key_str)
+            << ", value: " << common::Encode::HexEncode(val)
+            << std::endl;
+
         memcpy(tmp_val.bytes + offset, val.c_str(), length);
         return tmp_val;
     }
@@ -58,6 +69,13 @@ evmc_storage_status TenonHost::set_storage(
         const evmc::bytes32& key,
         const evmc::bytes32& value) noexcept {
     // just set temporary map storage, when commit set to db and block
+    std::string id((char*)addr.bytes, sizeof(addr.bytes));
+    std::string key_str((char*)key.bytes, sizeof(key.bytes));
+    std::string val_str((char*)value.bytes, sizeof(value.bytes));
+
+    std::cout << "tvm set storage called, id: " << common::Encode::HexEncode(id)
+        << ", key: " << common::Encode::HexEncode(key_str)
+        << ", value: " << common::Encode::HexEncode(val_str) << std::endl;
     auto it = accounts_.find(addr);
     if (it == accounts_.end()) {
         accounts_[addr] = MockedAccount();
@@ -307,6 +325,14 @@ void TenonHost::emit_log(const evmc::address& addr,
                 size_t data_size,
                 const evmc::bytes32 topics[],
                 size_t topics_count) noexcept {
+    std::string id((char*)addr.bytes, sizeof(addr.bytes));
+    std::string str_data((char*)data, data_size);
+    std::string topics_str;
+    for (int32_t i = 0; i < topics_count; ++i) {
+        topics_str += std::string((char*)topics[i].bytes, sizeof(topics[i].bytes)) + ", ";
+    }
+
+    std::cout << "log called id: " << id << ", data: " << str_data << ", topics: " << topics_str << std::endl;
     recorded_logs_.push_back({ addr, {data, data_size}, {topics, topics + topics_count} });
 }
 

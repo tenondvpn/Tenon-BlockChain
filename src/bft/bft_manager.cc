@@ -1859,8 +1859,8 @@ void BftManager::HandleToWaitingBlock(
 
         auto new_tx = tx_list[i];
         new_tx.set_to_add(true);
+        auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(new_tx.to());
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-            auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(new_tx.to());
             if (account_ptr != nullptr) {
                 // root just create account address and assignment consensus network id
                 just_broadcast = true;
@@ -1873,6 +1873,10 @@ void BftManager::HandleToWaitingBlock(
             if (new_tx.amount() <= 0 &&
                     new_tx.type() != common::kConsensusCreateContract) {
                 BFT_ERROR("transfer amount error!");
+                continue;
+            }
+        } else {
+            if (account_ptr == nullptr) {
                 continue;
             }
         }

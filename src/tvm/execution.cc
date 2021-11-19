@@ -110,7 +110,10 @@ int Execution::execute(
 
     *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
-    TVM_DEBUG("execute status: %d gas_used: %lu", out_res->status_code, gas_used);
+    std::string res_data((char*)out_res->output_data, out_res->output_size);
+    printf("execute status: %d gas_used: %lu, data: %s\n",
+        out_res->status_code, gas_used, common::Encode::HexEncode(res_data).c_str());
+    TVM_DEBUG("execute status: %d gas_used: %lu, data: %s", out_res->status_code, gas_used, common::Encode::HexEncode(res_data).c_str());
     return kTvmSuccess;
 }
 

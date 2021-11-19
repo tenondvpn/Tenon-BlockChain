@@ -791,10 +791,10 @@ int AccountManager::SetAccountAttrs(
                 
                 for (int32_t storage_idx = 0;
                         storage_idx < tx_info.storages_size(); ++storage_idx) {
-                    if (tx_info.storages(storage_idx).id() != account_id) {
-                        continue;
-                    }
-
+//                     if (tx_info.storages(storage_idx).id() != account_id) {
+//                         continue;
+//                     }
+// 
                     if (IsInvalidKey(tx_info.storages(storage_idx).key())) {
                         continue;
                     }

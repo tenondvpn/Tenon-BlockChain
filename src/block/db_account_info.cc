@@ -302,12 +302,42 @@ int DbAccountInfo::GetAttrValue(const std::string& key, std::string* value) {
         auto iter = attr_map_.find(key);
         if (iter != attr_map_.end()) {
             *value = iter->second;
+//             if (account_id_ == common::Encode::HexDecode("6bbd8b7912ac3bf7ed00963f5ddfbbfa911db54f") ||
+//                 account_id_ == common::Encode::HexDecode("544064949151817a1185e931ea43a71493f9f33c") ||
+//                 account_id_ == common::Encode::HexDecode("15518b7643b094a6b1faba3a91fc16c20a9041da") ||
+//                 account_id_ == common::Encode::HexDecode("7c4fd7e97e3cdd18dbe56e1256fbd60d4129af66") ||
+//                 account_id_ == common::Encode::HexDecode("7027d87b3b251eac11933b5c2e4bd2ff1f7dd666") ||
+//                 account_id_ == common::Encode::HexDecode("a2234d38e7073639156ee1cfc323e8d6cdadc604") ||
+//                 account_id_ == common::Encode::HexDecode("2935aeb958731e29b8297d7250903b86c22b40be") ||
+//                 account_id_ == common::Encode::HexDecode("14f87c1026d307937b6160ca69b24e891467749b") ||
+//                 account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
+//                 account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
+//                 account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
+                std::cout << "get storage key: " << common::Encode::HexEncode(key)
+                    << ", " << common::Encode::HexEncode(*value) << std::endl;
+//             }
+
             return kBlockSuccess;
         }
     }
 
     auto st = db::Db::Instance()->Get(StorageDbKey(account_id_, key), value);
     if (st.ok()) {
+//         if (account_id_ == common::Encode::HexDecode("6bbd8b7912ac3bf7ed00963f5ddfbbfa911db54f") ||
+//             account_id_ == common::Encode::HexDecode("544064949151817a1185e931ea43a71493f9f33c") ||
+//             account_id_ == common::Encode::HexDecode("15518b7643b094a6b1faba3a91fc16c20a9041da") ||
+//             account_id_ == common::Encode::HexDecode("7c4fd7e97e3cdd18dbe56e1256fbd60d4129af66") ||
+//             account_id_ == common::Encode::HexDecode("7027d87b3b251eac11933b5c2e4bd2ff1f7dd666") ||
+//             account_id_ == common::Encode::HexDecode("a2234d38e7073639156ee1cfc323e8d6cdadc604") ||
+//             account_id_ == common::Encode::HexDecode("2935aeb958731e29b8297d7250903b86c22b40be") ||
+//             account_id_ == common::Encode::HexDecode("14f87c1026d307937b6160ca69b24e891467749b") ||
+//             account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
+//             account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
+//             account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
+            std::cout << "get storage key: " << common::Encode::HexEncode(key)
+                << ", " << common::Encode::HexEncode(*value) << std::endl;
+//         }
+
         return kBlockSuccess;
     }
 
@@ -322,6 +352,24 @@ int DbAccountInfo::SetAttrValue(
         std::lock_guard<std::mutex> guard(attr_map_mutex_);
         attr_map_[key] = value;
     }
+
+//     if (account_id_ == common::Encode::HexDecode("6bbd8b7912ac3bf7ed00963f5ddfbbfa911db54f") ||
+//         account_id_ == common::Encode::HexDecode("544064949151817a1185e931ea43a71493f9f33c") ||
+//         account_id_ == common::Encode::HexDecode("15518b7643b094a6b1faba3a91fc16c20a9041da") ||
+//         account_id_ == common::Encode::HexDecode("7c4fd7e97e3cdd18dbe56e1256fbd60d4129af66") ||
+//         account_id_ == common::Encode::HexDecode("7027d87b3b251eac11933b5c2e4bd2ff1f7dd666") ||
+//         account_id_ == common::Encode::HexDecode("a2234d38e7073639156ee1cfc323e8d6cdadc604") ||
+//         account_id_ == common::Encode::HexDecode("2935aeb958731e29b8297d7250903b86c22b40be") ||
+//         account_id_ == common::Encode::HexDecode("14f87c1026d307937b6160ca69b24e891467749b") ||
+//         account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
+//         account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
+//         account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
+        std::cout << "set storage key: " << common::Encode::HexEncode(key)
+            << ", " << common::Encode::HexEncode(value) << std::endl;
+        BLOCK_DEBUG("set storage key: %s, value: %s",
+            common::Encode::HexEncode(key).c_str(),
+            common::Encode::HexEncode(value).c_str());
+//     }
 
     db_batch.Put(StorageDbKey(account_id_, key), value);
     return kBlockSuccess;
@@ -341,12 +389,12 @@ int DbAccountInfo::SetBytesCode(const std::string& bytes_code, db::DbWriteBach& 
         bytes_code_ = bytes_code;
     }
 
-    BLOCK_DEBUG("set bytes code addr: %s, bytescode: %s", common::Encode::HexEncode(account_id_).c_str(), common::Encode::HexEncode(bytes_code));
+//     BLOCK_DEBUG("set bytes code addr: %s, bytescode: %s", common::Encode::HexEncode(account_id_).c_str(), common::Encode::HexEncode(bytes_code));
     return kBlockSuccess;
 }
 
 int DbAccountInfo::GetBytesCode(std::string* bytes_code) {
-    BLOCK_DEBUG("get bytes code addr: %s", common::Encode::HexEncode(account_id_).c_str());
+//     BLOCK_DEBUG("get bytes code addr: %s", common::Encode::HexEncode(account_id_).c_str());
     {
         std::lock_guard<std::mutex> guard(bytes_code_mutex_);
         if (!bytes_code_.empty()) {
