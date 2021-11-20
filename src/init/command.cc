@@ -11,6 +11,7 @@
 #include "common/global_info.h"
 #include "common/country_code.h"
 #include "common/time_utils.h"
+#include "common/shell_utils.h"
 #include "block/block_utils.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
@@ -185,6 +186,10 @@ void Command::AddBaseCommands() {
     AddCommand("ballot_create", [this](const std::vector<std::string>& args) {
         std::string contract_addr = CreateContractBallot();
     });
+    AddCommand("ballot_create_and_set_voters", [this](const std::vector<std::string>& args) {
+        std::string contract_addr = CreateContractBallot();
+        ChairmanSetVoters(contract_addr);
+    });
     AddCommand("ballot_chairman_set_voter", [this](const std::vector<std::string>& args) {
         if (args.size() < 2) {
             return;
@@ -224,6 +229,16 @@ void Command::AddBaseCommands() {
         }
 
         GetWinner(common::Encode::HexDecode(args[0]));
+    });
+    AddCommand("receive_pay_create", [this](const std::vector<std::string>& args) {
+        CreateReceivePay();
+    });
+    AddCommand("receive_pay", [this](const std::vector<std::string>& args) {
+        if (args.size() < 2) {
+            return;
+        }
+
+        ReceivePay(common::Encode::HexDecode(args[0]), common::Encode::HexDecode(args[1]));
     });
     AddCommand("rc", [this](const std::vector<std::string>& args) {
         CheckAllNodePortValid();
@@ -969,6 +984,37 @@ std::string Command::CreateContractBallot() {
     return contract_address;
 }
 
+void Command::ChairmanSetVoters(const std::string& contract_addr) {
+    std::vector<std::string> voters = {
+        "544064949151817a1185e931ea43a71493f9f33c",
+        "15518b7643b094a6b1faba3a91fc16c20a9041da",
+        "7c4fd7e97e3cdd18dbe56e1256fbd60d4129af66",
+        "7027d87b3b251eac11933b5c2e4bd2ff1f7dd666",
+        "a2234d38e7073639156ee1cfc323e8d6cdadc604",
+        "2935aeb958731e29b8297d7250903b86c22b40be",
+        "14f87c1026d307937b6160ca69b24e891467749b",
+        "4dca4186ec80fe5bbce7531186fc8966d8dd58a9",
+        "a45c90f01155cd8615d2db4267b6ee0e8e3d6528",
+        "cc686eefa301ec1a781a77a915a742cc5f562613",
+    };
+
+    for (auto iter = voters.begin(); iter != voters.end(); ++iter) {
+        std::map<std::string, std::string> attrs;
+        attrs[bft::kContractInputCode] = common::Encode::HexDecode("9e7b8d61000000000000000000000000" + *iter);
+        uint64_t gas_usd = 1000000l + bft::kCallContractDefaultUseGas + bft::kTransferGas + (
+            bft::kContractInputCode.size() +
+            attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
+        std::string gid;
+        client::VpnClient::Instance()->TransactionEx(
+            contract_addr,
+            0,
+            gas_usd,
+            common::kConsensusCallContract,
+            attrs,
+            gid);
+    }
+}
+
 void Command::ChairmanSetVoter(const std::string& contract_addr, const std::string& des) {
     // call set voter
     std::map<std::string, std::string> attrs;
@@ -1019,6 +1065,62 @@ void Command::Vote(const std::string& contract_addr) {
 void Command::GetWinner(const std::string& contract_addr) {
     std::map<std::string, std::string> attrs;
     attrs[bft::kContractInputCode] = common::Encode::HexDecode("e2ba53f000000000000000000000000000000000000000000000000000000000");
+    uint64_t gas_usd = 1000000l + bft::kCallContractDefaultUseGas + bft::kTransferGas +
+        (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
+    std::string gid;
+    client::VpnClient::Instance()->TransactionEx(
+        contract_addr,
+        0,
+        gas_usd,
+        common::kConsensusCallContract,
+        attrs,
+        gid);
+}
+
+std::string Command::CreateReceivePay() {
+    // create voter
+    std::string receiver = "544064949151817a1185e931ea43a71493f9f33c";
+    std::string gid;
+    client::VpnClient::Instance()->Transaction(
+        receiver,
+        10000000000lu,
+        gid);
+
+    // create contract
+    static const std::string bytes_code = common::Encode::HexDecode("608060405233600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b5b61004c565b6107538061005b6000396000f3fe60806040523480156100115760006000fd5b506004361061003b5760003560e01c806341c0e1b514610041578063a90ae8871461004b5761003b565b60006000fd5b610049610067565b005b610065600480360381019061006091906103ba565b6100df565b005b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156100c45760006000fd5b3373ffffffffffffffffffffffffffffffffffffffff16ff5b565b6001600050600083815260200190815260200160002060009054906101000a900460ff161515156101105760006000fd5b60016001600050600084815260200190815260200160002060006101000a81548160ff021916908315150217905550600061017c3385853060405160200161015b94939291906104d8565b6040516020818303038152906040528051906020012061023963ffffffff16565b9050600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166101c7828461026e63ffffffff16565b73ffffffffffffffffffffffffffffffffffffffff161415156101ea5760006000fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc859081150290604051600060405180830381858888f19350505050158015610231573d600060003e3d6000fd5b50505b505050565b60008160405160200161024c91906104b1565b604051602081830303815290604052805190602001209050610269565b919050565b6000600060006000610285856102ee63ffffffff16565b925092509250600186848484604051600081526020016040526040516102ae949392919061051e565b6020604051602081039080840390855afa1580156102d1573d600060003e3d6000fd5b5050506020604051035193505050506102e8565050505b92915050565b600060006000604184511415156103055760006000fd5b6020840151915060408401519050606084015160001a925082828292509250925061032b565b91939092505661071c565b60006103496103448461058b565b610564565b9050828152602081018484840111156103625760006000fd5b61036d848285610647565b505b9392505050565b600082601f830112151561038a5760006000fd5b813561039a848260208601610336565b9150505b92915050565b6000813590506103b381610701565b5b92915050565b600060006000606084860312156103d15760006000fd5b60006103df868287016103a4565b93505060206103f0868287016103a4565b925050604084013567ffffffffffffffff81111561040e5760006000fd5b61041a86828701610376565b9150505b9250925092565b61042e816105c9565b825250505b565b61043e816105dc565b825250505b565b610456610451826105dc565b610689565b825250505b565b61046681610621565b825250505b565b600061047a601c836105bd565b9150610485826106d7565b601c820190505b919050565b61049a81610608565b825250505b565b6104aa81610613565b825250505b565b60006104bc8261046d565b91506104c88284610445565b6020820191508190505b92915050565b60006080820190506104ed6000830187610425565b6104fa6020830186610491565b6105076040830185610491565b610514606083018461045d565b5b95945050505050565b60006080820190506105336000830187610435565b61054060208301866104a1565b61054d6040830185610435565b61055a6060830184610435565b5b95945050505050565b600061056e610580565b905061057a8282610657565b5b919050565b600060405190505b90565b600067ffffffffffffffff8211156105a6576105a5610694565b5b6105af826106c5565b90506020810190505b919050565b60008190505b92915050565b60006105d4826105e7565b90505b919050565b60008190505b919050565b600073ffffffffffffffffffffffffffffffffffffffff821690505b919050565b60008190505b919050565b600060ff821690505b919050565b600061062c82610634565b90505b919050565b600061063f826105e7565b90505b919050565b828183376000838301525050505b565b610660826106c5565b810181811067ffffffffffffffff8211171561067f5761067e610694565b5b806040525050505b565b60008190505b919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b565b6000601f19601f83011690505b919050565b7f19457468657265756d205369676e6564204d6573736167653a0a3332000000006000820152505b565b61070a81610608565b811415156107185760006000fd5b505b565bfea26469706673582212207d24328cffe9c38baa5948249ab1e85c99dac9c1b744eb13246d64d072a40edd64736f6c63430008040033");
+    uint64_t amount = 0;
+    uint64_t gas_limit = 10000000;
+    std::string contract_address;
+    client::VpnClient::Instance()->CreateContract(bytes_code, amount, gas_limit, &contract_address);
+    std::string tx_gid;
+    tenon::client::VpnClient::Instance()->Transaction(common::Encode::HexEncode(contract_address), 1000000000lu, tx_gid);
+    std::cout << "contract_address: " << common::Encode::HexEncode(contract_address) << std::endl;
+
+    std::string path = R"(
+        const Web3 = require('web3')
+        var net = require('net');
+        var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net));
+        const args = require('minimist')(process.argv.slice(2))
+        var param_codes = web3.eth.abi.encodeParameters(['address', 'uint256', 'uint256', 'address'], ['0x' + args['to'], '2643000', '1', '0x' + args['caddr']]);
+        var kek256 = web3.utils.keccak256(param_codes);
+        var param_code_hash = web3.eth.accounts.hashMessage(kek256)
+        var sig_param = web3.eth.accounts.sign(kek256, '0xf0aed1c9983eec2ae15461057a838663ada156b4540dfd2df96c5bbcef529b6e');
+        var receive_pay_params = web3.eth.abi.encodeParameters(['uint256', 'uint256', 'bytes memory'], ['2643000', '1', sig_param.signature]);
+        var receive_func = web3.eth.abi.encodeFunctionSignature('claimPayment(uint256,uint256,bytes)');
+        var recover = web3.eth.accounts.recover({messageHash: param_code_hash, v: sig_param.v, r: sig_param.r, s: sig_param.s});
+        console.log(receive_func.substring(2) + receive_pay_params.substring(2));
+        )";
+    system((std::string("echo ") + path + " > ./test.js").c_str());
+    std::string cmd = (std::string("node ./test.js ") + "--to = '" + receiver + "' --caddr = '" + common::Encode::HexEncode(contract_address) + "'");
+    std::string res;
+    common::RunShellCmdToGetOutput(cmd, &res);
+    std::cout << res << std::endl;
+    return res;
+}
+
+void Command::ReceivePay(const std::string& contract_addr, const std::string& params) {
+    std::map<std::string, std::string> attrs;
+    attrs[bft::kContractInputCode] = params;
     uint64_t gas_usd = 1000000l + bft::kCallContractDefaultUseGas + bft::kTransferGas +
         (bft::kContractInputCode.size() + attrs[bft::kContractInputCode].size()) * bft::kKeyValueStorageEachBytes;
     std::string gid;
