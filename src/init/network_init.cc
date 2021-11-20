@@ -34,6 +34,7 @@
 #include "transport/tcp/tcp_transport.h"
 #include "transport/transport_utils.h"
 #include "transport/http/http_transport.h"
+#include "tvm/execution.h"
 
 namespace tenon {
 
@@ -99,6 +100,11 @@ int NetworkInit::Init(int argc, char** argv) {
     if (genesis_check != -1) {
         block::AccountManager::Instance()->FlushPoolHeightTreeToDb();
         return genesis_check;
+    }
+
+    if (tvm::Execution::Instance()->Init() != tvm::kTvmSuccess) {
+        INIT_ERROR("init tvm failed!");
+        return kInitError;
     }
 
     network::DhtManager::Instance();
