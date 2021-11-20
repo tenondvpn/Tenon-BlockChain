@@ -18,6 +18,35 @@ Execution::Execution() {}
 
 Execution::~Execution() {}
 
+Execution* Execution::Instance() {
+    static Execution ins;
+    return &ins;
+}
+
+int Execution::Init() {
+    evmc_loader_error_code ec;
+    evm_ = evmc::VM{ evmc_load_and_configure("./libevmone.so", &ec) };
+    if (ec != EVMC_LOADER_SUCCESS) {
+        const auto error = evmc_last_error_msg();
+        if (error != nullptr) {
+            TVM_ERROR("load libevmone.so error: %s", error);
+        }
+        else {
+            TVM_ERROR("load libevmone.so error.");
+        }
+
+        return static_cast<int>(ec);
+    }
+
+
+    if (evm_.set_option("O", "0") != EVMC_SET_OPTION_SUCCESS) {
+        TVM_ERROR("evm.set_option error.");
+        return kTvmError;
+    }
+
+    return kTvmSuccess;
+}
+
 // create no param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000
 //       has param: contract bytes_code + 000000000000000000000000000000000000000000000000000000000000007b00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000 + encode params
 int Execution::execute(
@@ -32,25 +61,6 @@ int Execution::execute(
         uint32_t call_mode,
         tenon::tvm::TenonHost& host,
         evmc::result* out_res) {
-    evmc::VM evm;
-    evmc_loader_error_code ec;
-    evm = evmc::VM{ evmc_load_and_configure("./libevmone.so", &ec) };
-    if (ec != EVMC_LOADER_SUCCESS) {
-        const auto error = evmc_last_error_msg();
-        if (error != nullptr) {
-            TVM_ERROR("load libevmone.so error: %s", error);
-        } else {
-            TVM_ERROR("load libevmone.so error.");
-        }
-
-        return static_cast<int>(ec);
-    }
-
-
-    if (evm.set_option("O", "0") != EVMC_SET_OPTION_SUCCESS) {
-        TVM_ERROR("evm.set_option error.");
-        return kTvmError;
-    }
 
     const size_t code_size = bytes_code.size();
     int64_t gas = gas_limit;
@@ -79,7 +89,7 @@ int Execution::execute(
         create_msg.sender = msg.sender;
         create_msg.gas = create_gas;
         Uint64ToEvmcBytes32(create_msg.value, value);
-        *out_res = evm.execute(
+        *out_res = evm_.execute(
             host,
             rev,
             create_msg,
@@ -108,7 +118,7 @@ int Execution::execute(
         exec_code_size = bytes_code.size();
     }
 
-    *out_res = evm.execute(host, rev, msg, exec_code_data, exec_code_size);
+    *out_res = evm_.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
     std::string res_data((char*)out_res->output_data, out_res->output_size);
     printf("execute status: %d gas_used: %lu, data: %s\n",

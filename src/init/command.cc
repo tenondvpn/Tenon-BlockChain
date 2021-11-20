@@ -337,7 +337,7 @@ void Command::AddBaseCommands() {
         FixDb(db_path);
     });
     AddCommand("tvm", [this](const std::vector<std::string>& args) {
-        tvm::Execution exec;
+//         tvm::Execution exec;
         std::string code;
         if (args.size() >= 1) {
             code = common::Encode::HexDecode(args[0]);
@@ -351,7 +351,7 @@ void Command::AddBaseCommands() {
         evmc_result evmc_res = {};
         evmc::result res{ evmc_res };
         tvm::TenonHost tenon_host;
-        exec.execute(code, input, "", "", "", 0, 0, 0, false, tenon_host, &res);
+        tvm::Execution::Instance()->execute(code, input, "", "", "", 0, 0, 0, false, tenon_host, &res);
     });
     AddCommand("ltr", [this](const std::vector<std::string>& args) {
         if (args.size() < 1) {

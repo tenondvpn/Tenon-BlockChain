@@ -270,9 +270,9 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
                 return evmc_res;
             }
 
-            Execution exec;
+//             Execution exec;
             ++depth_;
-            int res_status = exec.execute(
+            int res_status = tvm::Execution::Instance()->execute(
                 params.code_address,
                 params.data,
                 params.from,

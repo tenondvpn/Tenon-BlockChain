@@ -2589,8 +2589,8 @@ int TxBft::CreateContractCallExcute(
         input = iter->second;
         call_mode = tvm::kCreateAndCall;
     }
-    tvm::Execution exec;
-    int exec_res = exec.execute(
+//     tvm::Execution exec;
+    int exec_res = tvm::Execution::Instance()->execute(
         bytes_code,
         input,
         tx_info->tx.from(),
@@ -2642,8 +2642,8 @@ int TxBft::CallContract(
         return kBftError;
     }
 
-    tvm::Execution exec;
-    int exec_res = exec.execute(
+//     tvm::Execution exec;
+    int exec_res = tvm::Execution::Instance()->execute(
         bytes_code,
         input,
         tx_info->tx.from(),

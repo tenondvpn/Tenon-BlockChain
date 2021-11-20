@@ -11,8 +11,8 @@ namespace tvm {
 class TenonHost;
 class Execution {
 public:
-    Execution();
-    ~Execution();
+    static Execution* Instance();
+    int Init();
     int execute(
         const std::string& contract_address,
         const std::string& input,
@@ -28,6 +28,10 @@ public:
     int InitEnvironment(tenon::tvm::TenonHost& tenon_host, evmc_message* msg);
 
 private:
+    Execution();
+    ~Execution();
+
+    evmc::VM evm_;
 
     DISALLOW_COPY_AND_ASSIGN(Execution);
 };
