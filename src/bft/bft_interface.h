@@ -40,7 +40,7 @@ typedef std::shared_ptr<BackupResponse> BackupResponsePtr;
 
 class BftInterface {
 public:
-    virtual int Init(bool leader) = 0;
+    virtual int Init();
     virtual int Prepare(
         bool leader,
         int32_t pool_mod_idx,
@@ -64,6 +64,7 @@ public:
     int CheckTimeout();
     bool BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_msg);
     bool ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg);
+    int InitTenonTvmContext();
 
     void set_pool_index(uint32_t pool_idx) {
         pool_index_ = pool_idx;
@@ -286,7 +287,6 @@ public:
         bft_epoch_ = epoch;
     }
 
-    int Init();
     elect::BftMemberPtr& leader_mem_ptr() {
         return leader_mem_ptr_;
     }
@@ -357,7 +357,6 @@ protected:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
     void RechallengePrecommitClear();
-    int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     elect::MembersPtr members_ptr_{ nullptr };
     std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };

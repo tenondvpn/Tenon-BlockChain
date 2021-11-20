@@ -403,6 +403,10 @@ BftInterfacePtr BftManager::CreateBftPtr(const bft::protobuf::BftMessage& bft_ms
     bft_ptr->set_network_id(bft_msg.net_id());
     bft_ptr->set_pool_index(bft_msg.pool_index());
     bft_ptr->set_status(kBftPrepare);
+    if (bft_ptr->InitTenonTvmContext() != tvm::kTvmSuccess) {
+        return nullptr;
+    }
+
     bft_ptr->set_member_count(
         elect::ElectManager::Instance()->GetMemberCount(bft_msg.net_id()));
     return bft_ptr;

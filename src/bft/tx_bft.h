@@ -18,7 +18,7 @@ class TxBft : public BftInterface {
 public:
     TxBft();
     virtual ~TxBft();
-    virtual int Init(bool leader);
+    virtual int Init();
     virtual int Prepare(
         bool leader,
         int32_t pool_mod_idx,

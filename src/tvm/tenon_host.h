@@ -7,8 +7,8 @@
 
 #include <evmc/evmc.hpp>
 
-#include "contract/contract_manager.h"
-#include "contract/call_parameters.h"
+// #include "contract/contract_manager.h"
+// #include "contract/call_parameters.h"
 
 namespace tenon {
 

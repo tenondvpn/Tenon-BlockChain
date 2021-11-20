@@ -33,15 +33,8 @@ TxBft::TxBft() : BftInterface() {}
 
 TxBft::~TxBft() {}
 
-int TxBft::Init(bool leader) {
-//     std::vector<TxItemPtr> tx_vec;
-//     uint32_t pool_index = 0;
-//     DispatchPool::Instance()->GetTx(pool_index, tx_vec);
-//     if (tx_vec.empty()) {
-//         return kBftNoNewTxs;
-//     }
-
-    return kBftSuccess;
+int TxBft::Init() {
+    return BftInterface::Init();
 }
 
 int TxBft::Prepare(
@@ -157,6 +150,10 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     }
 // 
     set_pool_index(pool_index);
+    if (InitTenonTvmContext() != kBftSuccess) {
+        return kBftError;
+    }
+
     bft::protobuf::TxBft tx_bft;
     auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {

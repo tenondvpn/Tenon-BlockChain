@@ -1,9 +1,11 @@
 #include "tvm/tenon_host.h"
 
+#include "contract/contract_manager.h"
+#include "contract/call_parameters.h"
+#include "block/account_manager.h"
 #include "evmc/hex.hpp"
 #include "tvm/tvm_utils.h"
 #include "tvm/execution.h"
-#include "block/account_manager.h"
 
 namespace tenon {
 
