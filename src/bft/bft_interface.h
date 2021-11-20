@@ -6,12 +6,15 @@
 #include <unordered_map>
 
 #include <libbls/tools/utils.h>
+#include <evmc/evmc.hpp>
 
 #include "bft/bft_utils.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft.pb.h"
 #include "common/utils.h"
 #include "common/bitmap.h"
+#include "election/elect_node_detail.h"
+#include "election/member_manager.h"
 #include "security/signature.h"
 #include "security/commit_secret.h"
 #include "security/schnorr.h"
@@ -20,8 +23,9 @@
 #include "security/multi_sign.h"
 #include "security/response.h"
 #include "transport/transport_utils.h"
-#include "election/elect_node_detail.h"
-#include "election/member_manager.h"
+#include "tvm/tvm_utils.h"
+#include "tvm/execution.h"
+#include "tvm/tenon_host.h"
 
 namespace tenon {
 
@@ -353,6 +357,7 @@ protected:
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
     void RechallengePrecommitClear();
+    int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     elect::MembersPtr members_ptr_{ nullptr };
     std::shared_ptr<elect::MemberManager> mem_manager_ptr_{ nullptr };
@@ -403,6 +408,8 @@ protected:
     std::atomic<uint32_t> prepare_verify_failed_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
     uint32_t local_member_index_{ elect::kInvalidMemberIndex };
+    tvm::TenonHost tenon_host_;
+
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 

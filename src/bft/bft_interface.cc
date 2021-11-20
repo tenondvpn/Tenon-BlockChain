@@ -4,6 +4,7 @@
 #include <bls/bls_sign.h>
 
 #include "bls/bls_manager.h"
+#include "block/account_manager.h"
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
@@ -47,6 +48,40 @@ int BftInterface::Init() {
         return kBftError;
     }
 
+    return InitTenonTvmContext(tenon_host_);
+}
+
+int BftInterface::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
+    uint64_t last_height = 0;
+    std::string pool_hash;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_index(),
+        &last_height,
+        &pool_hash,
+        &tm_height,
+        &tm_with_block_height);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return kBftError;
+    }
+
+    tvm::Uint64ToEvmcBytes32(
+        tenon_host.tx_context_.tx_gas_price,
+        common::GlobalInfo::Instance()->gas_price());
+    tenon_host.tx_context_.tx_origin = evmc::address{};
+    tenon_host.tx_context_.block_coinbase = evmc::address{};
+    tenon_host.tx_context_.block_number = last_height;
+    tenon_host.tx_context_.block_timestamp = common::TimeUtils::TimestampSeconds();
+    tenon_host.tx_context_.block_gas_limit = 0;
+    tenon_host.tx_context_.block_difficulty = evmc_uint256be{};
+    uint64_t chanin_id = (((uint64_t)common::GlobalInfo::Instance()->network_id()) << 32 |
+        (uint64_t)last_pool_index);
+    tvm::Uint64ToEvmcBytes32(
+        tenon_host.tx_context_.chain_id,
+        chanin_id);
     return kBftSuccess;
 }
 

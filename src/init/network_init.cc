@@ -35,6 +35,7 @@
 #include "transport/transport_utils.h"
 #include "transport/http/http_transport.h"
 #include "tvm/execution.h"
+#include "tvm/tvm_utils.h"
 
 namespace tenon {
 

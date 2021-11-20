@@ -898,8 +898,6 @@ int TxBft::BackupCheckContractExceute(
         local_tx_ptr->tx.gid());
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
-    tvm::TenonHost tenon_host;
-    InitTenonTvmContext(tenon_host);
     int backup_status = kBftSuccess;
     do
     {
@@ -930,13 +928,13 @@ int TxBft::BackupCheckContractExceute(
 
         if (local_tx_ptr->tx.type() == common::kConsensusCallContract) {
             // will return from address's remove tenon and gas used
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 local_tx_info->tx.from(),
                 caller_balance);
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 local_tx_info->tx.to(),
                 contract_balance);
-            int call_res = CallContract(local_tx_info, &tenon_host, &res);
+            int call_res = CallContract(local_tx_info, &tenon_host_, &res);
             gas_used = local_tx_info->tx.gas_limit() - res.gas_left;
             if (call_res != kBftSuccess) {
                 if (tx_info.status() != kBftExecuteContractFailed) {
@@ -981,14 +979,14 @@ int TxBft::BackupCheckContractExceute(
                 break;
             }
 
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 local_tx_ptr->tx.from(),
                 caller_balance);
             int call_res = CreateContractCallExcute(
                 local_tx_ptr,
                 local_tx_ptr->tx.gas_limit() - gas_used,
                 local_tx_ptr->attr_map[kContractBytesCode],
-                &tenon_host,
+                &tenon_host_,
                 &res);
             gas_used += local_tx_ptr->tx.gas_limit() - gas_used - res.gas_left;
             if (call_res != kBftSuccess) {
@@ -1028,7 +1026,7 @@ int TxBft::BackupCheckContractExceute(
             for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
                 if (tx_info.storages(i).id() == local_tx_ptr->tx.to() &&
                         tx_info.storages(i).key() == kContractCreatedBytesCode &&
-                        tx_info.storages(i).value() == tenon_host.create_bytes_code_) {
+                        tx_info.storages(i).value() == tenon_host_.create_bytes_code_) {
                     create_bytes_code_ok = true;
                     break;
                 }
@@ -1047,8 +1045,8 @@ int TxBft::BackupCheckContractExceute(
     int64_t caller_balance_add = 0;
     if (tx_info.status() == kBftSuccess) {
         uint32_t backup_storage_size = 0;
-        for (auto account_iter = tenon_host.accounts_.begin();
-                account_iter != tenon_host.accounts_.end(); ++account_iter) {
+        for (auto account_iter = tenon_host_.accounts_.begin();
+                account_iter != tenon_host_.accounts_.end(); ++account_iter) {
             for (auto storage_iter = account_iter->second.storage.begin();
                 storage_iter != account_iter->second.storage.end(); ++storage_iter) {
                 ++backup_storage_size;
@@ -1076,8 +1074,8 @@ int TxBft::BackupCheckContractExceute(
 
             evmc::address id;
             memcpy(id.bytes, tx_info.storages(i).id().c_str(), sizeof(id.bytes));
-            auto account_iter = tenon_host.accounts_.find(id);
-            if (account_iter == tenon_host.accounts_.end()) {
+            auto account_iter = tenon_host_.accounts_.find(id);
+            if (account_iter == tenon_host_.accounts_.end()) {
                 BFT_ERROR("tx_info.storages(i).id()[%s] not exists",
                     common::Encode::HexEncode(tx_info.storages(i).id()).c_str());
                 return kBftLeaderInfoInvalid;
@@ -1100,7 +1098,7 @@ int TxBft::BackupCheckContractExceute(
             }
         }
 
-        auto& transfers = tenon_host.to_account_value_;
+        auto& transfers = tenon_host_.to_account_value_;
         if ((uint32_t)tx_info.transfers_size() != transfers.size()) {
             BFT_ERROR("tx_info.transfers_size() != transfers.size()");
             return kBftLeaderInfoInvalid;
@@ -2320,40 +2318,6 @@ int TxBft::LeaderCallContractDefault(
     return kBftSuccess;
 }
 
-int TxBft::InitTenonTvmContext(tvm::TenonHost& tenon_host) {
-    uint64_t last_height = 0;
-    std::string pool_hash;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_index(),
-        &last_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
-        return kBftError;
-    }
-
-    tvm::Uint64ToEvmcBytes32(
-        tenon_host.tx_context_.tx_gas_price,
-        common::GlobalInfo::Instance()->gas_price());
-    tenon_host.tx_context_.tx_origin = evmc::address{};
-    tenon_host.tx_context_.block_coinbase = evmc::address{};
-    tenon_host.tx_context_.block_number = last_height;
-    tenon_host.tx_context_.block_timestamp = common::TimeUtils::TimestampSeconds();
-    tenon_host.tx_context_.block_gas_limit = 0;
-    tenon_host.tx_context_.block_difficulty = evmc_uint256be{};
-    uint64_t chanin_id = (((uint64_t)common::GlobalInfo::Instance()->network_id()) << 32 |
-        (uint64_t)last_pool_index);
-    tvm::Uint64ToEvmcBytes32(
-        tenon_host.tx_context_.chain_id,
-        chanin_id);
-    return kBftSuccess;
-}
-
 int TxBft::LeaderCallContractExceute(
         TxItemPtr tx_info,
         std::unordered_map<std::string, int64_t>& acc_balance_map,
@@ -2373,8 +2337,6 @@ int TxBft::LeaderCallContractExceute(
 
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
-    tvm::TenonHost tenon_host;
-    InitTenonTvmContext(tenon_host);
     do
     {
         if (caller_balance < tx_info->tx.gas_limit() * tx.gas_price()) {
@@ -2386,13 +2348,13 @@ int TxBft::LeaderCallContractExceute(
 
         if (tx_info->tx.type() == common::kConsensusCallContract) {
             // will return from address's remove tenon and gas used
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 tx_info->tx.from(),
                 caller_balance);
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 tx_info->tx.to(),
                 contract_balance);
-            int call_res = CallContract(tx_info, &tenon_host, &res);
+            int call_res = CallContract(tx_info, &tenon_host_, &res);
             gas_used = tx_info->tx.gas_limit() - res.gas_left;
             if (call_res != kBftSuccess) {
                 BFT_ERROR("call contract failed![%d]", call_res);
@@ -2421,14 +2383,14 @@ int TxBft::LeaderCallContractExceute(
                 break;
             }
 
-            tenon_host.AddTmpAccountBalance(
+            tenon_host_.AddTmpAccountBalance(
                 tx_info->tx.from(),
                 caller_balance);
             int call_res = CreateContractCallExcute(
                 tx_info,
                 tx.gas_limit() - gas_used,
                 tx_info->attr_map[kContractBytesCode],
-                &tenon_host,
+                &tenon_host_,
                 &res);
             gas_used += tx.gas_limit() - gas_used - res.gas_left;
             if (call_res != kBftSuccess) {
@@ -2452,7 +2414,7 @@ int TxBft::LeaderCallContractExceute(
             auto bytes_code_attr = tx.add_storages();
             bytes_code_attr->set_id(tx_info->tx.to());
             bytes_code_attr->set_key(kContractCreatedBytesCode);
-            bytes_code_attr->set_value(tenon_host.create_bytes_code_);
+            bytes_code_attr->set_value(tenon_host_.create_bytes_code_);
             BFT_DEBUG("create contract address: %s, set bytes code storages success.",
                 common::Encode::HexEncode(tx_info->tx.to()).c_str());
         }
@@ -2462,8 +2424,8 @@ int TxBft::LeaderCallContractExceute(
     int64_t contract_balance_add = 0;
     int64_t caller_balance_add = 0;
     if (tx.status() == kBftSuccess) {
-        for (auto account_iter = tenon_host.accounts_.begin();
-                account_iter != tenon_host.accounts_.end(); ++account_iter) {
+        for (auto account_iter = tenon_host_.accounts_.begin();
+                account_iter != tenon_host_.accounts_.end(); ++account_iter) {
             for (auto storage_iter = account_iter->second.storage.begin();
                     storage_iter != account_iter->second.storage.end(); ++storage_iter) {
                 std::string id(
@@ -2482,8 +2444,8 @@ int TxBft::LeaderCallContractExceute(
             }
         }
 
-        for (auto transfer_iter = tenon_host.to_account_value_.begin();
-                transfer_iter != tenon_host.to_account_value_.end(); ++transfer_iter) {
+        for (auto transfer_iter = tenon_host_.to_account_value_.begin();
+                transfer_iter != tenon_host_.to_account_value_.end(); ++transfer_iter) {
             // transfer from must caller or contract address, other not allowed.
             assert(transfer_iter->first == tx_info->tx.from() ||
                 transfer_iter->first == tx_info->tx.to());

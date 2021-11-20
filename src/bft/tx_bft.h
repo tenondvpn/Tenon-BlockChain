@@ -5,7 +5,6 @@
 #include "bft/bft_interface.h"
 #include "bft/proto/bft.pb.h"
 #include "bft/proto/bft_proto.h"
-#include "evmc/evmc.hpp"
 
 namespace tenon {
 
@@ -127,7 +126,6 @@ private:
         TxItemPtr local_tx_ptr,
         const protobuf::TxInfo& tx_info);
     int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
-    int InitTenonTvmContext(tvm::TenonHost& tenon_host);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };
