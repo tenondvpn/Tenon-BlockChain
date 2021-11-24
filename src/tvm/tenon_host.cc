@@ -258,6 +258,7 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     evmc::result evmc_res{ call_result };
     evmc_result* raw_result = (evmc_result*)&evmc_res;
     raw_result->gas_left = msg.gas;
+    std::cout << "tvm host called address: " << common::Encode::HexEncode(params.code_address) << ", data: " << common::Encode::HexEncode(params.data) << std::endl;
     if (contract::ContractManager::Instance()->call(
             params,
             gas_price_,
@@ -334,7 +335,7 @@ void TenonHost::emit_log(const evmc::address& addr,
         topics_str += std::string((char*)topics[i].bytes, sizeof(topics[i].bytes)) + ", ";
     }
 
-    std::cout << "log called id: " << id << ", data: " << str_data << ", topics: " << topics_str << std::endl;
+    std::cout << "log called id: " << common::Encode::HexEncode(id) << ", data: " << common::Encode::HexEncode(str_data) << ", topics: " << common::Encode::HexEncode(topics_str) << std::endl;
     recorded_logs_.push_back({ addr, {data, data_size}, {topics, topics + topics_count} });
 }
 

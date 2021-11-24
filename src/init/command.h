@@ -68,6 +68,49 @@ private:
     std::string CreateReceivePay();
     void ReceivePay(const std::string& contract_addr, const std::string& params);
 
+    // test simple_auction
+    std::string CreateSimpleAuction();
+    void SimpleAuctionBid(const std::string& contract_addr, uint64_t amount);
+    void SimpleAuctionWithDraw(const std::string& contract_addr);
+    void SimpleAuctionEnd(const std::string& contract_addr);
+
+    // test blind_auction
+    std::string CreateBlindAuction();
+    void BlindAuctionBit(const std::string& contract_addr, const std::string& blindBid, uint64_t amount);
+    void BlindAuctionReveal(const std::string& contract_addr, const std::string& params);
+    void BlindAuctionWithdraw(const std::string& contract_addr);
+    void BlindAuctionEnd(const std::string& contract_addr);
+
+    // test purchase
+    std::string CreatePurchase();
+    void PurchaseAbort(const std::string& contract_addr);
+    void PurchaseConfirmPurchase(const std::string& contract_addr);
+    void PurchaseConfirmReceived(const std::string& contract_addr);
+    void PurchaseRefundSeller(const std::string& contract_addr);
+
+    // test payment channel
+    std::string CreatePaymentChannel();
+    void ChannelClose(const std::string& contract_addr, const std::string& params);
+    void ChannelExtend(const std::string& contract_addr);
+    void ChannelClaimTimeout(const std::string& contract_addr);
+
+    // test token
+    std::string CreateTokenLib();
+    std::string CreateToken();
+    void TokenBalance(const std::string& contract_addr, const std::string& params);
+    void TokenTransfer(const std::string& contract_addr, const std::string& params);
+    void TokenTransferFrom(const std::string& contract_addr, const std::string& params);
+    void TokenCreateAddr(const std::string& contract_addr, const std::string& params);
+    void TokenApprove(const std::string& contract_addr, const std::string& params);
+
+    // test inner lib math
+    std::string CreateTestMath();
+    void MathAdd(const std::string& contract_addr);
+    // test external lib math
+    std::string CreateExternMathLib();
+    std::string CreateExternMath();
+    void ExtenMathAdd(const std::string& contract_addr);
+
     static const uint32_t kTransportTestPeriod = 1000 * 1000;
     std::map<std::string, CommandFunction> cmd_map_;
     std::mutex cmd_map_mutex_;

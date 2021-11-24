@@ -1,5 +1,7 @@
 #include "tvm/execution.h"
 
+#include "block/account_manager.h"
+#include "bft/bft_utils.h"
 #include "common/encode.h"
 #include "evmone/evmone.h"
 #include "evmc/loader.h"
@@ -8,7 +10,6 @@
 #include "evmc/mocked_host.hpp"
 #include "tvm/tvm_utils.h"
 #include "tvm/tenon_host.h"
-#include "block/account_manager.h"
 
 namespace tenon {
 
@@ -84,6 +85,24 @@ int Execution::execute(
     const uint8_t* exec_code_data = nullptr;
     size_t exec_code_size = 0;
     if (call_mode == kJustCreate || call_mode == kCreateAndCall) {
+        if (!IsContractBytesCode(bytes_code)) {
+            if (gas_limit < (code_size * bft::kKeyValueStorageEachBytes)) {
+                out_res->gas_left = 0;
+                out_res->status_code = EVMC_OUT_OF_GAS;
+                out_res->output_data = nullptr;
+                out_res->output_size = 0;
+                return EVMC_OUT_OF_GAS;
+            }
+
+            out_res->create_address = msg.sender;
+            out_res->gas_left = gas_limit - (code_size * bft::kKeyValueStorageEachBytes);
+            host.create_bytes_code_ = bytes_code;
+            out_res->status_code = EVMC_SUCCESS;
+            out_res->output_data = nullptr;
+            out_res->output_size = 0;
+            return kTvmSuccess;
+        }
+
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
         create_msg.sender = msg.sender;
@@ -104,7 +123,8 @@ int Execution::execute(
 
         host.create_bytes_code_ = std::string((char*)out_res->output_data, out_res->output_size);
         const auto gas_used = create_msg.gas - out_res->gas_left;
-//         TVM_DEBUG("gas_used: %lu", gas_used);
+        TVM_DEBUG("create contract gas_used: %lu, bytes code: %s",
+            gas_used, common::Encode::HexEncode(host.create_bytes_code_).c_str());
         if (call_mode == kJustCreate) {
             return kTvmSuccess;
         }
@@ -121,9 +141,9 @@ int Execution::execute(
     *out_res = evm_.execute(host, rev, msg, exec_code_data, exec_code_size);
     const auto gas_used = msg.gas - out_res->gas_left;
     std::string res_data((char*)out_res->output_data, out_res->output_size);
-    printf("execute status: %d gas_used: %lu, data: %s\n",
-        out_res->status_code, gas_used, common::Encode::HexEncode(res_data).c_str());
-    TVM_DEBUG("execute status: %d gas_used: %lu, data: %s", out_res->status_code, gas_used, common::Encode::HexEncode(res_data).c_str());
+    printf("execute status: %d gas_used: %lu, src_data: %s, data: %s\n",
+        out_res->status_code, gas_used, res_data.c_str(), common::Encode::HexEncode(res_data).c_str());
+    TVM_DEBUG("execute status: %d gas_used: %lu, data: %s", out_res->status_code, gas_used, res_data.c_str(), common::Encode::HexEncode(res_data).c_str());
     return kTvmSuccess;
 }
 

@@ -190,6 +190,7 @@ int BlockManager::InitRootTimeBlocks() {
 }
 
 int BlockManager::InitRootElectBlocks() {
+    std::cout << 0 << std::endl;
     auto account_info = AccountManager::Instance()->GetAcountInfo(
         common::kRootChainElectionBlockTxAddress);
     if (account_info == nullptr) {
@@ -197,6 +198,7 @@ int BlockManager::InitRootElectBlocks() {
         return kBlockSuccess;
     }
 
+    std::cout << 1 << std::endl;
     for (uint32_t i = network::kRootCongressNetworkId;
             i < network::kConsensusShardEndNetworkId; ++i) {
         uint64_t latest_elect_block_height = 0;
@@ -209,12 +211,14 @@ int BlockManager::InitRootElectBlocks() {
             return kBlockSuccess;
         }
 
+        std::cout << 2 << std::endl;
         elect::protobuf::ElectBlock elect_block;
         if (!elect_block.ParseFromString(latest_elect_block_str)) {
             BLOCK_ERROR("this node not load elect blocks, parse failed");
             return kBlockError;
         }
 
+        std::cout << 3<< std::endl;
         elect::ElectManager::Instance()->OnNewElectBlock(
             latest_elect_block_height,
             elect_block);

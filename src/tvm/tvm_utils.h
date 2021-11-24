@@ -29,6 +29,12 @@ enum ContractCallMode {
     kCreateAndCall = 2,
 };
 
+static const std::string kContractHead = common::Encode::HexDecode("60806040");
+
+inline static bool IsContractBytesCode(const std::string& bytes_code) {
+    return memcmp(kContractHead.c_str(), bytes_code.c_str(), kContractHead.size()) == 0;
+}
+
 inline static void Uint64ToEvmcBytes32(evmc_bytes32& bytes32, uint64_t value) {
     for (std::size_t i = 0; i < sizeof(value); ++i) {
         bytes32.bytes[sizeof(bytes32.bytes) - 1 - i] = static_cast<uint8_t>(value >> (8 * i));
