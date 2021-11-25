@@ -893,6 +893,7 @@ int TxBft::BackupCheckContractExceute(
         local_tx_ptr->tx.type(),
         local_tx_ptr->tx.call_contract_step(),
         local_tx_ptr->tx.gid());
+    tenon_host_.my_address_ = local_tx_info->tx.to();
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
     int backup_status = kBftSuccess;
@@ -2334,6 +2335,7 @@ int TxBft::LeaderCallContractExceute(
 
     evmc_result evmc_res = {};
     evmc::result res{ evmc_res };
+    tenon_host_.my_address_ = tx_info->tx.to();
     do
     {
         if (caller_balance < tx_info->tx.gas_limit() * tx.gas_price()) {

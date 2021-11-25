@@ -76,7 +76,6 @@ int BftInterface::InitTenonTvmContext() {
     tenon_host_.tx_context_.block_coinbase = evmc::address{};
     tenon_host_.tx_context_.block_number = last_height;
     tenon_host_.tx_context_.block_timestamp = common::TimeUtils::TimestampSeconds();
-    std::cout << "tenon context timestamp sec: " << tenon_host_.tx_context_.block_timestamp << std::endl;
     tenon_host_.tx_context_.block_gas_limit = 0;
     tenon_host_.tx_context_.block_difficulty = evmc_uint256be{};
     uint64_t chanin_id = (((uint64_t)common::GlobalInfo::Instance()->network_id()) << 32 |

@@ -1475,6 +1475,18 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
                 id = tx_list[i].to();
             } else if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
                 id = tx_list[i].from();
+            } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
+                if (IsCreateContractLibraray(tx_list[i])) {
+                    for (int32_t i = 0;
+                            i < common::GlobalInfo::Instance()->consensus_shard_count(); ++i) {
+                        if ((network::kConsensusShardBeginNetworkId + i) !=
+                                common::GlobalInfo::Instance()->network_id()) {
+                            broadcast_nets.insert(network::kConsensusShardBeginNetworkId + i);
+                        }
+                    }
+                }
+
+                continue;
             } else {
                 continue;
             }
@@ -1511,6 +1523,23 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
         to_leader_broadcast_msg_ = msg;
 #endif
     }
+}
+
+bool BftManager::IsCreateContractLibraray(const bft::protobuf::TxInfo& tx_info) {
+    if (tx_info.type() != common::kConsensusCreateContract ||
+            tx_info.call_contract_step() != contract::kCallStepContractCalled) {
+        return false;
+    }
+
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        if (tx_info.attr(i).key() == kContractBytesCode) {
+            if (tvm::IsContractBytesCode(tx_info.attr(i).value())) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void BftManager::CheckTimeout() {
@@ -1853,10 +1882,32 @@ void BftManager::HandleToWaitingBlock(
             continue;
         }
 
+        if (tx_list[i].type() == common::kConsensusCreateContract &&
+                tx_list[i].call_contract_step() == contract::kCallStepContractFinal &&
+                IsCreateContractLibraray(tx_list[i])) {
+            // add contract library
+            db::DbWriteBach db_batch;
+            if (block::AccountManager::Instance()->AddNewAccount(
+                    tx_list[i],
+                    block.height(),
+                    block.hash(),
+                    db_batch) != block::kBlockSuccess) {
+                BFT_ERROR("add new account failed");
+            }
+
+            db::Db::Instance()->Put(db_batch);
+            continue;
+        }
+
         auto new_tx = tx_list[i];
         new_tx.set_to_add(true);
         auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(new_tx.to());
         if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            if (new_tx.type() == common::kConsensusCreateContract &&
+                    new_tx.call_contract_step() != contract::kCallStepCallerInited) {
+                continue;
+            }
+
             if (account_ptr != nullptr) {
                 // root just create account address and assignment consensus network id
                 just_broadcast = true;
@@ -1882,9 +1933,9 @@ void BftManager::HandleToWaitingBlock(
         }
     }
 
-    if (just_broadcast) {
+//     if (just_broadcast) {
 //         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
-    }
+//     }
 
     int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_index >= 0) {

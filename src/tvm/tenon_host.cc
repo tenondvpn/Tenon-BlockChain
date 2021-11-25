@@ -22,6 +22,11 @@ evmc::bytes32 TenonHost::get_storage(
     // first find from temporary map storage
     std::string id((char*)addr.bytes, sizeof(addr.bytes));
     std::string key_str((char*)key.bytes, sizeof(key.bytes));
+    std::cout << "0000 get storage called, id: " << common::Encode::HexEncode(id)
+        << ", key: " << common::Encode::HexEncode(key_str)
+        << std::endl;
+
+
     const auto account_iter = accounts_.find(addr);
     if (account_iter != accounts_.end()) {
         const auto storage_iter = account_iter->second.storage.find(key);
@@ -258,7 +263,7 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
     evmc::result evmc_res{ call_result };
     evmc_result* raw_result = (evmc_result*)&evmc_res;
     raw_result->gas_left = msg.gas;
-    std::cout << "tvm host called address: " << common::Encode::HexEncode(params.code_address) << ", data: " << common::Encode::HexEncode(params.data) << std::endl;
+    std::cout << "host called kind: " << msg.kind << ", from: " << common::Encode::HexEncode(params.from) << ", to: " << common::Encode::HexEncode(params.to) << std::endl;
     if (contract::ContractManager::Instance()->call(
             params,
             gas_price_,
@@ -273,10 +278,9 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
                 return evmc_res;
             }
 
-//             Execution exec;
             ++depth_;
             int res_status = tvm::Execution::Instance()->execute(
-                params.code_address,
+                bytes_code,
                 params.data,
                 params.from,
                 params.to,

@@ -95,13 +95,19 @@ private:
     void ChannelClaimTimeout(const std::string& contract_addr);
 
     // test token
-    std::string CreateTokenLib();
     std::string CreateToken();
     void TokenBalance(const std::string& contract_addr, const std::string& params);
     void TokenTransfer(const std::string& contract_addr, const std::string& params);
     void TokenTransferFrom(const std::string& contract_addr, const std::string& params);
     void TokenCreateAddr(const std::string& contract_addr, const std::string& params);
     void TokenApprove(const std::string& contract_addr, const std::string& params);
+
+    // test ex_tocken
+    std::string CreateExTokenLib();
+    std::string CreateExToken();
+
+    // test call_contract
+    void CallContract(const std::string& contract_addr, const std::string& param);
 
     // test inner lib math
     std::string CreateTestMath();

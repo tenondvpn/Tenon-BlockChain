@@ -85,23 +85,27 @@ int Execution::execute(
     const uint8_t* exec_code_data = nullptr;
     size_t exec_code_size = 0;
     if (call_mode == kJustCreate || call_mode == kCreateAndCall) {
-        if (!IsContractBytesCode(bytes_code)) {
-            if (gas_limit < (code_size * bft::kKeyValueStorageEachBytes)) {
-                out_res->gas_left = 0;
-                out_res->status_code = EVMC_OUT_OF_GAS;
-                out_res->output_data = nullptr;
-                out_res->output_size = 0;
-                return EVMC_OUT_OF_GAS;
-            }
-
-            out_res->create_address = msg.sender;
-            out_res->gas_left = gas_limit - (code_size * bft::kKeyValueStorageEachBytes);
-            host.create_bytes_code_ = bytes_code;
-            out_res->status_code = EVMC_SUCCESS;
-            out_res->output_data = nullptr;
-            out_res->output_size = 0;
-            return kTvmSuccess;
-        }
+//         if (!IsContractBytesCode(bytes_code)) {
+//             if (gas_limit < (code_size * bft::kKeyValueStorageEachBytes)) {
+//                 out_res->gas_left = 0;
+//                 out_res->status_code = EVMC_OUT_OF_GAS;
+//                 out_res->output_data = nullptr;
+//                 out_res->output_size = 0;
+//                 return EVMC_OUT_OF_GAS;
+//             }
+// 
+//             out_res->create_address = msg.sender;
+//             out_res->gas_left = gas_limit - (code_size * bft::kKeyValueStorageEachBytes);
+//             host.create_bytes_code_ = bytes_code;
+//             out_res->status_code = EVMC_SUCCESS;
+//             out_res->output_data = nullptr;
+//             out_res->output_size = 0;
+//             evmc_message create_msg{};
+//             create_msg.kind = EVMC_CREATE2;
+//             create_msg.sender = msg.sender;
+//             create_msg.gas = create_gas;
+//             return kTvmSuccess;
+//         }
 
         evmc_message create_msg{};
         create_msg.kind = EVMC_CREATE;
