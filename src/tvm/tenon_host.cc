@@ -291,6 +291,8 @@ evmc::result TenonHost::call(const evmc_message& msg) noexcept {
                 tvm::kJustCall,
                 *this,
                 &evmc_res);
+        } else {
+            // (TODO): sync account info from other shard
         }
     }
 

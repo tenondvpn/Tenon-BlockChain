@@ -290,6 +290,24 @@ int AccountManager::AddBlockItemToDb(
         }
 
         BLOCK_DEBUG("add block account: %s", common::Encode::HexEncode(account_id).c_str());
+
+        if (tx_list[i].type() == common::kConsensusCallContract ||
+                tx_list[i].type() == common::kConsensusCreateContract) {
+            switch (tx_list[i].call_contract_step()) {
+            case contract::kCallStepCallerInited:
+                account_id = tx_list[i].from();
+                break;
+            case contract::kCallStepContractCalled:
+                account_id = tx_list[i].to();
+                break;
+            case contract::kCallStepContractFinal:
+                account_id = tx_list[i].from();
+                break;
+            default:
+                break;
+            }
+        }
+
         uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (consistent_pool_index == common::kInvalidPoolIndex) {
             consistent_pool_index = pool_idx;
@@ -312,23 +330,6 @@ int AccountManager::AddBlockItemToDb(
                 tx_list[i].type(),
                 tx_list[i].call_contract_step(),
                 tx_list[i].gid());
-        }
-
-        if (tx_list[i].type() == common::kConsensusCallContract ||
-                tx_list[i].type() == common::kConsensusCreateContract) {
-            switch (tx_list[i].call_contract_step()) {
-            case contract::kCallStepCallerInited:
-                account_id = tx_list[i].from();
-                break;
-            case contract::kCallStepContractCalled:
-                account_id = tx_list[i].to();
-                break;
-            case contract::kCallStepContractFinal:
-                account_id = tx_list[i].from();
-                break;
-            default:
-                break;
-            }
         }
 
         if (tx_list[i].attr_size() > 0 || tx_list[i].storages_size() > 0) {
@@ -378,6 +379,7 @@ int AccountManager::AddBlockItemToDb(
     }
 
     block_pools_[consistent_pool_index]->SetHeightTree(block_item->height());
+    BLOCK_DEBUG("AddBlockItemToDb height tree network %u pool %u, set height: %lu", common::GlobalInfo::Instance()->network_id(), consistent_pool_index, block_item->height());
     return kBlockSuccess;
 }
 
@@ -823,6 +825,8 @@ int AccountManager::GetBlockInfo(
         uint64_t* tm_height,
         uint64_t* tm_with_block_height) {
     int res = block_pools_[pool_idx]->GetHeight(height);
+    BLOCK_DEBUG("get block info net: %d pool_idx: %u, height: %lu",
+        common::GlobalInfo::Instance()->network_id(), pool_idx, *height);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
         return res;
@@ -852,6 +856,8 @@ void AccountManager::SetPool(
         }
     }
 
+    BLOCK_DEBUG("set block info net: %d pool_idx: %u, height: %lu",
+        common::GlobalInfo::Instance()->network_id(), pool_index, block_item->height());
     block_pools_[pool_index]->SetHash(block_item->hash(), db_batch);
     block_pools_[pool_index]->SetHeight(block_item->height(), db_batch);
     block_pools_[pool_index]->SetTimeBlockHeight(
@@ -870,13 +876,17 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 }
 
 void AccountManager::CheckMissingHeight() {
-    return;
     uint32_t synced_height = 0;
+    std::string missing_heihts = std::to_string(common::GlobalInfo::Instance()->network_id()) + ": ";
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
         std::vector<uint64_t> missing_heights;
         block_pools_[i]->GetMissingHeights(&missing_heights);
+        if (missing_heights.empty()) {
+            continue;
+        }
 
         synced_height += missing_heights.size();
+        missing_heihts += std::to_string(i)  + ": [ ";
         for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
             if (i == common::kImmutablePoolSize) {
                 sync::KeyValueSync::Instance()->AddSyncHeight(
@@ -891,13 +901,16 @@ void AccountManager::CheckMissingHeight() {
                     missing_heights[h_idx],
                     sync::kSyncHighest);
             }
+            missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
         }
 
+        missing_heihts += "], ";
         if (synced_height > 64) {
             break;
         }
     }
 
+    BLOCK_DEBUG("height tree get missing heigths: %s", missing_heihts.c_str());
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));

@@ -684,7 +684,9 @@ int BlockManager::AddNewBlock(
         AccountManager::Instance()->AddBlockItemToCache(block_item, db_batch);
     }
 
+    BLOCK_DEBUG("AddBlockItemToDb called. %lu", block_item->height());
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch, is_kv_sync);
+    BLOCK_DEBUG("AddBlockItemToDb finished. %lu", block_item->height());
     ShardStatistic::Instance()->AddStatistic(block_item);
 #ifdef TENON_UNITTEST
     if (block_item->prehash() == "1") {

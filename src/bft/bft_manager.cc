@@ -1751,25 +1751,17 @@ int BftManager::VerifyBlsAggSignature(
         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
         return kBftError;
     }
-//     if (bls::BlsSign::Verify(
-//             t,
-//             n,
-//             sign,
-//             sign_hash,
-//             elect::ElectManager::Instance()->GetCommonPublicKey(
-//             bft_ptr->elect_height(),
-//             bft_ptr->network_id())) != bls::kBlsSuccess) {
-//         BFT_ERROR("VerifyBlsAggSignature agg sign failed!");
-//         return kBftError;
-//     }
 
     return kBftSuccess;
 }
 
-
 int BftManager::AddKeyValueSyncBlock(
         const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    if (db::Db::Instance()->Exist(block_ptr->hash())) {
+        return kBftError;
+    }
+
     auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,
