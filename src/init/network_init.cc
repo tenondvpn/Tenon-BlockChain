@@ -146,8 +146,21 @@ int NetworkInit::Init(int argc, char** argv) {
     }
 
     uint32_t net_id = common::GlobalInfo::Instance()->network_id();
-    if (net_id >= network::kConsensusShardEndNetworkId && net_id < network::kConsensusWaitingShardEndNetworkId) {
+    if (net_id >= network::kConsensusShardEndNetworkId &&
+            net_id < network::kConsensusWaitingShardEndNetworkId) {
         net_id -= network::kConsensusWaitingShardOffset;
+    } else if (net_id >= network::kRootCongressNetworkId &&
+            net_id <= network::kConsensusShardEndNetworkId) {
+        auto st = db::Db::Instance()->Put(
+            kInitJoinWaitingPoolDbKey,
+            std::to_string(net_id + network::kConsensusWaitingShardOffset));
+        if (!st.ok()) {
+            INIT_ERROR("db::Db::Instance()->Put network[%u] failed!", net_id);
+            return kInitError;
+        }
+    } else {
+        // not consensus node not allowed
+        return kInitError;
     }
 
     if (block::AccountManager::Instance()->Init(net_id) != block::kBlockSuccess) {
