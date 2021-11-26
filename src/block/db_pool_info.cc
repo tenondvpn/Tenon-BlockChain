@@ -19,8 +19,9 @@ static const std::string kPoolLastBlockStr = "pool_last_block_str";
 static const std::string kPoolTimeBlockHeight = "pool_tm_block_height";
 static const std::string kPoolTimeBlockWithChainHeight = "pool_tm_with_block_height";
 
-DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
-    dict_key_ = db::kGlobalDickKeyPoolInfo + "_" + std::to_string(pool_index);
+DbPoolInfo::DbPoolInfo(uint32_t pool_index, uint32_t net_id) {
+    dict_key_ = (db::kGlobalDickKeyPoolInfo + "_" +
+        std::to_string(net_id) + "_" + std::to_string(pool_index));
     pool_index_ = pool_index;
     std::string block_latest_hash;
     uint64_t max_height = 0;
@@ -28,7 +29,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index) {
     GetHash(&block_latest_hash);
     height_tree_ptr_ = std::make_shared<sync::HeightTreeLevel>(
         db::kGlobalHeightTreeKey + "_" +
-        std::to_string(common::GlobalInfo::Instance()->network_id()) + "_" +
+        std::to_string(net_id) + "_" +
         std::to_string(pool_index),
         max_height);
 }

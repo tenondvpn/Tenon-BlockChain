@@ -20,7 +20,7 @@ namespace block {
 
 class DbPoolInfo {
 public:
-    DbPoolInfo(uint32_t pool_index);
+    DbPoolInfo(uint32_t pool_index, uint32_t net_id);
     ~DbPoolInfo();
     int InitWithGenesisBlock();
     int SetHash(const std::string& hash, db::DbWriteBach& db_batch);

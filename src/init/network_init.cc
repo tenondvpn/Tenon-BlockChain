@@ -127,6 +127,7 @@ int NetworkInit::Init(int argc, char** argv) {
 //         INIT_ERROR("init http transport failed!");
 //         return kInitError;
 //     }
+    // get the latest elect block from root network
 
     if (InitNetworkSingleton() != kInitSuccess) {
         INIT_ERROR("InitNetworkSingleton failed!");
@@ -141,6 +142,15 @@ int NetworkInit::Init(int argc, char** argv) {
     // check if is any consensus shard or root node or join in waiting pool
     if (CheckJoinWaitingPool() != kInitSuccess) {
         INIT_ERROR("CheckJoinWaitingPool failed!");
+        return kInitError;
+    }
+
+    uint32_t net_id = common::GlobalInfo::Instance()->network_id();
+    if (net_id >= network::kConsensusShardEndNetworkId && net_id < network::kConsensusWaitingShardEndNetworkId) {
+        net_id -= network::kConsensusWaitingShardOffset;
+    }
+
+    if (block::AccountManager::Instance()->Init(net_id) != block::kBlockSuccess) {
         return kInitError;
     }
 
@@ -176,7 +186,6 @@ int NetworkInit::CheckJoinWaitingPool() {
         }
     }
 
-    waiting_network_id = network::kRootCongressWaitingNetworkId + 1;
     if ((waiting_network_id < network::kRootCongressWaitingNetworkId ||
             waiting_network_id >= network::kConsensusWaitingShardEndNetworkId)) {
         auto valid_network_ids = elect::ElectManager::Instance()->valid_shard_networks();

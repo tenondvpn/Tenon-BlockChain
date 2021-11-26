@@ -23,6 +23,7 @@ namespace block {
 class AccountManager {
 public:
     static AccountManager* Instance();
+    int Init(uint32_t network_id);
     int AddBlockItemToDb(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch,

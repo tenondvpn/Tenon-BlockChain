@@ -45,21 +45,6 @@ AccountManager* AccountManager::Instance() {
 }
 
 AccountManager::AccountManager() {
-    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
-        block_pools_[i] = new block::DbPoolInfo(i);
-    }
-
-    srand(time(NULL));
-    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds() + rand() % 30;
-    check_missing_height_tick_.CutOff(
-        kCheckMissingHeightPeriod,
-        std::bind(&AccountManager::CheckMissingHeight, this));
-    flush_db_tick_.CutOff(
-        kFushTreeToDbPeriod,
-        std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
-    refresh_pool_max_height_tick_.CutOff(
-        kRefreshPoolMaxHeightPeriod,
-        std::bind(&AccountManager::RefreshPoolMaxHeight, this));
 }
 
 AccountManager::~AccountManager() {
@@ -75,6 +60,25 @@ AccountManager::~AccountManager() {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         acc_map_.clear();
     }
+}
+
+int AccountManager::Init(uint32_t network_id) {
+    for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
+        block_pools_[i] = new block::DbPoolInfo(i, network_id);
+    }
+
+    srand(time(NULL));
+    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds() + rand() % 30;
+    check_missing_height_tick_.CutOff(
+        kCheckMissingHeightPeriod,
+        std::bind(&AccountManager::CheckMissingHeight, this));
+    flush_db_tick_.CutOff(
+        kFushTreeToDbPeriod,
+        std::bind(&AccountManager::FlushPoolHeightTreeToDb, this));
+    refresh_pool_max_height_tick_.CutOff(
+        kRefreshPoolMaxHeightPeriod,
+        std::bind(&AccountManager::RefreshPoolMaxHeight, this));
+    return kBlockSuccess;
 }
 
 bool AccountManager::AccountExists(const std::string& acc_id) {
