@@ -659,7 +659,8 @@ int BlockManager::AddNewBlock(
         db::DbWriteBach& db_batch,
         bool to_cache,
         bool is_kv_sync) {
-    BLOCK_DEBUG("AddNewBlock hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
+    BLOCK_DEBUG("AddNewBlock hash: %s, height: %lu",
+        common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
     if (!block_hash_limit_set_.Push(block_item->hash())) {
         return kBlockSuccess;
     }

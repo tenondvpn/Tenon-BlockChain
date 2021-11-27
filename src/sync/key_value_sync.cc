@@ -337,10 +337,12 @@ void KeyValueSync::ProcessSyncValueRequest(
                 sync_msg.sync_value_req().heights(i).pool_idx(),
                 sync_msg.sync_value_req().heights(i).height(),
                 &value) != block::kBlockSuccess) {
-            SYNC_DEBUG("get key failed network id: %u, pool index: %u, height: %lu",
+            SYNC_DEBUG("get key failed network id: %u, pool index: %u, height: %lu, from: %s:%d",
                 network_id,
                 sync_msg.sync_value_req().heights(i).pool_idx(),
-                sync_msg.sync_value_req().heights(i).height());
+                sync_msg.sync_value_req().heights(i).height(),
+                header.from_ip().c_str(),
+                header.from_port());
             continue;
         }
 

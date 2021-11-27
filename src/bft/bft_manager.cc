@@ -1759,6 +1759,7 @@ int BftManager::AddKeyValueSyncBlock(
         const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr) {
     if (db::Db::Instance()->Exist(block_ptr->hash())) {
+        BFT_WARN("sync block exists height: %lu", block_ptr->height());
         return kBftError;
     }
     

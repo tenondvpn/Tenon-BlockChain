@@ -87,6 +87,7 @@ void HeightTreeLevel::GetMissingHeights(
         std::vector<uint64_t>* heights,
         uint64_t max_height) {
     // The higher the height, the higher the priority
+    std::cout << db_prefix_ << ", max_height_: " << max_height_ << ", max_height: " << max_height << ", max_level_: " << max_level_ << std::endl;
     if (max_height_ != common::kInvalidUint64 && max_height > max_height_) {
         for (uint64_t i = max_height_ + 1; i <= max_height; ++i) {
             heights->push_back(i);
@@ -106,7 +107,6 @@ void HeightTreeLevel::GetMissingHeights(
     auto iter = level_map->begin();
     if (max_level_ == 0) {
         iter->second->GetLeafInvalidHeights(heights);
-//         std::cout << db_prefix_ << ", max_height_: " << max_height_ << ", max_height: " << max_height << ", max_level_: " << max_level_ << ", heights size: " << heights->size() << std::endl;
         return;
     }
 
