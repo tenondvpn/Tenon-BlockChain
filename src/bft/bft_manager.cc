@@ -1761,7 +1761,8 @@ int BftManager::AddKeyValueSyncBlock(
     if (db::Db::Instance()->Exist(block_ptr->hash())) {
         return kBftError;
     }
-
+    
+    // TODO: check agg signature valid
     auto queue_item_ptr = std::make_shared<BlockToDbItem>(block_ptr);
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,

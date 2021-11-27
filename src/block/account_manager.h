@@ -69,10 +69,6 @@ private:
         uint32_t pool_index,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch);
-    int GenesisAddAccountInfo(
-        const std::string& account_id,
-        db::DbWriteBach& db_batch,
-        block::DbAccountInfo* account_info);
     int SetAccountAttrs(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,

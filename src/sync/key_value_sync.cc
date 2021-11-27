@@ -203,7 +203,11 @@ uint64_t KeyValueSync::SendSyncRequest(
     std::vector<dht::NodePtr> nodes;
     dht::DhtKeyManager dht_key(network_id, 0);
     auto dht = network::DhtManager::Instance()->GetDht(network_id);
-    if (!dht) {
+    if (dht) {
+        nodes = *dht->readonly_dht();
+    }
+
+    if (nodes.empty()) {
         if (network_id >= network::kConsensusShardEndNetworkId) {
             network_id -= network::kConsensusWaitingShardOffset;
             dht = network::DhtManager::Instance()->GetDht(network_id);
@@ -219,8 +223,6 @@ uint64_t KeyValueSync::SendSyncRequest(
                 nodes = dht::DhtFunction::GetClosestNodes(*readonly_dht, dht_key.StrKey(), 4);
             }
         }
-    } else {
-        nodes = *dht->readonly_dht();
     }
 
     if (nodes.empty()) {

@@ -589,40 +589,12 @@ int AccountManager::AddNewAccount(
     return kBlockSuccess;
 }
 
-int AccountManager::GenesisAddAccountInfo(
-        const std::string& account_id,
-        db::DbWriteBach& db_batch,
-        block::DbAccountInfo* account_info) {
-    if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
-        BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
-            common::Encode::HexEncode(account_id).c_str());
-        return kBlockError;
-    }
-
-    account_info->SetMaxHeightHash(0, "", db_batch);
-    int res = account_info->SetBalance(0, db_batch);
-//     res += account_info->SetCreateAccountHeight(0, db_batch);
-//     if (res != 0) {
-//         BLOCK_ERROR("SetCreateAccountHeight failed: %s, %llu",
-//             common::Encode::HexEncode(account_id).c_str());
-//         return kBlockError;
-//     }
-
-    if (res != kBlockSuccess) {
-        BLOCK_ERROR("SetOutLego failed: %s, %llu",
-            common::Encode::HexEncode(account_id).c_str());
-        return kBlockError;
-    }
-
-    return kBlockSuccess;
-}
-
 int AccountManager::UpdateAccountInfo(
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_DEBUG("add new account: %s, height: %lu, type: %d",
+    BLOCK_DEBUG("update account: %s, height: %lu, type: %d",
         common::Encode::HexEncode(account_id).c_str(), block_item->height(), tx_info.type());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
@@ -632,27 +604,35 @@ int AccountManager::UpdateAccountInfo(
     }
 
     block::DbAccountInfoPtr account_info = nullptr;
+    uint64_t exist_height = 0;
     {
         std::lock_guard<std::mutex> guard(acc_map_mutex_);
         auto iter = acc_map_.find(account_id);
         if (iter == acc_map_.end()) {
             account_info = std::make_shared<block::DbAccountInfo>(account_id);
             if (!block::DbAccountInfo::AccountExists(account_id)) {
-                if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
-                        bft::IsRootSingleBlockTx(tx_info.type()) ||
-                        common::IsBaseAddress(account_id)) {
-                    if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
-                        return kBlockError;
-                    }
-                } else if (tx_info.type() == common::kConsensusCreateAcount &&
-                    tx_info.network_id() != 0) {
-                } else {
-                    BLOCK_ERROR("account id not exists[%s]!",
+//                 if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
+//                         bft::IsRootSingleBlockTx(tx_info.type()) ||
+//                         common::IsBaseAddress(account_id)) {
+//                     if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
+//                         return kBlockError;
+//                     }
+//                 } else if (tx_info.type() == common::kConsensusCreateAcount &&
+//                     tx_info.network_id() != 0) {
+//                 } else {
+//                     BLOCK_ERROR("account id not exists[%s]!",
+//                         common::Encode::HexEncode(account_id).c_str());
+//                     return kBlockError;
+//                 }
+                if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
+                    BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
                         common::Encode::HexEncode(account_id).c_str());
                     return kBlockError;
                 }
 
                 account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
+                account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
+                exist_height = block_item->height();
             }
 
             acc_map_[account_id] = account_info;
@@ -662,13 +642,11 @@ int AccountManager::UpdateAccountInfo(
             account_info = iter->second;
             account_info->set_added_timeout(common::TimeUtils::TimestampMs());
             acc_limit_heap_.AdjustDown(account_info->heap_index());
+            if (account_info->GetMaxHeight(&exist_height) != block::kBlockSuccess) {
+                BLOCK_ERROR("GetMaxHeight failed!");
+                return kBlockError;
+            }
         }
-    }
-
-    uint64_t exist_height = 0;
-    if (account_info->GetMaxHeight(&exist_height) != block::kBlockSuccess) {
-        BLOCK_ERROR("GetMaxHeight failed!");
-        return kBlockError;
     }
 
     BLOCK_ERROR("1 DDDDDDDDDDDDDD NewHeight: %s, %lu", common::Encode::HexEncode(account_id).c_str(), block_item->height());

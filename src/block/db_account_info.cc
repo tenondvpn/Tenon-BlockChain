@@ -313,8 +313,8 @@ int DbAccountInfo::GetAttrValue(const std::string& key, std::string* value) {
 //                 account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
 //                 account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
 //                 account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
-                std::cout << "get storage key: " << common::Encode::HexEncode(key)
-                    << ", " << common::Encode::HexEncode(*value) << std::endl;
+//                 std::cout << "get storage key: " << common::Encode::HexEncode(key)
+//                     << ", " << common::Encode::HexEncode(*value) << std::endl;
 //             }
 
             return kBlockSuccess;
@@ -334,8 +334,8 @@ int DbAccountInfo::GetAttrValue(const std::string& key, std::string* value) {
 //             account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
 //             account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
 //             account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
-            std::cout << "get storage key: " << common::Encode::HexEncode(key)
-                << ", " << common::Encode::HexEncode(*value) << std::endl;
+//             std::cout << "get storage key: " << common::Encode::HexEncode(key)
+//                 << ", " << common::Encode::HexEncode(*value) << std::endl;
 //         }
 
         return kBlockSuccess;
@@ -364,11 +364,11 @@ int DbAccountInfo::SetAttrValue(
 //         account_id_ == common::Encode::HexDecode("4dca4186ec80fe5bbce7531186fc8966d8dd58a9") ||
 //         account_id_ == common::Encode::HexDecode("a45c90f01155cd8615d2db4267b6ee0e8e3d6528") ||
 //         account_id_ == common::Encode::HexDecode("cc686eefa301ec1a781a77a915a742cc5f562613")) {
-        std::cout << "set storage key: " << common::Encode::HexEncode(key)
-            << ", " << common::Encode::HexEncode(value) << std::endl;
-        BLOCK_DEBUG("set storage key: %s, value: %s",
-            common::Encode::HexEncode(key).c_str(),
-            common::Encode::HexEncode(value).c_str());
+//         std::cout << "set storage key: " << common::Encode::HexEncode(key)
+//             << ", " << common::Encode::HexEncode(value) << std::endl;
+//         BLOCK_DEBUG("set storage key: %s, value: %s",
+//             common::Encode::HexEncode(key).c_str(),
+//             common::Encode::HexEncode(value).c_str());
 //     }
 
     db_batch.Put(StorageDbKey(account_id_, key), value);

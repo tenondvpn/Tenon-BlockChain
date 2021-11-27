@@ -404,7 +404,7 @@ void LeafHeightTree::GetBranchInvalidNode(uint64_t* vec_idx) {
 
 void LeafHeightTree::GetLeafInvalidHeights(std::vector<uint64_t>* height_vec) {
     int32_t parent_index = GetRootIndex();
-    if (data_[parent_index] == kLevelNodeValidHeights) {
+    if (data_[parent_index] == kLevelNodeValidHeights || max_height_ == common::kInvalidUint64) {
         return;
     }
 
@@ -424,6 +424,7 @@ void LeafHeightTree::GetLeafInvalidHeights(std::vector<uint64_t>* height_vec) {
     }
 
     uint64_t b_idx = global_leaf_index_ + choosed_leaf_node * 64;
+//     std::cout << "GetLeafInvalidHeights GetAlignMaxLevel: " << max_level << ", b_idx: " << b_idx << ", max_height_: " << max_height_ << std::endl;
     for (uint64_t i = 0; i < 64; ++i) {
         if (b_idx + i > max_height_) {
             break;

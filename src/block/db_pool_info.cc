@@ -182,7 +182,7 @@ int DbPoolInfo::GetHeight(uint64_t* height) {
             dict_key_,
             kPoolHeight,
             &str_height)) {
-        BLOCK_ERROR("get height from db failed[%s][%s]", dict_key_.c_str(), kPoolHeight.c_str());
+//         BLOCK_ERROR("get height from db failed[%s][%s]", dict_key_.c_str(), kPoolHeight.c_str());
         return kBlockError;
     }
 

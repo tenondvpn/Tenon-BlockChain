@@ -40,6 +40,7 @@ int GenesisBlockInit::CreateGenesisBlocks(
         shard_bitmap_.Set(i);
     }
 
+    block::AccountManager::Instance()->Init(net_id);
     if (net_id == network::kRootCongressNetworkId) {
         common::GlobalInfo::Instance()->set_network_id(network::kRootCongressNetworkId);
         return CreateRootGenesisBlocks(root_genesis_nodes, cons_genesis_nodes);
