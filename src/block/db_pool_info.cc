@@ -24,7 +24,7 @@ DbPoolInfo::DbPoolInfo(uint32_t pool_index, uint32_t net_id) {
         std::to_string(net_id) + "_" + std::to_string(pool_index));
     pool_index_ = pool_index;
     std::string block_latest_hash;
-    uint64_t max_height = 0;
+    uint64_t max_height = common::kInvalidUint64;
     GetHeight(&max_height);
     GetHash(&block_latest_hash);
     height_tree_ptr_ = std::make_shared<sync::HeightTreeLevel>(
@@ -160,6 +160,7 @@ int DbPoolInfo::SetHeight(uint64_t height, db::DbWriteBach& db_batch) {
     }
 
     height_ = height;
+    BLOCK_ERROR("set height from db success[%s][%s][%lu]", dict_key_.c_str(), kPoolHeight.c_str(), height);
     return kBlockSuccess;
 }
 
@@ -182,7 +183,7 @@ int DbPoolInfo::GetHeight(uint64_t* height) {
             dict_key_,
             kPoolHeight,
             &str_height)) {
-//         BLOCK_ERROR("get height from db failed[%s][%s]", dict_key_.c_str(), kPoolHeight.c_str());
+        BLOCK_ERROR("get height from db failed[%s][%s]", dict_key_.c_str(), kPoolHeight.c_str());
         return kBlockError;
     }
 

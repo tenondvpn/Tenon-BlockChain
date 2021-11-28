@@ -1759,7 +1759,7 @@ int BftManager::AddKeyValueSyncBlock(
         const transport::protobuf::Header& header,
         std::shared_ptr<bft::protobuf::Block>& block_ptr) {
     if (db::Db::Instance()->Exist(block_ptr->hash())) {
-        BFT_WARN("sync block exists height: %lu", block_ptr->height());
+        BFT_WARN("sync block exists height: %lu, hash: %s", block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
         return kBftError;
     }
     
@@ -1774,6 +1774,7 @@ int BftManager::AddKeyValueSyncBlock(
 
     queue_item_ptr->is_kv_synced = true;
     block_queue_[header.thread_idx()].push(queue_item_ptr);
+    BFT_WARN("not sync block exists height: %lu, hash: %s", block_ptr->height(), common::Encode::HexEncode(block_ptr->hash()).c_str());
     return kBftSuccess;
 }
 

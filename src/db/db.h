@@ -51,7 +51,8 @@ public:
         DbIterator* it = db_->NewIterator(DbReadOptions());
         it->Seek(key);
         bool res = false;
-        if (it->Valid() && it->key().ToString() == key) {
+        if (it->Valid() && it->key().size() == key.size() &&
+                memcmp(it->key().data(), key.c_str(), key.size()) == 0) {
             res = true;
         }
 

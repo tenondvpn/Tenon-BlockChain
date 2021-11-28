@@ -453,6 +453,7 @@ int AccountManager::AddBlockItemToCache(
         }
     }
 
+    BLOCK_DEBUG("block network id: %u, local net: %lu", block_item->network_id(), common::GlobalInfo::Instance()->network_id());
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex ||
             (block_item->network_id() >= network::kRootCongressNetworkId &&
@@ -835,6 +836,9 @@ void AccountManager::SetPool(
     uint64_t height = 0;
     if (block_pools_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
+            BLOCK_DEBUG("not set block info net: %d pool_idx: %u, height: %lu > block_item->height() : %lu",
+                common::GlobalInfo::Instance()->network_id(), pool_index, height, block_item->height());
+
             return;
         }
     }
@@ -973,7 +977,7 @@ void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Heade
     block::protobuf::BlockMessage block_msg;
     auto ref_hegihts_req = block_msg.mutable_ref_heights_res();
     for (uint32_t i = 0; i <= common::kImmutablePoolSize; ++i) {
-        uint64_t height;
+        uint64_t height = 0;
         block_pools_[i]->GetHeight(&height);
         ref_hegihts_req->add_heights(height);
     }
@@ -988,7 +992,8 @@ int AccountManager::HandleRefreshHeightsReq(
         protobuf::BlockMessage& block_msg) {
     for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
-        BLOCK_DEBUG("req pool index set max height: %u, %lu from: %s: %d", i, block_msg.ref_heights_req().heights(i), header.from_ip().c_str(), header.from_port());
+        if (block_msg.ref_heights_req().heights(i) > 0)
+            BLOCK_DEBUG("set RefreshHeights req network: %d, pool: %d, height: %lu", common::GlobalInfo::Instance()->network_id(), i, block_msg.ref_heights_req().heights(i));
     }
 
     SendRefreshHeightsResponse(header);
@@ -1001,7 +1006,7 @@ int AccountManager::HandleRefreshHeightsRes(
         protobuf::BlockMessage& block_msg) {
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
-        BLOCK_DEBUG("res pool index set max height: %u, %lu ", i, block_msg.ref_heights_res().heights(i), header.from_ip().c_str(), header.from_port());
+        BLOCK_DEBUG("set RefreshHeights res network: %d, pool: %d, height: %lu", common::GlobalInfo::Instance()->network_id(), i, block_msg.ref_heights_res().heights(i));
     }
 
     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();

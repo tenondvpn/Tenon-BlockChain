@@ -412,6 +412,9 @@ void KeyValueSync::ProcessSyncValueResponse(
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
+            SYNC_DEBUG("add key value success key: %s, value: %s.",
+                common::Encode::HexEncode(iter->key()).c_str(),
+                common::Encode::HexEncode(iter->value()).c_str());
         }
 
         std::string key = iter->key();
