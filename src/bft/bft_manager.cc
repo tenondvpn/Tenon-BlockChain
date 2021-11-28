@@ -1801,6 +1801,11 @@ void BftManager::HandleSyncWaitingBlock(
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
+    if (db::Db::Instance()->Exist(block.hash())) {
+        BFT_WARN("sync block exists height: %lu, hash: %s", block.height(), common::Encode::HexEncode(block.hash()).c_str());
+        return;
+    }
+
     if (common::GlobalInfo::Instance()->missing_node()) {
         block::AccountManager::Instance()->SetMaxHeight(
             block.pool_index(),
@@ -1942,6 +1947,11 @@ void BftManager::HandleRootWaitingBlock(
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
+    if (db::Db::Instance()->Exist(block.hash())) {
+        BFT_WARN("sync block exists height: %lu, hash: %s", block.height(), common::Encode::HexEncode(block.hash()).c_str());
+        return;
+    }
+
     // TODO: remove just for test
     if (common::GlobalInfo::Instance()->missing_node()) {
         block::AccountManager::Instance()->SetMaxHeight(
@@ -2021,11 +2031,6 @@ void BftManager::HandleVerifiedBlock(
         uint32_t type,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
-    if (db::Db::Instance()->Exist(block.hash())) {
-        BFT_WARN("sync block exists height: %lu, hash: %s", block.height(), common::Encode::HexEncode(block.hash()).c_str());
-        return;
-    }
-
     switch (type) {
     case kRootBlock:
         HandleRootWaitingBlock(thread_idx, block, block_ptr);
