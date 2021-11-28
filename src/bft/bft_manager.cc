@@ -71,12 +71,6 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-        header.id(),
-        bft_msg.leader(),
-        common::Encode::HexEncode(bft_msg.gid()).c_str(),
-        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -355,7 +349,6 @@ void BftManager::HandleBftMessage(
         const transport::TransportMessagePtr& header_ptr) {
     if (!bft_msg.leader()) {
         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-            BFT_DEBUG("this node is leader not handle backup message.");
             return;
         }
     }
@@ -571,7 +564,6 @@ void BftManager::RootCommitAddNewAccount(
         }
 
         db::DbWriteBach db_batch;
-        BFT_DEBUG("AddNewAccount: %s", common::Encode::HexEncode(tx_list[i].to()).c_str());
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 block.height(),
@@ -2001,7 +1993,6 @@ void BftManager::HandleRootWaitingBlock(
         }
 
         db::DbWriteBach db_batch;
-        BFT_DEBUG("HandleRootWaitingBlock AddNewAccount: %s", common::Encode::HexEncode(tx_list[i].to()).c_str());
         if (block::AccountManager::Instance()->AddNewAccount(
                 tx_list[i],
                 block.height(),

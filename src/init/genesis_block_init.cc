@@ -785,7 +785,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
         tenon_block->set_electblock_height(2);
         tenon_block->set_network_id(common::GlobalInfo::Instance()->network_id());
         tenon_block->set_hash(bft::GetBlockHash(*tenon_block));
-        INIT_DEBUG("add genesis block account id: %s", common::Encode::HexEncode(address).c_str());
+//         INIT_DEBUG("add genesis block account id: %s", common::Encode::HexEncode(address).c_str());
         if (bft::BftManager::Instance()->AddGenisisBlock(tenon_block) != bft::kBftSuccess) {
             INIT_ERROR("AddGenisisBlock error.");
             return kInitError;

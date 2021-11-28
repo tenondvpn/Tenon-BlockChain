@@ -127,8 +127,6 @@ int Execution::execute(
 
         host.create_bytes_code_ = std::string((char*)out_res->output_data, out_res->output_size);
         const auto gas_used = create_msg.gas - out_res->gas_left;
-        TVM_DEBUG("create contract gas_used: %lu, bytes code: %s",
-            gas_used, common::Encode::HexEncode(host.create_bytes_code_).c_str());
         if (call_mode == kJustCreate) {
             return kTvmSuccess;
         }
@@ -143,11 +141,6 @@ int Execution::execute(
     }
 
     *out_res = evm_.execute(host, rev, msg, exec_code_data, exec_code_size);
-    const auto gas_used = msg.gas - out_res->gas_left;
-    std::string res_data((char*)out_res->output_data, out_res->output_size);
-    printf("execute status: %d gas_used: %lu, src_data: %s, data: %s\n",
-        out_res->status_code, gas_used, res_data.c_str(), common::Encode::HexEncode(res_data).c_str());
-    TVM_DEBUG("execute status: %d gas_used: %lu, data: %s", out_res->status_code, gas_used, res_data.c_str(), common::Encode::HexEncode(res_data).c_str());
     return kTvmSuccess;
 }
 

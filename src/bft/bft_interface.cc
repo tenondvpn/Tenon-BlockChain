@@ -249,8 +249,6 @@ int BftInterface::LeaderPrecommitOk(
     precommit_aggree_set_.insert(id);
     prepare_bitmap_.Set(index);
     backup_precommit_signs_[index] = backup_sign;
-    BFT_DEBUG("precommit_aggree_set_.size: %u, index: %d, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
-        precommit_aggree_set_.size(), index, min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(), common::Encode::HexEncode(bft_gid).c_str());
     if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
         if (LeaderCreatePreCommitAggChallenge() != kBftSuccess) {
             BFT_ERROR("create bls precommit agg sign failed!");
@@ -258,7 +256,6 @@ int BftInterface::LeaderPrecommitOk(
         }
 
         leader_handled_precommit_ = true;
-        BFT_DEBUG("precommit_aggree_set_ bft_gid: %s", common::Encode::HexEncode(bft_gid).c_str());
         return kBftAgree;
     }
 
@@ -282,9 +279,6 @@ int BftInterface::LeaderCommitOk(
     commit_aggree_set_.insert(id);
     precommit_bitmap_.Set(index);
     backup_commit_signs_[index] = backup_sign;
-    BFT_DEBUG("LeaderCommitOk.size: %u, index: %d, min_prepare_member_count_: %u, min_aggree_member_count_: %u, id: %s, bft_gid: %s",
-        commit_aggree_set_.size(), index, min_prepare_member_count_, min_aggree_member_count_, common::Encode::HexEncode(id).c_str(),
-        common::Encode::HexEncode(gid_).c_str());
     if (commit_aggree_set_.size() >= min_aggree_member_count_) {
         leader_handled_commit_ = true;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {
@@ -408,13 +402,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
             assert(false);
             return kBftError;
-        } else {            common_pk.to_affine_coordinates();
-            auto cpk = std::make_shared<BLSPublicKey>(common_pk);
-            auto cpk_strs = cpk->toString();
-            BFT_DEBUG("leader verify leader precommit agg sign success! t: %u, n: %u,"
-                "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
-                t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
-                elect_height_, network_id_, common::Encode::HexEncode(prepare_hash_).c_str());
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
     } catch (std::exception& e) {

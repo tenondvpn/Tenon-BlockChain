@@ -47,9 +47,6 @@ bool GidManager::NewGidTxValid(
 //         }
 //     }
     std::string db_for_gid = "db_for_gid_" + tx_gid;
-    BFT_DEBUG("0 add new gid to_add: %d, type: %d, call_contract_step: %d, gid: %s, db_for_gid: %s",
-        tx_info.to_add(), tx_info.type(), tx_info.call_contract_step(),
-        common::Encode::HexEncode(tx_info.gid()).c_str(), common::Encode::HexEncode(db_for_gid).c_str());
     if (db::Db::Instance()->Exist(db_for_gid)) {
         return false;
     }
@@ -77,9 +74,6 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
 //         tx_map_[tx_gid] = nullptr;
 //     }
     std::string db_for_gid = "db_for_gid_" + tx_gid;
-    BFT_DEBUG("add new gid to_add: %d, type: %d, call_contract_step: %d, gid: %s, db_for_gid: %s",
-        tx_ptr->tx.to_add(), tx_ptr->tx.type(), tx_ptr->tx.call_contract_step(),
-        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(), common::Encode::HexEncode(db_for_gid).c_str());
     if (db::Db::Instance()->Exist(db_for_gid)) {
         return false;
     }

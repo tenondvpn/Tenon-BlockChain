@@ -126,10 +126,7 @@ DbAccountInfoPtr AccountManager::GetAcountInfo(const std::string& acc_id) {
         acc_map_[acc_id] = account_info;
         account_info->set_added_timeout(common::TimeUtils::TimestampMs());
         account_info->set_heap_index(acc_limit_heap_.push(account_info));
-        BLOCK_DEBUG("now account size: %u, acc_id: %s", acc_map_.size(), common::Encode::HexEncode(acc_id).c_str());
         return account_info;
-    } else {
-        BLOCK_DEBUG("not exists account acc_id: %s", common::Encode::HexEncode(acc_id).c_str());
     }
 
     return nullptr;
@@ -293,8 +290,6 @@ int AccountManager::AddBlockItemToDb(
             account_id = tx_list[i].from();
         }
 
-        BLOCK_DEBUG("add block account: %s", common::Encode::HexEncode(account_id).c_str());
-
         if (tx_list[i].type() == common::kConsensusCallContract ||
                 tx_list[i].type() == common::kConsensusCreateContract) {
             switch (tx_list[i].call_contract_step()) {
@@ -383,7 +378,6 @@ int AccountManager::AddBlockItemToDb(
     }
 
     block_pools_[consistent_pool_index]->SetHeightTree(block_item->height());
-    BLOCK_DEBUG("AddBlockItemToDb height tree network %u pool %u, set height: %lu", common::GlobalInfo::Instance()->network_id(), consistent_pool_index, block_item->height());
     return kBlockSuccess;
 }
 
@@ -395,8 +389,6 @@ int AccountManager::AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     if (!block_hash_limit_set_.Push(block_item->hash())) {
-        BLOCK_DEBUG("failed AddBlockItemToCache hash: %s, height: %lu",
-            common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
         return kBlockSuccess;
     }
 
@@ -459,7 +451,6 @@ int AccountManager::AddBlockItemToCache(
         }
     }
 
-    BLOCK_DEBUG("block network id: %u, local net: %lu", block_item->network_id(), common::GlobalInfo::Instance()->network_id());
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex ||
             (block_item->network_id() >= network::kRootCongressNetworkId &&
@@ -592,7 +583,6 @@ int AccountManager::AddNewAccount(
         return kBlockError;
     }
 
-    BLOCK_DEBUG("Add new account success: %s", common::Encode::HexEncode(account_id).c_str());
     return kBlockSuccess;
 }
 
@@ -601,8 +591,6 @@ int AccountManager::UpdateAccountInfo(
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
-    BLOCK_DEBUG("update account: %s, height: %lu, type: %d",
-        common::Encode::HexEncode(account_id).c_str(), block_item->height(), tx_info.type());
     if (tx_info.status() != bft::kBftSuccess && tx_info.to_add()) {
         if (tx_info.type() != common::kConsensusCallContract &&
             tx_info.type() != common::kConsensusCreateContract) {
@@ -815,8 +803,6 @@ int AccountManager::GetBlockInfo(
         uint64_t* tm_height,
         uint64_t* tm_with_block_height) {
     int res = block_pools_[pool_idx]->GetHeight(height);
-    BLOCK_DEBUG("get block info net: %d pool_idx: %u, height: %lu",
-        common::GlobalInfo::Instance()->network_id(), pool_idx, *height);
     if (res != kBlockSuccess) {
         BLOCK_ERROR("db_pool_info->GetHeight error pool_idx: %d", pool_idx);
         return res;
@@ -842,26 +828,16 @@ void AccountManager::SetPool(
     uint64_t height = 0;
     if (block_pools_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
-            BLOCK_DEBUG("not set block info net: %d pool_idx: %u, height: %lu > block_item->height() : %lu",
-                common::GlobalInfo::Instance()->network_id(), pool_index, height, block_item->height());
-
             return;
         }
     }
 
-    BLOCK_DEBUG("set block info net: %d pool_idx: %u, height: %lu",
-        common::GlobalInfo::Instance()->network_id(), pool_index, block_item->height());
     block_pools_[pool_index]->SetHash(block_item->hash(), db_batch);
     block_pools_[pool_index]->SetHeight(block_item->height(), db_batch);
     block_pools_[pool_index]->SetTimeBlockHeight(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
-    BLOCK_DEBUG("add new block hash: %s, prev hash: %s, pool_index: %d, height: %lu",
-        common::Encode::HexEncode(block_item->hash()).c_str(),
-        common::Encode::HexEncode(block_item->prehash()).c_str(),
-        pool_index,
-        block_item->height());
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
@@ -903,7 +879,6 @@ void AccountManager::CheckMissingHeight() {
         }
     }
 
-    BLOCK_DEBUG("height tree get missing heigths: %s", missing_heihts.c_str());
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));
@@ -998,8 +973,6 @@ int AccountManager::HandleRefreshHeightsReq(
         protobuf::BlockMessage& block_msg) {
     for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
-        if (block_msg.ref_heights_req().heights(i) > 0)
-            BLOCK_DEBUG("set RefreshHeights req network: %d, pool: %d, height: %lu", common::GlobalInfo::Instance()->network_id(), i, block_msg.ref_heights_req().heights(i));
     }
 
     SendRefreshHeightsResponse(header);
@@ -1012,7 +985,6 @@ int AccountManager::HandleRefreshHeightsRes(
         protobuf::BlockMessage& block_msg) {
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
-        BLOCK_DEBUG("set RefreshHeights res network: %d, pool: %d, height: %lu", common::GlobalInfo::Instance()->network_id(), i, block_msg.ref_heights_res().heights(i));
     }
 
     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();

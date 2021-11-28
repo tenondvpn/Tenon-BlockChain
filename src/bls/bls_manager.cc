@@ -133,7 +133,6 @@ int BlsManager::Sign(
 
     BlsSign::Sign(t, n, local_sec_key, sign_msg, bn_sign);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
-    BLS_DEBUG("0 sign data use sec key: %s, msg hash: %s", sec_key.c_str(), common::Encode::HexEncode(sign_msg).c_str());
     return kBlsSuccess;
 }
 
@@ -155,7 +154,6 @@ int BlsManager::Sign(
     *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
     *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
-    BLS_DEBUG("1 sign data use sec key: %s, msg hash: %s", sec_key.c_str(), common::Encode::HexEncode(sign_msg).c_str());
 //     BLSPublicKeyShare pkey(local_sec_key, t, n);
 //     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
 //     BLS_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
@@ -191,17 +189,17 @@ int BlsManager::Verify(
         return kBlsError;
     }
 
-    auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
-    sign_ptr->to_affine_coordinates();
-    auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-    auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
-    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-    pk->to_affine_coordinates();
-    auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
-    auto strs = pk_ptr->toString();
-    BLS_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s, msg hash: %s",
-        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-        strs->at(2).c_str(), strs->at(3).c_str(), common::Encode::HexEncode(sign_msg).c_str());
+//     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
+//     sign_ptr->to_affine_coordinates();
+//     auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
+//     auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+//     pk->to_affine_coordinates();
+//     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
+//     auto strs = pk_ptr->toString();
+//     BLS_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s, msg hash: %s",
+//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+//         strs->at(2).c_str(), strs->at(3).c_str(), common::Encode::HexEncode(sign_msg).c_str());
 
 //     std::cout << "verify t: " << t << ", n: " << n
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
@@ -387,8 +385,6 @@ void BlsManager::HandleFinish(
     }
 
     common::Bitmap bitmap(bitmap_data);
-    BLS_DEBUG("elect node valid count: %u, all nodes size: %u",
-        bitmap.valid_count(), members->size());
     auto item = std::make_shared<MaxBlsMemberItem>(1, bitmap);
     finish_item->max_bls_members[msg_hash] = item;
     if (finish_item->max_finish_count == 0) {
@@ -724,11 +720,11 @@ int BlsManager::AddBlsConsensusInfo(
         mem_bls_pk->set_y_c1(
             crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c1));
         mem_bls_pk->set_pool_idx_mod_num(-1);
-        BLS_DEBUG("AddBlsConsensusInfo success node index: %d,"
-            "x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
-            i,
-            mem_bls_pk->x_c0().c_str(), mem_bls_pk->x_c1().c_str(),
-            mem_bls_pk->y_c0().c_str(), mem_bls_pk->y_c1().c_str());
+//         BLS_DEBUG("AddBlsConsensusInfo success node index: %d,"
+//             "x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
+//             i,
+//             mem_bls_pk->x_c0().c_str(), mem_bls_pk->x_c1().c_str(),
+//             mem_bls_pk->y_c0().c_str(), mem_bls_pk->y_c1().c_str());
         bitmap->Set(i);
     }
 
@@ -752,12 +748,12 @@ int BlsManager::AddBlsConsensusInfo(
         crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
-    BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"
-        "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
-        ec_block.shard_network_id(),
-        bitmap->valid_count(), members->size(),
-        common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
-        common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
+//     BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"
+//         "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
+//         ec_block.shard_network_id(),
+//         bitmap->valid_count(), members->size(),
+//         common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
+//         common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
 //     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
 //         << ", member count: " << members->size()
 //         << ", " << common_pk->x_c0()

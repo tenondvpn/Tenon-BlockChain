@@ -92,8 +92,6 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
         prio_sync_queue_[priority].sync_queue.push(item);
     }
 
-    SYNC_DEBUG("add sync height network_id: %u, pool_idx: %u, height: %lu, priority: %u",
-        network_id, pool_idx, height, priority);
     return kSyncSuccess;
 }
 
@@ -267,11 +265,6 @@ uint64_t KeyValueSync::SendSyncRequest(
 
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             node->public_ip(), node->local_port + 1, 0, msg);
-    SYNC_DEBUG("sent sync request [%s:%d], key size: %u, heights size: %u",
-        node->public_ip().c_str(),
-        node->public_port,
-        sync_msg.sync_value_req().keys_size(),
-        sync_msg.sync_value_req().heights_size());
     return node->id_hash;
 }
 
@@ -337,12 +330,6 @@ void KeyValueSync::ProcessSyncValueRequest(
                 sync_msg.sync_value_req().heights(i).pool_idx(),
                 sync_msg.sync_value_req().heights(i).height(),
                 &value) != block::kBlockSuccess) {
-            SYNC_DEBUG("get key failed network id: %u, pool index: %u, height: %lu, from: %s:%d",
-                network_id,
-                sync_msg.sync_value_req().heights(i).pool_idx(),
-                sync_msg.sync_value_req().heights(i).height(),
-                header.from_ip().c_str(),
-                header.from_port());
             continue;
         }
 
@@ -373,10 +360,6 @@ void KeyValueSync::ProcessSyncValueRequest(
 
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
-    SYNC_DEBUG("send sync responce to: %s:%d, key size: %d",
-        header.from_ip().c_str(),
-        header.from_port(),
-        res_sync_msg.sync_value_res().res_size());
 }
 
 int KeyValueSync::HandleExistsBlock(const std::string& key) {
@@ -408,13 +391,9 @@ void KeyValueSync::ProcessSyncValueResponse(
         auto block_item = std::make_shared<bft::protobuf::Block>();
         if (block_item->ParseFromString(iter->value()) &&
                 (iter->has_height() || block_item->hash() == iter->key())) {
-            SYNC_DEBUG("get block success height: %lu.", iter->height());
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
-            SYNC_DEBUG("add key value success key: %s, value: %s.",
-                common::Encode::HexEncode(iter->key()).c_str(),
-                common::Encode::HexEncode(iter->value()).c_str());
         }
 
         std::string key = iter->key();

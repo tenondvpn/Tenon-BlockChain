@@ -72,14 +72,14 @@ void VssManager::OnTimeBlock(
                 std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
         }
 
-        VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-            "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
-            "first begin us: %ld, second begin us: %ld, third begin us: %ld",
-            (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-            (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_,
-            kVssFirstBeginUs + local_offset_us,
-            kVssSecondBeginUs + local_offset_us,
-            kVssFinishBeginUs + local_offset_us);
+//         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
+//             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
+//             "first begin us: %ld, second begin us: %ld, third begin us: %ld",
+//             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
+//             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_,
+//             kVssFirstBeginUs + local_offset_us,
+//             kVssSecondBeginUs + local_offset_us,
+//             kVssFinishBeginUs + local_offset_us);
 //         printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
 //             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
 //             "first begin us: %ld, second begin us: %ld, third begin us: %ld.\n",
@@ -485,8 +485,8 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     }
 
     SetConsensusFinalRandomNum(id, vss_msg.random());
-    VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
-        common::Encode::HexEncode(id).c_str(), vss_msg.random());
+//     VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
+//         common::Encode::HexEncode(id).c_str(), vss_msg.random());
 }
 
 }  // namespace vss

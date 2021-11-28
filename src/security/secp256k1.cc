@@ -128,10 +128,10 @@ std::string Secp256k1::GetContractAddress(
         const std::string& gid,
         const std::string& bytes_code) {
 
-    CRYPTO_DEBUG("get contract addr: %s, %s",
-        common::Encode::HexEncode(from + gid + bytes_code).c_str(),
-        common::Hash::keccak256(from + gid + bytes_code).c_str(),
-        block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code)).c_str());
+//     CRYPTO_DEBUG("get contract addr: %s, %s",
+//         common::Encode::HexEncode(from + gid + bytes_code).c_str(),
+//         common::Hash::keccak256(from + gid + bytes_code).c_str(),
+//         block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code)).c_str());
     return block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code));
 }
 

@@ -203,10 +203,6 @@ void BftProto::LeaderCreatePreCommit(
             BFT_ERROR("leader pre commit signature failed!");
             return;
         }
-
-        BFT_DEBUG("leader oppose sign message hash: %s, pk str: %s",
-            common::Encode::HexEncode(msg_to_hash).c_str(),
-            common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey()).c_str());
     }
 
     std::string sign_challenge_str;

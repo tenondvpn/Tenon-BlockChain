@@ -182,8 +182,6 @@ int DbAccountInfo::GetBalance(uint64_t* balance) {
 
 void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
     tx_queue_.push(std::to_string(height), db_batch);
-    BLOCK_DEBUG("account push height: %s, %lu",
-        common::Encode::HexEncode(account_id_).c_str(), height);
 }
 
 // get from end to begin, count's heights, one time max: 1024

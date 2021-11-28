@@ -842,7 +842,6 @@ int TxBft::BackupCheckContractDefault(
         backup_status = tx_info.status();
     }
 
-    BFT_DEBUG("backup gid: %s balance: %lu", common::Encode::HexEncode(tx_info.gid()).c_str(), from_balance);
     if (tx_info.balance() != from_balance) {
         BFT_ERROR("balance error not eq[%lu][%lu].", tx_info.balance(), from_balance);
         return kBftLeaderInfoInvalid;
@@ -2051,8 +2050,6 @@ void TxBft::LeaderCreateTxBlock(
         tx.set_version(common::kTransactionVersion);
         tx.set_gas_price(common::GlobalInfo::Instance()->gas_price());
         tx.set_status(kBftSuccess);
-        BFT_DEBUG("common::kConsensusCreateContract common::kConsensusCallContract call contract: %s, type: %d, bft step: %d",
-            common::Encode::HexEncode(tx.to()).c_str(), tx.type(), tx.call_contract_step());
         if (tx.type() == common::kConsensusCallContract ||
                 tx.type() == common::kConsensusCreateContract) {
             if (LeaderAddCallContract(
@@ -2303,7 +2300,6 @@ int TxBft::LeaderCallContractDefault(
         tx.set_status(kBftAccountBalanceError);
     }
     
-    BFT_DEBUG("gid: %s balance: %lu", common::Encode::HexEncode(tx_info->tx.gid()).c_str(), from_balance);
     acc_balance_map[tx_info->tx.from()] = from_balance;
     tx.set_balance(from_balance);
     tx.set_gas_used(gas_used);
@@ -2414,8 +2410,6 @@ int TxBft::LeaderCallContractExceute(
             bytes_code_attr->set_id(tx_info->tx.to());
             bytes_code_attr->set_key(kContractCreatedBytesCode);
             bytes_code_attr->set_value(tenon_host_.create_bytes_code_);
-            BFT_DEBUG("create contract address: %s, set bytes code storages success.",
-                common::Encode::HexEncode(tx_info->tx.to()).c_str());
         }
     } while (0);
 
