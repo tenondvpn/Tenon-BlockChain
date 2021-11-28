@@ -13,6 +13,7 @@
 #include "election/member_manager.h"
 #include "election/height_with_elect_blocks.h"
 #include "election/elect_node_detail.h"
+#include "election/leader_rotation.h"
 #include "network/shard_network.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -164,6 +165,7 @@ private:
     BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];
     std::set<std::string> prev_elected_ids_;
     std::set<std::string> now_elected_ids_;
+    LeaderRotation leader_rotation_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

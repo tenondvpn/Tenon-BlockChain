@@ -87,6 +87,8 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     void CheckTimeoutTx();
+    bool ShouldChangeLeader();
+    void ChangeLeader();
 
 private:
     bool IsTxContractLocked(TxItemPtr tx_ptr);
@@ -99,6 +101,7 @@ private:
     std::unordered_map<std::string, uint64_t> added_tx_map_;
     std::mutex tx_pool_mutex_;
     volatile uint32_t pool_index_;
+    int64_t last_bft_over_tm_sec_{ -1 };
 
     DISALLOW_COPY_AND_ASSIGN(TxPool);
 };

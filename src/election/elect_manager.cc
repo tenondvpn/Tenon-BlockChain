@@ -259,9 +259,6 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
 
 bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
     if (!elect_block.has_prev_members() || elect_block.prev_members().prev_elect_height() <= 0) {
-        ELECT_ERROR("not has prev network id: %u, elect: %lu",
-            elect_block.shard_network_id(),
-            elect_block.prev_members().prev_elect_height());
         return false;
     }
 
@@ -351,11 +348,11 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         std::vector<uint32_t> node_index_vec;
         uint32_t index = 0;
         for (auto iter = shard_members_ptr->begin(); iter != shard_members_ptr->end(); ++iter) {
-            if ((*iter)->pool_index_mod_num[0] >= 0) {
+            if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
                 if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
-                    local_node_pool_mod_num = (*iter)->pool_index_mod_num[0];
+                    local_node_pool_mod_num = (*iter)->pool_index_mod_num;
                     // create ecdh key
                 }
             }
@@ -370,11 +367,11 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                 prev_elect_block.shard_network_id(),
                 common::Encode::HexEncode((*iter)->id).c_str(),
-                (*iter)->pool_index_mod_num[0]);
+                (*iter)->pool_index_mod_num);
 //             std::cout << "DDDDDDDDDDDDDDDDDD ProcessNewElectBlock network: "
 //                 << prev_elect_block.shard_network_id()
 //                 << ", member leader: " << common::Encode::HexEncode((*iter)->id)
-//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num[0]
+//                 << ", (*iter)->pool_index_mod_num: " << (*iter)->pool_index_mod_num
 //                 << ", leader count: " << prev_elect_block.leader_count()
 //                 << std::endl;
         }
@@ -453,6 +450,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         local_node_is_super_leader_ = local_node_is_super_leader;
     }
 
+    leader_rotation_.OnElectBlock(shard_members_ptr);
     return true;
 }
 

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "common/time_utils.h"
+#include "common/tick.h"
 #include "election/elect_utils.h"
 #include "election/elect_node_detail.h"
 
@@ -17,27 +18,24 @@ public:
     LeaderRotation();
     ~LeaderRotation();
     void OnElectBlock(const MembersPtr& members);
-    void OnNewBlock(const bft::BlockPtr& block_ptr);
+    int32_t GetThisNodeValidPoolModNum();
 
 private:
     struct RotationItem {
-        RotationItem(BftMemberPtr& leader) : leader_ptr(leader) {
-            timeout = common::TimeUtils::TimestampMs();
-            rotation_times = 0;
-        }
-
-        BftMemberPtr leader_ptr;
-        uint64_t timeout;
-        uint32_t rotation_times;
+        BftMemberPtr pool_leader_map[common::kInvalidPoolIndex];
+        std::deque<BftMemberPtr> valid_leaders;
+        int32_t max_pool_mod_num;
+        int32_t rotation_idx;
     };
 
-    typedef std::shared_ptr<RotationItem> RotationItemPtr;
+    void CheckRotation();
+    BftMemberPtr ChooseValidLeader();
 
-    void CheckRotaition();
+    static const int64_t kCheckRotationPeriod{ 300000000l };
 
-    std::vector<BftMemberPtr> backup_nodes_[2];
-    RotationItemPtr pool_mod_index_leaders_[2][common::kInvalidPoolIndex];
-    uint32_t valid_backup_index_{ 0 };
+    RotationItem rotation_item_[2];
+    int32_t valid_idx_{ 0 };
+    common::Tick tick_;
 
     DISALLOW_COPY_AND_ASSIGN(LeaderRotation);
 };

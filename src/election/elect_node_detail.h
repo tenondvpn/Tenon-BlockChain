@@ -73,11 +73,7 @@ struct BftMember {
             public_port(0),
             dht_key(dhtkey) {
         assert(pubkey.ec_point());
-        for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
-            pool_index_mod_num[i] = -1;
-        }
-
-        pool_index_mod_num[0] = pool_mode_num;
+        pool_index_mod_num = pool_mode_num;
     }
 
     uint32_t net_id;
@@ -89,10 +85,12 @@ struct BftMember {
     std::string dht_key;
     security::CommitSecret secret;
     security::CommitPoint commit_point;
-    int32_t pool_index_mod_num[common::kNodeModIndexMaxCount];
+    int32_t pool_index_mod_num;
     std::string backup_ecdh_key;
     std::string leader_ecdh_key;
     libff::alt_bn128_G2 bls_publick_key;
+    bool valid_leader{ true };
+    bool leader_load_count{ 0 };
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;

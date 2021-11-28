@@ -1925,11 +1925,6 @@ void BftManager::HandleToWaitingBlock(
 //     if (just_broadcast) {
 //         LeaderBroadcastToAcc(std::make_shared<bft::protobuf::Block>(src_block));
 //     }
-
-    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
-    if (pool_mod_index >= 0) {
-        StartBft("", pool_mod_index);
-    }
 }
 
 void BftManager::HandleRootWaitingBlock(
@@ -2005,11 +2000,6 @@ void BftManager::HandleRootWaitingBlock(
         if (DispatchPool::Instance()->Dispatch(tx_list[i]) != kBftSuccess) {
             BFT_ERROR("dispatch pool failed!");
         }
-    }
-
-    int32_t pool_mod_index = elect::ElectManager::Instance()->local_node_pool_mod_num();
-    if (pool_mod_index >= 0) {
-        StartBft("", pool_mod_index);
     }
 }
 

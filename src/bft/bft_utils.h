@@ -140,6 +140,7 @@ static const uint32_t kBftTimeoutCheckPeriod = 10u * 1000u * 1000u;
 static const uint32_t kBftLeaderPrepareWaitPeriod = 5u * 1000u * 1000u;
 static const uint32_t kPrevTransportVersion = 0;
 static const uint32_t kTransportVersion = 1;
+static const int64_t kChangeLeaderTimePeriodSec = 30;
 
 static const std::string kVpnSubscriptionDeduction("vpn_subscription_deduction");
 static const std::string kRootCreateNewAccountAttrKey("kRootNewAddr_netid");

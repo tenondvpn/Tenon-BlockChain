@@ -70,7 +70,25 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
 //         common::Encode::HexEncode(uni_gid).c_str(),
 //         tx_pool_.size(),
 //         added_tx_map_.size());
+    if (last_bft_over_tm_sec_ == -1 || added_tx_map_.empty()) {
+        last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
+    }
+
     return kBftSuccess;
+}
+
+void TxPool::ChangeLeader() {
+    last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
+}
+
+bool TxPool::ShouldChangeLeader() {
+    std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+    if (!added_tx_map_.empty() && (common::TimeUtils::TimestampSeconds() - last_bft_over_tm_sec_)
+            >= kChangeLeaderTimePeriodSec) {
+        return true;
+    }
+
+    return false;
 }
 
 void TxPool::CheckTimeoutTx() {
@@ -353,6 +371,10 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
 
             tx_pool_.erase(iter);
         }
+    }
+
+    if (bft_ptr->status() == kBftCommited) {
+        last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
     }
 }
 

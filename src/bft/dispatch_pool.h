@@ -40,6 +40,14 @@ public:
         return true;
     }
 
+    bool ShouldChangeLeader(uint32_t pool_index) {
+        return tx_pool_.ShouldChangeLeader(pool_index);
+    }
+
+    void ChangeLeader(uint32_t pool_index) {
+        tx_pool_.ChangeLeader(pool_index);
+    }
+
 private:
     DispatchPool();
     ~DispatchPool();

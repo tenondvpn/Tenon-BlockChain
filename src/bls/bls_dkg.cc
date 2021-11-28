@@ -650,8 +650,8 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     finish_msg->set_bls_sign_x(sign_x);
     finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-    BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu",
-        common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_);
+//     BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu",
+//         common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_);
 #ifndef TENON_UNITTEST
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);

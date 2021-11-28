@@ -132,11 +132,11 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     bool leader_valid = false;
     auto need_mod_index = (int32_t)pool_index() % leader_count;
     for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
-        if (leader_mem_ptr_->pool_index_mod_num[i] < 0) {
+        if (leader_mem_ptr_->pool_index_mod_num < 0) {
             return false;
         }
 
-        if (need_mod_index == leader_mem_ptr_->pool_index_mod_num[i]) {
+        if (need_mod_index == leader_mem_ptr_->pool_index_mod_num) {
             leader_valid = true;
             break;
         }
@@ -145,7 +145,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     if (!leader_valid) {
         BFT_ERROR("pool index invalid[%u] leader_count[%d] pool_mod_idx[%d][%u]. network id[%d]",
             pool_index(), leader_count,
-            leader_mem_ptr_->pool_index_mod_num[0],
+            leader_mem_ptr_->pool_index_mod_num,
             (int32_t)pool_index() % leader_count,
             common::GlobalInfo::Instance()->network_id());
         return false;
