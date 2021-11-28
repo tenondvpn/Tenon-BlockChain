@@ -429,7 +429,7 @@ bool TxPoolManager::ShouldChangeLeader(uint32_t pool_index) {
 
 }
 
-bool TxPoolManager::ChangeLeader(uint32_t pool_index) {
+void TxPoolManager::ChangeLeader(uint32_t pool_index) {
     tx_pool_[pool_index].ChangeLeader();
 }
 
