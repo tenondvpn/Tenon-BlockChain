@@ -394,6 +394,12 @@ void AccountManager::SetMaxHeight(uint32_t pool_idx, uint64_t height) {
 int AccountManager::AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
+    if (!block_hash_limit_set_.Push(block_item->hash())) {
+        BLOCK_DEBUG("failed AddBlockItemToCache hash: %s, height: %lu",
+            common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
+        return kBlockSuccess;
+    }
+
     const auto& tx_list = block_item->tx_list();
     if (tx_list.empty()) {
         BLOCK_ERROR("tx block tx list is empty.");

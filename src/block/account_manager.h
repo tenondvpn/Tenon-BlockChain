@@ -7,6 +7,7 @@
 #include "common/config.h"
 #include "common/tick.h"
 #include "common/limit_heap.h"
+#include "common/limit_hash_set.h"
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
 #include "block/db_account_info.h"
@@ -108,6 +109,7 @@ private:
     common::Tick flush_db_tick_;
     common::Tick refresh_pool_max_height_tick_;
     uint64_t prev_refresh_heights_tm_{ 0 };
+    common::LimitHashSet<std::string> block_hash_limit_set_{ 2048u };
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };

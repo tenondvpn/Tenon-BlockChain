@@ -666,12 +666,6 @@ int BlockManager::AddNewBlock(
 
     BLOCK_DEBUG("AddNewBlock hash: %s, height: %lu",
         common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
-    if (!block_hash_limit_set_.Push(block_item->hash())) {
-        BLOCK_DEBUG("failed AddNewBlock hash: %s, height: %lu",
-            common::Encode::HexEncode(block_item->hash()).c_str(), block_item->height());
-        return kBlockSuccess;
-    }
-
 //     BLOCK_DEBUG("add block hash: %s", common::Encode::HexEncode(block_item->hash()).c_str());
     std::string height_db_key = common::GetHeightDbKey(
         block_item->network_id(),

@@ -3,7 +3,6 @@
 #include <deque>
 
 #include "common/config.h"
-#include "common/limit_hash_set.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -106,7 +105,6 @@ private:
     static const uint32_t kCacheBlockSize = 1024;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
-    common::LimitHashSet<std::string> block_hash_limit_set_{ 2048u };
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
 };
