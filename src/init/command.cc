@@ -18,6 +18,7 @@
 #include "common/country_code.h"
 #include "common/time_utils.h"
 #include "common/shell_utils.h"
+#include "db/db.h"
 #include "block/block_utils.h"
 #include "db/db.h"
 #include "dht/base_dht.h"
@@ -176,6 +177,24 @@ void Command::AddBaseCommands() {
         uint32_t network_id = 0;
         common::StringUtil::ToUint32(args[0], &network_id);
         PrintDht(network_id);
+    });
+    AddCommand("get", [this](const std::vector<std::string>& args) {
+        if (args.size() <= 0) {
+            return;
+        }
+        
+        std::string val;
+        db::Db::Instance()->Get(args[0], &val);
+        std::cout << args[0] << ":" << val << std::endl;
+    });
+    AddCommand("gete", [this](const std::vector<std::string>& args) {
+        if (args.size() <= 0) {
+            return;
+        }
+
+        std::string val;
+        db::Db::Instance()->Get(common::Encode::HexDecode(args[0]), &val);
+        std::cout << args[0] << ":" << common::Encode::HexEncode(val) << std::endl;
     });
     AddCommand("mem", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {

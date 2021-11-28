@@ -42,7 +42,7 @@ bool Db::Init(const std::string& db_path) {
     options.create_if_missing = true;
     options.max_file_size = 32 * 1048576; // leveldb 1.20
     options.create_if_missing = true;
-    max_open_files = cache_size / 1024 * 300;
+    int32_t max_open_files = cache_size / 1024 * 300;
     if (max_open_files < 500) {
         max_open_files = 500;
     }
