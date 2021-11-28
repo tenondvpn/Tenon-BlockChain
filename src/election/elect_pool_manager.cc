@@ -90,7 +90,6 @@ int ElectPoolManager::CreateElectTransaction(
 }
 
 int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
-    ELECT_INFO("GetElectionTxInfo network id: %d", tx_info.network_id());
     block::protobuf::StatisticInfo statistic_info;
     bool statistic_valid = false;
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {

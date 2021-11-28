@@ -41,8 +41,8 @@ BlsDkg::~BlsDkg() {}
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {
-    BLS_INFO("OnNewElectionBlock network id: %d, elect_height: %d, memsize: %d, elect_hegiht_: %lu",
-        common::GlobalInfo::Instance()->network_id(), elect_height, members->size(), elect_hegiht_);
+//     BLS_INFO("OnNewElectionBlock network id: %d, elect_height: %d, memsize: %d, elect_hegiht_: %lu",
+//         common::GlobalInfo::Instance()->network_id(), elect_height, members->size(), elect_hegiht_);
     std::lock_guard<std::mutex> guard(mutex_);
     if (elect_height <= elect_hegiht_) {
         return;
@@ -125,18 +125,18 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-    BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
-        "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
-        bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
-        bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
+//     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
+//         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
+//         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
+//         bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
     if (bls_msg.index() >= members_->size()) {
         BLS_ERROR("bls_msg.index() >= members_->size()");
         return;
     }
 
     if (bls_msg.elect_height() == 0 || bls_msg.elect_height() != elect_hegiht_) {
-        BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
-            bls_msg.elect_height(), elect_hegiht_);
+//         BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
+//             bls_msg.elect_height(), elect_hegiht_);
         return;
     }
 
@@ -387,7 +387,6 @@ void BlsDkg::HandleAgainstParticipant(
 }
 
 void BlsDkg::BroadcastVerfify() try {
-    BLS_ERROR("BroadcastVerfify called elect height: %lu, network id: %d", elect_hegiht_, common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;
@@ -440,7 +439,6 @@ void BlsDkg::BroadcastVerfify() try {
 }
 
 void BlsDkg::SwapSecKey() try {
-    BLS_ERROR("SwapSecKey called elect height: %lu, network id: %d", elect_hegiht_, common::GlobalInfo::Instance()->network_id());
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
         return;

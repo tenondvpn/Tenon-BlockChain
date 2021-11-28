@@ -220,7 +220,6 @@ void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
         return;
     }
 
-    BLS_INFO("handle bls message coming. %d", bls_msg.has_finish_req());
     if (bls_msg.has_finish_req()) {
         HandleFinish(*header, bls_msg);
         return;
@@ -356,12 +355,11 @@ void BlsManager::HandleFinish(
                 finish_item,
                 bls_msg.index());
         }
-
-        BLS_INFO("network id: %d, all finish count: %d, elect_height: %lu, hash: %s",
-            bls_msg.finish_req().network_id(),
-            cpk_iter->second,
-            bls_msg.elect_height(),
-            common::Encode::HexEncode(cpk_hash).c_str());
+//         BLS_INFO("network id: %d, all finish count: %d, elect_height: %lu, hash: %s",
+//             bls_msg.finish_req().network_id(),
+//             cpk_iter->second,
+//             bls_msg.elect_height(),
+//             common::Encode::HexEncode(cpk_hash).c_str());
     }
 
     auto max_iter = finish_item->max_bls_members.find(msg_hash);
@@ -619,7 +617,6 @@ bool BlsManager::VerifyAggSignValid(
 int BlsManager::AddBlsConsensusInfo(
         elect::protobuf::ElectBlock& ec_block,
         common::Bitmap* bitmap) {
-    BLS_ERROR("AddBlsConsensusInfo called network id: %d", ec_block.shard_network_id());
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
     auto iter = finish_networks_map_.find(ec_block.shard_network_id());
     if (iter == finish_networks_map_.end()) {

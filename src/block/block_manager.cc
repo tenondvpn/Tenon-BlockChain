@@ -650,7 +650,6 @@ int BlockManager::AddNewBlock(
         bool to_cache,
         bool is_kv_sync) {
     if (db::Db::Instance()->Exist(block_item->hash())) {
-        BFT_WARN("sync block exists height: %lu, hash: %s", block_item->height(), common::Encode::HexEncode(block_item->hash()).c_str());
         return kBlockError;
     }
 
