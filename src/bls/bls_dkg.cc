@@ -549,7 +549,6 @@ void BlsDkg::DumpLocalPrivateKey() {
 }
 
 void BlsDkg::Finish() try {
-    BLS_INFO("elect height: %lu, valid count.valid_sec_key_count_: %d", elect_hegiht_, valid_sec_key_count_);
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||

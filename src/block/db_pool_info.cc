@@ -164,7 +164,6 @@ int DbPoolInfo::SetHeight(uint64_t height, db::DbWriteBach& db_batch) {
     }
 
     height_ = height;
-    BLOCK_ERROR("set height from db success[%s][%s][%lu]", dict_key_.c_str(), kPoolHeight.c_str(), height);
     return kBlockSuccess;
 }
 
