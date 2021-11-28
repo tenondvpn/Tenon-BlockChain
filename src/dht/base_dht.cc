@@ -398,7 +398,7 @@ void BaseDht::HandleMessage(const transport::protobuf::Header& header) {
     }
 
     if (header.type() != common::kDhtMessage) {
-        DHT_ERROR("invalid message type[%d]", header.type());
+//         DHT_ERROR("invalid message type[%d]", header.type());
         return;
     }
 

@@ -645,7 +645,6 @@ int AccountManager::UpdateAccountInfo(
         }
     }
 
-    BLOCK_ERROR("1 DDDDDDDDDDDDDD NewHeight: %s, %lu", common::Encode::HexEncode(account_id).c_str(), block_item->height());
     account_info->NewHeight(block_item->height(), db_batch);
     if (exist_height <= block_item->height()) {
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
