@@ -441,6 +441,8 @@ int GenesisBlockInit::GenerateRootSingleBlock(
                 common::Encode::HexEncode(common::kRootChainTimeBlockTxAddress).c_str());
             return kInitError;
         }
+
+        root_pre_hash = bft::GetBlockHash(*tenon_block);
     }
 
     uint64_t root_prev_elect_height = root_single_block_height;

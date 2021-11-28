@@ -20,6 +20,10 @@ static const std::string kPoolTimeBlockHeight = "pool_tm_block_height";
 static const std::string kPoolTimeBlockWithChainHeight = "pool_tm_with_block_height";
 
 DbPoolInfo::DbPoolInfo(uint32_t pool_index, uint32_t net_id) {
+    if (pool_index == common::kRootChainPoolIndex) {
+        net_id = network::kRootCongressNetworkId;
+    }
+
     dict_key_ = (db::kGlobalDickKeyPoolInfo + "_" +
         std::to_string(net_id) + "_" + std::to_string(pool_index));
     pool_index_ = pool_index;
