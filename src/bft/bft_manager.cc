@@ -71,6 +71,12 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
+    BFT_DEBUG("msg id: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+        header.id(),
+        bft_msg.leader(),
+        common::Encode::HexEncode(bft_msg.gid()).c_str(),
+        bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+        bft_msg.bft_step());
     assert(bft_msg.has_bft_step());
     if (!bft_msg.has_bft_step()) {
         BFT_ERROR("bft message not has bft step failed!");
@@ -106,10 +112,14 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         }
 
         if (!bft_ptr->this_node_is_leader()) {
+            BFT_DEBUG("not valid leader get bft gid failed[%s]",
+                common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
         if (!bft_msg.agree()) {
+            BFT_DEBUG("not agree leader get bft gid failed[%s]",
+                common::Encode::HexEncode(bft_msg.gid()).c_str());
             LeaderHandleBftOppose(bft_ptr, *header_ptr, bft_msg);
             return;
         }
