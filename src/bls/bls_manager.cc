@@ -153,12 +153,12 @@ int BlsManager::Sign(
     *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
     *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
-//     BLSPublicKeyShare pkey(local_sec_key, t, n);
-//     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
-//     BLS_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
-//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-//         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
-//         common::Encode::HexEncode(sign_msg).c_str());
+    BLSPublicKeyShare pkey(local_sec_key, t, n);
+    std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
+    BLS_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
+        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+        strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
+        common::Encode::HexEncode(sign_msg).c_str());
 //     std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
 //         << ", sign x: " << *sign_x
@@ -188,17 +188,20 @@ int BlsManager::Verify(
         return kBlsError;
     }
 
-//     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
-//     sign_ptr->to_affine_coordinates();
-//     auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-//     auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
-//     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
-//     pk->to_affine_coordinates();
-//     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
-//     auto strs = pk_ptr->toString();
-//     BLS_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s, msg hash: %s",
-//         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
-//         strs->at(2).c_str(), strs->at(3).c_str(), common::Encode::HexEncode(sign_msg).c_str());
+    auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
+    sign_ptr->to_affine_coordinates();
+    auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
+    auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+    auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
+    pk->to_affine_coordinates();
+    auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
+    auto strs = pk_ptr->toString();
+    BLS_DEBUG("verify t: %u, , n: %u, , public key: %s,%s,%s,%s, msg hash: %s, sign x: %s, sign y: %s",
+        t, n, strs->at(0).c_str(), strs->at(1).c_str(),
+        strs->at(2).c_str(), strs->at(3).c_str(),
+        common::Encode::HexEncode(sign_msg).c_str(),
+        common::Encode::HexEncode(sign_x).c_str(),
+        common::Encode::HexEncode(sign_y).c_str());
 
 //     std::cout << "verify t: " << t << ", n: " << n
 //         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)

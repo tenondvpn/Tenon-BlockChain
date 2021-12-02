@@ -943,14 +943,25 @@ int BftManager::LeaderPrecommit(
         if (failed_count >= bft_ptr->min_oppose_member_count() &&
                 bft_ptr->elect_height() <
                 elect::ElectManager::Instance()->latest_height(bft_ptr->network_id())) {
-//             BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
-//                 " pool_index: %u, bft: %s",
-//                 bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+            BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
+                " pool_index: %u, bft: %s",
+                bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
             LeaderCallPrecommitOppose(bft_ptr);
             RemoveBft(bft_ptr->gid(), false);
         }
 
-        BFT_ERROR("verify prepare hash error!");
+        auto pk = const_cast<libff::alt_bn128_G2*>(&member_ptr->bls_publick_key);
+        pk->to_affine_coordinates();
+        auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
+        auto strs = pk_ptr->toString();
+        BLS_DEBUG("verify prepare hash error, hash: %s, signx: %s, signy: %s, public key: %s,%s,%s,%s, msg hash: %s",
+            common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
+            common::Encode::HexEncode(bft_msg.bls_sign_x()).c_str(),
+            common::Encode::HexEncode(bft_msg.bls_sign_y()).c_str(),
+            strs->at(0).c_str(),
+            strs->at(1).c_str(),
+            strs->at(2).c_str(),
+            strs->at(3).c_str());
         return kBftError;
     }
 
