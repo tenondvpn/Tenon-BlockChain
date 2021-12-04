@@ -193,6 +193,8 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     BFT_DEBUG("new block hash: %s, prehash: %s.",
 //         common::Encode::HexEncode(ltx_prepare.block().hash()).c_str(),
 //         common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
+    BFT_INFO("leader check leader success elect height: %lu, local_member_index_: %lu, gid: %s",
+        elect_height_, local_member_index_, common::Encode::HexEncode(gid_).c_str());
     return kBftSuccess;
 }
 

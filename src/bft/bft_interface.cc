@@ -244,6 +244,8 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 
     elect_height_ = local_elect_height;
     members_ptr_ = members;
+    BFT_INFO("backup check leader success elect height: %lu, local_member_index_: %lu, gid: %s",
+        elect_height_, local_member_index_, common::Encode::HexEncode(gid_).c_str());
     return true;
 }
 
