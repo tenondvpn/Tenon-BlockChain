@@ -31,13 +31,22 @@ int BftInterface::Init() {
         return kBftError;
     }
 
-    local_sec_key_ = bls::BlsManager::Instance()->local_sec_key();
-    if (local_sec_key_ == libff::alt_bn128_Fr::zero()) {
-        BFT_ERROR("local sec key is zero!");
+    leader_index_ = leader_mem_ptr_->index;
+    members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+        elect_height_,
+        common::GlobalInfo::Instance()->network_id(),
+        &common_pk_,
+        &local_sec_key_);
+    if (members_ptr_ == nullptr ||
+            leader_index_ < members_ptr_->size() ||
+            (*members_ptr_)[leader_index_]->id != common::GlobalInfo::Instance()->id()) {
+        BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
+            elect_height_,
+            elect::ElectManager::Instance()->latest_height(
+                common::GlobalInfo::Instance()->network_id()));
         return kBftError;
     }
 
-    leader_index_ = leader_mem_ptr_->index;
     // just leader call init
     this_node_is_leader_ = true;
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
@@ -124,11 +133,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    local_sec_key_ = bls::BlsManager::Instance()->local_sec_key();
-    if (local_sec_key_ == libff::alt_bn128_Fr::zero()) {
-        return false;
-    }
-
     bool leader_valid = false;
     auto need_mod_index = (int32_t)pool_index() % leader_count;
     for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
@@ -211,8 +215,12 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 
     auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
         bft_msg.elect_height(),
-        common::GlobalInfo::Instance()->network_id());
-    if (members == nullptr || bft_msg.member_index() >= members->size()) {
+        common::GlobalInfo::Instance()->network_id(),
+        &common_pk_,
+        &local_sec_key_);
+    if (members == nullptr || bft_msg.member_index() >= members->size() ||
+            common_pk_ == libff::alt_bn128_G2::zero() ||
+            local_sec_key_ == libff::alt_bn128_Fr::zero()) {
         BFT_ERROR("get members failed!.");
         return false;
     }

@@ -611,13 +611,20 @@ uint64_t ElectManager::latest_height(uint32_t network_id) {
 
 elect::MembersPtr ElectManager::GetNetworkMembersWithHeight(
         uint64_t elect_height,
-        uint32_t network_id) {
-    libff::alt_bn128_G2 common_pk;
-    return height_with_block_.GetMembersPtr(elect_height, network_id, &common_pk);
+        uint32_t network_id,
+        libff::alt_bn128_G2* common_pk,
+        libff::alt_bn128_Fr* sec_key) {
+    return height_with_block_.GetMembersPtr(elect_height, network_id, common_pk, sec_key);
 }
 
 uint32_t ElectManager::GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id) {
-    auto members_ptr = GetNetworkMembersWithHeight(elect_height, network_id);
+    libff::alt_bn128_G2 common_pk;
+    libff::alt_bn128_Fr sec_key;
+    auto members_ptr = GetNetworkMembersWithHeight(
+        elect_height,
+        network_id,
+        &common_pk,
+        &sec_key);
     if (members_ptr != nullptr) {
         return members_ptr->size();
     }

@@ -28,7 +28,7 @@ class HeightWithElectBlock {
         MembersPtr members_ptr;
         uint64_t height;
         libff::alt_bn128_G2 common_bls_publick_key;
-
+        libff::alt_bn128_Fr local_sec_key;
     };
 
     typedef std::shared_ptr<HeightMembersItem> HeightMembersItemPtr;
@@ -137,38 +137,99 @@ public:
         height_with_common_pks_[network_id][height] = common_pk;
     }
 
+    void SetLocalSecKey(
+            uint64_t height,
+            uint32_t network_id,
+            const libff::alt_bn128_Fr& sec_key) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return;
+        }
+
+        if (members_ptrs_[network_id][0] != nullptr &&
+            members_ptrs_[network_id][0]->height == height) {
+            members_ptrs_[network_id][0]->local_sec_key = sec_key;
+            return;
+        }
+
+        if (members_ptrs_[network_id][1] != nullptr &&
+            members_ptrs_[network_id][1]->height == height) {
+            members_ptrs_[network_id][1]->local_sec_key = sec_key;
+            return;
+        }
+
+        if (members_ptrs_[network_id][2] != nullptr &&
+            members_ptrs_[network_id][2]->height == height) {
+            members_ptrs_[network_id][2]->local_sec_key = sec_key;
+            return;
+        }
+
+        std::lock_guard<std::mutex> guard(height_with_members_mutex_);
+        height_with_local_sec_key_[network_id][height] = sec_key;
+    }
+
     MembersPtr GetMembersPtr(
             uint64_t height,
             uint32_t network_id,
-            libff::alt_bn128_G2* common_pk) {
+            libff::alt_bn128_G2* common_pk,
+            libff::alt_bn128_Fr* local_sec_key) {
         if (network_id >= network::kConsensusShardEndNetworkId) {
             return nullptr;
         }
 
         if (members_ptrs_[network_id][0] != nullptr &&
                 members_ptrs_[network_id][0]->height == height) {
-            *common_pk = members_ptrs_[network_id][0]->common_bls_publick_key;
+            if (common_pk != nullptr) {
+                *common_pk = members_ptrs_[network_id][0]->common_bls_publick_key;
+            }
+
+            if (local_sec_key != nullptr) {
+                *local_sec_key = members_ptrs_[network_id][0]->local_sec_key;
+            }
+
             return members_ptrs_[network_id][0]->members_ptr;
         }
 
         if (members_ptrs_[network_id][1] != nullptr &&
                 members_ptrs_[network_id][1]->height == height) {
-            *common_pk = members_ptrs_[network_id][1]->common_bls_publick_key;
+            if (common_pk != nullptr) {
+                *common_pk = members_ptrs_[network_id][1]->common_bls_publick_key;
+            }
+
+            if (local_sec_key != nullptr) {
+                *local_sec_key = members_ptrs_[network_id][1]->local_sec_key;
+            }
+
             return members_ptrs_[network_id][1]->members_ptr;
         }
 
         if (members_ptrs_[network_id][2] != nullptr &&
                 members_ptrs_[network_id][2]->height == height) {
-            *common_pk = members_ptrs_[network_id][2]->common_bls_publick_key;
+            if (common_pk != nullptr) {
+                *common_pk = members_ptrs_[network_id][2]->common_bls_publick_key;
+            }
+
+            if (local_sec_key != nullptr) {
+                *local_sec_key = members_ptrs_[network_id][2]->local_sec_key;
+            }
+
             return members_ptrs_[network_id][2]->members_ptr;
         }
 
         // get from cache map
         {
             std::lock_guard<std::mutex> guard(height_with_members_mutex_);
-            auto pk_iter = height_with_common_pks_[network_id].find(height);
-            if (pk_iter != height_with_common_pks_[network_id].end()) {
-                *common_pk = pk_iter->second;
+            if (common_pk != nullptr) {
+                auto pk_iter = height_with_common_pks_[network_id].find(height);
+                if (pk_iter != height_with_common_pks_[network_id].end()) {
+                    *common_pk = pk_iter->second;
+                }
+            }
+
+            if (local_sec_key != nullptr) {
+                auto sec_iter = height_with_local_sec_key_[network_id].find(height);
+                if (sec_iter != height_with_local_sec_key_[network_id].end()) {
+                    *local_sec_key = sec_iter->second;
+                }
             }
 
             auto iter = height_with_members_[network_id].find(height);
@@ -214,6 +275,13 @@ public:
             return nullptr;
         }
 
+        if (local_sec_key != nullptr) {
+            *local_sec_key = bls::BlsManager::Instance()->GetSeckFromDb(height, network_id);
+            if (*local_sec_key == libff::alt_bn128_Fr::zero()) {
+                return nullptr;
+            }
+        }
+
         auto shard_members_ptr = std::make_shared<Members>();
         auto& in = elect_block.in();
         uint32_t member_index = 0;
@@ -234,6 +302,7 @@ public:
             elect_block.shard_network_id());
         std::string val;
         st = db::Db::Instance()->Get(bls_key, &val);
+        libff::alt_bn128_G2 tmp_common_pk = libff::alt_bn128_G2::zero();
         if (st.ok()) {
             elect::protobuf::PrevMembers prev_members;
             if (prev_members.ParseFromString(val)) {
@@ -251,15 +320,24 @@ public:
                 }
 
                 BLSPublicKey pkey(std::make_shared<std::vector<std::string>>(pkey_str));
-                *common_pk = *pkey.getPublicKey();
+                tmp_common_pk = *pkey.getPublicKey();
             }
         }
+
+        if (common_pk != nullptr) {
+            if (tmp_common_pk == libff::alt_bn128_G2::zero()) {
+                return nullptr;
+            }
+
+            *common_pk = tmp_common_pk;
+        }
+
         {
             std::lock_guard<std::mutex> guard(height_with_members_mutex_);
             height_queue_.push(height);
             height_with_members_[network_id][height] = shard_members_ptr;
             if (st.ok()) {
-                height_with_common_pks_[network_id][height] = *common_pk;
+                height_with_common_pks_[network_id][height] = tmp_common_pk;
             }
 
             if (height_queue_.size() > kMaxCacheElectBlockCount) {
@@ -284,9 +362,9 @@ public:
 private:
     static const uint32_t kMaxKeepElectBlockCount = 3u;
     static const uint32_t kMaxCacheElectBlockCount = 7u;
-
     std::map<uint64_t, MembersPtr> height_with_members_[network::kConsensusShardEndNetworkId];
     std::map<uint64_t, libff::alt_bn128_G2> height_with_common_pks_[network::kConsensusShardEndNetworkId];
+    std::map<uint64_t, libff::alt_bn128_Fr> height_with_local_sec_key_[network::kConsensusShardEndNetworkId];
     std::priority_queue<uint64_t, std::vector<uint64_t>, std::greater<uint64_t>> height_queue_;
     std::mutex height_with_members_mutex_;
     HeightMembersItemPtr members_ptrs_[network::kConsensusShardEndNetworkId][kMaxKeepElectBlockCount];

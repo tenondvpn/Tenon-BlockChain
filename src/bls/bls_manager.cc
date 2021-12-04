@@ -65,18 +65,7 @@ void BlsManager::ProcessNewElectBlock(
     waiting_bls_->OnNewElectionBlock(elect_height, new_members);
 }
 
-void BlsManager::SetUsedElectionBlock(
-        uint64_t elect_height,
-        uint32_t network_id,
-        uint32_t member_count,
-        const libff::alt_bn128_G2& common_public_key) try {
-    std::lock_guard<std::mutex> guard(mutex_);
-    if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
-        BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
-        return;
-    }
-
-    max_height_ = elect_height;
+libff::alt_bn128_Fr BlsManager::GetSeckFromDb(uint64_t elect_height, uint32_t network_id) {
     std::string key = common::kBlsPrivateKeyPrefix +
         std::to_string(elect_height) + "_" +
         std::to_string(network_id) + "_" +
@@ -85,7 +74,7 @@ void BlsManager::SetUsedElectionBlock(
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
         BLS_ERROR("get bls private key failed![%s]", key.c_str());
-        return;
+        return libff::alt_bn128_Fr::zero();
     }
 
     std::string dec_data;
@@ -102,20 +91,25 @@ void BlsManager::SetUsedElectionBlock(
                 security::Schnorr::Instance()->str_prikey(),
                 val,
                 &dec_data) != security::kSecuritySuccess) {
-            return;
+            return libff::alt_bn128_Fr::zero();
         }
     }
     
-    libff::alt_bn128_Fr local_sec_key = libff::alt_bn128_Fr(dec_data.c_str());
-    auto t = common::GetSignerCount(member_count);
-    crypto::Dkg dkg(t, member_count);
-    libff::alt_bn128_G2 local_publick_key = dkg.GetPublicKeyFromSecretKey(local_sec_key);
-    used_bls_ = std::make_shared<bls::BlsDkg>(
-        t,
-        member_count,
-        local_sec_key,
-        local_publick_key,
-        common_public_key);
+    return libff::alt_bn128_Fr(dec_data.c_str());
+}
+
+void BlsManager::SetUsedElectionBlock(
+        uint64_t elect_height,
+        uint32_t network_id,
+        uint32_t member_count,
+        const libff::alt_bn128_G2& common_public_key) try {
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (max_height_ != common::kInvalidUint64 && elect_height <= max_height_) {
+        BLS_ERROR("elect_height error: %lu, %lu", elect_height, max_height_);
+        return;
+    }
+
+    max_height_ = elect_height;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -126,10 +120,6 @@ int BlsManager::Sign(
         const libff::alt_bn128_Fr& local_sec_key,
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign) {
-//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
-//         return kBlsError;
-//     }
-
     BlsSign::Sign(t, n, local_sec_key, sign_msg, bn_sign);
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
     return kBlsSuccess;
@@ -143,10 +133,6 @@ int BlsManager::Sign(
         std::string* sign_x,
         std::string* sign_y) try {
     std::lock_guard<std::mutex> guard(sign_mutex_);
-//     if (used_bls_ == nullptr || used_bls_->n() == 0) {
-//         return kBlsError;
-//     }
-
     libff::alt_bn128_G1 bn_sign;
     BlsSign::Sign(t, n, local_sec_key, sign_msg, &bn_sign);
     bn_sign.to_affine_coordinates();
@@ -159,13 +145,6 @@ int BlsManager::Sign(
         t, n, strs->at(0).c_str(), strs->at(1).c_str(),
         strs->at(2).c_str(), strs->at(3).c_str(), (*sign_x).c_str(), (*sign_y).c_str(),
         common::Encode::HexEncode(sign_msg).c_str());
-//     std::cout << "sign t: " << used_bls_->t() << ", n: " << used_bls_->n()
-//         << ", pk: " << strs->at(0) << ", " << strs->at(1) << ", " << strs->at(2) << ", " << strs->at(3)
-//         << ", sign x: " << *sign_x
-//         << ", sign y: " << *sign_y
-//         << ", sign msg: " << common::Encode::HexEncode(sign_msg)
-//         << std::endl;
-
     return kBlsSuccess;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());

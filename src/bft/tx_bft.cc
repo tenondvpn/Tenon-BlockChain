@@ -69,8 +69,6 @@ int TxBft::Prepare(
         res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
     }
 
-    members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
-        common::GlobalInfo::Instance()->network_id());
     if (res != kBftSuccess) {
         BFT_ERROR("backup prepare failed: %d", res);
         if (res == kBftBlockPreHashError) {
@@ -167,8 +165,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftNoNewTxs;
     }
 
-    members_ptr_ = elect::ElectManager::Instance()->GetNetworkMembers(
-        common::GlobalInfo::Instance()->network_id());
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
         common::GlobalInfo::Instance()->network_id());
     local_member_index_ = mem_manager_ptr_->GetMemberIndex(

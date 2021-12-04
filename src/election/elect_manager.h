@@ -44,7 +44,11 @@ public:
         uint64_t height,
         protobuf::ElectBlock& elect_block);
     int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
-    elect::MembersPtr GetNetworkMembersWithHeight(uint64_t elect_height, uint32_t network_id);
+    elect::MembersPtr GetNetworkMembersWithHeight(
+        uint64_t elect_height,
+        uint32_t network_id,
+        libff::alt_bn128_G2* common_pk,
+        libff::alt_bn128_Fr* sec_key);
     uint32_t GetMemberCountWithHeight(uint64_t elect_height, uint32_t network_id);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);

@@ -45,14 +45,7 @@ public:
         const libff::alt_bn128_G1& sign,
         const std::string& sign_msg);
     int AddBlsConsensusInfo(elect::protobuf::ElectBlock& ec_block, common::Bitmap* bitmap);
-
-    libff::alt_bn128_Fr local_sec_key() {
-        if (used_bls_ == nullptr) {
-            return libff::alt_bn128_Fr::zero();
-        }
-
-        return used_bls_->local_sec_key();
-    }
+    libff::alt_bn128_Fr GetSeckFromDb(uint64_t elect_height, uint32_t network_id);
 
 private:
     BlsManager();
@@ -86,7 +79,6 @@ private:
         std::vector<libff::alt_bn128_G1>& all_signs,
         std::vector<size_t>& idx_vec);
 
-    std::shared_ptr<bls::BlsDkg> used_bls_{ nullptr };
     std::shared_ptr<bls::BlsDkg> waiting_bls_{ nullptr };
     uint64_t max_height_{ common::kInvalidUint64 };
     std::mutex mutex_;

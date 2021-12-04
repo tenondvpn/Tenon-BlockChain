@@ -499,7 +499,9 @@ bool BftManager::AggSignValid(
 
     auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
         block.electblock_height(),
-        block.network_id());
+        block.network_id(),
+        nullptr,
+        nullptr);
     if (members == nullptr) {
         // The election block arrives later than the consensus block,
         // causing the aggregate signature verification to fail
@@ -2047,7 +2049,9 @@ void BftManager::VerifyWaitingBlock() {
             if (waiting_verify_block_queue_[i].pop(&waiting_ptr)) {
                 auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
                     waiting_ptr->block_ptr->electblock_height(),
-                    waiting_ptr->block_ptr->network_id());
+                    waiting_ptr->block_ptr->network_id(),
+                    nullptr,
+                    nullptr);
                 if (members == nullptr) {
                     waiting_block_set_.insert(waiting_ptr);
                     continue;

@@ -405,7 +405,8 @@ protected:
     std::string precommit_hash_;
     std::string commit_hash_;
     std::atomic<uint32_t> prepare_verify_failed_count_{ 0 };
-    libff::alt_bn128_Fr local_sec_key_;
+    libff::alt_bn128_Fr local_sec_key_{ libff::alt_bn128_Fr::zero() };
+    libff::alt_bn128_G2 common_pk_{ libff::alt_bn128_G2::zero() };
     uint32_t local_member_index_{ elect::kInvalidMemberIndex };
     tvm::TenonHost tenon_host_;
 

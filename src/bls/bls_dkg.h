@@ -43,10 +43,6 @@ public:
         return elect_hegiht_;
     }
 
-    const libff::alt_bn128_Fr& local_sec_key() const {
-        return local_sec_key_;
-    }
-
     const libff::alt_bn128_G2& local_publick_key() const {
         return local_publick_key_;
     }
