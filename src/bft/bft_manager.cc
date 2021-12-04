@@ -1414,6 +1414,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             kBftSyncBlock,
             false,
             block_ptr,
+            bft_ptr->local_member_index(),
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
@@ -1434,6 +1435,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             kBftRootBlock,
             true,
             block_ptr,
+            bft_ptr->local_member_index(),
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
@@ -1520,6 +1522,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
             kBftToTxInit,
             false,
             block_ptr,
+            bft_ptr->local_member_index(),
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);

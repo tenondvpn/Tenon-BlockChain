@@ -53,6 +53,7 @@ public:
         uint32_t bft_step,
         bool universal,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
+        uint32_t local_member_index,
         transport::protobuf::Header& msg);
     static void SetLocalPublicIpPort(
         const dht::NodePtr& local_node,

@@ -38,6 +38,7 @@ int BftInterface::Init() {
     }
 
     leader_index_ = leader_mem_ptr_->index;
+    member_index_ = leader_index_;
     // just leader call init
     this_node_is_leader_ = true;
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
@@ -217,6 +218,18 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         return false;
     }
 
+    for (uint32_t i = 0; i < members->size(); ++i) {
+        if ((*members)[i]->id == common::GlobalInfo::Instance()->id()) {
+            local_member_index_ = i;
+            break;
+        }
+    }
+
+    if (local_member_index_ == elect::kInvalidMemberIndex) {
+        BFT_ERROR("get local member failed!.");
+        return false;
+    }
+
     leader_mem_ptr_ = (*members)[bft_msg.member_index()];
     if (!leader_mem_ptr_) {
         BFT_ERROR("get leader failed!.");
@@ -228,6 +241,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
             local_elect_height, bft_msg.elect_height());
         return false;
     }
+
 
     elect_height_ = local_elect_height;
     members_ptr_ = members;

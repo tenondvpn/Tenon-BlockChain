@@ -92,7 +92,7 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_sign_response(sign_response_str);
     bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_member_index(bft_ptr->local_member_index());
     bft_msg.set_elect_height(bft_ptr->elect_height());
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader prepare pool index: %d, step: %d, bft gid: %s",
@@ -124,7 +124,7 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_epoch(from_bft_msg.epoch());
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_member_index(bft_ptr->local_member_index());
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(
@@ -172,7 +172,6 @@ void BftProto::LeaderCreatePreCommit(
     bft_msg.set_member_index(bft_ptr->local_member_index());
     security::Signature leader_sign;
     if (agree) {
-        bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
         const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
         for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
             bft_msg.add_bitmap(bitmap_data[i]);
@@ -243,7 +242,7 @@ void BftProto::BackupCreatePreCommit(
     bft_msg.set_agree(agree);
     bft_msg.set_bft_step(kBftPreCommit);
     bft_msg.set_epoch(from_bft_msg.epoch());
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_member_index(bft_ptr->local_member_index());
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(
@@ -284,7 +283,7 @@ void BftProto::LeaderCreateCommit(
     bft_msg.set_net_id(bft_ptr->network_id());
     bft_msg.set_bft_step(kBftCommit);
     bft_msg.set_pool_index(bft_ptr->pool_index());
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_member_index(bft_ptr->local_member_index());
     bft_msg.set_agree(agree);
     const auto& bitmap_data = bft_ptr->prepare_bitmap().data();
     for (uint32_t i = 0; i < bitmap_data.size(); ++i) {
@@ -337,6 +336,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
         uint32_t bft_step,
         bool universal,
         const std::shared_ptr<bft::protobuf::Block>& block_ptr,
+        uint32_t local_member_index,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(net_id, common::RandomCountry());
@@ -357,7 +357,7 @@ void BftProto::CreateLeaderBroadcastToAccount(
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_bft_step(bft_step);
     bft_msg.set_net_id(common::GlobalInfo::Instance()->network_id());
-    bft_msg.set_member_index(elect::ElectManager::Instance()->local_node_member_index());
+    bft_msg.set_member_index(local_member_index);
     auto block_hash = GetBlockHash(*block);
     block->set_hash(block_hash);
 //     security::Signature sign;

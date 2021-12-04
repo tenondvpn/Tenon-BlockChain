@@ -276,6 +276,7 @@ void BlsManager::HandleFinish(
         const protobuf::BlsMessage& bls_msg) {
     if (bls_msg.finish_req().network_id() < network::kRootCongressNetworkId ||
             bls_msg.finish_req().network_id() >= network::kConsensusShardEndNetworkId) {
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -284,6 +285,7 @@ void BlsManager::HandleFinish(
     if (members == nullptr || bls_msg.index() >= members->size()) {
         BLS_ERROR("not get waiting network members network id: %u, index: %d",
             bls_msg.finish_req().network_id(), bls_msg.index());
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -291,6 +293,7 @@ void BlsManager::HandleFinish(
     if (!IsSignValid(members, bls_msg, &msg_hash)) {
         BLS_ERROR("IsSignValid failed network id: %u",
             bls_msg.finish_req().network_id());
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -326,6 +329,7 @@ void BlsManager::HandleFinish(
             sign,
             msg_hash) != bls::kBlsSuccess) {
         BFT_ERROR("verify bls finish bls sign error!");
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -340,6 +344,7 @@ void BlsManager::HandleFinish(
     }
 
     if (finish_item->verified[bls_msg.index()]) {
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -384,6 +389,7 @@ void BlsManager::HandleFinish(
 //                 << std::endl;
         }
 
+        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -399,6 +405,7 @@ void BlsManager::HandleFinish(
         finish_item->max_finish_count = 1;
         finish_item->max_finish_hash = msg_hash;
     }
+    BLS_INFO("bls create HandleFinish success block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
 }
 
 void BlsManager::CheckAggSignValid(
