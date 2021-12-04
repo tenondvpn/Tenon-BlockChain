@@ -38,7 +38,6 @@ int BftInterface::Init() {
     }
 
     leader_index_ = leader_mem_ptr_->index;
-    member_index_ = leader_index_;
     // just leader call init
     this_node_is_leader_ = true;
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
