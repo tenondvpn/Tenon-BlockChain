@@ -939,6 +939,11 @@ int BftManager::LeaderPrecommit(
             member_ptr->bls_publick_key,
             sign,
             bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
+        BFT_ERROR("verify failed and now exit all.");
+        if (member_ptr->bls_publick_key != libff::alt_bn128_G2::zero()) {
+            system("ps -ef | grep tenon | awk -F' ' '{print $2}' | xargs kill -9");
+        }
+
         auto failed_count = bft_ptr->add_prepare_verify_failed_count();
         if (failed_count >= bft_ptr->min_oppose_member_count() &&
                 bft_ptr->elect_height() <
@@ -950,18 +955,6 @@ int BftManager::LeaderPrecommit(
             RemoveBft(bft_ptr->gid(), false);
         }
 
-        auto pk = const_cast<libff::alt_bn128_G2*>(&member_ptr->bls_publick_key);
-        pk->to_affine_coordinates();
-        auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
-        auto strs = pk_ptr->toString();
-        BLS_DEBUG("verify prepare hash error, hash: %s, signx: %s, signy: %s, public key: %s,%s,%s,%s, msg hash: %s",
-            common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
-            common::Encode::HexEncode(bft_msg.bls_sign_x()).c_str(),
-            common::Encode::HexEncode(bft_msg.bls_sign_y()).c_str(),
-            strs->at(0).c_str(),
-            strs->at(1).c_str(),
-            strs->at(2).c_str(),
-            strs->at(3).c_str());
         return kBftError;
     }
 
