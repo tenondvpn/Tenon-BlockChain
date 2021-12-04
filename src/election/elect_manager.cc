@@ -521,8 +521,8 @@ void ElectManager::UpdatePrevElectMembers(
 
         if (elect_block.prev_members().bls_pubkey(i).x_c0().empty()) {
             (*iter)->bls_publick_key = libff::alt_bn128_G2::zero();
-            ELECT_DEBUG("get invalid bls public key index: %d, id: %s",
-                i, common::Encode::HexEncode((*iter)->id).c_str());
+            ELECT_DEBUG("get invalid bls public key index: %d, id: %s, elect height: %lu",
+                i, common::Encode::HexEncode((*iter)->id).c_str(), elect_block.prev_members().prev_elect_height());
             continue;
         }
 
