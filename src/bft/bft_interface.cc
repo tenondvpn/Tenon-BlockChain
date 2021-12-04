@@ -42,10 +42,13 @@ int BftInterface::Init() {
             (*members_ptr_)[leader_index_]->id != common::GlobalInfo::Instance()->id() ||
             common_pk_ == libff::alt_bn128_G2::zero() ||
             local_sec_key_ == libff::alt_bn128_Fr::zero()) {
-        BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
+        BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!,"
+            "cpk valid: %d, sec key valid: %d",
             elect_height_,
             elect::ElectManager::Instance()->latest_height(
-                common::GlobalInfo::Instance()->network_id()));
+                common::GlobalInfo::Instance()->network_id()),
+            (common_pk_ == libff::alt_bn128_G2::zero()),
+            (local_sec_key_ == libff::alt_bn128_Fr::zero()));
         return kBftError;
     }
 
