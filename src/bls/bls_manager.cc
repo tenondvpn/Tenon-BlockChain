@@ -84,7 +84,7 @@ libff::alt_bn128_Fr BlsManager::GetSeckFromDb(uint64_t elect_height, uint32_t ne
                 init::kGenesisElectPrikeyEncryptKey,
                 val,
                 &dec_data) != security::kSecuritySuccess) {
-            return;
+            return libff::alt_bn128_Fr::zero();
         }
     } else {
         if (security::Crypto::Instance()->GetDecryptData(

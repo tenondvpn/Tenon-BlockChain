@@ -38,8 +38,10 @@ int BftInterface::Init() {
         &common_pk_,
         &local_sec_key_);
     if (members_ptr_ == nullptr ||
-            leader_index_ < members_ptr_->size() ||
-            (*members_ptr_)[leader_index_]->id != common::GlobalInfo::Instance()->id()) {
+            leader_index_ >= members_ptr_->size() ||
+            (*members_ptr_)[leader_index_]->id != common::GlobalInfo::Instance()->id() ||
+            common_pk_ == libff::alt_bn128_G2::zero() ||
+            local_sec_key_ == libff::alt_bn128_Fr::zero()) {
         BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
             elect_height_,
             elect::ElectManager::Instance()->latest_height(

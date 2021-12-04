@@ -10,6 +10,7 @@
 
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
+#include "bls/bls_manager.h"
 #include "common/utils.h"
 #include "db/db.h"
 #include "election/elect_node_detail.h"
