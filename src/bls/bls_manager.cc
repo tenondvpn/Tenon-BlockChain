@@ -389,7 +389,7 @@ void BlsManager::HandleFinish(
 //                 << std::endl;
         }
 
-        BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
+        BLS_INFO("bls create HandleFinish success block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
         return;
     }
 
@@ -405,7 +405,7 @@ void BlsManager::HandleFinish(
         finish_item->max_finish_count = 1;
         finish_item->max_finish_hash = msg_hash;
     }
-    BLS_INFO("bls create HandleFinish success block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
+    BLS_INFO("bls create HandleFinish init success block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
 }
 
 void BlsManager::CheckAggSignValid(
@@ -542,6 +542,7 @@ bool BlsManager::CheckAndVerifyAll(
             finish_item,
             all_signs,
             idx_vec)) {
+        BLS_INFO("CheckAndVerifyAll success");
         finish_item->success_verified = true;
         finish_item->verified_valid_signs = all_signs;
         finish_item->verified_valid_index = idx_vec;
@@ -589,6 +590,7 @@ bool BlsManager::CheckAndVerifyAll(
         return true;
     }
 
+    BLS_INFO("CheckAndVerifyAll failed.");
     return false;
 }
 
