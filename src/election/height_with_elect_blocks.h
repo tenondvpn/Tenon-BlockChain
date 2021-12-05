@@ -119,19 +119,12 @@ public:
         if (members_ptrs_[network_id][0] != nullptr &&
                 members_ptrs_[network_id][0]->height == height) {
             members_ptrs_[network_id][0]->common_bls_publick_key = common_pk;
-            return;
-        }
-
-        if (members_ptrs_[network_id][1] != nullptr &&
+        } else if (members_ptrs_[network_id][1] != nullptr &&
                 members_ptrs_[network_id][1]->height == height) {
             members_ptrs_[network_id][1]->common_bls_publick_key = common_pk;
-            return;
-        }
-
-        if (members_ptrs_[network_id][2] != nullptr &&
+        } else if (members_ptrs_[network_id][2] != nullptr &&
                 members_ptrs_[network_id][2]->height == height) {
             members_ptrs_[network_id][2]->common_bls_publick_key = common_pk;
-            return;
         }
 
         std::lock_guard<std::mutex> guard(height_with_members_mutex_);
@@ -147,21 +140,14 @@ public:
         }
 
         if (members_ptrs_[network_id][0] != nullptr &&
-            members_ptrs_[network_id][0]->height == height) {
+                members_ptrs_[network_id][0]->height == height) {
             members_ptrs_[network_id][0]->local_sec_key = sec_key;
-            return;
-        }
-
-        if (members_ptrs_[network_id][1] != nullptr &&
-            members_ptrs_[network_id][1]->height == height) {
+        } else if (members_ptrs_[network_id][1] != nullptr &&
+                members_ptrs_[network_id][1]->height == height) {
             members_ptrs_[network_id][1]->local_sec_key = sec_key;
-            return;
-        }
-
-        if (members_ptrs_[network_id][2] != nullptr &&
-            members_ptrs_[network_id][2]->height == height) {
+        } else if (members_ptrs_[network_id][2] != nullptr &&
+                members_ptrs_[network_id][2]->height == height) {
             members_ptrs_[network_id][2]->local_sec_key = sec_key;
-            return;
         }
 
         std::lock_guard<std::mutex> guard(height_with_members_mutex_);

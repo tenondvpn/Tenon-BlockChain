@@ -54,11 +54,11 @@ int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
 void LeaderRotation::CheckRotation() {
     std::vector<int32_t> should_change_leaders;
     for (int32_t i = 0; i <= rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
-        bool change_leader = true;
+        bool change_leader = false;
         for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
             if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
-                if (!bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
-                    change_leader = false;
+                if (bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
+                    change_leader = true;
                     break;
                 }
             }
