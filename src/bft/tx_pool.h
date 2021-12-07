@@ -58,7 +58,7 @@ struct TxItem {
     uint32_t index{ common::kInvalidPoolIndex };
     std::string uni_gid;
     bool valid{ false };
-
+    uint64_t timeblock_tx_tm_sec_{ 0 };
 };
 
 typedef std::shared_ptr<TxItem> TxItemPtr;
@@ -93,6 +93,7 @@ public:
 private:
     bool IsTxContractLocked(TxItemPtr tx_ptr);
     bool IsTxValid(TxItemPtr tx_ptr);
+    void RemoveInvalidTimeBlockTx(uint64_t latest_tm);
 
     static const uint32_t kKeepCoverLoadCount = 1024u;
 

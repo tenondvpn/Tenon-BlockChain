@@ -29,6 +29,23 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
         tx_ptr->tx.call_contract_step(),
         tx_ptr->tx.gid());
     tx_ptr->uni_gid = uni_gid;
+    if (tx_ptr->tx.type() == common::kConsensusRootTimeBlock) {
+        for (int32_t i = 0; i < tx_ptr->tx.attr_size(); ++i) {
+            if (tx_ptr->tx.attr(i).key() == tmblock::kAttrTimerBlock) {
+                uint64_t tmblock_tm = 0;
+                if (!common::StringUtil::ToUint64(tx_ptr->tx.attr(i).value(), &tmblock_tm)) {
+                    return kBftError;
+                }
+
+                tx_ptr->timeblock_tx_tm_sec_ = tmblock_tm;
+            }
+        }
+
+        if (tx_ptr->timeblock_tx_tm_sec_ == 0) {
+            return kBftError;
+        }
+    }
+
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter != added_tx_map_.end()) {
@@ -104,7 +121,19 @@ void TxPool::CheckTimeoutTx() {
             continue;
         }
 
-        break;
+        if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
+            if (iter->second->timeblock_tx_tm_sec_ < tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
+                auto miter = added_tx_map_.find(iter->second->uni_gid);
+                if (miter != added_tx_map_.end()) {
+                    added_tx_map_.erase(miter);
+                }
+
+                tx_pool_.erase(iter++);
+                continue;
+            }
+        }
+
+        ++iter;
     }
 }
 
@@ -137,6 +166,13 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
             }
 
             if (iter->second->time_valid <= timestamp_now) {
+                if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
+                    if (!tmblock::TimeBlockManager::Instance()->LeaderCanCallTimeBlockTx(
+                            iter->second->timeblock_tx_tm_sec_)) {
+                        continue;
+                    }
+                }
+
                 if (IsTxContractLocked(iter->second)) {
                     ++iter;
                     BFT_ERROR("IsTxContractLocked error.");
@@ -180,32 +216,8 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
 
 bool TxPool::IsTxValid(TxItemPtr tx_ptr) {
     auto now_time = std::chrono::steady_clock::now();
-    if (tx_ptr->timeout <= now_time) {
+    if (tx_ptr->timeout <= now_time && tx_ptr->tx.type() != common::kConsensusRootTimeBlock) {
 //         BFT_ERROR("timeout and remove tx: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
-        return false;
-    }
-
-    if (!tx_ptr) {
-        BFT_ERROR("iter second invalid.");
-        return false;
-    }
-
-    if (tx_ptr->tx.type() == common::kConsensusRootTimeBlock) {
-        for (int32_t i = 0; i < tx_ptr->tx.attr_size(); ++i) {
-            if (tx_ptr->tx.attr(i).key() == tmblock::kAttrTimerBlock) {
-                uint64_t tmblock_tm = 0;
-                if (!common::StringUtil::ToUint64(tx_ptr->tx.attr(i).value(), &tmblock_tm)) {
-                    return false;
-                }
-
-                if (tmblock_tm < tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
         return false;
     }
 

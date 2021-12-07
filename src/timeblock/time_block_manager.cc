@@ -5,6 +5,7 @@
 #include "bft/bft_utils.h"
 #include "bft/bft_manager.h"
 #include "bft/gid_manager.h"
+#include "bft/dispatch_pool.h"
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
 #include "dht/dht_key.h"
@@ -38,9 +39,9 @@ uint64_t TimeBlockManager::LatestTimestampHeight() {
 }
 
 TimeBlockManager::TimeBlockManager() {
-    create_tm_block_tick_.CutOff(
-        35 * kCheckTimeBlockPeriodUs,
-        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
+//     create_tm_block_tick_.CutOff(
+//         35 * kCheckTimeBlockPeriodUs,
+//         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
     check_bft_tick_.CutOff(
         35 * kCheckTimeBlockPeriodUs,
         std::bind(&TimeBlockManager::CheckBft, this));
@@ -86,13 +87,6 @@ int TimeBlockManager::LeaderCreateTimeBlockTx(transport::protobuf::Header* msg) 
 
         return kTimeBlockError;
     }
-
-//     BFT_DEBUG("LeaderCreateTimeBlockTx success gid exists[%s] %lu"
-//         "latest_time_block_tm_[%lu] new_time_block_tm[%lu], vss value: %lu",
-//         common::Encode::HexEncode(gid).c_str(),
-//         (uint64_t)latest_time_block_height_,
-//         (uint64_t)latest_time_block_tm_, new_time_block_tm,
-//         vss::VssManager::Instance()->GetConsensusFinalRandom());
 
     auto all_exits_attr = tx_info->add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
@@ -169,6 +163,57 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
     return kTimeBlockSuccess;
 }
 
+bool TimeBlockManager::LeaderCanCallTimeBlockTx(uint64_t tm_sec) {
+    uint64_t now_sec = common::TimeUtils::TimestampSeconds();
+    if (now_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
+        return true;
+    }
+
+    if (now_sec  >= latest_tm_block_local_sec_ + common::kTimeBlockCreatePeriodSeconds) {
+        return true;
+    }
+
+    return false;
+}
+
+int TimeBlockManager::CreateTimeBlockTx() {
+    auto gid = common::Hash::Hash256(kTimeBlockGidPrefix +
+        std::to_string(elect::ElectManager::Instance()->latest_height(
+            common::GlobalInfo::Instance()->network_id())) +
+        std::to_string(latest_time_block_tm_));
+    uint64_t new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
+    bft::protobuf::TxInfo tx_info;
+    tx_info.set_type(common::kConsensusRootTimeBlock);
+    tx_info.set_from(common::kRootChainTimeBlockTxAddress);
+    tx_info.set_gid(gid);
+    tx_info.set_gas_limit(0llu);
+    tx_info.set_amount(0);
+    tx_info.set_network_id(network::kRootCongressNetworkId);
+    if (!bft::GidManager::Instance()->NewGidTxValid(gid, tx_info, true)) {
+        BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu"
+            "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+            common::Encode::HexEncode(gid).c_str(),
+            (uint64_t)latest_time_block_height_,
+            (uint64_t)latest_time_block_tm_,
+            new_time_block_tm);
+        return kTimeBlockError;
+    }
+
+    auto all_exits_attr = tx_info.add_attr();
+    all_exits_attr->set_key(kAttrTimerBlock);
+    all_exits_attr->set_value(std::to_string(new_time_block_tm));
+    auto final_random_attr = tx_info.add_attr();
+    final_random_attr->set_key(kVssRandomAttr);
+    final_random_attr->set_value(
+        std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
+    if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
+        TMBLOCK_ERROR("dispatch timeblock tx info failed!");
+        return kTimeBlockError;
+    }
+
+    return kTimeBlockSuccess;
+}
+
 void TimeBlockManager::UpdateTimeBlock(
         uint64_t latest_time_block_height,
         uint64_t latest_time_block_tm,
@@ -181,8 +226,10 @@ void TimeBlockManager::UpdateTimeBlock(
 
         latest_time_block_height_ = latest_time_block_height;
         latest_time_block_tm_ = latest_time_block_tm;
+        latest_tm_block_local_sec_ = common::TimeUtils::TimestampSeconds();
     }
 
+    CreateTimeBlockTx();
 //     BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
 //         (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
     vss::VssManager::Instance()->OnTimeBlock(
@@ -239,30 +286,30 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
     return false;
 }
 
-void TimeBlockManager::CreateTimeBlockTx() {
-    {
-        std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
-        auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-        if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-            if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-                int32_t pool_mod_num = -1;
-                if (elect::ElectManager::Instance()->IsSuperLeader(
-                        common::GlobalInfo::Instance()->network_id(),
-                        common::GlobalInfo::Instance()->id())) {
-                    transport::protobuf::Header msg;
-                    if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
-                        network::Route::Instance()->Send(msg);
-                        network::Route::Instance()->SendToLocal(msg);
-                    }
-                }
-            }
-        }
-    }
+// void TimeBlockManager::CreateTimeBlockTx() {
+//     {
+//         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
+//         auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+//         if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
+//             if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+//                 int32_t pool_mod_num = -1;
+//                 if (elect::ElectManager::Instance()->IsSuperLeader(
+//                         common::GlobalInfo::Instance()->network_id(),
+//                         common::GlobalInfo::Instance()->id())) {
+//                     transport::protobuf::Header msg;
+//                     if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
+//                         network::Route::Instance()->Send(msg);
+//                         network::Route::Instance()->SendToLocal(msg);
+//                     }
+//                 }
+//             }
+//         }
+//     }
 
-    create_tm_block_tick_.CutOff(
-        kCheckTimeBlockPeriodUs,
-        std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
-}
+//     create_tm_block_tick_.CutOff(
+//         kCheckTimeBlockPeriodUs,
+//         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
+// }
 
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();

@@ -28,6 +28,7 @@ public:
     bool BackupheckNewTimeBlockValid(uint64_t new_time_block_tm);
     int LeaderCreateTimeBlockTx(transport::protobuf::Header* msg);
     int BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_info);
+    bool LeaderCanCallTimeBlockTx(uint64_t tm_sec);
 
 private:
     TimeBlockManager();
@@ -39,9 +40,9 @@ private:
     std::atomic<uint64_t> latest_time_block_height_{ 0 };
     std::atomic<uint64_t> latest_time_block_tm_{ 0 };
     std::mutex latest_time_blocks_mutex_;
-    common::Tick create_tm_block_tick_;
     common::Tick check_bft_tick_;
     common::Tick broadcast_tm_tick_;
+    uint64_t latest_tm_block_local_sec_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(TimeBlockManager);
 };
