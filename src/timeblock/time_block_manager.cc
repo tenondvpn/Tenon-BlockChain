@@ -313,7 +313,6 @@ void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_num >= 0) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
-        BFT_DEBUG("start bft called!");
     }
 
     check_bft_tick_.CutOff(

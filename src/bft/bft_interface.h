@@ -77,11 +77,6 @@ public:
 
     void set_gid(const std::string& gid) {
         gid_ = gid;
-        auto now_timestamp = std::chrono::steady_clock::now();
-        BFT_DEBUG("%lu, %lu, Timeout %s,",
-            timeout_.time_since_epoch().count(),
-            now_timestamp.time_since_epoch().count(),
-            common::Encode::HexEncode(gid).c_str());
     }
 
     const std::string& gid() {
