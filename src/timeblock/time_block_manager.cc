@@ -189,7 +189,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
     tx_info.set_gas_limit(0llu);
     tx_info.set_amount(0);
     tx_info.set_network_id(network::kRootCongressNetworkId);
-    if (!bft::GidManager::Instance()->NewGidTxValid(gid, tx_info, true)) {
+    if (!bft::GidManager::Instance()->NewGidTxValid(gid, tx_info, false)) {
         BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu"
             "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
             common::Encode::HexEncode(gid).c_str(),
@@ -209,6 +209,9 @@ void TimeBlockManager::CreateTimeBlockTx() {
     if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
         TMBLOCK_ERROR("dispatch timeblock tx info failed!");
     }
+
+    TMBLOCK_INFO("dispatch timeblock tx info success： %lu, vss: %s, real: %s!",
+        new_time_block_tm, final_random_attr->value().c_str(), tx_info.attr(1).value().c_str());
 }
 
 void TimeBlockManager::UpdateTimeBlock(
@@ -312,6 +315,7 @@ void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
     if (pool_mod_num >= 0) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
+        BFT_DEBUG("start bft called!");
     }
 
     check_bft_tick_.CutOff(

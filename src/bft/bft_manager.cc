@@ -684,6 +684,7 @@ int BftManager::InitBft(
     }
 
     res = StartBft(bft_msg.gid(), pool_mod_index);
+    BFT_DEBUG("start bft called!");
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
             BFT_WARN("start [%s][%llu] failed![%d]",
@@ -757,6 +758,7 @@ void BftManager::RemoveBft(const std::string& gid, bool remove_tx) {
         if (iter != bft_hash_map_.end()) {
             bft_ptr = iter->second;
             bft_hash_map_.erase(iter);
+            BFT_DEBUG("remove bft gid: %s", common::Encode::HexEncode(gid).c_str());
         }
     }
 
@@ -1062,6 +1064,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
     auto precommit_msg = std::make_shared<transport::protobuf::Header>();  // msg;
     BftProto::LeaderCreatePreCommit(local_node, bft_ptr, true, *precommit_msg);
     network::Route::Instance()->Send(*precommit_msg);
+    BFT_ERROR("LeaderCallPrecommit gid: %s", common::Encode::HexEncode(bft_ptr->gid()).c_str());
 #ifdef TENON_UNITTEST
     leader_precommit_msg_ = *precommit_msg;
 #endif
@@ -1570,6 +1573,7 @@ void BftManager::CheckTimeout() {
                 auto riter = bft_hash_map_.find(iter->first);
                 if (riter != bft_hash_map_.end()) {
                     bft_hash_map_.erase(riter);
+                    BFT_DEBUG("timeout remove bft gid: %s", common::Encode::HexEncode(iter->first).c_str());
                 }
             }
 

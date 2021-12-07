@@ -13,6 +13,7 @@
 #include "bft/proto/bft.pb.h"
 #include "common/utils.h"
 #include "common/bitmap.h"
+#include "common/encode.h"
 #include "election/elect_node_detail.h"
 #include "election/member_manager.h"
 #include "security/signature.h"
@@ -76,6 +77,11 @@ public:
 
     void set_gid(const std::string& gid) {
         gid_ = gid;
+        auto now_timestamp = std::chrono::steady_clock::now();
+        BFT_DEBUG("%lu, %lu, Timeout %s,",
+            timeout_.time_since_epoch().count(),
+            now_timestamp.time_since_epoch().count(),
+            common::Encode::HexEncode(gid).c_str());
     }
 
     const std::string& gid() {
