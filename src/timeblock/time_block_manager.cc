@@ -176,7 +176,7 @@ bool TimeBlockManager::LeaderCanCallTimeBlockTx(uint64_t tm_sec) {
     return false;
 }
 
-int TimeBlockManager::CreateTimeBlockTx() {
+void TimeBlockManager::CreateTimeBlockTx() {
     auto gid = common::Hash::Hash256(kTimeBlockGidPrefix +
         std::to_string(elect::ElectManager::Instance()->latest_height(
             common::GlobalInfo::Instance()->network_id())) +
@@ -196,7 +196,7 @@ int TimeBlockManager::CreateTimeBlockTx() {
             (uint64_t)latest_time_block_height_,
             (uint64_t)latest_time_block_tm_,
             new_time_block_tm);
-        return kTimeBlockError;
+        return;
     }
 
     auto all_exits_attr = tx_info.add_attr();
@@ -208,10 +208,7 @@ int TimeBlockManager::CreateTimeBlockTx() {
         std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
     if (bft::DispatchPool::Instance()->Dispatch(tx_info) != bft::kBftSuccess) {
         TMBLOCK_ERROR("dispatch timeblock tx info failed!");
-        return kTimeBlockError;
     }
-
-    return kTimeBlockSuccess;
 }
 
 void TimeBlockManager::UpdateTimeBlock(
