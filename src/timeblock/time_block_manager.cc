@@ -178,8 +178,6 @@ bool TimeBlockManager::LeaderCanCallTimeBlockTx(uint64_t tm_sec) {
 
 void TimeBlockManager::CreateTimeBlockTx() {
     auto gid = common::Hash::Hash256(kTimeBlockGidPrefix +
-        std::to_string(elect::ElectManager::Instance()->latest_height(
-            common::GlobalInfo::Instance()->network_id())) +
         std::to_string(latest_time_block_tm_));
     uint64_t new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
     bft::protobuf::TxInfo tx_info;

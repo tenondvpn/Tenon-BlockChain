@@ -699,20 +699,26 @@ int BftManager::InitBft(
     return kBftSuccess;
 }
 
-int BftManager::StartBft(const std::string& gid, int32_t pool_mod_index) {
+int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
         BFT_ERROR("leader create bft failed!");
         return kBftError;
     }
-
-    bft_ptr->set_gid(common::GlobalInfo::Instance()->gid());
+    auto gid = common::GlobalInfo::Instance()->gid();
+    BFT_DEBUG("0 start bft called: %s", common::Encode::HexEncode(gid).c_str());
+    bft_ptr->set_gid(gid);
+    BFT_DEBUG("1 start bft called: %s", common::Encode::HexEncode(gid).c_str());
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
+    BFT_DEBUG("2 start bft called: %s", common::Encode::HexEncode(gid).c_str());
     bft_ptr->set_randm_num(vss::VssManager::Instance()->EpochRandom());
+    BFT_DEBUG("3 start bft called: %s", common::Encode::HexEncode(gid).c_str());
     bft_ptr->set_member_count(elect::ElectManager::Instance()->GetMemberCount(
         common::GlobalInfo::Instance()->network_id()));
     std::string prepare_data;
+    BFT_DEBUG("4 start bft called: %s", common::Encode::HexEncode(gid).c_str());
     int leader_pre = LeaderPrepare(bft_ptr, pool_mod_index);
+    BFT_DEBUG("5 start bft called: %s", common::Encode::HexEncode(gid).c_str());
     if (leader_pre != kBftSuccess) {
         if (bft_ptr->pool_index() < common::kInvalidPoolIndex) {
             bft_ptr->clear_item_index_vec();
