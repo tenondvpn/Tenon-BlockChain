@@ -86,6 +86,25 @@ public:
         return db_->Delete(write_opt, DbSlice(key));
     }
 
+    void ClearPrefix(const std::string& prefix) {
+        DbReadOptions option;
+        auto iter = db_->NewIterator(option);
+        iter->Seek(prefix);
+        int32_t valid_count = 0;
+        while (iter->Valid()) {
+            if (memcmp(prefix.c_str(), iter->key().data(), prefix.size()) != 0) {
+                break;
+            }
+
+            DbWriteOptions write_opt;
+            db_->Delete(write_opt, iter->key());
+            ++valid_count;
+            iter->Next();
+        }
+
+        delete iter;
+    }
+
     std::shared_ptr<DickDb>& db() {
         return db_;
     }

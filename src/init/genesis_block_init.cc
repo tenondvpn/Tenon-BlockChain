@@ -40,14 +40,18 @@ int GenesisBlockInit::CreateGenesisBlocks(
         shard_bitmap_.Set(i);
     }
 
+    int res = kInitSuccess;
     block::AccountManager::Instance()->Init(net_id);
     if (net_id == network::kRootCongressNetworkId) {
         common::GlobalInfo::Instance()->set_network_id(network::kRootCongressNetworkId);
-        return CreateRootGenesisBlocks(root_genesis_nodes, cons_genesis_nodes);
+        res = CreateRootGenesisBlocks(root_genesis_nodes, cons_genesis_nodes);
+    } else {
+        common::GlobalInfo::Instance()->set_network_id(net_id);
+        res = CreateShardGenesisBlocks(net_id);
     }
 
-    common::GlobalInfo::Instance()->set_network_id(net_id);
-    return CreateShardGenesisBlocks(net_id);
+    db::Db::Instance()->ClearPrefix("db_for_gid_");
+    return res;
 }
 
 int GenesisBlockInit::CreateBlsGenesisKeys(

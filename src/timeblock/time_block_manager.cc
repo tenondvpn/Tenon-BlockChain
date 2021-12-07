@@ -188,7 +188,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
     tx_info.set_amount(0);
     tx_info.set_network_id(network::kRootCongressNetworkId);
     if (!bft::GidManager::Instance()->NewGidTxValid(gid, tx_info, false)) {
-        BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu"
+        BFT_ERROR("LeaderCreateTimeBlockTx error gid exists[%s] %lu, "
             "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
             common::Encode::HexEncode(gid).c_str(),
             (uint64_t)latest_time_block_height_,
@@ -196,6 +196,13 @@ void TimeBlockManager::CreateTimeBlockTx() {
             new_time_block_tm);
         return;
     }
+
+    BFT_ERROR("LeaderCreateTimeBlockTx success gid not exists[%s] %lu, "
+        "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+        common::Encode::HexEncode(gid).c_str(),
+        (uint64_t)latest_time_block_height_,
+        (uint64_t)latest_time_block_tm_,
+        new_time_block_tm);
 
     auto all_exits_attr = tx_info.add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);
