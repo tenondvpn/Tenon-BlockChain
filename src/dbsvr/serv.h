@@ -25,13 +25,13 @@ private:
 	std::string kv_range_s;
 	std::string kv_range_e;
 	
-	SSDB *meta;
+    SSDB *meta{ nullptr };
 
 public:
-	SSDBImpl *ssdb;
-	BackendDump *backend_dump;
-	BackendSync *backend_sync;
-	ExpirationHandler *expiration;
+	SSDBImpl *ssdb{ nullptr };
+	BackendDump *backend_dump{ nullptr };
+	BackendSync *backend_sync{ nullptr };
+	ExpirationHandler *expiration{ nullptr };
 	std::vector<Slave *> slaves;
 
 	SSDBServer(SSDB *ssdb, SSDB *meta, const Config &conf, NetworkServer *net);

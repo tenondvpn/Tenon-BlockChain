@@ -3,6 +3,8 @@
 #include <mutex>
 #include <memory>
 #include "common/utils.h"
+#include "dbsvr/ssdb/ssdb.h"
+#include "dbsvr/util/bytes.h"
 
 #ifdef LEVELDB
 #include "leveldb/options.h"
@@ -105,6 +107,66 @@ public:
         delete iter;
     }
 
+    virtual int zset(const Bytes &name, const Bytes &key, const Bytes &score, char log_type = BinlogType::SYNC) {
+        return ssdb_->zset(name, key, score, log_type);
+    }
+
+    virtual int zdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+        return ssdb_->zdel(name, key, log_type);
+    }
+
+    virtual int zincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type = BinlogType::SYNC) {
+        return ssdb_->zincr(name, key, by, new_val, log_type);
+    }
+
+    virtual int64_t zsize(const Bytes &name) {
+        return ssdb_->zsize(name);
+    }
+
+    virtual int zget(const Bytes &name, const Bytes &key, std::string *score) {
+        return ssdb_->zget(name, key, score);
+    }
+
+    virtual int64_t zrank(const Bytes &name, const Bytes &key) {
+        return ssdb_->zrank(name, key);
+    }
+
+    virtual int64_t zrrank(const Bytes &name, const Bytes &key) {
+        return ssdb_->zrrank(name, key);
+    }
+
+    virtual ZIterator* zrange(const Bytes &name, uint64_t offset, uint64_t limit) {
+        return ssdb_->zrange(name, offset, limit);
+    }
+
+    virtual ZIterator* zrrange(const Bytes &name, uint64_t offset, uint64_t limit) {
+        return ssdb_->zrrange(name, offset, limit);
+    }
+
+    virtual ZIterator* zscan(const Bytes &name, const Bytes &key,
+        const Bytes &score_start, const Bytes &score_end, uint64_t limit) {
+        return ssdb_->zscan(name, key, score_start, score_end, limit);
+    }
+
+    virtual ZIterator* zrscan(const Bytes &name, const Bytes &key,
+        const Bytes &score_start, const Bytes &score_end, uint64_t limit) {
+        return ssdb_->zrscan(name, key, score_start, score_end, limit);
+    }
+
+    virtual int zlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+        std::vector<std::string> *list) {
+        return ssdb_->zlist(name_s, name_e, limit, list);
+    }
+
+    virtual int zrlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+        std::vector<std::string> *list) {
+        return ssdb_->zrlist(name_s, name_e, limit, list);
+    }
+
+    virtual int64_t zfix(const Bytes &name) {
+        return ssdb_->zfix(name);
+    }
+
     std::shared_ptr<DickDb>& db() {
         return db_;
     }
@@ -117,7 +179,7 @@ private:
     Db(const Db&);
     Db(const Db&&);
     Db& operator=(const Db&);
-
+    SSDB* ssdb_{ nullptr };
     bool inited_{ false };
     std::mutex mutex;
 };

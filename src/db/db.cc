@@ -67,6 +67,10 @@ bool Db::Init(const std::string& db_path) {
 
     db_.reset(db);
     inited_ = true;
+    Options opt;
+    opt.binlog = false;
+    opt.binlog_capacity = 0;
+    ssdb_ = SSDB::open(opt, "", db);
     return true;
 }
 

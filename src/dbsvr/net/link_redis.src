@@ -139,7 +139,7 @@ int RedisLink::convert_req(){
 	it = cmd_table.find(cmd);
 	if(it == cmd_table.end()){
 		recv_string.push_back(cmd);
-		for(int i=1; i<recv_bytes.size(); i++){
+		for(size_t i=1; i<recv_bytes.size(); i++){
 			recv_string.push_back(recv_bytes[i].String());
 		}
 		return 0;
@@ -171,7 +171,7 @@ int RedisLink::convert_req(){
 		recv_string.push_back(req_desc->ssdb_cmd);
 		if(recv_bytes.size() >= 2){
 			recv_string.push_back(recv_bytes[1].String());
-			for(int i=2; i<=recv_bytes.size()-2; i+=2){
+			for(size_t i=2; i<=recv_bytes.size()-2; i+=2){
 				recv_string.push_back(recv_bytes[i+1].String());
 				int64_t score = (int64_t)recv_bytes[i].Double();
 				recv_string.push_back(str(score));
@@ -225,7 +225,7 @@ int RedisLink::convert_req(){
 			smax = recv_bytes[3].String();
 			
 			bool after_limit = false;
-			for(int i=4; i<recv_bytes.size(); i++){
+			for(size_t i=4; i<recv_bytes.size(); i++){
 				std::string s = recv_bytes[i].String();
 				if(after_limit){
 					if(offset.empty()){
@@ -296,7 +296,7 @@ int RedisLink::convert_req(){
 	}
 
 	recv_string.push_back(req_desc->ssdb_cmd);
-	for(int i=1; i<recv_bytes.size(); i++){
+	for(size_t i=1; i<recv_bytes.size(); i++){
 		recv_string.push_back(recv_bytes[i].String());
 	}
 	
@@ -332,7 +332,7 @@ const std::vector<Bytes>* RedisLink::recv_req(Buffer *input){
 	// Bytes don't hold memory, so we firstly copy Bytes into string and store
 	// in a vector of string, then create Bytes-es prointing to strings
 	recv_bytes.clear();
-	for(int i=0; i<recv_string.size(); i++){
+	for(size_t i=0; i<recv_string.size(); i++){
 		std::string *str = &recv_string[i];
 		recv_bytes.push_back(Bytes(str->data(), str->size()));
 	}
@@ -372,7 +372,7 @@ int RedisLink::send_resp(Buffer *output, const std::vector<std::string> &resp){
 			snprintf(buf, sizeof(buf), "*%d\r\n", (int)resp.size() - 1);
 			output->append(buf);
 		}
-		for(int i=1; i<resp.size(); i++){
+		for(size_t i=1; i<resp.size(); i++){
 			const std::string &val = resp[i];
 			char buf[32];
 			snprintf(buf, sizeof(buf), "$%d\r\n", (int)val.size());
@@ -483,7 +483,7 @@ int RedisLink::send_resp(Buffer *output, const std::vector<std::string> &resp){
 			}
 			output->append(buf);
 		}
-		for(int i=1; i<resp.size(); i++){
+		for(size_t i=1; i<resp.size(); i++){
 			const std::string &val = resp[i];
 			char buf[32];
 			snprintf(buf, sizeof(buf), "$%d\r\n", (int)val.size());

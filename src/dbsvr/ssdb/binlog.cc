@@ -36,7 +36,7 @@ const Bytes Binlog::key() const{
 }
 
 int Binlog::load(const Bytes &s){
-	if(s.size() < HEADER_LEN){
+	if(s.size() < (int)HEADER_LEN){
 		return -1;
 	}
 	buf.assign(s.data(), s.size());
@@ -418,7 +418,7 @@ void* BinlogQueue::log_clean_thread_func(void *arg){
 		}
 		assert(logs->last_seq >= logs->min_seq_);
 
-		if(logs->last_seq - logs->min_seq_ < logs->capacity + 10000){
+		if((int)(logs->last_seq - logs->min_seq_) < logs->capacity + 10000){
 			usleep(50 * 1000);
 			continue;
 		}

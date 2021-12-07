@@ -61,11 +61,6 @@ SSDB* SSDB::open(const Options &opt, const std::string &dir, leveldb::DB* db){
 	ssdb->binlogs = new BinlogQueue(ssdb->ldb, opt.binlog, opt.binlog_capacity);
 
 	return ssdb;
-err:
-	if(ssdb){
-		delete ssdb;
-	}
-	return NULL;
 }
 
 int SSDBImpl::flushdb(){

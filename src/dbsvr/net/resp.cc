@@ -97,7 +97,7 @@ void Response::reply_list(int status, const std::vector<std::string> &list){
 		resp.push_back("error");
 	}else{
 		resp.push_back("ok");
-		for(int i=0; i<list.size(); i++){
+		for(size_t i=0; i<list.size(); i++){
 			resp.push_back(list[i]);
 		}
 	}

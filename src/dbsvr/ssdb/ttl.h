@@ -26,6 +26,7 @@ public:
 	// The caller must hold mutex before calling set/del functions
 	int del_ttl(const Bytes &key);
 	int set_ttl(const Bytes &key, int64_t ttl);
+    void start();
 
 private:
 	SSDB *ssdb;
@@ -34,7 +35,6 @@ private:
 	int64_t first_timeout;
 	SortedSet fast_keys;
 
-	void start();
 	void stop();
 	void expire_loop();
 	static void* thread_func(void *arg);

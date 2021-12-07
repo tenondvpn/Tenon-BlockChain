@@ -424,7 +424,7 @@ int Link::send(const std::vector<std::string> &resp){
 		return this->redis->send_resp(this->output, resp);
 	}
 	
-	for(int i=0; i<resp.size(); i++){
+	for(size_t i=0; i<resp.size(); i++){
 		output->append_record(resp[i]);
 	}
 	output->append('\n');
@@ -432,7 +432,7 @@ int Link::send(const std::vector<std::string> &resp){
 }
 
 int Link::send(const std::vector<Bytes> &resp){
-	for(int i=0; i<resp.size(); i++){
+	for(size_t i=0; i<resp.size(); i++){
 		output->append_record(resp[i]);
 	}
 	output->append('\n');

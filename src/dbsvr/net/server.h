@@ -19,6 +19,7 @@ class Link;
 class Config;
 class IpFilter;
 class Fdevents;
+class ExpirationHandler;
 
 typedef std::vector<Link *> ready_list_t;
 
@@ -29,8 +30,8 @@ private:
 	int status_report_ticks;
 
 	//Config *conf;
-	Link *serv_link;
-	Fdevents *fdes;
+	Link *serv_link{ nullptr };
+	Fdevents *fdes{ nullptr };
 
 	Link* accept_link();
 	int proc_result(ProcJob *job, ready_list_t *ready_list);
@@ -40,8 +41,8 @@ private:
 
 	int num_readers;
 	int num_writers;
-	ProcWorkerPool *writer;
-	ProcWorkerPool *reader;
+    ProcWorkerPool *writer{ nullptr };
+	ProcWorkerPool *reader{ nullptr };
 	
 	bool readonly;
 
@@ -51,8 +52,8 @@ protected:
 	void usage(int argc, char **argv);
 
 public:
-	IpFilter *ip_filter;
-	void *data;
+	IpFilter *ip_filter{ nullptr };
+	void *data{ nullptr };
 	ProcMap proc_map;
 	int link_count;
 	bool need_auth;
@@ -66,6 +67,8 @@ public:
 	static NetworkServer* init(const Config &conf, int num_readers=-1, int num_writers=-1);
 	void serve();
     volatile bool quit = false;
+    ExpirationHandler* ttl_{ nullptr };
+    bool start_server_{ false };
 };
 
 

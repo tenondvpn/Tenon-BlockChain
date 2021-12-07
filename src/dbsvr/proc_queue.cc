@@ -151,7 +151,7 @@ int proc_qtrim_func(NetworkServer *net, Link *link, const Request &req, Response
 		size = req[2].Uint64();
 	}
 		
-	int count = 0;
+    uint64_t count = 0;
 	for(; count<size; count++){
 		int ret;
 		std::string item;

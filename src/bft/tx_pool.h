@@ -10,16 +10,17 @@
 #include <set>
 #include <deque>
 
+#include "bft/bft_utils.h"
+#include "bft/bft_interface.h"
+#include "bft/proto/bft.pb.h"
 #include "common/utils.h"
 #include "common/hash.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
 #include "common/time_utils.h"
-#include "bft/bft_utils.h"
-#include "bft/bft_interface.h"
-#include "bft/proto/bft.pb.h"
-#include "network/network_utils.h"
 #include "contract/contract_utils.h"
+#include "db/db_pri_queue.h"
+#include "network/network_utils.h"
 
 namespace tenon {
 
@@ -103,6 +104,7 @@ private:
     std::mutex tx_pool_mutex_;
     volatile uint32_t pool_index_;
     int64_t last_bft_over_tm_sec_{ -1 };
+    db::DbPriQueue<TxItemPtr, 1024> best_addr_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(TxPool);
 };

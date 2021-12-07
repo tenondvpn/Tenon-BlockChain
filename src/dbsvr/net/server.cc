@@ -9,6 +9,7 @@ found in the LICENSE file.
 #include "../util/config.h"
 #include "../util/log.h"
 #include "../util/ip_filter.h"
+#include "../ssdb/ttl.h"
 #include "link.h"
 #include <vector>
 
@@ -93,10 +94,15 @@ NetworkServer::~NetworkServer(){
 	delete fdes;
 	delete ip_filter;
 
-	writer->stop();
-	delete writer;
-	reader->stop();
-	delete reader;
+    if (writer != nullptr) {
+        writer->stop();
+        delete writer;
+    }
+
+    if (reader != nullptr) {
+        reader->stop();
+        delete reader;
+    }
 }
 
 NetworkServer* NetworkServer::init(const char *conf_file, int num_readers, int num_writers){
@@ -130,7 +136,14 @@ NetworkServer* NetworkServer::init(const Config &conf, int num_readers, int num_
 // 	inited = true;
 	
 	NetworkServer *serv = new NetworkServer();
-	if(num_readers >= 0){
+    serv->start_server_ = false;
+    if (std::string("yes") != conf.get_str("server.enable")) {
+        return serv;
+    }
+
+    num_readers = conf.get_num("server.num_readers");
+    serv->start_server_ = true;
+    if (num_readers >= 0) {
 		serv->num_readers = num_readers;
 	}
 	if(num_writers >= 0){
@@ -232,15 +245,22 @@ NetworkServer* NetworkServer::init(const Config &conf, int num_readers, int num_
 }
 
 void NetworkServer::serve(){
+    if (!start_server_) {
+        return;
+    }
+
 	writer = new ProcWorkerPool("writer");
 	writer->start(num_writers);
 	reader = new ProcWorkerPool("reader");
 	reader->start(num_readers);
-
 	ready_list_t ready_list;
 	ready_list_t ready_list_2;
 	ready_list_t::iterator it;
 	const Fdevents::events_t *events;
+
+    if (ttl_ != nullptr) {
+        ttl_->start();
+    }
 
 	fdes->set(serv_link->fd(), FDEVENT_IN, 0, serv_link);
 	fdes->set(this->reader->fd(), FDEVENT_IN, 0, this->reader);

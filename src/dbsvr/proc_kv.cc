@@ -213,7 +213,7 @@ int proc_multi_get(NetworkServer *net, Link *link, const Request &req, Response 
 
     if (resp != nullptr) {
         resp->push_back("ok");
-        for (int i = 1; i < req.size(); i++) {
+        for (size_t i = 1; i < req.size(); i++) {
             std::string val;
             int ret = serv->ssdb->get(req[i], &val);
             if (ret == 1) {

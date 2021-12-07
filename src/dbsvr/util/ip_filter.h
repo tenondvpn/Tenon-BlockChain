@@ -24,7 +24,7 @@ private:
 		}
 		const std::string &prefix = *it;
 
-		int len = prefix.size() - 1;
+		size_t len = prefix.size() - 1;
 		if(prefix[len] == '='){
 			return prefix.compare(0, len, ip) == 0;
 		}else if(ip.size() >= len){
