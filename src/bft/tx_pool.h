@@ -60,7 +60,7 @@ struct TxItem {
     uint64_t time_valid{ 0 };
     uint32_t index{ common::kInvalidPoolIndex };
     std::string uni_gid;
-    bool valid{ false };
+    bool valid{ true };
     uint64_t timeblock_tx_tm_sec_{ 0 };
     uint64_t gas_price{ 0 };
 };

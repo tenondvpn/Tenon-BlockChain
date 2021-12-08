@@ -95,7 +95,6 @@ void BlsDkg::OnNewElectionBlock(
     dkg_finish_timer_.CutOff(
         kDkgFinishBeginUs + local_offset_us_,
         std::bind(&BlsDkg::Finish, this));
-    BLS_INFO("bls create new elect block elect height: %lu", elect_hegiht_);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -206,19 +205,16 @@ void BlsDkg::HandleVerifyBroadcast(
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
         BLS_ERROR("sign verify failed!");
-        BLS_INFO("bls create HandleVerifyBroadcast error block elect height: %lu", elect_hegiht_);
         return;
     }
 
     if (bls_msg.verify_brd().verify_vec_size() < (int32_t)min_aggree_member_count_) {
         BLS_ERROR("bls_msg.verify_brd().verify_vec_size() < min_aggree_member_count_");
-        BLS_INFO("bls create HandleVerifyBroadcast error block elect height: %lu", elect_hegiht_);
         return;
     }
 
     if (all_verification_vector_.size() <= bls_msg.index()) {
         assert(false);
-        BLS_INFO("bls create HandleVerifyBroadcast error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -229,7 +225,6 @@ void BlsDkg::HandleVerifyBroadcast(
             all_verification_vector_[bls_msg.index()].size(),
             bls_msg.verify_brd().verify_vec_size());
         assert(false);
-        BLS_INFO("bls create HandleVerifyBroadcast error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -252,7 +247,6 @@ void BlsDkg::HandleVerifyBroadcast(
     SendVerifyBrdResponse(
         bls_msg.verify_brd().public_ip(),
         bls_msg.verify_brd().public_port());
-    BLS_INFO("bls create HandleVerifyBroadcast success block elect height: %lu", elect_hegiht_);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -262,13 +256,11 @@ void BlsDkg::HandleVerifyBroadcastRes(
         const protobuf::BlsMessage& bls_msg) {
     if (members_ == nullptr || members_->size() <= bls_msg.index()) {
         assert(false);
-        BLS_INFO("bls create HandleVerifyBroadcastRes block elect height: %lu", elect_hegiht_);
         return;
     }
 
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
-        BLS_INFO("bls create HandleVerifyBroadcastRes block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -287,21 +279,18 @@ void BlsDkg::HandleSwapSecKey(
 
     if (all_secret_key_contribution_.size() <= local_member_index_) {
         assert(false);
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 
     if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index()) {
         BLS_ERROR("all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index(): %d, %d",
             all_secret_key_contribution_[local_member_index_].size(), bls_msg.index());
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -311,7 +300,6 @@ void BlsDkg::HandleSwapSecKey(
         BLS_ERROR("local dht key: %s, des dht key: %s",
             common::Encode::HexEncode(dht->local_node()->dht_key()).c_str(),
             common::Encode::HexEncode(header.des_dht_key()).c_str());
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 #endif
@@ -321,7 +309,6 @@ void BlsDkg::HandleSwapSecKey(
         bls_msg.swap_req().sec_key());
     if (dec_msg.empty()) {
         BLS_ERROR("dec_msg.empty()");
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -329,7 +316,6 @@ void BlsDkg::HandleSwapSecKey(
     if (!IsValidBigInt(sec_key)) {
         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
         assert(false);
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -348,7 +334,6 @@ void BlsDkg::HandleSwapSecKey(
             bls_msg.index(),
             header.from_ip().c_str(),
             header.from_port());
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
             libff::alt_bn128_Fr::zero();
         // send against
@@ -384,19 +369,16 @@ void BlsDkg::HandleAgainstParticipant(
         const protobuf::BlsMessage& bls_msg) {
     if (all_secret_key_contribution_.size() <= local_member_index_) {
         assert(false);
-        BLS_INFO("bls create HandleAgainstParticipant error block elect height: %lu", elect_hegiht_);
         return;
     }
 
     if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.against_req().against_index()) {
         assert(false);
-        BLS_INFO("bls create HandleAgainstParticipant error block elect height: %lu", elect_hegiht_);
         return;
     }
 
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
-        BLS_INFO("bls create HandleAgainstParticipant error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -405,13 +387,11 @@ void BlsDkg::HandleAgainstParticipant(
         all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
             libff::alt_bn128_Fr::zero();
     }
-    BLS_INFO("bls create HandleAgainstParticipant success block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::BroadcastVerfify() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
-        BLS_INFO("bls create BroadcastVerfify error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -440,7 +420,6 @@ void BlsDkg::BroadcastVerfify() try {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
-        BLS_INFO("bls create BroadcastVerfify error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -455,24 +434,20 @@ void BlsDkg::BroadcastVerfify() try {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
-    BLS_INFO("bls create BroadcastVerfify success block elect height: %lu", elect_hegiht_);
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
 #endif
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
-    BLS_INFO("bls create BroadcastVerfify error block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::SwapSecKey() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
-        BLS_INFO("bls create SwapSecKey error block elect height: %lu", elect_hegiht_);
         return;
     }
 
     if (local_src_secret_key_contribution_.size() != members_->size()) {
-        BLS_INFO("bls create SwapSecKey error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -504,7 +479,6 @@ void BlsDkg::SwapSecKey() try {
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (!dht) {
-            BLS_INFO("bls create SwapSecKey error block elect height: %lu", elect_hegiht_);
             return;
         }
 
@@ -526,21 +500,18 @@ void BlsDkg::SwapSecKey() try {
             }
         }
 
-        BLS_INFO("bls create SwapSecKey success block elect height: %lu", elect_hegiht_);
 #ifdef TENON_UNITTEST
         sec_swap_msgs_.push_back(msg);
 #endif
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
-    BLS_INFO("bls create SwapSecKey error block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port) {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
-        BLS_INFO("bls create SendVerifyBrdResponse error block elect height: %lu", elect_hegiht_);
         return;
     }
     
@@ -560,7 +531,6 @@ void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_por
             0,
             msg);
     }
-    BLS_INFO("bls create SendVerifyBrdResponse success block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::DumpLocalPrivateKey() {
@@ -624,11 +594,9 @@ void BlsDkg::Finish() try {
     DumpLocalPrivateKey();
     BroadcastFinish(bitmap);
     finished_ = true;
-    BLS_INFO("bls create Finish success block elect height: %lu", elect_hegiht_);
 } catch (std::exception& e) {
     local_sec_key_ = libff::alt_bn128_Fr::zero();
     BLS_ERROR("catch error: %s", e.what());
-    BLS_INFO("bls create Finish error block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
@@ -648,7 +616,6 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
-        BLS_INFO("bls create BroadcastFinish error block elect height: %lu", elect_hegiht_);
         return;
     }
 
@@ -688,22 +655,21 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     finish_msg->set_bls_sign_x(sign_x);
     finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-    BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu,"
-        "cpk: %s,%s,%s,%s, pk: %s,%s,%s,%s",
-        common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_,
-        common_pk->x_c0().c_str(),
-        common_pk->x_c1().c_str(),
-        common_pk->y_c0().c_str(),
-        common_pk->y_c1().c_str(),
-        local_pk->x_c0().c_str(),
-        local_pk->x_c1().c_str(),
-        local_pk->y_c0().c_str(),
-        local_pk->y_c1().c_str());
+//     BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu,"
+//         "cpk: %s,%s,%s,%s, pk: %s,%s,%s,%s",
+//         common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_,
+//         common_pk->x_c0().c_str(),
+//         common_pk->x_c1().c_str(),
+//         common_pk->y_c0().c_str(),
+//         common_pk->y_c1().c_str(),
+//         local_pk->x_c0().c_str(),
+//         local_pk->x_c1().c_str(),
+//         local_pk->y_c0().c_str(),
+//         local_pk->y_c1().c_str());
 #ifndef TENON_UNITTEST
     network::Route::Instance()->Send(msg);
     network::Route::Instance()->SendToLocal(msg);
 #endif
-    BLS_INFO("bls create BroadcastFinish success block elect height: %lu", elect_hegiht_);
 }
 
 void BlsDkg::CreateContribution() {

@@ -247,27 +247,27 @@ void TimeBlockManager::UpdateTimeBlock(
     elect::ElectManager::Instance()->OnTimeBlock(latest_time_block_tm);
 }
 
-bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
+// bool TimeBlockManager::LeaderNewTimeBlockValid(uint64_t* new_time_block_tm) {
+// //     auto now_tm = common::TimeUtils::TimestampSeconds();
+// //     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
+// //         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
+// //         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
+// //         return true;
+// //     }
+// 
 //     auto now_tm = common::TimeUtils::TimestampSeconds();
 //     if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-//         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
 //         *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
+//         if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
+//             *new_time_block_tm += kTimeBlockMaxOffsetSeconds;
+//         } else {
+//             *new_time_block_tm += now_tm - *new_time_block_tm;
+//         }
+// 
 //         return true;
 //     }
-
-    auto now_tm = common::TimeUtils::TimestampSeconds();
-    if (now_tm >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-        *new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
-        if (now_tm - *new_time_block_tm > kTimeBlockMaxOffsetSeconds) {
-            *new_time_block_tm += kTimeBlockMaxOffsetSeconds;
-        } else {
-            *new_time_block_tm += now_tm - *new_time_block_tm;
-        }
-
-        return true;
-    }
-    return false;
-}
+//     return false;
+// }
 
 bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 //     uint64_t backup_latest_time_block_tm = latest_time_block_tm_;

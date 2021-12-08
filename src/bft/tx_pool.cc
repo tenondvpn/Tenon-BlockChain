@@ -4,10 +4,11 @@
 #include <cassert>
 
 #include "bft/bft_utils.h"
-#include "common/encode.h"
-#include "common/time_utils.h"
 #include "block/account_manager.h"
 #include "bft/gid_manager.h"
+#include "common/encode.h"
+#include "common/time_utils.h"
+#include "db/db.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
@@ -93,8 +94,7 @@ int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
     tx_ptr->index = tx_index;
     mem_queue_.push(tx_ptr);
     if (!init) {
-        auto tx_str = tx_ptr->tx.SerializeAsString()
-        db::Db::Instance()->hset(pool_name_, uni_gid, tx_str);
+        db::Db::Instance()->hset(pool_name_, uni_gid, tx_ptr->tx.SerializeAsString());
     }
 //     if (!tx_ptr->tx.to().empty()) {
 //         printf("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
@@ -241,16 +241,16 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
             }
 
             res_vec.push_back(item);
-//                 BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
-//                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
-//                     item->tx.to_add(),
-//                     pool_index_,
-//                     item->tx.type(),
-//                     item->tx.call_contract_step(),
-//                     common::Encode::HexEncode(item->tx.from()).c_str(),
-//                     common::Encode::HexEncode(item->tx.to()).c_str(),
-//                     common::Encode::HexEncode(item->tx.gid()).c_str(),
-//                     res_vec.size());
+            BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
+                "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
+                item->tx.to_add(),
+                pool_index_,
+                item->tx.type(),
+                item->tx.call_contract_step(),
+                common::Encode::HexEncode(item->tx.from()).c_str(),
+                common::Encode::HexEncode(item->tx.to()).c_str(),
+                common::Encode::HexEncode(item->tx.gid()).c_str(),
+                res_vec.size());
             if (IsShardSingleBlockTx(item->tx.type())) {
                 break;
             }
@@ -531,7 +531,7 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
             }
 
             iter->second->valid = false;
-            db::Db::Instance()->hdel(pool_name_, item_iter->second->uni_gid);
+            db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
             tx_pool_.erase(iter);
         }
     }
