@@ -149,6 +149,7 @@ void ShardStatistic::CreateStatisticTransaction(uint64_t timeblock_height) {
 //         tmblock::TimeBlockManager::Instance()->LatestTimestamp());
     tx_info.set_gas_limit(0llu);
     tx_info.set_amount(0);
+    tx_info.set_gas_price(common::kBuildinTransactionGasPrice);
     tx_info.set_network_id(common::GlobalInfo::Instance()->network_id());
     auto height_attr = tx_info.add_attr();
     height_attr->set_key(tmblock::kAttrTimerBlockHeight);

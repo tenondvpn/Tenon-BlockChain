@@ -9,6 +9,7 @@
 #include <vector>
 #include <set>
 #include <deque>
+#include <queue>
 
 #include "bft/bft_utils.h"
 #include "bft/bft_interface.h"
@@ -26,8 +27,7 @@ namespace tenon {
 namespace bft {
 
 struct TxItem {
-    TxItem(const protobuf::TxInfo& in_tx, uint64_t tx_idx)
-            : tx(in_tx), tx_index(tx_idx) {
+    TxItem(const protobuf::TxInfo& in_tx) : tx(in_tx) {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
         switch (tx.type()) {
@@ -62,7 +62,6 @@ struct TxItem {
     std::string uni_gid;
     bool valid{ false };
     uint64_t timeblock_tx_tm_sec_{ 0 };
-    uint64_t tx_index{ 0 };
     uint64_t gas_price{ 0 };
 };
 
@@ -78,7 +77,7 @@ class TxPool {
 public:
     TxPool();
     ~TxPool();
-    int AddTx(TxItemPtr account_ptr);
+    int AddTx(TxItemPtr& tx_ptr, bool init);
     void GetTx(std::vector<TxItemPtr>& res_vec);
     bool TxPoolEmpty();
     TxItemPtr GetTx(
@@ -103,8 +102,8 @@ public:
     void ChangeLeader();
 
 private:
-    bool IsTxContractLocked(TxItemPtr tx_ptr);
-    bool IsTxValid(TxItemPtr tx_ptr);
+    bool IsTxContractLocked(TxItemPtr& tx_ptr);
+    bool IsTxValid(TxItemPtr& tx_ptr);
     void RemoveInvalidTimeBlockTx(uint64_t latest_tm);
 
     static const uint32_t kKeepCoverLoadCount = 1024u;

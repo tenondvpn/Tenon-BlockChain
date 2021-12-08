@@ -189,7 +189,7 @@ public:
     }
 
     virtual int hget(const Bytes &name, const Bytes &key, std::string *val) {
-        return ssdb_->hget(name， key， val);
+        return ssdb_->hget(name, key, val);
     }
 
     virtual int hlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,

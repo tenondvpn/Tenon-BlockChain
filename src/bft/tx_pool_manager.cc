@@ -17,7 +17,7 @@ namespace bft {
 TxPoolManager::TxPoolManager() {
     tx_pool_ = new TxPool[common::kImmutablePoolSize + 1];
     for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
-        tx_pool_[i].set_pool_index(i);
+        tx_pool_[i].Init(i);
         waiting_pools_height_[i] = 0;
     }
 }
@@ -129,7 +129,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
     }
 
-    return tx_pool_[pool_index].AddTx(tx_ptr);
+    return tx_pool_[pool_index].AddTx(tx_ptr, false);
 }
 
 bool TxPoolManager::CheckCallContractAddressValid(const std::string& contract_addr) {

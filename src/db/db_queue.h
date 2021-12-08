@@ -10,7 +10,7 @@ namespace db {
 
 class Queue {
 public:
-    Queue();
+    Queue(const std::string& name, uint64_t max_size);
     ~Queue();
     bool init(const std::string& name, uint64_t max_size);
     bool push(const std::string& value, db::DbWriteBach& db_batch);

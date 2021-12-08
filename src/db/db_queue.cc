@@ -10,7 +10,9 @@ namespace tenon {
 
 namespace db {
 
-Queue::Queue() {}
+Queue::Queue(const std::string& name, uint64_t max_size) {
+    init(name, max_size);
+}
 
 Queue::~Queue() {}
 

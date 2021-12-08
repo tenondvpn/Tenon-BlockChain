@@ -42,7 +42,7 @@ int TxPool::Init(uint32_t pool_idx) {
             protobuf::TxInfo pb_tx;
             if (pb_tx.ParseFromString(*iter)) {
                 auto tx_ptr = std::make_shared<TxItem>(pb_tx);
-                AddTx(tx_ptr);
+                AddTx(tx_ptr, true);
             }
         }
 
@@ -54,7 +54,7 @@ int TxPool::Init(uint32_t pool_idx) {
     return kBftSuccess;
 }
 
-int TxPool::AddTx(TxItemPtr tx_ptr) {
+int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
     assert(tx_ptr != nullptr);
     std::string uni_gid = GidManager::Instance()->GetUniversalGid(
         tx_ptr->tx.to_add(),
@@ -92,6 +92,10 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
     mem_queue_.push(tx_ptr);
+    if (!init) {
+        auto tx_str = tx_ptr->tx.SerializeAsString()
+        db::Db::Instance()->hset(pool_name_, uni_gid, tx_str);
+    }
 //     if (!tx_ptr->tx.to().empty()) {
 //         printf("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
 //             "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!\n",
@@ -152,6 +156,7 @@ void TxPool::CheckTimeoutTx() {
             }
 
             iter->second->valid = false;
+            db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
             tx_pool_.erase(iter++);
             continue;
         }
@@ -164,6 +169,7 @@ void TxPool::CheckTimeoutTx() {
                 }
 
                 iter->second->valid = false;
+                db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
                 tx_pool_.erase(iter++);
                 continue;
             }
@@ -174,103 +180,195 @@ void TxPool::CheckTimeoutTx() {
 }
 
 void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
-    auto timestamp_now = common::TimeUtils::TimestampUs();
+    std::priority_queue<TxItemPtr, std::vector<TxItemPtr>, TxItemPriOper> mem_queue;
     {
         std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-        for (auto iter = tx_pool_.begin(); iter != tx_pool_.end();) {
-            if (!IsTxValid(iter->second)) {
-                auto miter = added_tx_map_.find(iter->second->uni_gid);
+        mem_queue = mem_queue_;
+    }
+
+    auto timestamp_now = common::TimeUtils::TimestampUs();
+    while (!mem_queue.empty()) {
+        auto item = mem_queue.top();
+        mem_queue.pop();
+        if (!IsTxValid(item)) {
+            {
+                std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+                auto miter = added_tx_map_.find(item->uni_gid);
                 if (miter != added_tx_map_.end()) {
                     added_tx_map_.erase(miter);
                 }
+            }
 
-                iter->second->valid = false;
-                tx_pool_.erase(iter++);
-//                 BFT_ERROR("timeout and remove tx.");
+            db::Db::Instance()->hdel(pool_name_, item->uni_gid);
+            continue;
+        }
+
+        if (item->tx.type() == common::kConsensusCallContract) {
+            auto contract_add = block::AccountManager::Instance()->GetAcountInfo(
+                item->tx.to());
+            uint32_t contract_type = block::kNormalAddress;
+            if (contract_add == nullptr ||
+                    contract_add->GetAddressType(&contract_type) != block::kBlockSuccess ||
+                    contract_type != block::kContractAddress) {
+                continue;
+            }
+        }
+
+        if (item->time_valid <= timestamp_now) {
+            if (item->tx.type() == common::kConsensusRootTimeBlock) {
+                if (!tmblock::TimeBlockManager::Instance()->LeaderCanCallTimeBlockTx(
+                        item->timeblock_tx_tm_sec_)) {
+                    continue;
+                }
+
+                item->tx.mutable_attr(1)->set_value(
+                    std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
+                for (int32_t i = 0; i < item->tx.attr_size(); ++i) {
+                    BFT_DEBUG("common::kConsensusRootTimeBlock leader set key value %s: %s, vss: %lu",
+                        item->tx.attr(i).key().c_str(), item->tx.attr(i).value().c_str(),
+                        vss::VssManager::Instance()->GetConsensusFinalRandom());
+                }
+            }
+
+            if (IsTxContractLocked(item)) {
+                BFT_ERROR("IsTxContractLocked error.");
                 continue;
             }
 
-            if (iter->second->tx.type() == common::kConsensusCallContract) {
-                auto contract_add = block::AccountManager::Instance()->GetAcountInfo(
-                    iter->second->tx.to());
-                uint32_t contract_type = block::kNormalAddress;
-                if (contract_add == nullptr ||
-                        contract_add->GetAddressType(&contract_type) != block::kBlockSuccess ||
-                        contract_type != block::kContractAddress) {
-                    ++iter;
-                    continue;
-                }
+            // root single block tx must just one tx
+            if (!res_vec.empty() && IsShardSingleBlockTx(item->tx.type())) {
+                break;
             }
 
-            if (iter->second->time_valid <= timestamp_now) {
-                if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
-                    if (!tmblock::TimeBlockManager::Instance()->LeaderCanCallTimeBlockTx(
-                            iter->second->timeblock_tx_tm_sec_)) {
-                        ++iter;
-                        continue;
-                    }
-
-                    iter->second->tx.mutable_attr(1)->set_value(
-                        std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
-                    for (int32_t i = 0; i < iter->second->tx.attr_size(); ++i) {
-                        BFT_DEBUG("common::kConsensusRootTimeBlock leader set key value %s: %s, vss: %lu",
-                            iter->second->tx.attr(i).key().c_str(), iter->second->tx.attr(i).value().c_str(),
-                            vss::VssManager::Instance()->GetConsensusFinalRandom());
-                    }
-                }
-
-                if (IsTxContractLocked(iter->second)) {
-                    ++iter;
-                    BFT_ERROR("IsTxContractLocked error.");
-                    continue;
-                }
-
-                // root single block tx must just one tx
-                if (!res_vec.empty() && IsShardSingleBlockTx(iter->second->tx.type())) {
-                    break;
-                }
-
-                res_vec.push_back(iter->second);
+            res_vec.push_back(item);
 //                 BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
 //                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
-//                     iter->second->tx.to_add(),
+//                     item->tx.to_add(),
 //                     pool_index_,
-//                     iter->second->tx.type(),
-//                     iter->second->tx.call_contract_step(),
-//                     common::Encode::HexEncode(iter->second->tx.from()).c_str(),
-//                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
-//                     common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+//                     item->tx.type(),
+//                     item->tx.call_contract_step(),
+//                     common::Encode::HexEncode(item->tx.from()).c_str(),
+//                     common::Encode::HexEncode(item->tx.to()).c_str(),
+//                     common::Encode::HexEncode(item->tx.gid()).c_str(),
 //                     res_vec.size());
-                if (IsShardSingleBlockTx(iter->second->tx.type())) {
-                    break;
-                }
-
-                if (res_vec.size() >= kBftOneConsensusMaxCount) {
-                    break;
-                }
+            if (IsShardSingleBlockTx(item->tx.type())) {
+                break;
             }
 
-            ++iter;
+            if (res_vec.size() >= kBftOneConsensusMaxCount) {
+                break;
+            }
         }
     }
 
-    //     BFT_DEBUG("get tx size[%u]", res_vec.size());
     if (res_vec.size() < kBftOneConsensusMinCount) {
         res_vec.clear();
     }
 }
 
-bool TxPool::IsTxValid(TxItemPtr tx_ptr) {
+// void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
+//     auto timestamp_now = common::TimeUtils::TimestampUs();
+//     {
+//         std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+//         for (auto iter = tx_pool_.begin(); iter != tx_pool_.end();) {
+//             if (!IsTxValid(iter->second)) {
+//                 auto miter = added_tx_map_.find(iter->second->uni_gid);
+//                 if (miter != added_tx_map_.end()) {
+//                     added_tx_map_.erase(miter);
+//                 }
+// 
+//                 iter->second->valid = false;
+//                 db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
+//                 tx_pool_.erase(iter++);
+// //                 BFT_ERROR("timeout and remove tx.");
+//                 continue;
+//             }
+// 
+//             if (iter->second->tx.type() == common::kConsensusCallContract) {
+//                 auto contract_add = block::AccountManager::Instance()->GetAcountInfo(
+//                     iter->second->tx.to());
+//                 uint32_t contract_type = block::kNormalAddress;
+//                 if (contract_add == nullptr ||
+//                         contract_add->GetAddressType(&contract_type) != block::kBlockSuccess ||
+//                         contract_type != block::kContractAddress) {
+//                     ++iter;
+//                     continue;
+//                 }
+//             }
+// 
+//             if (iter->second->time_valid <= timestamp_now) {
+//                 if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
+//                     if (!tmblock::TimeBlockManager::Instance()->LeaderCanCallTimeBlockTx(
+//                             iter->second->timeblock_tx_tm_sec_)) {
+//                         ++iter;
+//                         continue;
+//                     }
+// 
+//                     iter->second->tx.mutable_attr(1)->set_value(
+//                         std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
+//                     for (int32_t i = 0; i < iter->second->tx.attr_size(); ++i) {
+//                         BFT_DEBUG("common::kConsensusRootTimeBlock leader set key value %s: %s, vss: %lu",
+//                             iter->second->tx.attr(i).key().c_str(), iter->second->tx.attr(i).value().c_str(),
+//                             vss::VssManager::Instance()->GetConsensusFinalRandom());
+//                     }
+//                 }
+// 
+//                 if (IsTxContractLocked(iter->second)) {
+//                     ++iter;
+//                     BFT_ERROR("IsTxContractLocked error.");
+//                     continue;
+//                 }
+// 
+//                 // root single block tx must just one tx
+//                 if (!res_vec.empty() && IsShardSingleBlockTx(iter->second->tx.type())) {
+//                     break;
+//                 }
+// 
+//                 res_vec.push_back(iter->second);
+// //                 BFT_DEBUG("get tx [to: %d] [pool idx: %d] type: %d,"
+// //                     "call_contract_step: %d has tx[%s]to[%s][%s] tx size[%u]!\n",
+// //                     iter->second->tx.to_add(),
+// //                     pool_index_,
+// //                     iter->second->tx.type(),
+// //                     iter->second->tx.call_contract_step(),
+// //                     common::Encode::HexEncode(iter->second->tx.from()).c_str(),
+// //                     common::Encode::HexEncode(iter->second->tx.to()).c_str(),
+// //                     common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+// //                     res_vec.size());
+//                 if (IsShardSingleBlockTx(iter->second->tx.type())) {
+//                     break;
+//                 }
+// 
+//                 if (res_vec.size() >= kBftOneConsensusMaxCount) {
+//                     break;
+//                 }
+//             }
+// 
+//             ++iter;
+//         }
+//     }
+// 
+//     //     BFT_DEBUG("get tx size[%u]", res_vec.size());
+//     if (res_vec.size() < kBftOneConsensusMinCount) {
+//         res_vec.clear();
+//     }
+// }
+
+bool TxPool::IsTxValid(TxItemPtr& tx_ptr) {
     auto now_time = std::chrono::steady_clock::now();
     if (tx_ptr->timeout <= now_time && tx_ptr->tx.type() != common::kConsensusRootTimeBlock) {
 //         BFT_ERROR("timeout and remove tx: %s", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
         return false;
     }
 
+    if (!tx_ptr->valid) {
+        return false;
+    }
+
     return true;
 }
 
-bool TxPool::IsTxContractLocked(TxItemPtr tx_ptr) {
+bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
     if (tx_ptr->tx.to_add()) {
         return false;
     }
@@ -394,6 +492,7 @@ void TxPool::RemoveTx(
 //             common::Encode::HexEncode(gid).c_str(),
 //             common::Encode::HexEncode(uni_gid).c_str());
         item_iter->second->valid = false;
+        db::Db::Instance()->hdel(pool_name_, item_iter->second->uni_gid);
         tx_pool_.erase(item_iter);
     }
 
@@ -432,6 +531,7 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
             }
 
             iter->second->valid = false;
+            db::Db::Instance()->hdel(pool_name_, item_iter->second->uni_gid);
             tx_pool_.erase(iter);
         }
     }

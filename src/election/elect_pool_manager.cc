@@ -80,6 +80,7 @@ int ElectPoolManager::CreateElectTransaction(
     tx_info.set_amount(0);
     tx_info.set_gas_limit(0);
     tx_info.set_gas_used(0);
+    tx_info.set_gas_price(common::kBuildinTransactionGasPrice);
     tx_info.set_balance(0);
     tx_info.set_status(bft::kBftSuccess);
     ELECT_INFO("CreateElectTransaction success gid: %s, shard id: %u, "

@@ -102,6 +102,7 @@ static const uint32_t kDefaultBroadcastStopTimes = 2u;
 static const uint32_t kDefaultBroadcastHopLimit = 5u;
 static const uint32_t kDefaultBroadcastHopToLayer = 2u;
 static const uint32_t kDefaultBroadcastNeighborCount = 7u;
+static const uint64_t kBuildinTransactionGasPrice = 999999999lu;
 
 static inline bool IsBaseAddress(const std::string& address) {
     return (address.substr(2, kStatisticFromAddressMidllefixDecode.size()) ==
