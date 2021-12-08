@@ -123,6 +123,7 @@ bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
 bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_mem_ptr_ == nullptr) {
+        BFT_ERROR("leader mem ptr is null.");
         return false;
     }
 
@@ -134,7 +135,8 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
     if (leader_count <= 0) {
-        BFT_ERROR("leader_count invalid[%d].", leader_count);
+        BFT_ERROR("leader_count invalid[%d] net: %d.",
+            leader_count, common::GlobalInfo::Instance()->network_id());
         return false;
     }
 
@@ -142,6 +144,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     auto need_mod_index = (int32_t)pool_index() % leader_count;
     for (uint32_t i = 0; i < common::kNodeModIndexMaxCount; ++i) {
         if (leader_mem_ptr_->pool_index_mod_num < 0) {
+            BFT_ERROR("leader_mem_ptr_->pool_index_mod_num < 0.");
             return false;
         }
 
@@ -167,6 +170,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
+        BFT_ERROR("tx_bft.ParseFromString failed.");
         return false;
     }
 

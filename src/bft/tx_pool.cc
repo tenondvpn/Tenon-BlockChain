@@ -22,6 +22,38 @@ TxPool::TxPool() {}
 
 TxPool::~TxPool() {}
 
+int TxPool::Init(uint32_t pool_idx) {
+    pool_index_ = pool_idx;
+    pool_name_ = db::kGlobalTxPoolKey + std::to_string(pool_idx);
+    while (true) {
+        std::vector<std::string> txs;
+        db::Db::Instance()->hlist(pool_name_, "", 1024, &txs);
+        if (txs.empty()) {
+            break;
+        }
+
+        bool over = false;
+        for (auto iter = txs.begin(); iter != txs.end(); ++iter) {
+            if (memcmp(pool_name_.c_str(), (*iter).c_str(), pool_name_.size()) != 0) {
+                over = true;
+                break;
+            }
+
+            protobuf::TxInfo pb_tx;
+            if (pb_tx.ParseFromString(*iter)) {
+                auto tx_ptr = std::make_shared<TxItem>(pb_tx);
+                AddTx(tx_ptr);
+            }
+        }
+
+        if (over) {
+            break;
+        }
+    }
+
+    return kBftSuccess;
+}
+
 int TxPool::AddTx(TxItemPtr tx_ptr) {
     assert(tx_ptr != nullptr);
     std::string uni_gid = GidManager::Instance()->GetUniversalGid(
@@ -59,6 +91,7 @@ int TxPool::AddTx(TxItemPtr tx_ptr) {
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
+    mem_queue_.push(tx_ptr);
 //     if (!tx_ptr->tx.to().empty()) {
 //         printf("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
 //             "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!\n",
@@ -118,6 +151,7 @@ void TxPool::CheckTimeoutTx() {
                 added_tx_map_.erase(miter);
             }
 
+            iter->second->valid = false;
             tx_pool_.erase(iter++);
             continue;
         }
@@ -129,6 +163,7 @@ void TxPool::CheckTimeoutTx() {
                     added_tx_map_.erase(miter);
                 }
 
+                iter->second->valid = false;
                 tx_pool_.erase(iter++);
                 continue;
             }
@@ -149,6 +184,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                     added_tx_map_.erase(miter);
                 }
 
+                iter->second->valid = false;
                 tx_pool_.erase(iter++);
 //                 BFT_ERROR("timeout and remove tx.");
                 continue;
@@ -357,6 +393,7 @@ void TxPool::RemoveTx(
 //             "",
 //             common::Encode::HexEncode(gid).c_str(),
 //             common::Encode::HexEncode(uni_gid).c_str());
+        item_iter->second->valid = false;
         tx_pool_.erase(item_iter);
     }
 
@@ -394,6 +431,7 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
                 added_tx_map_.erase(miter);
             }
 
+            iter->second->valid = false;
             tx_pool_.erase(iter);
         }
     }

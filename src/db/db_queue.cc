@@ -10,7 +10,11 @@ namespace tenon {
 
 namespace db {
 
-Queue::Queue(const std::string& name, uint64_t max_size) {
+Queue::Queue() {}
+
+Queue::~Queue() {}
+
+bool Queue::init(const std::string& name, uint64_t max_size) {
     db_name_ = db::kGlobalDbQueueKeyPrefix + "_" + name;
     db_bindex_name_ = db::kGlobalDbQueueKeyPrefix + "_bi_" + name;
     db_eindex_name_ = db::kGlobalDbQueueKeyPrefix + "_ei_" + name;
@@ -30,9 +34,9 @@ Queue::Queue(const std::string& name, uint64_t max_size) {
         end_index_ = tmp_index;
         ++end_index_;
     }
-}
 
-Queue::~Queue() {}
+    return true;
+}
 
 bool Queue::push(const std::string& value, db::DbWriteBach& db_batch) {
     uint64_t end_index = end_index_;

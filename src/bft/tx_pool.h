@@ -26,8 +26,8 @@ namespace tenon {
 namespace bft {
 
 struct TxItem {
-    TxItem(const protobuf::TxInfo& in_tx)
-            : tx(in_tx) {
+    TxItem(const protobuf::TxInfo& in_tx, uint64_t tx_idx)
+            : tx(in_tx), tx_index(tx_idx) {
         delta_time = (std::chrono::steady_clock::now() +
             std::chrono::microseconds(kBftStartDeltaTime));
         switch (tx.type()) {
@@ -48,6 +48,9 @@ struct TxItem {
         for (int32_t i = 0; i < tx.attr_size(); ++i) {
             attr_map[tx.attr(i).key()] = tx.attr(i).value();
         }
+
+        gas_price = tx.gas_price();
+        tx.set_timestamp(common::TimeUtils::TimestampMs());
     }
     
     protobuf::TxInfo tx;
@@ -59,9 +62,17 @@ struct TxItem {
     std::string uni_gid;
     bool valid{ false };
     uint64_t timeblock_tx_tm_sec_{ 0 };
+    uint64_t tx_index{ 0 };
+    uint64_t gas_price{ 0 };
 };
 
 typedef std::shared_ptr<TxItem> TxItemPtr;
+
+struct TxItemPriOper {
+    bool operator() (TxItemPtr& a, TxItemPtr& b) {
+        return a->gas_price < b->gas_price;
+    }
+};
 
 class TxPool {
 public:
@@ -76,10 +87,11 @@ public:
         uint32_t call_contract_step,
         const std::string& gid);
     void BftOver(BftInterfacePtr& bft_ptr);
+    int Init(uint32_t pool_idx);
 
-    void set_pool_index(uint32_t pool_idx) {
-        pool_index_ = pool_idx;
-    }
+//     void set_pool_index(uint32_t pool_idx) {
+//         pool_index_ = pool_idx;
+//     }
 
     void RemoveTx(
         bool add_to,
@@ -96,13 +108,16 @@ private:
     void RemoveInvalidTimeBlockTx(uint64_t latest_tm);
 
     static const uint32_t kKeepCoverLoadCount = 1024u;
+    static const uint32_t kTxPoolMaxCount = 10240;
 
     static std::atomic<uint64_t> pool_index_gen_;
     std::map<uint64_t, TxItemPtr> tx_pool_;
+    std::priority_queue<TxItemPtr, std::vector<TxItemPtr>, TxItemPriOper> mem_queue_;
     std::unordered_map<std::string, uint64_t> added_tx_map_;
     std::mutex tx_pool_mutex_;
     volatile uint32_t pool_index_;
     int64_t last_bft_over_tm_sec_{ -1 };
+    std::string pool_name_;
 
     DISALLOW_COPY_AND_ASSIGN(TxPool);
 };

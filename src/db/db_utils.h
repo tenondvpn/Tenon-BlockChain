@@ -33,6 +33,9 @@ static const std::string kGlobalContractForVpnMining = kGlobalDbKeyVersion + "_k
 // for pool height tree
 static const std::string kGlobalHeightTreeKey = kGlobalDbKeyVersion + "_kHT";
 
+// for pool index
+static const std::string kGlobalTxPoolKey = kGlobalDbKeyVersion + "_kTxPool";
+
 }
 
 }

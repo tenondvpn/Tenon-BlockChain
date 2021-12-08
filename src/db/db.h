@@ -167,6 +167,53 @@ public:
         return ssdb_->zfix(name);
     }
 
+    virtual int hset(const Bytes &name, const Bytes &key, const Bytes &val, char log_type = BinlogType::SYNC) {
+        return ssdb_->hset(name, key, val, log_type);
+    }
+
+    virtual int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+        return ssdb_->hdel(name, key, log_type);
+    }
+
+    // -1: error, 1: ok, 0: value is not an integer or out of range
+    virtual int hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type = BinlogType::SYNC) {
+        return ssdb_->hincr(name, key, by, new_val, log_type);
+    }
+
+    virtual int64_t hsize(const Bytes &name) {
+        return ssdb_->hsize(name);
+    }
+
+    virtual int64_t hclear(const Bytes &name) {
+        return ssdb_->hclear(name);
+    }
+
+    virtual int hget(const Bytes &name, const Bytes &key, std::string *val) {
+        return ssdb_->hget(name， key， val);
+    }
+
+    virtual int hlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+        std::vector<std::string> *list) {
+        return ssdb_->hlist(name_s, name_e, limit, list);
+    }
+
+    virtual int hrlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+        std::vector<std::string> *list) {
+        return ssdb_->hrlist(name_s, name_e, limit, list);
+    }
+
+    virtual HIterator* hscan(const Bytes &name, const Bytes &start, const Bytes &end, uint64_t limit) {
+        return ssdb_->hscan(name, start, end, limit);
+    }
+
+    virtual HIterator* hrscan(const Bytes &name, const Bytes &start, const Bytes &end, uint64_t limit) {
+        return ssdb_->hrscan(name, start, end, limit);
+    }
+
+    virtual int64_t hfix(const Bytes &name) {
+        return ssdb_->hfix(name);
+    }
+
     std::shared_ptr<DickDb>& db() {
         return db_;
     }
