@@ -390,7 +390,6 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
         assert(backup_precommit_signs_[i] != libff::alt_bn128_G1::zero());
         all_signs.push_back(backup_precommit_signs_[i]);
         idx_vec.push_back(i + 1);
-        BFT_INFO("valid index: %d", i);
         if (idx_vec.size() >= t) {
             break;
         }

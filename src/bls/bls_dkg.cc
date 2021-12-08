@@ -357,7 +357,6 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    BLS_INFO("bls create HandleSwapSecKey success block elect height: %lu", elect_hegiht_);
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
 } catch (std::exception& e) {
