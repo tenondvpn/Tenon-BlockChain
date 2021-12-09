@@ -446,13 +446,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     if (*elected) {
         local_node_pool_mod_num_ = local_node_pool_mod_num;
         local_node_is_super_leader_ = local_node_is_super_leader;
-        height_with_block_.SetLocalSecKey(
-            elect_block.prev_members().prev_elect_height(),
-            prev_elect_block.shard_network_id(),
-            bls::BlsManager::Instance()->GetSeckFromDb(
-                elect_block.prev_members().prev_elect_height(),
-                prev_elect_block.shard_network_id()));
-
     }
 
     leader_rotation_.OnElectBlock(shard_members_ptr);

@@ -50,12 +50,6 @@ public:
             return;
         }
 
-        std::string debug_str;
-        for (uint32_t i = 0; i < members_ptr->size(); ++i) {
-            debug_str = common::Encode::HexEncode((*members_ptr)[i]->id) + ":" + std::to_string((*members_ptr)[i]->pool_index_mod_num) + ",";
-        }
-
-        ELECT_DEBUG("AddNewHeightBlock %s", debug_str.c_str());
         uint64_t min_height = common::kInvalidUint64;
         uint64_t min_index = 0;
         for (int32_t i = 0; i < 3; ++i) {
@@ -123,13 +117,6 @@ public:
                     *local_sec_key = members_ptrs_[network_id][i]->local_sec_key;
                 }
 
-                std::string debug_str;
-                for (uint32_t i = 0; i < members_ptrs_[network_id][i]->members_ptr->size(); ++i) {
-                    debug_str = common::Encode::HexEncode((*members_ptrs_[network_id][i]->members_ptr)[i]->id) + ":" + std::to_string((*members_ptrs_[network_id][i]->members_ptr)[i]->pool_index_mod_num) + ",";
-                }
-
-                ELECT_DEBUG("GetMembersPtr AddNewHeightBlock %s", debug_str.c_str());
-
                 return members_ptrs_[network_id][i]->members_ptr;
             }
         }
@@ -150,14 +137,7 @@ public:
 
             auto iter = height_with_members_[network_id].find(height);
             if (iter != height_with_members_[network_id].end()) {
-                std::string debug_str;
-                for (uint32_t i = 0; i < iter->second->members_ptr->size(); ++i) {
-                    debug_str = common::Encode::HexEncode((*iter->second->members_ptr)[i]->id) + ":" + std::to_string((*iter->second->members_ptr)[i]->pool_index_mod_num) + ",";
-                }
-
-                ELECT_DEBUG("GetMembersPtr AddNewHeightBlock %s", debug_str.c_str());
-
-                return iter->second->members_ptr;
+                return iter->second;
             }
         }
 
@@ -271,13 +251,6 @@ public:
                 height_queue_.pop();
             }
         }
-
-        std::string debug_str;
-        for (uint32_t i = 0; i < shard_members_ptr->size(); ++i) {
-            debug_str = common::Encode::HexEncode((*shard_members_ptr)[i]->id) + ":" + std::to_string((*shard_members_ptr)[i]->pool_index_mod_num) + ",";
-        }
-
-        ELECT_DEBUG("GetMembersPtr AddNewHeightBlock %s", debug_str.c_str());
 
         return shard_members_ptr;
     }

@@ -68,11 +68,11 @@ void LeaderRotation::CheckRotation() {
             continue;
         }
 
-        rotation_item_[valid_idx_].pool_leader_map[i]->valid_leader = false;
-        rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = -1;
+//         rotation_item_[valid_idx_].pool_leader_map[i]->valid_leader = false;
+//         rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = -1;
         should_change_leaders.push_back(i);
         ELECT_WARN("leader rotation: %d, %s",
-            i, common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[i]->id));
+            i, common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[i]->id).c_str());
     }
 
     for (int32_t i = 0; i < should_change_leaders.size(); ++i) {
