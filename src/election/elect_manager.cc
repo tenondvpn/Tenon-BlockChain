@@ -430,14 +430,11 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
         valid_shard_networks_.insert(prev_elect_block.shard_network_id());
     }
 
+    auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(pk_vec));
     height_with_block_.AddNewHeightBlock(
         elect_block.prev_members().prev_elect_height(),
         prev_elect_block.shard_network_id(),
-        shard_members_ptr);
-    auto common_pk = BLSPublicKey(std::make_shared<std::vector<std::string>>(pk_vec));
-    height_with_block_.SetCommonPublicKey(
-        elect_block.prev_members().prev_elect_height(),
-        elect_block.shard_network_id(),
+        shard_members_ptr,
         *common_pk.getPublicKey());
     if (elect_net_heights_map_[prev_elect_block.shard_network_id()] == common::kInvalidUint64 ||
             elect_block.prev_members().prev_elect_height() >
