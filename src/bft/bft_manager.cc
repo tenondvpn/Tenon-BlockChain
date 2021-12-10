@@ -702,6 +702,7 @@ int BftManager::InitBft(
 int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
+        BFT_ERROR("bft init failed!");
         return kBftError;
     }
 
@@ -719,7 +720,7 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
             DispatchPool::Instance()->BftOver(bft_ptr);
         }
 
-//         BFT_ERROR("LeaderPrepare bft failed!");
+        BFT_ERROR("LeaderPrepare bft failed!");
         return leader_pre;
     }
 
