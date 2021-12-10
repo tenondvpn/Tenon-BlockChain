@@ -13,6 +13,7 @@ LeaderRotation::LeaderRotation() {
 LeaderRotation::~LeaderRotation() {}
 
 void LeaderRotation::OnElectBlock(const MembersPtr& members) {
+    int32_t this_node_pool_mod_num = -1;
     int32_t invalid_idx = (valid_idx_ + 1) % 2;
     for (auto iter = members->begin(); iter != members->end(); ++iter) {
         if ((*iter)->bls_publick_key == libff::alt_bn128_G2::zero()) {
@@ -25,7 +26,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
         (*iter)->leader_load_count = 0;
         if ((*iter)->pool_index_mod_num >= 0) {
             if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
-                this_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+                this_node_pool_mod_num = (*iter)->pool_index_mod_num;
             }
 
             rotation_item_[invalid_idx].pool_leader_map[(*iter)->pool_index_mod_num] = *iter;
@@ -41,6 +42,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
     }
 
     rotation_item_[invalid_idx].rotation_idx = rotation_item_[invalid_idx].max_pool_mod_num + 1;
+    this_node_pool_mod_num_ = this_node_pool_mod_num;
     valid_idx_ = invalid_idx;
 }
 

@@ -433,7 +433,10 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_block.prev_members().prev_elect_height();
     }
 
-    leader_rotation_.OnElectBlock(shard_members_ptr);
+    if (*elected) {
+        leader_rotation_.OnElectBlock(shard_members_ptr);
+    }
+
     return true;
 }
 
