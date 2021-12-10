@@ -1394,10 +1394,6 @@ int BftManager::BackupCommit(
 
 void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_leader) {
     // broadcast to this consensus shard and waiting pool shard
-    if (!is_bft_leader && !elect::ElectManager::Instance()->LocalNodeIsSuperLeader()) {
-        return;
-    }
-
     const std::shared_ptr<bft::protobuf::Block>& block_ptr = bft_ptr->prpare_block();
     auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
         network::kUniversalNetworkId);

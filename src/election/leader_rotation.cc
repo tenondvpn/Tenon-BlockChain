@@ -24,6 +24,10 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
         (*iter)->valid_leader = true;
         (*iter)->leader_load_count = 0;
         if ((*iter)->pool_index_mod_num >= 0) {
+            if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+                this_node_pool_mod_num_ = (*iter)->pool_index_mod_num;
+            }
+
             rotation_item_[invalid_idx].pool_leader_map[(*iter)->pool_index_mod_num] = *iter;
             ++(*iter)->leader_load_count;
             if ((*iter)->pool_index_mod_num > rotation_item_[invalid_idx].max_pool_mod_num) {
@@ -41,14 +45,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 }
 
 int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
-    for (int32_t i = 0; i < rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
-        if (rotation_item_[valid_idx_].pool_leader_map[i]->id ==
-                common::GlobalInfo::Instance()->id()) {
-            return i;
-        }
-    }
-
-    return -1;
+    return this_node_pool_mod_num_;
 }
 
 void LeaderRotation::CheckRotation() {
@@ -69,15 +66,26 @@ void LeaderRotation::CheckRotation() {
         }
 
         should_change_leaders.push_back(i);
-        ELECT_WARN("leader rotation: %d, %s",
-            i, common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[i]->id).c_str());
     }
 
     for (int32_t i = 0; i < should_change_leaders.size(); ++i) {
+        if (rotation_item_[valid_idx_].pool_leader_map[i]->id == common::GlobalInfo::Instance()->id()) {
+            this_node_pool_mod_num_ = -1;
+        }
+
         rotation_item_[valid_idx_].pool_leader_map[i]->valid_leader = false;
         rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = -1;
+        std::string src_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
         rotation_item_[valid_idx_].pool_leader_map[i] = ChooseValidLeader();
         rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = i;
+        std::string des_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
+        if (rotation_item_[valid_idx_].pool_leader_map[i]->id == common::GlobalInfo::Instance()->id()) {
+            this_node_pool_mod_num_ = i;
+        }
+
+        ELECT_WARN("leader rotation: %d, %s, to: %s",
+            i, common::Encode::HexEncode(src_id).c_str(),
+            common::Encode::HexEncode(des_id).c_str());
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));

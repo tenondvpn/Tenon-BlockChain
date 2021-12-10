@@ -296,11 +296,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     added_height_.insert(elect_block.prev_members().prev_elect_height());
-    if (common::GlobalInfo::Instance()->network_id() == prev_elect_block.shard_network_id()) {
-        local_node_pool_mod_num_ = -1;
-        local_node_is_super_leader_ = false;
-    }
-
     latest_member_count_[prev_elect_block.shard_network_id()] = prev_elect_block.in_size();
     std::map<uint32_t, NodeIndexMapPtr> in_index_members;
     std::map<uint32_t, uint32_t> begin_index_map;
@@ -441,11 +436,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_net_heights_map_[prev_elect_block.shard_network_id()]) {
         elect_net_heights_map_[prev_elect_block.shard_network_id()] =
             elect_block.prev_members().prev_elect_height();
-    }
-
-    if (*elected) {
-        local_node_pool_mod_num_ = local_node_pool_mod_num;
-        local_node_is_super_leader_ = local_node_is_super_leader;
     }
 
     leader_rotation_.OnElectBlock(shard_members_ptr);

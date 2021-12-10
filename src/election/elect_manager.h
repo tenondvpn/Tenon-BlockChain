@@ -85,12 +85,8 @@ public:
         return false;
     }
 
-    bool LocalNodeIsSuperLeader() {
-        return local_node_is_super_leader_;
-    }
-
     int32_t local_node_pool_mod_num() {
-        return local_node_pool_mod_num_;
+        return leader_rotation_.GetThisNodeValidPoolModNum();
     }
 
     int32_t local_node_member_index() {
@@ -154,8 +150,6 @@ private:
     std::mutex added_net_id_set_mutex_;
     std::unordered_map<uint32_t, std::unordered_set<std::string>> added_net_ip_set_;
     std::mutex added_net_ip_set_mutex_;
-    volatile bool local_node_is_super_leader_{ false };
-    volatile int32_t local_node_pool_mod_num_{ -1 };
     volatile int32_t local_node_member_index_{ -1 };
     MembersPtr members_ptr_[network::kConsensusShardEndNetworkId];
     MembersPtr waiting_members_ptr_[network::kConsensusShardEndNetworkId];
