@@ -24,10 +24,13 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 
         (*iter)->valid_leader = true;
         (*iter)->leader_load_count = 0;
+        if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
+            rotation_item_[invalid_idx].local_member = *iter;
+        }
+
         if ((*iter)->pool_index_mod_num >= 0) {
             if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
                 this_node_pool_mod_num = (*iter)->pool_index_mod_num;
-                rotation_item_[invalid_idx].local_member = *iter;
             }
 
             rotation_item_[invalid_idx].pool_leader_map[(*iter)->pool_index_mod_num] = *iter;
