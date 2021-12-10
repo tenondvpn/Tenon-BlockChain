@@ -94,7 +94,7 @@ public:
     }
 
     elect::BftMemberPtr local_mem_ptr(uint32_t network_id) {
-        return local_mem_ptr_[network_id];
+        return leader_rotation_.local_member();
     }
 
     std::unordered_set<uint32_t> valid_shard_networks() {
@@ -157,7 +157,6 @@ private:
     std::shared_ptr<MemberManager> mem_manager_ptr_[network::kConsensusShardEndNetworkId];
     int32_t latest_member_count_[network::kConsensusShardEndNetworkId];
     int32_t latest_leader_count_[network::kConsensusShardEndNetworkId];
-    elect::BftMemberPtr local_mem_ptr_[network::kConsensusShardEndNetworkId];
     elect::NodeIndexMapPtr node_index_map_[network::kConsensusShardEndNetworkId];
     HeightWithElectBlock height_with_block_;
     BftMemberPtr pool_mod_leaders_[common::kInvalidPoolIndex];

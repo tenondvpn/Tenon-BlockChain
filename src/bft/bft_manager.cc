@@ -778,6 +778,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     bft::protobuf::BftMessage bft_msg;
     int res = bft_ptr->Prepare(true, pool_mod_idx, bft_msg, &prepare_data);
     if (res != kBftSuccess || prepare_data.empty()) {
+        BFT_ERROR("Prepare failed[%u].prepare_data.empty(): %d", res, prepare_data.empty());
         return res;
     }
 
@@ -828,6 +829,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
 
     res = AddBft(bft_ptr);
     if (res != kBftSuccess) {
+        BFT_ERROR("AddBft failed[%u].", res);
         return res;
     }
 

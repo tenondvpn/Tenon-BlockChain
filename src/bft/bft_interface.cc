@@ -26,7 +26,8 @@ int BftInterface::Init() {
     leader_mem_ptr_ = elect::ElectManager::Instance()->local_mem_ptr(
         common::GlobalInfo::Instance()->network_id());
     if (leader_mem_ptr_ == nullptr || leader_mem_ptr_->pool_index_mod_num < 0) {
-        BFT_ERROR("leader_mem_ptr_->pool_index_mod_num < 0");
+        BFT_ERROR("leader_mem_ptr_->pool_index_mod_num < 0: %s",
+            common::Encode::HexEncode(leader_mem_ptr_->id).c_str());
         return kBftError;
     }
 

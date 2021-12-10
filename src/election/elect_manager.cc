@@ -217,7 +217,6 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
     if (!cons_elected) {
         if (local_netid == elect_block.shard_network_id()) {
 //             Quit(local_netid);
-            local_mem_ptr_[local_netid] = nullptr;
             if (Join(local_netid + network::kConsensusWaitingShardOffset) != kElectSuccess) {
                 BFT_ERROR("join elected network failed![%u]",
                     local_netid + network::kConsensusWaitingShardOffset);
@@ -345,11 +344,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
-            }
-
-            if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
-                local_mem_ptr_[prev_elect_block.shard_network_id()] = *iter;
-                ELECT_ERROR("network set member: %d", prev_elect_block.shard_network_id());
             }
 
             now_elected_ids_.insert((*iter)->id);

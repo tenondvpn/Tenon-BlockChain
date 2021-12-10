@@ -19,6 +19,9 @@ public:
     ~LeaderRotation();
     void OnElectBlock(const MembersPtr& members);
     int32_t GetThisNodeValidPoolModNum();
+    BftMemberPtr local_member() {
+        return rotation_item_[valid_idx_].local_member;
+    }
 
 private:
     struct RotationItem {
@@ -26,6 +29,7 @@ private:
         std::deque<BftMemberPtr> valid_leaders;
         int32_t max_pool_mod_num;
         int32_t rotation_idx;
+        BftMemberPtr local_member{ nullptr };
     };
 
     void CheckRotation();
