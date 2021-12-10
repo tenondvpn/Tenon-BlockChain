@@ -336,7 +336,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     latest_leader_count_[prev_elect_block.shard_network_id()] = leader_count;
     std::vector<std::string> pk_vec;
     UpdatePrevElectMembers(shard_members_ptr, elect_block, elected, &pk_vec);
-    int32_t local_node_pool_mod_num = -1;
     bool local_node_is_super_leader = false;
     {
         Members tmp_leaders;
@@ -346,10 +345,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             if ((*iter)->pool_index_mod_num >= 0) {
                 tmp_leaders.push_back(*iter);
                 node_index_vec.push_back(index++);
-                if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
-                    local_node_pool_mod_num = (*iter)->pool_index_mod_num;
-                    // create ecdh key
-                }
             }
 
             if ((*iter)->id == common::GlobalInfo::Instance()->id()) {

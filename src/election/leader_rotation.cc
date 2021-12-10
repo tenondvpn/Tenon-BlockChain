@@ -83,9 +83,10 @@ void LeaderRotation::CheckRotation() {
             this_node_pool_mod_num_ = i;
         }
 
-        ELECT_WARN("leader rotation: %d, %s, to: %s",
+        ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
             i, common::Encode::HexEncode(src_id).c_str(),
-            common::Encode::HexEncode(des_id).c_str());
+            common::Encode::HexEncode(des_id).c_str(),
+            this_node_pool_mod_num_);
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
