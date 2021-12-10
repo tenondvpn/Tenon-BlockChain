@@ -360,7 +360,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             now_elected_ids_.insert((*iter)->id);
             ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock elect height: %lu, network: %d,"
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
-                prev_elect_block.prev_members().prev_elect_height(),
+                elect_block.prev_members().prev_elect_height(),
                 prev_elect_block.shard_network_id(),
                 common::Encode::HexEncode((*iter)->id).c_str(),
                 (*iter)->pool_index_mod_num);
