@@ -702,9 +702,9 @@ int BftManager::InitBft(
 int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
-        BFT_ERROR("leader create bft failed!");
         return kBftError;
     }
+
     auto gid = common::GlobalInfo::Instance()->gid();
     bft_ptr->set_gid(gid);
     bft_ptr->set_network_id(common::GlobalInfo::Instance()->network_id());
