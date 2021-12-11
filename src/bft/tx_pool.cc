@@ -89,6 +89,10 @@ int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
     }
 
     uint64_t tx_index = pool_index_gen_.fetch_add(1);
+    if (last_bft_over_tm_sec_ == -1 || added_tx_map_.empty()) {
+        last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
+    }
+
     added_tx_map_.insert(std::make_pair(uni_gid, tx_index));
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
@@ -125,10 +129,6 @@ int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
         common::Encode::HexEncode(uni_gid).c_str(),
         tx_pool_.size(),
         added_tx_map_.size());
-    if (last_bft_over_tm_sec_ == -1 || added_tx_map_.empty()) {
-        last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
-    }
-
     return kBftSuccess;
 }
 
