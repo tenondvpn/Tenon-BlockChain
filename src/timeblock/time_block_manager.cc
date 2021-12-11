@@ -8,6 +8,7 @@
 #include "bft/dispatch_pool.h"
 #include "common/user_property_key_define.h"
 #include "common/string_utils.h"
+#include "common/global_info.h"
 #include "dht/dht_key.h"
 #include "election/proto/elect_proto.h"
 #include "election/elect_manager.h"
@@ -177,6 +178,12 @@ bool TimeBlockManager::LeaderCanCallTimeBlockTx(uint64_t tm_sec) {
 }
 
 void TimeBlockManager::CreateTimeBlockTx() {
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
+            common::GlobalInfo::Instance()->network_id() !=
+            (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
+        return;
+    }
+
     auto gid = common::Hash::Hash256(kTimeBlockGidPrefix +
         std::to_string(latest_time_block_tm_));
     uint64_t new_time_block_tm = latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds;
@@ -291,31 +298,6 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
         new_time_block_tm, (uint64_t)backup_latest_time_block_tm, (uint64_t)latest_time_block_tm_);
     return false;
 }
-
-// void TimeBlockManager::CreateTimeBlockTx() {
-//     {
-//         std::lock_guard<std::mutex> guard(latest_time_blocks_mutex_);
-//         auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-//         if (now_tm_sec >= latest_time_block_tm_ + common::kTimeBlockCreatePeriodSeconds) {
-//             if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-//                 int32_t pool_mod_num = -1;
-//                 if (elect::ElectManager::Instance()->IsSuperLeader(
-//                         common::GlobalInfo::Instance()->network_id(),
-//                         common::GlobalInfo::Instance()->id())) {
-//                     transport::protobuf::Header msg;
-//                     if (LeaderCreateTimeBlockTx(&msg) == kTimeBlockSuccess) {
-//                         network::Route::Instance()->Send(msg);
-//                         network::Route::Instance()->SendToLocal(msg);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-//     create_tm_block_tick_.CutOff(
-//         kCheckTimeBlockPeriodUs,
-//         std::bind(&TimeBlockManager::CreateTimeBlockTx, this));
-// }
 
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();

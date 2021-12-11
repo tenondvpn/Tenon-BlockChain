@@ -73,7 +73,6 @@ libff::alt_bn128_Fr BlsManager::GetSeckFromDb(uint64_t elect_height, uint32_t ne
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
-        BLS_ERROR("get bls private key failed![%s]", key.c_str());
         return libff::alt_bn128_Fr::zero();
     }
 

@@ -720,7 +720,7 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
             DispatchPool::Instance()->BftOver(bft_ptr);
         }
 
-        BFT_ERROR("LeaderPrepare bft failed!");
+//         BFT_ERROR("LeaderPrepare bft failed!");
         return leader_pre;
     }
 
@@ -778,7 +778,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     bft::protobuf::BftMessage bft_msg;
     int res = bft_ptr->Prepare(true, pool_mod_idx, bft_msg, &prepare_data);
     if (res != kBftSuccess || prepare_data.empty()) {
-        BFT_ERROR("Prepare failed[%u].prepare_data.empty(): %d", res, prepare_data.empty());
+//         BFT_ERROR("Prepare failed[%u].prepare_data.empty(): %d", res, prepare_data.empty());
         return res;
     }
 
