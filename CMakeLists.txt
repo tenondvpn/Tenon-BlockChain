@@ -155,6 +155,7 @@ set(LINK_ARGS
     contract
     limit
     common
+    dbsvr
     protobuf
     uv
     pthread
@@ -191,6 +192,7 @@ set(CLIENT_LINK_ARGS
     tnet
     contract
     common
+    dbsvr
     protobuf
     uv
     uuid
@@ -240,6 +242,7 @@ else()
     add_subdirectory(${SRC_DIR}/timeblock timeblock)
     add_subdirectory(${SRC_DIR}/big_num big_num)
     add_subdirectory(${SRC_DIR}/services services)
+    add_subdirectory(${SRC_DIR}/dbsvr dbsvr)
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         add_subdirectory(${SRC_DIR}/common/tests common_test)
