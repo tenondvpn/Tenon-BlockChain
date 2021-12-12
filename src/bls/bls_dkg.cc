@@ -663,8 +663,8 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     local_publick_key_.to_affine_coordinates();
     std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key_);
-    BLS_DEBUG("Finish new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d, sec_key: %s, cpk: %s, %s, %s, %s, pk: %s, %s, %s, %s, msg_hash: %s, signxy: %s, %s",
-        elect_hegiht_, local_member_index_, i, sec_key.c_str(), 
+    BLS_DEBUG("Finish new election block elect_hegiht_: %lu, local_member_index_: %d, sec_key: %s, cpk: %s, %s, %s, %s, pk: %s, %s, %s, %s, msg_hash: %s, signxy: %s, %s",
+        elect_hegiht_, local_member_index_, sec_key.c_str(), 
         common_pk->x_c0().c_str(),
         common_pk->x_c1().c_str(),
         common_pk->y_c0().c_str(),

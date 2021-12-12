@@ -332,9 +332,9 @@ void BlsManager::HandleFinish(
     finish_item->all_bls_signs[bls_msg.index()] = sign;
     finish_item->all_common_public_keys[bls_msg.index()] = *common_pkey.getPublicKey();
 
-    BLS_INFO("HandleFinish new election block network id: %d, all finish count: %d, elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, cpk: %s, %s, %s, %s",
+    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, cpk: %s, %s, %s, %s",
         bls_msg.finish_req().network_id(),
-        cpk_iter->second,
+        bls_msg.index(),
         bls_msg.elect_height(),
         common::Encode::HexEncode(msg_hash).c_str(),
         bls_msg.finish_req().bls_sign_x().c_str(),
