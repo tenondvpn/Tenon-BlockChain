@@ -339,14 +339,14 @@ void BlsManager::HandleFinish(
         common::Encode::HexEncode(msg_hash).c_str(),
         bls_msg.finish_req().bls_sign_x().c_str(),
         bls_msg.finish_req().bls_sign_y().c_str(),
-        bls_msg.finish_req().pubkey().x_c0(),
-        bls_msg.finish_req().pubkey().x_c1(),
-        bls_msg.finish_req().pubkey().y_c0(),
-        bls_msg.finish_req().pubkey().y_c1(),
-        bls_msg.finish_req().common_pubkey().x_c0(),
-        bls_msg.finish_req().common_pubkey().x_c1(),
-        bls_msg.finish_req().common_pubkey().y_c0(),
-        bls_msg.finish_req().common_pubkey().y_c1());
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c1()).c_str());
 
     auto cpk_iter = finish_item->max_public_pk_map.find(cpk_hash);
     if (cpk_iter == finish_item->max_public_pk_map.end()) {
