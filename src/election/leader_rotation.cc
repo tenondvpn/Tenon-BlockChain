@@ -14,6 +14,7 @@ LeaderRotation::~LeaderRotation() {}
 
 void LeaderRotation::OnElectBlock(const MembersPtr& members) {
     int32_t invalid_idx = (valid_idx_ + 1) % 2;
+    rotation_item_[invalid_idx].local_member = nullptr;
     for (auto iter = members->begin(); iter != members->end(); ++iter) {
         if ((*iter)->bls_publick_key == libff::alt_bn128_G2::zero()) {
             // should not to be leader
@@ -45,6 +46,10 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 }
 
 int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
+    if (rotation_item_[valid_idx_].local_member == nullptr) {
+        return -1;
+    }
+
     return rotation_item_[valid_idx_].local_member->pool_index_mod_num;
 }
 
