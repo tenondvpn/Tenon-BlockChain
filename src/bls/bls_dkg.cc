@@ -95,6 +95,7 @@ void BlsDkg::OnNewElectionBlock(
     dkg_finish_timer_.CutOff(
         kDkgFinishBeginUs + local_offset_us_,
         std::bind(&BlsDkg::Finish, this));
+    BLS_DEBUG("new election block elect_hegiht_: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -142,18 +143,22 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 
     if (bls_msg.has_verify_brd()) {
         HandleVerifyBroadcast(header, bls_msg);
+        BLS_DEBUG("HandleVerifyBroadcast new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_swap_req()) {
         HandleSwapSecKey(header, bls_msg);
+        BLS_DEBUG("HandleSwapSecKey new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_against_req()) {
         HandleAgainstParticipant(header, bls_msg);
+        BLS_DEBUG("HandleAgainstParticipant new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_verify_res()) {
         HandleVerifyBroadcastRes(header, bls_msg);
+        BLS_DEBUG("HandleVerifyBroadcastRes new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -433,6 +438,7 @@ void BlsDkg::BroadcastVerfify() try {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     network::Route::Instance()->Send(msg);
+    BLS_DEBUG("BroadcastVerfify new election block elect_hegiht_: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 #ifdef TENON_UNITTEST
     ver_brd_msg_ = msg;
 #endif
@@ -502,6 +508,7 @@ void BlsDkg::SwapSecKey() try {
 #ifdef TENON_UNITTEST
         sec_swap_msgs_.push_back(msg);
 #endif
+        BLS_DEBUG("SwapSecKey new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, i);
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -654,6 +661,22 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     finish_msg->set_bls_sign_x(sign_x);
     finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    local_publick_key_.to_affine_coordinates();
+    std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key_);
+    BLS_DEBUG("Finish new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d, sec_key: %s, cpk: %s, %s, %s, %s, pk: %s, %s, %s, %s, msg_hash: %s, signxy: %s, %s",
+        elect_hegiht_, local_member_index_, i, sec_key.c_str(), 
+        common_pk->x_c0().c_str(),
+        common_pk->x_c1().c_str(),
+        common_pk->y_c0().c_str(),
+        common_pk->y_c1().c_str(),
+        local_pk->x_c0().c_str(),
+        local_pk->x_c1().c_str(),
+        local_pk->y_c0().c_str(),
+        local_pk->y_c1().c_str(),
+        common::Encode::HexEncode(message_hash).c_str(),
+        sign_x.c_str(),
+        sign_y.c_str());
+
 //     BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu,"
 //         "cpk: %s,%s,%s,%s, pk: %s,%s,%s,%s",
 //         common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_,
