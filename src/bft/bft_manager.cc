@@ -178,6 +178,8 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
             // if commit, check agg sign and just commit
             if (bft_item_ptr->bft_msg.bft_step() == kBftCommit) {
                 // just commit it 
+                // remove tx
+
                 return;
             }
 
@@ -1306,6 +1308,17 @@ int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& gen
     return kBftSuccess;
 }
 
+void BftManager::CommitJustRemoveTx(bft::protobuf::BftMessage& bft_msg) {
+    if (!bft_msg.agree()) {
+        return;
+    }
+
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->precommit_hash()) != kBftSuccess) {
+        return kBftError;
+    }
+
+}
+
 int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
@@ -1783,6 +1796,16 @@ int BftManager::AddKeyValueSyncBlock(
             queue_item_ptr->db_batch) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
         return kBftError;
+    }
+
+    auto& tx_list = block_ptr->tx_list();
+    for (int32_t i = 0; i < tx_list.size(); ++i) {
+        DispatchPool::Instance()->RemoveTx(
+            block_ptr->pool_index(),
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
     }
 
     queue_item_ptr->is_kv_synced = true;
