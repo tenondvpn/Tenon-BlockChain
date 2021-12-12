@@ -1308,17 +1308,6 @@ int BftManager::AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& gen
     return kBftSuccess;
 }
 
-void BftManager::CommitJustRemoveTx(bft::protobuf::BftMessage& bft_msg) {
-    if (!bft_msg.agree()) {
-        return;
-    }
-
-    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->precommit_hash()) != kBftSuccess) {
-        return kBftError;
-    }
-
-}
-
 int BftManager::BackupCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,

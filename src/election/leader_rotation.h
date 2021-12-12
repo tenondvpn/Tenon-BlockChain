@@ -40,7 +40,6 @@ private:
     RotationItem rotation_item_[2];
     int32_t valid_idx_{ 0 };
     common::Tick tick_;
-    int32_t this_node_pool_mod_num_{ -1 };
 
     DISALLOW_COPY_AND_ASSIGN(LeaderRotation);
 };
