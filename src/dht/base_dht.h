@@ -96,6 +96,10 @@ public:
         return bootstrap_create_res_cb_;
     }
 
+    void SetNotUniqId() {
+        uniq_id_ = false;
+    }
+
 protected:
     bool NodeValid(NodePtr& node);
     bool NodeJoined(NodePtr& node);
@@ -152,6 +156,9 @@ protected:
     NewNodeJoinCallback node_join_cb_{ nullptr };
     VerifySignCallback sign_msg_cb_{ nullptr };
     BootstrapRespnseCallback bootstrap_create_res_cb_{ nullptr };
+    std::unordered_set<std::string> uniq_ids_;
+    std::mutex uniq_ids_mutex_;
+    bool uniq_id_{ true };
 
     DISALLOW_COPY_AND_ASSIGN(BaseDht);
 };

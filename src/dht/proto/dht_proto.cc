@@ -181,7 +181,7 @@ void DhtProto::CreateRefreshNeighborsRequest(
     }
     refresh_nei_req->set_des_dht_key(local_node->dht_key());
     refresh_nei_req->set_count(dht.size() + 1);
-    refresh_nei_req->set_id(common::GlobalInfo::Instance()->id);
+    refresh_nei_req->set_id(common::GlobalInfo::Instance()->id());
     auto proto_node = refresh_nei_req->mutable_node_info();
     proto_node->set_public_ip(local_node->public_ip());
     proto_node->set_public_port(local_node->public_port);
@@ -191,7 +191,7 @@ void DhtProto::CreateRefreshNeighborsRequest(
     proto_node->set_nat_type(local_node->nat_type);
     proto_node->set_dht_key(local_node->dht_key());
     proto_node->set_min_svr_port(local_node->min_svr_port);
-    proto_node->set_max_svr_port(local_node]->max_svr_port);
+    proto_node->set_max_svr_port(local_node->max_svr_port);
     proto_node->set_min_route_port(local_node->min_route_port);
     proto_node->set_max_route_port(local_node->max_route_port);
     proto_node->set_min_udp_port(local_node->min_udp_port);

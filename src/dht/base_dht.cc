@@ -81,6 +81,16 @@ int BaseDht::Join(NodePtr& node) {
 
     std::lock_guard<std::mutex> guard(dht_mutex_);
     std::unique_lock<std::mutex> lock_hash(node_map_mutex_);
+    if (uniq_id_) {
+        std::lock_guard<std::mutex> guard(uniq_ids_mutex_);
+        auto iter = uniq_ids_.find(node->id);
+        if (iter != uniq_ids_.end()) {
+            return true;
+        }
+
+        uniq_ids_.insert(node->id);
+    }
+
     uint32_t b_dht_size = dht_.size();
     uint32_t b_map_size = node_map_.size();
     DhtFunction::PartialSort(local_node_->dht_key(), dht_.size(), dht_);
@@ -178,6 +188,14 @@ int BaseDht::Drop(const std::string& id) {
         }
     }
 
+    {
+        std::lock_guard<std::mutex> guard1(uniq_ids_mutex_);
+        auto iter = uniq_ids_.find(id);
+        if (iter != uniq_ids_.end()) {
+            uniq_ids_.erase(iter);
+        }
+    }
+
     return kDhtSuccess;
 }
 
@@ -205,6 +223,14 @@ int BaseDht::Drop(const std::vector<std::string>& ids) {
 }
 
 int BaseDht::Drop(NodePtr& node) {
+    {
+        std::lock_guard<std::mutex> guard1(uniq_ids_mutex_);
+        auto iter = uniq_ids_.find(node->id());
+        if (iter != uniq_ids_.end()) {
+            uniq_ids_.erase(iter);
+        }
+    }
+
     std::lock_guard<std::mutex> guard2(dht_mutex_);
     {
         if (dht_.size() <= kDhtMinReserveNodes) {
@@ -612,7 +638,7 @@ void BaseDht::ProcessBootstrapResponse(
 void BaseDht::ProcessRefreshNeighborsRequest(
         const transport::protobuf::Header& header,
         protobuf::DhtMessage& dht_msg) {
-    if (!CheckDestination(header.des_dht_key(), false)) {
+//     if (!CheckDestination(header.des_dht_key(), false)) {
 //         DHT_WARN("refresh neighbors request destnation error[%s][%s]"
 //                 "from[%s][%d]to[%s][%d]",
 //                 common::Encode::HexEncode(header.des_dht_key()).c_str(),
@@ -621,8 +647,8 @@ void BaseDht::ProcessRefreshNeighborsRequest(
 //                 header.from_port(),
 //                 local_node_->public_ip().c_str(),
 //                 local_node_->public_port);
-        return;
-    }
+//         return;
+//     }
 
     if (!dht_msg.has_refresh_neighbors_req()) {
         DHT_WARN("not refresh neighbor request.");
@@ -649,9 +675,23 @@ void BaseDht::ProcessRefreshNeighborsRequest(
     node->node_weight = dht_msg.refresh_neighbors_req().node_info().node_weight();
     transport::protobuf::Header msg;
     SetFrequently(msg);
-    int res = CheckJoin(node);
-    if (res == kDhtSuccess) {
+    int join_res = CheckJoin(node);
+    if (join_res == kDhtSuccess) {
         Join(node);
+        DHT_ERROR("ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
+            node->public_ip().c_str(),
+            node->public_port,
+            DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+            common::Encode::HexEncode(node->dht_key()).c_str(),
+            common::Encode::HexEncode(node->id()).c_str());
+    }
+    else {
+        DHT_ERROR("error ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
+            node->public_ip().c_str(),
+            node->public_port,
+            DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+            common::Encode::HexEncode(node->dht_key()).c_str(),
+            common::Encode::HexEncode(node->id()).c_str());
     }
 
     std::vector<uint64_t> bloomfilter_vec;
@@ -918,14 +958,25 @@ bool BaseDht::NodeValid(NodePtr& node) {
 }
 
 bool BaseDht::NodeJoined(NodePtr& node) {
-    std::lock_guard<std::mutex> guard(node_map_mutex_);
-    auto iter = node_map_.find(node->dht_key_hash);
-    if (iter != node_map_.end()) {
-        if (!node->node_tag().empty() && node->node_tag() != iter->second->node_tag()) {
-            iter->second->set_node_tag(node->node_tag());
+    if (uniq_id_) {
+        std::lock_guard<std::mutex> guard(uniq_ids_mutex_);
+        auto iter = uniq_ids_.find(node->id);
+        if (iter != uniq_ids_.end()) {
+            return true;
+        }
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(node_map_mutex_);
+        auto iter = node_map_.find(node->dht_key_hash);
+        if (iter != node_map_.end()) {
+            if (!node->node_tag().empty() && node->node_tag() != iter->second->node_tag()) {
+                iter->second->set_node_tag(node->node_tag());
+            }
+
+            return true;
         }
 
-        return true;
     }
 
     return false;
@@ -1051,11 +1102,11 @@ void BaseDht::RefreshNeighbors() {
                 0,
                 msg);
         DHT_ERROR("RefreshNeighbors: %s:%d, net: %d dht key: %s, id: %s,",
-            close_nodes[rand_idx]->public_ip().c_str(),
-            close_nodes[rand_idx]->public_port,
-            DhtKeyManager::DhtKeyGetNetId(close_nodes[rand_idx]->dht_key()),
-            common::Encode::HexEncode(close_nodes[rand_idx]->dht_key()).c_str(),
-            common::Encode::HexEncode(close_nodes[rand_idx]->id()).c_str());
+            local_node_->public_ip().c_str(),
+            local_node_->public_port,
+            DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key()),
+            common::Encode::HexEncode(local_node_->dht_key()).c_str(),
+            common::Encode::HexEncode(local_node_->id()).c_str());
     }
 
     if (local_node_->client_mode) {

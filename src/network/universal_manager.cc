@@ -118,6 +118,10 @@ int UniversalManager::CreateNetwork(
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);
+    if (network_id == network::kUniversalNetworkId) {
+        dht_ptr->SetNotUniqId();
+    }
+
     dht_ptr->Init(
         std::bind(
             &UniversalManager::DhtBootstrapResponseCallback,
