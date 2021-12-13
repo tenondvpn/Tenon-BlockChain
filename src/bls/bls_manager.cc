@@ -49,6 +49,8 @@ void BlsManager::ProcessNewElectBlock(
         if (iter != finish_networks_map_.end()) {
             finish_networks_map_.erase(iter);
             BLS_DEBUG("remove old finish network map network: %d, elect height: %lu", network_id, elect_height);
+        } else {
+            BLS_DEBUG("not remove old finish network map network: %d, elect height: %lu", network_id, elect_height);
         }
     }
 

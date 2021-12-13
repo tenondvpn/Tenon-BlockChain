@@ -85,13 +85,6 @@ message BootstrapResponse {
     optional bytes node_tag = 17;
 }
 
-message RefreshNeighborsRequest {
-    optional uint32 count = 1;
-    optional bytes des_dht_key = 2;
-    repeated uint64 bloomfilter1 = 3;
-    repeated uint64 bloomfilter = 4;
-}
-
 message NodeInfo {
     optional bytes public_ip = 1;
     optional int32 public_port = 2;
@@ -108,6 +101,15 @@ message NodeInfo {
     optional uint32 min_udp_port = 13;
     optional uint32 max_udp_port = 14;
     optional bytes node_tag = 15;
+}
+
+message RefreshNeighborsRequest {
+    optional uint32 count = 1;
+    optional bytes des_dht_key = 2;
+    repeated uint64 bloomfilter1 = 3;
+    repeated uint64 bloomfilter = 4;
+    optional NodeInfo node_info = 6;
+    optional bytes id = 15;
 }
 
 message RefreshNeighborsResponse {

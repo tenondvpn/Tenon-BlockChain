@@ -74,8 +74,8 @@ int BaseDht::Join(NodePtr& node) {
 
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
-//         DHT_ERROR("CheckJoin join node failed! %s",
-//             common::Encode::HexEncode(node->id()).c_str());
+        DHT_ERROR("CheckJoin join node failed! %s, res: %d",
+            common::Encode::HexEncode(node->id()).c_str(), res);
         return res;
     }
 
@@ -125,19 +125,21 @@ int BaseDht::Join(NodePtr& node) {
 //         DHT_ERROR("vip node coming: %s", node->public_ip().c_str());
 //     }
 
-//     auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
-//     auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
-//     DHT_ERROR("join new node public ip: %s, dht key: %s, id: %s,"
-//         "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
-//         node->public_ip().c_str(),
-//         common::Encode::HexEncode(node->dht_key()).c_str(),
-//         common::Encode::HexEncode(node->id()).c_str(),
-//         node->min_svr_port,
-//         node->max_svr_port,
-//         node->min_route_port,
-//         node->max_route_port,
-//         svr_port,
-//         route_port);
+    auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
+    auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
+    DHT_ERROR("join new node public ip: %s:%d, net: %d dht key: %s, id: %s,"
+        "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
+        node->public_ip().c_str(),
+        node->public_port,
+        DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+        common::Encode::HexEncode(node->dht_key()).c_str(),
+        common::Encode::HexEncode(node->id()).c_str(),
+        node->min_svr_port,
+        node->max_svr_port,
+        node->min_route_port,
+        node->max_route_port,
+        svr_port,
+        route_port);
 //     uint32_t e_dht_size = dht_.size();
 //     uint32_t e_map_size = node_map_.size();
 //     assert((b_dht_size + 1) == e_dht_size);
@@ -626,10 +628,37 @@ void BaseDht::ProcessRefreshNeighborsRequest(
         DHT_WARN("not refresh neighbor request.");
         return;
     }
+
+    NodePtr node = std::make_shared<Node>(
+        dht_msg.refresh_neighbors_req().id(),
+        dht_msg.refresh_neighbors_req().node_info().dht_key(),
+        dht_msg.refresh_neighbors_req().node_info().nat_type(),
+        false,
+        dht_msg.refresh_neighbors_req().node_info().public_ip(),
+        dht_msg.refresh_neighbors_req().node_info().public_port(),
+        dht_msg.refresh_neighbors_req().node_info().local_ip(),
+        dht_msg.refresh_neighbors_req().node_info().local_port(),
+        dht_msg.refresh_neighbors_req().node_info().public_key(),
+        dht_msg.refresh_neighbors_req().node_info().node_tag());
+    node->min_svr_port = dht_msg.refresh_neighbors_req().node_info().min_svr_port();
+    node->max_svr_port = dht_msg.refresh_neighbors_req().node_info().max_svr_port();
+    node->min_route_port = dht_msg.refresh_neighbors_req().node_info().min_route_port();
+    node->max_route_port = dht_msg.refresh_neighbors_req().node_info().max_route_port();
+    node->min_udp_port = dht_msg.refresh_neighbors_req().node_info().min_udp_port();
+    node->max_udp_port = dht_msg.refresh_neighbors_req().node_info().max_udp_port();
+    node->node_weight = dht_msg.refresh_neighbors_req().node_info().node_weight();
+    transport::protobuf::Header msg;
+    SetFrequently(msg);
+    int res = CheckJoin(node);
+    if (res == kDhtSuccess) {
+        Join(node);
+    }
+
     std::vector<uint64_t> bloomfilter_vec;
     for (auto i = 0; i < dht_msg.refresh_neighbors_req().bloomfilter_size(); ++i) {
         bloomfilter_vec.push_back(dht_msg.refresh_neighbors_req().bloomfilter(i));
     }
+
     std::shared_ptr<common::BloomFilter> bloomfilter{ nullptr };
     if (!bloomfilter_vec.empty()) {
         bloomfilter = std::make_shared<common::BloomFilter>(
@@ -1021,6 +1050,12 @@ void BaseDht::RefreshNeighbors() {
                 close_nodes[rand_idx]->local_port + 1,
                 0,
                 msg);
+        DHT_ERROR("RefreshNeighbors: %s:%d, net: %d dht key: %s, id: %s,",
+            close_nodes[rand_idx]->public_ip().c_str(),
+            close_nodes[rand_idx]->public_port,
+            DhtKeyManager::DhtKeyGetNetId(close_nodes[rand_idx]->dht_key()),
+            common::Encode::HexEncode(close_nodes[rand_idx]->dht_key()).c_str(),
+            common::Encode::HexEncode(close_nodes[rand_idx]->id()).c_str());
     }
 
     if (local_node_->client_mode) {

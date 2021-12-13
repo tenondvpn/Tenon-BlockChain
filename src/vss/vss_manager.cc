@@ -272,7 +272,7 @@ void VssManager::BroadcastFirstPeriodHash() {
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
-//         VSS_DEBUG("BroadcastFirstPeriodHash: %lu", local_random_.GetHash());
+        VSS_DEBUG("BroadcastFirstPeriodHash: %lu，prev_elect_height_: %lu", local_random_.GetHash(), prev_elect_height_);
 #ifdef TENON_UNITTEST
         first_msg_ = msg;
 #endif
@@ -297,7 +297,7 @@ void VssManager::BroadcastSecondPeriodRandom() {
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
-//         VSS_DEBUG("BroadcastSecondPeriodRandom: %lu", local_random_.GetFinalRandomNum());
+        VSS_DEBUG("BroadcastSecondPeriodRandom: %lu，prev_elect_height_: %lu", local_random_.GetFinalRandomNum(), prev_elect_height_);
 #ifdef TENON_UNITTEST
         second_msg_ = msg;
 #endif
@@ -322,7 +322,7 @@ void VssManager::BroadcastThirdPeriodRandom() {
     if (msg.has_data()) {
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
-//         VSS_DEBUG("BroadcastThirdPeriodRandom: %lu", GetAllVssValid());
+        VSS_DEBUG("BroadcastThirdPeriodRandom: %lu，prev_elect_height_: %lu", GetAllVssValid(), prev_elect_height_);
 #ifdef TENON_UNITTEST
         third_msg_ = msg;
 #endif
@@ -401,8 +401,8 @@ void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
     }
 
     other_randoms_[mem_index].SetHash(id, vss_msg.random_hash());
-//     VSS_DEBUG("HandleFirstPeriodHash: %s, %llu",
-//         common::Encode::HexEncode(id).c_str(), vss_msg.random_hash());
+    VSS_DEBUG("HandleFirstPeriodHash: %s, %llu",
+        common::Encode::HexEncode(id).c_str(), vss_msg.random_hash());
 }
 
 void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
@@ -432,8 +432,8 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     }
 
     other_randoms_[mem_index].SetFinalRandomNum(id, vss_msg.random());
-//     VSS_DEBUG("HandleSecondPeriodRandom: %s, %llu",
-//         common::Encode::HexEncode(id).c_str(), vss_msg.random());
+    VSS_DEBUG("HandleSecondPeriodRandom: %s, %llu",
+        common::Encode::HexEncode(id).c_str(), vss_msg.random());
 }
 
 void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t final_random_num) {
@@ -485,8 +485,8 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     }
 
     SetConsensusFinalRandomNum(id, vss_msg.random());
-//     VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
-//         common::Encode::HexEncode(id).c_str(), vss_msg.random());
+    VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
+        common::Encode::HexEncode(id).c_str(), vss_msg.random());
 }
 
 }  // namespace vss
