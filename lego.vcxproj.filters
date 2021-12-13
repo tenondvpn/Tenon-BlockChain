@@ -5220,6 +5220,9 @@
     <ClInclude Include="src\common\spin_mutex.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\shell_utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common\tick\thread_pool.cc">
@@ -11049,6 +11052,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\common\tests\test_spin_mutex.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\contract\tests\test_contract_ballot.cc">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

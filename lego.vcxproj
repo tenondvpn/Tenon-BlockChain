@@ -540,6 +540,7 @@
     <ClInclude Include="src\common\limit_heap.h" />
     <ClInclude Include="src\common\parse_args.h" />
     <ClInclude Include="src\common\random.h" />
+    <ClInclude Include="src\common\shell_utils.h" />
     <ClInclude Include="src\common\spin_mutex.h" />
     <ClInclude Include="src\common\split.h" />
     <ClInclude Include="src\common\spsc_queue.h" />
@@ -2008,6 +2009,7 @@
     <ClCompile Include="src\contract\contract_vpn_mining.cc" />
     <ClCompile Include="src\contract\contract_vpn_svr_bandwidth.cc" />
     <ClCompile Include="src\contract\proto\contract.pb.cc" />
+    <ClCompile Include="src\contract\tests\test_contract_ballot.cc" />
     <ClCompile Include="src\contract\tests\test_contract_manager.cc" />
     <ClCompile Include="src\contract\tests\test_main.cc" />
     <ClCompile Include="src\db\db_queue.cc" />
