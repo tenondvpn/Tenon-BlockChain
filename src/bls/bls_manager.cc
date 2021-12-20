@@ -452,6 +452,7 @@ void BlsManager::CheckAggSignValid(
         }
 
         if (finish_item->all_common_public_keys[i] != common_pk) {
+            BLS_DEBUG("common public key invalid.");
             continue;
         }
 

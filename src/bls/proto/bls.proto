@@ -34,6 +34,10 @@ message SwapSecKeyReq {
     optional uint32 sec_key_len = 2;
 }
 
+message SwapSecKeyRes {
+    optional uint32 index = 1;
+}
+
 message AgainstParticipant {
     optional uint32 against_index = 1;
 }
@@ -53,8 +57,9 @@ message BlsMessage {
     optional AgainstParticipant against_req = 3;
     optional FinishBroadcast finish_req = 4;
     optional VerifyVecBrdRes verify_res = 5;
-    optional uint32 index = 6;
-    optional bytes sign_ch = 7;
-	optional bytes sign_res = 8;
-    optional uint64 elect_height = 9;
+    optional SwapSecKeyRes swapkey_res = 6;
+    optional uint32 index = 7;
+    optional bytes sign_ch = 8;
+	optional bytes sign_res = 9;
+    optional uint64 elect_height = 10;
 }

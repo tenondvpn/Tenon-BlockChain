@@ -68,6 +68,9 @@ private:
     void HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
+    void HandleSwapSecKeyRes(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg);
     void HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
@@ -85,7 +88,9 @@ private:
     void DumpContribution();
     void DumpLocalPrivateKey();
     void SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port);
+    void SendSwapkeyResponse(const std::string& from_ip, uint16_t from_port, uint32_t local_index);
     void BroadcastFinish(const common::Bitmap& bitmap);
+    void TimerToSwapKey();
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
@@ -119,6 +124,8 @@ private:
     uint32_t max_finish_count_{ 0 };
     std::unordered_set<uint32_t> valid_swapkey_set_;
     std::mutex mutex_;
+    bool swapkey_valid_{ false };
+    bool valid_swaped_keys_[common::kEachShardMaxNodeCount];
 
 #ifdef TENON_UNITTEST
     transport::protobuf::Header ver_brd_msg_;

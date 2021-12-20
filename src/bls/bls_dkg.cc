@@ -48,6 +48,7 @@ void BlsDkg::OnNewElectionBlock(
         return;
     }
 
+    memset(valid_swaped_keys_, 0, sizeof(valid_swaped_keys_));
     finished_ = false;
     // destroy old timer
     dkg_verify_brd_timer_.Destroy();
@@ -86,12 +87,13 @@ void BlsDkg::OnNewElectionBlock(
 
     auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
     local_offset_us_ = each_member_offset_us * local_member_index_;
+    swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
         std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
         kDkgSwapSecKeyBeginUs + local_offset_us_,
-        std::bind(&BlsDkg::SwapSecKey, this));
+        std::bind(&BlsDkg::TimerToSwapKey, this));
     dkg_finish_timer_.CutOff(
         kDkgFinishBeginUs + local_offset_us_,
         std::bind(&BlsDkg::Finish, this));
@@ -151,6 +153,11 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         BLS_DEBUG("HandleSwapSecKey new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
+    if (bls_msg.has_swap_res()) {
+        HandleSwapSecKeyRes(header, bls_msg);
+        BLS_DEBUG("HandleSwapSecKeyRes new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+    }
+
     if (bls_msg.has_against_req()) {
         HandleAgainstParticipant(header, bls_msg);
         BLS_DEBUG("HandleAgainstParticipant new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
@@ -162,6 +169,24 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
+}
+
+void BlsDkg::HandleSwapSecKeyRes(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+    if (members_ == nullptr ||
+            members_->size() <= bls_msg.index() ||
+            members_->size() <= bls_msg.swap_res().index()) {
+        assert(false);
+        return;
+    }
+
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
+        return;
+    }
+
+    valid_swaped_keys_[bls_msg.swap_res().index()] = true;
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {
@@ -190,6 +215,8 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
         for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
             *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i));
         }
+    } else if (bls_msg.has_verify_res()) {
+        *content_to_hash = std::to_string(bls_msg.swapkey_res().index());
     }
 
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
@@ -328,6 +355,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    SendSwapkeyResponse(header.from_ip(), header.from_port());
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -370,6 +398,26 @@ void BlsDkg::HandleSwapSecKey(
     ++valid_sec_key_count_;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
+}
+
+void BlsDkg::SendSwapkeyResponse(
+        const std::string& from_ip,
+        uint16_t from_port,
+        uint32_t local_index) {
+    protobuf::BlsMessage bls_msg;
+    auto swapkey_res = bls_msg.mutable_swapkey_res();
+    swapkey_res->set_index(local_index);
+    std::string str_to_hash = std::to_string(local_index);
+    auto message_hash = common::Hash::keccak256(str_to_hash);
+    transport::protobuf::Header msg;
+    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
+        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+            from_ip,
+            from_port,
+            0,
+            msg);
+    }
 }
 
 void BlsDkg::HandleAgainstParticipant(
@@ -450,6 +498,17 @@ void BlsDkg::BroadcastVerfify() try {
     BLS_ERROR("catch error: %s", e.what());
 }
 
+void BlsDkg::TimerToSwapKey() {
+    if (!swapkey_valid_) {
+        return;
+    }
+
+    SwapSecKey();
+    dkg_swap_seckkey_timer_.CutOff(
+        kDkgSwapSecKeyBeginUs + local_offset_us_,
+        std::bind(&BlsDkg::TimerToSwapKey, this));
+}
+
 void BlsDkg::SwapSecKey() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
@@ -464,6 +523,10 @@ void BlsDkg::SwapSecKey() try {
     sec_swap_msgs_.clear();
 #endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
+        if (valid_swaped_keys_[i]) {
+            continue;
+        }
+
         transport::protobuf::Header msg;
         if (i == local_member_index_) {
 #ifdef TENON_UNITTEST
@@ -562,6 +625,7 @@ void BlsDkg::DumpLocalPrivateKey() {
 }
 
 void BlsDkg::Finish() try {
+    swapkey_valid_ = false;
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
