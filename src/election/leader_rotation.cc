@@ -7,7 +7,7 @@ namespace tenon {
 namespace elect {
 
 LeaderRotation::LeaderRotation() {
-    tick_.CutOff(3000000000l, std::bind(&LeaderRotation::CheckRotation, this));
+    tick_.CutOff(30000000l, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
 LeaderRotation::~LeaderRotation() {}
@@ -74,16 +74,22 @@ void LeaderRotation::CheckRotation() {
     }
 
     for (int32_t i = 0; i < should_change_leaders.size(); ++i) {
+        auto new_leader = ChooseValidLeader();
+        if (new_leader == nullptr) {
+            continue;
+        }
+
         rotation_item_[valid_idx_].pool_leader_map[i]->valid_leader = false;
         rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = -1;
         std::string src_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
-        rotation_item_[valid_idx_].pool_leader_map[i] = ChooseValidLeader();
+        rotation_item_[valid_idx_].pool_leader_map[i] = new_leader;
         rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = i;
         std::string des_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
         ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
             i, common::Encode::HexEncode(src_id).c_str(),
             common::Encode::HexEncode(des_id).c_str(),
             rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num);
+        bft::DispatchPool::Instance()->ChangeLeader(i);
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));

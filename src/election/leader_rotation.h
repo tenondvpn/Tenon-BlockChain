@@ -35,7 +35,7 @@ private:
     void CheckRotation();
     BftMemberPtr ChooseValidLeader();
 
-    static const int64_t kCheckRotationPeriod{ 300000000l };
+    static const int64_t kCheckRotationPeriod{ 3000000l };
 
     RotationItem rotation_item_[2];
     int32_t valid_idx_{ 0 };
