@@ -583,16 +583,16 @@ void BaseDht::ProcessBootstrapResponse(
     }
 
     NodePtr node = std::make_shared<Node>(
-            dht_msg.bootstrap_res().node_id(),
-            header.src_dht_key(),
-            dht_msg.bootstrap_res().nat_type(),
-            false,
-            header.from_ip(),
-            from_port,
-            dht_msg.bootstrap_res().local_ip(),
-            static_cast<uint16_t>(dht_msg.bootstrap_res().local_port()),
-            header.pubkey(),
-            dht_msg.bootstrap_res().node_tag());
+        dht_msg.bootstrap_res().node_id(),
+        header.src_dht_key(),
+        dht_msg.bootstrap_res().nat_type(),
+        false,
+        header.from_ip(),
+        from_port,
+        dht_msg.bootstrap_res().local_ip(),
+        static_cast<uint16_t>(dht_msg.bootstrap_res().local_port()),
+        header.pubkey(),
+        dht_msg.bootstrap_res().node_tag());
     node->min_svr_port = dht_msg.bootstrap_res().min_svr_port();
     node->max_svr_port = dht_msg.bootstrap_res().max_svr_port();
     node->min_route_port = dht_msg.bootstrap_res().min_route_port();
@@ -675,17 +675,14 @@ void BaseDht::ProcessRefreshNeighborsRequest(
     node->node_weight = dht_msg.refresh_neighbors_req().node_info().node_weight();
     transport::protobuf::Header msg;
     SetFrequently(msg);
-    int join_res = CheckJoin(node);
-    if (join_res == kDhtSuccess) {
-        node->join_way = kJoinFromRefreshNeigberRequest;
-        Join(node);
+    node->join_way = kJoinFromRefreshNeigberRequest;
+    Join(node);
 //         DHT_ERROR("ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
 //             node->public_ip().c_str(),
 //             node->public_port,
 //             DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
 //             common::Encode::HexEncode(node->dht_key()).c_str(),
 //             common::Encode::HexEncode(node->id()).c_str());
-    }
 //     else {
 //         DHT_ERROR("error ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
 //             node->public_ip().c_str(),
@@ -992,6 +989,7 @@ int BaseDht::CheckJoin(NodePtr& node) {
     if (uniq_id_) {
         if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
             DHT_INFO("invalid dht country. join way: %d", node->join_way);
+            assert(false);
             return kDhtKeyInvalidCountry;
         }
     }

@@ -300,7 +300,11 @@ void BlsDkg::HandleSwapSecKey(
     }
 
 #ifndef TENON_UNITTEST
-    if (dht->local_node()->dht_key() != header.des_dht_key()) {
+    dht::DhtKeyManager dht_key(
+        common::GlobalInfo::Instance()->network_id(),
+        0,
+        common::GlobalInfo::Instance()->id());
+    if (dht_key.StrKey() != header.des_dht_key()) {
         dht->SendToClosestNode(header);
         BLS_ERROR("local dht key: %s, des dht key: %s",
             common::Encode::HexEncode(dht->local_node()->dht_key()).c_str(),
