@@ -334,23 +334,6 @@ void BlsManager::HandleFinish(
     finish_item->all_public_keys[bls_msg.index()] = *pkey.getPublicKey();
     finish_item->all_bls_signs[bls_msg.index()] = sign;
     finish_item->all_common_public_keys[bls_msg.index()] = *common_pkey.getPublicKey();
-
-    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, cpk: %s, %s, %s, %s",
-        bls_msg.finish_req().network_id(),
-        bls_msg.index(),
-        bls_msg.elect_height(),
-        common::Encode::HexEncode(msg_hash).c_str(),
-        bls_msg.finish_req().bls_sign_x().c_str(),
-        bls_msg.finish_req().bls_sign_y().c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c1()).c_str());
-
     auto cpk_iter = finish_item->max_public_pk_map.find(cpk_hash);
     if (cpk_iter == finish_item->max_public_pk_map.end()) {
         finish_item->max_public_pk_map[cpk_hash] = 1;
@@ -365,6 +348,26 @@ void BlsManager::HandleFinish(
                 bls_msg.index());
         }
     }
+
+    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, "
+        "elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, "
+        "cpk: %s, %s, %s, %s, cpk_hash count: %d, t: %d",
+        bls_msg.finish_req().network_id(),
+        bls_msg.index(),
+        bls_msg.elect_height(),
+        common::Encode::HexEncode(msg_hash).c_str(),
+        bls_msg.finish_req().bls_sign_x().c_str(),
+        bls_msg.finish_req().bls_sign_y().c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c1()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c0()).c_str(),
+        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c1()).c_str(),
+        finish_item->max_public_pk_map[cpk_hash],
+        t);
 
     auto max_iter = finish_item->max_bls_members.find(msg_hash);
     if (max_iter != finish_item->max_bls_members.end()) {

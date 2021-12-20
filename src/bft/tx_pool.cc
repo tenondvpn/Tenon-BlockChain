@@ -26,7 +26,6 @@ TxPool::~TxPool() {}
 int TxPool::Init(uint32_t pool_idx) {
     pool_index_ = pool_idx;
     pool_name_ = db::kGlobalTxPoolKey + std::to_string(pool_idx);
-    last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds() + 60;
     while (true) {
         std::vector<std::string> txs;
         db::Db::Instance()->hlist(pool_name_, "", 1024, &txs);
@@ -139,7 +138,8 @@ void TxPool::ChangeLeader() {
 
 bool TxPool::ShouldChangeLeader() {
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-    if (!added_tx_map_.empty() && common::TimeUtils::TimestampSeconds() >= (last_bft_over_tm_sec_ + kChangeLeaderTimePeriodSec)) {
+    if (!added_tx_map_.empty() && common::TimeUtils::TimestampSeconds() >=
+            (last_bft_over_tm_sec_ + kChangeLeaderTimePeriodSec)) {
         return true;
     }
 
