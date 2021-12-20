@@ -1,11 +1,12 @@
 #include "dht/dht_utils.h"
 
+#include "dht/proto/dht.pb.h"
+#include "dht/dht_key.h"
 #include "openssl/aes.h"
 #include "security/crypto_utils.h"
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
 #include "security/schnorr.h"
-#include "dht/proto/dht.pb.h"
 
 namespace tenon {
 

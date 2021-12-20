@@ -702,6 +702,10 @@ int BftManager::InitBft(
 }
 
 int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
+    if (common::GlobalInfo::Instance()->id() == common::Encode::HexDecode("371324201830e133aa65d54d9686522a53f38a2e")) {
+        return kBftError;
+    }
+
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
         BFT_ERROR("bft init failed!");

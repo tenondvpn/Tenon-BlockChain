@@ -74,8 +74,8 @@ int BaseDht::Join(NodePtr& node) {
 
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
-        DHT_ERROR("CheckJoin join node failed! %s, res: %d",
-            common::Encode::HexEncode(node->id()).c_str(), res);
+//         DHT_ERROR("CheckJoin join node failed! %s, res: %d",
+//             common::Encode::HexEncode(node->id()).c_str(), res);
         return res;
     }
 
@@ -83,12 +83,12 @@ int BaseDht::Join(NodePtr& node) {
     std::unique_lock<std::mutex> lock_hash(node_map_mutex_);
     if (uniq_id_) {
         std::lock_guard<std::mutex> guard(uniq_ids_mutex_);
-        auto iter = uniq_ids_.find(node->id);
+        auto iter = uniq_ids_.find(node->id());
         if (iter != uniq_ids_.end()) {
             return true;
         }
 
-        uniq_ids_.insert(node->id);
+        uniq_ids_.insert(node->id());
     }
 
     uint32_t b_dht_size = dht_.size();
@@ -678,21 +678,21 @@ void BaseDht::ProcessRefreshNeighborsRequest(
     int join_res = CheckJoin(node);
     if (join_res == kDhtSuccess) {
         Join(node);
-        DHT_ERROR("ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
-            node->public_ip().c_str(),
-            node->public_port,
-            DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
-            common::Encode::HexEncode(node->dht_key()).c_str(),
-            common::Encode::HexEncode(node->id()).c_str());
+//         DHT_ERROR("ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
+//             node->public_ip().c_str(),
+//             node->public_port,
+//             DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+//             common::Encode::HexEncode(node->dht_key()).c_str(),
+//             common::Encode::HexEncode(node->id()).c_str());
     }
-    else {
-        DHT_ERROR("error ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
-            node->public_ip().c_str(),
-            node->public_port,
-            DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
-            common::Encode::HexEncode(node->dht_key()).c_str(),
-            common::Encode::HexEncode(node->id()).c_str());
-    }
+//     else {
+//         DHT_ERROR("error ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
+//             node->public_ip().c_str(),
+//             node->public_port,
+//             DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+//             common::Encode::HexEncode(node->dht_key()).c_str(),
+//             common::Encode::HexEncode(node->id()).c_str());
+//     }
 
     std::vector<uint64_t> bloomfilter_vec;
     for (auto i = 0; i < dht_msg.refresh_neighbors_req().bloomfilter_size(); ++i) {
@@ -960,7 +960,7 @@ bool BaseDht::NodeValid(NodePtr& node) {
 bool BaseDht::NodeJoined(NodePtr& node) {
     if (uniq_id_) {
         std::lock_guard<std::mutex> guard(uniq_ids_mutex_);
-        auto iter = uniq_ids_.find(node->id);
+        auto iter = uniq_ids_.find(node->id());
         if (iter != uniq_ids_.end()) {
             return true;
         }
@@ -985,6 +985,13 @@ bool BaseDht::NodeJoined(NodePtr& node) {
 int BaseDht::CheckJoin(NodePtr& node) {
     if (node->public_ip() == "0.0.0.0" || common::IsVlanIp(node->public_ip())) {
         return kDhtIpInvalid;
+    }
+
+    if (uniq_id_) {
+        if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
+            DHT_INFO("invalid dht country.");
+            return kDhtKeyInvalidCountry;
+        }
     }
 
     if (node->pubkey_str().empty() || node->id().empty() || node->dht_key().empty()) {
@@ -1101,12 +1108,12 @@ void BaseDht::RefreshNeighbors() {
                 close_nodes[rand_idx]->local_port + 1,
                 0,
                 msg);
-        DHT_ERROR("RefreshNeighbors: %s:%d, net: %d dht key: %s, id: %s,",
-            local_node_->public_ip().c_str(),
-            local_node_->public_port,
-            DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key()),
-            common::Encode::HexEncode(local_node_->dht_key()).c_str(),
-            common::Encode::HexEncode(local_node_->id()).c_str());
+//         DHT_ERROR("RefreshNeighbors: %s:%d, net: %d dht key: %s, id: %s,",
+//             local_node_->public_ip().c_str(),
+//             local_node_->public_port,
+//             DhtKeyManager::DhtKeyGetNetId(local_node_->dht_key()),
+//             common::Encode::HexEncode(local_node_->dht_key()).c_str(),
+//             common::Encode::HexEncode(local_node_->id()).c_str());
     }
 
     if (local_node_->client_mode) {

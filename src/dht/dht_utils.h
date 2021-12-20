@@ -40,6 +40,7 @@ enum DhtErrorCode {
     kDhtKeyHashError = 10,
     kDhtGetBucketError = 11,
     kDhtMaxNeiborsError = 12,
+    kDhtKeyInvalidCountry = 13,
 };
 
 enum BootstrapTag {
