@@ -78,6 +78,7 @@ private:
     void BroadcastVerfify();
     void SwapSecKey();
     void Finish();
+    void FinishNoLock();
     void CreateContribution();
     void CreateDkgMessage(
         const dht::NodePtr& local_node,

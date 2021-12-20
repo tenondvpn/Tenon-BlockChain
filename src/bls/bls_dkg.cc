@@ -398,7 +398,7 @@ void BlsDkg::HandleSwapSecKey(
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
     if (finish_called_) {
-        Finish();
+        FinishNoLock();
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -534,7 +534,7 @@ void BlsDkg::SwapSecKey() try {
 #endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
         if (valid_swaped_keys_[i]) {
-            std::cout << "valid_swaped_keys_: " << i << std::endl;
+            BLS_DEBUG("valid_swaped_keys_: %d", i);
             continue;
         }
 
@@ -635,8 +635,12 @@ void BlsDkg::DumpLocalPrivateKey() {
     db::Db::Instance()->Put(key, enc_data);
 }
 
-void BlsDkg::Finish() try {
+void BlsDkg::Finish() {
     std::lock_guard<std::mutex> guard(mutex_);
+    FinishNoLock();
+}
+
+void BlsDkg::FinishNoLock() try {
     if (!finish_called_) {
         finish_called_ = true;
     }
