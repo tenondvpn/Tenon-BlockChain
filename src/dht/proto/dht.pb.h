@@ -1513,164 +1513,6 @@ class BootstrapResponse : public ::google::protobuf::Message /* @@protoc_inserti
 };
 // -------------------------------------------------------------------
 
-class RefreshNeighborsRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.dht.protobuf.RefreshNeighborsRequest) */ {
- public:
-  RefreshNeighborsRequest();
-  virtual ~RefreshNeighborsRequest();
-
-  RefreshNeighborsRequest(const RefreshNeighborsRequest& from);
-
-  inline RefreshNeighborsRequest& operator=(const RefreshNeighborsRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  #if LANG_CXX11
-  RefreshNeighborsRequest(RefreshNeighborsRequest&& from) noexcept
-    : RefreshNeighborsRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline RefreshNeighborsRequest& operator=(RefreshNeighborsRequest&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-  #endif
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const RefreshNeighborsRequest& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const RefreshNeighborsRequest* internal_default_instance() {
-    return reinterpret_cast<const RefreshNeighborsRequest*>(
-               &_RefreshNeighborsRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    5;
-
-  void Swap(RefreshNeighborsRequest* other);
-  friend void swap(RefreshNeighborsRequest& a, RefreshNeighborsRequest& b) {
-    a.Swap(&b);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline RefreshNeighborsRequest* New() const final {
-    return CreateMaybeMessage<RefreshNeighborsRequest>(NULL);
-  }
-
-  RefreshNeighborsRequest* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<RefreshNeighborsRequest>(arena);
-  }
-  void CopyFrom(const ::google::protobuf::Message& from) final;
-  void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const RefreshNeighborsRequest& from);
-  void MergeFrom(const RefreshNeighborsRequest& from);
-  void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) final;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const final;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(RefreshNeighborsRequest* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated uint64 bloomfilter1 = 3;
-  int bloomfilter1_size() const;
-  void clear_bloomfilter1();
-  static const int kBloomfilter1FieldNumber = 3;
-  ::google::protobuf::uint64 bloomfilter1(int index) const;
-  void set_bloomfilter1(int index, ::google::protobuf::uint64 value);
-  void add_bloomfilter1(::google::protobuf::uint64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-      bloomfilter1() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-      mutable_bloomfilter1();
-
-  // repeated uint64 bloomfilter = 4;
-  int bloomfilter_size() const;
-  void clear_bloomfilter();
-  static const int kBloomfilterFieldNumber = 4;
-  ::google::protobuf::uint64 bloomfilter(int index) const;
-  void set_bloomfilter(int index, ::google::protobuf::uint64 value);
-  void add_bloomfilter(::google::protobuf::uint64 value);
-  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-      bloomfilter() const;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-      mutable_bloomfilter();
-
-  // optional bytes des_dht_key = 2;
-  bool has_des_dht_key() const;
-  void clear_des_dht_key();
-  static const int kDesDhtKeyFieldNumber = 2;
-  const ::std::string& des_dht_key() const;
-  void set_des_dht_key(const ::std::string& value);
-  #if LANG_CXX11
-  void set_des_dht_key(::std::string&& value);
-  #endif
-  void set_des_dht_key(const char* value);
-  void set_des_dht_key(const void* value, size_t size);
-  ::std::string* mutable_des_dht_key();
-  ::std::string* release_des_dht_key();
-  void set_allocated_des_dht_key(::std::string* des_dht_key);
-
-  // optional uint32 count = 1;
-  bool has_count() const;
-  void clear_count();
-  static const int kCountFieldNumber = 1;
-  ::google::protobuf::uint32 count() const;
-  void set_count(::google::protobuf::uint32 value);
-
-  // @@protoc_insertion_point(class_scope:tenon.dht.protobuf.RefreshNeighborsRequest)
- private:
-  void set_has_count();
-  void clear_has_count();
-  void set_has_des_dht_key();
-  void clear_has_des_dht_key();
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::HasBits<1> _has_bits_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bloomfilter1_;
-  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bloomfilter_;
-  ::google::protobuf::internal::ArenaStringPtr des_dht_key_;
-  ::google::protobuf::uint32 count_;
-  friend struct ::protobuf_dht_2eproto::TableStruct;
-};
-// -------------------------------------------------------------------
-
 class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.dht.protobuf.NodeInfo) */ {
  public:
   NodeInfo();
@@ -1713,7 +1555,7 @@ class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(
                &_NodeInfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    5;
 
   void Swap(NodeInfo* other);
   friend void swap(NodeInfo& a, NodeInfo& b) {
@@ -1961,6 +1803,197 @@ class NodeInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::uint32 node_weight_;
   ::google::protobuf::uint32 min_udp_port_;
   ::google::protobuf::uint32 max_udp_port_;
+  friend struct ::protobuf_dht_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class RefreshNeighborsRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.dht.protobuf.RefreshNeighborsRequest) */ {
+ public:
+  RefreshNeighborsRequest();
+  virtual ~RefreshNeighborsRequest();
+
+  RefreshNeighborsRequest(const RefreshNeighborsRequest& from);
+
+  inline RefreshNeighborsRequest& operator=(const RefreshNeighborsRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  RefreshNeighborsRequest(RefreshNeighborsRequest&& from) noexcept
+    : RefreshNeighborsRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline RefreshNeighborsRequest& operator=(RefreshNeighborsRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RefreshNeighborsRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const RefreshNeighborsRequest* internal_default_instance() {
+    return reinterpret_cast<const RefreshNeighborsRequest*>(
+               &_RefreshNeighborsRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  void Swap(RefreshNeighborsRequest* other);
+  friend void swap(RefreshNeighborsRequest& a, RefreshNeighborsRequest& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RefreshNeighborsRequest* New() const final {
+    return CreateMaybeMessage<RefreshNeighborsRequest>(NULL);
+  }
+
+  RefreshNeighborsRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<RefreshNeighborsRequest>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const RefreshNeighborsRequest& from);
+  void MergeFrom(const RefreshNeighborsRequest& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RefreshNeighborsRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated uint64 bloomfilter1 = 3;
+  int bloomfilter1_size() const;
+  void clear_bloomfilter1();
+  static const int kBloomfilter1FieldNumber = 3;
+  ::google::protobuf::uint64 bloomfilter1(int index) const;
+  void set_bloomfilter1(int index, ::google::protobuf::uint64 value);
+  void add_bloomfilter1(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      bloomfilter1() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_bloomfilter1();
+
+  // repeated uint64 bloomfilter = 4;
+  int bloomfilter_size() const;
+  void clear_bloomfilter();
+  static const int kBloomfilterFieldNumber = 4;
+  ::google::protobuf::uint64 bloomfilter(int index) const;
+  void set_bloomfilter(int index, ::google::protobuf::uint64 value);
+  void add_bloomfilter(::google::protobuf::uint64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      bloomfilter() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_bloomfilter();
+
+  // optional bytes des_dht_key = 2;
+  bool has_des_dht_key() const;
+  void clear_des_dht_key();
+  static const int kDesDhtKeyFieldNumber = 2;
+  const ::std::string& des_dht_key() const;
+  void set_des_dht_key(const ::std::string& value);
+  #if LANG_CXX11
+  void set_des_dht_key(::std::string&& value);
+  #endif
+  void set_des_dht_key(const char* value);
+  void set_des_dht_key(const void* value, size_t size);
+  ::std::string* mutable_des_dht_key();
+  ::std::string* release_des_dht_key();
+  void set_allocated_des_dht_key(::std::string* des_dht_key);
+
+  // optional bytes id = 15;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 15;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+  bool has_node_info() const;
+  void clear_node_info();
+  static const int kNodeInfoFieldNumber = 6;
+  private:
+  const ::tenon::dht::protobuf::NodeInfo& _internal_node_info() const;
+  public:
+  const ::tenon::dht::protobuf::NodeInfo& node_info() const;
+  ::tenon::dht::protobuf::NodeInfo* release_node_info();
+  ::tenon::dht::protobuf::NodeInfo* mutable_node_info();
+  void set_allocated_node_info(::tenon::dht::protobuf::NodeInfo* node_info);
+
+  // optional uint32 count = 1;
+  bool has_count() const;
+  void clear_count();
+  static const int kCountFieldNumber = 1;
+  ::google::protobuf::uint32 count() const;
+  void set_count(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.dht.protobuf.RefreshNeighborsRequest)
+ private:
+  void set_has_count();
+  void clear_has_count();
+  void set_has_des_dht_key();
+  void clear_has_des_dht_key();
+  void set_has_node_info();
+  void clear_has_node_info();
+  void set_has_id();
+  void clear_has_id();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bloomfilter1_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > bloomfilter_;
+  ::google::protobuf::internal::ArenaStringPtr des_dht_key_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
+  ::tenon::dht::protobuf::NodeInfo* node_info_;
+  ::google::protobuf::uint32 count_;
   friend struct ::protobuf_dht_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -5579,160 +5612,6 @@ inline void BootstrapResponse::set_allocated_node_tag(::std::string* node_tag) {
 
 // -------------------------------------------------------------------
 
-// RefreshNeighborsRequest
-
-// optional uint32 count = 1;
-inline bool RefreshNeighborsRequest::has_count() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void RefreshNeighborsRequest::set_has_count() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void RefreshNeighborsRequest::clear_has_count() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void RefreshNeighborsRequest::clear_count() {
-  count_ = 0u;
-  clear_has_count();
-}
-inline ::google::protobuf::uint32 RefreshNeighborsRequest::count() const {
-  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.count)
-  return count_;
-}
-inline void RefreshNeighborsRequest::set_count(::google::protobuf::uint32 value) {
-  set_has_count();
-  count_ = value;
-  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.count)
-}
-
-// optional bytes des_dht_key = 2;
-inline bool RefreshNeighborsRequest::has_des_dht_key() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void RefreshNeighborsRequest::set_has_des_dht_key() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void RefreshNeighborsRequest::clear_has_des_dht_key() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void RefreshNeighborsRequest::clear_des_dht_key() {
-  des_dht_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_des_dht_key();
-}
-inline const ::std::string& RefreshNeighborsRequest::des_dht_key() const {
-  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-  return des_dht_key_.GetNoArena();
-}
-inline void RefreshNeighborsRequest::set_des_dht_key(const ::std::string& value) {
-  set_has_des_dht_key();
-  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-}
-#if LANG_CXX11
-inline void RefreshNeighborsRequest::set_des_dht_key(::std::string&& value) {
-  set_has_des_dht_key();
-  des_dht_key_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-}
-#endif
-inline void RefreshNeighborsRequest::set_des_dht_key(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_des_dht_key();
-  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-}
-inline void RefreshNeighborsRequest::set_des_dht_key(const void* value, size_t size) {
-  set_has_des_dht_key();
-  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-}
-inline ::std::string* RefreshNeighborsRequest::mutable_des_dht_key() {
-  set_has_des_dht_key();
-  // @@protoc_insertion_point(field_mutable:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-  return des_dht_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* RefreshNeighborsRequest::release_des_dht_key() {
-  // @@protoc_insertion_point(field_release:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-  if (!has_des_dht_key()) {
-    return NULL;
-  }
-  clear_has_des_dht_key();
-  return des_dht_key_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void RefreshNeighborsRequest::set_allocated_des_dht_key(::std::string* des_dht_key) {
-  if (des_dht_key != NULL) {
-    set_has_des_dht_key();
-  } else {
-    clear_has_des_dht_key();
-  }
-  des_dht_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), des_dht_key);
-  // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
-}
-
-// repeated uint64 bloomfilter1 = 3;
-inline int RefreshNeighborsRequest::bloomfilter1_size() const {
-  return bloomfilter1_.size();
-}
-inline void RefreshNeighborsRequest::clear_bloomfilter1() {
-  bloomfilter1_.Clear();
-}
-inline ::google::protobuf::uint64 RefreshNeighborsRequest::bloomfilter1(int index) const {
-  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
-  return bloomfilter1_.Get(index);
-}
-inline void RefreshNeighborsRequest::set_bloomfilter1(int index, ::google::protobuf::uint64 value) {
-  bloomfilter1_.Set(index, value);
-  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
-}
-inline void RefreshNeighborsRequest::add_bloomfilter1(::google::protobuf::uint64 value) {
-  bloomfilter1_.Add(value);
-  // @@protoc_insertion_point(field_add:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-RefreshNeighborsRequest::bloomfilter1() const {
-  // @@protoc_insertion_point(field_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
-  return bloomfilter1_;
-}
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-RefreshNeighborsRequest::mutable_bloomfilter1() {
-  // @@protoc_insertion_point(field_mutable_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
-  return &bloomfilter1_;
-}
-
-// repeated uint64 bloomfilter = 4;
-inline int RefreshNeighborsRequest::bloomfilter_size() const {
-  return bloomfilter_.size();
-}
-inline void RefreshNeighborsRequest::clear_bloomfilter() {
-  bloomfilter_.Clear();
-}
-inline ::google::protobuf::uint64 RefreshNeighborsRequest::bloomfilter(int index) const {
-  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
-  return bloomfilter_.Get(index);
-}
-inline void RefreshNeighborsRequest::set_bloomfilter(int index, ::google::protobuf::uint64 value) {
-  bloomfilter_.Set(index, value);
-  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
-}
-inline void RefreshNeighborsRequest::add_bloomfilter(::google::protobuf::uint64 value) {
-  bloomfilter_.Add(value);
-  // @@protoc_insertion_point(field_add:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
-RefreshNeighborsRequest::bloomfilter() const {
-  // @@protoc_insertion_point(field_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
-  return bloomfilter_;
-}
-inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
-RefreshNeighborsRequest::mutable_bloomfilter() {
-  // @@protoc_insertion_point(field_mutable_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
-  return &bloomfilter_;
-}
-
-// -------------------------------------------------------------------
-
 // NodeInfo
 
 // optional bytes public_ip = 1;
@@ -6303,6 +6182,284 @@ inline void NodeInfo::set_allocated_node_tag(::std::string* node_tag) {
   }
   node_tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), node_tag);
   // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.NodeInfo.node_tag)
+}
+
+// -------------------------------------------------------------------
+
+// RefreshNeighborsRequest
+
+// optional uint32 count = 1;
+inline bool RefreshNeighborsRequest::has_count() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void RefreshNeighborsRequest::set_has_count() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void RefreshNeighborsRequest::clear_has_count() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void RefreshNeighborsRequest::clear_count() {
+  count_ = 0u;
+  clear_has_count();
+}
+inline ::google::protobuf::uint32 RefreshNeighborsRequest::count() const {
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.count)
+  return count_;
+}
+inline void RefreshNeighborsRequest::set_count(::google::protobuf::uint32 value) {
+  set_has_count();
+  count_ = value;
+  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.count)
+}
+
+// optional bytes des_dht_key = 2;
+inline bool RefreshNeighborsRequest::has_des_dht_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RefreshNeighborsRequest::set_has_des_dht_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RefreshNeighborsRequest::clear_has_des_dht_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RefreshNeighborsRequest::clear_des_dht_key() {
+  des_dht_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_des_dht_key();
+}
+inline const ::std::string& RefreshNeighborsRequest::des_dht_key() const {
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+  return des_dht_key_.GetNoArena();
+}
+inline void RefreshNeighborsRequest::set_des_dht_key(const ::std::string& value) {
+  set_has_des_dht_key();
+  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+}
+#if LANG_CXX11
+inline void RefreshNeighborsRequest::set_des_dht_key(::std::string&& value) {
+  set_has_des_dht_key();
+  des_dht_key_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+}
+#endif
+inline void RefreshNeighborsRequest::set_des_dht_key(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_des_dht_key();
+  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+}
+inline void RefreshNeighborsRequest::set_des_dht_key(const void* value, size_t size) {
+  set_has_des_dht_key();
+  des_dht_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+}
+inline ::std::string* RefreshNeighborsRequest::mutable_des_dht_key() {
+  set_has_des_dht_key();
+  // @@protoc_insertion_point(field_mutable:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+  return des_dht_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* RefreshNeighborsRequest::release_des_dht_key() {
+  // @@protoc_insertion_point(field_release:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+  if (!has_des_dht_key()) {
+    return NULL;
+  }
+  clear_has_des_dht_key();
+  return des_dht_key_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void RefreshNeighborsRequest::set_allocated_des_dht_key(::std::string* des_dht_key) {
+  if (des_dht_key != NULL) {
+    set_has_des_dht_key();
+  } else {
+    clear_has_des_dht_key();
+  }
+  des_dht_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), des_dht_key);
+  // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.RefreshNeighborsRequest.des_dht_key)
+}
+
+// repeated uint64 bloomfilter1 = 3;
+inline int RefreshNeighborsRequest::bloomfilter1_size() const {
+  return bloomfilter1_.size();
+}
+inline void RefreshNeighborsRequest::clear_bloomfilter1() {
+  bloomfilter1_.Clear();
+}
+inline ::google::protobuf::uint64 RefreshNeighborsRequest::bloomfilter1(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
+  return bloomfilter1_.Get(index);
+}
+inline void RefreshNeighborsRequest::set_bloomfilter1(int index, ::google::protobuf::uint64 value) {
+  bloomfilter1_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
+}
+inline void RefreshNeighborsRequest::add_bloomfilter1(::google::protobuf::uint64 value) {
+  bloomfilter1_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+RefreshNeighborsRequest::bloomfilter1() const {
+  // @@protoc_insertion_point(field_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
+  return bloomfilter1_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+RefreshNeighborsRequest::mutable_bloomfilter1() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter1)
+  return &bloomfilter1_;
+}
+
+// repeated uint64 bloomfilter = 4;
+inline int RefreshNeighborsRequest::bloomfilter_size() const {
+  return bloomfilter_.size();
+}
+inline void RefreshNeighborsRequest::clear_bloomfilter() {
+  bloomfilter_.Clear();
+}
+inline ::google::protobuf::uint64 RefreshNeighborsRequest::bloomfilter(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
+  return bloomfilter_.Get(index);
+}
+inline void RefreshNeighborsRequest::set_bloomfilter(int index, ::google::protobuf::uint64 value) {
+  bloomfilter_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
+}
+inline void RefreshNeighborsRequest::add_bloomfilter(::google::protobuf::uint64 value) {
+  bloomfilter_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+RefreshNeighborsRequest::bloomfilter() const {
+  // @@protoc_insertion_point(field_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
+  return bloomfilter_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+RefreshNeighborsRequest::mutable_bloomfilter() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.dht.protobuf.RefreshNeighborsRequest.bloomfilter)
+  return &bloomfilter_;
+}
+
+// optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+inline bool RefreshNeighborsRequest::has_node_info() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void RefreshNeighborsRequest::set_has_node_info() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void RefreshNeighborsRequest::clear_has_node_info() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void RefreshNeighborsRequest::clear_node_info() {
+  if (node_info_ != NULL) node_info_->Clear();
+  clear_has_node_info();
+}
+inline const ::tenon::dht::protobuf::NodeInfo& RefreshNeighborsRequest::_internal_node_info() const {
+  return *node_info_;
+}
+inline const ::tenon::dht::protobuf::NodeInfo& RefreshNeighborsRequest::node_info() const {
+  const ::tenon::dht::protobuf::NodeInfo* p = node_info_;
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.node_info)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::dht::protobuf::NodeInfo*>(
+      &::tenon::dht::protobuf::_NodeInfo_default_instance_);
+}
+inline ::tenon::dht::protobuf::NodeInfo* RefreshNeighborsRequest::release_node_info() {
+  // @@protoc_insertion_point(field_release:tenon.dht.protobuf.RefreshNeighborsRequest.node_info)
+  clear_has_node_info();
+  ::tenon::dht::protobuf::NodeInfo* temp = node_info_;
+  node_info_ = NULL;
+  return temp;
+}
+inline ::tenon::dht::protobuf::NodeInfo* RefreshNeighborsRequest::mutable_node_info() {
+  set_has_node_info();
+  if (node_info_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::dht::protobuf::NodeInfo>(GetArenaNoVirtual());
+    node_info_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.dht.protobuf.RefreshNeighborsRequest.node_info)
+  return node_info_;
+}
+inline void RefreshNeighborsRequest::set_allocated_node_info(::tenon::dht::protobuf::NodeInfo* node_info) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete node_info_;
+  }
+  if (node_info) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      node_info = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, node_info, submessage_arena);
+    }
+    set_has_node_info();
+  } else {
+    clear_has_node_info();
+  }
+  node_info_ = node_info;
+  // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.RefreshNeighborsRequest.node_info)
+}
+
+// optional bytes id = 15;
+inline bool RefreshNeighborsRequest::has_id() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void RefreshNeighborsRequest::set_has_id() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void RefreshNeighborsRequest::clear_has_id() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void RefreshNeighborsRequest::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& RefreshNeighborsRequest::id() const {
+  // @@protoc_insertion_point(field_get:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+  return id_.GetNoArena();
+}
+inline void RefreshNeighborsRequest::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+}
+#if LANG_CXX11
+inline void RefreshNeighborsRequest::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+}
+#endif
+inline void RefreshNeighborsRequest::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+}
+inline void RefreshNeighborsRequest::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+}
+inline ::std::string* RefreshNeighborsRequest::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* RefreshNeighborsRequest::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.dht.protobuf.RefreshNeighborsRequest.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void RefreshNeighborsRequest::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.dht.protobuf.RefreshNeighborsRequest.id)
 }
 
 // -------------------------------------------------------------------

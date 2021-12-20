@@ -25,10 +25,10 @@ extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::interna
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_HeartbeatRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_HeartbeatResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_NodeInfo;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_RefreshNeighborsRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_RelayVpnNodeInfo;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_BootstrapResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_InitMessage;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_RefreshNeighborsRequest;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_RefreshNeighborsResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_dht_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_VpnNodeInfo;
 }  // namespace protobuf_dht_2eproto
@@ -60,16 +60,16 @@ class BootstrapResponseDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<BootstrapResponse>
       _instance;
 } _BootstrapResponse_default_instance_;
-class RefreshNeighborsRequestDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<RefreshNeighborsRequest>
-      _instance;
-} _RefreshNeighborsRequest_default_instance_;
 class NodeInfoDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<NodeInfo>
       _instance;
 } _NodeInfo_default_instance_;
+class RefreshNeighborsRequestDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<RefreshNeighborsRequest>
+      _instance;
+} _RefreshNeighborsRequest_default_instance_;
 class RefreshNeighborsResponseDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<RefreshNeighborsResponse>
@@ -172,20 +172,6 @@ static void InitDefaultsBootstrapResponse() {
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsBootstrapResponse}, {
       &protobuf_dht_2eproto::scc_info_InitMessage.base,}};
 
-static void InitDefaultsRefreshNeighborsRequest() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_;
-    new (ptr) ::tenon::dht::protobuf::RefreshNeighborsRequest();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::tenon::dht::protobuf::RefreshNeighborsRequest::InitAsDefaultInstance();
-}
-
-::google::protobuf::internal::SCCInfo<0> scc_info_RefreshNeighborsRequest =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsRefreshNeighborsRequest}, {}};
-
 static void InitDefaultsNodeInfo() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -199,6 +185,21 @@ static void InitDefaultsNodeInfo() {
 
 ::google::protobuf::internal::SCCInfo<0> scc_info_NodeInfo =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsNodeInfo}, {}};
+
+static void InitDefaultsRefreshNeighborsRequest() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_;
+    new (ptr) ::tenon::dht::protobuf::RefreshNeighborsRequest();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::dht::protobuf::RefreshNeighborsRequest::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<1> scc_info_RefreshNeighborsRequest =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsRefreshNeighborsRequest}, {
+      &protobuf_dht_2eproto::scc_info_NodeInfo.base,}};
 
 static void InitDefaultsRefreshNeighborsResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -284,8 +285,8 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_VpnNodeInfo.base);
   ::google::protobuf::internal::InitSCC(&scc_info_InitMessage.base);
   ::google::protobuf::internal::InitSCC(&scc_info_BootstrapResponse.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_RefreshNeighborsRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_NodeInfo.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_RefreshNeighborsRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_RefreshNeighborsResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_HeartbeatRequest.base);
   ::google::protobuf::internal::InitSCC(&scc_info_HeartbeatResponse.base);
@@ -457,19 +458,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   15,
   16,
   3,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, count_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, des_dht_key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter_),
-  1,
-  0,
-  ~0u,
-  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::NodeInfo, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -505,6 +493,23 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   13,
   14,
   4,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, count_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, des_dht_key_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, bloomfilter_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, node_info_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsRequest, id_),
+  3,
+  0,
+  ~0u,
+  ~0u,
+  2,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsResponse, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::dht::protobuf::RefreshNeighborsResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -597,13 +602,13 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 66, 84, sizeof(::tenon::dht::protobuf::VpnNodeInfo)},
   { 97, 112, sizeof(::tenon::dht::protobuf::InitMessage)},
   { 122, 144, sizeof(::tenon::dht::protobuf::BootstrapResponse)},
-  { 161, 170, sizeof(::tenon::dht::protobuf::RefreshNeighborsRequest)},
-  { 174, 194, sizeof(::tenon::dht::protobuf::NodeInfo)},
-  { 209, 215, sizeof(::tenon::dht::protobuf::RefreshNeighborsResponse)},
-  { 216, 222, sizeof(::tenon::dht::protobuf::HeartbeatRequest)},
-  { 223, 229, sizeof(::tenon::dht::protobuf::HeartbeatResponse)},
-  { 230, 251, sizeof(::tenon::dht::protobuf::ConnectReqeust)},
-  { 267, 283, sizeof(::tenon::dht::protobuf::DhtMessage)},
+  { 161, 181, sizeof(::tenon::dht::protobuf::NodeInfo)},
+  { 196, 207, sizeof(::tenon::dht::protobuf::RefreshNeighborsRequest)},
+  { 213, 219, sizeof(::tenon::dht::protobuf::RefreshNeighborsResponse)},
+  { 220, 226, sizeof(::tenon::dht::protobuf::HeartbeatRequest)},
+  { 227, 233, sizeof(::tenon::dht::protobuf::HeartbeatResponse)},
+  { 234, 255, sizeof(::tenon::dht::protobuf::ConnectReqeust)},
+  { 271, 287, sizeof(::tenon::dht::protobuf::DhtMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -612,8 +617,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_VpnNodeInfo_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_InitMessage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_BootstrapResponse_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_NodeInfo_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_RefreshNeighborsResponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_HeartbeatRequest_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::dht::protobuf::_HeartbeatResponse_default_instance_),
@@ -685,46 +690,48 @@ void AddDescriptorsImpl() {
       "route_port\030\014 \001(\r\022\030\n\020peer_public_port\030\r \001"
       "(\005\022\023\n\013node_weight\030\016 \001(\r\022\024\n\014min_udp_port\030"
       "\017 \001(\r\022\024\n\014max_udp_port\030\020 \001(\r\022\020\n\010node_tag\030"
-      "\021 \001(\014\"h\n\027RefreshNeighborsRequest\022\r\n\005coun"
-      "t\030\001 \001(\r\022\023\n\013des_dht_key\030\002 \001(\014\022\024\n\014bloomfil"
-      "ter1\030\003 \003(\004\022\023\n\013bloomfilter\030\004 \003(\004\"\276\002\n\010Node"
-      "Info\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013public_port\030\002"
-      " \001(\005\022\020\n\010local_ip\030\003 \001(\014\022\022\n\nlocal_port\030\004 \001"
-      "(\005\022\022\n\npublic_key\030\005 \001(\014\022\020\n\010nat_type\030\006 \001(\005"
-      "\022\017\n\007dht_key\030\007 \001(\014\022\024\n\014min_svr_port\030\010 \001(\r\022"
-      "\024\n\014max_svr_port\030\t \001(\r\022\026\n\016min_route_port\030"
-      "\n \001(\r\022\026\n\016max_route_port\030\013 \001(\r\022\023\n\013node_we"
-      "ight\030\014 \001(\r\022\024\n\014min_udp_port\030\r \001(\r\022\024\n\014max_"
-      "udp_port\030\016 \001(\r\022\020\n\010node_tag\030\017 \001(\014\"G\n\030Refr"
-      "eshNeighborsResponse\022+\n\005nodes\030\001 \003(\0132\034.te"
-      "non.dht.protobuf.NodeInfo\"(\n\020HeartbeatRe"
-      "quest\022\024\n\014dht_key_hash\030\001 \001(\004\")\n\021Heartbeat"
-      "Response\022\024\n\014dht_key_hash\030\001 \001(\004\"\314\002\n\016Conne"
-      "ctReqeust\022\020\n\010local_ip\030\001 \001(\014\022\022\n\nlocal_por"
-      "t\030\002 \001(\005\022\021\n\tpublic_ip\030\003 \001(\014\022\023\n\013public_por"
-      "t\030\004 \001(\005\022\020\n\010nat_type\030\005 \001(\005\022\n\n\002id\030\006 \001(\014\022\017\n"
-      "\007dht_key\030\007 \001(\014\022\016\n\006direct\030\010 \001(\010\022\024\n\014min_sv"
-      "r_port\030\t \001(\r\022\024\n\014max_svr_port\030\n \001(\r\022\026\n\016mi"
-      "n_route_port\030\013 \001(\r\022\026\n\016max_route_port\030\014 \001"
-      "(\r\022\023\n\013node_weight\030\r \001(\r\022\024\n\014min_udp_port\030"
-      "\016 \001(\r\022\024\n\014max_udp_port\030\017 \001(\r\022\020\n\010node_tag\030"
-      "\020 \001(\014\"\232\004\n\nDhtMessage\022;\n\rbootstrap_req\030\001 "
-      "\001(\0132$.tenon.dht.protobuf.BootstrapReques"
-      "t\022<\n\rbootstrap_res\030\002 \001(\0132%.tenon.dht.pro"
-      "tobuf.BootstrapResponse\022J\n\025refresh_neigh"
-      "bors_req\030\003 \001(\0132+.tenon.dht.protobuf.Refr"
-      "eshNeighborsRequest\022K\n\025refresh_neighbors"
-      "_res\030\004 \001(\0132,.tenon.dht.protobuf.RefreshN"
-      "eighborsResponse\0227\n\013connect_req\030\005 \001(\0132\"."
-      "tenon.dht.protobuf.ConnectReqeust\022;\n\rhea"
-      "rtbeat_req\030\006 \001(\0132$.tenon.dht.protobuf.He"
-      "artbeatRequest\022<\n\rheartbeat_res\030\007 \001(\0132%."
-      "tenon.dht.protobuf.HeartbeatResponse\022\020\n\010"
-      "networks\030\010 \003(\r\022\020\n\010enc_data\030\t \001(\014\022\017\n\007sign"
-      "_ch\030\n \001(\014\022\017\n\007sign_re\030\013 \001(\014"
+      "\021 \001(\014\"\276\002\n\010NodeInfo\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n"
+      "\013public_port\030\002 \001(\005\022\020\n\010local_ip\030\003 \001(\014\022\022\n\n"
+      "local_port\030\004 \001(\005\022\022\n\npublic_key\030\005 \001(\014\022\020\n\010"
+      "nat_type\030\006 \001(\005\022\017\n\007dht_key\030\007 \001(\014\022\024\n\014min_s"
+      "vr_port\030\010 \001(\r\022\024\n\014max_svr_port\030\t \001(\r\022\026\n\016m"
+      "in_route_port\030\n \001(\r\022\026\n\016max_route_port\030\013 "
+      "\001(\r\022\023\n\013node_weight\030\014 \001(\r\022\024\n\014min_udp_port"
+      "\030\r \001(\r\022\024\n\014max_udp_port\030\016 \001(\r\022\020\n\010node_tag"
+      "\030\017 \001(\014\"\245\001\n\027RefreshNeighborsRequest\022\r\n\005co"
+      "unt\030\001 \001(\r\022\023\n\013des_dht_key\030\002 \001(\014\022\024\n\014bloomf"
+      "ilter1\030\003 \003(\004\022\023\n\013bloomfilter\030\004 \003(\004\022/\n\tnod"
+      "e_info\030\006 \001(\0132\034.tenon.dht.protobuf.NodeIn"
+      "fo\022\n\n\002id\030\017 \001(\014\"G\n\030RefreshNeighborsRespon"
+      "se\022+\n\005nodes\030\001 \003(\0132\034.tenon.dht.protobuf.N"
+      "odeInfo\"(\n\020HeartbeatRequest\022\024\n\014dht_key_h"
+      "ash\030\001 \001(\004\")\n\021HeartbeatResponse\022\024\n\014dht_ke"
+      "y_hash\030\001 \001(\004\"\314\002\n\016ConnectReqeust\022\020\n\010local"
+      "_ip\030\001 \001(\014\022\022\n\nlocal_port\030\002 \001(\005\022\021\n\tpublic_"
+      "ip\030\003 \001(\014\022\023\n\013public_port\030\004 \001(\005\022\020\n\010nat_typ"
+      "e\030\005 \001(\005\022\n\n\002id\030\006 \001(\014\022\017\n\007dht_key\030\007 \001(\014\022\016\n\006"
+      "direct\030\010 \001(\010\022\024\n\014min_svr_port\030\t \001(\r\022\024\n\014ma"
+      "x_svr_port\030\n \001(\r\022\026\n\016min_route_port\030\013 \001(\r"
+      "\022\026\n\016max_route_port\030\014 \001(\r\022\023\n\013node_weight\030"
+      "\r \001(\r\022\024\n\014min_udp_port\030\016 \001(\r\022\024\n\014max_udp_p"
+      "ort\030\017 \001(\r\022\020\n\010node_tag\030\020 \001(\014\"\232\004\n\nDhtMessa"
+      "ge\022;\n\rbootstrap_req\030\001 \001(\0132$.tenon.dht.pr"
+      "otobuf.BootstrapRequest\022<\n\rbootstrap_res"
+      "\030\002 \001(\0132%.tenon.dht.protobuf.BootstrapRes"
+      "ponse\022J\n\025refresh_neighbors_req\030\003 \001(\0132+.t"
+      "enon.dht.protobuf.RefreshNeighborsReques"
+      "t\022K\n\025refresh_neighbors_res\030\004 \001(\0132,.tenon"
+      ".dht.protobuf.RefreshNeighborsResponse\0227"
+      "\n\013connect_req\030\005 \001(\0132\".tenon.dht.protobuf"
+      ".ConnectReqeust\022;\n\rheartbeat_req\030\006 \001(\0132$"
+      ".tenon.dht.protobuf.HeartbeatRequest\022<\n\r"
+      "heartbeat_res\030\007 \001(\0132%.tenon.dht.protobuf"
+      ".HeartbeatResponse\022\020\n\010networks\030\010 \003(\r\022\020\n\010"
+      "enc_data\030\t \001(\014\022\017\n\007sign_ch\030\n \001(\014\022\017\n\007sign_"
+      "re\030\013 \001(\014"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 3186);
+      descriptor, 3248);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "dht.proto", &protobuf_RegisterTypes);
 }
@@ -4640,375 +4647,6 @@ void BootstrapResponse::InternalSwap(BootstrapResponse* other) {
 
 // ===================================================================
 
-void RefreshNeighborsRequest::InitAsDefaultInstance() {
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int RefreshNeighborsRequest::kCountFieldNumber;
-const int RefreshNeighborsRequest::kDesDhtKeyFieldNumber;
-const int RefreshNeighborsRequest::kBloomfilter1FieldNumber;
-const int RefreshNeighborsRequest::kBloomfilterFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-RefreshNeighborsRequest::RefreshNeighborsRequest()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_dht_2eproto::scc_info_RefreshNeighborsRequest.base);
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
-}
-RefreshNeighborsRequest::RefreshNeighborsRequest(const RefreshNeighborsRequest& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      bloomfilter1_(from.bloomfilter1_),
-      bloomfilter_(from.bloomfilter_) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  des_dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_des_dht_key()) {
-    des_dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.des_dht_key_);
-  }
-  count_ = from.count_;
-  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
-}
-
-void RefreshNeighborsRequest::SharedCtor() {
-  des_dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  count_ = 0u;
-}
-
-RefreshNeighborsRequest::~RefreshNeighborsRequest() {
-  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.RefreshNeighborsRequest)
-  SharedDtor();
-}
-
-void RefreshNeighborsRequest::SharedDtor() {
-  des_dht_key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-
-void RefreshNeighborsRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const ::google::protobuf::Descriptor* RefreshNeighborsRequest::descriptor() {
-  ::protobuf_dht_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_dht_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const RefreshNeighborsRequest& RefreshNeighborsRequest::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_dht_2eproto::scc_info_RefreshNeighborsRequest.base);
-  return *internal_default_instance();
-}
-
-
-void RefreshNeighborsRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  bloomfilter1_.Clear();
-  bloomfilter_.Clear();
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    des_dht_key_.ClearNonDefaultToEmptyNoArena();
-  }
-  count_ = 0u;
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
-}
-
-bool RefreshNeighborsRequest::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 count = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          set_has_count();
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &count_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional bytes des_dht_key = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_des_dht_key()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // repeated uint64 bloomfilter1 = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 24u, input, this->mutable_bloomfilter1())));
-        } else if (
-            static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, this->mutable_bloomfilter1())));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // repeated uint64 bloomfilter = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 1, 32u, input, this->mutable_bloomfilter())));
-        } else if (
-            static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, this->mutable_bloomfilter())));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.RefreshNeighborsRequest)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.RefreshNeighborsRequest)
-  return false;
-#undef DO_
-}
-
-void RefreshNeighborsRequest::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // optional uint32 count = 1;
-  if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->count(), output);
-  }
-
-  // optional bytes des_dht_key = 2;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->des_dht_key(), output);
-  }
-
-  // repeated uint64 bloomfilter1 = 3;
-  for (int i = 0, n = this->bloomfilter1_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
-      3, this->bloomfilter1(i), output);
-  }
-
-  // repeated uint64 bloomfilter = 4;
-  for (int i = 0, n = this->bloomfilter_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
-      4, this->bloomfilter(i), output);
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        _internal_metadata_.unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.RefreshNeighborsRequest)
-}
-
-::google::protobuf::uint8* RefreshNeighborsRequest::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // optional uint32 count = 1;
-  if (cached_has_bits & 0x00000002u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->count(), target);
-  }
-
-  // optional bytes des_dht_key = 2;
-  if (cached_has_bits & 0x00000001u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->des_dht_key(), target);
-  }
-
-  // repeated uint64 bloomfilter1 = 3;
-  target = ::google::protobuf::internal::WireFormatLite::
-    WriteUInt64ToArray(3, this->bloomfilter1_, target);
-
-  // repeated uint64 bloomfilter = 4;
-  target = ::google::protobuf::internal::WireFormatLite::
-    WriteUInt64ToArray(4, this->bloomfilter_, target);
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.RefreshNeighborsRequest)
-  return target;
-}
-
-size_t RefreshNeighborsRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  size_t total_size = 0;
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        _internal_metadata_.unknown_fields());
-  }
-  // repeated uint64 bloomfilter1 = 3;
-  {
-    size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      UInt64Size(this->bloomfilter1_);
-    total_size += 1 *
-                  ::google::protobuf::internal::FromIntSize(this->bloomfilter1_size());
-    total_size += data_size;
-  }
-
-  // repeated uint64 bloomfilter = 4;
-  {
-    size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      UInt64Size(this->bloomfilter_);
-    total_size += 1 *
-                  ::google::protobuf::internal::FromIntSize(this->bloomfilter_size());
-    total_size += data_size;
-  }
-
-  if (_has_bits_[0 / 32] & 3u) {
-    // optional bytes des_dht_key = 2;
-    if (has_des_dht_key()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->des_dht_key());
-    }
-
-    // optional uint32 count = 1;
-    if (has_count()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->count());
-    }
-
-  }
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-void RefreshNeighborsRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  const RefreshNeighborsRequest* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const RefreshNeighborsRequest>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.RefreshNeighborsRequest)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.RefreshNeighborsRequest)
-    MergeFrom(*source);
-  }
-}
-
-void RefreshNeighborsRequest::MergeFrom(const RefreshNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  bloomfilter1_.MergeFrom(from.bloomfilter1_);
-  bloomfilter_.MergeFrom(from.bloomfilter_);
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      set_has_des_dht_key();
-      des_dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.des_dht_key_);
-    }
-    if (cached_has_bits & 0x00000002u) {
-      count_ = from.count_;
-    }
-    _has_bits_[0] |= cached_has_bits;
-  }
-}
-
-void RefreshNeighborsRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RefreshNeighborsRequest::CopyFrom(const RefreshNeighborsRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RefreshNeighborsRequest::IsInitialized() const {
-  return true;
-}
-
-void RefreshNeighborsRequest::Swap(RefreshNeighborsRequest* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void RefreshNeighborsRequest::InternalSwap(RefreshNeighborsRequest* other) {
-  using std::swap;
-  bloomfilter1_.InternalSwap(&other->bloomfilter1_);
-  bloomfilter_.InternalSwap(&other->bloomfilter_);
-  des_dht_key_.Swap(&other->des_dht_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(count_, other->count_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-}
-
-::google::protobuf::Metadata RefreshNeighborsRequest::GetMetadata() const {
-  protobuf_dht_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_dht_2eproto::file_level_metadata[kIndexInFileMessages];
-}
-
-
-// ===================================================================
-
 void NodeInfo::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -5821,6 +5459,476 @@ void NodeInfo::InternalSwap(NodeInfo* other) {
 }
 
 ::google::protobuf::Metadata NodeInfo::GetMetadata() const {
+  protobuf_dht_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_dht_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void RefreshNeighborsRequest::InitAsDefaultInstance() {
+  ::tenon::dht::protobuf::_RefreshNeighborsRequest_default_instance_._instance.get_mutable()->node_info_ = const_cast< ::tenon::dht::protobuf::NodeInfo*>(
+      ::tenon::dht::protobuf::NodeInfo::internal_default_instance());
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int RefreshNeighborsRequest::kCountFieldNumber;
+const int RefreshNeighborsRequest::kDesDhtKeyFieldNumber;
+const int RefreshNeighborsRequest::kBloomfilter1FieldNumber;
+const int RefreshNeighborsRequest::kBloomfilterFieldNumber;
+const int RefreshNeighborsRequest::kNodeInfoFieldNumber;
+const int RefreshNeighborsRequest::kIdFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+RefreshNeighborsRequest::RefreshNeighborsRequest()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_dht_2eproto::scc_info_RefreshNeighborsRequest.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
+}
+RefreshNeighborsRequest::RefreshNeighborsRequest(const RefreshNeighborsRequest& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_),
+      bloomfilter1_(from.bloomfilter1_),
+      bloomfilter_(from.bloomfilter_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  des_dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_des_dht_key()) {
+    des_dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.des_dht_key_);
+  }
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_id()) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  if (from.has_node_info()) {
+    node_info_ = new ::tenon::dht::protobuf::NodeInfo(*from.node_info_);
+  } else {
+    node_info_ = NULL;
+  }
+  count_ = from.count_;
+  // @@protoc_insertion_point(copy_constructor:tenon.dht.protobuf.RefreshNeighborsRequest)
+}
+
+void RefreshNeighborsRequest::SharedCtor() {
+  des_dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&node_info_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&count_) -
+      reinterpret_cast<char*>(&node_info_)) + sizeof(count_));
+}
+
+RefreshNeighborsRequest::~RefreshNeighborsRequest() {
+  // @@protoc_insertion_point(destructor:tenon.dht.protobuf.RefreshNeighborsRequest)
+  SharedDtor();
+}
+
+void RefreshNeighborsRequest::SharedDtor() {
+  des_dht_key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != internal_default_instance()) delete node_info_;
+}
+
+void RefreshNeighborsRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* RefreshNeighborsRequest::descriptor() {
+  ::protobuf_dht_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_dht_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const RefreshNeighborsRequest& RefreshNeighborsRequest::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_dht_2eproto::scc_info_RefreshNeighborsRequest.base);
+  return *internal_default_instance();
+}
+
+
+void RefreshNeighborsRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  bloomfilter1_.Clear();
+  bloomfilter_.Clear();
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 7u) {
+    if (cached_has_bits & 0x00000001u) {
+      des_dht_key_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      id_.ClearNonDefaultToEmptyNoArena();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(node_info_ != NULL);
+      node_info_->Clear();
+    }
+  }
+  count_ = 0u;
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool RefreshNeighborsRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 count = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          set_has_count();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &count_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes des_dht_key = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_des_dht_key()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated uint64 bloomfilter1 = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 24u, input, this->mutable_bloomfilter1())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_bloomfilter1())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated uint64 bloomfilter = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 32u, input, this->mutable_bloomfilter())));
+        } else if (
+            static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_bloomfilter())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_node_info()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes id = 15;
+      case 15: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(122u /* 122 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.dht.protobuf.RefreshNeighborsRequest)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.dht.protobuf.RefreshNeighborsRequest)
+  return false;
+#undef DO_
+}
+
+void RefreshNeighborsRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 count = 1;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->count(), output);
+  }
+
+  // optional bytes des_dht_key = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->des_dht_key(), output);
+  }
+
+  // repeated uint64 bloomfilter1 = 3;
+  for (int i = 0, n = this->bloomfilter1_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      3, this->bloomfilter1(i), output);
+  }
+
+  // repeated uint64 bloomfilter = 4;
+  for (int i = 0, n = this->bloomfilter_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(
+      4, this->bloomfilter(i), output);
+  }
+
+  // optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->_internal_node_info(), output);
+  }
+
+  // optional bytes id = 15;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      15, this->id(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.dht.protobuf.RefreshNeighborsRequest)
+}
+
+::google::protobuf::uint8* RefreshNeighborsRequest::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional uint32 count = 1;
+  if (cached_has_bits & 0x00000008u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->count(), target);
+  }
+
+  // optional bytes des_dht_key = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->des_dht_key(), target);
+  }
+
+  // repeated uint64 bloomfilter1 = 3;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(3, this->bloomfilter1_, target);
+
+  // repeated uint64 bloomfilter = 4;
+  target = ::google::protobuf::internal::WireFormatLite::
+    WriteUInt64ToArray(4, this->bloomfilter_, target);
+
+  // optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        6, this->_internal_node_info(), deterministic, target);
+  }
+
+  // optional bytes id = 15;
+  if (cached_has_bits & 0x00000002u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        15, this->id(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.dht.protobuf.RefreshNeighborsRequest)
+  return target;
+}
+
+size_t RefreshNeighborsRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  // repeated uint64 bloomfilter1 = 3;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->bloomfilter1_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->bloomfilter1_size());
+    total_size += data_size;
+  }
+
+  // repeated uint64 bloomfilter = 4;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt64Size(this->bloomfilter_);
+    total_size += 1 *
+                  ::google::protobuf::internal::FromIntSize(this->bloomfilter_size());
+    total_size += data_size;
+  }
+
+  if (_has_bits_[0 / 32] & 15u) {
+    // optional bytes des_dht_key = 2;
+    if (has_des_dht_key()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->des_dht_key());
+    }
+
+    // optional bytes id = 15;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->id());
+    }
+
+    // optional .tenon.dht.protobuf.NodeInfo node_info = 6;
+    if (has_node_info()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *node_info_);
+    }
+
+    // optional uint32 count = 1;
+    if (has_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->count());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void RefreshNeighborsRequest::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const RefreshNeighborsRequest* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const RefreshNeighborsRequest>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.dht.protobuf.RefreshNeighborsRequest)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.dht.protobuf.RefreshNeighborsRequest)
+    MergeFrom(*source);
+  }
+}
+
+void RefreshNeighborsRequest::MergeFrom(const RefreshNeighborsRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  bloomfilter1_.MergeFrom(from.bloomfilter1_);
+  bloomfilter_.MergeFrom(from.bloomfilter_);
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 15u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_des_dht_key();
+      des_dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.des_dht_key_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      set_has_id();
+      id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+    }
+    if (cached_has_bits & 0x00000004u) {
+      mutable_node_info()->::tenon::dht::protobuf::NodeInfo::MergeFrom(from.node_info());
+    }
+    if (cached_has_bits & 0x00000008u) {
+      count_ = from.count_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void RefreshNeighborsRequest::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void RefreshNeighborsRequest::CopyFrom(const RefreshNeighborsRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.dht.protobuf.RefreshNeighborsRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool RefreshNeighborsRequest::IsInitialized() const {
+  return true;
+}
+
+void RefreshNeighborsRequest::Swap(RefreshNeighborsRequest* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void RefreshNeighborsRequest::InternalSwap(RefreshNeighborsRequest* other) {
+  using std::swap;
+  bloomfilter1_.InternalSwap(&other->bloomfilter1_);
+  bloomfilter_.InternalSwap(&other->bloomfilter_);
+  des_dht_key_.Swap(&other->des_dht_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(node_info_, other->node_info_);
+  swap(count_, other->count_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata RefreshNeighborsRequest::GetMetadata() const {
   protobuf_dht_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_dht_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -8124,11 +8232,11 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::InitMessag
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::BootstrapResponse* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::BootstrapResponse >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::dht::protobuf::BootstrapResponse >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RefreshNeighborsRequest* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RefreshNeighborsRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::tenon::dht::protobuf::RefreshNeighborsRequest >(arena);
-}
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::NodeInfo* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::NodeInfo >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::dht::protobuf::NodeInfo >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RefreshNeighborsRequest* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RefreshNeighborsRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::dht::protobuf::RefreshNeighborsRequest >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::dht::protobuf::RefreshNeighborsResponse* Arena::CreateMaybeMessage< ::tenon::dht::protobuf::RefreshNeighborsResponse >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::dht::protobuf::RefreshNeighborsResponse >(arena);
