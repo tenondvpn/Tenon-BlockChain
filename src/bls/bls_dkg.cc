@@ -49,6 +49,7 @@ void BlsDkg::OnNewElectionBlock(
     }
 
     memset(valid_swaped_keys_, 0, sizeof(valid_swaped_keys_));
+    memset(has_swaped_keys_, 0, sizeof(has_swaped_keys_));
     finished_ = false;
     finish_called_ = false;
     // destroy old timer
@@ -216,7 +217,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
         for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
             *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i));
         }
-    } else if (bls_msg.has_verify_res()) {
+    } else if (bls_msg.has_swapkey_res()) {
         *content_to_hash = std::to_string(bls_msg.swapkey_res().index());
     }
 
@@ -356,6 +357,11 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    if (has_swaped_keys_[bls_msg.index()]) {
+        return;
+    }
+
+    has_swaped_keys_[bls_msg.index()] = true;
     SendSwapkeyResponse(header.from_ip(), header.from_port(), local_member_index_);
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
