@@ -117,6 +117,13 @@ int UniversalManager::CreateNetwork(
         security::Schnorr::Instance()->str_pubkey(),
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
+    if (local_node->first_node) {
+        auto local_dht_key = DhtKeyManager(local_node->dht_key());
+        local_dht_key.SetCountryId(common::GlobalInfo::Instance()->country());
+        local_node->set_dht_key(local_dht_key.StrKey());
+        local_node->dht_key_hash = common::Hash::Hash64(local_node_->dht_key());
+    }
+
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);
     if (network_id == network::kUniversalNetworkId) {
         dht_ptr->SetNotUniqId();

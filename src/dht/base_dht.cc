@@ -66,8 +66,8 @@ int BaseDht::Destroy() {
 int BaseDht::Join(NodePtr& node) {
     if (node_join_cb_ != nullptr) {
         if (node_join_cb_(node) != kDhtSuccess) {
-            DHT_ERROR("check callback join node failed! %s",
-                common::Encode::HexEncode(node->id()).c_str());
+            DHT_ERROR("check callback join node failed! %s, %d",
+                common::Encode::HexEncode(node->id()).c_str(), node->join_way);
             return kDhtError;
         }
     }
@@ -989,7 +989,7 @@ int BaseDht::CheckJoin(NodePtr& node) {
 
     if (uniq_id_) {
         if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
-            DHT_INFO("invalid dht country.");
+            DHT_INFO("invalid dht country. join way: %d", node->join_way);
             return kDhtKeyInvalidCountry;
         }
     }
