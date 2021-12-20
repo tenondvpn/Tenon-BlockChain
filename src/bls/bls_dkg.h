@@ -99,6 +99,7 @@ private:
     static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
     static const int64_t kDkgSwapSecKeyBeginUs = kDkgWorkPeriodUs + kDkgOffsetUs;
     static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+    static const int64_t kSwapkeyPeriod = 3000000l;
 
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };

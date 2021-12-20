@@ -91,7 +91,7 @@ void LeaderRotation::CheckRotation() {
             rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num);
         for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
             if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
-                bft::DispatchPool::Instance()->ChangeLeader(i);
+                bft::DispatchPool::Instance()->ChangeLeader(j);
             }
         }
     }
