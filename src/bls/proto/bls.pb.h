@@ -38,7 +38,7 @@ namespace protobuf_bls_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[8];
+  static const ::google::protobuf::internal::ParseTable schema[9];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -63,6 +63,9 @@ extern FinishBroadcastDefaultTypeInternal _FinishBroadcast_default_instance_;
 class SwapSecKeyReq;
 class SwapSecKeyReqDefaultTypeInternal;
 extern SwapSecKeyReqDefaultTypeInternal _SwapSecKeyReq_default_instance_;
+class SwapSecKeyRes;
+class SwapSecKeyResDefaultTypeInternal;
+extern SwapSecKeyResDefaultTypeInternal _SwapSecKeyRes_default_instance_;
 class VerifyVecBrdReq;
 class VerifyVecBrdReqDefaultTypeInternal;
 extern VerifyVecBrdReqDefaultTypeInternal _VerifyVecBrdReq_default_instance_;
@@ -82,6 +85,7 @@ template<> ::tenon::bls::protobuf::BlsMessage* Arena::CreateMaybeMessage<::tenon
 template<> ::tenon::bls::protobuf::BlsPublicKey* Arena::CreateMaybeMessage<::tenon::bls::protobuf::BlsPublicKey>(Arena*);
 template<> ::tenon::bls::protobuf::FinishBroadcast* Arena::CreateMaybeMessage<::tenon::bls::protobuf::FinishBroadcast>(Arena*);
 template<> ::tenon::bls::protobuf::SwapSecKeyReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::SwapSecKeyReq>(Arena*);
+template<> ::tenon::bls::protobuf::SwapSecKeyRes* Arena::CreateMaybeMessage<::tenon::bls::protobuf::SwapSecKeyRes>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecBrdReq* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdReq>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecBrdRes* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecBrdRes>(Arena*);
 template<> ::tenon::bls::protobuf::VerifyVecItem* Arena::CreateMaybeMessage<::tenon::bls::protobuf::VerifyVecItem>(Arena*);
@@ -890,6 +894,120 @@ class SwapSecKeyReq : public ::google::protobuf::Message /* @@protoc_insertion_p
 };
 // -------------------------------------------------------------------
 
+class SwapSecKeyRes : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.SwapSecKeyRes) */ {
+ public:
+  SwapSecKeyRes();
+  virtual ~SwapSecKeyRes();
+
+  SwapSecKeyRes(const SwapSecKeyRes& from);
+
+  inline SwapSecKeyRes& operator=(const SwapSecKeyRes& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SwapSecKeyRes(SwapSecKeyRes&& from) noexcept
+    : SwapSecKeyRes() {
+    *this = ::std::move(from);
+  }
+
+  inline SwapSecKeyRes& operator=(SwapSecKeyRes&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SwapSecKeyRes& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SwapSecKeyRes* internal_default_instance() {
+    return reinterpret_cast<const SwapSecKeyRes*>(
+               &_SwapSecKeyRes_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  void Swap(SwapSecKeyRes* other);
+  friend void swap(SwapSecKeyRes& a, SwapSecKeyRes& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SwapSecKeyRes* New() const final {
+    return CreateMaybeMessage<SwapSecKeyRes>(NULL);
+  }
+
+  SwapSecKeyRes* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SwapSecKeyRes>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SwapSecKeyRes& from);
+  void MergeFrom(const SwapSecKeyRes& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SwapSecKeyRes* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 index = 1;
+  bool has_index() const;
+  void clear_index();
+  static const int kIndexFieldNumber = 1;
+  ::google::protobuf::uint32 index() const;
+  void set_index(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.SwapSecKeyRes)
+ private:
+  void set_has_index();
+  void clear_has_index();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::uint32 index_;
+  friend struct ::protobuf_bls_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class AgainstParticipant : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bls.protobuf.AgainstParticipant) */ {
  public:
   AgainstParticipant();
@@ -932,7 +1050,7 @@ class AgainstParticipant : public ::google::protobuf::Message /* @@protoc_insert
                &_AgainstParticipant_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(AgainstParticipant* other);
   friend void swap(AgainstParticipant& a, AgainstParticipant& b) {
@@ -1046,7 +1164,7 @@ class FinishBroadcast : public ::google::protobuf::Message /* @@protoc_insertion
                &_FinishBroadcast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   void Swap(FinishBroadcast* other);
   friend void swap(FinishBroadcast& a, FinishBroadcast& b) {
@@ -1239,7 +1357,7 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_BlsMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   void Swap(BlsMessage* other);
   friend void swap(BlsMessage& a, BlsMessage& b) {
@@ -1291,10 +1409,10 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
-  // optional bytes sign_ch = 7;
+  // optional bytes sign_ch = 8;
   bool has_sign_ch() const;
   void clear_sign_ch();
-  static const int kSignChFieldNumber = 7;
+  static const int kSignChFieldNumber = 8;
   const ::std::string& sign_ch() const;
   void set_sign_ch(const ::std::string& value);
   #if LANG_CXX11
@@ -1306,10 +1424,10 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_sign_ch();
   void set_allocated_sign_ch(::std::string* sign_ch);
 
-  // optional bytes sign_res = 8;
+  // optional bytes sign_res = 9;
   bool has_sign_res() const;
   void clear_sign_res();
-  static const int kSignResFieldNumber = 8;
+  static const int kSignResFieldNumber = 9;
   const ::std::string& sign_res() const;
   void set_sign_res(const ::std::string& value);
   #if LANG_CXX11
@@ -1381,17 +1499,29 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::tenon::bls::protobuf::VerifyVecBrdRes* mutable_verify_res();
   void set_allocated_verify_res(::tenon::bls::protobuf::VerifyVecBrdRes* verify_res);
 
-  // optional uint64 elect_height = 9;
+  // optional .tenon.bls.protobuf.SwapSecKeyRes swapkey_res = 6;
+  bool has_swapkey_res() const;
+  void clear_swapkey_res();
+  static const int kSwapkeyResFieldNumber = 6;
+  private:
+  const ::tenon::bls::protobuf::SwapSecKeyRes& _internal_swapkey_res() const;
+  public:
+  const ::tenon::bls::protobuf::SwapSecKeyRes& swapkey_res() const;
+  ::tenon::bls::protobuf::SwapSecKeyRes* release_swapkey_res();
+  ::tenon::bls::protobuf::SwapSecKeyRes* mutable_swapkey_res();
+  void set_allocated_swapkey_res(::tenon::bls::protobuf::SwapSecKeyRes* swapkey_res);
+
+  // optional uint64 elect_height = 10;
   bool has_elect_height() const;
   void clear_elect_height();
-  static const int kElectHeightFieldNumber = 9;
+  static const int kElectHeightFieldNumber = 10;
   ::google::protobuf::uint64 elect_height() const;
   void set_elect_height(::google::protobuf::uint64 value);
 
-  // optional uint32 index = 6;
+  // optional uint32 index = 7;
   bool has_index() const;
   void clear_index();
-  static const int kIndexFieldNumber = 6;
+  static const int kIndexFieldNumber = 7;
   ::google::protobuf::uint32 index() const;
   void set_index(::google::protobuf::uint32 value);
 
@@ -1407,6 +1537,8 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void clear_has_finish_req();
   void set_has_verify_res();
   void clear_has_verify_res();
+  void set_has_swapkey_res();
+  void clear_has_swapkey_res();
   void set_has_index();
   void clear_has_index();
   void set_has_sign_ch();
@@ -1426,6 +1558,7 @@ class BlsMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::tenon::bls::protobuf::AgainstParticipant* against_req_;
   ::tenon::bls::protobuf::FinishBroadcast* finish_req_;
   ::tenon::bls::protobuf::VerifyVecBrdRes* verify_res_;
+  ::tenon::bls::protobuf::SwapSecKeyRes* swapkey_res_;
   ::google::protobuf::uint64 elect_height_;
   ::google::protobuf::uint32 index_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
@@ -2419,6 +2552,34 @@ inline void SwapSecKeyReq::set_sec_key_len(::google::protobuf::uint32 value) {
 
 // -------------------------------------------------------------------
 
+// SwapSecKeyRes
+
+// optional uint32 index = 1;
+inline bool SwapSecKeyRes::has_index() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSecKeyRes::set_has_index() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSecKeyRes::clear_has_index() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSecKeyRes::clear_index() {
+  index_ = 0u;
+  clear_has_index();
+}
+inline ::google::protobuf::uint32 SwapSecKeyRes::index() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.SwapSecKeyRes.index)
+  return index_;
+}
+inline void SwapSecKeyRes::set_index(::google::protobuf::uint32 value) {
+  set_has_index();
+  index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.SwapSecKeyRes.index)
+}
+
+// -------------------------------------------------------------------
+
 // AgainstParticipant
 
 // optional uint32 against_index = 1;
@@ -3045,15 +3206,73 @@ inline void BlsMessage::set_allocated_verify_res(::tenon::bls::protobuf::VerifyV
   // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsMessage.verify_res)
 }
 
-// optional uint32 index = 6;
+// optional .tenon.bls.protobuf.SwapSecKeyRes swapkey_res = 6;
+inline bool BlsMessage::has_swapkey_res() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void BlsMessage::set_has_swapkey_res() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void BlsMessage::clear_has_swapkey_res() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void BlsMessage::clear_swapkey_res() {
+  if (swapkey_res_ != NULL) swapkey_res_->Clear();
+  clear_has_swapkey_res();
+}
+inline const ::tenon::bls::protobuf::SwapSecKeyRes& BlsMessage::_internal_swapkey_res() const {
+  return *swapkey_res_;
+}
+inline const ::tenon::bls::protobuf::SwapSecKeyRes& BlsMessage::swapkey_res() const {
+  const ::tenon::bls::protobuf::SwapSecKeyRes* p = swapkey_res_;
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.BlsMessage.swapkey_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bls::protobuf::SwapSecKeyRes*>(
+      &::tenon::bls::protobuf::_SwapSecKeyRes_default_instance_);
+}
+inline ::tenon::bls::protobuf::SwapSecKeyRes* BlsMessage::release_swapkey_res() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.BlsMessage.swapkey_res)
+  clear_has_swapkey_res();
+  ::tenon::bls::protobuf::SwapSecKeyRes* temp = swapkey_res_;
+  swapkey_res_ = NULL;
+  return temp;
+}
+inline ::tenon::bls::protobuf::SwapSecKeyRes* BlsMessage::mutable_swapkey_res() {
+  set_has_swapkey_res();
+  if (swapkey_res_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bls::protobuf::SwapSecKeyRes>(GetArenaNoVirtual());
+    swapkey_res_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.BlsMessage.swapkey_res)
+  return swapkey_res_;
+}
+inline void BlsMessage::set_allocated_swapkey_res(::tenon::bls::protobuf::SwapSecKeyRes* swapkey_res) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete swapkey_res_;
+  }
+  if (swapkey_res) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      swapkey_res = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, swapkey_res, submessage_arena);
+    }
+    set_has_swapkey_res();
+  } else {
+    clear_has_swapkey_res();
+  }
+  swapkey_res_ = swapkey_res;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsMessage.swapkey_res)
+}
+
+// optional uint32 index = 7;
 inline bool BlsMessage::has_index() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void BlsMessage::set_has_index() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void BlsMessage::clear_has_index() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void BlsMessage::clear_index() {
   index_ = 0u;
@@ -3069,7 +3288,7 @@ inline void BlsMessage::set_index(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bls.protobuf.BlsMessage.index)
 }
 
-// optional bytes sign_ch = 7;
+// optional bytes sign_ch = 8;
 inline bool BlsMessage::has_sign_ch() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3135,7 +3354,7 @@ inline void BlsMessage::set_allocated_sign_ch(::std::string* sign_ch) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsMessage.sign_ch)
 }
 
-// optional bytes sign_res = 8;
+// optional bytes sign_res = 9;
 inline bool BlsMessage::has_sign_res() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -3201,15 +3420,15 @@ inline void BlsMessage::set_allocated_sign_res(::std::string* sign_res) {
   // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.BlsMessage.sign_res)
 }
 
-// optional uint64 elect_height = 9;
+// optional uint64 elect_height = 10;
 inline bool BlsMessage::has_elect_height() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void BlsMessage::set_has_elect_height() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void BlsMessage::clear_has_elect_height() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void BlsMessage::clear_elect_height() {
   elect_height_ = GOOGLE_ULONGLONG(0);
@@ -3228,6 +3447,8 @@ inline void BlsMessage::set_elect_height(::google::protobuf::uint64 value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
