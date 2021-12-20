@@ -153,7 +153,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         BLS_DEBUG("HandleSwapSecKey new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
-    if (bls_msg.has_swap_res()) {
+    if (bls_msg.has_swapkey_res()) {
         HandleSwapSecKeyRes(header, bls_msg);
         BLS_DEBUG("HandleSwapSecKeyRes new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
@@ -176,7 +176,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         const protobuf::BlsMessage& bls_msg) {
     if (members_ == nullptr ||
             members_->size() <= bls_msg.index() ||
-            members_->size() <= bls_msg.swap_res().index()) {
+            members_->size() <= bls_msg.swapkey_res().index()) {
         assert(false);
         return;
     }
@@ -186,7 +186,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
-    valid_swaped_keys_[bls_msg.swap_res().index()] = true;
+    valid_swaped_keys_[bls_msg.swapkey_res().index()] = true;
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {
@@ -355,7 +355,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    SendSwapkeyResponse(header.from_ip(), header.from_port());
+    SendSwapkeyResponse(header.from_ip(), header.from_port(), local_member_index_);
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -404,6 +404,12 @@ void BlsDkg::SendSwapkeyResponse(
         const std::string& from_ip,
         uint16_t from_port,
         uint32_t local_index) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
     protobuf::BlsMessage bls_msg;
     auto swapkey_res = bls_msg.mutable_swapkey_res();
     swapkey_res->set_index(local_index);
