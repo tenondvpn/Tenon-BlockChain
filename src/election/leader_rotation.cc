@@ -89,7 +89,11 @@ void LeaderRotation::CheckRotation() {
             i, common::Encode::HexEncode(src_id).c_str(),
             common::Encode::HexEncode(des_id).c_str(),
             rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num);
-        bft::DispatchPool::Instance()->ChangeLeader(i);
+        for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
+            if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
+                bft::DispatchPool::Instance()->ChangeLeader(i);
+            }
+        }
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));

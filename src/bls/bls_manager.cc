@@ -237,6 +237,7 @@ bool BlsManager::IsSignValid(
     }
 
     *content_to_hash += std::string("_") + std::to_string(bls_msg.finish_req().network_id());
+    BLS_ERROR("content_to_hash: %s", (*content_to_hash).c_str());
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
     auto& pubkey = (*members)[bls_msg.index()]->pubkey;
     std::string pk_str;
@@ -463,6 +464,7 @@ void BlsManager::CheckAggSignValid(
     }
 
     if (valid_count < t) {
+        BLS_ERROR("valid_count: %d < t: %d", valid_count, t);
         return;
     }
 

@@ -621,6 +621,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
 
     msg_for_hash += std::string("_") +
         std::to_string(common::GlobalInfo::Instance()->network_id());
+    BLS_DEBUG("BroadcastFinish: %s", msg_for_hash.c_str());
     auto message_hash = common::Hash::keccak256(msg_for_hash);
     transport::protobuf::Header msg;
     auto dht = network::DhtManager::Instance()->GetDht(
