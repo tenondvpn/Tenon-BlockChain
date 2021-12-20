@@ -124,6 +124,7 @@ void DhtManager::NetworkDetection() {
             continue;
         }
 
+        node->join_way = dht::kJoinFromNetworkDetection;
         int res = (*iter)->Join(node);
         network::UniversalManager::Instance()->AddNodeToUniversal(node);
         transport::protobuf::Header msg;

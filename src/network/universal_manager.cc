@@ -122,6 +122,7 @@ int UniversalManager::CreateNetwork(
         local_dht_key.SetCountryId(common::GlobalInfo::Instance()->country());
         local_node->set_dht_key(local_dht_key.StrKey());
         local_node->dht_key_hash = common::Hash::Hash64(local_node->dht_key());
+        std::cout << "set dht country: " << common::GlobalInfo::Instance()->country() << std::endl;
     }
 
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);

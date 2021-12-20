@@ -59,7 +59,8 @@ enum NatType {
 enum NodeJoinWay : int32_t {
     kJoinFromUnknown = 0,
     kJoinFromBootstrapRes,
-    kJoinFromRefreshNeigber,
+    kJoinFromRefreshNeigberRequest,
+    kJoinFromRefreshNeigberResponse,
     kJoinFromElectBlock,
     kJoinFromNetworkDetection,
     // if root and consensus shard must check valid

@@ -677,6 +677,7 @@ void BaseDht::ProcessRefreshNeighborsRequest(
     SetFrequently(msg);
     int join_res = CheckJoin(node);
     if (join_res == kDhtSuccess) {
+        node->join_way = kJoinFromRefreshNeigberRequest;
         Join(node);
 //         DHT_ERROR("ProcessRefreshNeighborsRequest join new node public ip: %s:%d, net: %d dht key: %s, id: %s,",
 //             node->public_ip().c_str(),
@@ -793,6 +794,7 @@ void BaseDht::ProcessRefreshNeighborsResponse(
             continue;
         }
 
+        node->join_way = kJoinFromRefreshNeigberResponse;
         Join(node);
         if (DhtProto::CreateConnectRequest(
                 local_node_,
