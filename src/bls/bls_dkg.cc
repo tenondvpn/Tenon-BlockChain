@@ -50,6 +50,7 @@ void BlsDkg::OnNewElectionBlock(
 
     memset(valid_swaped_keys_, 0, sizeof(valid_swaped_keys_));
     finished_ = false;
+    finish_called_ = false;
     // destroy old timer
     dkg_verify_brd_timer_.Destroy();
     dkg_swap_seckkey_timer_.Destroy();
@@ -396,6 +397,9 @@ void BlsDkg::HandleSwapSecKey(
 
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
+    if (finish_called_) {
+        Finish();
+    }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -530,6 +534,7 @@ void BlsDkg::SwapSecKey() try {
 #endif
     for (uint32_t i = 0; i < members_->size(); ++i) {
         if (valid_swaped_keys_[i]) {
+            std::cout << "valid_swaped_keys_: " << i << std::endl;
             continue;
         }
 
@@ -631,8 +636,12 @@ void BlsDkg::DumpLocalPrivateKey() {
 }
 
 void BlsDkg::Finish() try {
-    swapkey_valid_ = false;
     std::lock_guard<std::mutex> guard(mutex_);
+    if (!finish_called_) {
+        finish_called_ = true;
+    }
+
+    swapkey_valid_ = false;
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {

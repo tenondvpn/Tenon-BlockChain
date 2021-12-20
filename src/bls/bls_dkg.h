@@ -126,6 +126,7 @@ private:
     std::mutex mutex_;
     bool swapkey_valid_{ false };
     bool valid_swaped_keys_[common::kEachShardMaxNodeCount];
+    bool finish_called_{ false };
 
 #ifdef TENON_UNITTEST
     transport::protobuf::Header ver_brd_msg_;
