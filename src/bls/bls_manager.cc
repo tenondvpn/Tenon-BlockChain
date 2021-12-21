@@ -352,13 +352,13 @@ void BlsManager::HandleFinish(
         }
     }
 
-    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, id: %s, "
-        "elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, "
+    BLS_INFO("HandleFinish new election block network id: %d, elect_height: %lu, finish index: %d, id: %s, "
+        "hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, "
         "cpk: %s, %s, %s, %s, cpk_hash count: %d, t: %d",
         bls_msg.finish_req().network_id(),
+        bls_msg.elect_height(),
         bls_msg.index(),
         common::Encode::HexEncode((*members)[bls_msg.index()]->id).c_str(),
-        bls_msg.elect_height(),
         common::Encode::HexEncode(msg_hash).c_str(),
         bls_msg.finish_req().bls_sign_x().c_str(),
         bls_msg.finish_req().bls_sign_y().c_str(),
@@ -437,6 +437,8 @@ void BlsManager::CheckAggSignValid(
                 tmp_idx_vec)) {
             finish_item->all_common_public_keys[member_idx] = libff::alt_bn128_G2::zero();
             BLS_ERROR("invalid bls item index: %d", member_idx);
+        } else {
+            BLS_ERROR("valid bls item index: %d", member_idx);
         }
 
         return;
@@ -603,6 +605,8 @@ bool BlsManager::CheckAndVerifyAll(
                 finish_item->all_common_public_keys[member_idx] = libff::alt_bn128_G2::zero();
                 finish_item->all_public_keys[member_idx] == libff::alt_bn128_G2::zero();
                 BLS_ERROR("invalid bls item index: %d", member_idx);
+            } else {
+                BLS_ERROR("valid bls item index: %d", member_idx);
             }
         }
 

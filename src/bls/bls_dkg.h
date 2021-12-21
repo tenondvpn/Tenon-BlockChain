@@ -92,6 +92,7 @@ private:
     void SendSwapkeyResponse(const std::string& from_ip, uint16_t from_port, uint32_t local_index);
     void BroadcastFinish(const common::Bitmap& bitmap);
     void TimerToSwapKey();
+    void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
 
     static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
     static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
