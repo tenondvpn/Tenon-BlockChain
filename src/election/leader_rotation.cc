@@ -7,7 +7,7 @@ namespace tenon {
 namespace elect {
 
 LeaderRotation::LeaderRotation() {
-    tick_.CutOff(3000000l, std::bind(&LeaderRotation::CheckRotation, this));
+//     tick_.CutOff(3000000l, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
 LeaderRotation::~LeaderRotation() {}

@@ -350,11 +350,12 @@ void BlsManager::HandleFinish(
         }
     }
 
-    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, "
+    BLS_INFO("HandleFinish new election block network id: %d, finish index: %d, id: %s, "
         "elect_height: %lu, hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, "
         "cpk: %s, %s, %s, %s, cpk_hash count: %d, t: %d",
         bls_msg.finish_req().network_id(),
         bls_msg.index(),
+        common::Encode::HexEncode((*members)[bls_msg.index()]->id).c_str(),
         bls_msg.elect_height(),
         common::Encode::HexEncode(msg_hash).c_str(),
         bls_msg.finish_req().bls_sign_x().c_str(),
@@ -452,7 +453,17 @@ void BlsManager::CheckAggSignValid(
         }
 
         if (finish_item->all_common_public_keys[i] != common_pk) {
-            BLS_DEBUG("common public key invalid.");
+            finish_item->all_common_public_keys[i].to_affine_coordinates();
+            common_pk.to_affine_coordinates();
+            BLS_DEBUG("common public key invalid.i: %d, icpk: %s,%s,%s,%s cpk: %s,%s,%s,%s", i,
+                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c1).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c1).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
             continue;
         }
 
