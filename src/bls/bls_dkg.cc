@@ -183,6 +183,10 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
+    if (bls_msg.swapkey_res().sec_key_len() <= 0) {
+        return;
+    }
+
     std::string msg_hash = bls_msg.swapkey_res().sec_key() +
         std::to_string(bls_msg.swapkey_res().sec_key_len()) +
         std::to_string(bls_msg.swapkey_res().index());
@@ -205,7 +209,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
-    std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
+    std::string sec_key(dec_msg.substr(0, bls_msg.swapkey_res().sec_key_len()));
     if (!IsValidBigInt(sec_key)) {
         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
         assert(false);
@@ -609,6 +613,10 @@ void BlsDkg::SwapSecKey() try {
         std::string seckey;
         int32_t seckey_len = 0;
         CreateSwapKey(i, &seckey, &seckey_len);
+        if (seckey_len == 0) {
+            continue;
+        }
+
         protobuf::BlsMessage bls_msg;
         auto swap_req = bls_msg.mutable_swap_req();
         swap_req->set_sec_key(seckey);
@@ -648,10 +656,18 @@ void BlsDkg::SwapSecKey() try {
 }
 
 void BlsDkg::CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len) {
+    if (members_ == nullptr || local_member_index_ >= members_->size()) {
+        return;
+    }
+
+    if (local_src_secret_key_contribution_.size() != members_->size()) {
+        return;
+    }
+
     auto sec_key = crypto::ThresholdUtils::fieldElementToString(
-        local_src_secret_key_contribution_[i]);
+        local_src_secret_key_contribution_[member_idx]);
     *seckey = security::Crypto::Instance()->GetEncryptData(
-        (*members_)[i]->pubkey,
+        (*members_)[member_idx]->pubkey,
         sec_key);
     *seckey_len = sec_key.size();
 }

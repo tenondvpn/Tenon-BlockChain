@@ -630,6 +630,16 @@ bool BlsManager::VerifyAggSignValid(
         if (in_idx_vec[i] != 0) {
             idx_vec.push_back(in_idx_vec[i]);
             all_signs.push_back(in_all_signs[i]);
+
+            BLS_DEBUG("VerifyAggSignValid.i: %d, sign: %s,%s, cpk: %s,%s,%s,%s",
+                (in_idx_vec[i] - 1),
+                crypto::ThresholdUtils::fieldElementToString(in_all_signs[i].X).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(in_all_signs[i].Y).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
+                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
+
         }
     }
 
