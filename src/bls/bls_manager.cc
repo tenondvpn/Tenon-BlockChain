@@ -323,7 +323,8 @@ void BlsManager::HandleFinish(
     }
 
     if (finish_item->verified[bls_msg.index()]) {
-        return;
+//         return;
+        BLS_DEBUG("bls manager verified.");
     }
 
     finish_item->verified[bls_msg.index()] = true;
@@ -448,9 +449,17 @@ void BlsManager::CheckAggSignValid(
     uint32_t i = start_pos;
     uint32_t valid_count = 0;
     uint32_t min_pos = common::kInvalidUint32;
-    while (++i != start_pos && i != start_pos) {
+    while (true) {
         if (i >= n) {
             i = 0;
+            if (i == start_pos) {
+                break;
+            }
+        }
+
+        if (finish_item->all_common_public_keys[i] == libff::alt_bn128_G2::zero()) {
+            ++i;
+            continue;
         }
 
         if (finish_item->all_common_public_keys[i] != common_pk) {
@@ -464,6 +473,7 @@ void BlsManager::CheckAggSignValid(
                 crypto::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
                 crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
                 crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
+            ++i;
             continue;
         }
 
@@ -471,6 +481,11 @@ void BlsManager::CheckAggSignValid(
         idx_vec[i] = i + 1;
         ++valid_count;
         if (valid_count >= t) {
+            break;
+        }
+
+        ++i;
+        if (i == start_pos) {
             break;
         }
     }
@@ -768,12 +783,12 @@ int BlsManager::AddBlsConsensusInfo(
         crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
-//     BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"
-//         "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
-//         ec_block.shard_network_id(),
-//         bitmap->valid_count(), members->size(),
-//         common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
-//         common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
+    BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"
+        "member count: %d, x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
+        ec_block.shard_network_id(),
+        bitmap->valid_count(), members->size(),
+        common_pk->x_c0().c_str(), common_pk->x_c1().c_str(),
+        common_pk->y_c0().c_str(), common_pk->y_c1().c_str());
 //     std::cout << "AddBlsConsensusInfo success max_finish_count_: " << all_valid_count
 //         << ", member count: " << members->size()
 //         << ", " << common_pk->x_c0()

@@ -773,7 +773,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
         (local_pk->x_c1()).c_str(),
         (local_pk->y_c0()).c_str(),
         (local_pk->y_c1()).c_str(),
-        (message_hash).c_str(),
+        common::Encode::HexEncode(message_hash).c_str(),
         sign_x.c_str(),
         sign_y.c_str());
 
