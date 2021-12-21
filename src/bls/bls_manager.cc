@@ -340,6 +340,7 @@ void BlsManager::HandleFinish(
         finish_item->max_public_pk_map[cpk_hash] = 1;
     } else {
         ++cpk_iter->second;
+        common_pkey.getPublicKey()->to_affine_coordinates();
         if (cpk_iter->second >= t) {
             CheckAggSignValid(
                 t,
@@ -360,14 +361,14 @@ void BlsManager::HandleFinish(
         common::Encode::HexEncode(msg_hash).c_str(),
         bls_msg.finish_req().bls_sign_x().c_str(),
         bls_msg.finish_req().bls_sign_y().c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().x_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().pubkey().y_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().x_c1()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c0()).c_str(),
-        common::Encode::HexEncode(bls_msg.finish_req().common_pubkey().y_c1()).c_str(),
+        (bls_msg.finish_req().pubkey().x_c0()).c_str(),
+        (bls_msg.finish_req().pubkey().x_c1()).c_str(),
+        (bls_msg.finish_req().pubkey().y_c0()).c_str(),
+        (bls_msg.finish_req().pubkey().y_c1()).c_str(),
+        (bls_msg.finish_req().common_pubkey().x_c0()).c_str(),
+        (bls_msg.finish_req().common_pubkey().x_c1()).c_str(),
+        (bls_msg.finish_req().common_pubkey().y_c0()).c_str(),
+        (bls_msg.finish_req().common_pubkey().y_c1()).c_str(),
         finish_item->max_public_pk_map[cpk_hash],
         t);
 
@@ -454,7 +455,6 @@ void BlsManager::CheckAggSignValid(
 
         if (finish_item->all_common_public_keys[i] != common_pk) {
             finish_item->all_common_public_keys[i].to_affine_coordinates();
-            common_pk.to_affine_coordinates();
             BLS_DEBUG("common public key invalid.i: %d, icpk: %s,%s,%s,%s cpk: %s,%s,%s,%s", i,
                 crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c0).c_str(),
                 crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c1).c_str(),
