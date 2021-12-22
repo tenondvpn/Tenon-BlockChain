@@ -162,7 +162,8 @@ private:
     uint64_t tps_btime_{ 0 };
     BlockQueue block_queue_[transport::kMessageHandlerThreadCount];
     WaitingBlockQueue waiting_verify_block_queue_[transport::kMessageHandlerThreadCount];
-    std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
+//     std::unordered_set<WaitingBlockItemPtr> waiting_block_set_;
+    std::unordered_map<std::string, WaitingBlockItemPtr> waiting_block_map_;
     common::Tick timeout_tick_;
     common::Tick block_to_db_tick_;
     common::Tick verify_block_tick_;

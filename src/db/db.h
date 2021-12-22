@@ -107,7 +107,11 @@ public:
         delete iter;
     }
 
-    virtual int zset(const Bytes &name, const Bytes &key, const Bytes &score, char log_type = BinlogType::SYNC) {
+    virtual int zset(
+            const Bytes &name,
+            const Bytes &key,
+            const Bytes &score,
+            char log_type = BinlogType::SYNC) {
         return ssdb_->zset(name, key, score, log_type);
     }
 
@@ -115,7 +119,12 @@ public:
         return ssdb_->zdel(name, key, log_type);
     }
 
-    virtual int zincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type = BinlogType::SYNC) {
+    virtual int zincr(
+            const Bytes &name,
+            const Bytes &key,
+            int64_t by,
+            int64_t *new_val,
+            char log_type = BinlogType::SYNC) {
         return ssdb_->zincr(name, key, by, new_val, log_type);
     }
 
@@ -167,7 +176,11 @@ public:
         return ssdb_->zfix(name);
     }
 
-    virtual int hset(const Bytes &name, const Bytes &key, const Bytes &val, char log_type = BinlogType::SYNC) {
+    virtual int hset(
+            const Bytes &name,
+            const Bytes &key,
+            const Bytes &val,
+            char log_type = BinlogType::SYNC) {
         return ssdb_->hset(name, key, val, log_type);
     }
 
@@ -176,7 +189,12 @@ public:
     }
 
     // -1: error, 1: ok, 0: value is not an integer or out of range
-    virtual int hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type = BinlogType::SYNC) {
+    virtual int hincr(
+            const Bytes &name,
+            const Bytes &key,
+            int64_t by,
+            int64_t *new_val,
+            char log_type = BinlogType::SYNC) {
         return ssdb_->hincr(name, key, by, new_val, log_type);
     }
 
@@ -192,26 +210,133 @@ public:
         return ssdb_->hget(name, key, val);
     }
 
-    virtual int hlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
-        std::vector<std::string> *list) {
+    virtual int hlist(
+            const Bytes &name_s,
+            const Bytes &name_e,
+            uint64_t limit,
+            std::vector<std::string> *list) {
         return ssdb_->hlist(name_s, name_e, limit, list);
     }
 
-    virtual int hrlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
-        std::vector<std::string> *list) {
+    virtual int hrlist(
+            const Bytes &name_s,
+            const Bytes &name_e,
+            uint64_t limit,
+            std::vector<std::string> *list) {
         return ssdb_->hrlist(name_s, name_e, limit, list);
     }
 
-    virtual HIterator* hscan(const Bytes &name, const Bytes &start, const Bytes &end, uint64_t limit) {
+    virtual HIterator* hscan(
+            const Bytes &name,
+            const Bytes &start,
+            const Bytes &end,
+            uint64_t limit) {
         return ssdb_->hscan(name, start, end, limit);
     }
 
-    virtual HIterator* hrscan(const Bytes &name, const Bytes &start, const Bytes &end, uint64_t limit) {
+    virtual HIterator* hrscan(
+            const Bytes &name,
+            const Bytes &start,
+            const Bytes &end,
+            uint64_t limit) {
         return ssdb_->hrscan(name, start, end, limit);
     }
 
     virtual int64_t hfix(const Bytes &name) {
         return ssdb_->hfix(name);
+    }
+
+    // queue
+    virtual int64_t qsize(const Bytes &name) {
+        return ssdb_->qsize(name);
+    }
+
+    // @return 0: empty queue, 1: item peeked, -1: error
+    virtual int qfront(const Bytes &name, std::string *item) {
+        return ssdb_->qfront(name, item);
+    }
+
+    // @return 0: empty queue, 1: item peeked, -1: error
+    virtual int qback(const Bytes &name, std::string *item) {
+        return ssdb_->qback(name, item);
+    }
+
+    // @return -1: error, other: the new length of the queue
+    virtual int64_t qpush_front(
+            const Bytes &name,
+            const Bytes &item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qpush_front(name, item, log_type);
+    }
+
+    virtual int64_t qpush_back(
+            const Bytes &name,
+            const Bytes &item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qpush_back(name, item, log_type);
+    }
+
+    // @return 0: empty queue, 1: item popped, -1: error
+    virtual int qpop_front(
+            const Bytes &name,
+            std::string *item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qpop_front(name, item, log_type);
+    }
+
+    virtual int qpop_back(
+            const Bytes &name,
+            std::string *item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qpop_back(name, item, log_type);
+    }
+
+    virtual int qfix(const Bytes &name) {
+        return ssdb_->qfix(name);
+    }
+
+    virtual int qlist(
+            const Bytes &name_s,
+            const Bytes &name_e,
+            uint64_t limit,
+            std::vector<std::string> *list) {
+        return ssdb_->qlist(name_s, name_e, limit, list);
+    }
+
+    virtual int qrlist(
+            const Bytes &name_s,
+            const Bytes &name_e,
+            uint64_t limit,
+            std::vector<std::string> *list) {
+        return ssdb_->qrlist(name_s, name_e, limit, list);
+    }
+
+    virtual int qslice(
+            const Bytes &name,
+            int64_t offset,
+            int64_t limit,
+            std::vector<std::string> *list) {
+        return ssdb_->qslice(name, offset, limit, list);
+    }
+
+    virtual int qget(const Bytes &name, int64_t index, std::string *item) {
+        return ssdb_->qget(name, index, item);
+    }
+
+    virtual int qset(
+            const Bytes &name,
+            int64_t index,
+            const Bytes &item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qset(name, index, item, log_type);
+    }
+
+    virtual int qset_by_seq(
+            const Bytes &name,
+            uint64_t seq,
+            const Bytes &item,
+            char log_type = BinlogType::SYNC) {
+        return ssdb_->qset_by_seq(name, seq, item, log_type);
     }
 
     std::shared_ptr<DickDb>& db() {

@@ -199,7 +199,6 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
-    has_swaped_keys_[bls_msg.index()] = true;
     // swap
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
         (*members_)[bls_msg.index()]->pubkey,
@@ -212,7 +211,6 @@ void BlsDkg::HandleSwapSecKeyRes(
     std::string sec_key(dec_msg.substr(0, bls_msg.swapkey_res().sec_key_len()));
     if (!IsValidBigInt(sec_key)) {
         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
-        assert(false);
         return;
     }
 
@@ -240,6 +238,7 @@ void BlsDkg::HandleSwapSecKeyRes(
     if (finish_called_) {
         FinishNoLock();
     }
+    has_swaped_keys_[bls_msg.index()] = true;
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {
@@ -410,7 +409,6 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    has_swaped_keys_[bls_msg.index()] = true;
     SendSwapkeyResponse(header.from_ip(), header.from_port(), bls_msg.index());
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
@@ -457,6 +455,7 @@ void BlsDkg::HandleSwapSecKey(
     if (finish_called_) {
         FinishNoLock();
     }
+    has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }

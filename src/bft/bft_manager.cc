@@ -643,7 +643,6 @@ void BftManager::HandleToAccountTxBlock(
         return;
     }
 
-    auto src_block = tx_bft.to_tx().block();
     auto& tx_list = *(tx_bft.mutable_to_tx()->mutable_block()->mutable_tx_list());
     if (tx_list.empty()) {
         BFT_ERROR("to has no transaction info!");
@@ -2072,7 +2071,13 @@ void BftManager::VerifyWaitingBlock() {
                     nullptr,
                     nullptr);
                 if (members == nullptr) {
-                    waiting_block_set_.insert(waiting_ptr);
+                    std::string key = std::to_string(waiting_ptr->block_ptr->network_id()) + "_" +
+                        std::to_string(waiting_ptr->block_ptr->pool_index());
+                    auto iter = waiting_block_map_.find(key);
+                    if (iter == waiting_block_map_.end()) {
+                        waiting_block_map_[key] = waiting_ptr;
+                    }
+
                     continue;
                 }
 
@@ -2085,6 +2090,30 @@ void BftManager::VerifyWaitingBlock() {
                 }
             }
         }
+    }
+
+    for (auto iter = waiting_block_map_.begin(); iter != waiting_block_map_.end();) {
+        auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+            iter->second->electblock_height(),
+            iter->second->network_id(),
+            nullptr,
+            nullptr);
+        if (members == nullptr) {
+            ++iter;
+            continue;
+        }
+
+        if (VerifyAggSignWithMembers(members, *iter->second->block_ptr)) {
+            HandleVerifiedBlock(
+                common::kInvalidUint32,
+                iter->second->type,
+                *iter->second->block_ptr,
+                iter->second->block_ptr);
+        }
+
+        BFT_DEBUG("handle waiting block success key: %s height: %lu",
+            iter->first.c_str(), iter->second->electblock_height());
+        waiting_block_map_.erase(iter++);
     }
 
     verify_block_tick_.CutOff(
