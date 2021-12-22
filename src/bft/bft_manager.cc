@@ -45,7 +45,8 @@ BftManager::BftManager() {
         kBftTimeoutCheckPeriod,
         std::bind(&BftManager::CheckTimeout, this));
     BlockToDb();
-//     CheckCommitBackupRecall();
+    VerifyWaitingBlock();
+    //     CheckCommitBackupRecall();
 }
 
 BftManager::~BftManager() {}
@@ -508,7 +509,7 @@ bool BftManager::AggSignValid(
         // The election block arrives later than the consensus block,
         // causing the aggregate signature verification to fail
         // add to waiting verify pool.
-        BFT_ERROR("get members failed height: %lu", block.electblock_height());
+        BFT_ERROR("get members failed height: %lu, map size: %d", block.electblock_height(), waiting_block_map_.size());
         auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
         waiting_verify_block_queue_[thread_idx].push(
             std::make_shared<WaitingBlockItem>(block_ptr, type));
@@ -1316,13 +1317,9 @@ int BftManager::BackupCommit(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
     // TODO: remove just for test
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        block::AccountManager::Instance()->SetMaxHeight(
-            bft_ptr->pool_index(),
-            bft_ptr->prpare_block()->height());
-        return kBftError;
-    }
-
+    block::AccountManager::Instance()->SetMaxHeight(
+        bft_ptr->pool_index(),
+        bft_ptr->prpare_block()->height());
     bft_ptr->not_aggree();
     if (!bft_msg.agree()) {
         BFT_ERROR("BackupCommit LeaderCallCommitOppose gid: %s",
@@ -1832,13 +1829,9 @@ void BftManager::HandleSyncWaitingBlock(
         return;
     }
 
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        block::AccountManager::Instance()->SetMaxHeight(
-            block.pool_index(),
-            block.height());
-        return;
-    }
-
+    block::AccountManager::Instance()->SetMaxHeight(
+        block.pool_index(),
+        block.height());
     auto tmp_block_ptr = block_ptr;
     if (tmp_block_ptr == nullptr) {
         tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);
@@ -1973,13 +1966,9 @@ void BftManager::HandleRootWaitingBlock(
     }
 
     // TODO: remove just for test
-    if (common::GlobalInfo::Instance()->missing_node()) {
-        block::AccountManager::Instance()->SetMaxHeight(
-            block.pool_index(),
-            block.height());
-        return;
-    }
-
+    block::AccountManager::Instance()->SetMaxHeight(
+        block.pool_index(),
+        block.height());
     auto& tx_list = block.tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         DispatchPool::Instance()->RemoveTx(
@@ -2078,6 +2067,8 @@ void BftManager::VerifyWaitingBlock() {
                         waiting_block_map_[key] = waiting_ptr;
                     }
 
+                    BFT_DEBUG("add waiting block success key: %s height: %lu, size: %d",
+                        key.c_str(), waiting_ptr->block_ptr->electblock_height(), waiting_block_map_.size());
                     continue;
                 }
 

@@ -387,8 +387,12 @@ void KeyValueSync::ProcessSyncValueResponse(
 //     SYNC_DEBUG("recv sync response from[%s:%d] key size: %u",
 //         header.from_ip().c_str(), header.from_port(), res_arr.size());
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
-        SYNC_ERROR("ttttttttttttttt recv sync response [%s]", common::Encode::HexEncode(iter->key()).c_str());
         auto block_item = std::make_shared<bft::protobuf::Block>();
+        SYNC_ERROR("ttttttttttttttt recv sync response [%s], net: %d, pool_idx: %d, height: %lu",
+            common::Encode::HexEncode(iter->key()).c_str(),
+            block_item->network_id(),
+            block_item->pool_index(),
+            iter->height());
         if (block_item->ParseFromString(iter->value()) &&
                 (iter->has_height() || block_item->hash() == iter->key())) {
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);

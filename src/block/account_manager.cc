@@ -982,10 +982,13 @@ int AccountManager::HandleRefreshHeightsReq(
 int AccountManager::HandleRefreshHeightsRes(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
+    std::string pool_heights;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
+        pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i));
     }
 
+    BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
     return kBlockSuccess;
 }
