@@ -2094,8 +2094,8 @@ void BftManager::VerifyWaitingBlock() {
 
     for (auto iter = waiting_block_map_.begin(); iter != waiting_block_map_.end();) {
         auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
-            iter->second->electblock_height(),
-            iter->second->network_id(),
+            iter->second->block_ptr->electblock_height(),
+            iter->second->block_ptr->network_id(),
             nullptr,
             nullptr);
         if (members == nullptr) {
@@ -2112,7 +2112,7 @@ void BftManager::VerifyWaitingBlock() {
         }
 
         BFT_DEBUG("handle waiting block success key: %s height: %lu",
-            iter->first.c_str(), iter->second->electblock_height());
+            iter->first.c_str(), iter->second->block_ptr->electblock_height());
         waiting_block_map_.erase(iter++);
     }
 
