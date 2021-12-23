@@ -985,7 +985,7 @@ int AccountManager::HandleRefreshHeightsRes(
     std::string pool_heights;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
-        pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i));
+        pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i)) + ",";
     }
 
     BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());

@@ -88,7 +88,7 @@ void BlsDkg::OnNewElectionBlock(
     }
 
     auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
-    local_offset_us_ = each_member_offset_us * local_member_index_;
+    local_offset_us_ = 0;// each_member_offset_us * local_member_index_;
     swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
