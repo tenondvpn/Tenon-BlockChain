@@ -988,6 +988,21 @@ class SwapSecKeyRes : public ::google::protobuf::Message /* @@protoc_insertion_p
 
   // accessors -------------------------------------------------------
 
+  // optional bytes sec_key = 2;
+  bool has_sec_key() const;
+  void clear_sec_key();
+  static const int kSecKeyFieldNumber = 2;
+  const ::std::string& sec_key() const;
+  void set_sec_key(const ::std::string& value);
+  #if LANG_CXX11
+  void set_sec_key(::std::string&& value);
+  #endif
+  void set_sec_key(const char* value);
+  void set_sec_key(const void* value, size_t size);
+  ::std::string* mutable_sec_key();
+  ::std::string* release_sec_key();
+  void set_allocated_sec_key(::std::string* sec_key);
+
   // optional uint32 index = 1;
   bool has_index() const;
   void clear_index();
@@ -995,15 +1010,28 @@ class SwapSecKeyRes : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::google::protobuf::uint32 index() const;
   void set_index(::google::protobuf::uint32 value);
 
+  // optional uint32 sec_key_len = 3;
+  bool has_sec_key_len() const;
+  void clear_sec_key_len();
+  static const int kSecKeyLenFieldNumber = 3;
+  ::google::protobuf::uint32 sec_key_len() const;
+  void set_sec_key_len(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:tenon.bls.protobuf.SwapSecKeyRes)
  private:
   void set_has_index();
   void clear_has_index();
+  void set_has_sec_key();
+  void clear_has_sec_key();
+  void set_has_sec_key_len();
+  void clear_has_sec_key_len();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr sec_key_;
   ::google::protobuf::uint32 index_;
+  ::google::protobuf::uint32 sec_key_len_;
   friend struct ::protobuf_bls_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -2556,13 +2584,13 @@ inline void SwapSecKeyReq::set_sec_key_len(::google::protobuf::uint32 value) {
 
 // optional uint32 index = 1;
 inline bool SwapSecKeyRes::has_index() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void SwapSecKeyRes::set_has_index() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void SwapSecKeyRes::clear_has_index() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void SwapSecKeyRes::clear_index() {
   index_ = 0u;
@@ -2576,6 +2604,96 @@ inline void SwapSecKeyRes::set_index(::google::protobuf::uint32 value) {
   set_has_index();
   index_ = value;
   // @@protoc_insertion_point(field_set:tenon.bls.protobuf.SwapSecKeyRes.index)
+}
+
+// optional bytes sec_key = 2;
+inline bool SwapSecKeyRes::has_sec_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SwapSecKeyRes::set_has_sec_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SwapSecKeyRes::clear_has_sec_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SwapSecKeyRes::clear_sec_key() {
+  sec_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_sec_key();
+}
+inline const ::std::string& SwapSecKeyRes::sec_key() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+  return sec_key_.GetNoArena();
+}
+inline void SwapSecKeyRes::set_sec_key(const ::std::string& value) {
+  set_has_sec_key();
+  sec_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+}
+#if LANG_CXX11
+inline void SwapSecKeyRes::set_sec_key(::std::string&& value) {
+  set_has_sec_key();
+  sec_key_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+}
+#endif
+inline void SwapSecKeyRes::set_sec_key(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_sec_key();
+  sec_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+}
+inline void SwapSecKeyRes::set_sec_key(const void* value, size_t size) {
+  set_has_sec_key();
+  sec_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+}
+inline ::std::string* SwapSecKeyRes::mutable_sec_key() {
+  set_has_sec_key();
+  // @@protoc_insertion_point(field_mutable:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+  return sec_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* SwapSecKeyRes::release_sec_key() {
+  // @@protoc_insertion_point(field_release:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+  if (!has_sec_key()) {
+    return NULL;
+  }
+  clear_has_sec_key();
+  return sec_key_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void SwapSecKeyRes::set_allocated_sec_key(::std::string* sec_key) {
+  if (sec_key != NULL) {
+    set_has_sec_key();
+  } else {
+    clear_has_sec_key();
+  }
+  sec_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sec_key);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bls.protobuf.SwapSecKeyRes.sec_key)
+}
+
+// optional uint32 sec_key_len = 3;
+inline bool SwapSecKeyRes::has_sec_key_len() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SwapSecKeyRes::set_has_sec_key_len() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SwapSecKeyRes::clear_has_sec_key_len() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SwapSecKeyRes::clear_sec_key_len() {
+  sec_key_len_ = 0u;
+  clear_has_sec_key_len();
+}
+inline ::google::protobuf::uint32 SwapSecKeyRes::sec_key_len() const {
+  // @@protoc_insertion_point(field_get:tenon.bls.protobuf.SwapSecKeyRes.sec_key_len)
+  return sec_key_len_;
+}
+inline void SwapSecKeyRes::set_sec_key_len(::google::protobuf::uint32 value) {
+  set_has_sec_key_len();
+  sec_key_len_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bls.protobuf.SwapSecKeyRes.sec_key_len)
 }
 
 // -------------------------------------------------------------------
