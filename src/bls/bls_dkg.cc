@@ -162,7 +162,8 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 
     if (bls_msg.has_against_req()) {
         HandleAgainstParticipant(header, bls_msg);
-        BLS_DEBUG("HandleAgainstParticipant new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("HandleAgainstParticipant new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d, aginst index: %d",
+            elect_hegiht_, local_member_index_, bls_msg.index(), bls_msg.against_req().against_index());
     }
 
     if (bls_msg.has_verify_res()) {
@@ -326,6 +327,11 @@ void BlsDkg::HandleVerifyBroadcast(
             z_coord);
     }
 
+    if ((*members_)[bls_msg.index()]->public_ip.empty()) {
+        (*members_)[bls_msg.index()]->public_ip = bls_msg.verify_brd().public_ip();
+        (*members_)[bls_msg.index()]->public_port = bls_msg.verify_brd().public_port();
+    }
+
     SendVerifyBrdResponse(
         bls_msg.verify_brd().public_ip(),
         bls_msg.verify_brd().public_port());
@@ -455,6 +461,7 @@ void BlsDkg::HandleSwapSecKey(
     if (finish_called_) {
         FinishNoLock();
     }
+
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -513,6 +520,7 @@ void BlsDkg::HandleAgainstParticipant(
     if (invalid_node_map_[bls_msg.against_req().against_index()] >= min_aggree_member_count_) {
         all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
             libff::alt_bn128_Fr::zero();
+        BLS_ERROR("invalid bls part: %d", bls_msg.against_req().against_index());
     }
 }
 
@@ -746,11 +754,17 @@ void BlsDkg::FinishNoLock() try {
         if (iter == valid_swapkey_set_.end()) {
             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
-        } else {
-            valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
-            common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
-            bitmap.Set(i);
+            continue;
         }
+
+        if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
+            continue;
+        }
+
+        valid_seck_keys.push_back(all_secret_key_contribution_[local_member_index_][i]);
+        common_public_key_ = common_public_key_ + all_verification_vector_[i][0];
+        bitmap.Set(i);
     }
 
     if (bitmap.valid_count() < members_->size() * kBlsMaxExchangeMembersRatio) {
