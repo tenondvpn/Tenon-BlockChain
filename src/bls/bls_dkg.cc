@@ -409,7 +409,6 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    SendSwapkeyResponse(header.from_ip(), header.from_port(), bls_msg.index());
     // swap
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
@@ -450,6 +449,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
+    SendSwapkeyResponse(header.from_ip(), header.from_port(), bls_msg.index());
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
     if (finish_called_) {
