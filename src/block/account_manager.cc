@@ -845,7 +845,6 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 
 void AccountManager::CheckMissingHeight() {
     uint32_t synced_height = 0;
-    std::string missing_heihts = std::to_string(common::GlobalInfo::Instance()->network_id()) + ": ";
     for (int32_t i = (int32_t)common::kImmutablePoolSize; i >= 0; --i) {
         std::vector<uint64_t> missing_heights;
         block_pools_[i]->GetMissingHeights(&missing_heights);
@@ -854,7 +853,6 @@ void AccountManager::CheckMissingHeight() {
         }
 
         synced_height += missing_heights.size();
-        missing_heihts += std::to_string(i)  + ": [ ";
         for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
             if (i == common::kImmutablePoolSize) {
                 sync::KeyValueSync::Instance()->AddSyncHeight(
@@ -869,10 +867,8 @@ void AccountManager::CheckMissingHeight() {
                     missing_heights[h_idx],
                     sync::kSyncHighest);
             }
-            missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
         }
 
-        missing_heihts += "], ";
         if (synced_height > 64) {
             break;
         }
