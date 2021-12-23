@@ -657,6 +657,7 @@ int BlockManager::AddNewBlock(
         block_item->network_id(),
         block_item->pool_index(),
         block_item->height());
+    BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
     db_batch.Put(height_db_key, block_item->hash());
     std::string block_str;
     if (!block_item->SerializeToString(&block_str)) {

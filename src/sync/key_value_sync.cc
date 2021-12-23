@@ -77,7 +77,7 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
         std::string key = std::to_string(network_id) + "_" +
             std::to_string(pool_idx) + "_" +
             std::to_string(height);
-        BLS_DEBUG("add sync height: %s", key.c_str());
+        SYNC_DEBUG("add sync height: %s", key.c_str());
         std::lock_guard<std::mutex> guard(added_key_set_mutex_);
         auto iter = added_key_set_.find(key);
         if (iter != added_key_set_.end()) {
@@ -389,13 +389,13 @@ void KeyValueSync::ProcessSyncValueResponse(
 //         header.from_ip().c_str(), header.from_port(), res_arr.size());
     for (auto iter = res_arr.begin(); iter != res_arr.end(); ++iter) {
         auto block_item = std::make_shared<bft::protobuf::Block>();
-        SYNC_ERROR("ttttttttttttttt recv sync response [%s], net: %d, pool_idx: %d, height: %lu",
-            common::Encode::HexEncode(iter->key()).c_str(),
-            block_item->network_id(),
-            block_item->pool_index(),
-            iter->height());
         if (block_item->ParseFromString(iter->value()) &&
                 (iter->has_height() || block_item->hash() == iter->key())) {
+            SYNC_ERROR("ttttttttttttttt recv sync response [%s], net: %d, pool_idx: %d, height: %lu",
+                common::Encode::HexEncode(iter->key()).c_str(),
+                block_item->network_id(),
+                block_item->pool_index(),
+                iter->height());
             bft::BftManager::Instance()->AddKeyValueSyncBlock(header, block_item);
         } else {
             db::Db::Instance()->Put(iter->key(), iter->value());
