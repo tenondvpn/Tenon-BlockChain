@@ -46,7 +46,12 @@ void DhtManager::Destroy() {
 
 void DhtManager::RegisterDht(uint32_t net_id, dht::BaseDhtPtr& dht) {
     assert(net_id < common::kNetworkMaxDhtCount);
-    assert(dhts_[net_id] == nullptr);
+//     assert(dhts_[net_id] == nullptr);
+    if (dhts_[net_id] != nullptr) {
+        NETWORK_DEBUG("dht has registered: %u", net_id);
+        return;
+    }
+
     dhts_[net_id] = dht;
     {
         std::lock_guard<std::mutex> guard(dht_map_mutex_);

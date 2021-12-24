@@ -1991,27 +1991,27 @@ void BftManager::HandleRootWaitingBlock(
             tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);
         }
 
-        if (thread_idx < transport::kMessageHandlerThreadCount) {
-            auto queue_item_ptr = std::make_shared<BlockToDbItem>(tmp_block_ptr);
-            if (block::AccountManager::Instance()->AddBlockItemToCache(
-                queue_item_ptr->block_ptr,
-                queue_item_ptr->db_batch) != block::kBlockSuccess) {
-                BFT_ERROR("leader add block to db failed!");
-            }
-
-            block_queue_[thread_idx].push(queue_item_ptr);
-        } else {
-            db::DbWriteBach db_batch;
-            std::string height_db_key = common::GetHeightDbKey(
-                tmp_block_ptr->network_id(),
-                tmp_block_ptr->pool_index(),
-                tmp_block_ptr->height());
-            BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
-            db_batch.Put(height_db_key, tmp_block_ptr->hash());
-            block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
-            block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
-            db::Db::Instance()->Put(db_batch);
-        }
+//         if (thread_idx < transport::kMessageHandlerThreadCount) {
+//             auto queue_item_ptr = std::make_shared<BlockToDbItem>(tmp_block_ptr);
+//             if (block::AccountManager::Instance()->AddBlockItemToCache(
+//                 queue_item_ptr->block_ptr,
+//                 queue_item_ptr->db_batch) != block::kBlockSuccess) {
+//                 BFT_ERROR("leader add block to db failed!");
+//             }
+// 
+//             block_queue_[thread_idx].push(queue_item_ptr);
+//         } else {
+        db::DbWriteBach db_batch;
+        std::string height_db_key = common::GetHeightDbKey(
+            tmp_block_ptr->network_id(),
+            tmp_block_ptr->pool_index(),
+            tmp_block_ptr->height());
+        BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
+        db_batch.Put(height_db_key, tmp_block_ptr->hash());
+        block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
+        block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
+        db::Db::Instance()->Put(db_batch);
+//         }
         
         return;
     }
