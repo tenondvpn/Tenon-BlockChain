@@ -258,6 +258,7 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
 
 bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bool* elected) {
     if (!elect_block.has_prev_members() || elect_block.prev_members().prev_elect_height() <= 0) {
+        ELECT_DEBUG("not has prev members.");
         return false;
     }
 
@@ -268,10 +269,15 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             common::kRootChainPoolIndex,
             elect_block.prev_members().prev_elect_height(),
             block_item) != block::kBlockSuccess) {
+        ELECT_ERROR("get prev block error[%d][%d][%lu].",
+            network::kRootCongressNetworkId,
+            common::kRootChainPoolIndex,
+            elect_block.prev_members().prev_elect_height());
         return false;
     }
 
     if (block_item.tx_list_size() != 1) {
+        ELECT_ERROR("not has tx list size.");
         return false;
     }
 
@@ -291,6 +297,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     }
 
     if (added_height_.find(elect_block.prev_members().prev_elect_height()) != added_height_.end()) {
+        ELECT_ERROR("height has added: %lu", elect_block.prev_members().prev_elect_height());
         return false;
     }
 
