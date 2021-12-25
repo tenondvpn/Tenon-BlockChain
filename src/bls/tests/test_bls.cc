@@ -348,10 +348,11 @@ TEST_F(TestBls, FinishWithMissingNodesNoVerify) {
         all_signs,
         lagrange_coeffs);
     for (uint32_t i = 0; i < n; ++i) {
-        if (i == kInvalidNodeIndex) {
+        if (i == kInvalidNodeIndex || i == kInvalidSwapNodeIndex2) {
             continue;
         }
 
+        EXPECT_EQ(dkg[i].common_public_key_, dkg[0].common_public_key_);
         BlsSign bls_sign;
         EXPECT_EQ(
             bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_),
@@ -614,7 +615,7 @@ TEST_F(TestBls, ThreeRatioFailFine) {
 
     for (uint32_t i = 0; i < n; ++i) {
         BlsSign bls_sign;
-        ASSERT_EQ(
+        EXPECT_EQ(
             bls_sign.Verify(t, n, agg_sign, hash, dkg[i].common_public_key_),
             kBlsSuccess);
     }

@@ -157,12 +157,12 @@ bool Schnorr::Sign(
             }
 
             err = (EC_POINT_point2oct(
-                    curve_.group_.get(),
-                    Q.get(),
-                    POINT_CONVERSION_COMPRESSED,
-                    buf.data(),
-                    kPublicCompresssedSizeBytes,
-                    NULL) != kPublicCompresssedSizeBytes);
+                curve_.group_.get(),
+                Q.get(),
+                POINT_CONVERSION_COMPRESSED,
+                buf.data(),
+                kPublicCompresssedSizeBytes,
+                ctx.get()) != kPublicCompresssedSizeBytes);
             if (err) {
                 CRYPTO_ERROR("Commit octet conversion failed");
                 return false;
@@ -172,12 +172,12 @@ bool Schnorr::Sign(
             sha2.Update(tmp_buf);
             fill(buf.begin(), buf.end(), 0x00);
             err = (EC_POINT_point2oct(
-                    curve_.group_.get(),
-                    pubkey.ec_point().get(),
-                    POINT_CONVERSION_COMPRESSED,
-                    buf.data(),
-                    kPublicCompresssedSizeBytes,
-                    NULL) != kPublicCompresssedSizeBytes);
+                curve_.group_.get(),
+                pubkey.ec_point().get(),
+                POINT_CONVERSION_COMPRESSED,
+                buf.data(),
+                kPublicCompresssedSizeBytes,
+                ctx.get()) != kPublicCompresssedSizeBytes);
             if (err) {
                 CRYPTO_ERROR("Pubkey octet conversion failed");
                 return false;
@@ -189,19 +189,19 @@ bool Schnorr::Sign(
             std::string digest = sha2.Finalize();
 
             err = ((BN_bin2bn(
-                    (unsigned char*)digest.c_str(),
-                    digest.size(),
-                    result.challenge().get())) == NULL);
+                (unsigned char*)digest.c_str(),
+                digest.size(),
+                result.challenge().get())) == NULL);
             if (err) {
                 CRYPTO_ERROR("Digest to challenge failed");
                 return false;
             }
 
             err = (BN_nnmod(
-                    result.challenge().get(),
-                    result.challenge().get(),
-                    curve_.order_.get(),
-                    NULL) == 0);
+                result.challenge().get(),
+                result.challenge().get(),
+                curve_.order_.get(),
+                ctx.get()) == 0);
             if (err) {
                 CRYPTO_ERROR("BIGNUM NNmod failed");
                 return false;
@@ -303,12 +303,12 @@ bool Schnorr::Verify(
             }
 
             err2 = (EC_POINT_point2oct(
-                    curve_.group_.get(),
-                    Q.get(),
-                    POINT_CONVERSION_COMPRESSED,
-                    buf.data(),
-                    kPublicCompresssedSizeBytes,
-                    NULL) != kPublicCompresssedSizeBytes);
+                curve_.group_.get(),
+                Q.get(),
+                POINT_CONVERSION_COMPRESSED,
+                buf.data(),
+                kPublicCompresssedSizeBytes,
+                ctx.get()) != kPublicCompresssedSizeBytes);
             err = err || err2;
             if (err2) {
                 CRYPTO_ERROR("Commit octet conversion failed");
@@ -319,12 +319,12 @@ bool Schnorr::Verify(
             sha2.Update(tmp_buf);
             fill(buf.begin(), buf.end(), 0x00);
             err2 = (EC_POINT_point2oct(
-                    curve_.group_.get(),
-                    pubkey.ec_point().get(),
-                    POINT_CONVERSION_COMPRESSED,
-                    buf.data(),
-                    kPublicCompresssedSizeBytes,
-                    NULL) != kPublicCompresssedSizeBytes);
+                curve_.group_.get(),
+                pubkey.ec_point().get(),
+                POINT_CONVERSION_COMPRESSED,
+                buf.data(),
+                kPublicCompresssedSizeBytes,
+                ctx.get()) != kPublicCompresssedSizeBytes);
             err = err || err2;
             if (err2) {
                 CRYPTO_ERROR("Pubkey octet conversion failed");
@@ -347,9 +347,10 @@ bool Schnorr::Verify(
             }
 
             err2 = (BN_nnmod(
-                    challenge_built.get(),
-                    challenge_built.get(),
-                    curve_.order_.get(), NULL) == 0);
+                challenge_built.get(),
+                challenge_built.get(),
+                curve_.order_.get(),
+                ctx.get()) == 0);
             err = err || err2;
             if (err2) {
                 CRYPTO_ERROR("Challenge rebuild mod failed");

@@ -752,7 +752,7 @@ void BlsDkg::FinishNoLock() try {
     for (size_t i = 0; i < members_->size(); ++i) {
         auto iter = valid_swapkey_set_.find(i);
         if (iter == valid_swapkey_set_.end()) {
-            valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
+//             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
             continue;
         }
