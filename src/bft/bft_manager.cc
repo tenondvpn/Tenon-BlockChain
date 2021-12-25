@@ -1248,9 +1248,9 @@ int BftManager::LeaderCallCommit(
 
     auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
     tenon_block->set_bls_agg_sign_x(
-        crypto::ThresholdUtils::fieldElementToString(bls_commit_sign->X));
+        libBLS::ThresholdUtils::fieldElementToString(bls_commit_sign->X));
     tenon_block->set_bls_agg_sign_y(
-        crypto::ThresholdUtils::fieldElementToString(bls_commit_sign->Y));
+        libBLS::ThresholdUtils::fieldElementToString(bls_commit_sign->Y));
     assert(tenon_block->bitmap_size() > 0);
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         if (tenon_block->tx_list_size() == 1 &&
