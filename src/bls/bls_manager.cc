@@ -123,7 +123,7 @@ int BlsManager::Sign(
         const std::string& sign_msg,
         libff::alt_bn128_G1* bn_sign) {
     BlsSign::Sign(t, n, local_sec_key, sign_msg, bn_sign);
-    std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
+    std::string sec_key = libBLS::ThresholdUtils::fieldElementToString(local_sec_key);
     return kBlsSuccess;
 }
 
@@ -138,9 +138,9 @@ int BlsManager::Sign(
     libff::alt_bn128_G1 bn_sign;
     BlsSign::Sign(t, n, local_sec_key, sign_msg, &bn_sign);
     bn_sign.to_affine_coordinates();
-    *sign_x = crypto::ThresholdUtils::fieldElementToString(bn_sign.X);
-    *sign_y = crypto::ThresholdUtils::fieldElementToString(bn_sign.Y);
-    std::string sec_key = crypto::ThresholdUtils::fieldElementToString(local_sec_key);
+    *sign_x = libBLS::ThresholdUtils::fieldElementToString(bn_sign.X);
+    *sign_y = libBLS::ThresholdUtils::fieldElementToString(bn_sign.Y);
+    std::string sec_key = libBLS::ThresholdUtils::fieldElementToString(local_sec_key);
     BLSPublicKeyShare pkey(local_sec_key, t, n);
     std::shared_ptr< std::vector< std::string > > strs = pkey.toString();
     BLS_DEBUG("sign t: %u, , n: %u, , pk: %s,%s,%s,%s, sign x: %s, sign y: %s, sign msg: %s",
@@ -162,8 +162,8 @@ int BlsManager::Verify(
     if (pubkey == libff::alt_bn128_G2::zero()) {
         auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
         sign_ptr->to_affine_coordinates();
-        auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-        auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+        auto sign_x = libBLS::ThresholdUtils::fieldElementToString(sign_ptr->X);
+        auto sign_y = libBLS::ThresholdUtils::fieldElementToString(sign_ptr->Y);
         BLS_ERROR("public key error: zero,msg hash: %s, sign x: %s, sign y: %s",
             common::Encode::HexEncode(sign_msg).c_str(),
             sign_x.c_str(),
@@ -179,8 +179,8 @@ int BlsManager::Verify(
 
     auto sign_ptr = const_cast<libff::alt_bn128_G1*>(&sign);
     sign_ptr->to_affine_coordinates();
-    auto sign_x = crypto::ThresholdUtils::fieldElementToString(sign_ptr->X);
-    auto sign_y = crypto::ThresholdUtils::fieldElementToString(sign_ptr->Y);
+    auto sign_x = libBLS::ThresholdUtils::fieldElementToString(sign_ptr->X);
+    auto sign_y = libBLS::ThresholdUtils::fieldElementToString(sign_ptr->Y);
     auto pk = const_cast<libff::alt_bn128_G2*>(&pubkey);
     pk->to_affine_coordinates();
     auto pk_ptr = std::make_shared<BLSPublicKey>(*pk);
@@ -467,14 +467,14 @@ void BlsManager::CheckAggSignValid(
         if (finish_item->all_common_public_keys[i] != common_pk) {
             finish_item->all_common_public_keys[i].to_affine_coordinates();
             BLS_DEBUG("common public key invalid.i: %d, icpk: %s,%s,%s,%s cpk: %s,%s,%s,%s", i,
-                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c1).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c1).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
+                libBLS::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].X.c1).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(finish_item->all_common_public_keys[i].Y.c1).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
             ++i;
             continue;
         }
@@ -633,19 +633,19 @@ bool BlsManager::VerifyAggSignValid(
 
             BLS_DEBUG("VerifyAggSignValid.i: %d, sign: %s,%s, cpk: %s,%s,%s,%s",
                 (in_idx_vec[i] - 1),
-                crypto::ThresholdUtils::fieldElementToString(in_all_signs[i].X).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(in_all_signs[i].Y).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
-                crypto::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
+                libBLS::ThresholdUtils::fieldElementToString(in_all_signs[i].X).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(in_all_signs[i].Y).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.X.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.X.c1).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.Y.c0).c_str(),
+                libBLS::ThresholdUtils::fieldElementToString(common_pk.Y.c1).c_str());
 
         }
     }
 
     try {
-        crypto::Bls bls_instance = crypto::Bls(t, n);
-        auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+        libBLS::Bls bls_instance = libBLS::Bls(t, n);
+        auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
         auto bls_agg_sign = std::make_shared<libff::alt_bn128_G1>(bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));
@@ -761,13 +761,13 @@ int BlsManager::AddBlsConsensusInfo(
 
         finish_item->all_public_keys[i].to_affine_coordinates();
         mem_bls_pk->set_x_c0(
-            crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].X.c0));
+            libBLS::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].X.c0));
         mem_bls_pk->set_x_c1(
-            crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].X.c1));
+            libBLS::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].X.c1));
         mem_bls_pk->set_y_c0(
-            crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c0));
+            libBLS::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c0));
         mem_bls_pk->set_y_c1(
-            crypto::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c1));
+            libBLS::ThresholdUtils::fieldElementToString(finish_item->all_public_keys[i].Y.c1));
         mem_bls_pk->set_pool_idx_mod_num(-1);
 //         BLS_DEBUG("AddBlsConsensusInfo success node index: %d,"
 //             "x_c0: %s, x_c1: %s, y_c0: %s, y_c1: %s.",
@@ -788,13 +788,13 @@ int BlsManager::AddBlsConsensusInfo(
     common_pk_iter->second.to_affine_coordinates();
     auto common_pk = pre_ec_members->mutable_common_pubkey();
     common_pk->set_x_c0(
-        crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.X.c0));
+        libBLS::ThresholdUtils::fieldElementToString(common_pk_iter->second.X.c0));
     common_pk->set_x_c1(
-        crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.X.c1));
+        libBLS::ThresholdUtils::fieldElementToString(common_pk_iter->second.X.c1));
     common_pk->set_y_c0(
-        crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c0));
+        libBLS::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c0));
     common_pk->set_y_c1(
-        crypto::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c1));
+        libBLS::ThresholdUtils::fieldElementToString(common_pk_iter->second.Y.c1));
     pre_ec_members->set_prev_elect_height(
         elect::ElectManager::Instance()->waiting_elect_height(ec_block.shard_network_id()));
     BLS_DEBUG("network: %u, AddBlsConsensusInfo success max_finish_count_: %d,"

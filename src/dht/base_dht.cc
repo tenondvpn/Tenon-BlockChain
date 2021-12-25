@@ -50,7 +50,7 @@ int BaseDht::Init(BootstrapResponseCallback boot_cb, NewNodeJoinCallback node_jo
     uint32_t net_id;
     uint8_t country;
     GetNetIdAndCountry(net_id, country);
-    DHT_INFO("dht [%d][%d] init success.", net_id, country);
+    //DHT_INFO("dht [%d][%d] init success.", net_id, country);
     return kDhtSuccess;
 }
 

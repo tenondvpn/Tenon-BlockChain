@@ -16,7 +16,7 @@ void BlsSign::Sign(
         const libff::alt_bn128_Fr& secret_key,
         const std::string& message,
         libff::alt_bn128_G1* sign) {
-    crypto::Bls bls_instance = crypto::Bls(t, n);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
     libff::alt_bn128_G1 hash = bls_instance.Hashing(message);
     *sign = bls_instance.Signing(hash, secret_key);
 }
@@ -37,7 +37,7 @@ int BlsSign::Verify(
         return kBlsError;
     }
 
-    crypto::Bls bls_instance = crypto::Bls(t, n);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
     if (!bls_instance.Verification(message, sign, pkey)) {
         BLS_ERROR("bls_instance.Verification error.");
         return kBlsError;

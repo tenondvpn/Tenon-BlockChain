@@ -207,8 +207,8 @@ TEST_F(TestBls, AllSuccess) {
         idx_vec[i] = i + 1;
     }
 
-    crypto::Bls bls_instance = crypto::Bls(t, n);
-    auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
+    auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
     libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
         all_signs,
         lagrange_coeffs);
@@ -342,8 +342,8 @@ TEST_F(TestBls, FinishWithMissingNodesNoVerify) {
         }
     }
 
-    crypto::Bls bls_instance = crypto::Bls(t, n);
-    auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
+    auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
     libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
         all_signs,
         lagrange_coeffs);
@@ -469,8 +469,8 @@ TEST_F(TestBls, FinishWithMissingNodesNoVerify5) {
         }
     }
 
-    crypto::Bls bls_instance = crypto::Bls(t, n);
-    auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
+    auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
     libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
         all_signs,
         lagrange_coeffs);
@@ -606,8 +606,8 @@ TEST_F(TestBls, ThreeRatioFailFine) {
         }
     }
 
-    crypto::Bls bls_instance = crypto::Bls(t, n);
-    auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+    libBLS::Bls bls_instance = libBLS::Bls(t, n);
+    auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
     libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
         all_signs,
         lagrange_coeffs);
@@ -742,8 +742,8 @@ TEST_F(TestBls, ThreeRatioFail) {
     }
 
     try {
-        crypto::Bls bls_instance = crypto::Bls(t, n);
-        auto lagrange_coeffs = crypto::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
+        libBLS::Bls bls_instance = libBLS::Bls(t, n);
+        auto lagrange_coeffs = libBLS::ThresholdUtils::LagrangeCoeffs(idx_vec, t);
         libff::alt_bn128_G1 agg_sign = bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs);
