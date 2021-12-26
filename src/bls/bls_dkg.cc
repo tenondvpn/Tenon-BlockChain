@@ -88,7 +88,7 @@ void BlsDkg::OnNewElectionBlock(
     }
 
     auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
-    local_offset_us_ = 0;// each_member_offset_us * local_member_index_;
+    local_offset_us_ = each_member_offset_us * local_member_index_;
     swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
         kDkgVerifyBrdBeginUs + local_offset_us_,
@@ -379,6 +379,7 @@ void BlsDkg::HandleSwapSecKey(
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
+        BLS_ERROR("get dht error");
         return;
     }
 
@@ -462,6 +463,7 @@ void BlsDkg::HandleSwapSecKey(
         FinishNoLock();
     }
 
+    BLS_DEBUG("HandleSwapSecKey success: %s", common::Encode::HexEncode(sec_key).c_str());
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -752,13 +754,23 @@ void BlsDkg::FinishNoLock() try {
     for (size_t i = 0; i < members_->size(); ++i) {
         auto iter = valid_swapkey_set_.find(i);
         if (iter == valid_swapkey_set_.end()) {
-//             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
+            valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
+            BLS_DEBUG("invalid swapkey index: %d", i);
             continue;
         }
 
         if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
+            BLS_DEBUG("invalid all_verification_vector_ index: %d", i);
+            continue;
+        }
+
+        if (all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero()) {
+            valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
+            common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
+            BLS_DEBUG("invalid all_secret_key_contribution_ index: %d", i);
             continue;
         }
 

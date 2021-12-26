@@ -57,6 +57,7 @@ public:
     }
 
     virtual void TearDown() {
+        common::global_stop = true;
     }
 
     static void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
@@ -572,9 +573,9 @@ TEST_F(TestBls, ThreeRatioFailFine) {
         dkg[i].all_secret_key_contribution_[i][3] = libff::alt_bn128_Fr::zero();
         dkg[i].all_secret_key_contribution_[i][6] = libff::alt_bn128_Fr::zero();
         dkg[i].all_secret_key_contribution_[i][9] = libff::alt_bn128_Fr::zero();
-        dkg[i].invalid_node_map_[3] = 9;
-        dkg[i].invalid_node_map_[6] = 9;
-        dkg[i].invalid_node_map_[9] = 9;
+//         dkg[i].invalid_node_map_[3] = 9;
+//         dkg[i].invalid_node_map_[6] = 9;
+//         dkg[i].invalid_node_map_[9] = 9;
     }
 
     // sign and verify
@@ -718,7 +719,7 @@ TEST_F(TestBls, ThreeRatioFail) {
     std::vector<libff::alt_bn128_G1> all_signs;
     for (uint32_t i = 0; i < n; ++i) {
         dkg[i].Finish();
-        ASSERT_TRUE(dkg[i].finished_);
+        ASSERT_FALSE(dkg[i].finished_);
     }
 
     size_t count = 0;
@@ -733,7 +734,7 @@ TEST_F(TestBls, ThreeRatioFail) {
         bls_sign.Sign(t, n, dkg[i].local_sec_key_, hash, &sign);
         ASSERT_EQ(
             bls_sign.Verify(t, n, sign, hash, dkg[i].local_publick_key_),
-            kBlsSuccess);
+            kBlsError);
         all_signs.push_back(sign);
         idx_vec.push_back(i + 1);
         ++count;

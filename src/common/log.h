@@ -81,6 +81,10 @@
 #define DEBUG(fmt, ...)  do {\
     printf("[DEBUG][%s][%s][%d] " fmt "\n", LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
+#define TENON_DEBUG(fmt, ...)  do {\
+    printf("[DEBUG][%s][%s][%d] " fmt "\n", LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
+} while (0)
+
 #define TENON_INFO(fmt, ...)  do {\
     printf("[INFO][%s][%s][%d] " fmt "\n", LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
