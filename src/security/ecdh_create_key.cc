@@ -41,6 +41,11 @@ int EcdhCreateKey::Init() {
         return kSecurityError;
     }
     field_size_ = EC_GROUP_get_degree(EC_KEY_get0_group(ec_key_));
+    auto secret_len = (field_size_ + 7) / 8;
+    if (secret_len != 32) {
+        CRYPTO_ERROR("secret_len error: %d!", secret_len);
+        return kSecurityError;
+    }
     return kSecuritySuccess;
 }
 
