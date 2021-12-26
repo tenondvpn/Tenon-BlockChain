@@ -130,18 +130,18 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-//     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
-//         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
-//         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
-//         bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
+    BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
+        "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
+        bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
+        bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
     if (bls_msg.index() >= members_->size()) {
         BLS_ERROR("bls_msg.index() >= members_->size()");
         return;
     }
 
     if (bls_msg.elect_height() == 0 || bls_msg.elect_height() != elect_hegiht_) {
-//         BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
-//             bls_msg.elect_height(), elect_hegiht_);
+        BLS_ERROR("bls_msg.elect_height() != elect_hegiht_: %lu, %lu",
+            bls_msg.elect_height(), elect_hegiht_);
         return;
     }
 
