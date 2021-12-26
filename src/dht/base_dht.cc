@@ -291,7 +291,8 @@ void BaseDht::SetFrequently(transport::protobuf::Header& message) {
 int BaseDht::Bootstrap(
         const std::vector<NodePtr>& boot_nodes,
         int32_t get_init_msg,
-        const std::string init_uid) {
+        const std::string init_uid,
+        bool wait) {
     assert(!boot_nodes.empty());
     for (uint32_t i = 0; i < boot_nodes.size(); ++i) {
         transport::protobuf::Header msg;
@@ -318,6 +319,10 @@ int BaseDht::Bootstrap(
                 boot_nodes[i]->public_ip().c_str(),
                 (boot_nodes[i]->local_port + 1));
         }
+    }
+
+    if (!wait) {
+        return kDhtSuccess;
     }
 
     std::unique_lock<std::mutex> lock(join_res_mutex_);
@@ -504,6 +509,7 @@ void BaseDht::ProcessBootstrapRequest(
         }
     }
 
+    DHT_DEBUG("bootstrap response to: %s:%d", header.from_ip().c_str(), from_port);
     if (header.has_transport_type() && header.transport_type() == transport::kTcp) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                 header.from_ip(), (from_port + 1), 0, msg);

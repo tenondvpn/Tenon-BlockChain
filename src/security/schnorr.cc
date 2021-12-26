@@ -149,8 +149,10 @@ bool Schnorr::Sign(
                     return false;
                 }
             } while (BN_is_zero(k.get()));
-
-            err = (EC_POINT_mul(curve_.group_.get(), Q.get(), k.get(), NULL, NULL, NULL) == 0);
+            EC_POINT *ptPk = EC_POINT_new(curve_.group_.get());
+            BIGNUM   *bnC = BN_CTX_get(ctx.get());
+            err = (EC_POINT_mul(curve_.group_.get(), Q.get(), k.get(), ptPk, bnC, ctx.get()) == 0);
+            EC_POINT_free(ptPk);
             if (err) {
                 CRYPTO_ERROR("Commit generation failed");
                 return false;

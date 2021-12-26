@@ -37,7 +37,8 @@ public:
     virtual int Bootstrap(
             const std::vector<NodePtr>& boot_nodes,
             int32_t get_init_msg = 0,
-            const std::string init_uid = "");
+            const std::string init_uid = "",
+            bool wait = true);
     virtual void HandleMessage(const transport::protobuf::Header& msg);
     virtual bool CheckDestination(const std::string& des_dht_key, bool closest);
     virtual void SetFrequently(transport::protobuf::Header& msg);
