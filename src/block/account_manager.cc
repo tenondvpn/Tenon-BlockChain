@@ -846,7 +846,8 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 void AccountManager::CheckMissingHeight() {
     uint32_t synced_height = 0;
     uint32_t net_id = common::GlobalInfo::Instance()->network_id();
-    if (net_id >= network::kConsensusWaitingShardBeginNetworkId && net_id < network::kConsensusWaitingShardEndNetworkId) {
+    if (net_id >= network::kConsensusShardBeginNetworkId &&
+            net_id < network::kConsensusWaitingShardEndNetworkId) {
         net_id -= network::kConsensusWaitingShardOffset;
     }
 
