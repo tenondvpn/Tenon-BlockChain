@@ -436,14 +436,16 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
 
             uint32_t pick_in_count = weed_out_count;
             if (elect::ElectManager::Instance()->GetMemberCount(shard_netid) <
-                    (int32_t)common::kEachShardMaxNodeCount) {
+                    (int32_t)common::kEachShardMaxNodeCount ) {
                 pick_in_count += weed_out_count / 2;
                 if (pick_in_count <= 0) {
                     pick_in_count = 1;
                 }
 
-                if (pick_in_count + elect::ElectManager::Instance()->GetMemberCount(shard_netid) > (int32_t)common::kEachShardMaxNodeCount) {
-                    pick_in_count = common::kEachShardMaxNodeCount - elect::ElectManager::Instance()->GetMemberCount(shard_netid);
+                if (pick_in_count + elect::ElectManager::Instance()->GetMemberCount(shard_netid) >
+                        (int32_t)common::kEachShardMaxNodeCount) {
+                    pick_in_count = common::kEachShardMaxNodeCount -
+                        elect::ElectManager::Instance()->GetMemberCount(shard_netid);
                 }
 
                 if (pick_in_count <= weed_out_count) {

@@ -707,9 +707,13 @@ int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
 }
 
 void ElectManager::WaitingNodeSendHeartbeat() {
-    if (common::GlobalInfo::Instance()->network_id() >= network::kRootCongressWaitingNetworkId &&
-            common::GlobalInfo::Instance()->network_id() <
-            network::kConsensusWaitingShardEndNetworkId) {
+    uint32_t net_id = common::GlobalInfo::Instance()->network_id();
+    if (net_id >= network::kRootCongressWaitingNetworkId &&
+            net_id < network::kConsensusWaitingShardEndNetworkId) {
+        net_id -= network::kConsensusWaitingShardOffset;
+    }
+
+    if (!IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id()) {
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (dht) {
