@@ -34,7 +34,6 @@ public:
     void OnTimeBlock(uint64_t tm_block_tm);
 
 private:
-    void HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr);
     void SendConsensusNodes(uint64_t time_block_tm);
     void GetThisTimeBlockLocallNodes(uint64_t tm_block_tm);
     void WaitingNodesUpdate();

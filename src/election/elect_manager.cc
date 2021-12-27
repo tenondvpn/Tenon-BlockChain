@@ -713,14 +713,15 @@ void ElectManager::WaitingNodeSendHeartbeat() {
         net_id -= network::kConsensusWaitingShardOffset;
     }
 
-    if (!IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id()) {
+    if (!IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id())) {
+        ELECT_DEBUG("CreateWaitingHeartbeat and waiting join.");
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (dht) {
             transport::protobuf::Header msg;
             elect::ElectProto::CreateWaitingHeartbeat(
                 dht->local_node(),
-                common::GlobalInfo::Instance()->network_id(),
+                net_id + network::kConsensusWaitingShardOffset,
                 msg);
             if (msg.has_data()) {
                 network::Route::Instance()->Send(msg);

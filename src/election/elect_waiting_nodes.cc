@@ -123,6 +123,11 @@ void ElectWaitingNodes::GetAllValidNodes(
 }
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
+    ELECT_DEBUG("waiting_shard_id_: %d, add new node: %s, %s:%d",
+        waiting_shard_id_,
+        common::Encode::HexEncode(node_ptr->id).c_str(),
+        node_ptr->public_ip.c_str(),
+        node_ptr->public_port);
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     auto iter = node_map_.find(node_ptr->id);
     if (iter != node_map_.end()) {
@@ -207,23 +212,6 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
 
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
         nodes.push_back(iter->second);
-    }
-}
-
-void ElectWaitingNodes::HandleUpdateNodeHeartbeat(NodeDetailPtr& node_ptr) {
-    ELECT_DEBUG("heartbeat node coming: %s, ip: %s:%d",
-        common::Encode::HexEncode(node_ptr->id).c_str(),
-        node_ptr->public_ip.c_str(),
-        node_ptr->public_port);
-    std::lock_guard<std::mutex> guard(node_map_mutex_);
-    auto iter = node_map_.find(node_ptr->id);
-    if (iter != node_map_.end()) {
-        ++iter->second->heatbeat_succ_count[
-            tmblock::TimeBlockManager::Instance()->LatestTimestamp()];
-    } else {
-        node_ptr->heatbeat_succ_count[
-            tmblock::TimeBlockManager::Instance()->LatestTimestamp()] = 1;
-        node_map_[node_ptr->id] = node_ptr;
     }
 }
 
