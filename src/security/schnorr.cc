@@ -109,6 +109,7 @@ void Schnorr::GenPublicKey(PrivateKey& prikey, PublicKey& pubkey) {
 void Schnorr::set_prikey(const std::shared_ptr<PrivateKey>& prikey) {
     prikey_ptr_ = prikey;
     prikey_ptr_->Serialize(str_prikey_);
+    assert(str_prikey_.size() == 32);
     pubkey_ptr_ = std::make_shared<PublicKey>(*(prikey.get()));
     pubkey_ptr_->Serialize(str_pubkey_, true);
     pubkey_ptr_->Serialize(str_pubkey_uncompress_, false);

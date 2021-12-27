@@ -995,7 +995,7 @@ int BaseDht::CheckJoin(NodePtr& node) {
     if (uniq_id_) {
         if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
             DHT_INFO("invalid dht country. join way: %d", node->join_way);
-            assert(false);
+            //assert(false);
             return kDhtKeyInvalidCountry;
         }
     }

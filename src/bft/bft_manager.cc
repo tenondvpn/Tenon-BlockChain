@@ -1849,15 +1849,20 @@ void BftManager::HandleSyncWaitingBlock(
         block_queue_[thread_idx].push(queue_item_ptr);
     } else {
         db::DbWriteBach db_batch;
-        std::string height_db_key = common::GetHeightDbKey(
-            tmp_block_ptr->network_id(),
-            tmp_block_ptr->pool_index(),
-            tmp_block_ptr->height());
-        BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
-        db_batch.Put(height_db_key, tmp_block_ptr->hash());
-        block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
-        block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
-        db::Db::Instance()->Put(db_batch);
+//         std::string height_db_key = common::GetHeightDbKey(
+//             tmp_block_ptr->network_id(),
+//             tmp_block_ptr->pool_index(),
+//             tmp_block_ptr->height());
+//         BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
+//         db_batch.Put(height_db_key, tmp_block_ptr->hash());
+//         block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
+//         block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
+//         ShardStatistic::Instance()->AddStatistic(tmp_block_ptr);
+        block::BlockManager::Instance()->AddNewBlock(
+            tmp_block_ptr,
+            db_batch,
+            true,
+            false);
     }
     
     auto& tx_list = block.tx_list();
@@ -2007,7 +2012,6 @@ void BftManager::HandleRootWaitingBlock(
             db_batch,
             true,
             false);
-        db::Db::Instance()->Put(db_batch);
 //         }
         
         return;

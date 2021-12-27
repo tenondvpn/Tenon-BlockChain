@@ -39,6 +39,7 @@ void DhtManager::Destroy() {
                 dhts_[i] = nullptr;
             }
         }
+
         delete []dhts_;
         dhts_ = nullptr;
     }
@@ -115,10 +116,10 @@ void DhtManager::NetworkDetection() {
         uint32_t network_id = dht::DhtKeyManager::DhtKeyGetNetId(
                 (*iter)->local_node()->dht_key());
         auto nodes = universal_dht->LocalGetNetworkNodes(network_id, 4);
-        NETWORK_DEBUG("detection network id: %d, nodes size: %d", network_id, nodes.size());
+//         NETWORK_DEBUG("detection network id: %d, nodes size: %d", network_id, nodes.size());
         if (nodes.empty()) {
             nodes = universal_dht->RemoteGetNetworkNodes(network_id, 4);
-            NETWORK_DEBUG("detection network id: %d, remote nodes size: %d", network_id, nodes.size());
+//             NETWORK_DEBUG("detection network id: %d, remote nodes size: %d", network_id, nodes.size());
             if (nodes.empty()) {
                 continue;
             }

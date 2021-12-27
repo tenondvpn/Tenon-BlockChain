@@ -38,7 +38,6 @@ void SecurityStringTrans::BignumToString(
             (unsigned char*)(&(dst[0]))) != kSrcBnSize) {
         CRYPTO_ERROR("BN_bn2bin failed");
         dst.clear();
-        return;
     }
 }
 

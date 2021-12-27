@@ -90,10 +90,10 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
         return;
     }
 
-    if (header.type() == common::kBlsMessage) {
-        uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
-        NETWORK_DEBUG("receive message des net_id: %u, msg id: %lu", net_id, header.id());
-    }
+//     if (header.type() == common::kBlsMessage) {
+//         uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
+//         NETWORK_DEBUG("receive message des net_id: %u, msg id: %lu", net_id, header.id());
+//     }
 
     if (message_processor_[header.type()] == nullptr) {
         RouteByUniversal(header);

@@ -710,6 +710,7 @@ void BlsDkg::DumpLocalPrivateKey() {
     // encrypt by private key and save to db
     std::string enc_data;
     std::string sec_key = libBLS::ThresholdUtils::fieldElementToString(local_sec_key_);
+    BLS_DEBUG("DumpLocalPrivateKey sec_key: %s, size: %d", sec_key.c_str(), sec_key.size());
     if (security::Crypto::Instance()->GetEncryptData(
             security::Schnorr::Instance()->str_prikey(),
             sec_key,

@@ -649,6 +649,7 @@ int BlockManager::AddNewBlock(
         db::DbWriteBach& db_batch,
         bool to_cache,
         bool is_kv_sync) {
+    std::lock_guard<std::mutex> guard(block_mutex_);
     if (db::Db::Instance()->Exist(block_item->hash())) {
         return kBlockError;
     }

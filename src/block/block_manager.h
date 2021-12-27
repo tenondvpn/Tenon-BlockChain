@@ -105,6 +105,7 @@ private:
     static const uint32_t kCacheBlockSize = 1024;
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
+    std::mutex block_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
 };

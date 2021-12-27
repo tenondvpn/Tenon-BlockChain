@@ -52,6 +52,11 @@ int EcdhCreateKey::Init() {
 int EcdhCreateKey::CreateKey(const PublicKey& peer_pubkey, std::string& sec_key) {
     auto secret_len = (field_size_ + 7) / 8;
     sec_key.resize(secret_len, 0);
+    if (secret_len != 32 || sec_key.size() != secret_len) {
+        CRYPTO_ERROR("secret_len error: %d, str size: %d!", secret_len, sec_key.size());
+        return kSecurityError;
+    }
+
     secret_len = ECDH_compute_key(
             ((void*)&(sec_key[0])),
             secret_len,
