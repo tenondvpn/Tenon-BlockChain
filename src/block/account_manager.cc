@@ -320,16 +320,16 @@ int AccountManager::AddBlockItemToDb(
             exit(0);
         }
 
-        if (is_kv_sync) {
-            // reset tx gid and remove from tx pools
-            bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true);
-            bft::DispatchPool::Instance()->RemoveTx(
-                pool_idx,
-                tx_list[i].to_add(),
-                tx_list[i].type(),
-                tx_list[i].call_contract_step(),
-                tx_list[i].gid());
-        }
+//         if (is_kv_sync) {
+        // reset tx gid and remove from tx pools
+        bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true);
+        bft::DispatchPool::Instance()->RemoveTx(
+            pool_idx,
+            tx_list[i].to_add(),
+            tx_list[i].type(),
+            tx_list[i].call_contract_step(),
+            tx_list[i].gid());
+//         }
 
         if (tx_list[i].attr_size() > 0 || tx_list[i].storages_size() > 0) {
             block::DbAccountInfoPtr account_info = nullptr;

@@ -92,6 +92,10 @@ void FtsTree::PrintFtsTree() {
 }
 
 void* FtsTree::GetOneNode(std::mt19937_64& g2) {
+    if (fts_nodes_.empty() || fts_nodes_.size() <= root_node_index_) {
+        return nullptr;
+    }
+
     assert(fts_nodes_.size() == root_node_index_ + 1);
     uint32_t choose_idx = root_node_index_;
     while (true) {

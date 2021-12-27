@@ -441,6 +441,14 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
                 if (pick_in_count <= 0) {
                     pick_in_count = 1;
                 }
+
+                if (pick_in_count + elect::ElectManager::Instance()->GetMemberCount(shard_netid) > (int32_t)common::kEachShardMaxNodeCount) {
+                    pick_in_count = common::kEachShardMaxNodeCount - elect::ElectManager::Instance()->GetMemberCount(shard_netid);
+                }
+
+                if (pick_in_count <= weed_out_count) {
+                    pick_in_count = weed_out_count + 1;
+                }
             }
 
             FtsGetNodes(
@@ -507,6 +515,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
+    ELECT_DEBUG("pick_all_vec size: %d, pick_in_vec size: %d, weed_out_vec size: %d, elected_nodes size: %d",
+        pick_all_vec.size(), pick_in_vec.size(), weed_out_vec.size(), elected_nodes.size());
     return kElectSuccess;
 }
 
@@ -619,9 +629,9 @@ void ElectPoolManager::FtsGetNodes(
         if (data == nullptr) {
             ++try_times;
             if (try_times > 5) {
-                fts_tree.PrintFtsTree();
-                ELECT_ERROR("fts get bft nodes failed!");
-                assert(false);
+//                 fts_tree.PrintFtsTree();
+                ELECT_ERROR("fts get bft nodes failed! tmp_res_nodes size: %d", tmp_res_nodes.size());
+//                 assert(false);
                 return;
             }
             continue;

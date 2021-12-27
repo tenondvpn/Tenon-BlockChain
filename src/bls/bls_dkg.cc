@@ -115,6 +115,11 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
+    if (local_member_index_ == common::kInvalidUint32) {
+        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
+        return;
+    }
+
     auto& header = *header_ptr;
     assert(header.type() == common::kBlsMessage);
     // must verify message signature, to avoid evil node
@@ -359,12 +364,6 @@ void BlsDkg::HandleVerifyBroadcastRes(
 void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
-    if (local_member_index_ == common::kInvalidUint32) {
-        assert(false);
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
-        return;
-    }
-
     if (all_secret_key_contribution_.size() <= local_member_index_) {
         assert(false);
         return;
