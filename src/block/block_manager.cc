@@ -662,6 +662,7 @@ int BlockManager::AddNewBlock(
     db_batch.Put(height_db_key, block_item->hash());
     std::string block_str;
     if (!block_item->SerializeToString(&block_str)) {
+        BLOCK_ERROR("block SerializeToString failed!");
         return kBlockError;
     }
 
