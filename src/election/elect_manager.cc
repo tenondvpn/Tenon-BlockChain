@@ -713,8 +713,12 @@ void ElectManager::WaitingNodeSendHeartbeat() {
         net_id -= network::kConsensusWaitingShardOffset;
     }
 
-    if (!IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id())) {
-        ELECT_DEBUG("CreateWaitingHeartbeat and waiting join.");
+    bool joined = IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id());
+    ELECT_DEBUG("CreateWaitingHeartbeat and waiting join. net: %d, id: %s, joined: %d",
+        net_id,
+        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+        joined);
+    if (!joined) {
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
         if (dht) {
