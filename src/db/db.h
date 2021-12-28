@@ -3,6 +3,7 @@
 #include <mutex>
 #include <memory>
 #include "common/utils.h"
+#include "common/log.h"
 #include "dbsvr/ssdb/ssdb.h"
 #include "dbsvr/util/bytes.h"
 
@@ -107,7 +108,7 @@ public:
         delete iter;
     }
 
-    virtual int zset(
+    int zset(
             const Bytes &name,
             const Bytes &key,
             const Bytes &score,
@@ -115,11 +116,11 @@ public:
         return ssdb_->zset(name, key, score, log_type);
     }
 
-    virtual int zdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+    int zdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
         return ssdb_->zdel(name, key, log_type);
     }
 
-    virtual int zincr(
+    int zincr(
             const Bytes &name,
             const Bytes &key,
             int64_t by,
@@ -128,91 +129,92 @@ public:
         return ssdb_->zincr(name, key, by, new_val, log_type);
     }
 
-    virtual int64_t zsize(const Bytes &name) {
+    int64_t zsize(const Bytes &name) {
         return ssdb_->zsize(name);
     }
 
-    virtual int zget(const Bytes &name, const Bytes &key, std::string *score) {
+    int zget(const Bytes &name, const Bytes &key, std::string *score) {
         return ssdb_->zget(name, key, score);
     }
 
-    virtual int64_t zrank(const Bytes &name, const Bytes &key) {
+    int64_t zrank(const Bytes &name, const Bytes &key) {
         return ssdb_->zrank(name, key);
     }
 
-    virtual int64_t zrrank(const Bytes &name, const Bytes &key) {
+    int64_t zrrank(const Bytes &name, const Bytes &key) {
         return ssdb_->zrrank(name, key);
     }
 
-    virtual ZIterator* zrange(const Bytes &name, uint64_t offset, uint64_t limit) {
+    ZIterator* zrange(const Bytes &name, uint64_t offset, uint64_t limit) {
         return ssdb_->zrange(name, offset, limit);
     }
 
-    virtual ZIterator* zrrange(const Bytes &name, uint64_t offset, uint64_t limit) {
+    ZIterator* zrrange(const Bytes &name, uint64_t offset, uint64_t limit) {
         return ssdb_->zrrange(name, offset, limit);
     }
 
-    virtual ZIterator* zscan(const Bytes &name, const Bytes &key,
+    ZIterator* zscan(const Bytes &name, const Bytes &key,
         const Bytes &score_start, const Bytes &score_end, uint64_t limit) {
         return ssdb_->zscan(name, key, score_start, score_end, limit);
     }
 
-    virtual ZIterator* zrscan(const Bytes &name, const Bytes &key,
+    ZIterator* zrscan(const Bytes &name, const Bytes &key,
         const Bytes &score_start, const Bytes &score_end, uint64_t limit) {
         return ssdb_->zrscan(name, key, score_start, score_end, limit);
     }
 
-    virtual int zlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+    int zlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
         std::vector<std::string> *list) {
         return ssdb_->zlist(name_s, name_e, limit, list);
     }
 
-    virtual int zrlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
+    int zrlist(const Bytes &name_s, const Bytes &name_e, uint64_t limit,
         std::vector<std::string> *list) {
         return ssdb_->zrlist(name_s, name_e, limit, list);
     }
 
-    virtual int64_t zfix(const Bytes &name) {
+    int64_t zfix(const Bytes &name) {
         return ssdb_->zfix(name);
     }
 
-    virtual int hset(
+    int hset(
             const Bytes &name,
             const Bytes &key,
             const Bytes &val,
             char log_type = BinlogType::SYNC) {
+        TENON_ERROR("call hset now 0: %lu", ssdb_);
         return ssdb_->hset(name, key, val, log_type);
     }
 
-    virtual int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
-        BFT_ERROR("call hdel now 0.");
+    int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+        TENON_ERROR("call hdel now 0: %lu", ssdb_);
         return ssdb_->hdel(name, key, log_type);
     }
 
     // -1: error, 1: ok, 0: value is not an integer or out of range
-    virtual int hincr(
+    int hincr(
             const Bytes &name,
             const Bytes &key,
             int64_t by,
             int64_t *new_val,
             char log_type = BinlogType::SYNC) {
-        BFT_ERROR("call hincr now 0.");
+        TENON_ERROR("call hincr now 0.");
         return ssdb_->hincr(name, key, by, new_val, log_type);
     }
 
-    virtual int64_t hsize(const Bytes &name) {
+    int64_t hsize(const Bytes &name) {
         return ssdb_->hsize(name);
     }
 
-    virtual int64_t hclear(const Bytes &name) {
+    int64_t hclear(const Bytes &name) {
         return ssdb_->hclear(name);
     }
 
-    virtual int hget(const Bytes &name, const Bytes &key, std::string *val) {
+    int hget(const Bytes &name, const Bytes &key, std::string *val) {
         return ssdb_->hget(name, key, val);
     }
 
-    virtual int hlist(
+    int hlist(
             const Bytes &name_s,
             const Bytes &name_e,
             uint64_t limit,
@@ -220,7 +222,7 @@ public:
         return ssdb_->hlist(name_s, name_e, limit, list);
     }
 
-    virtual int hrlist(
+    int hrlist(
             const Bytes &name_s,
             const Bytes &name_e,
             uint64_t limit,
@@ -228,7 +230,7 @@ public:
         return ssdb_->hrlist(name_s, name_e, limit, list);
     }
 
-    virtual HIterator* hscan(
+    HIterator* hscan(
             const Bytes &name,
             const Bytes &start,
             const Bytes &end,
@@ -236,7 +238,7 @@ public:
         return ssdb_->hscan(name, start, end, limit);
     }
 
-    virtual HIterator* hrscan(
+    HIterator* hrscan(
             const Bytes &name,
             const Bytes &start,
             const Bytes &end,
@@ -244,34 +246,34 @@ public:
         return ssdb_->hrscan(name, start, end, limit);
     }
 
-    virtual int64_t hfix(const Bytes &name) {
+    int64_t hfix(const Bytes &name) {
         return ssdb_->hfix(name);
     }
 
     // queue
-    virtual int64_t qsize(const Bytes &name) {
+    int64_t qsize(const Bytes &name) {
         return ssdb_->qsize(name);
     }
 
     // @return 0: empty queue, 1: item peeked, -1: error
-    virtual int qfront(const Bytes &name, std::string *item) {
+    int qfront(const Bytes &name, std::string *item) {
         return ssdb_->qfront(name, item);
     }
 
     // @return 0: empty queue, 1: item peeked, -1: error
-    virtual int qback(const Bytes &name, std::string *item) {
+    int qback(const Bytes &name, std::string *item) {
         return ssdb_->qback(name, item);
     }
 
     // @return -1: error, other: the new length of the queue
-    virtual int64_t qpush_front(
+    int64_t qpush_front(
             const Bytes &name,
             const Bytes &item,
             char log_type = BinlogType::SYNC) {
         return ssdb_->qpush_front(name, item, log_type);
     }
 
-    virtual int64_t qpush_back(
+    int64_t qpush_back(
             const Bytes &name,
             const Bytes &item,
             char log_type = BinlogType::SYNC) {
@@ -279,25 +281,25 @@ public:
     }
 
     // @return 0: empty queue, 1: item popped, -1: error
-    virtual int qpop_front(
+    int qpop_front(
             const Bytes &name,
             std::string *item,
             char log_type = BinlogType::SYNC) {
         return ssdb_->qpop_front(name, item, log_type);
     }
 
-    virtual int qpop_back(
+    int qpop_back(
             const Bytes &name,
             std::string *item,
             char log_type = BinlogType::SYNC) {
         return ssdb_->qpop_back(name, item, log_type);
     }
 
-    virtual int qfix(const Bytes &name) {
+    int qfix(const Bytes &name) {
         return ssdb_->qfix(name);
     }
 
-    virtual int qlist(
+    int qlist(
             const Bytes &name_s,
             const Bytes &name_e,
             uint64_t limit,
@@ -305,7 +307,7 @@ public:
         return ssdb_->qlist(name_s, name_e, limit, list);
     }
 
-    virtual int qrlist(
+    int qrlist(
             const Bytes &name_s,
             const Bytes &name_e,
             uint64_t limit,
@@ -313,7 +315,7 @@ public:
         return ssdb_->qrlist(name_s, name_e, limit, list);
     }
 
-    virtual int qslice(
+    int qslice(
             const Bytes &name,
             int64_t offset,
             int64_t limit,
@@ -321,11 +323,11 @@ public:
         return ssdb_->qslice(name, offset, limit, list);
     }
 
-    virtual int qget(const Bytes &name, int64_t index, std::string *item) {
+    int qget(const Bytes &name, int64_t index, std::string *item) {
         return ssdb_->qget(name, index, item);
     }
 
-    virtual int qset(
+    int qset(
             const Bytes &name,
             int64_t index,
             const Bytes &item,
@@ -333,7 +335,7 @@ public:
         return ssdb_->qset(name, index, item, log_type);
     }
 
-    virtual int qset_by_seq(
+    int qset_by_seq(
             const Bytes &name,
             uint64_t seq,
             const Bytes &item,
