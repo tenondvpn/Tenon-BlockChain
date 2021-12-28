@@ -5,6 +5,8 @@ found in the LICENSE file.
 */
 #include "t_hash.h"
 
+#include "common/log.h"
+
 static int hset_one(SSDBImpl *ssdb, const Bytes &name, const Bytes &key, const Bytes &val, char log_type);
 static int hdel_one(SSDBImpl *ssdb, const Bytes &name, const Bytes &key, char log_type);
 static int incr_hsize(SSDBImpl *ssdb, const Bytes &name, int64_t incr);
@@ -33,19 +35,24 @@ int SSDBImpl::hset(const Bytes &name, const Bytes &key, const Bytes &val, char l
 int SSDBImpl::hdel(const Bytes &name, const Bytes &key, char log_type){
 	Transaction trans(binlogs);
 
-	int ret = hdel_one(this, name, key, log_type);
-	if(ret >= 0){
+    TENON_ERROR("r call hdel now 0.");
+    int ret = hdel_one(this, name, key, log_type);
+    TENON_ERROR("r call hdel now 1.");
+    if (ret >= 0) {
 		if(ret > 0){
-			if(incr_hsize(this, name, -ret) == -1){
+            TENON_ERROR("r call hdel now 2.");
+            if (incr_hsize(this, name, -ret) == -1) {
 				return -1;
 			}
 		}
-		leveldb::Status s = binlogs->commit();
+        TENON_ERROR("r call hdel now 3.");
+        leveldb::Status s = binlogs->commit();
 		if(!s.ok()){
 			return -1;
 		}
 	}
-	return ret;
+    TENON_ERROR("r call hdel now 4.");
+    return ret;
 }
 
 int SSDBImpl::hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type){

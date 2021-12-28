@@ -185,6 +185,7 @@ public:
     }
 
     virtual int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+        BFT_ERROR("call hdel now 0.");
         return ssdb_->hdel(name, key, log_type);
     }
 
@@ -195,6 +196,7 @@ public:
             int64_t by,
             int64_t *new_val,
             char log_type = BinlogType::SYNC) {
+        BFT_ERROR("call hincr now 0.");
         return ssdb_->hincr(name, key, by, new_val, log_type);
     }
 

@@ -8,7 +8,9 @@
 #include "bft/gid_manager.h"
 #include "common/encode.h"
 #include "common/time_utils.h"
+#include "common/global_info.h"
 #include "db/db.h"
+#include "network/network_utils.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
@@ -56,6 +58,10 @@ int TxPool::Init(uint32_t pool_idx) {
 }
 
 int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
+    if (common::GlobalInfo::Instance()->network_id() < network::kRootCongressNetworkId ||
+            common::GlobalInfo::Instance()->network_id() >= network::kConsensusShardEndNetworkId) {
+        return kBftError;
+    }
     assert(tx_ptr != nullptr);
     std::string uni_gid = GidManager::Instance()->GetUniversalGid(
         tx_ptr->tx.to_add(),
@@ -559,7 +565,9 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
             }
 
             iter->second->valid = false;
+            BFT_ERROR("call hdel now.");
             db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
+            BFT_ERROR("call hdel now over.");
             tx_pool_.erase(iter);
         }
     }

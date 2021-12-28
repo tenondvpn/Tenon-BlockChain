@@ -265,6 +265,31 @@ int AccountManager::AddBlockItemToDb(
     // one block must be one consensus pool
     uint32_t consistent_pool_index = common::kInvalidPoolIndex;
     for (int32_t i = 0; i < tx_list.size(); ++i) {
+        std::string account_id;
+        if (tx_list[i].to_add()) {
+            account_id = tx_list[i].to();
+        } else {
+            account_id = tx_list[i].from();
+        }
+
+        if (tx_list[i].type() == common::kConsensusCallContract ||
+            tx_list[i].type() == common::kConsensusCreateContract) {
+            switch (tx_list[i].call_contract_step()) {
+            case contract::kCallStepCallerInited:
+                account_id = tx_list[i].from();
+                break;
+            case contract::kCallStepContractCalled:
+                account_id = tx_list[i].to();
+                break;
+            case contract::kCallStepContractFinal:
+                account_id = tx_list[i].from();
+                break;
+            default:
+                break;
+            }
+        }
+
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
         bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true);
         bft::DispatchPool::Instance()->RemoveTx(
             pool_idx,
@@ -290,31 +315,6 @@ int AccountManager::AddBlockItemToDb(
             }
         }
 
-        std::string account_id;
-        if (tx_list[i].to_add()) {
-            account_id = tx_list[i].to();
-        } else {
-            account_id = tx_list[i].from();
-        }
-
-        if (tx_list[i].type() == common::kConsensusCallContract ||
-                tx_list[i].type() == common::kConsensusCreateContract) {
-            switch (tx_list[i].call_contract_step()) {
-            case contract::kCallStepCallerInited:
-                account_id = tx_list[i].from();
-                break;
-            case contract::kCallStepContractCalled:
-                account_id = tx_list[i].to();
-                break;
-            case contract::kCallStepContractFinal:
-                account_id = tx_list[i].from();
-                break;
-            default:
-                break;
-            }
-        }
-
-        uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (consistent_pool_index == common::kInvalidPoolIndex) {
             consistent_pool_index = pool_idx;
         }
