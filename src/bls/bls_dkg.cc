@@ -391,7 +391,7 @@ void BlsDkg::HandleSwapSecKey(
         common::GlobalInfo::Instance()->network_id(),
         0,
         common::GlobalInfo::Instance()->id());
-    if (dht_key.StrKey() != header.des_dht_key()) {
+    if (memcmp(dht_key.StrKey().c_str() + 8, header.des_dht_key().c_str() + 8, 24) != 0) {
         dht->SendToClosestNode(header);
         BLS_ERROR("local dht key: %s, des dht key: %s",
             common::Encode::HexEncode(dht->local_node()->dht_key()).c_str(),
