@@ -135,21 +135,21 @@ int BaseDht::Join(NodePtr& node) {
 //         DHT_ERROR("vip node coming: %s", node->public_ip().c_str());
 //     }
 
-    auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
-    auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
-    DHT_ERROR("join new node public ip: %s:%d, net: %d dht key: %s, id: %s,"
-        "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
-        node->public_ip().c_str(),
-        node->public_port,
-        DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
-        common::Encode::HexEncode(node->dht_key()).c_str(),
-        common::Encode::HexEncode(node->id()).c_str(),
-        node->min_svr_port,
-        node->max_svr_port,
-        node->min_route_port,
-        node->max_route_port,
-        svr_port,
-        route_port);
+//     auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
+//     auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
+//     DHT_DEBUG("join new node public ip: %s:%d, net: %d dht key: %s, id: %s,"
+//         "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
+//         node->public_ip().c_str(),
+//         node->public_port,
+//         DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+//         common::Encode::HexEncode(node->dht_key()).c_str(),
+//         common::Encode::HexEncode(node->id()).c_str(),
+//         node->min_svr_port,
+//         node->max_svr_port,
+//         node->min_route_port,
+//         node->max_route_port,
+//         svr_port,
+//         route_port);
 //     uint32_t e_dht_size = dht_.size();
 //     uint32_t e_map_size = node_map_.size();
 //     assert((b_dht_size + 1) == e_dht_size);

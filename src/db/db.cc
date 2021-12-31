@@ -70,7 +70,7 @@ bool Db::Init(const std::string& db_path) {
     Options opt;
     opt.binlog = false;
     opt.binlog_capacity = 0;
-    ssdb_ = SSDB::open(opt, "", db);
+    ssdb_ = SSDB::open(opt, "", db_.get());
     if (ssdb_ == nullptr) {
         TENON_ERROR("open ssdb error.");
         return false;

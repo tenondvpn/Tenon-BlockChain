@@ -846,6 +846,10 @@ void AccountManager::CheckMissingHeight() {
             net_id < network::kConsensusWaitingShardEndNetworkId) {
         net_id -= network::kConsensusWaitingShardOffset;
     }
+    
+    if (net_id < network::kRootCongressNetworkId || net_id >= network::kConsensusShardEndNetworkId) {
+        return;
+    }
 
 //     std::string missing_heihts = std::to_string(net_id) + ": ";
     for (int32_t i = (int32_t)common::kImmutablePoolSize; i >= 0; --i) {

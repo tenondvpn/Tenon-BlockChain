@@ -56,7 +56,8 @@ int SSDBImpl::hdel(const Bytes &name, const Bytes &key, char log_type){
 }
 
 int SSDBImpl::hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *new_val, char log_type){
-	Transaction trans(binlogs);
+    TENON_ERROR("r call hincr now 0.");
+    Transaction trans(binlogs);
 
 	std::string old;
 	int ret = this->hget(name, key, &old);

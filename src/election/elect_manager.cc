@@ -354,7 +354,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             }
 
             now_elected_ids_.insert((*iter)->id);
-            ELECT_DEBUG("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock elect height: %lu, network: %d,"
+            ELECT_INFO("DDDDDDDDDDDDDDDDDD ProcessNewElectBlock elect height: %lu, network: %d,"
                 "member leader: %s,, (*iter)->pool_index_mod_num: %d",
                 elect_block.prev_members().prev_elect_height(),
                 prev_elect_block.shard_network_id(),
@@ -434,7 +434,9 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_block.prev_members().prev_elect_height();
     }
 
-    if (*elected) {
+    if (prev_elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id() ||
+            (prev_elect_block.shard_network_id() + network::kConsensusWaitingShardOffset) ==
+            common::GlobalInfo::Instance()->network_id()) {
         leader_rotation_.OnElectBlock(shard_members_ptr);
     }
 

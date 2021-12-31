@@ -28,31 +28,31 @@ TxPool::~TxPool() {}
 int TxPool::Init(uint32_t pool_idx) {
     pool_index_ = pool_idx;
     pool_name_ = db::kGlobalTxPoolKey + std::to_string(pool_idx);
-    while (true) {
-        std::vector<std::string> txs;
-        db::Db::Instance()->hlist(pool_name_, "", 1024, &txs);
-        if (txs.empty()) {
-            break;
-        }
-
-        bool over = false;
-        for (auto iter = txs.begin(); iter != txs.end(); ++iter) {
-            if (memcmp(pool_name_.c_str(), (*iter).c_str(), pool_name_.size()) != 0) {
-                over = true;
-                break;
-            }
-
-            protobuf::TxInfo pb_tx;
-            if (pb_tx.ParseFromString(*iter)) {
-                auto tx_ptr = std::make_shared<TxItem>(pb_tx);
-                AddTx(tx_ptr, true);
-            }
-        }
-
-        if (over) {
-            break;
-        }
-    }
+//     while (true) {
+//         std::vector<std::string> txs;
+//         db::Db::Instance()->hlist(pool_name_, "", 1024, &txs);
+//         if (txs.empty()) {
+//             break;
+//         }
+// 
+//         bool over = false;
+//         for (auto iter = txs.begin(); iter != txs.end(); ++iter) {
+//             if (memcmp(pool_name_.c_str(), (*iter).c_str(), pool_name_.size()) != 0) {
+//                 over = true;
+//                 break;
+//             }
+// 
+//             protobuf::TxInfo pb_tx;
+//             if (pb_tx.ParseFromString(*iter)) {
+//                 auto tx_ptr = std::make_shared<TxItem>(pb_tx);
+//                 AddTx(tx_ptr, true);
+//             }
+//         }
+// 
+//         if (over) {
+//             break;
+//         }
+//     }
 
     return kBftSuccess;
 }
@@ -103,9 +103,9 @@ int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
     tx_pool_[tx_index] = tx_ptr;
     tx_ptr->index = tx_index;
     mem_queue_.push(tx_ptr);
-    if (!init) {
-        db::Db::Instance()->hset(pool_name_, uni_gid, tx_ptr->tx.SerializeAsString());
-    }
+//     if (!init) {
+//         db::Db::Instance()->hset(pool_name_, uni_gid, tx_ptr->tx.SerializeAsString());
+//     }
 //     if (!tx_ptr->tx.to().empty()) {
 //         printf("add new tx tx index: %lu, [to: %d] [pool idx: %d] type: %d,"
 //             "call_contract_step: %d has tx[%s]to[%s][%s], uni_gid[%s], now tx size: %d, added_tx_map_ size: %u!\n",
@@ -162,7 +162,7 @@ void TxPool::CheckTimeoutTx() {
             }
 
             iter->second->valid = false;
-            db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
+//             db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
             BFT_DEBUG("timeout remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
                 iter->first,
                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
@@ -182,7 +182,7 @@ void TxPool::CheckTimeoutTx() {
                 }
 
                 iter->second->valid = false;
-                db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
+//                 db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
                 tx_pool_.erase(iter++);
                 continue;
             }
@@ -212,7 +212,7 @@ void TxPool::GetTx(std::vector<TxItemPtr>& res_vec) {
                 }
             }
 
-            db::Db::Instance()->hdel(pool_name_, item->uni_gid);
+//             db::Db::Instance()->hdel(pool_name_, item->uni_gid);
             continue;
         }
 
@@ -515,7 +515,7 @@ void TxPool::RemoveTx(
             common::Encode::HexEncode(gid).c_str(),
             common::Encode::HexEncode(uni_gid).c_str());
         item_iter->second->valid = false;
-        db::Db::Instance()->hdel(pool_name_, item_iter->second->uni_gid);
+//         db::Db::Instance()->hdel(pool_name_, item_iter->second->uni_gid);
         tx_pool_.erase(item_iter);
     } else {
         BFT_DEBUG("not RemoveTx remove tx tx index [to: %d] [pool idx: %d] type: %d,"
@@ -565,9 +565,9 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
             }
 
             iter->second->valid = false;
-            BFT_ERROR("call hdel now.");
-            db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
-            BFT_ERROR("call hdel now over.");
+//             BFT_ERROR("call hdel now.");
+//             db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
+//             BFT_ERROR("call hdel now over.");
             tx_pool_.erase(iter);
         }
     }

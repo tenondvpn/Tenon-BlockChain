@@ -187,6 +187,7 @@ int NetworkInit::Init(int argc, char** argv) {
 
 int NetworkInit::CheckJoinWaitingPool() {
     if (common::GlobalInfo::Instance()->network_id() != common::kInvalidUint32) {
+        INIT_INFO("init with network id: %u", common::GlobalInfo::Instance()->network_id());
         return kInitSuccess;
     }
 
@@ -218,10 +219,12 @@ int NetworkInit::CheckJoinWaitingPool() {
         st = db::Db::Instance()->Put(kInitJoinWaitingPoolDbKey, std::to_string(waiting_network_id));
         if (!st.ok()) {
             INIT_ERROR("db::Db::Instance()->Put network[%u] failed!", waiting_network_id);
+            return kInitError;
         }
     }
 
     common::GlobalInfo::Instance()->set_network_id(waiting_network_id);
+    INIT_INFO("init with network id: %u", waiting_network_id);
     return kInitSuccess;
 }
 

@@ -135,10 +135,10 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-    BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
-        "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
-        bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
-        bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
+//     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
+//         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
+//         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
+//         bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
     if (bls_msg.index() >= members_->size()) {
         BLS_ERROR("bls_msg.index() >= members_->size()");
         return;
@@ -190,6 +190,7 @@ void BlsDkg::HandleSwapSecKeyRes(
     }
 
     if (bls_msg.swapkey_res().sec_key_len() <= 0) {
+        BLS_ERROR("swapkey_res().sec_key_len()[%d]", bls_msg.swapkey_res().index());
         return;
     }
 
@@ -197,6 +198,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         std::to_string(bls_msg.swapkey_res().sec_key_len()) +
         std::to_string(bls_msg.swapkey_res().index());
     if (!IsSignValid(bls_msg, &msg_hash)) {
+        BLS_ERROR("sign invalid big int[%d]", bls_msg.swapkey_res().index());
         return;
     }
 
@@ -245,6 +247,8 @@ void BlsDkg::HandleSwapSecKeyRes(
         FinishNoLock();
     }
     has_swaped_keys_[bls_msg.index()] = true;
+    BLS_DEBUG("swap key success: %d, valid_sec_key_count: %d",
+        bls_msg.index(), valid_sec_key_count_);
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {

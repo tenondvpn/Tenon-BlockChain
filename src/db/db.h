@@ -177,7 +177,7 @@ public:
         return ssdb_->zfix(name);
     }
 
-    int hset(
+    inline int hset(
             const Bytes &name,
             const Bytes &key,
             const Bytes &val,
@@ -186,13 +186,13 @@ public:
         return ssdb_->hset(name, key, val, log_type);
     }
 
-    int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
+    inline int hdel(const Bytes &name, const Bytes &key, char log_type = BinlogType::SYNC) {
         TENON_ERROR("call hdel now 0: %lu", ssdb_);
         return ssdb_->hdel(name, key, log_type);
     }
 
     // -1: error, 1: ok, 0: value is not an integer or out of range
-    int hincr(
+    inline int hincr(
             const Bytes &name,
             const Bytes &key,
             int64_t by,
