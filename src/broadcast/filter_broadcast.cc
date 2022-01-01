@@ -203,6 +203,12 @@ void FilterBroadcast::Send(
         dht::BaseDhtPtr& dht_ptr,
         const transport::protobuf::Header& message,
         const std::vector<dht::NodePtr>& nodes) {
+    dht::DhtPtr readobly_dht = dht_ptr->readonly_dht();
+    if (message.has_debug()) {
+        BROAD_DEBUG("%s, broadcast out all nodes size: %d, des size: %d, msg id: %lu",
+            message.debug().c_str(), readobly_dht->size(), nodes.size(), message.id());
+    }
+
     for (uint32_t i = 0; i < nodes.size(); ++i) {
 //         transport::MultiThreadHandler::Instance()->transport()->Send(
 //                 nodes[i]->public_ip(),

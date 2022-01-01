@@ -436,6 +436,8 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             elect_net_heights_map_[prev_elect_block.shard_network_id()]) {
         elect_net_heights_map_[prev_elect_block.shard_network_id()] =
             elect_block.prev_members().prev_elect_height();
+        ELECT_DEBUG("set netid: %d, elect height: %lu",
+            prev_elect_block.shard_network_id(), elect_block.prev_members().prev_elect_height());
     }
 
     if (prev_elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id() ||

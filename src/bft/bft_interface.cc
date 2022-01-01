@@ -217,8 +217,8 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     std::lock_guard<std::mutex> guard(mutex_);
     if (local_elect_height != bft_msg.elect_height()) {
         BFT_ERROR("leader elect height not equal to local. "
-            "local elect height: %lu, leader elect height: %lu",
-            local_elect_height, bft_msg.elect_height());
+            "local elect height: %lu, leader elect height: %lu, local netid: %d",
+            local_elect_height, bft_msg.elect_height(), common::GlobalInfo::Instance()->network_id());
         return false;
     }
 
