@@ -223,9 +223,9 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
             } else {
                 BFT_INFO("join new election shard network: %u",
                     local_netid + network::kConsensusWaitingShardOffset);
-                common::GlobalInfo::Instance()->set_network_id(
-                    local_netid + network::kConsensusWaitingShardOffset);
             }
+            common::GlobalInfo::Instance()->set_network_id(
+                local_netid + network::kConsensusWaitingShardOffset);
         }
     } else {
         if (local_netid != elect_block.shard_network_id()) {
@@ -234,8 +234,8 @@ void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bo
                 BFT_ERROR("join elected network failed![%u]", elect_block.shard_network_id());
             } else {
                 BFT_INFO("join new election shard network: %u", elect_block.shard_network_id());
-                common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
             }
+            common::GlobalInfo::Instance()->set_network_id(elect_block.shard_network_id());
         } else {
             std::vector<std::string> erase_nodes;
             for (auto iter = prev_elected_ids_.begin(); iter != prev_elected_ids_.end(); ++iter) {
