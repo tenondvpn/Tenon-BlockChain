@@ -459,7 +459,7 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
     }
 
     VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu, max_count_: %d, count_iter->second: %d",
-        common::Encode::HexEncode(id).c_str(), vss_msg.random(), max_count_, count_iter->second);
+        common::Encode::HexEncode(id).c_str(), final_random_num, max_count_, count_iter->second);
 }
 
 void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {

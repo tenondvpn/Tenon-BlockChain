@@ -645,7 +645,7 @@ void BlsDkg::SwapSecKey() try {
                 common::GlobalInfo::Instance()->network_id(),
                 0,
                 (*members_)[i]->id);
-            msg.set_des_dht_key((*members_)[i]->id);
+            msg.set_des_dht_key(dht_key.StrKey());
             if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
                 network::Route::Instance()->Send(msg);
             } else {
