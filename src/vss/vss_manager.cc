@@ -105,6 +105,7 @@ void VssManager::OnElectBlock(uint32_t network_id, uint64_t elect_height) {
 uint64_t VssManager::GetConsensusFinalRandom() {
     std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
     if ((max_count_ * 3 / 2 + 1) < member_count_ || max_count_random_ == 0) {
+        BLS_ERROR("use old random: %lu, max_count_: %d, expect: %d, member_count_: %d, max_count_random_: %lu", epoch_random_, max_count_, (max_count_ * 3 / 2 + 1), member_count_, max_count_random_);
         return epoch_random_;
     }
 
@@ -456,6 +457,9 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
         max_count_ = count_iter->second;
         max_count_random_ = final_random_num;
     }
+
+    VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu, max_count_: %d, count_iter->second: %d",
+        common::Encode::HexEncode(id).c_str(), vss_msg.random(), max_count_, count_iter->second);
 }
 
 void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
@@ -485,8 +489,6 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     }
 
     SetConsensusFinalRandomNum(id, vss_msg.random());
-    VSS_DEBUG("HandleThirdPeriodRandom: %s, %llu",
-        common::Encode::HexEncode(id).c_str(), vss_msg.random());
 }
 
 }  // namespace vss

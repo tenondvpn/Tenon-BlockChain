@@ -629,10 +629,11 @@ int TcpTransport::Send(
         return kTransportError;
     }
 
-//     if (message.type() == common::kBlsMessage) {
-//         TRANSPORT_ERROR("send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
-//             message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
-//     }
+    if (message.has_debug()) {
+        TRANSPORT_ERROR("%s send message id: %lu, type: %d, to: %s:%d, debug: %s, msg hash: %lu, des net id: %s",
+            message.debug().c_str();
+            message.id(), message.type(), des_ip.c_str(), des_port, message.debug().c_str(), message.hash(), common::Encode::HexEncode(message.des_dht_key()).c_str());
+    }
     return kTransportSuccess;
 }
 

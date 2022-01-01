@@ -645,7 +645,7 @@ void BlsDkg::SwapSecKey() try {
                 common::GlobalInfo::Instance()->network_id(),
                 0,
                 (*members_)[i]->id);
-            msg.set_des_dht_key(dht_key.StrKey());
+            msg.set_des_dht_key((*members_)[i]->id);
             if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
                 network::Route::Instance()->Send(msg);
             } else {
@@ -967,6 +967,7 @@ void BlsDkg::CreateDkgMessage(
     msg.set_client(local_node->client_mode);
     msg.set_universal(false);
     msg.set_hop_count(0);
+    msg.set_debug("dkg_msg_debug");
     if (!message_hash.empty()) {
         security::Signature sign;
         bool sign_res = security::Schnorr::Instance()->Sign(

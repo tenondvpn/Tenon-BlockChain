@@ -199,11 +199,17 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
+    if (message_ptr->has_debug()) {
+        TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
+            message_ptr->debug().c_str(),
+            message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+            from_ip.c_str(), from_port);
+    }
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
-#ifndef LEGO_TRACE_MESSAGE
-    message_ptr->clear_debug();
-#endif
+// #ifndef LEGO_TRACE_MESSAGE
+//     message_ptr->clear_debug();
+// #endif
 
 #ifdef ENABLE_CLIENT_MODE
     if (message_ptr->des_dht_key().size() != dht::kDhtKeySize) {
@@ -261,11 +267,6 @@ void MultiThreadHandler::HandleRemoteMessage(
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
-//         if (message_ptr->type() == common::kBlsMessage) {
-//             TRANSPORT_DEBUG("msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, priority: %d, size: %u",
-//                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-//                 from_ip.c_str(), from_port, priority, priority_queue_map_[priority].size());
-//         }
 	}
 }
 

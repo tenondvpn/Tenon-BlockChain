@@ -314,6 +314,10 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
     ClearExistsNetwork(prev_elect_block.shard_network_id());
     auto& prev_members_bls = elect_block.prev_members().bls_pubkey();
     if (prev_members_bls.size() != in.size()) {
+        ELECT_ERROR("prev_members_bls.size(): %d, in.size(): %d, height: %lu",
+            prev_members_bls.size(),
+            in.size(),
+            elect_block.prev_members().prev_elect_height());
         assert(false);
         return false;
     }
@@ -436,7 +440,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     if (prev_elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id() ||
             (prev_elect_block.shard_network_id() + network::kConsensusWaitingShardOffset) ==
-            common::GlobalInfo::Instance()->network_id()) {
+            common::GlobalInfo::Instance()->network_id() || *elected) {
         leader_rotation_.OnElectBlock(shard_members_ptr);
     }
 
