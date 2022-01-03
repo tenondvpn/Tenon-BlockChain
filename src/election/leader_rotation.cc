@@ -26,6 +26,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
         (*iter)->leader_load_count = 0;
         if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
             rotation_item_[invalid_idx].local_member = *iter;
+            ELECT_DEBUG("new election block: %s", common::Encode::HexEncode((*iter)->id).c_str());
         }
 
         if ((*iter)->pool_index_mod_num >= 0) {

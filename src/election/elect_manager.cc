@@ -444,6 +444,11 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             (prev_elect_block.shard_network_id() + network::kConsensusWaitingShardOffset) ==
             common::GlobalInfo::Instance()->network_id() || *elected) {
         leader_rotation_.OnElectBlock(shard_members_ptr);
+        ELECT_DEBUG("set netid: %d, elect height: %lu, now net: %d, elected: %d",
+            prev_elect_block.shard_network_id(),
+            elect_block.prev_members().prev_elect_height(),
+            common::GlobalInfo::Instance()->network_id(),
+            *elected);
     }
 
     return true;

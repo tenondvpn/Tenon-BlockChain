@@ -379,6 +379,7 @@ int AccountManager::AddBlockItemToDb(
 
 void AccountManager::SetMaxHeight(uint32_t pool_idx, uint64_t height) {
     block_pools_[pool_idx]->SetMaxHeight(height);
+    BLOCK_DEBUG("pool: %d set max height: %lu", pool_idx, height);
 }
 
 int AccountManager::AddBlockItemToCache(
@@ -851,7 +852,7 @@ void AccountManager::CheckMissingHeight() {
         return;
     }
 
-//     std::string missing_heihts = std::to_string(net_id) + ": ";
+    std::string missing_heihts = std::to_string(net_id) + ": ";
     for (int32_t i = (int32_t)common::kImmutablePoolSize; i >= 0; --i) {
         std::vector<uint64_t> missing_heights;
         block_pools_[i]->GetMissingHeights(&missing_heights);
@@ -860,7 +861,7 @@ void AccountManager::CheckMissingHeight() {
         }
 
         synced_height += missing_heights.size();
-//         missing_heihts += std::to_string(i)  + ": [ ";
+        missing_heihts += std::to_string(i)  + ": [ ";
         for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
             if (i == common::kImmutablePoolSize) {
                 sync::KeyValueSync::Instance()->AddSyncHeight(
@@ -875,7 +876,7 @@ void AccountManager::CheckMissingHeight() {
                     missing_heights[h_idx],
                     sync::kSyncHighest);
             }
-//             missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
+            missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
         }
 
         if (synced_height > 64) {
@@ -883,7 +884,7 @@ void AccountManager::CheckMissingHeight() {
         }
     }
 
-//     BLOCK_DEBUG("missing_heihts: %s", missing_heihts.c_str());
+    BLOCK_DEBUG("missing_heihts: %s", missing_heihts.c_str());
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));
@@ -948,6 +949,7 @@ void AccountManager::SendRefreshHeightsRequest() {
 
     msg.set_data(block_msg.SerializeAsString());
     dht->SendToClosestNode(msg);
+    BLOCK_DEBUG("sent refresh max height.");
 }
 
 void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Header& header) {
@@ -988,13 +990,13 @@ int AccountManager::HandleRefreshHeightsReq(
 int AccountManager::HandleRefreshHeightsRes(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
-//     std::string pool_heights;
+    std::string pool_heights;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
-//         pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i)) + ",";
+        pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i)) + ",";
     }
 
-//     BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
+    BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
     return kBlockSuccess;
 }

@@ -109,7 +109,7 @@ bool BftInterface::ThisNodeIsLeader(const bft::protobuf::BftMessage& bft_msg) {
 
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
-        BFT_ERROR("get local bft member failed!");
+        BFT_ERROR("get local bft member failed net: %d", bft_msg.net_id());
         return false;
     }
 
@@ -186,7 +186,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
     leader_index_ = leader_mem_ptr_->index;
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
-        BFT_ERROR("get local bft member failed!");
+        BFT_ERROR("get local bft member failed net: %d", bft_msg.net_id());
         return false;
     }
 
