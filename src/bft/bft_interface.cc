@@ -301,10 +301,12 @@ int BftInterface::LeaderCommitOk(
         const std::string& id) {
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_commit_) {
+        BFT_DEBUG("leader_handled_commit_");
         return kBftHandled;
     }
 
     if (!prepare_bitmap_.Valid(index)) {
+        BFT_DEBUG("index invalid: %d", index);
         return kBftWaitingBackup;
     }
 
@@ -312,6 +314,8 @@ int BftInterface::LeaderCommitOk(
     commit_aggree_set_.insert(id);
     precommit_bitmap_.Set(index);
     backup_commit_signs_[index] = backup_sign;
+    BFT_DEBUG("commit_aggree_set_.size() >= min_aggree_member_count_",
+        commit_aggree_set_.size(), min_aggree_member_count_);
     if (commit_aggree_set_.size() >= min_aggree_member_count_) {
         leader_handled_commit_ = true;
         if (LeaderCreateCommitAggSign() != kBftSuccess) {

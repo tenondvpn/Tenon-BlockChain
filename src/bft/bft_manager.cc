@@ -1150,6 +1150,8 @@ int BftManager::LeaderCommit(
     }
 
     if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
+        BFT_ERROR("bft_ptr->members_ptr()->size() <= bft_msg.member_index()",
+            bft_ptr->members_ptr()->size(), bft_msg.member_index());
         return kBftError;
     }
 
@@ -1174,13 +1176,16 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-    auto local_node = dht_ptr->local_node();
+//     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+//     auto local_node = dht_ptr->local_node();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
+        BFT_ERROR("bft_msg.member_index() == elect::kInvalidMemberIndex.");
         return kBftError;
     }
 
     if (bft_ptr->members_ptr()->size() <= bft_msg.member_index()) {
+        BFT_ERROR("bft_msg.member_index() == elect::kInvalidMemberIndex.",
+            bft_ptr->members_ptr()->size(), bft_msg.member_index());
         return kBftError;
     }
 
