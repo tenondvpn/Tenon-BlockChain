@@ -36,7 +36,7 @@ static const uint32_t kConsensusShardBeginNetworkId = 3u;  // eq
 static const uint32_t kConsensusShardEndNetworkId = 1026u;  // less
 static const uint32_t kConsensusWaitingShardOffset = kConsensusShardEndNetworkId - kRootCongressNetworkId;
 static const uint32_t kRootCongressWaitingNetworkId = kRootCongressNetworkId + kConsensusWaitingShardOffset;
-static const uint32_t kConsensusWaitingShardBeginNetworkId = kConsensusShardBeginNetworkId + kConsensusWaitingShardOffset;  // eq
+static const uint32_t kConsensusWaitingShardBeginNetworkId = kRootCongressNetworkId + kConsensusWaitingShardOffset;  // eq
 static const uint32_t kConsensusWaitingShardEndNetworkId = kConsensusShardEndNetworkId + kConsensusWaitingShardOffset;  // less
 
 static const uint32_t kConsensusShardNetworkCount = (

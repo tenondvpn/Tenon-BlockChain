@@ -843,44 +843,42 @@ std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {
 void AccountManager::CheckMissingHeight() {
     uint32_t synced_height = 0;
     uint32_t net_id = common::GlobalInfo::Instance()->network_id();
-    if (net_id >= network::kConsensusShardBeginNetworkId &&
+    if (net_id >= network::kConsensusWaitingShardBeginNetworkId &&
             net_id < network::kConsensusWaitingShardEndNetworkId) {
         net_id -= network::kConsensusWaitingShardOffset;
     }
     
-    if (net_id < network::kRootCongressNetworkId || net_id >= network::kConsensusShardEndNetworkId) {
-        return;
-    }
-
     std::string missing_heihts = std::to_string(net_id) + ": ";
-    for (int32_t i = (int32_t)common::kImmutablePoolSize; i >= 0; --i) {
-        std::vector<uint64_t> missing_heights;
-        block_pools_[i]->GetMissingHeights(&missing_heights);
-        if (missing_heights.empty()) {
-            continue;
-        }
-
-        synced_height += missing_heights.size();
-        missing_heihts += std::to_string(i)  + ": [ ";
-        for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
-            if (i == common::kImmutablePoolSize) {
-                sync::KeyValueSync::Instance()->AddSyncHeight(
-                    network::kRootCongressNetworkId,
-                    i,
-                    missing_heights[h_idx],
-                    sync::kSyncHighest);
-            } else {
-                sync::KeyValueSync::Instance()->AddSyncHeight(
-                    net_id,
-                    i,
-                    missing_heights[h_idx],
-                    sync::kSyncHighest);
+    if (net_id >= network::kRootCongressNetworkId && net_id < network::kConsensusShardEndNetworkId) {
+        for (int32_t i = (int32_t)common::kImmutablePoolSize; i >= 0; --i) {
+            std::vector<uint64_t> missing_heights;
+            block_pools_[i]->GetMissingHeights(&missing_heights);
+            if (missing_heights.empty()) {
+                continue;
             }
-            missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
-        }
 
-        if (synced_height > 64) {
-            break;
+            synced_height += missing_heights.size();
+            missing_heihts += std::to_string(i)  + ": [ ";
+            for (uint32_t h_idx = 0; h_idx < missing_heights.size(); ++h_idx) {
+                if (i == common::kImmutablePoolSize) {
+                    sync::KeyValueSync::Instance()->AddSyncHeight(
+                        network::kRootCongressNetworkId,
+                        i,
+                        missing_heights[h_idx],
+                        sync::kSyncHighest);
+                } else {
+                    sync::KeyValueSync::Instance()->AddSyncHeight(
+                        net_id,
+                        i,
+                        missing_heights[h_idx],
+                        sync::kSyncHighest);
+                }
+                missing_heihts += std::to_string(missing_heights[h_idx]) + ", ";
+            }
+
+            if (synced_height > 64) {
+                break;
+            }
         }
     }
 
