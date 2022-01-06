@@ -97,6 +97,13 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
 
     if (message_processor_[header.type()] == nullptr) {
         RouteByUniversal(header);
+        if (header_ptr->has_debug()) {
+            NETWORK_DEBUG("message_processor_[header.type()] == nullptr %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
+                header_ptr->debug().c_str(),
+                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
+                header_ptr->from_ip().c_str(), header_ptr->from_port());
+            assert(false);
+        }
         return;
     }
 
@@ -104,6 +111,13 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
             kUniversalNetworkId);
     if (!uni_dht) {
         NETWORK_ERROR("get uni dht failed!");
+        if (header_ptr->has_debug()) {
+            NETWORK_DEBUG("get uni dht failed %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
+                header_ptr->debug().c_str(),
+                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
+                header_ptr->from_ip().c_str(), header_ptr->from_port());
+            assert(false);
+        }
         return;
     }
 
@@ -116,7 +130,25 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto dht = GetDht(header.des_dht_key(), header.universal());
     if (!dht) {
         RouteByUniversal(header);
+        if (header_ptr->has_debug()) {
+            uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
+            NETWORK_DEBUG("GetDht dht failed %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, net_id: %d",
+                header_ptr->debug().c_str(),
+                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
+                header_ptr->from_ip().c_str(), header_ptr->from_port(), net_id);
+//             assert(false);
+        }
+
         return;
+    }
+
+    if (header.handled() && header_ptr->has_debug()) {
+        uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
+        NETWORK_DEBUG("GetDht dht failed %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, net_id: %d, header.handled(): %d",
+            header_ptr->debug().c_str(),
+            header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
+            header_ptr->from_ip().c_str(), header_ptr->from_port(), net_id, header.handled());
+        assert(false);
     }
 
     if (!header.handled()) {

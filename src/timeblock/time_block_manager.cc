@@ -243,8 +243,8 @@ void TimeBlockManager::UpdateTimeBlock(
     }
 
     CreateTimeBlockTx();
-//     BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
-//         (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
+    BFT_ERROR("LeaderNewTimeBlockValid offset_tm final[%lu], prev[%lu]",
+        (uint64_t)latest_time_block_height_, (uint64_t)latest_time_block_tm_);
     vss::VssManager::Instance()->OnTimeBlock(
         latest_time_block_tm,
         latest_time_block_height,
@@ -301,6 +301,7 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
+    TMBLOCK_INFO("pool_mod_num: %d", pool_mod_num);
     if (pool_mod_num >= 0) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }

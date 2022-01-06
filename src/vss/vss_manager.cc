@@ -176,13 +176,14 @@ uint64_t VssManager::GetAllVssValid() {
 }
 
 bool VssManager::IsVssFirstPeriods() {
+    return true;
 #ifdef TENON_UNITTEST
     return true;
 #endif
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssTimePeriodOffsetSeconds <= now_seconds &&
-            latest_tm_block_tm_ + kVssFirstPeriodTimeout - kVssTimePeriodOffsetSeconds >
-            now_seconds) {
+            latest_tm_block_tm_ + kVssFirstPeriodTimeout >
+            now_seconds + kVssTimePeriodOffsetSeconds) {
         return true;
     }
 
@@ -190,13 +191,14 @@ bool VssManager::IsVssFirstPeriods() {
 }
 
 bool VssManager::IsVssSecondPeriods() {
+    return true;
 #ifdef TENON_UNITTEST
     return true;
 #endif
     auto now_seconds = common::TimeUtils::TimestampSeconds();
     if (latest_tm_block_tm_ + kVssFirstPeriodTimeout <= now_seconds &&
-            latest_tm_block_tm_ + kVssSecondPeriodTimeout - kVssTimePeriodOffsetSeconds >
-            now_seconds) {
+            latest_tm_block_tm_ + kVssSecondPeriodTimeout >
+            now_seconds + kVssTimePeriodOffsetSeconds) {
         return true;
     }
 
@@ -204,6 +206,7 @@ bool VssManager::IsVssSecondPeriods() {
 }
 
 bool VssManager::IsVssThirdPeriods() {
+    return true;
 #ifdef TENON_UNITTEST
     return true;
 #endif
@@ -217,6 +220,7 @@ bool VssManager::IsVssThirdPeriods() {
 }
 
 bool VssManager::IsVssFirstPeriodsHandleMessage() {
+    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
@@ -230,6 +234,7 @@ bool VssManager::IsVssFirstPeriodsHandleMessage() {
 }
 
 bool VssManager::IsVssSecondPeriodsHandleMessage() {
+    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
@@ -243,6 +248,7 @@ bool VssManager::IsVssSecondPeriodsHandleMessage() {
 }
 
 bool VssManager::IsVssThirdPeriodsHandleMessage() {
+    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
@@ -463,16 +469,21 @@ void VssManager::SetConsensusFinalRandomNum(const std::string& id, uint64_t fina
 }
 
 void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
-    if (!IsVssThirdPeriodsHandleMessage()) {
-        return;
-    }
-
     auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(vss_msg.pubkey());
     auto mem_index = elect::ElectManager::Instance()->GetMemberIndex(
         network::kRootCongressNetworkId,
         id);
+    if (!IsVssThirdPeriodsHandleMessage()) {
+        VSS_ERROR("not IsVssThirdPeriodsHandleMessage, id: %s, pk: %s",
+            common::Encode::HexEncode(id).c_str(),
+            common::Encode::HexEncode(vss_msg.pubkey()).c_str());
+        return;
+    }
+
     if (mem_index == elect::kInvalidMemberIndex) {
-        VSS_ERROR("mem_index == elect::kInvalidMemberIndex");
+        VSS_ERROR("mem_index == elect::kInvalidMemberIndex, id: %s, pk: %s",
+            common::Encode::HexEncode(id).c_str(),
+            common::Encode::HexEncode(vss_msg.pubkey()).c_str());
         return;
     }
 

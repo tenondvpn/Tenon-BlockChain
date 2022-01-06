@@ -726,7 +726,7 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
             DispatchPool::Instance()->BftOver(bft_ptr);
         }
 
-//         BFT_ERROR("LeaderPrepare bft failed!");
+        BFT_ERROR("LeaderPrepare bft failed!");
         return leader_pre;
     }
 
@@ -1396,7 +1396,7 @@ int BftManager::BackupCommit(
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-//     LeaderBroadcastToAcc(bft_ptr, false);
+    LeaderBroadcastToAcc(bft_ptr, false);
     // start new bft
     RemoveBft(bft_ptr->gid(), true);
     return kBftSuccess;
