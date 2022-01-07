@@ -1,6 +1,8 @@
 #include "election/leader_rotation.h"
 
 #include "bft/dispatch_pool.h"
+#include "network/dht_manager.h"
+#include "network/route.h"
 
 namespace tenon {
 
@@ -75,7 +77,7 @@ void LeaderRotation::SendRotationReq(const std::string& id, int32_t pool_mod_num
 }
 
 void LeaderRotation::LeaderRotationReq(
-        protobuf::LeaderRotationMessage& leader_rotation,
+        const protobuf::LeaderRotationMessage& leader_rotation,
         int32_t index,
         int32_t all_count) {
     std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
@@ -120,7 +122,7 @@ void LeaderRotation::CheckRotation() {
         }
 
         ChangeLeader(new_leader->id, i);
-        SendRotationReq(des_id, i);
+        SendRotationReq(new_leader->id, i);
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));

@@ -2,12 +2,13 @@
 
 #include <vector>
 
+#include "bft/bft_utils.h"
 #include "common/time_utils.h"
 #include "common/tick.h"
 #include "election/elect_utils.h"
 #include "election/elect_node_detail.h"
-
-#include "bft/bft_utils.h"
+#include "election/proto/elect.pb.h"
+#include "election/proto/elect_proto.h"
 
 namespace tenon {
 
@@ -19,7 +20,10 @@ public:
     ~LeaderRotation();
     void OnElectBlock(const MembersPtr& members);
     int32_t GetThisNodeValidPoolModNum();
-    void LeaderRotationReq(protobuf::LeaderRotationMessage& leader_rotation, int32_t index, int32_t all_count);
+    void LeaderRotationReq(
+        const protobuf::LeaderRotationMessage& leader_rotation,
+        int32_t index,
+        int32_t all_count);
     BftMemberPtr local_member() {
         return rotation_item_[valid_idx_].local_member;
     }
