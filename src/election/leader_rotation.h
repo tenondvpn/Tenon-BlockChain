@@ -19,7 +19,7 @@ public:
     ~LeaderRotation();
     void OnElectBlock(const MembersPtr& members);
     int32_t GetThisNodeValidPoolModNum();
-    void LeaderRotationReq(protobuf::LeaderRotationMessage& leader_rotation, int32_t index);
+    void LeaderRotationReq(protobuf::LeaderRotationMessage& leader_rotation, int32_t index, int32_t all_count);
     BftMemberPtr local_member() {
         return rotation_item_[valid_idx_].local_member;
     }

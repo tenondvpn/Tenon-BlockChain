@@ -132,6 +132,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
             return;
         }
 
+        auto all_size = members_ptr_[network::kRootCongressNetworkId]->size();
         auto mem_ptr = GetMemberWithId(network::kRootCongressNetworkId, id);
         if (mem_ptr) {
             std::string hash_str = ec_msg.leader_rotation().leader_id() + 
@@ -143,7 +144,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
                 return;
             }
 
-            leader_rotation_.LeaderRotationReq(ec_msg.leader_rotation(), mem_index);
+            leader_rotation_.LeaderRotationReq(ec_msg.leader_rotation(), mem_index, all_size);
         }
     }
 

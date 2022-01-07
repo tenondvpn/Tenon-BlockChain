@@ -76,7 +76,8 @@ void LeaderRotation::SendRotationReq(const std::string& id, int32_t pool_mod_num
 
 void LeaderRotation::LeaderRotationReq(
         protobuf::LeaderRotationMessage& leader_rotation,
-        int32_t index) {
+        int32_t index,
+        int32_t all_count) {
     std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
     auto iter = cons_rotation_leaders_.find(key);
     if (iter == cons_rotation_leaders_.end()) {
@@ -84,7 +85,7 @@ void LeaderRotation::LeaderRotationReq(
         cons_rotation_leaders_[key].insert(index);
     } else {
         iter->second.insert(index);
-        if (iter->second.si) {
+        if (iter->second.size() >= (all_count / 3 * 2 + 1)) {
             std::lock_guard<std::mutex> guard(rotation_mutex_);
             ChangeLeader(leader_rotation.leader_id(), leader_rotation.pool_mod_num())
         }
