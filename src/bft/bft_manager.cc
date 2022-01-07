@@ -1396,7 +1396,10 @@ int BftManager::BackupCommit(
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-    LeaderBroadcastToAcc(bft_ptr, false);
+    if (elect::ElectManager::Instance()->local_node_is_super_leader()) {
+        LeaderBroadcastToAcc(bft_ptr, false);
+    }
+
     // start new bft
     RemoveBft(bft_ptr->gid(), true);
     return kBftSuccess;

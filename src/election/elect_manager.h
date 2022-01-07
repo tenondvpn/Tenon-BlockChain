@@ -106,6 +106,10 @@ public:
         return waiting_elect_height_[network_id];
     }
 
+    bool local_node_is_super_leader() {
+        return bool local_node_is_super_leader_;
+    }
+
 private:
     ElectManager();
     ~ElectManager();
@@ -163,6 +167,7 @@ private:
     std::set<std::string> prev_elected_ids_;
     std::set<std::string> now_elected_ids_;
     LeaderRotation leader_rotation_;
+    bool local_node_is_super_leader_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(ElectManager);
 };

@@ -476,6 +476,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             *elected);
     }
 
+    local_node_is_super_leader_ = local_node_is_super_leader;
     return true;
 }
 

@@ -90,7 +90,6 @@ struct BftMember {
     std::string leader_ecdh_key;
     libff::alt_bn128_G2 bls_publick_key;
     bool valid_leader{ true };
-    bool leader_load_count{ 0 };
 };
 
 typedef std::shared_ptr<BftMember> BftMemberPtr;
