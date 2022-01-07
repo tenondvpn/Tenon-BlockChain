@@ -102,7 +102,7 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
                 header_ptr->debug().c_str(),
                 header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
                 header_ptr->from_ip().c_str(), header_ptr->from_port());
-            assert(false);
+//             assert(false);
         }
         return;
     }

@@ -123,6 +123,30 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
+    if (ec_msg.has_leader_rotation()) {
+        auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
+        auto mem_index = GetMemberIndex(
+            network::kRootCongressNetworkId,
+            ec_msg.leader_rotation().leader_id());
+        if (mem_index == kInvalidMemberIndex) {
+            return;
+        }
+
+        auto mem_ptr = GetMemberWithId(network::kRootCongressNetworkId, id);
+        if (mem_ptr) {
+            std::string hash_str = ec_msg.leader_rotation().leader_id() + 
+                std::to_string(ec_msg.leader_rotation().pool_mod_num());
+            auto message_hash = common::Hash::keccak256(hash_str);
+            auto pubkey = security::PublicKey(ec_msg.pubkey());
+            auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
+            if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                return;
+            }
+
+            leader_rotation_.LeaderRotationReq(ec_msg.leader_rotation(), mem_index);
+        }
+    }
+
     if (ec_msg.has_waiting_nodes()) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         auto mem_ptr = GetMemberWithId(network::kRootCongressNetworkId, id);

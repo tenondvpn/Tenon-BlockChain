@@ -7,7 +7,7 @@ namespace tenon {
 namespace elect {
 
 LeaderRotation::LeaderRotation() {
-//     tick_.CutOff(3000000l, std::bind(&LeaderRotation::CheckRotation, this));
+    tick_.CutOff(1000000l * 60l, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
 LeaderRotation::~LeaderRotation() {}
@@ -44,6 +44,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 
     rotation_item_[invalid_idx].rotation_idx = rotation_item_[invalid_idx].max_pool_mod_num + 1;
     valid_idx_ = invalid_idx;
+    cons_rotation_leaders_.clear();
 }
 
 int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
@@ -54,7 +55,44 @@ int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
     return rotation_item_[valid_idx_].local_member->pool_index_mod_num;
 }
 
+void LeaderRotation::SendRotationReq(const std::string& id, int32_t pool_mod_num) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    transport::protobuf::Header msg;
+    elect::ElectProto::CreateLeaderRotation(
+        dht->local_node(),
+        id,
+        pool_mod_num,
+        msg);
+    if (msg.has_data()) {
+        network::Route::Instance()->Send(msg);
+        network::Route::Instance()->SendToLocal(msg);
+    }
+}
+
+void LeaderRotation::LeaderRotationReq(
+        protobuf::LeaderRotationMessage& leader_rotation,
+        int32_t index) {
+    std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
+    auto iter = cons_rotation_leaders_.find(key);
+    if (iter == cons_rotation_leaders_.end()) {
+        cons_rotation_leaders_[key] = std::set<int32_t>();
+        cons_rotation_leaders_[key].insert(index);
+    } else {
+        iter->second.insert(index);
+        if (iter->second.si) {
+            std::lock_guard<std::mutex> guard(rotation_mutex_);
+            ChangeLeader(leader_rotation.leader_id(), leader_rotation.pool_mod_num())
+        }
+    }
+}
+
 void LeaderRotation::CheckRotation() {
+    std::lock_guard<std::mutex> guard(rotation_mutex_);
     std::vector<int32_t> should_change_leaders;
     for (int32_t i = 0; i <= rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
         bool change_leader = false;
@@ -80,24 +118,55 @@ void LeaderRotation::CheckRotation() {
             continue;
         }
 
-        rotation_item_[valid_idx_].pool_leader_map[i]->valid_leader = false;
-        rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = -1;
-        std::string src_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
-        rotation_item_[valid_idx_].pool_leader_map[i] = new_leader;
-        rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num = i;
-        std::string des_id = rotation_item_[valid_idx_].pool_leader_map[i]->id;
-        ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
-            i, common::Encode::HexEncode(src_id).c_str(),
-            common::Encode::HexEncode(des_id).c_str(),
-            rotation_item_[valid_idx_].pool_leader_map[i]->pool_index_mod_num);
-        for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
-            if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
-                bft::DispatchPool::Instance()->ChangeLeader(j);
+        ChangeLeader(new_leader->id, i);
+        SendRotationReq(des_id, i);
+    }
+
+    tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
+}
+
+void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
+    bool change_leader = false;
+    for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
+        if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == pool_mod_num) {
+            if (bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
+                change_leader = true;
+                break;
             }
         }
     }
 
-    tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
+    if (!change_leader) {
+        return;
+    }
+
+    BftMemberPtr new_leader = nullptr;
+    for (int32_t i = 0; i < rotation_item_[valid_idx_].valid_leaders.size(); ++i) {
+        if (rotation_item_[valid_idx_].valid_leaders[i]->id == id) {
+            new_leader = rotation_item_[valid_idx_].valid_leaders[i];
+            break;
+        }
+    }
+
+    if (new_leader == nullptr) {
+        return;
+    }
+
+    rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->valid_leader = false;
+    rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = -1;
+    std::string src_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
+    rotation_item_[valid_idx_].pool_leader_map[pool_mod_num] = new_leader;
+    rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = pool_mod_num;
+    std::string des_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
+    ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
+        pool_mod_num, common::Encode::HexEncode(src_id).c_str(),
+        common::Encode::HexEncode(des_id).c_str(),
+        rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num);
+    for (int32_t j = 0; j < common::kInvalidPoolIndex; ++j) {
+        if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == pool_mod_num) {
+            bft::DispatchPool::Instance()->ChangeLeader(j);
+        }
+    }
 }
 
 BftMemberPtr LeaderRotation::ChooseValidLeader() {

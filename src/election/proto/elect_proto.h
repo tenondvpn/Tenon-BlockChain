@@ -20,6 +20,11 @@ public:
         const dht::NodePtr& local_node,
         uint32_t waiting_shard_id,
         transport::protobuf::Header& msg);
+    static void CreateLeaderRotation(
+        const dht::NodePtr& local_node,
+        const std::string& leader_id,
+        uint32_t pool_mod_num,
+        transport::protobuf::Header& msg);
 
 private:
     ElectProto() {}
