@@ -107,7 +107,7 @@ public:
     }
 
     bool local_node_is_super_leader() {
-        return bool local_node_is_super_leader_;
+        return local_node_is_super_leader_;
     }
 
 private:
