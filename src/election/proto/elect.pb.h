@@ -38,7 +38,7 @@ namespace protobuf_elect_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[7];
+  static const ::google::protobuf::internal::ParseTable schema[8];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -57,6 +57,9 @@ extern ElectBlockDefaultTypeInternal _ElectBlock_default_instance_;
 class ElectMessage;
 class ElectMessageDefaultTypeInternal;
 extern ElectMessageDefaultTypeInternal _ElectMessage_default_instance_;
+class LeaderRotationMessage;
+class LeaderRotationMessageDefaultTypeInternal;
+extern LeaderRotationMessageDefaultTypeInternal _LeaderRotationMessage_default_instance_;
 class PrevMembers;
 class PrevMembersDefaultTypeInternal;
 extern PrevMembersDefaultTypeInternal _PrevMembers_default_instance_;
@@ -77,6 +80,7 @@ namespace protobuf {
 template<> ::tenon::elect::protobuf::BlsPublicKey* Arena::CreateMaybeMessage<::tenon::elect::protobuf::BlsPublicKey>(Arena*);
 template<> ::tenon::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectBlock>(Arena*);
 template<> ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectMessage>(Arena*);
+template<> ::tenon::elect::protobuf::LeaderRotationMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::LeaderRotationMessage>(Arena*);
 template<> ::tenon::elect::protobuf::PrevMembers* Arena::CreateMaybeMessage<::tenon::elect::protobuf::PrevMembers>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodeHeartbeat* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodeHeartbeat>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodesMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodesMessage>(Arena*);
@@ -1136,6 +1140,138 @@ class WaitingNodeHeartbeat : public ::google::protobuf::Message /* @@protoc_inse
 };
 // -------------------------------------------------------------------
 
+class LeaderRotationMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.LeaderRotationMessage) */ {
+ public:
+  LeaderRotationMessage();
+  virtual ~LeaderRotationMessage();
+
+  LeaderRotationMessage(const LeaderRotationMessage& from);
+
+  inline LeaderRotationMessage& operator=(const LeaderRotationMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  LeaderRotationMessage(LeaderRotationMessage&& from) noexcept
+    : LeaderRotationMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline LeaderRotationMessage& operator=(LeaderRotationMessage&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LeaderRotationMessage& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const LeaderRotationMessage* internal_default_instance() {
+    return reinterpret_cast<const LeaderRotationMessage*>(
+               &_LeaderRotationMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  void Swap(LeaderRotationMessage* other);
+  friend void swap(LeaderRotationMessage& a, LeaderRotationMessage& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline LeaderRotationMessage* New() const final {
+    return CreateMaybeMessage<LeaderRotationMessage>(NULL);
+  }
+
+  LeaderRotationMessage* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<LeaderRotationMessage>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const LeaderRotationMessage& from);
+  void MergeFrom(const LeaderRotationMessage& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(LeaderRotationMessage* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes leader_id = 1;
+  bool has_leader_id() const;
+  void clear_leader_id();
+  static const int kLeaderIdFieldNumber = 1;
+  const ::std::string& leader_id() const;
+  void set_leader_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_leader_id(::std::string&& value);
+  #endif
+  void set_leader_id(const char* value);
+  void set_leader_id(const void* value, size_t size);
+  ::std::string* mutable_leader_id();
+  ::std::string* release_leader_id();
+  void set_allocated_leader_id(::std::string* leader_id);
+
+  // optional uint32 pool_mod_num = 2;
+  bool has_pool_mod_num() const;
+  void clear_pool_mod_num();
+  static const int kPoolModNumFieldNumber = 2;
+  ::google::protobuf::uint32 pool_mod_num() const;
+  void set_pool_mod_num(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.LeaderRotationMessage)
+ private:
+  void set_has_leader_id();
+  void clear_has_leader_id();
+  void set_has_pool_mod_num();
+  void clear_has_pool_mod_num();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr leader_id_;
+  ::google::protobuf::uint32 pool_mod_num_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.ElectMessage) */ {
  public:
   ElectMessage();
@@ -1178,7 +1314,7 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_ElectMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   void Swap(ElectMessage* other);
   friend void swap(ElectMessage& a, ElectMessage& b) {
@@ -1323,6 +1459,18 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::elect::protobuf::WaitingNodeHeartbeat* mutable_waiting_heartbeat();
   void set_allocated_waiting_heartbeat(::tenon::elect::protobuf::WaitingNodeHeartbeat* waiting_heartbeat);
 
+  // optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+  bool has_leader_rotation() const;
+  void clear_leader_rotation();
+  static const int kLeaderRotationFieldNumber = 8;
+  private:
+  const ::tenon::elect::protobuf::LeaderRotationMessage& _internal_leader_rotation() const;
+  public:
+  const ::tenon::elect::protobuf::LeaderRotationMessage& leader_rotation() const;
+  ::tenon::elect::protobuf::LeaderRotationMessage* release_leader_rotation();
+  ::tenon::elect::protobuf::LeaderRotationMessage* mutable_leader_rotation();
+  void set_allocated_leader_rotation(::tenon::elect::protobuf::LeaderRotationMessage* leader_rotation);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectMessage)
  private:
   void set_has_elect_block();
@@ -1339,6 +1487,8 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   void clear_has_sign_res();
   void set_has_waiting_heartbeat();
   void clear_has_waiting_heartbeat();
+  void set_has_leader_rotation();
+  void clear_has_leader_rotation();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1350,6 +1500,7 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::elect::protobuf::ElectBlock* prev_elect_block_;
   ::tenon::elect::protobuf::WaitingNodesMessage* waiting_nodes_;
   ::tenon::elect::protobuf::WaitingNodeHeartbeat* waiting_heartbeat_;
+  ::tenon::elect::protobuf::LeaderRotationMessage* leader_rotation_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // ===================================================================
@@ -2737,6 +2888,100 @@ inline void WaitingNodeHeartbeat::set_timestamp_sec(::google::protobuf::uint64 v
 
 // -------------------------------------------------------------------
 
+// LeaderRotationMessage
+
+// optional bytes leader_id = 1;
+inline bool LeaderRotationMessage::has_leader_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LeaderRotationMessage::set_has_leader_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LeaderRotationMessage::clear_has_leader_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LeaderRotationMessage::clear_leader_id() {
+  leader_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_leader_id();
+}
+inline const ::std::string& LeaderRotationMessage::leader_id() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+  return leader_id_.GetNoArena();
+}
+inline void LeaderRotationMessage::set_leader_id(const ::std::string& value) {
+  set_has_leader_id();
+  leader_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+}
+#if LANG_CXX11
+inline void LeaderRotationMessage::set_leader_id(::std::string&& value) {
+  set_has_leader_id();
+  leader_id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+}
+#endif
+inline void LeaderRotationMessage::set_leader_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_leader_id();
+  leader_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+}
+inline void LeaderRotationMessage::set_leader_id(const void* value, size_t size) {
+  set_has_leader_id();
+  leader_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+}
+inline ::std::string* LeaderRotationMessage::mutable_leader_id() {
+  set_has_leader_id();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+  return leader_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* LeaderRotationMessage::release_leader_id() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+  if (!has_leader_id()) {
+    return NULL;
+  }
+  clear_has_leader_id();
+  return leader_id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void LeaderRotationMessage::set_allocated_leader_id(::std::string* leader_id) {
+  if (leader_id != NULL) {
+    set_has_leader_id();
+  } else {
+    clear_has_leader_id();
+  }
+  leader_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), leader_id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.LeaderRotationMessage.leader_id)
+}
+
+// optional uint32 pool_mod_num = 2;
+inline bool LeaderRotationMessage::has_pool_mod_num() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void LeaderRotationMessage::set_has_pool_mod_num() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void LeaderRotationMessage::clear_has_pool_mod_num() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void LeaderRotationMessage::clear_pool_mod_num() {
+  pool_mod_num_ = 0u;
+  clear_has_pool_mod_num();
+}
+inline ::google::protobuf::uint32 LeaderRotationMessage::pool_mod_num() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.LeaderRotationMessage.pool_mod_num)
+  return pool_mod_num_;
+}
+inline void LeaderRotationMessage::set_pool_mod_num(::google::protobuf::uint32 value) {
+  set_has_pool_mod_num();
+  pool_mod_num_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.LeaderRotationMessage.pool_mod_num)
+}
+
+// -------------------------------------------------------------------
+
 // ElectMessage
 
 // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
@@ -3169,9 +3414,69 @@ inline void ElectMessage::set_allocated_waiting_heartbeat(::tenon::elect::protob
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.waiting_heartbeat)
 }
 
+// optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+inline bool ElectMessage::has_leader_rotation() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ElectMessage::set_has_leader_rotation() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ElectMessage::clear_has_leader_rotation() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ElectMessage::clear_leader_rotation() {
+  if (leader_rotation_ != NULL) leader_rotation_->Clear();
+  clear_has_leader_rotation();
+}
+inline const ::tenon::elect::protobuf::LeaderRotationMessage& ElectMessage::_internal_leader_rotation() const {
+  return *leader_rotation_;
+}
+inline const ::tenon::elect::protobuf::LeaderRotationMessage& ElectMessage::leader_rotation() const {
+  const ::tenon::elect::protobuf::LeaderRotationMessage* p = leader_rotation_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.leader_rotation)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::LeaderRotationMessage*>(
+      &::tenon::elect::protobuf::_LeaderRotationMessage_default_instance_);
+}
+inline ::tenon::elect::protobuf::LeaderRotationMessage* ElectMessage::release_leader_rotation() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.leader_rotation)
+  clear_has_leader_rotation();
+  ::tenon::elect::protobuf::LeaderRotationMessage* temp = leader_rotation_;
+  leader_rotation_ = NULL;
+  return temp;
+}
+inline ::tenon::elect::protobuf::LeaderRotationMessage* ElectMessage::mutable_leader_rotation() {
+  set_has_leader_rotation();
+  if (leader_rotation_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::LeaderRotationMessage>(GetArenaNoVirtual());
+    leader_rotation_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.leader_rotation)
+  return leader_rotation_;
+}
+inline void ElectMessage::set_allocated_leader_rotation(::tenon::elect::protobuf::LeaderRotationMessage* leader_rotation) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete leader_rotation_;
+  }
+  if (leader_rotation) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      leader_rotation = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, leader_rotation, submessage_arena);
+    }
+    set_has_leader_rotation();
+  } else {
+    clear_has_leader_rotation();
+  }
+  leader_rotation_ = leader_rotation;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.leader_rotation)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

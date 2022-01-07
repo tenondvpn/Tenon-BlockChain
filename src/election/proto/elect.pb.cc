@@ -21,6 +21,7 @@
 
 namespace protobuf_elect_2eproto {
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_BlsPublicKey;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_LeaderRotationMessage;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodeHeartbeat;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodesMessage;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_member;
@@ -60,6 +61,11 @@ class WaitingNodeHeartbeatDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<WaitingNodeHeartbeat>
       _instance;
 } _WaitingNodeHeartbeat_default_instance_;
+class LeaderRotationMessageDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<LeaderRotationMessage>
+      _instance;
+} _LeaderRotationMessage_default_instance_;
 class ElectMessageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<ElectMessage>
@@ -156,6 +162,20 @@ static void InitDefaultsWaitingNodeHeartbeat() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodeHeartbeat =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsWaitingNodeHeartbeat}, {}};
 
+static void InitDefaultsLeaderRotationMessage() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::elect::protobuf::_LeaderRotationMessage_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::LeaderRotationMessage();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::elect::protobuf::LeaderRotationMessage::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_LeaderRotationMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsLeaderRotationMessage}, {}};
+
 static void InitDefaultsElectMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -167,11 +187,12 @@ static void InitDefaultsElectMessage() {
   ::tenon::elect::protobuf::ElectMessage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<3> scc_info_ElectMessage =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsElectMessage}, {
+::google::protobuf::internal::SCCInfo<4> scc_info_ElectMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 4, InitDefaultsElectMessage}, {
       &protobuf_elect_2eproto::scc_info_ElectBlock.base,
       &protobuf_elect_2eproto::scc_info_WaitingNodesMessage.base,
-      &protobuf_elect_2eproto::scc_info_WaitingNodeHeartbeat.base,}};
+      &protobuf_elect_2eproto::scc_info_WaitingNodeHeartbeat.base,
+      &protobuf_elect_2eproto::scc_info_LeaderRotationMessage.base,}};
 
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_BlsPublicKey.base);
@@ -180,10 +201,11 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_ElectBlock.base);
   ::google::protobuf::internal::InitSCC(&scc_info_WaitingNodesMessage.base);
   ::google::protobuf::internal::InitSCC(&scc_info_WaitingNodeHeartbeat.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_LeaderRotationMessage.base);
   ::google::protobuf::internal::InitSCC(&scc_info_ElectMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[7];
+::google::protobuf::Metadata file_level_metadata[8];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::BlsPublicKey, _has_bits_),
@@ -276,6 +298,15 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   1,
   2,
   3,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::LeaderRotationMessage, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::LeaderRotationMessage, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::LeaderRotationMessage, leader_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::LeaderRotationMessage, pool_mod_num_),
+  0,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -288,6 +319,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, sign_ch_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, sign_res_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, waiting_heartbeat_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectMessage, leader_rotation_),
   3,
   4,
   5,
@@ -295,6 +327,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   1,
   2,
   6,
+  7,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 10, sizeof(::tenon::elect::protobuf::BlsPublicKey)},
@@ -303,7 +336,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 53, 63, sizeof(::tenon::elect::protobuf::ElectBlock)},
   { 68, 75, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
   { 77, 86, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
-  { 90, 102, sizeof(::tenon::elect::protobuf::ElectMessage)},
+  { 90, 97, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
+  { 99, 112, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -313,6 +347,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectBlock_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_WaitingNodesMessage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_WaitingNodeHeartbeat_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_LeaderRotationMessage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectMessage_default_instance_),
 };
 
@@ -331,7 +366,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 7);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 8);
 }
 
 void AddDescriptorsImpl() {
@@ -358,18 +393,21 @@ void AddDescriptorsImpl() {
       "\003(\004\022\030\n\020waiting_shard_id\030\002 \001(\r\"i\n\024Waiting"
       "NodeHeartbeat\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013publ"
       "ic_port\030\002 \001(\r\022\022\n\nnetwork_id\030\003 \001(\r\022\025\n\rtim"
-      "estamp_sec\030\004 \001(\004\"\275\002\n\014ElectMessage\0225\n\013ele"
-      "ct_block\030\001 \001(\0132 .tenon.elect.protobuf.El"
-      "ectBlock\022:\n\020prev_elect_block\030\002 \001(\0132 .ten"
-      "on.elect.protobuf.ElectBlock\022@\n\rwaiting_"
-      "nodes\030\003 \001(\0132).tenon.elect.protobuf.Waiti"
-      "ngNodesMessage\022\016\n\006pubkey\030\004 \001(\014\022\017\n\007sign_c"
-      "h\030\005 \001(\014\022\020\n\010sign_res\030\006 \001(\014\022E\n\021waiting_hea"
-      "rtbeat\030\007 \001(\0132*.tenon.elect.protobuf.Wait"
-      "ingNodeHeartbeat"
+      "estamp_sec\030\004 \001(\004\"@\n\025LeaderRotationMessag"
+      "e\022\021\n\tleader_id\030\001 \001(\014\022\024\n\014pool_mod_num\030\002 \001"
+      "(\r\"\203\003\n\014ElectMessage\0225\n\013elect_block\030\001 \001(\013"
+      "2 .tenon.elect.protobuf.ElectBlock\022:\n\020pr"
+      "ev_elect_block\030\002 \001(\0132 .tenon.elect.proto"
+      "buf.ElectBlock\022@\n\rwaiting_nodes\030\003 \001(\0132)."
+      "tenon.elect.protobuf.WaitingNodesMessage"
+      "\022\016\n\006pubkey\030\004 \001(\014\022\017\n\007sign_ch\030\005 \001(\014\022\020\n\010sig"
+      "n_res\030\006 \001(\014\022E\n\021waiting_heartbeat\030\007 \001(\0132*"
+      ".tenon.elect.protobuf.WaitingNodeHeartbe"
+      "at\022D\n\017leader_rotation\030\010 \001(\0132+.tenon.elec"
+      "t.protobuf.LeaderRotationMessage"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1176);
+      descriptor, 1312);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -2901,6 +2939,289 @@ void WaitingNodeHeartbeat::InternalSwap(WaitingNodeHeartbeat* other) {
 
 // ===================================================================
 
+void LeaderRotationMessage::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int LeaderRotationMessage::kLeaderIdFieldNumber;
+const int LeaderRotationMessage::kPoolModNumFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+LeaderRotationMessage::LeaderRotationMessage()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_elect_2eproto::scc_info_LeaderRotationMessage.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.LeaderRotationMessage)
+}
+LeaderRotationMessage::LeaderRotationMessage(const LeaderRotationMessage& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  leader_id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_leader_id()) {
+    leader_id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.leader_id_);
+  }
+  pool_mod_num_ = from.pool_mod_num_;
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.LeaderRotationMessage)
+}
+
+void LeaderRotationMessage::SharedCtor() {
+  leader_id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  pool_mod_num_ = 0u;
+}
+
+LeaderRotationMessage::~LeaderRotationMessage() {
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.LeaderRotationMessage)
+  SharedDtor();
+}
+
+void LeaderRotationMessage::SharedDtor() {
+  leader_id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void LeaderRotationMessage::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* LeaderRotationMessage::descriptor() {
+  ::protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const LeaderRotationMessage& LeaderRotationMessage::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_elect_2eproto::scc_info_LeaderRotationMessage.base);
+  return *internal_default_instance();
+}
+
+
+void LeaderRotationMessage::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.LeaderRotationMessage)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    leader_id_.ClearNonDefaultToEmptyNoArena();
+  }
+  pool_mod_num_ = 0u;
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool LeaderRotationMessage::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.LeaderRotationMessage)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes leader_id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_leader_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 pool_mod_num = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_pool_mod_num();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &pool_mod_num_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.LeaderRotationMessage)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.LeaderRotationMessage)
+  return false;
+#undef DO_
+}
+
+void LeaderRotationMessage::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.LeaderRotationMessage)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes leader_id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->leader_id(), output);
+  }
+
+  // optional uint32 pool_mod_num = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->pool_mod_num(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.LeaderRotationMessage)
+}
+
+::google::protobuf::uint8* LeaderRotationMessage::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.LeaderRotationMessage)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes leader_id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->leader_id(), target);
+  }
+
+  // optional uint32 pool_mod_num = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->pool_mod_num(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.LeaderRotationMessage)
+  return target;
+}
+
+size_t LeaderRotationMessage::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.LeaderRotationMessage)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional bytes leader_id = 1;
+    if (has_leader_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->leader_id());
+    }
+
+    // optional uint32 pool_mod_num = 2;
+    if (has_pool_mod_num()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->pool_mod_num());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void LeaderRotationMessage::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.LeaderRotationMessage)
+  GOOGLE_DCHECK_NE(&from, this);
+  const LeaderRotationMessage* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const LeaderRotationMessage>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.LeaderRotationMessage)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.LeaderRotationMessage)
+    MergeFrom(*source);
+  }
+}
+
+void LeaderRotationMessage::MergeFrom(const LeaderRotationMessage& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.LeaderRotationMessage)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_leader_id();
+      leader_id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.leader_id_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      pool_mod_num_ = from.pool_mod_num_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void LeaderRotationMessage::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.LeaderRotationMessage)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void LeaderRotationMessage::CopyFrom(const LeaderRotationMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.LeaderRotationMessage)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool LeaderRotationMessage::IsInitialized() const {
+  return true;
+}
+
+void LeaderRotationMessage::Swap(LeaderRotationMessage* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void LeaderRotationMessage::InternalSwap(LeaderRotationMessage* other) {
+  using std::swap;
+  leader_id_.Swap(&other->leader_id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(pool_mod_num_, other->pool_mod_num_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata LeaderRotationMessage::GetMetadata() const {
+  protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void ElectMessage::InitAsDefaultInstance() {
   ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->elect_block_ = const_cast< ::tenon::elect::protobuf::ElectBlock*>(
       ::tenon::elect::protobuf::ElectBlock::internal_default_instance());
@@ -2910,6 +3231,8 @@ void ElectMessage::InitAsDefaultInstance() {
       ::tenon::elect::protobuf::WaitingNodesMessage::internal_default_instance());
   ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->waiting_heartbeat_ = const_cast< ::tenon::elect::protobuf::WaitingNodeHeartbeat*>(
       ::tenon::elect::protobuf::WaitingNodeHeartbeat::internal_default_instance());
+  ::tenon::elect::protobuf::_ElectMessage_default_instance_._instance.get_mutable()->leader_rotation_ = const_cast< ::tenon::elect::protobuf::LeaderRotationMessage*>(
+      ::tenon::elect::protobuf::LeaderRotationMessage::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ElectMessage::kElectBlockFieldNumber;
@@ -2919,6 +3242,7 @@ const int ElectMessage::kPubkeyFieldNumber;
 const int ElectMessage::kSignChFieldNumber;
 const int ElectMessage::kSignResFieldNumber;
 const int ElectMessage::kWaitingHeartbeatFieldNumber;
+const int ElectMessage::kLeaderRotationFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ElectMessage::ElectMessage()
@@ -2965,6 +3289,11 @@ ElectMessage::ElectMessage(const ElectMessage& from)
   } else {
     waiting_heartbeat_ = NULL;
   }
+  if (from.has_leader_rotation()) {
+    leader_rotation_ = new ::tenon::elect::protobuf::LeaderRotationMessage(*from.leader_rotation_);
+  } else {
+    leader_rotation_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.ElectMessage)
 }
 
@@ -2973,8 +3302,8 @@ void ElectMessage::SharedCtor() {
   sign_ch_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_res_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&elect_block_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&waiting_heartbeat_) -
-      reinterpret_cast<char*>(&elect_block_)) + sizeof(waiting_heartbeat_));
+      reinterpret_cast<char*>(&leader_rotation_) -
+      reinterpret_cast<char*>(&elect_block_)) + sizeof(leader_rotation_));
 }
 
 ElectMessage::~ElectMessage() {
@@ -2990,6 +3319,7 @@ void ElectMessage::SharedDtor() {
   if (this != internal_default_instance()) delete prev_elect_block_;
   if (this != internal_default_instance()) delete waiting_nodes_;
   if (this != internal_default_instance()) delete waiting_heartbeat_;
+  if (this != internal_default_instance()) delete leader_rotation_;
 }
 
 void ElectMessage::SetCachedSize(int size) const {
@@ -3013,7 +3343,7 @@ void ElectMessage::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 127u) {
+  if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
       pubkey_.ClearNonDefaultToEmptyNoArena();
     }
@@ -3038,6 +3368,10 @@ void ElectMessage::Clear() {
     if (cached_has_bits & 0x00000040u) {
       GOOGLE_DCHECK(waiting_heartbeat_ != NULL);
       waiting_heartbeat_->Clear();
+    }
+    if (cached_has_bits & 0x00000080u) {
+      GOOGLE_DCHECK(leader_rotation_ != NULL);
+      leader_rotation_->Clear();
     }
   }
   _has_bits_.Clear();
@@ -3138,6 +3472,18 @@ bool ElectMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+      case 8: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_leader_rotation()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -3207,6 +3553,12 @@ void ElectMessage::SerializeWithCachedSizes(
       7, this->_internal_waiting_heartbeat(), output);
   }
 
+  // optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+  if (cached_has_bits & 0x00000080u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->_internal_leader_rotation(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -3271,6 +3623,13 @@ void ElectMessage::SerializeWithCachedSizes(
         7, this->_internal_waiting_heartbeat(), deterministic, target);
   }
 
+  // optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+  if (cached_has_bits & 0x00000080u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        8, this->_internal_leader_rotation(), deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -3288,7 +3647,7 @@ size_t ElectMessage::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 127u) {
+  if (_has_bits_[0 / 32] & 255u) {
     // optional bytes pubkey = 4;
     if (has_pubkey()) {
       total_size += 1 +
@@ -3338,6 +3697,13 @@ size_t ElectMessage::ByteSizeLong() const {
           *waiting_heartbeat_);
     }
 
+    // optional .tenon.elect.protobuf.LeaderRotationMessage leader_rotation = 8;
+    if (has_leader_rotation()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *leader_rotation_);
+    }
+
   }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
@@ -3367,7 +3733,7 @@ void ElectMessage::MergeFrom(const ElectMessage& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 127u) {
+  if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_pubkey();
       pubkey_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pubkey_);
@@ -3391,6 +3757,9 @@ void ElectMessage::MergeFrom(const ElectMessage& from) {
     }
     if (cached_has_bits & 0x00000040u) {
       mutable_waiting_heartbeat()->::tenon::elect::protobuf::WaitingNodeHeartbeat::MergeFrom(from.waiting_heartbeat());
+    }
+    if (cached_has_bits & 0x00000080u) {
+      mutable_leader_rotation()->::tenon::elect::protobuf::LeaderRotationMessage::MergeFrom(from.leader_rotation());
     }
   }
 }
@@ -3429,6 +3798,7 @@ void ElectMessage::InternalSwap(ElectMessage* other) {
   swap(prev_elect_block_, other->prev_elect_block_);
   swap(waiting_nodes_, other->waiting_nodes_);
   swap(waiting_heartbeat_, other->waiting_heartbeat_);
+  swap(leader_rotation_, other->leader_rotation_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -3462,6 +3832,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::WaitingN
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::WaitingNodeHeartbeat* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::WaitingNodeHeartbeat >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::WaitingNodeHeartbeat >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::LeaderRotationMessage* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::LeaderRotationMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::LeaderRotationMessage >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::ElectMessage >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::ElectMessage >(arena);
