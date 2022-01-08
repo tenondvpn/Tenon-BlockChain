@@ -777,11 +777,13 @@ int BlsManager::AddBlsConsensusInfo(
         bitmap->Set(i);
     }
 
-    if (bitmap->valid_count() < members->size() * kBlsMaxExchangeMembersRatio) {
+    if (bitmap->valid_count() < exchange_member_count) {
         ec_block.clear_prev_members();
-        BLS_ERROR("all_valid_count < t[%u][%u]",
+        BLS_ERROR("all_valid_count < t[%u][%u][%f][%u]",
             bitmap->valid_count(),
-            members->size() * kBlsMaxExchangeMembersRatio);
+            members->size(),
+            kBlsMaxExchangeMembersRatio,
+            exchange_member_count);
         return kBlsError;
     }
 
