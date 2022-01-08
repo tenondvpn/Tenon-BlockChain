@@ -563,6 +563,12 @@ void ElectManager::UpdatePrevElectMembers(
             *elected = true;
         }
 
+        BLS_DEBUG("id: %s, pk: %s,%s,%s,%s",
+            common::Encode::HexEncode((*iter)->id).c_str(),
+            elect_block.prev_members().bls_pubkey(i).x_c0().c_str(),
+            elect_block.prev_members().bls_pubkey(i).x_c1().c_str(),
+            elect_block.prev_members().bls_pubkey(i).y_c0().c_str(),
+            elect_block.prev_members().bls_pubkey(i).y_c1().c_str());
 //         std::cout << "set bls public key: " << i << ", " << elect_block.prev_members().bls_pubkey(i).x_c0()
 //             << ", " << elect_block.prev_members().bls_pubkey(i).x_c1()
 //             << ", " << elect_block.prev_members().bls_pubkey(i).y_c0()

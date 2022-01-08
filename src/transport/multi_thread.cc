@@ -199,12 +199,12 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-    if (message_ptr->has_debug()) {
+//     if (message_ptr->has_debug()) {
         TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
             message_ptr->debug().c_str(),
             message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
             from_ip.c_str(), from_port);
-    }
+//     }
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 // #ifndef LEGO_TRACE_MESSAGE
