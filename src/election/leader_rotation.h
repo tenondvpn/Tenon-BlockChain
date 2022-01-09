@@ -38,7 +38,7 @@ private:
     };
 
     void CheckRotation();
-    BftMemberPtr ChooseValidLeader();
+    BftMemberPtr ChooseValidLeader(int32_t pool_mod_num);
     void SendRotationReq(const std::string& id, int32_t pool_mod_num);
     void ChangeLeader(const std::string& id, int32_t pool_mod_num);
 

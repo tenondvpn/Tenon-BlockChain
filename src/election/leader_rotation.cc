@@ -123,12 +123,12 @@ void LeaderRotation::CheckRotation() {
     }
 
     for (int32_t i = 0; i < (int32_t)should_change_leaders.size(); ++i) {
-        auto new_leader = ChooseValidLeader();
+        auto new_leader = ChooseValidLeader(i);
         if (new_leader == nullptr) {
             continue;
         }
 
-        ChangeLeader(new_leader->id, i);
+//         ChangeLeader(new_leader->id, i);
         SendRotationReq(new_leader->id, i);
     }
 
@@ -184,7 +184,7 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
     }
 }
 
-BftMemberPtr LeaderRotation::ChooseValidLeader() {
+BftMemberPtr LeaderRotation::ChooseValidLeader(int32_t pool_mod_num) {
     int32_t start_idx = rotation_item_[valid_idx_].rotation_idx;
     for (int32_t i = rotation_item_[valid_idx_].rotation_idx;
             i < (int32_t)rotation_item_[valid_idx_].valid_leaders.size(); ++i) {
@@ -192,6 +192,10 @@ BftMemberPtr LeaderRotation::ChooseValidLeader() {
             continue;
         }
 
+        if (rotation_item_[valid_idx_].valid_leaders[i]->id ==
+                rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id) {
+            continue;
+        }
 //         rotation_item_[valid_idx_].rotation_idx = i + 1;
 //         if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
 //             rotation_item_[valid_idx_].rotation_idx = 0;
@@ -202,6 +206,11 @@ BftMemberPtr LeaderRotation::ChooseValidLeader() {
 
     for (int32_t i = 0; i < (int32_t)rotation_item_[valid_idx_].rotation_idx; ++i) {
         if (!rotation_item_[valid_idx_].valid_leaders[i]->valid_leader) {
+            continue;
+        }
+
+        if (rotation_item_[valid_idx_].valid_leaders[i]->id ==
+                rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id) {
             continue;
         }
 
