@@ -49,6 +49,7 @@ private:
     int32_t valid_idx_{ 0 };
     common::Tick tick_;
     std::mutex rotation_mutex_;
+    bool check_rotation_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(LeaderRotation);
 };

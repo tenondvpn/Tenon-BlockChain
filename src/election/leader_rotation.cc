@@ -10,7 +10,7 @@ namespace tenon {
 namespace elect {
 
 LeaderRotation::LeaderRotation() {
-//     tick_.CutOff(1000000l * 60l, std::bind(&LeaderRotation::CheckRotation, this));
+    tick_.CutOff(1000000l * 60l, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
 LeaderRotation::~LeaderRotation() {}
@@ -46,6 +46,9 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
     rotation_item_[invalid_idx].rotation_idx = rotation_item_[invalid_idx].max_pool_mod_num + 1;
     valid_idx_ = invalid_idx;
     cons_rotation_leaders_.clear();
+    if (members->size() > 10) {
+        check_rotation_ = true;
+    }
 }
 
 int32_t LeaderRotation::GetThisNodeValidPoolModNum() {
@@ -94,6 +97,11 @@ void LeaderRotation::LeaderRotationReq(
 }
 
 void LeaderRotation::CheckRotation() {
+    if (!check_rotation_) {
+        tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
+        return;
+    }
+
     std::lock_guard<std::mutex> guard(rotation_mutex_);
     std::vector<int32_t> should_change_leaders;
     for (int32_t i = 0; i <= rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
@@ -146,6 +154,11 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
     for (int32_t i = 0; i < (int32_t)rotation_item_[valid_idx_].valid_leaders.size(); ++i) {
         if (rotation_item_[valid_idx_].valid_leaders[i]->id == id) {
             new_leader = rotation_item_[valid_idx_].valid_leaders[i];
+            rotation_item_[valid_idx_].rotation_idx = i + 1;
+            if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
+                rotation_item_[valid_idx_].rotation_idx = 0;
+            }
+
             break;
         }
     }
@@ -179,10 +192,10 @@ BftMemberPtr LeaderRotation::ChooseValidLeader() {
             continue;
         }
 
-        rotation_item_[valid_idx_].rotation_idx = i + 1;
-        if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
-            rotation_item_[valid_idx_].rotation_idx = 0;
-        }
+//         rotation_item_[valid_idx_].rotation_idx = i + 1;
+//         if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
+//             rotation_item_[valid_idx_].rotation_idx = 0;
+//         }
 
         return rotation_item_[valid_idx_].valid_leaders[i];
     }
@@ -192,10 +205,10 @@ BftMemberPtr LeaderRotation::ChooseValidLeader() {
             continue;
         }
 
-        rotation_item_[valid_idx_].rotation_idx = i + 1;
-        if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
-            rotation_item_[valid_idx_].rotation_idx = 0;
-        }
+//         rotation_item_[valid_idx_].rotation_idx = i + 1;
+//         if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
+//             rotation_item_[valid_idx_].rotation_idx = 0;
+//         }
 
         return rotation_item_[valid_idx_].valid_leaders[i];
     }

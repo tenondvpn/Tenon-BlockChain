@@ -1397,7 +1397,7 @@ int BftManager::BackupCommit(
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
 //     if (elect::ElectManager::Instance()->local_node_is_super_leader()) {
-        LeaderBroadcastToAcc(bft_ptr, false);
+//         LeaderBroadcastToAcc(bft_ptr, false);
 //     }
 
     // start new bft
