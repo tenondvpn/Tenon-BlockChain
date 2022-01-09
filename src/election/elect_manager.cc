@@ -127,7 +127,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         auto mem_index = GetMemberIndex(
             network::kRootCongressNetworkId,
-            ec_msg.leader_rotation().leader_id());
+            id);
         if (mem_index == kInvalidMemberIndex) {
             return;
         }
@@ -141,6 +141,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
             if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                ELECT_ERROR("leader rotation verify signature error.");
                 return;
             }
 

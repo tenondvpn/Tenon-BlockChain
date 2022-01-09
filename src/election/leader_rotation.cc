@@ -45,11 +45,9 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 
     rotation_item_[invalid_idx].rotation_idx = rotation_item_[invalid_idx].max_pool_mod_num + 1;
     valid_idx_ = invalid_idx;
-    {
-        std::lock_guard<std::mutex> guard(cons_rotation_leaders_mutex_);
-        cons_rotation_leaders_.clear();
-    }
-    if (members->size() > 10) {
+    std::lock_guard<std::mutex> guard(rotation_mutex_);
+    cons_rotation_leaders_.clear();
+    if (members->size() > 6) {
         check_rotation_ = true;
     }
 }
@@ -85,7 +83,8 @@ void LeaderRotation::LeaderRotationReq(
         const protobuf::LeaderRotationMessage& leader_rotation,
         int32_t index,
         int32_t all_count) {
-    std::lock_guard<std::mutex> guard(cons_rotation_leaders_mutex_);
+    ELECT_DEBUG("req leader rotation index: %d, all_count: %d", index, all_count);
+    std::lock_guard<std::mutex> guard(rotation_mutex_);
     std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
     auto iter = cons_rotation_leaders_.find(key);
     if (iter == cons_rotation_leaders_.end()) {
@@ -94,7 +93,6 @@ void LeaderRotation::LeaderRotationReq(
     } else {
         iter->second.insert(index);
         if ((int32_t)iter->second.size() >= (all_count / 3 * 2 + 1)) {
-            std::lock_guard<std::mutex> guard(rotation_mutex_);
             ChangeLeader(leader_rotation.leader_id(), leader_rotation.pool_mod_num());
         }
     }

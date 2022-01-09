@@ -42,9 +42,8 @@ private:
     void SendRotationReq(const std::string& id, int32_t pool_mod_num);
     void ChangeLeader(const std::string& id, int32_t pool_mod_num);
 
-    static const int64_t kCheckRotationPeriod{ 3000000l };
+    static const int64_t kCheckRotationPeriod{ 5000000l };
     std::unordered_map<std::string, std::set<int32_t>> cons_rotation_leaders_;
-    std::mutex cons_rotation_leaders_mutex_;
 
     RotationItem rotation_item_[2];
     int32_t valid_idx_{ 0 };
