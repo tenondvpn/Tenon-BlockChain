@@ -123,10 +123,14 @@ void LeaderRotation::CheckRotation() {
     }
 
     for (int32_t i = 0; i < (int32_t)should_change_leaders.size(); ++i) {
-        auto new_leader = ChooseValidLeader(i);
+        auto new_leader = ChooseValidLeader(should_change_leaders[i]);
         if (new_leader == nullptr) {
             continue;
         }
+        ELECT_WARN("check leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
+            pool_mod_num, common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id).c_str(),
+            common::Encode::HexEncode(new_leader->id).c_str(),
+            should_change_leaders[i]);
 
 //         ChangeLeader(new_leader->id, i);
         SendRotationReq(new_leader->id, i);
