@@ -128,7 +128,8 @@ void LeaderRotation::CheckRotation() {
             continue;
         }
         ELECT_WARN("check leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
-            pool_mod_num, common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id).c_str(),
+            should_change_leaders[i],
+            common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[should_change_leaders[i]]->id).c_str(),
             common::Encode::HexEncode(new_leader->id).c_str(),
             should_change_leaders[i]);
 
