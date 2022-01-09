@@ -45,7 +45,10 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
 
     rotation_item_[invalid_idx].rotation_idx = rotation_item_[invalid_idx].max_pool_mod_num + 1;
     valid_idx_ = invalid_idx;
-    cons_rotation_leaders_.clear();
+    {
+        std::lock_guard<std::mutex> guard(cons_rotation_leaders_mutex_);
+        cons_rotation_leaders_.clear();
+    }
     if (members->size() > 10) {
         check_rotation_ = true;
     }
@@ -82,6 +85,7 @@ void LeaderRotation::LeaderRotationReq(
         const protobuf::LeaderRotationMessage& leader_rotation,
         int32_t index,
         int32_t all_count) {
+    std::lock_guard<std::mutex> guard(cons_rotation_leaders_mutex_);
     std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
     auto iter = cons_rotation_leaders_.find(key);
     if (iter == cons_rotation_leaders_.end()) {
