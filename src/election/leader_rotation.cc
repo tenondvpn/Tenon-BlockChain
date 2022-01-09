@@ -133,7 +133,7 @@ void LeaderRotation::CheckRotation() {
             should_change_leaders[i]);
 
 //         ChangeLeader(new_leader->id, i);
-        SendRotationReq(new_leader->id, i);
+        SendRotationReq(new_leader->id, should_change_leaders[i]);
     }
 
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
