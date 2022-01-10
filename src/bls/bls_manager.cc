@@ -264,6 +264,7 @@ bool BlsManager::IsSignValid(
 void BlsManager::HandleFinish(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) {
+    BLS_DEBUG("0 msg_id: %lu", header.id());
     if (bls_msg.finish_req().network_id() < network::kRootCongressNetworkId ||
             bls_msg.finish_req().network_id() >= network::kConsensusShardEndNetworkId) {
         BLS_INFO("bls create HandleFinish error block elect height: %lu, index: %d", bls_msg.elect_height(), bls_msg.index());
@@ -320,7 +321,9 @@ void BlsManager::HandleFinish(
         return;
     }
 
+    BLS_DEBUG("1 msg_id: %lu", header.id());
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
+    BLS_DEBUG("2 msg_id: %lu", header.id());
     BlsFinishItemPtr finish_item = nullptr;
     auto iter = finish_networks_map_.find(bls_msg.finish_req().network_id());
     if (iter == finish_networks_map_.end()) {
@@ -408,6 +411,7 @@ void BlsManager::HandleFinish(
         finish_item->max_finish_count = 1;
         finish_item->max_finish_hash = msg_hash;
     }
+    BLS_DEBUG("3 msg_id: %lu", header.id());
 }
 
 void BlsManager::CheckAggSignValid(
