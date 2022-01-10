@@ -58,6 +58,8 @@ public:
         return member_count_;
     }
 
+    void Destroy();
+
 private:
     void HandleVerifyBroadcast(
         const transport::protobuf::Header& header,

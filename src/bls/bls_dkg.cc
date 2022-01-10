@@ -38,6 +38,12 @@ BlsDkg::BlsDkg(uint32_t t,
 
 BlsDkg::~BlsDkg() {}
 
+void Destroy() {
+    dkg_verify_brd_timer_.Destroy();
+    dkg_swap_seckkey_timer_.Destroy();
+    dkg_finish_timer_.Destroy();
+}
+
 void BlsDkg::OnNewElectionBlock(
         uint64_t elect_height,
         elect::MembersPtr& members) try {

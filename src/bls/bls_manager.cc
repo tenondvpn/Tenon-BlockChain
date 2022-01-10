@@ -59,6 +59,11 @@ void BlsManager::ProcessNewElectBlock(
     }
 
     std::lock_guard<std::mutex> guard(mutex_);
+    if (waiting_bls_ != nullptr) {
+        waiting_bls_->Destroy();
+        waiting_bls_.reset();
+    }
+
     waiting_bls_ = std::make_shared<bls::BlsDkg>(
         0,
         0,
@@ -216,8 +221,11 @@ void BlsManager::HandleMessage(const transport::TransportMessagePtr& header) {
         return;
     }
 
-    if (waiting_bls_ != nullptr) {
-        waiting_bls_->HandleMessage(header);
+    {
+        std::lock_guard<std::mutex> guard(mutex_);
+        if (waiting_bls_ != nullptr) {
+            waiting_bls_->HandleMessage(header);
+        }
     }
 }
 
