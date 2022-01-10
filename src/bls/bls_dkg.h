@@ -17,6 +17,7 @@
 #include "common/utils.h"
 #include "common/tick.h"
 #include "common/bitmap.h"
+#include "common/time_utils.h"
 #include "dht/dht_utils.h"
 #include "election/elect_node_detail.h"
 #include "election/proto/elect.pb.h"
@@ -95,13 +96,26 @@ private:
     void BroadcastFinish(const common::Bitmap& bitmap);
     void TimerToSwapKey();
     void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
+    bool IsVerifyBrdPeriod() {
+        auto now_tm_us = common::TimeUtils::TimestampUs();
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 2)) {
+            return true;
+        }
 
-    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 2 * 1000u * 1000u;
-    static const int64_t kDkgOffsetUs = kDkgPeriodUs / 10;
-    static const int64_t kDkgWorkPeriodUs = (kDkgPeriodUs - 2 * kDkgOffsetUs) / 3;
-    static const int64_t kDkgVerifyBrdBeginUs = kDkgOffsetUs;
-    static const int64_t kDkgSwapSecKeyBeginUs = kDkgWorkPeriodUs + kDkgOffsetUs;
-    static const int64_t kDkgFinishBeginUs = kDkgSwapSecKeyBeginUs + kDkgWorkPeriodUs + kDkgOffsetUs;
+        return false;
+    }
+
+    bool IsSwapKeyPeriod() {
+        auto now_tm_us = common::TimeUtils::TimestampUs();
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4) &&
+                now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 2)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 5 * 1000u * 1000u;
     static const int64_t kSwapkeyPeriod = 3000000l;
 
     elect::MembersPtr members_{ nullptr };
@@ -112,7 +126,6 @@ private:
     std::vector<std::vector<libff::alt_bn128_Fr>> all_secret_key_contribution_;
     std::vector<libff::alt_bn128_Fr> local_src_secret_key_contribution_;
     std::vector<std::vector<libff::alt_bn128_G2>> all_verification_vector_;
-    int64_t local_offset_us_{ 0 };
     uint32_t local_member_index_{ common::kInvalidUint32 };
     std::shared_ptr<libBLS::Dkg> dkg_instance_;
     uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
@@ -132,7 +145,7 @@ private:
     bool swapkey_valid_{ false };
     bool valid_swaped_keys_[common::kEachShardMaxNodeCount];
     bool has_swaped_keys_[common::kEachShardMaxNodeCount];
-    bool finish_called_{ false };
+    uint64_t begin_time_us_{ 0 };
 
 #ifdef TENON_UNITTEST
     transport::protobuf::Header ver_brd_msg_;

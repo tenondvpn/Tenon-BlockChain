@@ -57,7 +57,6 @@ void BlsDkg::OnNewElectionBlock(
     memset(valid_swaped_keys_, 0, sizeof(valid_swaped_keys_));
     memset(has_swaped_keys_, 0, sizeof(has_swaped_keys_));
     finished_ = false;
-    finish_called_ = false;
     // destroy old timer
     dkg_verify_brd_timer_.Destroy();
     dkg_swap_seckkey_timer_.Destroy();
@@ -93,17 +92,16 @@ void BlsDkg::OnNewElectionBlock(
         all_secret_key_contribution_[i].push_back(libff::alt_bn128_Fr::zero());
     }
 
-    auto each_member_offset_us = kDkgWorkPeriodUs / members->size();
-    local_offset_us_ = each_member_offset_us * local_member_index_;
+    begin_time_us_ = common::TimeUtils::TimestampUs();
     swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
-        kDkgVerifyBrdBeginUs + local_offset_us_,
+        kDkgPeriodUs,
         std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
-        kDkgSwapSecKeyBeginUs + local_offset_us_,
+        kDkgPeriodUs * 2,
         std::bind(&BlsDkg::TimerToSwapKey, this));
     dkg_finish_timer_.CutOff(
-        kDkgFinishBeginUs + local_offset_us_,
+        kDkgPeriodUs * 4,
         std::bind(&BlsDkg::Finish, this));
     BLS_DEBUG("new election block elect_hegiht_: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 } catch (std::exception& e) {
@@ -114,8 +112,9 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 //     if (common::GlobalInfo::Instance()->missing_node()) {
 //         return;
 //     }
-
+    BLS_DEBUG("0 comming: %lu", header_ptr->id());
     std::lock_guard<std::mutex> guard(mutex_);
+    BLS_DEBUG("1 comming: %lu", header_ptr->id());
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
         return;
@@ -157,8 +156,9 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 
     if (bls_msg.has_verify_brd()) {
+        BLS_DEBUG("0 HandleVerifyBroadcast new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
         HandleVerifyBroadcast(header, bls_msg);
-        BLS_DEBUG("HandleVerifyBroadcast new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("1 HandleVerifyBroadcast new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_swap_req()) {
@@ -249,9 +249,6 @@ void BlsDkg::HandleSwapSecKeyRes(
 
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
-    if (finish_called_) {
-        FinishNoLock();
-    }
     has_swaped_keys_[bls_msg.index()] = true;
     BLS_DEBUG("swap key success: %d, valid_sec_key_count: %d",
         bls_msg.index(), valid_sec_key_count_);
@@ -300,6 +297,11 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
 void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
+    if (!IsVerifyBrdPeriod()) {
+        return;
+    }
+
+    BLS_DEBUG("0 id: %lu", header.id());
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
         BLS_ERROR("sign verify failed!");
@@ -326,6 +328,7 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
+    BLS_DEBUG("1 id: %lu", header.id());
     for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
         auto x_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c0().c_str());
         auto x_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c1().c_str());
@@ -375,6 +378,10 @@ void BlsDkg::HandleVerifyBroadcastRes(
 void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
+    if (!IsSwapKeyPeriod()) {
+        return;
+    }
+
     if (all_secret_key_contribution_.size() <= local_member_index_) {
         assert(false);
         return;
@@ -469,10 +476,6 @@ void BlsDkg::HandleSwapSecKey(
     SendSwapkeyResponse(header.from_ip(), header.from_port(), bls_msg.index());
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
-    if (finish_called_) {
-        FinishNoLock();
-    }
-
     BLS_DEBUG("HandleSwapSecKey success: %s", common::Encode::HexEncode(sec_key).c_str());
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
@@ -743,10 +746,6 @@ void BlsDkg::Finish() {
 }
 
 void BlsDkg::FinishNoLock() try {
-    if (!finish_called_) {
-        finish_called_ = true;
-    }
-
     swapkey_valid_ = false;
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
