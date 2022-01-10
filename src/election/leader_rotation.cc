@@ -17,7 +17,14 @@ LeaderRotation::~LeaderRotation() {}
 
 void LeaderRotation::OnElectBlock(const MembersPtr& members) {
     int32_t invalid_idx = (valid_idx_ + 1) % 2;
+    rotation_item_[invalid_idx].max_pool_mod_num = 0;
+    rotation_item_[invalid_idx].rotation_idx = 0;
     rotation_item_[invalid_idx].local_member = nullptr;
+    rotation_item_[invalid_idx].valid_leaders.clear();
+    for (int32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
+        rotation_item_[invalid_idx].pool_leader_map[i] = nullptr;
+    }
+
     for (auto iter = members->begin(); iter != members->end(); ++iter) {
         if ((*iter)->bls_publick_key == libff::alt_bn128_G2::zero()) {
             // should not to be leader
@@ -180,6 +187,10 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num] = new_leader;
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = pool_mod_num;
     std::string des_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
+//     if (des_id == common::GlobalInfo::Instance()->id()) {
+//         rotation_item_[valid_idx_].local_member = new_leader;
+//     }
+
     ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
         pool_mod_num, common::Encode::HexEncode(src_id).c_str(),
         common::Encode::HexEncode(des_id).c_str(),

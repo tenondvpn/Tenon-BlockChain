@@ -43,12 +43,17 @@ int BftInterface::Init() {
             common_pk_ == libff::alt_bn128_G2::zero() ||
             local_sec_key_ == libff::alt_bn128_Fr::zero()) {
         BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!,"
-            "cpk valid: %d, sec key valid: %d",
+            "cpk valid: %d, sec key valid: %d, members_ptr_ == nullptr: %d, "
+            "leader_index_: %d, members_ptr_->size(): %d",
             elect_height_,
             elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()),
             (common_pk_ == libff::alt_bn128_G2::zero()),
-            (local_sec_key_ == libff::alt_bn128_Fr::zero()));
+            (local_sec_key_ == libff::alt_bn128_Fr::zero()),
+            (members_ptr_ == nullptr), leader_index_, members_ptr_->size());
+        if (members_ptr_ != nullptr && leader_index_ < members_ptr_->size()) {
+            BFT_ERROR("memid:  %s", common::Encode::HexEncode((*members_ptr_)[leader_index_]->id).c_str());
+        }
         return kBftError;
     }
 

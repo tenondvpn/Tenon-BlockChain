@@ -526,7 +526,7 @@ void BftManager::HandleRootTxBlock(
 //         BFT_ERROR("root congress don't handle this message.");
 //         return;
 //     }
-
+    BFT_DEBUG("0 msg id: %lu", header.id());
     protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("tx_bft.ParseFromString failed.");
@@ -549,6 +549,7 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
+    BFT_DEBUG("1 msg id: %lu", header.id());
     if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
             tx_bft.to_tx().block().height(),
@@ -556,8 +557,10 @@ void BftManager::HandleRootTxBlock(
         return;
     }
  
+    BFT_DEBUG("2 msg id: %lu", header.id());
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kRootBlock, tx_bft.to_tx().block(), block_ptr);
+    BFT_DEBUG("3 msg id: %lu", header.id());
 }
 
 elect::MembersPtr BftManager::GetNetworkMembers(uint32_t network_id) {
