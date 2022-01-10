@@ -37,7 +37,7 @@ void ElectProto::CreateLeaderRotation(
         uint32_t pool_mod_num,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
-    dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+    dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), 0);
     msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());

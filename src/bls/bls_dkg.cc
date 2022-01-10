@@ -712,6 +712,7 @@ void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_por
             from_port,
             0,
             msg);
+        BLS_DEBUG("send back verify broadcast to: %s:%d", from_ip.c_str(), from_port);
     }
 }
 
@@ -748,7 +749,8 @@ void BlsDkg::FinishNoLock() try {
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
-        BLS_ERROR("valid count error.valid_sec_key_count_: %d", valid_sec_key_count_);
+        BLS_ERROR("valid count error.valid_sec_key_count_: %d, min_aggree_member_count_: %d, members_ == nullptr: %d, local_member_index_: %d, members_->size(): %d",
+            valid_sec_key_count_, min_aggree_member_count_, (members_ == nullptr), local_member_index_, members_->size());
         BLS_INFO("bls create Finish error block elect height: %lu", elect_hegiht_);
         return;
     }
