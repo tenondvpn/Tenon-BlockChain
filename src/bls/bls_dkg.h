@@ -90,7 +90,7 @@ private:
     void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     void DumpContribution();
     void DumpLocalPrivateKey();
-    void SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port);
+    void SendVerifyBrdResponse(uint32_t msg_id, const std::string& from_ip, uint16_t from_port);
     void SendSwapkeyResponse(const std::string& from_ip, uint16_t from_port, uint32_t local_index);
     void BroadcastFinish(const common::Bitmap& bitmap);
     void TimerToSwapKey();

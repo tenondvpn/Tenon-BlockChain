@@ -348,6 +348,7 @@ void BlsDkg::HandleVerifyBroadcast(
     }
 
     SendVerifyBrdResponse(
+        header.id(),
         bls_msg.verify_brd().public_ip(),
         bls_msg.verify_brd().public_port());
 } catch (std::exception& e) {
@@ -690,7 +691,7 @@ void BlsDkg::CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* se
     *seckey_len = sec_key.size();
 }
 
-void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_port) {
+void BlsDkg::SendVerifyBrdResponse(uint32_t msg_id, const std::string& from_ip, uint16_t from_port) {
     auto dht = network::DhtManager::Instance()->GetDht(
         common::GlobalInfo::Instance()->network_id());
     if (!dht) {
@@ -706,6 +707,7 @@ void BlsDkg::SendVerifyBrdResponse(const std::string& from_ip, uint16_t from_por
     auto message_hash = common::Hash::keccak256(str_to_hash);
     transport::protobuf::Header msg;
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    msg.set_id(msg_id);
     if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
             from_ip,
