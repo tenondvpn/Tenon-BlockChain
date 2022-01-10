@@ -48,7 +48,11 @@ void ThreadHandler::HandleMessage() {
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
             msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
             msg_ptr->set_thread_idx(thread_idx_);
-//             auto btime = common::TimeUtils::TimestampUs();
+            auto btime = common::TimeUtils::TimestampUs();
+            TRANSPORT_ERROR("start msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+                msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+                (common::TimeUtils::TimestampUs() - btime));
             Processor::Instance()->HandleMessage(msg_ptr);
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 //             std::string tmp_str = std::to_string(msg_ptr->timestamps(0));
@@ -57,11 +61,10 @@ void ThreadHandler::HandleMessage() {
 //             }
 
 //             if (msg_ptr->client()) {
-//                 TRANSPORT_ERROR("client msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu, use time list: %s",
-//                     msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
-//                     msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
-//                     (common::TimeUtils::TimestampUs() - btime),
-//                     tmp_str.c_str());
+                TRANSPORT_ERROR("end msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+                    msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+                    msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+                    (common::TimeUtils::TimestampUs() - btime));
 //             }
         }
 
@@ -125,17 +128,17 @@ void MultiThreadHandler::Destroy() {
 void MultiThreadHandler::HandleMessage(const protobuf::Header& msg) {
     // just local message
     auto message_ptr = std::make_shared<transport::protobuf::Header>(msg);
-//     {
-//         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-//         uint32_t priority = kTransportPriorityLowest;
-//         if (message_ptr->has_priority() && (message_ptr->priority() < kTransportPriorityLowest)) {
-//             priority = message_ptr->priority();
-//         }
-//         priority_queue_map_[priority].push(message_ptr);
-//     }
+    {
+        std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
+        uint32_t priority = kTransportPriorityLowest;
+        if (message_ptr->has_priority() && (message_ptr->priority() < kTransportPriorityLowest)) {
+            priority = message_ptr->priority();
+        }
+        priority_queue_map_[priority].push(message_ptr);
+    }
 //     common::AutoSpinLock auto_lock(local_queue_mutex_);
-    std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-    local_queue_.push(message_ptr);
+//     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
+//     local_queue_.push(message_ptr);
 }
 
 void MultiThreadHandler::HandleMessage(
@@ -255,13 +258,13 @@ void MultiThreadHandler::HandleRemoteMessage(
     }
 
     {
-// 		uint32_t priority = kTransportPriorityLowest;
-// 		if (message_ptr->has_priority() &&
-// 			    (message_ptr->priority() < kTransportPriorityLowest)) {
-// 			priority = message_ptr->priority();
-// 		}
+		uint32_t priority = kTransportPriorityLowest;
+		if (message_ptr->has_priority() &&
+			    (message_ptr->priority() < kTransportPriorityLowest)) {
+			priority = message_ptr->priority();
+		}
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-        uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
+//         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
         TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
             message_ptr->debug().c_str(),
@@ -328,29 +331,29 @@ int MultiThreadHandler::HandleClientMessage(
 }
 
 std::shared_ptr<protobuf::Header> MultiThreadHandler::GetMessageFromQueue(uint32_t thread_idx) {
-//     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-//     for (uint32_t i = kTransportPrioritySystem; i < kTransportPriorityMaxCount; ++i) {
-//         if (!priority_queue_map_[i].empty()) {
-//             std::shared_ptr<protobuf::Header> msg_obj = priority_queue_map_[i].front();
-//             priority_queue_map_[i].pop();
-//             return msg_obj;
-//         }
-//     }
     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
-    std::shared_ptr<protobuf::Header> item = nullptr;
-    if (!priority_queue_map_[thread_idx].empty()) {
-        item = priority_queue_map_[thread_idx].front();
-        priority_queue_map_[thread_idx].pop();
-        return item;
-    }
-
-    if (thread_idx == 0) {
-        if (!local_queue_.empty()) {
-            item = local_queue_.front();
-            local_queue_.pop();
-            return item;
+    for (uint32_t i = kTransportPrioritySystem; i < kTransportPriorityMaxCount; ++i) {
+        if (!priority_queue_map_[i].empty()) {
+            std::shared_ptr<protobuf::Header> msg_obj = priority_queue_map_[i].front();
+            priority_queue_map_[i].pop();
+            return msg_obj;
         }
     }
+//     std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
+//     std::shared_ptr<protobuf::Header> item = nullptr;
+//     if (!priority_queue_map_[thread_idx].empty()) {
+//         item = priority_queue_map_[thread_idx].front();
+//         priority_queue_map_[thread_idx].pop();
+//         return item;
+//     }
+// 
+//     if (thread_idx == 0) {
+//         if (!local_queue_.empty()) {
+//             item = local_queue_.front();
+//             local_queue_.pop();
+//             return item;
+//         }
+//     }
 
     return nullptr;
 }

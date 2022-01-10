@@ -283,7 +283,7 @@ int ShardNetwork<DhtType>::JoinShard() {
         return kNetworkSuccess;
     }
 
-    if (elect_dht_->Bootstrap(boot_nodes) != dht::kDhtSuccess) {
+    if (elect_dht_->Bootstrap(boot_nodes, 0, "", false) != dht::kDhtSuccess) {
         NETWORK_ERROR("join shard network [%u] failed!", network_id_);
     }
 
