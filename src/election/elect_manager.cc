@@ -126,14 +126,14 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
     if (ec_msg.has_leader_rotation()) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(ec_msg.pubkey());
         auto mem_index = GetMemberIndex(
-            network::kRootCongressNetworkId,
+            common::GlobalInfo::Instance()->network_id(),
             id);
         if (mem_index == kInvalidMemberIndex) {
             return;
         }
 
-        auto all_size = members_ptr_[network::kRootCongressNetworkId]->size();
-        auto mem_ptr = GetMemberWithId(network::kRootCongressNetworkId, id);
+        auto all_size = members_ptr_[common::GlobalInfo::Instance()->network_id()]->size();
+        auto mem_ptr = GetMemberWithId(common::GlobalInfo::Instance()->network_id(), id);
         if (mem_ptr) {
             std::string hash_str = ec_msg.leader_rotation().leader_id() + 
                 std::to_string(ec_msg.leader_rotation().pool_mod_num());
