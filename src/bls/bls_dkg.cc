@@ -140,7 +140,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-//     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
+    //     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_hegiht_: %lu, "
 //         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
 //         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
 //         bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
@@ -167,6 +167,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 
     if (bls_msg.has_swapkey_res()) {
+        BLS_DEBUG("2 comming: %lu", header_ptr->id());
         HandleSwapSecKeyRes(header, bls_msg);
         BLS_DEBUG("HandleSwapSecKeyRes new election block elect_hegiht_: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
@@ -200,6 +201,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
+    BLS_DEBUG("3 comming: %lu", header.id());
     std::string msg_hash = bls_msg.swapkey_res().sec_key() +
         std::to_string(bls_msg.swapkey_res().sec_key_len()) +
         std::to_string(bls_msg.swapkey_res().index());
@@ -213,6 +215,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
+    BLS_DEBUG("31 comming: %lu", header.id());
     // swap
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
         (*members_)[bls_msg.index()]->pubkey,
@@ -228,6 +231,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
+    BLS_DEBUG("4 comming: %lu", header.id());
     all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
         libff::alt_bn128_Fr(sec_key.c_str());
     // verify it valid, if not broadcast against.
@@ -247,6 +251,7 @@ void BlsDkg::HandleSwapSecKeyRes(
         return;
     }
 
+    BLS_DEBUG("41 comming: %lu", header.id());
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
     has_swaped_keys_[bls_msg.index()] = true;
@@ -769,21 +774,21 @@ void BlsDkg::FinishNoLock() try {
         if (iter == valid_swapkey_set_.end()) {
             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
-            BLS_DEBUG("invalid swapkey index: %d", i);
+            BLS_DEBUG("elect_hegiht_: %d, invalid swapkey index: %d", elect_hegiht_, i);
             continue;
         }
 
         if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
-            BLS_DEBUG("invalid all_verification_vector_ index: %d", i);
+            BLS_DEBUG("elect_hegiht_: %d, invalid all_verification_vector_ index: %d", elect_hegiht_, i);
             continue;
         }
 
         if (all_secret_key_contribution_[local_member_index_][i] == libff::alt_bn128_Fr::zero()) {
             valid_seck_keys.push_back(libff::alt_bn128_Fr::zero());
             common_public_key_ = common_public_key_ + libff::alt_bn128_G2::zero();
-            BLS_DEBUG("invalid all_secret_key_contribution_ index: %d", i);
+            BLS_DEBUG("elect_hegiht_: %d, invalid all_secret_key_contribution_ index: %d", elect_hegiht_, i);
             continue;
         }
 
@@ -792,10 +797,10 @@ void BlsDkg::FinishNoLock() try {
         bitmap.Set(i);
     }
 
-    if (bitmap.valid_count() < members_->size() * kBlsMaxExchangeMembersRatio) {
-        BLS_ERROR("bitmap.valid_count: %d < :%d",
-            bitmap.valid_count(), members_->size() * kBlsMaxExchangeMembersRatio);
-        BLS_INFO("bls create Finish error block elect height: %lu", elect_hegiht_);
+    uint32_t valid_count = static_cast<uint32_t>((float)members_->size() * kBlsMaxExchangeMembersRatio);
+    if (bitmap.valid_count() < valid_count) {
+        BLS_ERROR("elect_hegiht_: %d, bitmap.valid_count: %u < %u,  members_->size(): %u, kBlsMaxExchangeMembersRatio: %f",
+            elect_hegiht_, bitmap.valid_count(), valid_count, members_->size(), kBlsMaxExchangeMembersRatio);
         return;
     }
 

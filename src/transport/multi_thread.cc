@@ -202,8 +202,16 @@ void MultiThreadHandler::HandleRemoteMessage(
         return;
 	}
 
-//     if (message_ptr->has_debug()) {
-//     }
+    uint32_t priority = kTransportPriorityLowest;
+    if (message_ptr->has_priority() &&
+        (message_ptr->priority() < kTransportPriorityLowest)) {
+        priority = message_ptr->priority();
+    }
+
+    TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
+        message_ptr->debug().c_str(),
+        message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+        from_ip.c_str(), from_port, priority_queue_map_[priority].size());
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 // #ifndef LEGO_TRACE_MESSAGE
@@ -258,15 +266,10 @@ void MultiThreadHandler::HandleRemoteMessage(
     }
 
     {
-		uint32_t priority = kTransportPriorityLowest;
-		if (message_ptr->has_priority() &&
-			    (message_ptr->priority() < kTransportPriorityLowest)) {
-			priority = message_ptr->priority();
-		}
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
 //         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
-        TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
+        TRANSPORT_DEBUG("111 %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
             message_ptr->debug().c_str(),
             message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
             from_ip.c_str(), from_port, priority_queue_map_[priority].size());

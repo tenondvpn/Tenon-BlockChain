@@ -286,6 +286,7 @@ void BlsManager::HandleFinish(
         return;
     }
 
+    BLS_DEBUG("0 1 msg_id: %lu", header.id());
     std::vector<std::string> pkey_str = {
             bls_msg.finish_req().pubkey().x_c0(),
             bls_msg.finish_req().pubkey().x_c1(),
@@ -311,6 +312,7 @@ void BlsManager::HandleFinish(
     sign.X = libff::alt_bn128_Fq(bls_msg.finish_req().bls_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(bls_msg.finish_req().bls_sign_y().c_str());
     sign.Z = libff::alt_bn128_Fq::one();
+    BLS_DEBUG("0 2 msg_id: %lu", header.id());
     if (bls::BlsManager::Instance()->Verify(
             t,
             members->size(),
@@ -320,6 +322,7 @@ void BlsManager::HandleFinish(
         BFT_ERROR("verify bls finish bls sign error!");
         return;
     }
+    BLS_DEBUG("0 3 msg_id: %lu", header.id());
 
     BLS_DEBUG("1 msg_id: %lu", header.id());
     std::lock_guard<std::mutex> guard(finish_networks_map_mutex_);
