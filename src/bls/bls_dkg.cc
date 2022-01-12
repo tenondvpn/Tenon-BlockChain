@@ -303,6 +303,7 @@ void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
     if (!IsVerifyBrdPeriod()) {
+        BLS_ERROR("elect_hegiht_: %d HandleVerifyBroadcast invalid.", elect_hegiht_);
         return;
     }
 
@@ -384,6 +385,7 @@ void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
     if (!IsSwapKeyPeriod()) {
+        BLS_ERROR("elect_hegiht_: %d swapkey period invalid.", elect_hegiht_);
         return;
     }
 

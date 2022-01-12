@@ -112,7 +112,7 @@ int ShardNetwork<DhtType>::JoinUniversal() {
         country = 0;
     }
 
-    dht::DhtKeyManager dht_key(network_id_, country, local_node->id());
+    dht::DhtKeyManager dht_key(network_id_, country, common::GlobalInfo::Instance()->id());
     local_node->set_dht_key(dht_key.StrKey());
     local_node->dht_key_hash = common::Hash::Hash64(dht_key.StrKey());
     transport::TransportPtr tansport_ptr = unversal_dht->transport();
@@ -248,12 +248,12 @@ int ShardNetwork<DhtType>::JoinShard() {
     assert(unversal_dht->local_node());
     auto local_node = std::make_shared<dht::Node>(*unversal_dht->local_node());
     uint8_t country = dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key());
-//     if (network_id_ >= network::kRootCongressNetworkId &&
-//         network_id_ < network::kConsensusShardEndNetworkId) {
-//         country = 0;
-//     }
+    if (network_id_ >= network::kRootCongressNetworkId &&
+        network_id_ < network::kConsensusShardEndNetworkId) {
+        country = 0;
+    }
 
-    dht::DhtKeyManager dht_key(network_id_, country, local_node->id());
+    dht::DhtKeyManager dht_key(network_id_, country, common::GlobalInfo::Instance()->id());
     local_node->set_dht_key(dht_key.StrKey());
     local_node->dht_key_hash = common::Hash::Hash64(dht_key.StrKey());
     transport::TransportPtr tansport_ptr = unversal_dht->transport();

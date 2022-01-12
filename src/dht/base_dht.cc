@@ -992,13 +992,13 @@ int BaseDht::CheckJoin(NodePtr& node) {
         return kDhtIpInvalid;
     }
 
-    if (uniq_id_) {
-        if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
-            DHT_INFO("invalid dht country. join way: %d", node->join_way);
-            //assert(false);
-            return kDhtKeyInvalidCountry;
-        }
-    }
+//     if (uniq_id_) {
+//         if (dht::DhtKeyManager::DhtKeyGetCountry(node->dht_key()) == 0) {
+//             DHT_INFO("invalid dht country. join way: %d", node->join_way);
+//             //assert(false);
+//             return kDhtKeyInvalidCountry;
+//         }
+//     }
 
     if (node->pubkey_str().empty() || node->id().empty() || node->dht_key().empty()) {
         DHT_ERROR("invalid node nat type pubkey or id or dht key is empty.[%d][%d][%d][%d][%s:%d]",
