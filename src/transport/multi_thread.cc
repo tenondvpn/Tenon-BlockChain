@@ -48,11 +48,11 @@ void ThreadHandler::HandleMessage() {
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
             msg_ptr->set_hop_count(msg_ptr->hop_count() + 1);
             msg_ptr->set_thread_idx(thread_idx_);
-            auto btime = common::TimeUtils::TimestampUs();
-            TRANSPORT_ERROR("start msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
-                msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
-                msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
-                (common::TimeUtils::TimestampUs() - btime));
+//             auto btime = common::TimeUtils::TimestampUs();
+//             TRANSPORT_ERROR("start msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+//                 msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+//                 msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+//                 (common::TimeUtils::TimestampUs() - btime));
             Processor::Instance()->HandleMessage(msg_ptr);
 //             msg_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 //             std::string tmp_str = std::to_string(msg_ptr->timestamps(0));
@@ -61,10 +61,10 @@ void ThreadHandler::HandleMessage() {
 //             }
 
 //             if (msg_ptr->client()) {
-                TRANSPORT_ERROR("end msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
-                    msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
-                    msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
-                    (common::TimeUtils::TimestampUs() - btime));
+//                 TRANSPORT_ERROR("end msg id: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, use time: %lu",
+//                     msg_ptr->id(), msg_ptr->type(), msg_ptr->debug().c_str(), msg_ptr->has_broadcast(),
+//                     msg_ptr->from_ip().c_str(), msg_ptr->from_port(),
+//                     (common::TimeUtils::TimestampUs() - btime));
 //             }
         }
 
@@ -208,10 +208,10 @@ void MultiThreadHandler::HandleRemoteMessage(
         priority = message_ptr->priority();
     }
 
-    TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
-        message_ptr->debug().c_str(),
-        message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-        from_ip.c_str(), from_port, priority_queue_map_[priority].size());
+//     TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
+//         message_ptr->debug().c_str(),
+//         message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//         from_ip.c_str(), from_port, priority_queue_map_[priority].size());
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 // #ifndef LEGO_TRACE_MESSAGE
@@ -269,10 +269,14 @@ void MultiThreadHandler::HandleRemoteMessage(
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
 //         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
-        TRANSPORT_DEBUG("111 %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
-            message_ptr->debug().c_str(),
-            message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-            from_ip.c_str(), from_port, priority_queue_map_[priority].size());
+        if (priority_queue_map_[priority].size() > 256) {
+            priority_queue_map_[priority].pop();
+        }
+// 
+//         TRANSPORT_DEBUG("111 %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
+//             message_ptr->debug().c_str(),
+//             message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//             from_ip.c_str(), from_port, priority_queue_map_[priority].size());
 
 	}
 }

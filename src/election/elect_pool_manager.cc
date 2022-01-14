@@ -517,6 +517,15 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         elected_nodes.push_back(*iter);
     }
 
+    struct RangGen {
+        int operator() (int n) {
+            return std::rand() / (1.0 + RAND_MAX) * n;
+        }
+    };
+
+    std::srand(static_cast<uint32_t>(vss::VssManager::Instance()->EpochRandom() % RAND_MAX));
+//     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
+    std::random_shuffle(elected_nodes.begin(), elected_nodes.end(), RangGen());
     ELECT_DEBUG("pick_all_vec size: %d, pick_in_vec size: %d, weed_out_vec size: %d, elected_nodes size: %d",
         pick_all_vec.size(), pick_in_vec.size(), weed_out_vec.size(), elected_nodes.size());
     return kElectSuccess;
@@ -574,8 +583,8 @@ int ElectPoolManager::SelectLeader(
 
     int32_t mode_idx = 0;
     std::unordered_map<std::string, int32_t> leader_mode_idx_map;
-    ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d",
-        expect_leader_count, leader_nodes.size(), members->size());
+    ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, random: %lu",
+        expect_leader_count, leader_nodes.size(), members->size(), vss::VssManager::Instance()->EpochRandom());
     for (int32_t i = 0; i < ec_block->prev_members().bls_pubkey_size(); ++i) {
         ec_block->mutable_prev_members()->mutable_bls_pubkey(i)->set_pool_idx_mod_num(-1);
     }

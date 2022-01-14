@@ -153,9 +153,9 @@ void DhtProto::CreateRefreshNeighborsRequest(
         const NodePtr& local_node,
         const NodePtr& des_node,
         transport::protobuf::Header& msg) {
-    if (dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key()) == 0) {
-        return;
-    }
+//     if (dht::DhtKeyManager::DhtKeyGetCountry(local_node->dht_key()) == 0) {
+//         return;
+//     }
 
     msg.set_src_dht_key(local_node->dht_key());
     msg.set_des_dht_key(des_node->dht_key());
