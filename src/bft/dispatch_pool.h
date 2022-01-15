@@ -49,7 +49,7 @@ public:
     }
 
     void SetTimeout(uint32_t pool_idx) {
-        tx_pool_.SetTimeout(pool_index);
+        tx_pool_.SetTimeout(pool_idx);
     }
 
 private:

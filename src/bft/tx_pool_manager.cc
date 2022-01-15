@@ -19,6 +19,7 @@ TxPoolManager::TxPoolManager() {
     for (uint32_t i = 0; i < common::kImmutablePoolSize + 1; ++i) {
         tx_pool_[i].Init(i);
         waiting_pools_height_[i] = 0;
+        timeout_pools_[i] = 0;
     }
 }
 
@@ -300,7 +301,7 @@ void TxPoolManager::GetTx(
             continue;
         }
 
-        if (timeout_pools_[pool_idx] > now_tm_ms) {
+        if (timeout_pools_[i] > now_tm_ms) {
             continue;
         }
 
@@ -336,7 +337,7 @@ void TxPoolManager::GetTx(
                 continue;
             }
 
-            if (timeout_pools_[pool_idx] > now_tm_ms) {
+            if (timeout_pools_[i] > now_tm_ms) {
                 continue;
             }
 

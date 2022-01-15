@@ -487,6 +487,7 @@ void TxPool::RemoveTx(
         call_contract_step,
         gid);
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+    last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {
         BFT_DEBUG("not uni_gid RemoveTx remove tx tx index [to: %d] [pool idx: %d] type: %d,"
