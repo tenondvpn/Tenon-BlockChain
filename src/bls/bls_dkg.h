@@ -116,9 +116,9 @@ private:
         return false;
     }
 
-    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
     static const int64_t kSwapkeyPeriod = 3000000l;
 
+    int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
     common::Tick dkg_verify_brd_timer_;

@@ -19,6 +19,7 @@
 #include "security/crypto_utils.h"
 #include "security/schnorr.h"
 #include "security/crypto.h"
+#include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
 
 namespace tenon {
@@ -92,16 +93,30 @@ void BlsDkg::OnNewElectionBlock(
         all_secret_key_contribution_[i].push_back(libff::alt_bn128_Fr::zero());
     }
 
+    auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
     begin_time_us_ = common::TimeUtils::TimestampUs();
+    auto ver_offset = kDkgPeriodUs;
+    auto swap_offset = kDkgPeriodUs * 4;
+    auto finish_offset = kDkgPeriodUs * 8;
+    if (begin_time_us_ < tmblock_tm + 10) {
+        kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
+        ver_offset = tmblock_tm + 10 - begin_time_us_;
+        begin_time_us_ = tmblock_tm + 10;
+        swap_offset = ver_offset + kDkgPeriodUs * 3;
+        finish_offset = ver_offset + kDkgPeriodUs * 7;
+    }
+
+    BLS_DEBUG("tmblock_tm: %lu, begin_time_us_: %lu, diff: %lu, ver_offset: %lu, swap_offset: %lu, finish_offset: %lu, begin_time_us_: %lu",
+        tmblock_tm, common::TimeUtils::TimestampUs(), (begin_time_us_ - tmblock_tm), ver_offset, swap_offset, finish_offset, begin_time_us_);
     swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
-        kDkgPeriodUs,
+        ver_offset,
         std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
-        kDkgPeriodUs * 4,
+        swap_offset,
         std::bind(&BlsDkg::TimerToSwapKey, this));
     dkg_finish_timer_.CutOff(
-        kDkgPeriodUs * 6,
+        finish_offset,
         std::bind(&BlsDkg::Finish, this));
     BLS_DEBUG("new election block elect_hegiht_: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 } catch (std::exception& e) {
