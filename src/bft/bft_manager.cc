@@ -1000,6 +1000,7 @@ int BftManager::LeaderPrecommit(
 void BftManager::HandleOpposeNodeMsg(
         bft::protobuf::BftMessage& bft_msg,
         BftInterfacePtr& bft_ptr) {
+    bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
     common::Split<> spliter(bft_msg.data().c_str(), ',', bft_msg.data().size());
     if (spliter.Count() < 2) {
         return;

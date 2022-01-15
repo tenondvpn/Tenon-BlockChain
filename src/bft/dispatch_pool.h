@@ -48,6 +48,10 @@ public:
         tx_pool_.ChangeLeader(pool_index);
     }
 
+    void SetTimeout(uint32_t pool_idx) {
+        tx_pool_.SetTimeout(pool_index);
+    }
+
 private:
     DispatchPool();
     ~DispatchPool();

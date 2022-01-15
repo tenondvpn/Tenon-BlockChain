@@ -38,6 +38,7 @@ public:
     void LockPool(uint32_t pool_index);
     bool ShouldChangeLeader(uint32_t pool_index);
     void ChangeLeader(uint32_t pool_index);
+    void SetTimeout(uint32_t pool_idx);
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);
@@ -47,6 +48,7 @@ private:
     TxPool* tx_pool_{ nullptr };
     common::Bitmap waiting_pools_{ common::kImmutablePoolSize };
     uint64_t waiting_pools_height_[common::kImmutablePoolSize + 1];
+    uint64_t timeout_pools_[common::kImmutablePoolSize + 1];
     std::mutex waiting_pools_mutex_;
     uint32_t prev_pool_index_{ 0 };
     std::atomic<bool> root_tx_pool_valid_{ true };

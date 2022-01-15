@@ -228,8 +228,13 @@ bool TxPoolManager::CheckDispatchNormalTransaction(TxItemPtr& tx_ptr) {
 }
 
 TxItemPtr TxPoolManager::GetRootTx() {
+    auto now_tm_ms = common::TimeUtils::TimestampMs();
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     if (tx_pool_[common::kRootChainPoolIndex].TxPoolEmpty()) {
+        return nullptr;
+    }
+
+    if (timeout_pools_[common::kRootChainPoolIndex] > now_tm_ms) {
         return nullptr;
     }
 
@@ -275,6 +280,11 @@ TxItemPtr TxPoolManager::GetRootTx() {
     return nullptr;
 }
 
+void TxPoolManager::SetTimeout(uint32_t pool_idx) {
+    assert(pool_idx < (common::kImmutablePoolSize + 1));
+    timeout_pools_[pool_idx] = common::TimeUtils::TimestampMs() + 3000lu;
+}
+
 void TxPoolManager::GetTx(
         uint32_t& pool_index,
         int32_t pool_mod_idx,
@@ -283,9 +293,14 @@ void TxPoolManager::GetTx(
     uint64_t height = 0;
     int32_t leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
         common::GlobalInfo::Instance()->network_id());
+    auto now_tm_ms = common::TimeUtils::TimestampMs();
     std::lock_guard<std::mutex> guard(waiting_pools_mutex_);
     for (int32_t i = prev_pool_index_; i < (int32_t)common::kImmutablePoolSize; ++i) {
         if (i % leader_count != pool_mod_idx) {
+            continue;
+        }
+
+        if (timeout_pools_[pool_idx] > now_tm_ms) {
             continue;
         }
 
@@ -318,6 +333,10 @@ void TxPoolManager::GetTx(
     if (valid_pool < 0) {
         for (int32_t i = 0; i < (int32_t)prev_pool_index_; ++i) {
             if (i % leader_count != pool_mod_idx) {
+                continue;
+            }
+
+            if (timeout_pools_[pool_idx] > now_tm_ms) {
                 continue;
             }
 
@@ -405,6 +424,7 @@ void TxPoolManager::RemoveTx(
         const std::string& gid) {
     assert(pool_index < common::kInvalidPoolIndex);
     tx_pool_[pool_index].RemoveTx(add_to, tx_type, call_contract_step, gid);
+    timeout_pools_[pool_index] = 0;
 }
 
 void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
@@ -416,6 +436,8 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     } else {
         waiting_pools_.UnSet(bft_ptr->pool_index());
     }
+
+    timeout_pools_[bft_ptr->pool_index()] = 0;
 }
 
 void TxPoolManager::CheckTimeoutTx() {
