@@ -755,6 +755,7 @@ int BlsManager::AddBlsConsensusInfo(
             mem_bls_pk->set_x_c1("");
             mem_bls_pk->set_y_c0("");
             mem_bls_pk->set_y_c1("");
+            BLS_DEBUG("0 invalid bitmap: %d", i);
             continue;
         }
 
@@ -763,6 +764,7 @@ int BlsManager::AddBlsConsensusInfo(
             mem_bls_pk->set_x_c1("");
             mem_bls_pk->set_y_c0("");
             mem_bls_pk->set_y_c1("");
+            BLS_DEBUG("0 invalid all_public_keys: %d", i);
             continue;
         }
 
@@ -771,6 +773,7 @@ int BlsManager::AddBlsConsensusInfo(
             mem_bls_pk->set_x_c1("");
             mem_bls_pk->set_y_c0("");
             mem_bls_pk->set_y_c1("");
+            BLS_DEBUG("0 invalid all_common_public_keys: %d", i);
             continue;
         }
 

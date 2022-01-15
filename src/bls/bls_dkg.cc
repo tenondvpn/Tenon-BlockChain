@@ -66,7 +66,7 @@ void BlsDkg::OnNewElectionBlock(
     valid_sec_key_count_ = 0;
     members_ = members;
     valid_swapkey_set_.clear();
-    memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
+//     memset(invalid_node_map_, 0, sizeof(invalid_node_map_));
     min_aggree_member_count_ = common::GetSignerCount(members_->size());
     member_count_ = members_->size();
     dkg_instance_ = std::make_shared<libBLS::Dkg>(min_aggree_member_count_, members_->size());
@@ -98,10 +98,10 @@ void BlsDkg::OnNewElectionBlock(
         kDkgPeriodUs,
         std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
-        kDkgPeriodUs * 2,
+        kDkgPeriodUs * 4,
         std::bind(&BlsDkg::TimerToSwapKey, this));
     dkg_finish_timer_.CutOff(
-        kDkgPeriodUs * 4,
+        kDkgPeriodUs * 6,
         std::bind(&BlsDkg::Finish, this));
     BLS_DEBUG("new election block elect_hegiht_: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 } catch (std::exception& e) {
@@ -112,9 +112,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 //     if (common::GlobalInfo::Instance()->missing_node()) {
 //         return;
 //     }
-    BLS_DEBUG("0 comming: %lu", header_ptr->id());
     std::lock_guard<std::mutex> guard(mutex_);
-    BLS_DEBUG("1 comming: %lu", header_ptr->id());
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
         return;
@@ -538,8 +536,8 @@ void BlsDkg::HandleAgainstParticipant(
         return;
     }
 
-    ++invalid_node_map_[bls_msg.against_req().against_index()];
-    if (invalid_node_map_[bls_msg.against_req().against_index()] >= min_aggree_member_count_) {
+    invalid_node_map_[bls_msg.against_req().against_index()].insert(bls_msg.index());
+    if (invalid_node_map_[bls_msg.against_req().against_index()].size() >= min_aggree_member_count_) {
         all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
             libff::alt_bn128_Fr::zero();
         BLS_ERROR("invalid bls part: %d", bls_msg.against_req().against_index());

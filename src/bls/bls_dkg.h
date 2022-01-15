@@ -4,6 +4,7 @@
 #include <memory>
 #include <random>
 #include <unordered_map>
+#include <set>
 
 #include <libbls/bls/BLSPrivateKey.h>
 #include <libbls/bls/BLSPrivateKeyShare.h>
@@ -98,7 +99,7 @@ private:
     void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
     bool IsVerifyBrdPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
-        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 2)) {
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
             return true;
         }
 
@@ -107,15 +108,15 @@ private:
 
     bool IsSwapKeyPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
-        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4) &&
-                now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 2)) {
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 6) &&
+                now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
             return true;
         }
 
         return false;
     }
 
-    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 5 * 1000u * 1000u;
+    static const int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
     static const int64_t kSwapkeyPeriod = 3000000l;
 
     elect::MembersPtr members_{ nullptr };
@@ -128,7 +129,7 @@ private:
     std::vector<std::vector<libff::alt_bn128_G2>> all_verification_vector_;
     uint32_t local_member_index_{ common::kInvalidUint32 };
     std::shared_ptr<libBLS::Dkg> dkg_instance_;
-    uint32_t invalid_node_map_[common::kEachShardMaxNodeCount];
+    std::set<uint32_t> invalid_node_map_[common::kEachShardMaxNodeCount];
     uint32_t min_aggree_member_count_{ 0 };
     uint32_t member_count_{ 0 };
     libff::alt_bn128_Fr local_sec_key_;
