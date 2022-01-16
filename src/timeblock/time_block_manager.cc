@@ -65,7 +65,7 @@ TimeBlockManager::~TimeBlockManager() {}
 //     msg->set_client(false);
 //     msg->set_hop_count(0);
 //     auto broad_param = msg->mutable_broadcast();
-//     elect::ElectProto::SetDefaultBroadcastParam(broad_param);
+//     elect::ElectProto::transport::SetDefaultBroadcastParam(broad_param);
 //     bft::protobuf::BftMessage bft_msg;
 //     uint64_t new_time_block_tm = 0;
 //     if (!LeaderNewTimeBlockValid(&new_time_block_tm)) {

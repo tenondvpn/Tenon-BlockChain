@@ -14,16 +14,6 @@ namespace tenon {
 
 namespace vss {
 
-void VssProto::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
-    broad_param->set_layer_left(0);
-    broad_param->set_layer_right((std::numeric_limits<uint64_t>::max)());
-    broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
-    broad_param->set_stop_times(common::kDefaultBroadcastStopTimes);
-    broad_param->set_hop_limit(common::kDefaultBroadcastHopLimit);
-    broad_param->set_hop_to_layer(common::kDefaultBroadcastHopToLayer);
-    broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
-}
-
 void VssProto::CreateHashMessage(
         const dht::NodePtr& local_node,
         uint64_t random_hash,
@@ -67,7 +57,7 @@ void VssProto::CreateHashMessage(
     vss_msg.set_sign_res(sign_response_str);
     vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(vss_msg.SerializeAsString());
 }
 
@@ -116,7 +106,7 @@ void VssProto::CreateRandomMessage(
     vss_msg.set_sign_res(sign_response_str);
     vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(vss_msg.SerializeAsString());
 }
 

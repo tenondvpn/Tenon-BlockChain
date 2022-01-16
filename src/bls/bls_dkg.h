@@ -89,7 +89,6 @@ private:
         protobuf::BlsMessage& bls_msg,
         const std::string& message_hash,
         transport::protobuf::Header& msg);
-    void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     void DumpContribution();
     void DumpLocalPrivateKey();
     void SendVerifyBrdResponse(uint32_t msg_id, const std::string& from_ip, uint16_t from_port);

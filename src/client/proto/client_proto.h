@@ -20,16 +20,6 @@ namespace client {
 
 class ClientProto {
 public:
-    static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
-        broad_param->set_layer_left(0);
-        broad_param->set_layer_right((std::numeric_limits<uint64_t>::max)());
-        broad_param->set_ign_bloomfilter_hop(kBftBroadcastIgnBloomfilterHop);
-        broad_param->set_stop_times(kBftBroadcastStopTimes);
-        broad_param->set_hop_limit(kBftHopLimit);
-        broad_param->set_hop_to_layer(kBftHopToLayer);
-        broad_param->set_neighbor_count(kBftNeighborCount);
-    }
-
     static void CreateGetVpnInfoRequest(
             const dht::NodePtr& local_node,
             const dht::NodePtr& des_node,
@@ -70,7 +60,7 @@ public:
         msg.set_hop_count(0);
         msg.set_version(common::GlobalInfo::Instance()->version());
         auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
+        transport::SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
@@ -131,7 +121,7 @@ public:
         msg.set_client(false);
         msg.set_hop_count(0);
         auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
+        transport::SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
@@ -191,7 +181,7 @@ public:
         msg.set_client(false);
         msg.set_hop_count(0);
         auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
+        transport::SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
@@ -254,7 +244,7 @@ public:
         msg.set_client(false);
         msg.set_hop_count(0);
         auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
+        transport::SetDefaultBroadcastParam(broad_param);
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);

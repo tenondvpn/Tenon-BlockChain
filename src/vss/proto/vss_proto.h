@@ -11,7 +11,6 @@ namespace vss {
 
 class VssProto {
 public:
-    static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     static void CreateHashMessage(
         const dht::NodePtr& local_node,
         uint64_t random_hash,

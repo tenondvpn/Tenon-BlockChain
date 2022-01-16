@@ -485,7 +485,7 @@ void BlsDkg::HandleSwapSecKey(
         auto message_hash = common::Hash::keccak256(content_to_hash);
         CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
         auto broad_param = msg.mutable_broadcast();
-        SetDefaultBroadcastParam(broad_param);
+        transport::SetDefaultBroadcastParam(broad_param);
         network::Route::Instance()->Send(msg);
 #ifdef TENON_UNITTEST
         sec_against_msgs_.push_back(msg);
@@ -604,7 +604,7 @@ void BlsDkg::BroadcastVerfify() try {
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     network::Route::Instance()->Send(msg);
     BLS_DEBUG("BroadcastVerfify new election block elect_height: %lu, local_member_index_: %d", elect_hegiht_, local_member_index_);
 #ifdef TENON_UNITTEST
@@ -888,7 +888,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
     finish_msg->set_bls_sign_y(sign_y);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     local_publick_key_.to_affine_coordinates();
     std::string sec_key = libBLS::ThresholdUtils::fieldElementToString(local_sec_key_);
     BLS_DEBUG("Finish new election block elect_height: %lu, local_member_index_: %d, sec_key: %s, cpk: %s, %s, %s, %s, pk: %s, %s, %s, %s, msg_hash: %s, signxy: %s, %s",
@@ -964,16 +964,6 @@ void BlsDkg::DumpContribution() {
 
     std::ofstream outfile("data_for_" + std::to_string(local_member_index_) + "-th_participant.json");
     outfile << data.dump(4) << "\n\n";
-}
-
-void BlsDkg::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
-    broad_param->set_layer_left(0);
-    broad_param->set_layer_right((std::numeric_limits<uint64_t>::max)());
-    broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
-    broad_param->set_stop_times(common::kDefaultBroadcastStopTimes);
-    broad_param->set_hop_limit(common::kDefaultBroadcastHopLimit);
-    broad_param->set_hop_to_layer(common::kDefaultBroadcastHopToLayer);
-    broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
 }
 
 void BlsDkg::CreateDkgMessage(

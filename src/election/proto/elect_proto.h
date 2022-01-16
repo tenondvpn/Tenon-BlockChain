@@ -10,7 +10,6 @@ namespace elect {
 
 class ElectProto {
 public:
-    static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     static void CreateElectWaitingNodes(
         const dht::NodePtr& local_node,
         uint32_t waiting_shard_id,

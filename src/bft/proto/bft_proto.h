@@ -13,7 +13,6 @@ namespace bft {
 
 class BftProto {
 public:
-    static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param);
     static void LeaderCreatePrepare(
         const dht::NodePtr& local_node,
         const std::string& data,

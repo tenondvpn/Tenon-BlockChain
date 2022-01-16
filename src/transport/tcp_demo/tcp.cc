@@ -31,16 +31,6 @@ static void HandleMessage(transport::TransportMessagePtr& message_ptr) {
     }
 }
 
-static void SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
-    broad_param->set_layer_left(0);
-    broad_param->set_layer_right(((std::numeric_limits<uint64_t>::max))());
-    broad_param->set_ign_bloomfilter_hop(1);
-    broad_param->set_stop_times(2);
-    broad_param->set_hop_limit(5);
-    broad_param->set_hop_to_layer(2);
-    broad_param->set_neighbor_count(7);
-}
-
 int main(int argc, char** argv) {
     log4cpp::PropertyConfigurator::configure("./conf/log4cpp.properties");
     using namespace tenon::transport;
@@ -113,7 +103,7 @@ int main(int argc, char** argv) {
             msg.set_client(false);
             msg.set_id(10);
             auto broad_param = msg.mutable_broadcast();
-            SetDefaultBroadcastParam(broad_param);
+            transport::SetDefaultBroadcastParam(broad_param);
             tcp_ptr->Send(peer_ip, peer_port, 0, msg);
         }
 

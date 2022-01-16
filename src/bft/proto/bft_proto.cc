@@ -17,16 +17,6 @@ namespace tenon {
 
 namespace bft {
 
-void BftProto::SetDefaultBroadcastParam(transport::protobuf::BroadcastParam* broad_param) {
-    broad_param->set_layer_left(0);
-    broad_param->set_layer_right(((std::numeric_limits<uint64_t>::max))());
-    broad_param->set_ign_bloomfilter_hop(common::kDefaultBroadcastIgnBloomfilterHop);
-    broad_param->set_stop_times(common::kDefaultBroadcastStopTimes);
-    broad_param->set_hop_limit(common::kDefaultBroadcastHopLimit);
-    broad_param->set_hop_to_layer(common::kDefaultBroadcastHopToLayer);
-    broad_param->set_neighbor_count(common::kDefaultBroadcastNeighborCount);
-}
-
 void BftProto::SetLocalPublicIpPort(
         const dht::NodePtr& local_node,
         bft::protobuf::BftMessage& bft_msg) {
@@ -61,7 +51,7 @@ void BftProto::LeaderCreatePrepare(
     msg.set_client(false);
     msg.set_hop_count(0);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_data(data);
     bft_msg.set_leader(false);
@@ -159,7 +149,7 @@ void BftProto::LeaderCreatePreCommit(
     msg.set_client(false);
     msg.set_hop_count(0);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_data(bft_ptr->prepare_hash());
     bft_msg.set_leader(false);
@@ -275,7 +265,7 @@ void BftProto::LeaderCreateCommit(
     msg.set_client(false);
     msg.set_hop_count(0);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_data(bft_ptr->prepare_hash());
     bft_msg.set_leader(false);
@@ -342,13 +332,13 @@ void BftProto::CreateLeaderBroadcastToAccount(
     dht::DhtKeyManager dht_key(net_id, common::RandomCountry());
     msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHighest);
-    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_id(common::GlobalInfo::Instance()->MessageId() + 8888888u);
     msg.set_type(message_type);
     msg.set_client(false);
     msg.set_hop_count(0);
     msg.set_universal(universal);
     auto broad_param = msg.mutable_broadcast();
-    SetDefaultBroadcastParam(broad_param);
+    transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
     bft::protobuf::TxBft tx_bft;
     auto to_tx = tx_bft.mutable_to_tx();
