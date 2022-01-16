@@ -46,6 +46,8 @@ bool MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
         if (iter->second >= stop_times) {
             return true;
         }
+
+        ++iter->second;
     } else {
         broadcast_stop_map_[header.hash()] = 1;
     }

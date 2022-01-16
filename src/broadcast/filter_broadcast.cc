@@ -32,11 +32,7 @@ void FilterBroadcast::Broadcasting(
     }
 
     auto bloomfilter = GetBloomfilter(message);
-    if (message.broadcast().has_ign_bloomfilter_hop() &&
-            message.broadcast().ign_bloomfilter_hop() <= message.hop_count()) {
-        bloomfilter->Add(common::GlobalInfo::Instance()->id_hash());
-    }
-
+    bloomfilter->Add(common::GlobalInfo::Instance()->id_hash());
     if (message.broadcast().has_hop_to_layer() &&
             message.hop_count() >= message.broadcast().hop_to_layer()) {
         auto nodes = GetlayerNodes(dht_ptr, bloomfilter, message);
@@ -97,7 +93,7 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
     for (int32_t i = 0; i < hash_order_dht.size(); ++i) {
         debug_msg += common::Encode::HexEncode(hash_order_dht[i]->id()) + ":" +
             hash_order_dht[i]->public_ip() + ":" +
-            std::to_string(hash_order_dht[i]->public_port) + ", ";
+            std::to_string(hash_order_dht[i]->public_port) + std::to_string(hash_order_dht[i]->id_hash) + ", ";
     }
 
     debug_msg += " -- des: ";
@@ -130,8 +126,8 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
         }
     }
 
-    BROAD_DEBUG("layer broadcast out des_id: %s, left: %u, right:%u, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
-        common::Encode::HexEncode(message.des_dht_key()).c_str(), left, right, message.debug().c_str(), hash_order_dht.size(), nodes.size(), message.id(), debug_msg.c_str());
+    BROAD_DEBUG("layer broadcast out des_id: %s, left: %u, right:%u, lv: %lu, rv: %lu, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
+        common::Encode::HexEncode(message.des_dht_key()).c_str(), left, right, hash_order_dht[left]->id_hash, hash_order_dht[right]->id_hash, message.debug().c_str(), hash_order_dht.size(), nodes.size(), message.id(), debug_msg.c_str());
 
     auto& data = bloomfilter->data();
     for (uint32_t i = 0; i < data.size(); ++i) {
