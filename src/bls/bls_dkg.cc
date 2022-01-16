@@ -96,8 +96,8 @@ void BlsDkg::OnNewElectionBlock(
     auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
     begin_time_us_ = common::TimeUtils::TimestampUs();
     auto ver_offset = kDkgPeriodUs;
-    auto swap_offset = kDkgPeriodUs * 4;
-    auto finish_offset = kDkgPeriodUs * 8;
+    auto swap_offset = kDkgPeriodUs * 3;
+    auto finish_offset = kDkgPeriodUs * 7;
     if (begin_time_us_ < tmblock_tm + 10 * 1000l * 1000l) {
         kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
         ver_offset = tmblock_tm + 10 * 1000l * 1000l - begin_time_us_;

@@ -144,6 +144,23 @@ void TxPool::ChangeLeader() {
 
 bool TxPool::ShouldChangeLeader() {
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
+    if (pool_index_ == common::kRootChainPoolIndex) {
+        if (added_tx_map_.size() == 1) {
+            auto miter = added_tx_map_.begin();
+            auto iter = tx_pool_.find(miter->second);
+            if (iter != tx_pool_.end()) {
+                if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
+                    if (common::TimeUtils::TimestampSeconds() >=
+                            (last_bft_over_tm_sec_ + common::kTimeBlockCreatePeriodSeconds + 10)) {
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+        }
+    }
+
     if (!added_tx_map_.empty() && common::TimeUtils::TimestampSeconds() >=
             (last_bft_over_tm_sec_ + kChangeLeaderTimePeriodSec)) {
         return true;

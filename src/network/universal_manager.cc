@@ -99,9 +99,14 @@ int UniversalManager::CreateNetwork(
         uint32_t network_id,
         const common::Config& config,
         transport::TransportPtr& transport) {
+    uint8_t country_id = common::GlobalInfo::Instance()->country();
+    if (network_id != network::kNodeNetworkId) {
+        country_id = 0;
+    }
+
     dht::DhtKeyManager dht_key(
         network_id,
-        common::GlobalInfo::Instance()->country(),
+        country_id,
         common::GlobalInfo::Instance()->id());
     bool client = false;
     config.Get("tenon", "client", client);
@@ -119,10 +124,10 @@ int UniversalManager::CreateNetwork(
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     if (local_node->first_node) {
         auto local_dht_key = dht::DhtKeyManager(local_node->dht_key());
-        local_dht_key.SetCountryId(common::GlobalInfo::Instance()->country());
+        local_dht_key.SetCountryId(country_id);
         local_node->set_dht_key(local_dht_key.StrKey());
         local_node->dht_key_hash = common::Hash::Hash64(local_node->dht_key());
-        std::cout << "set dht country: " << common::GlobalInfo::Instance()->country() << std::endl;
+        std::cout << "set dht country: " << country_id << std::endl;
     }
 
     dht::BaseDhtPtr dht_ptr = std::make_shared<network::Universal>(transport, local_node);

@@ -236,6 +236,7 @@ TxItemPtr TxPoolManager::GetRootTx() {
     }
 
     if (timeout_pools_[common::kRootChainPoolIndex] > now_tm_ms) {
+        BFT_DEBUG("timeout not valid.");
         return nullptr;
     }
 
@@ -262,6 +263,7 @@ TxItemPtr TxPoolManager::GetRootTx() {
 
 
         if (pool_height < waiting_pools_height_[common::kRootChainPoolIndex]) {
+            BFT_DEBUG("pool_height < waiting_pools_height_[common::kRootChainPoolIndex].");
             return nullptr;
         }
 
