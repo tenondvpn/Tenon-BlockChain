@@ -34,13 +34,6 @@ private:
 
     // just two period and consensus with time block can also guarantee safety
     void ClearAll();
-    void CheckVssPeriods();
-    void CheckVssFirstPeriods();
-    void CheckVssSecondPeriods();
-    void CheckVssThirdPeriods();
-    bool IsVssFirstPeriods();
-    bool IsVssSecondPeriods();
-    bool IsVssThirdPeriods();
     bool IsVssFirstPeriodsHandleMessage();
     bool IsVssSecondPeriodsHandleMessage();
     bool IsVssThirdPeriodsHandleMessage();
@@ -54,6 +47,7 @@ private:
     uint64_t GetAllVssValid();
     void SetConsensusFinalRandomNum(const std::string& id, uint64_t final_random_num);
 
+    int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
     RandomNum local_random_{ true };
     RandomNum other_randoms_[common::kEachShardMaxNodeCount];
     uint64_t prev_tm_height_{ common::kInvalidUint64 };
@@ -76,6 +70,7 @@ private:
     common::Tick vss_first_tick_;
     common::Tick vss_second_tick_;
     common::Tick vss_third_tick_;
+    int64_t begin_time_us_{ 0 };
 
     // for unit test
 #ifdef TENON_UNITTEST

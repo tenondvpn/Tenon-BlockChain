@@ -58,36 +58,31 @@ void VssManager::OnTimeBlock(
         prev_tm_height_ = tm_height;
         int64_t local_offset_us = 0;
         if (member_count_ > 0 && local_index_ < member_count_) {
+            auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
+            begin_time_us_ = common::TimeUtils::TimestampUs();
+            auto first_offset = kDkgPeriodUs;
+            auto second_offset = kDkgPeriodUs * 4;
+            auto third_offset = kDkgPeriodUs * 8;
+            auto offset_tm = 13l * 1000l * 1000l;
+            if (begin_time_us_ < tmblock_tm + offset_tm) {
+                kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
+                first_offset = tmblock_tm + offset_tm - begin_time_us_;
+                begin_time_us_ = tmblock_tm + offset_tm - kDkgPeriodUs;
+                second_offset = first_offset + kDkgPeriodUs * 3;
+                third_offset = first_offset + kDkgPeriodUs * 7;
+            }
+
             // waiting elect block coming.
-            auto each_member_offset_us = kVssWorkPeriodUs / member_count_;
-            local_offset_us = each_member_offset_us * local_index_;
             vss_first_tick_.CutOff(
-                kVssFirstBeginUs + local_offset_us,
+                first_offset,
                 std::bind(&VssManager::BroadcastFirstPeriodHash, this));
             vss_second_tick_.CutOff(
-                kVssSecondBeginUs + local_offset_us,
+                second_offset,
                 std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
             vss_third_tick_.CutOff(
-                kVssFinishBeginUs + local_offset_us,
+                third_offset,
                 std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
         }
-
-//         VSS_DEBUG("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-//             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
-//             "first begin us: %ld, second begin us: %ld, third begin us: %ld",
-//             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-//             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_,
-//             kVssFirstBeginUs + local_offset_us,
-//             kVssSecondBeginUs + local_offset_us,
-//             kVssFinishBeginUs + local_offset_us);
-//         printf("new time block latest_tm_block_tm_: %lu, prev_tm_height_: %lu,"
-//             "prev_elect_height_: %lu, member_count_: %u, epoch_random_: %lu, "
-//             "first begin us: %ld, second begin us: %ld, third begin us: %ld.\n",
-//             (uint64_t)latest_tm_block_tm_, (uint64_t)prev_tm_height_,
-//             (uint64_t)prev_elect_height_, member_count_, (uint64_t)epoch_random_,
-//             kVssFirstBeginUs + local_offset_us,
-//             kVssSecondBeginUs + local_offset_us,
-//             kVssFinishBeginUs + local_offset_us);
     }
 }
 
@@ -131,39 +126,6 @@ void VssManager::ClearAll() {
     vss_third_tick_.Destroy();
 }
 
-void VssManager::CheckVssFirstPeriods() {
-    if (first_period_cheched_) {
-        return;
-    }
-
-    if (IsVssFirstPeriods()) {
-        BroadcastFirstPeriodHash();
-        first_period_cheched_ = true;
-    }
-}
-
-void VssManager::CheckVssSecondPeriods() {
-    if (second_period_cheched_) {
-        return;
-    }
-
-    if (IsVssSecondPeriods()) {
-        BroadcastSecondPeriodRandom();
-        second_period_cheched_ = true;
-    }
-}
-
-void VssManager::CheckVssThirdPeriods() {
-    if (third_period_cheched_) {
-        return;
-    }
-
-    if (IsVssThirdPeriods()) {
-        BroadcastThirdPeriodRandom();
-        third_period_cheched_ = true;
-    }
-}
-
 uint64_t VssManager::GetAllVssValid() {
     uint64_t final_random = 0;
     for (uint32_t i = 0; i < member_count_; ++i) {
@@ -175,58 +137,12 @@ uint64_t VssManager::GetAllVssValid() {
     return final_random;
 }
 
-bool VssManager::IsVssFirstPeriods() {
-    return true;
-#ifdef TENON_UNITTEST
-    return true;
-#endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kVssTimePeriodOffsetSeconds <= now_seconds &&
-            latest_tm_block_tm_ + kVssFirstPeriodTimeout >
-            now_seconds + kVssTimePeriodOffsetSeconds) {
-        return true;
-    }
-
-    return false;
-}
-
-bool VssManager::IsVssSecondPeriods() {
-    return true;
-#ifdef TENON_UNITTEST
-    return true;
-#endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kVssFirstPeriodTimeout <= now_seconds &&
-            latest_tm_block_tm_ + kVssSecondPeriodTimeout >
-            now_seconds + kVssTimePeriodOffsetSeconds) {
-        return true;
-    }
-
-    return false;
-}
-
-bool VssManager::IsVssThirdPeriods() {
-    return true;
-#ifdef TENON_UNITTEST
-    return true;
-#endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kVssSecondPeriodTimeout <= now_seconds &&
-        latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
-        return true;
-    }
-
-    return false;
-}
-
 bool VssManager::IsVssFirstPeriodsHandleMessage() {
-    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
-        latest_tm_block_tm_ + kVssFirstPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds > now_seconds) {
+    auto now_tm_us = common::TimeUtils::TimestampUs();
+    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
         return true;
     }
 
@@ -234,13 +150,12 @@ bool VssManager::IsVssFirstPeriodsHandleMessage() {
 }
 
 bool VssManager::IsVssSecondPeriodsHandleMessage() {
-    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kVssFirstPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
-        latest_tm_block_tm_ + kVssSecondPeriodTimeout > now_seconds) {
+    auto now_tm_us = common::TimeUtils::TimestampUs();
+    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8) &&
+        now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
         return true;
     }
 
@@ -248,13 +163,11 @@ bool VssManager::IsVssSecondPeriodsHandleMessage() {
 }
 
 bool VssManager::IsVssThirdPeriodsHandleMessage() {
-    return false;
 #ifdef TENON_UNITTEST
     return true;
 #endif
-    auto now_seconds = common::TimeUtils::TimestampSeconds();
-    if (latest_tm_block_tm_ + kVssSecondPeriodTimeout - kHandleMessageVssTimePeriodOffsetSeconds <= now_seconds &&
-        latest_tm_block_tm_ + kVssThirdPeriodTimeout > now_seconds) {
+    auto now_tm_us = common::TimeUtils::TimestampUs();
+    if (now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 8)) {
         return true;
     }
 

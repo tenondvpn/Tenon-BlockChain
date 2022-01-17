@@ -30,18 +30,6 @@ static const int64_t kVssCheckPeriodTimeout = 3000000ll;
 // Avoid small differences in time between different machines leading to cheating
 static const uint32_t kVssTimePeriodOffsetSeconds = 3u;
 static const uint32_t kHandleMessageVssTimePeriodOffsetSeconds = 1u;
-// left 60 seconds for each nodes valid
-static const uint64_t kVssAllPeriodSeconds = common::kTimeBlockCreatePeriodSeconds - 1;
-static const uint64_t kVssFirstPeriodTimeout = kVssAllPeriodSeconds / 3;
-static const uint64_t kVssSecondPeriodTimeout = 2 * kVssAllPeriodSeconds / 3;
-static const uint64_t kVssThirdPeriodTimeout = kVssAllPeriodSeconds;
-static const int64_t kMaxVssOffsetUs = 30L * 1000L * 1000L;
-static const int64_t kVssPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 1) * 1000L * 1000L;
-static const int64_t kVssOffsetUs = kVssPeriodUs / 10 > kMaxVssOffsetUs ? kMaxVssOffsetUs : kVssPeriodUs / 10;
-static const int64_t kVssWorkPeriodUs = (kVssPeriodUs - 2 * kVssOffsetUs) / 3;
-static const int64_t kVssFirstBeginUs = kVssOffsetUs;
-static const int64_t kVssSecondBeginUs = kVssWorkPeriodUs + kVssOffsetUs;
-static const int64_t kVssFinishBeginUs = kVssSecondBeginUs + kVssWorkPeriodUs + kVssOffsetUs;
 
 }  // namespace vss
 
