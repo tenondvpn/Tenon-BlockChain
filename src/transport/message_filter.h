@@ -16,7 +16,7 @@ class MessageFilter {
 public:
     static MessageFilter* Instance();
     bool CheckUnique(uint64_t msg_hash);
-    bool StopBroadcast(transport::protobuf::Header& header);
+    int32_t StopBroadcast(transport::protobuf::Header& header);
 
 private:
     MessageFilter();

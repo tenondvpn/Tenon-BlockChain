@@ -208,9 +208,11 @@ void MultiThreadHandler::HandleRemoteMessage(
         priority = message_ptr->priority();
     }
 
-    TRANSPORT_DEBUG("%s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
+    TRANSPORT_DEBUG("%s msg id: %lu, hash: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
         message_ptr->debug().c_str(),
-        message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+        message_ptr->id(),
+        message_ptr->hash(),
+        message_ptr->debug().c_str(), message_ptr->has_broadcast(),
         from_ip.c_str(), from_port, priority_queue_map_[priority].size(), message_ptr->hop_count());
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
@@ -230,20 +232,20 @@ void MultiThreadHandler::HandleRemoteMessage(
 
     assert(message_ptr->has_hash());
 	if (message_ptr->hop_count() >= kMaxHops) {
-		const auto& msg = *message_ptr;
 		return;
 	}
 
     if (message_ptr->has_broadcast()) {
-		if (MessageFilter::Instance()->StopBroadcast(*message_ptr)) {
+        int32_t count = MessageFilter::Instance()->StopBroadcast(*message_ptr);
+		if (count > kBroadcastMaxRelayTimes) {
 			return;
 		}
 
-// 		if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
-//             return;
-// 		}
-// 
-        message_ptr->set_handled(false);
+		if (count >= 2) {
+            message_ptr->set_handled(true);
+        } else {
+            message_ptr->set_handled(false);
+        }
 	} else {
         if (MessageFilter::Instance()->CheckUnique(message_ptr->hash())) {
 			return;

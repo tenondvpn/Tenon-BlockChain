@@ -29,10 +29,10 @@ bool MessageFilter::CheckUnique(uint64_t msg_hash) {
     return false;
 }
 
-bool MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
+int32_t MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
     std::lock_guard<std::mutex> guard(broadcast_stop_queue_mutex_);
     if (!header.has_broadcast()) {
-        return false;
+        return 0;
     }
 
     assert(header.has_hash());
@@ -44,10 +44,11 @@ bool MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
     auto iter = broadcast_stop_map_.find(header.hash());
     if (iter != broadcast_stop_map_.end()) {
         if (iter->second >= stop_times) {
-            return true;
+            return iter->second + 1;
         }
 
         ++iter->second;
+        return iter->second;
     } else {
         broadcast_stop_map_[header.hash()] = 1;
     }
@@ -57,7 +58,7 @@ bool MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
         broadcast_stop_map_.erase(broadcast_stop_queue_.front());
         broadcast_stop_queue_.pop();
     }
-    return false;
+    return 1;
 }
 
 MessageFilter::MessageFilter()
