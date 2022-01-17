@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "network/route.h"
 
-#include "transport/processor.h"
 #include "dht/dht_key.h"
+#include "bft/proto/bft.pb.h"
 #include "broadcast/filter_broadcast.h"
+#include "common/time_utils.h"
 #include "network/universal.h"
 #include "network/dht_manager.h"
 #include "network/universal_manager.h"
 #include "network/network_utils.h"
+#include "transport/processor.h"
 
 namespace tenon {
 
@@ -144,7 +146,33 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     }
 
     if (!header.handled()) {
+        auto btime = common::TimeUtils::TimestampUs();
+        bft::protobuf::BftMessage bft_msg;
+        if (header.type() == common::kBftMessage) {
+            if (!bft_msg.ParseFromString(header.data())) {
+                return;
+            }
+
+            NETWORK_DEBUG("msg id: %lu, hash: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+                header.id(),
+                header.hash(),
+                bft_msg.leader(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                bft_msg.bft_step());
+        }
         message_processor_[header.type()](header_ptr);
+        if (header.type() == common::kBftMessage) {
+            NETWORK_DEBUG("over msg id: %lu, hash: %lu, use_time: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
+                header.id(),
+                header.hash(),
+                (common::TimeUtils::TimestampUs() - btime),
+                bft_msg.leader(),
+                common::Encode::HexEncode(bft_msg.gid()).c_str(),
+                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
+                bft_msg.bft_step());
+        }
+
 //         if (!header.debug().empty()) {
 //             NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
 //         }

@@ -49,15 +49,15 @@ int32_t MessageFilter::StopBroadcast(transport::protobuf::Header& header) {
 
         ++iter->second;
         return iter->second;
-    } else {
-        broadcast_stop_map_[header.hash()] = 1;
     }
-
+        
+    broadcast_stop_map_[header.hash()] = 1;
     broadcast_stop_queue_.push(header.hash());
     if (broadcast_stop_queue_.size() >= kBroadcastMaxMessageCount) {
         broadcast_stop_map_.erase(broadcast_stop_queue_.front());
         broadcast_stop_queue_.pop();
     }
+
     return 1;
 }
 

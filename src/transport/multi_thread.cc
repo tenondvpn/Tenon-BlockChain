@@ -278,7 +278,6 @@ void MultiThreadHandler::HandleRemoteMessage(
                 from_ip.c_str(), from_port, priority_queue_map_[priority].size());
             priority_queue_map_[priority].pop();
         }
-
 	}
 }
 

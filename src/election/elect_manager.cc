@@ -670,7 +670,7 @@ std::shared_ptr<MemberManager> ElectManager::GetMemberManager(uint32_t network_i
 }
 
 uint32_t ElectManager::GetMemberIndex(uint32_t network_id, const std::string& node_id) {
-    if (node_index_map_[network_id] == nullptr) {
+    if (network_id >= network::kConsensusShardEndNetworkId || node_index_map_[network_id] == nullptr) {
         return kInvalidMemberIndex;
     }
 
