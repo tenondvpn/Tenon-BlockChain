@@ -206,11 +206,12 @@ void TimeBlockManager::CreateTimeBlockTx() {
     }
 
     BFT_ERROR("LeaderCreateTimeBlockTx success gid not exists[%s] %lu, "
-        "latest_time_block_tm_[%lu] new_time_block_tm[%lu]",
+        "latest_time_block_tm_[%lu] new_time_block_tm[%lu], vss[%lu]",
         common::Encode::HexEncode(gid).c_str(),
         (uint64_t)latest_time_block_height_,
         (uint64_t)latest_time_block_tm_,
-        new_time_block_tm);
+        new_time_block_tm,
+        vss::VssManager::Instance()->GetConsensusFinalRandom());
 
     auto all_exits_attr = tx_info.add_attr();
     all_exits_attr->set_key(kAttrTimerBlock);

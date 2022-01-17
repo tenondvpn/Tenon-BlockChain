@@ -134,7 +134,7 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 
     if (local_member_index_ == common::kInvalidUint32) {
-        BLS_INFO("bls create HandleSwapSecKey block elect height: %lu", elect_hegiht_);
+        BLS_INFO("bls create HandleSwapSecKey block elect_height: %lu", elect_hegiht_);
         return;
     }
 
@@ -252,7 +252,7 @@ void BlsDkg::HandleSwapSecKeyRes(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        TENON_WARN("dkg_instance_->Verification failed!elect height: %lu,"
+        TENON_WARN("dkg_instance_->Verification failed!elect_height: %lu,"
             "local_member_index_: %d, remote idx: %d, %s:%d\n",
             elect_hegiht_,
             local_member_index_,
@@ -305,7 +305,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
     assert(pubkey.ec_point() != nullptr);
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
     if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
-        BLS_INFO("bls create IsSignValid error block elect height: %lu", elect_hegiht_);
+        BLS_INFO("bls create IsSignValid error block elect_height: %lu", elect_hegiht_);
         return false;
     }
 
@@ -461,7 +461,7 @@ void BlsDkg::HandleSwapSecKey(
             local_member_index_,
             all_secret_key_contribution_[local_member_index_][bls_msg.index()],
             all_verification_vector_[bls_msg.index()])) {
-        TENON_WARN("dkg_instance_->Verification failed!elect height: %lu,"
+        TENON_WARN("dkg_instance_->Verification failed!elect_height: %lu,"
             "local_member_index_: %d, remote idx: %d, %s:%d\n",
             elect_hegiht_,
             local_member_index_,
@@ -772,7 +772,7 @@ void BlsDkg::FinishNoLock() try {
             valid_sec_key_count_ < min_aggree_member_count_) {
         BLS_ERROR("valid count error.valid_sec_key_count_: %d, min_aggree_member_count_: %d, members_ == nullptr: %d, local_member_index_: %d, members_->size(): %d",
             valid_sec_key_count_, min_aggree_member_count_, (members_ == nullptr), local_member_index_, members_->size());
-        BLS_INFO("bls create Finish error block elect height: %lu", elect_hegiht_);
+        BLS_INFO("bls create Finish error block elect_height: %lu", elect_hegiht_);
         return;
     }
 
@@ -905,7 +905,7 @@ void BlsDkg::BroadcastFinish(const common::Bitmap& bitmap) {
         sign_x.c_str(),
         sign_y.c_str());
 
-//     BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect height: %lu,"
+//     BLS_INFO("broadcast finish network: %d, valid_sec_key_count_: %d, bitmap.valid_count: %d, elect_height: %lu,"
 //         "cpk: %s,%s,%s,%s, pk: %s,%s,%s,%s",
 //         common::GlobalInfo::Instance()->network_id(), valid_sec_key_count_, bitmap.valid_count(), elect_hegiht_,
 //         common_pk->x_c0().c_str(),
