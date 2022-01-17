@@ -71,7 +71,7 @@ private:
     common::Tick vss_second_tick_;
     common::Tick vss_third_tick_;
     int64_t begin_time_us_{ 0 };
-
+    uint64_t prev_valid_vss_{ 0 };
     // for unit test
 #ifdef TENON_UNITTEST
     transport::protobuf::Header first_msg_;

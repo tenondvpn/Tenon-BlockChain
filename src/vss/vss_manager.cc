@@ -8,6 +8,7 @@
 #include "security/secp256k1.h"
 #include "security/aes.h"
 #include "security/crypto.h"
+#include "timeblock/time_block_manager.h"
 #include "vss/proto/vss_proto.h"
 
 namespace tenon {
@@ -34,6 +35,16 @@ void VssManager::OnTimeBlock(
         uint64_t tm_height,
         uint64_t elect_height,
         uint64_t epoch_random) {
+    {
+        std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
+        if ((max_count_ * 3 / 2 + 1) < member_count_ || max_count_random_ == 0) {
+            BLS_ERROR("use old random: %lu, max_count_: %d, expect: %d, member_count_: %d, max_count_random_: %lu", epoch_random_, max_count_, (max_count_ * 3 / 2 + 1), member_count_, max_count_random_);
+            prev_valid_vss_ = epoch_random_;
+        } else {
+            prev_valid_vss_ = max_count_random_;
+        }
+    }
+
     {
         std::lock_guard<std::mutex> guard(mutex_);
         ClearAll();
@@ -98,13 +109,7 @@ void VssManager::OnElectBlock(uint32_t network_id, uint64_t elect_height) {
 }
 
 uint64_t VssManager::GetConsensusFinalRandom() {
-    std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
-    if ((max_count_ * 3 / 2 + 1) < member_count_ || max_count_random_ == 0) {
-        BLS_ERROR("use old random: %lu, max_count_: %d, expect: %d, member_count_: %d, max_count_random_: %lu", epoch_random_, max_count_, (max_count_ * 3 / 2 + 1), member_count_, max_count_random_);
-        return epoch_random_;
-    }
-
-    return max_count_random_;
+    return prev_valid_vss_;
 }
 
 void VssManager::ClearAll() {
