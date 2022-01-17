@@ -60,6 +60,7 @@ int Route::Send(const transport::protobuf::Header& message) {
 
     if (dht_ptr != nullptr) {
         if (message.has_broadcast()) {
+            NETWORK_DEBUG("broadcast message init: %u, hash: %lu", message.id(), message.hash());
             broadcast_->Broadcasting(dht_ptr, message);
         } else {
             if (message.has_to_ip() && message.has_to_port()) {
