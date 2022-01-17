@@ -98,7 +98,7 @@ private:
     void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
     bool IsVerifyBrdPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
-        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 3)) {
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
             return true;
         }
 
@@ -107,8 +107,8 @@ private:
 
     bool IsSwapKeyPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
-        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 7) &&
-                now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 3)) {
+        if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8) &&
+                now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
             return true;
         }
 

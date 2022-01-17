@@ -366,9 +366,10 @@ void BlsManager::HandleFinish(
         }
     }
 
-    BLS_INFO("HandleFinish new election block network id: %d, elect_height: %lu, finish index: %d, id: %s, "
+    BLS_INFO("msg_id: %u, hash: %lu, HandleFinish new election block network id: %d, elect_height: %lu, finish index: %d, id: %s, "
         "hash: %s, signxy: %s, %s, pk: %s, %s, %s, %s, "
         "cpk: %s, %s, %s, %s, cpk_hash count: %d, t: %d",
+        header.id(), header.hash(),
         bls_msg.finish_req().network_id(),
         bls_msg.elect_height(),
         bls_msg.index(),

@@ -96,8 +96,8 @@ void BlsDkg::OnNewElectionBlock(
     auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
     begin_time_us_ = common::TimeUtils::TimestampUs();
     auto ver_offset = kDkgPeriodUs;
-    auto swap_offset = kDkgPeriodUs * 3;
-    auto finish_offset = kDkgPeriodUs * 7;
+    auto swap_offset = kDkgPeriodUs * 4;
+    auto finish_offset = kDkgPeriodUs * 8;
     if (begin_time_us_ < tmblock_tm + 10 * 1000l * 1000l) {
         kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
         ver_offset = tmblock_tm + 10 * 1000l * 1000l - begin_time_us_;
@@ -169,31 +169,31 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 
     if (bls_msg.has_verify_brd()) {
-        BLS_DEBUG("0 HandleVerifyBroadcast new election block elect_height: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("msg_id: %u, hash: %lu, HandleVerifyBroadcast new election block elect_height: %lu, local_member_index_: %d, index: %d",
+            header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
         HandleVerifyBroadcast(header, bls_msg);
-        BLS_DEBUG("1 HandleVerifyBroadcast new election block elect_height: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_swap_req()) {
         HandleSwapSecKey(header, bls_msg);
-        BLS_DEBUG("HandleSwapSecKey new election block elect_height: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("msg_id: %u, hash: %lu, HandleSwapSecKey new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_swapkey_res()) {
         BLS_DEBUG("2 comming: %lu", header_ptr->id());
         HandleSwapSecKeyRes(header, bls_msg);
-        BLS_DEBUG("HandleSwapSecKeyRes new election block elect_height: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("msg_id: %u, hash: %lu, HandleSwapSecKeyRes new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
     }
 
     if (bls_msg.has_against_req()) {
         HandleAgainstParticipant(header, bls_msg);
-        BLS_DEBUG("HandleAgainstParticipant new election block elect_height: %lu, local_member_index_: %d, index: %d, aginst index: %d",
-            elect_hegiht_, local_member_index_, bls_msg.index(), bls_msg.against_req().against_index());
+        BLS_DEBUG("msg_id: %u, hash: %lu, HandleAgainstParticipant new election block elect_height: %lu, local_member_index_: %d, index: %d, aginst index: %d",
+            header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index(), bls_msg.against_req().against_index());
     }
 
     if (bls_msg.has_verify_res()) {
         HandleVerifyBroadcastRes(header, bls_msg);
-        BLS_DEBUG("HandleVerifyBroadcastRes new election block elect_height: %lu, local_member_index_: %d, index: %d", elect_hegiht_, local_member_index_, bls_msg.index());
+        BLS_DEBUG("msg_id: %u, hash: %lu, HandleVerifyBroadcastRes new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -316,7 +316,7 @@ void BlsDkg::HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
     if (!IsVerifyBrdPeriod()) {
-        BLS_ERROR("elect_height: %d HandleVerifyBroadcast invalid.", elect_hegiht_);
+        BLS_ERROR("msg_id: %u, hash: %lu, elect_height: %d HandleVerifyBroadcast invalid.", header.id(), header.hash(), elect_hegiht_);
         return;
     }
 
@@ -398,7 +398,7 @@ void BlsDkg::HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg) try {
     if (!IsSwapKeyPeriod()) {
-        BLS_ERROR("elect_height: %d swapkey period invalid.", elect_hegiht_);
+        BLS_ERROR("msg_id: %u, hash: %lu, elect_height: %d swapkey period invalid.", header.id(), header.hash(), elect_hegiht_);
         return;
     }
 
