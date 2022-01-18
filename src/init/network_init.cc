@@ -36,6 +36,7 @@
 #include "transport/http/http_transport.h"
 #include "tvm/execution.h"
 #include "tvm/tvm_utils.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -110,6 +111,7 @@ int NetworkInit::Init(int argc, char** argv) {
 
     network::DhtManager::Instance();
     network::Route::Instance();
+    vss::VssManager::Instance();
     if (InitUdpTransport() != kInitSuccess) {
         INIT_ERROR("init udp transport failed!");
         return kInitError;

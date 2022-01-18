@@ -160,7 +160,7 @@ bool VssManager::IsVssSecondPeriodsHandleMessage() {
 #endif
     auto now_tm_us = common::TimeUtils::TimestampUs();
     if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8) &&
-        now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
+            now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
         return true;
     }
 
@@ -220,6 +220,8 @@ void VssManager::BroadcastSecondPeriodRandom() {
         prev_elect_height_,
         msg);
     if (msg.has_data()) {
+        dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+        msg.set_des_dht_key(dht_key.StrKey());
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
         VSS_DEBUG("BroadcastSecondPeriodRandom: %lu，prev_elect_height_: %lu", local_random_.GetFinalRandomNum(), prev_elect_height_);
@@ -249,8 +251,11 @@ void VssManager::BroadcastThirdPeriodRandom() {
         msg.set_des_dht_key(dht_key.StrKey());
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
-        dht::DhtKeyManager dht_key(network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset, 0);
-        msg.set_des_dht_key(dht_key.StrKey());
+        dht::DhtKeyManager wait_dht_key(network::kNodeNetworkId, 0);
+        msg.set_des_dht_key(wait_dht_key.StrKey());
+        msg.mutable_broadcast()->clear_bloomfilter();
+        msg.set_hop_count(0);
+        msg.clear_hash();
         network::Route::Instance()->Send(msg);
         VSS_DEBUG("BroadcastThirdPeriodRandom: %lu，prev_elect_height_: %lu", GetAllVssValid(), prev_elect_height_);
 #ifdef TENON_UNITTEST
@@ -265,10 +270,7 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
             common::GlobalInfo::Instance()->network_id() !=
             (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
-        return;
-    }
-
-    if (local_index_ == elect::kInvalidMemberIndex) {
+        VSS_DEBUG("invalid vss message network_id: %d", common::GlobalInfo::Instance()->network_id());
         return;
     }
 
@@ -276,6 +278,11 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     protobuf::VssMessage vss_msg;
     if (!vss_msg.ParseFromString(header.data())) {
         ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
+        return;
+    }
+
+    if (vss_msg.type() != kVssFinalRandom && local_index_ == elect::kInvalidMemberIndex) {
+        VSS_DEBUG("invalid vss message: %d, %d", vss_msg.type(), local_index_);
         return;
     }
 
@@ -308,6 +315,7 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
 
 void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
     if (!IsVssFirstPeriodsHandleMessage()) {
+        VSS_DEBUG("invalid first period message.");
         return;
     }
 
@@ -339,6 +347,7 @@ void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
 
 void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     if (!IsVssSecondPeriodsHandleMessage()) {
+        VSS_DEBUG("invalid second period message.");
         return;
     }
 
