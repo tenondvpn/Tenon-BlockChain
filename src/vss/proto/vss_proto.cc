@@ -69,8 +69,6 @@ void VssProto::CreateRandomMessage(
         uint64_t elect_height,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
-    dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
-    msg.set_des_dht_key(dht_key.StrKey());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kVssMessage);

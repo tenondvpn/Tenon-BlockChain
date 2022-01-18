@@ -20,13 +20,13 @@
 #define LOG_INS log4cpp::Category::getInstance(std::string("sub1"))
 #ifdef _WIN32
 
-#ifdef NDEBUG
-#define DEBUG(fmt, ...)
-#else
+// #ifdef NDEBUG
+// #define DEBUG(fmt, ...)
+// #else
 #define DEBUG(fmt, ...)  do {\
-    LOG_INS.debug("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
+    LOG_INS.info("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
-#endif
+// #endif
 
 #define TENON_INFO(fmt, ...)  do {\
     LOG_INS.info("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
@@ -41,17 +41,17 @@
 } while (0)
 #else
 
-#ifdef NDEBUG
-#define DEBUG(fmt, ...)
-#define TENON_DEBUG(fmt, ...)
-#else
+// #ifdef NDEBUG
+// #define DEBUG(fmt, ...)
+// #define TENON_DEBUG(fmt, ...)
+// #else
 #define DEBUG(fmt, ...)  do {\
-    LOG_INS.debug("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
+    LOG_INS.info("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
 #define TENON_DEBUG(fmt, ...)  do {\
-    LOG_INS.debug("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
+    LOG_INS.info("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\
 } while (0)
-#endif
+// #endif
 
 #define TENON_INFO(fmt, ...)  do {\
     LOG_INS.info("[%s][%s][%d] " fmt, LEGO_LOG_FILE_NAME, __FUNCTION__, __LINE__, ## __VA_ARGS__);\

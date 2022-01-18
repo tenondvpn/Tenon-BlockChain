@@ -245,8 +245,13 @@ void VssManager::BroadcastThirdPeriodRandom() {
         prev_elect_height_,
         msg);
     if (msg.has_data()) {
+        dht::DhtKeyManager dht_key(network::kRootCongressNetworkId, 0);
+        msg.set_des_dht_key(dht_key.StrKey());
         network::Route::Instance()->Send(msg);
         network::Route::Instance()->SendToLocal(msg);
+        dht::DhtKeyManager dht_key(network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset, 0);
+        msg.set_des_dht_key(dht_key.StrKey());
+        network::Route::Instance()->Send(msg);
         VSS_DEBUG("BroadcastThirdPeriodRandom: %lu，prev_elect_height_: %lu", GetAllVssValid(), prev_elect_height_);
 #ifdef TENON_UNITTEST
         third_msg_ = msg;
@@ -257,7 +262,9 @@ void VssManager::BroadcastThirdPeriodRandom() {
 void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
     assert(header.type() == common::kVssMessage);
-    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
+            common::GlobalInfo::Instance()->network_id() !=
+            (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
         return;
     }
 
