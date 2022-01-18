@@ -101,28 +101,19 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     if (bft_msg.leader()) {
         auto bft_ptr = GetBft(bft_msg.gid());
         if (bft_ptr == nullptr) {
-            BFT_DEBUG("leader get bft gid failed[%s]",
-                common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
         if (!bft_ptr->this_node_is_leader()) {
-            BFT_DEBUG("not valid leader get bft gid failed[%s]",
-                common::Encode::HexEncode(bft_msg.gid()).c_str());
             return;
         }
 
         if (!bft_msg.agree()) {
-            BFT_DEBUG("not agree leader get bft gid failed[%s]",
-                common::Encode::HexEncode(bft_msg.gid()).c_str());
             LeaderHandleBftOppose(bft_ptr, *header_ptr, bft_msg);
             return;
         }
 
-//         uint64_t time2 = common::TimeUtils::TimestampUs();
         HandleBftMessage(bft_ptr, bft_msg, "", header_ptr);
-//         uint64_t time3 = common::TimeUtils::TimestampUs();
-//         BFT_DEBUG("leader HandleBftMessage time use: %lu, %lu, %lu", time1 - b_time, time2 - time1, time3 - time2);
         return;
     }
 
@@ -458,25 +449,6 @@ bool BftManager::VerifyAggSignWithMembers(
         return false;
     }
 
-//     if (bls::BlsSign::Verify(
-//             t,
-//             n,
-//             sign,
-//             hash,
-//             elect::ElectManager::Instance()->GetCommonPublicKey(
-//             block.electblock_height(),
-//             block.network_id())) != bls::kBlsSuccess) {
-//         auto tmp_block_hash = GetBlockHash(block);
-//         BFT_ERROR("VerifyBlsAggSignature agg sign failed!prepare hash: %s, agg sign hash: %s,"
-//             "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
-//             common::Encode::HexEncode(tmp_block_hash).c_str(),
-//             common::Encode::HexEncode(hash).c_str(),
-//             t, n, block.electblock_height(), block.network_id(),
-//             block.bls_agg_sign_x().c_str(),
-//             block.bls_agg_sign_y().c_str());
-//         return false;
-//     }
-
     return true;
 }
 
@@ -503,7 +475,8 @@ bool BftManager::AggSignValid(
         // The election block arrives later than the consensus block,
         // causing the aggregate signature verification to fail
         // add to waiting verify pool.
-        BFT_ERROR("get members failed height: %lu, map size: %d", block.electblock_height(), waiting_block_map_.size());
+        BFT_ERROR("get members failed height: %lu, map size: %d",
+            block.electblock_height(), waiting_block_map_.size());
         auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
         waiting_verify_block_queue_[thread_idx].push(
             std::make_shared<WaitingBlockItem>(block_ptr, type));
@@ -516,11 +489,6 @@ bool BftManager::AggSignValid(
 void BftManager::HandleRootTxBlock(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-//     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-//         BFT_ERROR("root congress don't handle this message.");
-//         return;
-//     }
-    BFT_DEBUG("0 msg id: %lu", header.id());
     protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("tx_bft.ParseFromString failed.");
@@ -543,7 +511,6 @@ void BftManager::HandleRootTxBlock(
         return;
     }
 
-    BFT_DEBUG("1 msg id: %lu", header.id());
     if (!AggSignValid(header.thread_idx(), kRootBlock, tx_bft.to_tx().block())) {
         BFT_ERROR("root block agg sign verify failed! height: %lu, type: %d",
             tx_bft.to_tx().block().height(),
@@ -551,10 +518,8 @@ void BftManager::HandleRootTxBlock(
         return;
     }
  
-    BFT_DEBUG("2 msg id: %lu", header.id());
     BlockPtr block_ptr = nullptr;
     HandleVerifiedBlock(header.thread_idx(), kRootBlock, tx_bft.to_tx().block(), block_ptr);
-    BFT_DEBUG("3 msg id: %lu", header.id());
 }
 
 elect::MembersPtr BftManager::GetNetworkMembers(uint32_t network_id) {
@@ -683,7 +648,6 @@ int BftManager::InitBft(
     }
 
     res = StartBft(bft_msg.gid(), pool_mod_index);
-    BFT_DEBUG("start bft called!");
     if (res != kBftSuccess) {
         if (res != kBftNoNewTxs) {
             BFT_WARN("start [%s][%llu] failed![%d]",
@@ -699,10 +663,6 @@ int BftManager::InitBft(
 }
 
 int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
-//     if (common::GlobalInfo::Instance()->id() == common::Encode::HexDecode("24b2b4f59351d2b2b3fce592e0a73271a3337812")) {
-//         return kBftError;
-//     }
-// 
     BftInterfacePtr bft_ptr = std::make_shared<TxBft>();
     if (bft_ptr->Init() != kBftSuccess) {
         BFT_ERROR("bft init failed!");
@@ -727,7 +687,7 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
         return leader_pre;
     }
 
-    BFT_DEBUG("this node is leader and start bft: %s",
+    BFT_INFO("this node is leader and start bft: %s",
         common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
@@ -886,7 +846,7 @@ int BftManager::BackupPrepare(
         bft_ptr,
         true,
         *msg);
-    BFT_ERROR("bft backup prepare success! agree bft gid: %s, from: %s:%d",
+    BFT_DEBUG("bft backup prepare success! agree bft gid: %s, from: %s:%d",
         common::Encode::HexEncode(bft_ptr->gid()).c_str(),
         bft_msg.node_ip().c_str(), bft_msg.node_port());
     if (!msg->has_data()) {
@@ -974,20 +934,14 @@ int BftManager::LeaderPrecommit(
         header.id(),
         sign,
         member_ptr->id);
-//     time3 = common::TimeUtils::TimestampUs();
     if (!bft_msg.agree()) {
         HandleOpposeNodeMsg(bft_msg, bft_ptr);
     }
 
-//     BFT_ERROR("LeaderPrecommit res: %d", res);
     if (res == kBftAgree) {
         LeaderCallPrecommit(bft_ptr);
-//         time4 = common::TimeUtils::TimestampUs();
-//         time4 = common::TimeUtils::TimestampUs();
     }
 
-//     BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3);
-    // broadcast pre-commit to backups
     return kBftSuccess;
 }
 
@@ -1005,16 +959,12 @@ void BftManager::HandleOpposeNodeMsg(
         return;
     }
 
-    // TODO: just use merkle-tree sync data, this will decrease performance
     if (res == kBftBlockPreHashError) {
         std::string pre_hash(bft_msg.data().c_str() + spliter.SubLen(0) + 1, 32);
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
             sync::kSyncHighest);
-//         BFT_DEBUG("add bft block pre hash sync: %s, bft gid: %s",
-//             common::Encode::HexEncode(pre_hash).c_str(),
-//             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return;
     }
 
@@ -1131,12 +1081,6 @@ int BftManager::LeaderCommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-//     uint64_t time1 = common::TimeUtils::TimestampUs();
-//     uint64_t time2;
-//     uint64_t time3;
-//     uint64_t time4;
-//     uint64_t time5;
-
     if (!bft_ptr->this_node_is_leader()) {
         BFT_ERROR("check leader error.");
         return kBftError;
@@ -1174,8 +1118,6 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-//     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-//     auto local_node = dht_ptr->local_node();
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("bft_msg.member_index() == elect::kInvalidMemberIndex.");
         return kBftError;
@@ -1187,17 +1129,14 @@ int BftManager::LeaderCommit(
         return kBftError;
     }
 
-//     time3 = common::TimeUtils::TimestampUs();
     int res = bft_ptr->LeaderCommitOk(
         bft_msg.member_index(),
         sign,
         member_ptr->id);
-//     time4 = common::TimeUtils::TimestampUs();
     if (res == kBftAgree) {
         LeaderCallCommit(header, bft_ptr);
     }
 
-//     BFT_DEBUG("bft: %s, LeaderPrecommit use time: %lu, %lu, %lu, %lu", common::Encode::HexEncode(member_ptr->id).c_str(), time2 - time1, time3 - time2, time4 - time3, time5 - time4);
     return kBftSuccess;
 }
 
@@ -1220,8 +1159,6 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-//     BFT_DEBUG("LeaderCommit success waiting pool_index: %u, bft gid: %s",
-//         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;}
 
 int BftManager::LeaderCallCommit(
@@ -1278,14 +1215,6 @@ int BftManager::LeaderCallCommit(
         return kBftError;
     }
 
-//     BFT_DEBUG("VerifyBlsAggSignature agg sign success!prepare hash: %s, agg sign hash: %s,"
-//         "t: %u, n: %u, elect height: %lu, network id: %u, agg x: %s, agg y: %s",
-//         common::Encode::HexEncode(bft_ptr->prepare_hash()).c_str(),
-//         common::Encode::HexEncode(bft_ptr->precommit_hash()).c_str(),
-//         bft_ptr->min_aggree_member_count(), bft_ptr->member_count(),
-//         tenon_block->electblock_height(), tenon_block->network_id(),
-//         tenon_block->bls_agg_sign_x().c_str(),
-//         tenon_block->bls_agg_sign_y().c_str());
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     network::Route::Instance()->Send(msg);
@@ -1352,8 +1281,6 @@ int BftManager::BackupCommit(
     }
 
     auto& tenon_block = bft_ptr->prpare_block();
-//     tenon_block->set_agg_sign_challenge(bft_msg.agg_sign_challenge());
-//     tenon_block->set_agg_sign_response(bft_msg.agg_sign_response());
     tenon_block->set_pool_index(bft_ptr->pool_index());
     tenon_block->set_bls_agg_sign_x(bft_msg.bls_sign_x());
     tenon_block->set_bls_agg_sign_y(bft_msg.bls_sign_y());
@@ -1394,9 +1321,6 @@ int BftManager::BackupCommit(
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
-//     if (elect::ElectManager::Instance()->local_node_is_super_leader()) {
-//         LeaderBroadcastToAcc(bft_ptr, false);
-//     }
 
     // start new bft
     RemoveBft(bft_ptr->gid(), true);
@@ -1657,38 +1581,6 @@ int BftManager::VerifySignature(
 
     return kBftSuccess;
 }
-// 
-// int BftManager::VerifyBlockSignature(
-//         uint32_t mem_index,
-//         const bft::protobuf::BftMessage& bft_msg,
-//         const bft::protobuf::Block& tx_block,
-//         security::Signature& sign) {
-//     if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
-//         BFT_ERROR("backup has no sign");
-//         return kBftError;
-//     }
-// 
-//     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-//     auto mem_ptr = elect::ElectManager::Instance()->GetMember(
-//         tx_block.electblock_height(),
-//         bft_msg.net_id(),
-//         mem_index);
-//     if (!mem_ptr) {
-//         return kBftError;
-//     }
-// 
-//     auto block_hash = GetBlockHash(tx_block);
-//     if (block_hash != tx_block.hash()) {
-//         return kBftError;
-//     }
-// 
-//     if (!security::Schnorr::Instance()->Verify(block_hash, sign, mem_ptr->pubkey)) {
-//         BFT_ERROR("check signature error!");
-//         return kBftError;
-//     }
-// 
-//     return kBftSuccess;
-// }
 
 int BftManager::VerifyLeaderSignature(
         const elect::BftMemberPtr& mem_ptr,
@@ -1814,7 +1706,6 @@ void BftManager::BlockToDb() {
             BlockToDbItemPtr db_item_ptr;
             if (block_queue_[i].pop(&db_item_ptr)) {
                 //
-//                 if (!common::GlobalInfo::Instance()->missing_node())
                 block::BlockManager::Instance()->AddNewBlock(
                     db_item_ptr->block_ptr,
                     db_item_ptr->db_batch,
@@ -1855,15 +1746,6 @@ void BftManager::HandleSyncWaitingBlock(
         block_queue_[thread_idx].push(queue_item_ptr);
     } else {
         db::DbWriteBach db_batch;
-//         std::string height_db_key = common::GetHeightDbKey(
-//             tmp_block_ptr->network_id(),
-//             tmp_block_ptr->pool_index(),
-//             tmp_block_ptr->height());
-//         BLOCK_DEBUG("add height_db_key: %s", height_db_key.c_str());
-//         db_batch.Put(height_db_key, tmp_block_ptr->hash());
-//         block::AccountManager::Instance()->AddBlockItemToCache(tmp_block_ptr, db_batch);
-//         block::AccountManager::Instance()->AddBlockItemToDb(tmp_block_ptr, db_batch, true);
-//         ShardStatistic::Instance()->AddStatistic(tmp_block_ptr);
         block::BlockManager::Instance()->AddNewBlock(
             tmp_block_ptr,
             db_batch,
@@ -2002,24 +1884,12 @@ void BftManager::HandleRootWaitingBlock(
             tmp_block_ptr = std::make_shared<bft::protobuf::Block>(block);
         }
 
-//         if (thread_idx < transport::kMessageHandlerThreadCount) {
-//             auto queue_item_ptr = std::make_shared<BlockToDbItem>(tmp_block_ptr);
-//             if (block::AccountManager::Instance()->AddBlockItemToCache(
-//                 queue_item_ptr->block_ptr,
-//                 queue_item_ptr->db_batch) != block::kBlockSuccess) {
-//                 BFT_ERROR("leader add block to db failed!");
-//             }
-// 
-//             block_queue_[thread_idx].push(queue_item_ptr);
-//         } else {
         db::DbWriteBach db_batch;
         block::BlockManager::Instance()->AddNewBlock(
             tmp_block_ptr,
             db_batch,
             true,
             false);
-//         }
-        
         return;
     }
 
@@ -2086,8 +1956,6 @@ void BftManager::VerifyWaitingBlock() {
                         waiting_block_map_[key] = waiting_ptr;
                     }
 
-                    BFT_DEBUG("add waiting block success key: %s height: %lu, size: %d",
-                        key.c_str(), waiting_ptr->block_ptr->electblock_height(), waiting_block_map_.size());
                     continue;
                 }
 
@@ -2130,22 +1998,6 @@ void BftManager::VerifyWaitingBlock() {
         kBlockToDbPeriod,
         std::bind(&BftManager::VerifyWaitingBlock, this));
 }
-// 
-// void BftManager::CheckCommitBackupRecall() {
-//     std::unordered_map<std::string, BftInterfacePtr> bft_hash_map;
-//     {
-//         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
-//         bft_hash_map = bft_hash_map_;
-//     }
-// 
-//     for (auto iter = bft_hash_map.begin(); iter != bft_hash_map.end(); ++iter) {
-//         iter->second->CheckCommitRecallBackup();
-//     }
-// 
-//     leader_resend_tick_.CutOff(
-//         300000,
-//         std::bind(&BftManager::CheckCommitBackupRecall, this));
-// }
 
 }  // namespace bft
 
