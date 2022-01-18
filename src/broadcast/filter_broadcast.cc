@@ -22,6 +22,7 @@ void FilterBroadcast::Broadcasting(
         const transport::protobuf::Header& message) {
     assert(dht_ptr);
     if (message.broadcast().hop_limit() <= message.hop_count()) {
+        BROAD_INFO("message.broadcast().hop_limit() <= message.hop_count()[%d, %d].", message.broadcast().hop_limit(), message.hop_count());
         return;
     }
 

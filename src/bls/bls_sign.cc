@@ -58,15 +58,12 @@ int BlsSign::Verify(
         return kBlsError;
     }
 
-    BLS_DEBUG("000000000000");
     libBLS::Bls bls_instance = libBLS::Bls(t, n);
-    BLS_DEBUG("111111111111");
     if (!bls_instance.Verification(message, sign, pkey)) {
         BLS_ERROR("bls_instance.Verification error.");
         return kBlsError;
     }
     
-    BLS_DEBUG("2222222222222");
     return kBlsSuccess;
 } catch (std::exception& e) {
     BLS_ERROR("sign message failed: %s", e.what());

@@ -98,10 +98,12 @@ void BlsDkg::OnNewElectionBlock(
     auto ver_offset = kDkgPeriodUs;
     auto swap_offset = kDkgPeriodUs * 4;
     auto finish_offset = kDkgPeriodUs * 8;
-    if (begin_time_us_ < tmblock_tm + 10 * 1000l * 1000l) {
-        kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
-        ver_offset = tmblock_tm + 10 * 1000l * 1000l - begin_time_us_;
-        begin_time_us_ = tmblock_tm + 10 * 1000l * 1000l - kDkgPeriodUs;
+    auto timeblock_period = common::kTimeBlockCreatePeriodSeconds * 1000l * 1000l;
+    auto offset_period = timeblock_period / 3l * 2l;
+    if (begin_time_us_ < tmblock_tm + offset_period) {
+        kDkgPeriodUs = (timeblock_period - offset_period) * 1000l * 1000l / 10l;
+        ver_offset = tmblock_tm + offset_period - begin_time_us_;
+        begin_time_us_ = tmblock_tm + offset_period - kDkgPeriodUs;
         swap_offset = ver_offset + kDkgPeriodUs * 3;
         finish_offset = ver_offset + kDkgPeriodUs * 7;
     }

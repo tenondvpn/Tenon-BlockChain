@@ -253,9 +253,11 @@ void VssManager::BroadcastThirdPeriodRandom() {
         network::Route::Instance()->SendToLocal(msg);
         dht::DhtKeyManager wait_dht_key(network::kNodeNetworkId, 0);
         msg.set_des_dht_key(wait_dht_key.StrKey());
-        msg.mutable_broadcast()->clear_bloomfilter();
-        msg.set_hop_count(0);
+        auto broad_param = msg.mutable_broadcast();
+        transport::SetDefaultBroadcastParam(broad_param);
         msg.clear_hash();
+        msg.set_handled(false);
+        msg.set_universal(true);
         network::Route::Instance()->Send(msg);
         VSS_DEBUG("BroadcastThirdPeriodRandom: %lu，prev_elect_height_: %lu", GetAllVssValid(), prev_elect_height_);
 #ifdef TENON_UNITTEST
