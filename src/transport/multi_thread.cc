@@ -208,10 +208,11 @@ void MultiThreadHandler::HandleRemoteMessage(
         priority = message_ptr->priority();
     }
 
-    TRANSPORT_DEBUG("%s msg id: %lu, hash: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
+    TRANSPORT_DEBUG("%s msg id: %lu, hash: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
         message_ptr->debug().c_str(),
         message_ptr->id(),
         message_ptr->hash(),
+        message_ptr->type(),
         message_ptr->debug().c_str(), message_ptr->has_broadcast(),
         from_ip.c_str(), from_port, priority_queue_map_[priority].size(), message_ptr->hop_count());
 
