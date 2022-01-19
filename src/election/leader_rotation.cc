@@ -126,6 +126,7 @@ void LeaderRotation::CheckRotation() {
             if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
                 ELECT_DEBUG("2 3: %d", j);
                 if (bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
+                    ELECT_DEBUG("2 3 1: %d", j);
                     change_leader = true;
                     break;
                 }

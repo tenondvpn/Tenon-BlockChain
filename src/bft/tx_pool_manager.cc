@@ -449,11 +449,6 @@ void TxPoolManager::CheckTimeoutTx() {
     }
 }
 
-bool TxPoolManager::ShouldChangeLeader(uint32_t pool_index) {
-    tx_pool_[pool_index].ShouldChangeLeader();
-
-}
-
 void TxPoolManager::ChangeLeader(uint32_t pool_index) {
     tx_pool_[pool_index].ChangeLeader();
 }

@@ -36,7 +36,10 @@ public:
     void CheckTimeoutTx();
     bool IsPoolLocked(uint32_t pool_index);
     void LockPool(uint32_t pool_index);
-    bool ShouldChangeLeader(uint32_t pool_index);
+    bool ShouldChangeLeader(uint32_t pool_index) {
+        return tx_pool_[pool_index].ShouldChangeLeader();
+    }
+
     void ChangeLeader(uint32_t pool_index);
     void SetTimeout(uint32_t pool_idx);
 
