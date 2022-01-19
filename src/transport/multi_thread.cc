@@ -208,13 +208,13 @@ void MultiThreadHandler::HandleRemoteMessage(
         priority = message_ptr->priority();
     }
 
-    TRANSPORT_DEBUG("%s msg id: %lu, hash: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
-        message_ptr->debug().c_str(),
-        message_ptr->id(),
-        message_ptr->hash(),
-        message_ptr->type(),
-        message_ptr->debug().c_str(), message_ptr->has_broadcast(),
-        from_ip.c_str(), from_port, priority_queue_map_[priority].size(), message_ptr->hop_count());
+//     TRANSPORT_DEBUG("%s msg id: %lu, hash: %lu, type: %d, message coming: %s, has broadcast: %d, from: %s:%d, size: %d, hop_count: %d",
+//         message_ptr->debug().c_str(),
+//         message_ptr->id(),
+//         message_ptr->hash(),
+//         message_ptr->type(),
+//         message_ptr->debug().c_str(), message_ptr->has_broadcast(),
+//         from_ip.c_str(), from_port, priority_queue_map_[priority].size(), message_ptr->hop_count());
 
     message_ptr->add_timestamps(common::TimeUtils::TimestampUs());
 // #ifndef LEGO_TRACE_MESSAGE
@@ -272,7 +272,7 @@ void MultiThreadHandler::HandleRemoteMessage(
         std::unique_lock<std::mutex> lock(priority_queue_map_mutex_);
 //         uint32_t priority = common::Hash::Hash32(message_ptr->src_dht_key()) % kMessageHandlerThreadCount;
         priority_queue_map_[priority].push(message_ptr);
-        if (priority_queue_map_[priority].size() > 64) {
+        if (priority_queue_map_[priority].size() > 1024) {
             TRANSPORT_DEBUG("111 %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, size: %d",
                 message_ptr->debug().c_str(),
                 message_ptr->id(), message_ptr->debug().c_str(), message_ptr->has_broadcast(),
