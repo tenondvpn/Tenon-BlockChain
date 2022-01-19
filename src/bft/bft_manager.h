@@ -139,7 +139,8 @@ private:
         BlockPtr& block_ptr);
     void BackupSendOppose(
         const transport::protobuf::Header& header,
-        bft::protobuf::BftMessage& bft_msg);
+        bft::protobuf::BftMessage& bft_msg,
+        BftInterfacePtr& bft_ptr);
     void LeaderHandleBftOppose(
         const BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,

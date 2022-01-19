@@ -336,8 +336,13 @@ int TxBft::RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    if (tmblock::TimeBlockManager::Instance()->BackupCheckTimeBlockTx(
-            tx_info) != tmblock::kTimeBlockSuccess) {
+    auto tmres = tmblock::TimeBlockManager::Instance()->BackupCheckTimeBlockTx(tx_info)
+    if (tmres != tmblock::kTimeBlockSuccess) {
+        if (tmres == tmblock::kTimeBlockVssError) {
+            SetHandlerError(
+                kBftVssRandomNotMatch,
+                std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
+        }
         BFT_ERROR("BackupCheckTimeBlockTx error.");
         return kBftError;
     }

@@ -155,7 +155,7 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
 
             SetBftGidPrepareInvalid(bft_item_ptr);
             // oppose
-            BackupSendOppose(*bft_item_ptr->header_ptr, bft_item_ptr->bft_msg);
+            BackupSendOppose(*bft_item_ptr->header_ptr, bft_item_ptr->bft_msg, bft_ptr);
             return;
         }
     } else {
@@ -293,8 +293,15 @@ void BftManager::LeaderHandleBftOppose(
 
 void BftManager::BackupSendOppose(
         const transport::protobuf::Header& header,
-        bft::protobuf::BftMessage& from_bft_msg) {
-    std::string res_data = std::to_string(kBftInvalidPackage) + ",-1";
+        bft::protobuf::BftMessage& from_bft_msg,
+        BftInterfacePtr& bft_ptr) {
+    bft::protobuf::BftMessage bft_msg;
+    bft_msg.set_error(kBftInvalidPackage);
+    if (bft_ptr != nullptr && bft_ptr->handle_last_error_code() > 0) {
+        bft_msg.set_error(bft_ptr->handle_last_error_code());
+        bft_msg.set_data(bft_ptr->handle_last_error_msg());
+    }
+
     auto dht_ptr = network::DhtManager::Instance()->GetDht(from_bft_msg.net_id());
     auto local_node = dht_ptr->local_node();
     transport::protobuf::Header msg;
@@ -306,8 +313,6 @@ void BftManager::BackupSendOppose(
     msg.set_type(common::kBftMessage);
     msg.set_client(false);
     msg.set_hop_count(0);
-    bft::protobuf::BftMessage bft_msg;
-    bft_msg.set_data(res_data);
     bft_msg.set_leader(true);
     bft_msg.set_gid(from_bft_msg.gid());
     bft_msg.set_net_id(from_bft_msg.net_id());
@@ -822,7 +827,7 @@ int BftManager::BackupPrepare(
     auto local_node = dht_ptr->local_node();
     auto msg = std::make_shared<transport::protobuf::Header>();
     if (!bft_ptr->CheckLeaderPrepare(bft_msg)) {
-        BackupSendOppose(header, bft_msg);
+        BackupSendOppose(header, bft_msg, bft_ptr);
         BFT_ERROR("0 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         bft_ptr->not_aggree();
@@ -832,7 +837,7 @@ int BftManager::BackupPrepare(
     std::string data;
     int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
     if (prepare_res != kBftSuccess) {
-        BackupSendOppose(header, bft_msg);
+        BackupSendOppose(header, bft_msg, bft_ptr);
         BFT_ERROR("1 bft backup prepare failed! not agree bft gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         bft_ptr->not_aggree();
@@ -852,7 +857,7 @@ int BftManager::BackupPrepare(
         bft_msg.node_ip().c_str(), bft_msg.node_port());
     if (!msg->has_data()) {
         BFT_ERROR("message set data failed!");
-        BackupSendOppose(header, bft_msg);
+        BackupSendOppose(header, bft_msg, bft_ptr);
         bft_ptr->not_aggree();
         return kBftError;
     }
@@ -944,35 +949,23 @@ int BftManager::LeaderPrecommit(
 void BftManager::HandleOpposeNodeMsg(
         bft::protobuf::BftMessage& bft_msg,
         BftInterfacePtr& bft_ptr) {
-    common::Split<> spliter(bft_msg.data().c_str(), ',', bft_msg.data().size());
-    if (spliter.Count() < 2) {
-        return;
-    }
-        
-    int32_t res = 0;
-    if (!common::StringUtil::ToInt32(spliter[0], &res)) {
-        return;
-    }
-
-    switch (res) {
+    switch (bft_msg.error()) {
     case kBftBlockPreHashError: {
-        std::string pre_hash(bft_msg.data().c_str() + spliter.SubLen(0) + 1, 32);
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
-            pre_hash,
+            bft_msg.data(),
             sync::kSyncHighest);
         break;
     }
     case kBftVssRandomNotMatch: {
         uint64_t random_num = 0;
-        if (!common::StringUtil::ToUint64(spliter[1], &random_num)) {
-            return;
+        if (common::StringUtil::ToUint64(bft_msg.data(), &random_num)) {
+            auto count = bft_ptr->AddVssRandomOppose(bft_msg.member_index(), random_num);
+            if (count >= bft_ptr->min_agree_member_count()) {
+                vss::VssManager::Instance()->SetFinalVss(random_num);
+            }
         }
 
-        auto count = bft_ptr->AddVssRandomOppose(bft_msg.member_index(), random_num);
-        if (count >= bft_ptr->min_agree_member_count()) {
-            vss::VssManager::Instance()->SetFinalVss(random_num);
-        }
         break;
     }
     default:

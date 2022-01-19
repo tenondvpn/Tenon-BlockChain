@@ -360,6 +360,19 @@ public:
         }
     }
 
+    int32_t handle_last_error_code() {
+        return handle_last_error_code_;
+    }
+
+    std::string handle_last_error_msg() {
+        return handle_last_error_msg_;
+    }
+
+    void SetHandlerError(int32_t error_code, const std::string& error_msg) {
+        handle_last_error_code_ = error_code;
+        handle_last_error_msg_ = error_msg;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -425,6 +438,8 @@ protected:
     tvm::TenonHost tenon_host_;
     std::map<uint64_t, std::set<uint32_t>> vss_random_map_;
     std::mutex vss_random_map_mutex_;
+    int32_t handle_last_error_code_{ 0 };
+    std::string handle_last_error_msg_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

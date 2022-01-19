@@ -143,7 +143,7 @@ int TimeBlockManager::BackupCheckTimeBlockTx(const bft::protobuf::TxInfo& tx_inf
         TMBLOCK_ERROR("leader_final_cons_random: %lu, GetConsensusFinalRandom(): %lu",
             leader_final_cons_random,
             vss::VssManager::Instance()->GetConsensusFinalRandom());
-        return kTimeBlockError;
+        return kTimeBlockVssError;
     }
 
     if (tx_info.attr(0).key() != kAttrTimerBlock) {

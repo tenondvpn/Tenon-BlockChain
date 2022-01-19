@@ -16,6 +16,7 @@ namespace tmblock {
 enum RootErrorCode {
     kTimeBlockSuccess = 0,
     kTimeBlockError = 1,
+    kTimeBlockVssError = 2,
 };
 
 static const uint64_t kTimeBlockTolerateSeconds = 30ll;
