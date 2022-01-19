@@ -347,6 +347,19 @@ public:
         return kBftWaitingBackup;
     }
 
+    int32_t AddVssRandomOppose(uint32_t index, uint64_t random) {
+        std::lock_guard<std::mutex> guard(vss_random_map_mutex_);
+        auto iter = vss_random_map_.find(random);
+        if (iter == vss_random_map_.end()) {
+            vss_random_map_[random] = std::set<uint32_t>();
+            vss_random_map_[random].insert(index);
+            return 1;
+        } else {
+            iter->second.insert(index);
+            return iter->second.size();
+        }
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -410,6 +423,8 @@ protected:
     libff::alt_bn128_G2 common_pk_{ libff::alt_bn128_G2::zero() };
     uint32_t local_member_index_{ elect::kInvalidMemberIndex };
     tvm::TenonHost tenon_host_;
+    std::map<uint64_t, std::set<uint32_t>> vss_random_map_;
+    std::mutex vss_random_map_mutex_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

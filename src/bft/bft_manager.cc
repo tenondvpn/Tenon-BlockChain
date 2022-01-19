@@ -285,6 +285,7 @@ void BftManager::LeaderHandleBftOppose(
     }
 
     if (res == kBftOppose) {
+        bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
         LeaderCallPrecommitOppose(bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
     }
@@ -871,11 +872,6 @@ int BftManager::LeaderPrecommit(
         BftInterfacePtr& bft_ptr,
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg) {
-//     uint64_t time1 = common::TimeUtils::TimestampUs();
-//     uint64_t time2;
-//     uint64_t time3;
-//     uint64_t time4;
-//     uint64_t time5;
     if (bft_msg.member_index() == elect::kInvalidMemberIndex) {
         BFT_ERROR("backup message member index invalid.");
         return kBftError;
@@ -890,7 +886,6 @@ int BftManager::LeaderPrecommit(
     if (member_ptr->public_ip.empty()) {
         member_ptr->public_ip = bft_msg.node_ip();
         member_ptr->public_port = bft_msg.node_port();
-//         BFT_DEBUG("set prepare node public ip: %u, index: %d", member_ptr->public_ip, bft_msg.member_index());
     }
 
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
@@ -921,6 +916,7 @@ int BftManager::LeaderPrecommit(
             BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
                 " pool_index: %u, bft: %s",
                 bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+            bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
             LeaderCallPrecommitOppose(bft_ptr);
             RemoveBft(bft_ptr->gid(), false);
         }
@@ -948,7 +944,6 @@ int BftManager::LeaderPrecommit(
 void BftManager::HandleOpposeNodeMsg(
         bft::protobuf::BftMessage& bft_msg,
         BftInterfacePtr& bft_ptr) {
-    bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
     common::Split<> spliter(bft_msg.data().c_str(), ',', bft_msg.data().size());
     if (spliter.Count() < 2) {
         return;
@@ -959,13 +954,29 @@ void BftManager::HandleOpposeNodeMsg(
         return;
     }
 
-    if (res == kBftBlockPreHashError) {
+    switch (res) {
+    case kBftBlockPreHashError: {
         std::string pre_hash(bft_msg.data().c_str() + spliter.SubLen(0) + 1, 32);
         sync::KeyValueSync::Instance()->AddSync(
             common::GlobalInfo::Instance()->network_id(),
             pre_hash,
             sync::kSyncHighest);
-        return;
+        break;
+    }
+    case kBftVssRandomNotMatch: {
+        uint64_t random_num = 0;
+        if (!common::StringUtil::ToUint64(spliter[1], &random_num)) {
+            return;
+        }
+
+        auto count = bft_ptr->AddVssRandomOppose(bft_msg.member_index(), random_num);
+        if (count >= bft_ptr->min_agree_member_count()) {
+            vss::VssManager::Instance()->SetFinalVss(random_num);
+        }
+        break;
+    }
+    default:
+        break;
     }
 
     int32_t tx_index = -1;

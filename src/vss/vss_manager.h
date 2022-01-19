@@ -27,6 +27,9 @@ public:
     void OnElectBlock(uint32_t network_id, uint64_t elect_height);
     uint64_t EpochRandom();
     uint64_t GetConsensusFinalRandom();
+    void SetFinalVss(uint64_t vss_random) {
+        prev_valid_vss_ = vss_random;
+    }
    
 private:
     VssManager();

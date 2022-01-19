@@ -48,6 +48,7 @@ enum BftErrorCode {
     kBftTimeBlockHeightError = 25,
     kBftElectBlockHeightError = 26,
     kBftLeaderTxInfoInvalid = 27,
+    kBftVssRandomNotMatch = 28,
 };
 
 enum BftStatus {
