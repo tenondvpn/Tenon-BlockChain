@@ -99,7 +99,9 @@ void LeaderRotation::LeaderRotationReq(
         cons_rotation_leaders_[key].insert(index);
     } else {
         iter->second.insert(index);
+        ELECT_DEBUG("LeaderRotationReq 1");
         if ((int32_t)iter->second.size() >= (all_count / 3 * 2 + 1)) {
+            ELECT_DEBUG("LeaderRotationReq 2");
             ChangeLeader(leader_rotation.leader_id(), leader_rotation.pool_mod_num());
         }
     }
@@ -127,14 +129,18 @@ void LeaderRotation::CheckRotation() {
                     change_leader = true;
                     break;
                 }
+                ELECT_DEBUG("2 4: %d", j);
             }
         }
 
+        ELECT_DEBUG("2 5: %d", i);
         if (!change_leader) {
             continue;
         }
 
+        ELECT_DEBUG("2 6: %d", i);
         should_change_leaders.push_back(i);
+        ELECT_DEBUG("2 7: %d", i);
     }
 
     ELECT_DEBUG("3");
@@ -160,6 +166,7 @@ void LeaderRotation::CheckRotation() {
 }
 
 void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
+    ELECT_DEBUG("ChangeLeader 0");
     bool change_leader = false;
     for (int32_t j = 0; j < (int32_t)common::kInvalidPoolIndex; ++j) {
         if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == pool_mod_num) {
@@ -191,6 +198,7 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
         return;
     }
 
+    ELECT_DEBUG("1 ChangeLeader 1");
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->valid_leader = false;
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = -1;
     std::string src_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
