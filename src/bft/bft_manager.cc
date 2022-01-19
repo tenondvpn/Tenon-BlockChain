@@ -973,7 +973,7 @@ void BftManager::HandleOpposeNodeMsg(
     }
 
     int32_t tx_index = -1;
-    if (!common::StringUtil::ToInt32(spliter[1], &tx_index)) {
+    if (!common::StringUtil::ToInt32(bft_msg.data(), &tx_index)) {
         return;
     }
 

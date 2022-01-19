@@ -111,7 +111,7 @@ message BftMessage {
 	repeated uint64 bitmap = 7;
 	optional bool agree = 8;
 	optional uint32 pool_index = 9;
-	optional int32_t error = 10;
+	optional int32 error = 10;
 	optional bytes data = 11;
 	optional bytes prepare_hash = 12;
 	optional bytes node_ip = 13;

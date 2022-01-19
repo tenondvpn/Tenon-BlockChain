@@ -336,7 +336,7 @@ int TxBft::RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    auto tmres = tmblock::TimeBlockManager::Instance()->BackupCheckTimeBlockTx(tx_info)
+    auto tmres = tmblock::TimeBlockManager::Instance()->BackupCheckTimeBlockTx(tx_info);
     if (tmres != tmblock::kTimeBlockSuccess) {
         if (tmres == tmblock::kTimeBlockVssError) {
             SetHandlerError(
