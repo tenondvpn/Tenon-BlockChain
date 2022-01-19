@@ -106,17 +106,23 @@ void LeaderRotation::LeaderRotationReq(
 }
 
 void LeaderRotation::CheckRotation() {
+    ELECT_DEBUG("0");
     if (!check_rotation_) {
         tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
         return;
     }
 
+    ELECT_DEBUG("1");
     std::lock_guard<std::mutex> guard(rotation_mutex_);
     std::vector<int32_t> should_change_leaders;
+    ELECT_DEBUG("2");
     for (int32_t i = 0; i <= rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
         bool change_leader = false;
+        ELECT_DEBUG("2 1: %d", i);
         for (int32_t j = 0; j < (int32_t)common::kInvalidPoolIndex; ++j) {
+            ELECT_DEBUG("2 2: %d, valid_idx_: %d, max_pool_mod_num: %d", j, valid_idx_, rotation_item_[valid_idx_].max_pool_mod_num);
             if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
+                ELECT_DEBUG("2 3: %d", j);
                 if (bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
                     change_leader = true;
                     break;
@@ -131,7 +137,9 @@ void LeaderRotation::CheckRotation() {
         should_change_leaders.push_back(i);
     }
 
+    ELECT_DEBUG("3");
     for (int32_t i = 0; i < (int32_t)should_change_leaders.size(); ++i) {
+        ELECT_DEBUG("3 0: %d", i);
         auto new_leader = ChooseValidLeader(should_change_leaders[i]);
         if (new_leader == nullptr) {
             continue;
@@ -143,9 +151,11 @@ void LeaderRotation::CheckRotation() {
             should_change_leaders[i]);
 
 //         ChangeLeader(new_leader->id, i);
+        ELECT_DEBUG("3 1: %d", i);
         SendRotationReq(new_leader->id, should_change_leaders[i]);
     }
 
+    ELECT_DEBUG("4");
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
