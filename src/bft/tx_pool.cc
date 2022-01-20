@@ -139,15 +139,11 @@ int TxPool::AddTx(TxItemPtr& tx_ptr, bool init) {
 }
 
 void TxPool::ChangeLeader() {
-    BFT_DEBUG("ChangeLeader called. 0");
     last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
-    BFT_DEBUG("ChangeLeader called. 1");
 }
 
 bool TxPool::ShouldChangeLeader() {
-    BFT_DEBUG("ShouldChangeLeader called. 0");
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
-    BFT_DEBUG("ShouldChangeLeader called. 1");
     if (pool_index_ == common::kRootChainPoolIndex) {
         if (added_tx_map_.size() == 1) {
             auto miter = added_tx_map_.begin();
@@ -165,13 +161,11 @@ bool TxPool::ShouldChangeLeader() {
         }
     }
 
-    BFT_DEBUG("ShouldChangeLeader called. 2");
     if (!added_tx_map_.empty() && common::TimeUtils::TimestampSeconds() >=
             (last_bft_over_tm_sec_ + kChangeLeaderTimePeriodSec)) {
         return true;
     }
 
-    BFT_DEBUG("ShouldChangeLeader called. 3");
     return false;
 }
 

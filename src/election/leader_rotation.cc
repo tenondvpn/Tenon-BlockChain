@@ -35,7 +35,6 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
         (*iter)->valid_leader = true;
         if ((*iter)->id == common::GlobalInfo::Instance()->id()) {
             rotation_item_[invalid_idx].local_member = *iter;
-            ELECT_DEBUG("new election block: %s", common::Encode::HexEncode((*iter)->id).c_str());
         }
 
         if ((*iter)->pool_index_mod_num >= 0) {
@@ -90,84 +89,65 @@ void LeaderRotation::LeaderRotationReq(
         const protobuf::LeaderRotationMessage& leader_rotation,
         int32_t index,
         int32_t all_count) {
-    ELECT_DEBUG("req leader rotation index: %d, all_count: %d", index, all_count);
     std::lock_guard<std::mutex> guard(rotation_mutex_);
-    std::string key = leader_rotation.leader_id() + "_" + std::to_string(leader_rotation.pool_mod_num());
+    std::string key = leader_rotation.leader_id() + "_" +
+        std::to_string(leader_rotation.pool_mod_num());
     auto iter = cons_rotation_leaders_.find(key);
     if (iter == cons_rotation_leaders_.end()) {
         cons_rotation_leaders_[key] = std::set<int32_t>();
         cons_rotation_leaders_[key].insert(index);
     } else {
         iter->second.insert(index);
-        ELECT_DEBUG("LeaderRotationReq 1");
         if ((int32_t)iter->second.size() >= (all_count / 3 * 2 + 1)) {
-            ELECT_DEBUG("LeaderRotationReq 2");
             ChangeLeader(leader_rotation.leader_id(), leader_rotation.pool_mod_num());
         }
     }
 }
 
 void LeaderRotation::CheckRotation() {
-    ELECT_DEBUG("0");
     if (!check_rotation_) {
         tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
         return;
     }
 
-    ELECT_DEBUG("1");
     std::lock_guard<std::mutex> guard(rotation_mutex_);
     std::vector<int32_t> should_change_leaders;
-    ELECT_DEBUG("2");
     for (int32_t i = 0; i <= rotation_item_[valid_idx_].max_pool_mod_num; ++i) {
         bool change_leader = false;
-        ELECT_DEBUG("2 1: %d", i);
         for (int32_t j = 0; j < (int32_t)common::kInvalidPoolIndex; ++j) {
-            ELECT_DEBUG("2 2: %d, valid_idx_: %d, max_pool_mod_num: %d", j, valid_idx_, rotation_item_[valid_idx_].max_pool_mod_num);
             if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == i) {
-                ELECT_DEBUG("2 3: %d", j);
                 if (bft::DispatchPool::Instance()->ShouldChangeLeader(j)) {
-                    ELECT_DEBUG("2 3 1: %d", j);
                     change_leader = true;
                     break;
                 }
-                ELECT_DEBUG("2 4: %d", j);
             }
         }
 
-        ELECT_DEBUG("2 5: %d", i);
         if (!change_leader) {
             continue;
         }
 
-        ELECT_DEBUG("2 6: %d", i);
         should_change_leaders.push_back(i);
-        ELECT_DEBUG("2 7: %d", i);
     }
 
-    ELECT_DEBUG("3");
     for (int32_t i = 0; i < (int32_t)should_change_leaders.size(); ++i) {
-        ELECT_DEBUG("3 0: %d", i);
         auto new_leader = ChooseValidLeader(should_change_leaders[i]);
         if (new_leader == nullptr) {
             continue;
         }
+
         ELECT_WARN("check leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
             should_change_leaders[i],
             common::Encode::HexEncode(rotation_item_[valid_idx_].pool_leader_map[should_change_leaders[i]]->id).c_str(),
             common::Encode::HexEncode(new_leader->id).c_str(),
             should_change_leaders[i]);
-
-//         ChangeLeader(new_leader->id, i);
-        ELECT_DEBUG("3 1: %d", i);
         SendRotationReq(new_leader->id, should_change_leaders[i]);
     }
 
-    ELECT_DEBUG("4");
     tick_.CutOff(kCheckRotationPeriod, std::bind(&LeaderRotation::CheckRotation, this));
 }
 
 void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
-    ELECT_DEBUG("ChangeLeader 0");
     bool change_leader = false;
     for (int32_t j = 0; j < (int32_t)common::kInvalidPoolIndex; ++j) {
         if (j % (rotation_item_[valid_idx_].max_pool_mod_num + 1) == pool_mod_num) {
@@ -199,17 +179,12 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
         return;
     }
 
-    ELECT_DEBUG("1 ChangeLeader 1");
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->valid_leader = false;
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = -1;
     std::string src_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num] = new_leader;
     rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->pool_index_mod_num = pool_mod_num;
     std::string des_id = rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id;
-//     if (des_id == common::GlobalInfo::Instance()->id()) {
-//         rotation_item_[valid_idx_].local_member = new_leader;
-//     }
-
     ELECT_WARN("leader rotation: %d, %s, to: %s, this_node_pool_mod_num_: %d",
         pool_mod_num, common::Encode::HexEncode(src_id).c_str(),
         common::Encode::HexEncode(des_id).c_str(),
@@ -233,10 +208,6 @@ BftMemberPtr LeaderRotation::ChooseValidLeader(int32_t pool_mod_num) {
                 rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id) {
             continue;
         }
-//         rotation_item_[valid_idx_].rotation_idx = i + 1;
-//         if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
-//             rotation_item_[valid_idx_].rotation_idx = 0;
-//         }
 
         return rotation_item_[valid_idx_].valid_leaders[i];
     }
@@ -250,11 +221,6 @@ BftMemberPtr LeaderRotation::ChooseValidLeader(int32_t pool_mod_num) {
                 rotation_item_[valid_idx_].pool_leader_map[pool_mod_num]->id) {
             continue;
         }
-
-//         rotation_item_[valid_idx_].rotation_idx = i + 1;
-//         if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
-//             rotation_item_[valid_idx_].rotation_idx = 0;
-//         }
 
         return rotation_item_[valid_idx_].valid_leaders[i];
     }
