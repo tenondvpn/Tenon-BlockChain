@@ -3,18 +3,19 @@
 
 #include <limits>
 
+#include "block/block_manager.h"
 #include "common/country_code.h"
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
 #include "common/time_utils.h"
-#include "election/proto/elect.pb.h"
-#include "election/elect_utils.h"
-#include "security/schnorr.h"
-#include "transport/transport_utils.h"
 #include "dht/dht_key.h"
 #include "dht/base_dht.h"
+#include "election/proto/elect.pb.h"
+#include "election/elect_utils.h"
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
+#include "security/schnorr.h"
+#include "transport/transport_utils.h"
 
 namespace tenon {
 
@@ -109,6 +110,49 @@ void ElectProto::CreateElectWaitingNodes(
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());
+}
+
+void ElectProto::GetBlockZeroKnowledgeProof(
+        const std::string& id,
+        uint64_t random,
+        uint32_t net_id,
+        uint64_t max_height,
+        uint64_t* max_zkp,
+        uint64_t* rand_zkp) {
+    uint64_t rerand = common::Hash::Hash64(id + std::to_string(random) + std::to_string(max_height));
+    int32_t rand_pool = rerand % common::kInvalidPoolIndex;
+    int32_t rand_height = rerand % max_height;
+    std::string block_str;
+    if (block::BlockManager::Instance()->GetBlockStringWithHeight(
+            net_id,
+            rand_pool,
+            max_height,
+            &block_str) != block::kBlockSuccess) {
+        return;
+    }
+
+    if (block_str.size() < sizeof(uint64_t)) {
+        return;
+    }
+
+    size_t rand_pos = rerand % (block_str.size() - sizeof(uint64_t));
+    *max_zkp = ((uint64_t*)(block_str.c_str() + rand_pos))[0];
+
+    std::string rand_block_str;
+    if (block::BlockManager::Instance()->GetBlockStringWithHeight(
+            net_id,
+            rand_pool,
+            max_height,
+            &rand_block_str) != block::kBlockSuccess) {
+        return;
+    }
+
+    if (rand_block_str.size() < sizeof(uint64_t)) {
+        return;
+    }
+
+    rand_pos = rerand % (rand_block_str.size() - sizeof(uint64_t));
+    *rand_zkp = ((uint64_t*)(rand_block_str.c_str() + rand_pos))[0];
 }
 
 void ElectProto::CreateWaitingHeartbeat(

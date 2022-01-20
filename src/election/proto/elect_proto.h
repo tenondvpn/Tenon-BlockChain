@@ -24,6 +24,13 @@ public:
         const std::string& leader_id,
         uint32_t pool_mod_num,
         transport::protobuf::Header& msg);
+    static void GetBlockZeroKnowledgeProof(
+        const std::string& id,
+        uint64_t random,
+        uint32_t net_id,
+        uint64_t max_height,
+        uint64_t* max_zkp,
+        uint64_t* rand_zkp);
 
 private:
     ElectProto() {}
