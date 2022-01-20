@@ -123,11 +123,11 @@ void ElectWaitingNodes::GetAllValidNodes(
 }
 
 void ElectWaitingNodes::AddNewNode(NodeDetailPtr& node_ptr) {
-    ELECT_DEBUG("waiting_shard_id_: %d, add new node: %s, %s:%d",
-        waiting_shard_id_,
-        common::Encode::HexEncode(node_ptr->id).c_str(),
-        node_ptr->public_ip.c_str(),
-        node_ptr->public_port);
+//     ELECT_DEBUG("waiting_shard_id_: %d, add new node: %s, %s:%d",
+//         waiting_shard_id_,
+//         common::Encode::HexEncode(node_ptr->id).c_str(),
+//         node_ptr->public_ip.c_str(),
+//         node_ptr->public_port);
     std::lock_guard<std::mutex> guard(node_map_mutex_);
     auto iter = node_map_.find(node_ptr->id);
     if (iter != node_map_.end()) {

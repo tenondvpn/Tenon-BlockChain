@@ -134,7 +134,7 @@ private:
     bool NodeHasElected(uint32_t network_id, const std::string& node_id);
     void ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bool elected);
 
-    static const uint64_t kWaitingHeartbeatPeriod = 3000000llu;
+    static const uint64_t kWaitingHeartbeatPeriod = 15000000llu;
 
     // visit not frequently, just mutex lock
     std::map<uint32_t, ElectNodePtr> elect_network_map_;

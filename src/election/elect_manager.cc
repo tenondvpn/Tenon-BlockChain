@@ -761,10 +761,10 @@ void ElectManager::WaitingNodeSendHeartbeat() {
     }
 
     bool joined = IsIdExistsInAnyShard(net_id, common::GlobalInfo::Instance()->id());
-    ELECT_DEBUG("CreateWaitingHeartbeat and waiting join. net: %d, id: %s, joined: %d",
-        net_id,
-        common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
-        joined);
+//     ELECT_DEBUG("CreateWaitingHeartbeat and waiting join. net: %d, id: %s, joined: %d",
+//         net_id,
+//         common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str(),
+//         joined);
     if (!joined) {
         auto dht = network::DhtManager::Instance()->GetDht(
             common::GlobalInfo::Instance()->network_id());
