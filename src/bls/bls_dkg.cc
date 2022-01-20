@@ -194,7 +194,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
         }
     } else if (bls_msg.has_swap_req()) {
         for (int32_t i = 0; i < bls_msg.swap_req().keys_size(); ++i) {
-            *content_to_hash += bls_msg.swap_req().keys(i);
+            *content_to_hash += bls_msg.swap_req().keys(i).sec_key();
         }
     } else {
         return false;
