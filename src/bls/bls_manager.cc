@@ -325,6 +325,10 @@ void BlsManager::HandleFinish(
         finish_item = iter->second;
     }
 
+    if (finish_item->verified[bls_msg.index()]) {
+        return;
+    }
+
     finish_item->verified[bls_msg.index()] = true;
     auto common_pk_iter = finish_item->common_pk_map.find(msg_hash);
     if (common_pk_iter == finish_item->common_pk_map.end()) {
