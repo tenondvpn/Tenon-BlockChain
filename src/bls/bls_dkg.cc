@@ -334,7 +334,7 @@ void BlsDkg::HandleSwapSecKey(
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
     BLS_DEBUG("HandleSwapSecKey success, index: %d, elect_height: %lu",
-        bls_msg.index(). bls_msg.elect_height());
+        bls_msg.index(), bls_msg.elect_height());
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
