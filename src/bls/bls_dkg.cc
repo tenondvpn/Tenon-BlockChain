@@ -108,6 +108,9 @@ void BlsDkg::OnNewElectionBlock(
         finish_offset = ver_offset + kDkgPeriodUs * 7;
     }
 
+    ver_offset += rand() % (kDkgPeriodUs * 2);
+    swap_offset += rand() % (kDkgPeriodUs * 2);
+    finish_offset += rand() % kDkgPeriodUs;
     BLS_DEBUG("elect_height: %lu, tmblock_tm: %lu, begin_time_us_: %lu, diff: %lu, ver_offset: %lu, swap_offset: %lu, finish_offset: %lu, begin_time_us_: %lu",
         elect_hegiht_, tmblock_tm, common::TimeUtils::TimestampUs(), (common::TimeUtils::TimestampUs() - tmblock_tm), ver_offset, swap_offset, finish_offset, begin_time_us_);
     swapkey_valid_ = true;

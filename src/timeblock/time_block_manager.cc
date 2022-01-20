@@ -302,7 +302,6 @@ bool TimeBlockManager::BackupheckNewTimeBlockValid(uint64_t new_time_block_tm) {
 
 void TimeBlockManager::CheckBft() {
     int32_t pool_mod_num = elect::ElectManager::Instance()->local_node_pool_mod_num();
-    TMBLOCK_INFO("pool_mod_num: %d", pool_mod_num);
     if (pool_mod_num >= 0) {
         bft::BftManager::Instance()->StartBft("", pool_mod_num);
     }
