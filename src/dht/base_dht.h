@@ -46,6 +46,7 @@ public:
 
     void AddDetectionTarget(NodePtr& node);
     void SendToClosestNode(const transport::protobuf::Header& msg);
+    void RandomSend(const transport::protobuf::Header& msg);
     void SendToDesNetworkNodes(const transport::protobuf::Header& msg);
     int CheckJoin(NodePtr& node);
     DhtPtr readonly_dht() {

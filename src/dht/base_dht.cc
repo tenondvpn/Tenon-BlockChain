@@ -365,6 +365,16 @@ void BaseDht::SendToDesNetworkNodes(const transport::protobuf::Header& message) 
     }
 }
 
+void BaseDht::RandomSend(const transport::protobuf::Header& msg) {
+    auto dhts = readonly_hash_sort_dht();
+    auto pos = rand() % dhts.size();
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        dhts[pos]->public_ip(),
+        dhts[pos]->local_port + 1,
+        0,
+        msg);
+}
+
 void BaseDht::SendToClosestNode(const transport::protobuf::Header& message) {
     if (message.client_proxy() && message.client_handled()) {
         if (message.transport_type() == transport::kTcp) {

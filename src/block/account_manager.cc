@@ -904,10 +904,10 @@ void AccountManager::FlushPoolHeightTreeToDb() {
 }
 
 void AccountManager::RefreshPoolMaxHeight() {
-    auto now_tm_sec = common::TimeUtils::TimestampSeconds();
-    if (now_tm_sec - prev_refresh_heights_tm_ > 10) {
+//     auto now_tm_sec = common::TimeUtils::TimestampSeconds();
+//     if (now_tm_sec - prev_refresh_heights_tm_ > 10) {
         SendRefreshHeightsRequest();
-    }
+//     }
 
     refresh_pool_max_height_tick_.CutOff(
         kRefreshPoolMaxHeightPeriod,
@@ -946,7 +946,7 @@ void AccountManager::SendRefreshHeightsRequest() {
     }
 
     msg.set_data(block_msg.SerializeAsString());
-    dht->SendToClosestNode(msg);
+    dht->RandomSend(msg);
     BLOCK_DEBUG("sent refresh max height.");
 }
 
@@ -981,7 +981,7 @@ int AccountManager::HandleRefreshHeightsReq(
     }
 
     SendRefreshHeightsResponse(header);
-    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
+//     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
     return kBlockSuccess;
 }
 
@@ -995,7 +995,7 @@ int AccountManager::HandleRefreshHeightsRes(
     }
 
     BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
-    prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
+//     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
     return kBlockSuccess;
 }
 
