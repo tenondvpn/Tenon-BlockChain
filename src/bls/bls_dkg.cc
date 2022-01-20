@@ -194,7 +194,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
         }
     } else if (bls_msg.has_swap_req()) {
         for (int32_t i = 0; i < bls_msg.swap_req().keys_size(); ++i) {
-            *content_to_hash += std::to_string(bls_msg.swap_req().keys(i));
+            *content_to_hash += bls_msg.swap_req().keys(i);
         }
     } else {
         return false;
@@ -406,6 +406,7 @@ void BlsDkg::SwapSecKey() try {
         return;
     }
 
+    std::string content_to_hash;
     protobuf::BlsMessage bls_msg;
     auto swap_req = bls_msg.mutable_swap_req();
     for (uint32_t i = 0; i < members_->size(); ++i) {
@@ -417,7 +418,6 @@ void BlsDkg::SwapSecKey() try {
             continue;
         }
 
-        transport::protobuf::Header msg;
         if (i == local_member_index_) {
             continue;
         }
@@ -441,11 +441,9 @@ void BlsDkg::SwapSecKey() try {
     }
 
     auto message_hash = common::Hash::keccak256(content_to_hash);
+    transport::protobuf::Header msg;
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-    dht::DhtKeyManager dht_key(
-        common::GlobalInfo::Instance()->network_id(),
-        0,
-        (*members_)[i]->id);
+    dht::DhtKeyManager dht_key(common::GlobalInfo::Instance()->network_id(), 0);
     msg.set_des_dht_key(dht_key.StrKey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
