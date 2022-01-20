@@ -22,7 +22,8 @@ void FilterBroadcast::Broadcasting(
         const transport::protobuf::Header& message) {
     assert(dht_ptr);
     if (message.broadcast().hop_limit() <= message.hop_count()) {
-        BROAD_INFO("message.broadcast().hop_limit() <= message.hop_count()[%d, %d].", message.broadcast().hop_limit(), message.hop_count());
+//         BROAD_INFO("message.broadcast().hop_limit() <= message.hop_count()[%d, %d].",
+//             message.broadcast().hop_limit(), message.hop_count());
         return;
     }
 
@@ -90,14 +91,14 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
         pos_vec.push_back(i);
     }
 
-    std::string debug_msg = "all: ";
-    for (int32_t i = 0; i < hash_order_dht.size(); ++i) {
-        debug_msg += common::Encode::HexEncode(hash_order_dht[i]->id()) + ":" +
-            hash_order_dht[i]->public_ip() + ":" +
-            std::to_string(hash_order_dht[i]->public_port) + std::to_string(hash_order_dht[i]->id_hash) + ", ";
-    }
-
-    debug_msg += " -- des: ";
+//     std::string debug_msg = "all: ";
+//     for (int32_t i = 0; i < hash_order_dht.size(); ++i) {
+//         debug_msg += common::Encode::HexEncode(hash_order_dht[i]->id()) + ":" +
+//             hash_order_dht[i]->public_ip() + ":" +
+//             std::to_string(hash_order_dht[i]->public_port) + std::to_string(hash_order_dht[i]->id_hash) + ", ";
+//     }
+// 
+//     debug_msg += " -- des: ";
     std::random_shuffle(pos_vec.begin(), pos_vec.end());
     std::vector<dht::NodePtr> nodes;
     uint32_t neighbor_count = GetNeighborCount(message);
@@ -114,9 +115,9 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
             continue;
         }
 
-        debug_msg += common::Encode::HexEncode(hash_order_dht[pos_vec[i]]->id()) + ":" +
-            hash_order_dht[pos_vec[i]]->public_ip() + ":" +
-            std::to_string(hash_order_dht[pos_vec[i]]->public_port) + ", ";
+//         debug_msg += common::Encode::HexEncode(hash_order_dht[pos_vec[i]]->id()) + ":" +
+//             hash_order_dht[pos_vec[i]]->public_ip() + ":" +
+//             std::to_string(hash_order_dht[pos_vec[i]]->public_port) + ", ";
         nodes.push_back(hash_order_dht[pos_vec[i]]);
         if (message.broadcast().ign_bloomfilter_hop() <= message.hop_count() + 1) {
             bloomfilter->Add(hash_order_dht[pos_vec[i]]->id_hash);
@@ -127,8 +128,8 @@ std::vector<dht::NodePtr> FilterBroadcast::GetlayerNodes(
         }
     }
 
-    BROAD_DEBUG("layer broadcast out des_id: %s, left: %u, right:%u, lv: %lu, rv: %lu, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
-        common::Encode::HexEncode(message.des_dht_key()).c_str(), left, right, hash_order_dht[left]->id_hash, hash_order_dht[right]->id_hash, message.debug().c_str(), hash_order_dht.size(), nodes.size(), message.id(), debug_msg.c_str());
+//     BROAD_DEBUG("layer broadcast out des_id: %s, left: %u, right:%u, lv: %lu, rv: %lu, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
+//         common::Encode::HexEncode(message.des_dht_key()).c_str(), left, right, hash_order_dht[left]->id_hash, hash_order_dht[right]->id_hash, message.debug().c_str(), hash_order_dht.size(), nodes.size(), message.id(), debug_msg.c_str());
 
     auto& data = bloomfilter->data();
     for (uint32_t i = 0; i < data.size(); ++i) {
@@ -215,31 +216,24 @@ void FilterBroadcast::Send(
         const transport::protobuf::Header& message,
         const std::vector<dht::NodePtr>& nodes) {
     dht::DhtPtr readobly_dht = dht_ptr->readonly_dht();
-//     if (message.has_debug()) {
-    std::string debug_msg = "all: ";
-    for (int32_t i = 0; i < readobly_dht->size(); ++i) {
-        debug_msg += common::Encode::HexEncode((*readobly_dht)[i]->id()) + ":" +
-            (*readobly_dht)[i]->public_ip() + ":" +
-            std::to_string((*readobly_dht)[i]->public_port) + ", ";
-    }
-
-    debug_msg += " -- des: ";
-    for (int32_t i = 0; i < nodes.size(); ++i) {
-        debug_msg += common::Encode::HexEncode(nodes[i]->id()) + ":" +
-            nodes[i]->public_ip() + ":" +
-            std::to_string(nodes[i]->public_port) + ", ";
-    }
-
-    BROAD_DEBUG("broadcast out des_id: %s, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
-        common::Encode::HexEncode(message.des_dht_key()).c_str(), message.debug().c_str(), readobly_dht->size(), nodes.size(), message.id(), debug_msg.c_str());
+//     std::string debug_msg = "all: ";
+//     for (int32_t i = 0; i < readobly_dht->size(); ++i) {
+//         debug_msg += common::Encode::HexEncode((*readobly_dht)[i]->id()) + ":" +
+//             (*readobly_dht)[i]->public_ip() + ":" +
+//             std::to_string((*readobly_dht)[i]->public_port) + ", ";
 //     }
+// 
+//     debug_msg += " -- des: ";
+//     for (int32_t i = 0; i < nodes.size(); ++i) {
+//         debug_msg += common::Encode::HexEncode(nodes[i]->id()) + ":" +
+//             nodes[i]->public_ip() + ":" +
+//             std::to_string(nodes[i]->public_port) + ", ";
+//     }
+// 
+//     BROAD_DEBUG("broadcast out des_id: %s, %s, all nodes size: %d, des size: %d, msg id: %lu, %s",
+//         common::Encode::HexEncode(message.des_dht_key()).c_str(), message.debug().c_str(), readobly_dht->size(), nodes.size(), message.id(), debug_msg.c_str());
 
     for (uint32_t i = 0; i < nodes.size(); ++i) {
-//         transport::MultiThreadHandler::Instance()->transport()->Send(
-//                 nodes[i]->public_ip(),
-//                 nodes[i]->local_port,
-//                 0,
-//                 message);
         transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
                 nodes[i]->public_ip(),
                 nodes[i]->local_port + 1,

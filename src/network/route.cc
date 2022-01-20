@@ -85,46 +85,23 @@ int Route::Send(const transport::protobuf::Header& message) {
 
 void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto& header = *header_ptr;
-//     if (!header.debug().empty()) {
-//         NETWORK_DEBUG("route call broadcast: %s, has broadcast: %d", header.debug().c_str(), header.has_broadcast());
-//     }
-
     if (header.type() >= common::kLegoMaxMessageTypeCount) {
         return;
     }
 
-//     if (header.type() == common::kBlsMessage) {
-//         uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
-//         NETWORK_DEBUG("receive message des net_id: %u, msg id: %lu", net_id, header.id());
-//     }
-
     if (message_processor_[header.type()] == nullptr) {
         RouteByUniversal(header);
-        if (header_ptr->has_debug()) {
-            NETWORK_DEBUG("message_processor_[header.type()] == nullptr %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
-                header_ptr->debug().c_str(),
-                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
-                header_ptr->from_ip().c_str(), header_ptr->from_port());
-//             assert(false);
-        }
         return;
     }
 
     auto uni_dht = network::UniversalManager::Instance()->GetUniversal(
             kUniversalNetworkId);
     if (!uni_dht) {
-        NETWORK_ERROR("get uni dht failed!");
-        if (header_ptr->has_debug()) {
-            NETWORK_DEBUG("get uni dht failed %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d",
-                header_ptr->debug().c_str(),
-                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
-                header_ptr->from_ip().c_str(), header_ptr->from_port());
-            assert(false);
-        }
         return;
     }
 
-    if (uni_dht->local_node()->client_mode || uni_dht->local_node()->dht_key() == header.des_dht_key()) {
+    if (uni_dht->local_node()->client_mode ||
+            uni_dht->local_node()->dht_key() == header.des_dht_key()) {
         message_processor_[header.type()](header_ptr);
         return;
     }
@@ -133,57 +110,15 @@ void Route::HandleMessage(const transport::TransportMessagePtr& header_ptr) {
     auto dht = GetDht(header.des_dht_key(), header.universal());
     if (!dht) {
         RouteByUniversal(header);
-        if (header_ptr->has_debug()) {
-            uint32_t net_id = dht::DhtKeyManager::DhtKeyGetNetId(header.des_dht_key());
-            NETWORK_DEBUG("GetDht dht failed %s msg id: %lu, message coming: %s, has broadcast: %d, from: %s:%d, net_id: %d",
-                header_ptr->debug().c_str(),
-                header_ptr->id(), header_ptr->debug().c_str(), header_ptr->has_broadcast(),
-                header_ptr->from_ip().c_str(), header_ptr->from_port(), net_id);
-//             assert(false);
-        }
-
         return;
     }
 
     if (!header.handled()) {
-        auto btime = common::TimeUtils::TimestampUs();
-        bft::protobuf::BftMessage bft_msg;
-        if (header.type() == common::kBftMessage) {
-            if (!bft_msg.ParseFromString(header.data())) {
-                return;
-            }
-
-            NETWORK_DEBUG("msg id: %lu, hash: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-                header.id(),
-                header.hash(),
-                bft_msg.leader(),
-                common::Encode::HexEncode(bft_msg.gid()).c_str(),
-                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-                bft_msg.bft_step());
-        }
         message_processor_[header.type()](header_ptr);
-        if (header.type() == common::kBftMessage) {
-            NETWORK_DEBUG("over msg id: %lu, hash: %lu, use_time: %lu, leader: %d, HandleMessage %s, step: %d, from:%s:%d, bft_msg.bft_step(): %d",
-                header.id(),
-                header.hash(),
-                (common::TimeUtils::TimestampUs() - btime),
-                bft_msg.leader(),
-                common::Encode::HexEncode(bft_msg.gid()).c_str(),
-                bft_msg.bft_step(), header.from_ip().c_str(), header.from_port(),
-                bft_msg.bft_step());
-        }
-
-//         if (!header.debug().empty()) {
-//             NETWORK_DEBUG("route call broadcast and handle message: %d, : %s", header.type(), header.debug().c_str());
-//         }
     }
 
     if (header.has_broadcast()) {
         broadcast_queue_[header.thread_idx()].push(header_ptr);
-//         Broadcast(header);
-        //         if (!header.debug().empty()) {
-        //             NETWORK_DEBUG("route call broadcast and broadcast message: %d, : %s", header.type(), header.debug().c_str());
-        //         }
     }
 }
 
@@ -233,7 +168,6 @@ void Route::RegisterMessage(uint32_t type, transport::MessageProcessor proc) {
     }
 
     message_processor_[type] = proc;
-//     NETWORK_DEBUG("register message handler: %d", type);
     transport::Processor::Instance()->RegisterProcessor(
             type,
             std::bind(&Route::HandleMessage, this, std::placeholders::_1));
@@ -244,7 +178,6 @@ void Route::UnRegisterMessage(uint32_t type) {
         return;
     }
 
-//     NETWORK_DEBUG("unregister message handler: %d", type);
     message_processor_[type] = nullptr;
 }
 
