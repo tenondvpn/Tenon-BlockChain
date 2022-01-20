@@ -257,10 +257,8 @@ void BlsDkg::HandleVerifyBroadcast(
             z_coord);
     }
 
-    if ((*members_)[bls_msg.index()]->public_ip.empty()) {
-        (*members_)[bls_msg.index()]->public_ip = bls_msg.verify_brd().public_ip();
-        (*members_)[bls_msg.index()]->public_port = bls_msg.verify_brd().public_port();
-    }
+    BLS_DEBUG("success hanlde verify broadcast: %d, elect_height: %lu",
+        bls_msg.index(), bls_msg.elect_height());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -335,7 +333,8 @@ void BlsDkg::HandleSwapSecKey(
 
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
-    BLS_DEBUG("HandleSwapSecKey success: %s", common::Encode::HexEncode(sec_key).c_str());
+    BLS_DEBUG("HandleSwapSecKey success, index: %d, elect_height: %lu",
+        bls_msg.index(). bls_msg.elect_height());
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
