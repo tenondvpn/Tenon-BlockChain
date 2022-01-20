@@ -285,9 +285,9 @@ void BftManager::LeaderHandleBftOppose(
     }
 
     if (res == kBftOppose) {
-        bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
         LeaderCallPrecommitOppose(bft_ptr);
         RemoveBft(bft_ptr->gid(), false);
+        bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
     }
 }
 
