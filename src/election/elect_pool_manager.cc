@@ -414,10 +414,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     {
         std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
         auto iter = waiting_pool_map_.find(shard_netid + network::kConsensusWaitingShardOffset);
-        if (iter == waiting_pool_map_.end()) {
-//             ELECT_DEBUG("find waiting shard network failed [%u]!",
-//                 shard_netid + network::kConsensusWaitingShardOffset);
-        } else {
+        if (iter != waiting_pool_map_.end()) {
             waiting_pool_ptr = iter->second;
         }
     }

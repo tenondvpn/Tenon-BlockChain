@@ -66,16 +66,7 @@ private:
     void HandleVerifyBroadcast(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
-    void HandleVerifyBroadcastRes(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg);
     void HandleSwapSecKey(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg);
-    void HandleSwapSecKeyRes(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg);
-    void HandleAgainstParticipant(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
     bool IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* msg_hash);
@@ -91,10 +82,7 @@ private:
         transport::protobuf::Header& msg);
     void DumpContribution();
     void DumpLocalPrivateKey();
-    void SendVerifyBrdResponse(uint32_t msg_id, const std::string& from_ip, uint16_t from_port);
-    void SendSwapkeyResponse(const std::string& from_ip, uint16_t from_port, uint32_t local_index);
     void BroadcastFinish(const common::Bitmap& bitmap);
-    void TimerToSwapKey();
     void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
     bool IsVerifyBrdPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
@@ -115,7 +103,7 @@ private:
         return false;
     }
 
-    static const int64_t kSwapkeyPeriod = 3000000l;
+    static const int64_t kSwapkeyPeriod = 20000000l;
 
     int64_t kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
     elect::MembersPtr members_{ nullptr };

@@ -116,7 +116,7 @@ void BlsDkg::OnNewElectionBlock(
         std::bind(&BlsDkg::BroadcastVerfify, this));
     dkg_swap_seckkey_timer_.CutOff(
         swap_offset,
-        std::bind(&BlsDkg::TimerToSwapKey, this));
+        std::bind(&BlsDkg::SwapSecKey, this));
     dkg_finish_timer_.CutOff(
         finish_offset,
         std::bind(&BlsDkg::Finish, this));
@@ -126,9 +126,6 @@ void BlsDkg::OnNewElectionBlock(
 }
 
 void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try {
-//     if (common::GlobalInfo::Instance()->missing_node()) {
-//         return;
-//     }
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr) {
         BLS_ERROR("members_ == nullptr");
@@ -155,10 +152,6 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         return;
     }
 
-    //     BLS_ERROR("HandleMessage, index: %d,. mem size: %d, bls_msg.elect_height(): %lu, elect_height: %lu, "
-//         "bls_msg.has_verify_brd(): %d, bls_msg.has_swap_req(): %d, bls_msg.has_against_req(): %d, bls_msg.has_verify_res(): %d",
-//         bls_msg.index(), members_->size(), bls_msg.elect_height(), elect_hegiht_,
-//         bls_msg.has_verify_brd(), bls_msg.has_swap_req(), bls_msg.has_against_req(), bls_msg.has_verify_res());
     if (bls_msg.index() >= members_->size()) {
         BLS_ERROR("bls_msg.index() >= members_->size()");
         return;
@@ -171,8 +164,6 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
     }
 
     if (bls_msg.has_verify_brd()) {
-        BLS_DEBUG("msg_id: %u, hash: %lu, HandleVerifyBroadcast new election block elect_height: %lu, local_member_index_: %d, index: %d",
-            header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
         HandleVerifyBroadcast(header, bls_msg);
     }
 
@@ -180,98 +171,8 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
         HandleSwapSecKey(header, bls_msg);
         BLS_DEBUG("msg_id: %u, hash: %lu, HandleSwapSecKey new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
     }
-
-    if (bls_msg.has_swapkey_res()) {
-        BLS_DEBUG("2 comming: %lu", header_ptr->id());
-        HandleSwapSecKeyRes(header, bls_msg);
-        BLS_DEBUG("msg_id: %u, hash: %lu, HandleSwapSecKeyRes new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
-    }
-
-    if (bls_msg.has_against_req()) {
-        HandleAgainstParticipant(header, bls_msg);
-        BLS_DEBUG("msg_id: %u, hash: %lu, HandleAgainstParticipant new election block elect_height: %lu, local_member_index_: %d, index: %d, aginst index: %d",
-            header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index(), bls_msg.against_req().against_index());
-    }
-
-    if (bls_msg.has_verify_res()) {
-        HandleVerifyBroadcastRes(header, bls_msg);
-        BLS_DEBUG("msg_id: %u, hash: %lu, HandleVerifyBroadcastRes new election block elect_height: %lu, local_member_index_: %d, index: %d", header.id(), header.hash(), elect_hegiht_, local_member_index_, bls_msg.index());
-    }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
-}
-
-void BlsDkg::HandleSwapSecKeyRes(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
-    if (members_ == nullptr ||
-            members_->size() <= bls_msg.index() ||
-            members_->size() <= bls_msg.swapkey_res().index()) {
-        assert(false);
-        return;
-    }
-
-    if (bls_msg.swapkey_res().sec_key_len() <= 0) {
-        BLS_ERROR("swapkey_res().sec_key_len()[%d]", bls_msg.swapkey_res().index());
-        return;
-    }
-
-    BLS_DEBUG("3 comming: %lu", header.id());
-    std::string msg_hash = bls_msg.swapkey_res().sec_key() +
-        std::to_string(bls_msg.swapkey_res().sec_key_len()) +
-        std::to_string(bls_msg.swapkey_res().index());
-    if (!IsSignValid(bls_msg, &msg_hash)) {
-        BLS_ERROR("sign invalid big int[%d]", bls_msg.swapkey_res().index());
-        return;
-    }
-
-    valid_swaped_keys_[bls_msg.swapkey_res().index()] = true;
-    if (has_swaped_keys_[bls_msg.index()]) {
-        return;
-    }
-
-    BLS_DEBUG("31 comming: %lu", header.id());
-    // swap
-    auto dec_msg = security::Crypto::Instance()->GetDecryptData(
-        (*members_)[bls_msg.index()]->pubkey,
-        bls_msg.swapkey_res().sec_key());
-    if (dec_msg.empty()) {
-        BLS_ERROR("dec_msg.empty()");
-        return;
-    }
-
-    std::string sec_key(dec_msg.substr(0, bls_msg.swapkey_res().sec_key_len()));
-    if (!IsValidBigInt(sec_key)) {
-        BLS_ERROR("invalid big int[%s]", sec_key.c_str());
-        return;
-    }
-
-    BLS_DEBUG("4 comming: %lu", header.id());
-    all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
-        libff::alt_bn128_Fr(sec_key.c_str());
-    // verify it valid, if not broadcast against.
-    if (!dkg_instance_->Verification(
-            local_member_index_,
-            all_secret_key_contribution_[local_member_index_][bls_msg.index()],
-            all_verification_vector_[bls_msg.index()])) {
-        TENON_WARN("dkg_instance_->Verification failed!elect_height: %lu,"
-            "local_member_index_: %d, remote idx: %d, %s:%d\n",
-            elect_hegiht_,
-            local_member_index_,
-            bls_msg.index(),
-            header.from_ip().c_str(),
-            header.from_port());
-        all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
-            libff::alt_bn128_Fr::zero();
-        return;
-    }
-
-    BLS_DEBUG("41 comming: %lu", header.id());
-    valid_swapkey_set_.insert(bls_msg.index());
-    ++valid_sec_key_count_;
-    has_swaped_keys_[bls_msg.index()] = true;
-    BLS_DEBUG("swap key success: %d, valid_sec_key_count: %d",
-        bls_msg.index(), valid_sec_key_count_);
 }
 
 bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* content_to_hash) {
@@ -291,15 +192,12 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
                 bls_msg.verify_brd().verify_vec(i).z_c0() +
                 bls_msg.verify_brd().verify_vec(i).z_c1();
         }
-    } else if (bls_msg.has_against_req()) {
-        *content_to_hash = std::to_string(bls_msg.against_req().against_index());
-    } else if (bls_msg.has_verify_res()) {
-        *content_to_hash = bls_msg.verify_res().public_ip() + "_" +
-            std::to_string(bls_msg.verify_res().public_port());
-    } else if (bls_msg.has_finish_req()) {
-        for (int32_t i = 0; i < bls_msg.finish_req().bitmap_size(); ++i) {
-            *content_to_hash += std::to_string(bls_msg.finish_req().bitmap(i));
+    } else if (bls_msg.has_swap_req()) {
+        for (int32_t i = 0; i < bls_msg.swap_req().keys_size(); ++i) {
+            *content_to_hash += std::to_string(bls_msg.swap_req().keys(i));
         }
+    } else {
+        return false;
     }
 
     *content_to_hash = common::Hash::keccak256(*content_to_hash);
@@ -322,7 +220,6 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
-    BLS_DEBUG("0 id: %lu", header.id());
     std::string msg_hash;
     if (!IsSignValid(bls_msg, &msg_hash)) {
         BLS_ERROR("sign verify failed!");
@@ -349,7 +246,6 @@ void BlsDkg::HandleVerifyBroadcast(
         return;
     }
 
-    BLS_DEBUG("1 id: %lu", header.id());
     for (int32_t i = 0; i < bls_msg.verify_brd().verify_vec_size(); ++i) {
         auto x_c0 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c0().c_str());
         auto x_c1 = libff::alt_bn128_Fq(bls_msg.verify_brd().verify_vec(i).x_c1().c_str());
@@ -370,30 +266,8 @@ void BlsDkg::HandleVerifyBroadcast(
         (*members_)[bls_msg.index()]->public_ip = bls_msg.verify_brd().public_ip();
         (*members_)[bls_msg.index()]->public_port = bls_msg.verify_brd().public_port();
     }
-
-    SendVerifyBrdResponse(
-        header.id(),
-        bls_msg.verify_brd().public_ip(),
-        bls_msg.verify_brd().public_port());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
-}
-
-void BlsDkg::HandleVerifyBroadcastRes(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
-    if (members_ == nullptr || members_->size() <= bls_msg.index()) {
-        assert(false);
-        return;
-    }
-
-    std::string msg_hash;
-    if (!IsSignValid(bls_msg, &msg_hash)) {
-        return;
-    }
-
-    (*members_)[bls_msg.index()]->public_ip = bls_msg.verify_res().public_ip();
-    (*members_)[bls_msg.index()]->public_port = bls_msg.verify_res().public_port();
 }
 
 void BlsDkg::HandleSwapSecKey(
@@ -415,36 +289,28 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        BLS_ERROR("get dht error");
+    if (bls_msg.swap_req().keys_size() <= local_member_index_) {
+        assert(false);
         return;
     }
 
-#ifndef TENON_UNITTEST
-    dht::DhtKeyManager dht_key(
-        common::GlobalInfo::Instance()->network_id(),
-        0,
-        common::GlobalInfo::Instance()->id());
-    if (memcmp(dht_key.StrKey().c_str() + 8, header.des_dht_key().c_str() + 8, 24) != 0) {
-        dht->SendToClosestNode(header);
-        BLS_ERROR("local dht key: %s, des dht key: %s",
-            common::Encode::HexEncode(dht->local_node()->dht_key()).c_str(),
-            common::Encode::HexEncode(header.des_dht_key()).c_str());
+    std::string msg_hash;
+    if (!IsSignValid(bls_msg, &msg_hash)) {
+        BLS_ERROR("sign verify failed!");
         return;
     }
-#endif
 
     auto dec_msg = security::Crypto::Instance()->GetDecryptData(
         (*members_)[bls_msg.index()]->pubkey,
-        bls_msg.swap_req().sec_key());
+        bls_msg.swap_req().keys(local_member_index_).sec_key());
     if (dec_msg.empty()) {
         BLS_ERROR("dec_msg.empty()");
         return;
     }
 
-    std::string sec_key(dec_msg.substr(0, bls_msg.swap_req().sec_key_len()));
+    std::string sec_key(dec_msg.substr(
+        0,
+        bls_msg.swap_req().keys(local_member_index_).sec_key_len()));
     if (!IsValidBigInt(sec_key)) {
         BLS_ERROR("invalid big int[%s]", sec_key.c_str());
         assert(false);
@@ -472,93 +338,15 @@ void BlsDkg::HandleSwapSecKey(
             header.from_port());
         all_secret_key_contribution_[local_member_index_][bls_msg.index()] =
             libff::alt_bn128_Fr::zero();
-        // send against
-        bls::protobuf::BlsMessage bls_msg;
-        auto against_req = bls_msg.mutable_against_req();
-        against_req->set_against_index(bls_msg.index());
-        auto content_to_hash = std::to_string(bls_msg.index());
-        transport::protobuf::Header msg;
-        auto dht = network::DhtManager::Instance()->GetDht(
-            common::GlobalInfo::Instance()->network_id());
-        if (!dht) {
-            return;
-        }
-
-        auto message_hash = common::Hash::keccak256(content_to_hash);
-        CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-        auto broad_param = msg.mutable_broadcast();
-        transport::SetDefaultBroadcastParam(broad_param);
-        network::Route::Instance()->Send(msg);
-#ifdef TENON_UNITTEST
-        sec_against_msgs_.push_back(msg);
-#endif
         return;
     }
 
-    SendSwapkeyResponse(header.from_ip(), header.from_port(), bls_msg.index());
     valid_swapkey_set_.insert(bls_msg.index());
     ++valid_sec_key_count_;
     BLS_DEBUG("HandleSwapSecKey success: %s", common::Encode::HexEncode(sec_key).c_str());
     has_swaped_keys_[bls_msg.index()] = true;
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
-}
-
-void BlsDkg::SendSwapkeyResponse(
-        const std::string& from_ip,
-        uint16_t from_port,
-        uint32_t remote_index) {
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        return;
-    }
-
-    protobuf::BlsMessage bls_msg;
-    auto swapkey_res = bls_msg.mutable_swapkey_res();
-    swapkey_res->set_index(local_member_index_);
-    std::string seckey;
-    int32_t seckey_len = 0;
-    CreateSwapKey(remote_index, &seckey, &seckey_len);
-    swapkey_res->set_sec_key(seckey);
-    swapkey_res->set_sec_key_len(seckey_len);
-    std::string str_to_hash = seckey + std::to_string(seckey_len) + std::to_string(local_member_index_);
-    auto message_hash = common::Hash::keccak256(str_to_hash);
-    transport::protobuf::Header msg;
-    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-    if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            from_ip,
-            from_port,
-            0,
-            msg);
-    }
-}
-
-void BlsDkg::HandleAgainstParticipant(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
-    if (all_secret_key_contribution_.size() <= local_member_index_) {
-        assert(false);
-        return;
-    }
-
-    if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.against_req().against_index()) {
-        assert(false);
-        return;
-    }
-
-    std::string msg_hash;
-    if (!IsSignValid(bls_msg, &msg_hash)) {
-        return;
-    }
-
-    invalid_node_map_[bls_msg.against_req().against_index()].insert(bls_msg.index());
-    if (invalid_node_map_[bls_msg.against_req().against_index()].size() >= min_aggree_member_count_) {
-        all_secret_key_contribution_[local_member_index_][bls_msg.against_req().against_index()] =
-            libff::alt_bn128_Fr::zero();
-        BLS_ERROR("invalid bls part: %d", bls_msg.against_req().against_index());
-    }
 }
 
 void BlsDkg::BroadcastVerfify() try {
@@ -595,14 +383,6 @@ void BlsDkg::BroadcastVerfify() try {
         return;
     }
 
-    if (common::GlobalInfo::Instance()->config_first_node()) {
-        verfiy_brd->set_public_ip(common::GlobalInfo::Instance()->config_local_ip());
-        verfiy_brd->set_public_port(common::GlobalInfo::Instance()->config_local_port() + 1);
-    } else {
-        verfiy_brd->set_public_ip(dht->local_node()->public_ip());
-        verfiy_brd->set_public_port(dht->local_node()->public_port + 1);
-    }
-
     auto message_hash = common::Hash::keccak256(content_to_hash);
     CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
     auto broad_param = msg.mutable_broadcast();
@@ -616,17 +396,6 @@ void BlsDkg::BroadcastVerfify() try {
     BLS_ERROR("catch error: %s", e.what());
 }
 
-void BlsDkg::TimerToSwapKey() {
-    if (!swapkey_valid_) {
-        return;
-    }
-
-    SwapSecKey();
-    dkg_swap_seckkey_timer_.CutOff(
-        kSwapkeyPeriod,
-        std::bind(&BlsDkg::TimerToSwapKey, this));
-}
-
 void BlsDkg::SwapSecKey() try {
     std::lock_guard<std::mutex> guard(mutex_);
     if (members_ == nullptr || local_member_index_ >= members_->size()) {
@@ -637,10 +406,12 @@ void BlsDkg::SwapSecKey() try {
         return;
     }
 
-#ifdef TENON_UNITTEST
-    sec_swap_msgs_.clear();
-#endif
+    protobuf::BlsMessage bls_msg;
+    auto swap_req = bls_msg.mutable_swap_req();
     for (uint32_t i = 0; i < members_->size(); ++i) {
+        auto swap_item = swap_req->add_keys();
+        swap_item->set_sec_key("");
+        swap_item->set_sec_key_len(0);
         if (valid_swaped_keys_[i]) {
             BLS_DEBUG("valid_swaped_keys_: %d", i);
             continue;
@@ -648,9 +419,6 @@ void BlsDkg::SwapSecKey() try {
 
         transport::protobuf::Header msg;
         if (i == local_member_index_) {
-#ifdef TENON_UNITTEST
-            sec_swap_msgs_.push_back(msg);
-#endif
             continue;
         }
 
@@ -661,40 +429,27 @@ void BlsDkg::SwapSecKey() try {
             continue;
         }
 
-        protobuf::BlsMessage bls_msg;
-        auto swap_req = bls_msg.mutable_swap_req();
-        swap_req->set_sec_key(seckey);
-        swap_req->set_sec_key_len(seckey_len);
-        auto dht = network::DhtManager::Instance()->GetDht(
-            common::GlobalInfo::Instance()->network_id());
-        if (!dht) {
-            return;
-        }
-
-        CreateDkgMessage(dht->local_node(), bls_msg, "", msg);
-        if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
-            dht::DhtKeyManager dht_key(
-                common::GlobalInfo::Instance()->network_id(),
-                0,
-                (*members_)[i]->id);
-            msg.set_des_dht_key(dht_key.StrKey());
-            if ((*members_)[i]->public_ip.empty() || (*members_)[i]->public_port == 0) {
-                network::Route::Instance()->Send(msg);
-            } else {
-                transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-                    (*members_)[i]->public_ip,
-                    (*members_)[i]->public_port,
-                    0,
-                    msg);
-            }
-        }
-
-#ifdef TENON_UNITTEST
-        sec_swap_msgs_.push_back(msg);
-#endif
-        BLS_DEBUG("SwapSecKey new election block elect_height: %lu, local_member_index_: %d, index: %d, ip: %s, port: %d",
-            elect_hegiht_, local_member_index_, i, (*members_)[i]->public_ip.c_str(), (*members_)[i]->public_port);
+        swap_item->set_sec_key(seckey);
+        swap_item->set_sec_key_len(seckey_len);
+        content_to_hash += seckey;
     }
+
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    auto message_hash = common::Hash::keccak256(content_to_hash);
+    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
+    dht::DhtKeyManager dht_key(
+        common::GlobalInfo::Instance()->network_id(),
+        0,
+        (*members_)[i]->id);
+    msg.set_des_dht_key(dht_key.StrKey());
+    auto broad_param = msg.mutable_broadcast();
+    transport::SetDefaultBroadcastParam(broad_param);
+    network::Route::Instance()->Send(msg);
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -714,33 +469,6 @@ void BlsDkg::CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* se
         (*members_)[member_idx]->pubkey,
         sec_key);
     *seckey_len = sec_key.size();
-}
-
-void BlsDkg::SendVerifyBrdResponse(uint32_t msg_id, const std::string& from_ip, uint16_t from_port) {
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        return;
-    }
-    
-    protobuf::BlsMessage bls_msg;
-    auto verify_res = bls_msg.mutable_verify_res();
-    verify_res->set_public_ip(dht->local_node()->public_ip());
-    verify_res->set_public_port(dht->local_node()->public_port + 1);
-    std::string str_to_hash = dht->local_node()->public_ip() + "_" +
-        std::to_string(dht->local_node()->public_port + 1);
-    auto message_hash = common::Hash::keccak256(str_to_hash);
-    transport::protobuf::Header msg;
-    CreateDkgMessage(dht->local_node(), bls_msg, message_hash, msg);
-    msg.set_id(msg_id);
-    if (transport::MultiThreadHandler::Instance()->tcp_transport() != nullptr) {
-        transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-            from_ip,
-            from_port,
-            0,
-            msg);
-        BLS_DEBUG("send back verify broadcast to: %s:%d", from_ip.c_str(), from_port);
-    }
 }
 
 void BlsDkg::DumpLocalPrivateKey() {
