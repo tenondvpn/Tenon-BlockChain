@@ -119,6 +119,8 @@ void BlsDkg::OnNewElectionBlock(
     dkg_finish_timer_.CutOff(
         finish_offset,
         std::bind(&BlsDkg::Finish, this));
+    CheckVerifyAllValid();
+    CheckSwapKeyAllValid();
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }
@@ -171,6 +173,10 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 
     if (bls_msg.has_check_verify_req()) {
         HandleCheckVerifyReq(header, bls_msg);
+    }
+
+    if (bls_msg.has_check_swapkey_req()) {
+        HandleCheckSwapKeyReq(header, bls_msg);
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -270,10 +276,16 @@ void BlsDkg::HandleVerifyBroadcast(
 
 void BlsDkg::CheckVerifyAllValid() {
     auto now_tm_us = common::TimeUtils::TimestampUs();
-    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs + 5) && now_tm_us < (kDkgPeriodUs * 4 - 5)) {
+    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs + 5) &&
+            now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4 - 5)) {
         std::lock_guard<std::mutex> guard(mutex_);
         for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
-            if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            if (i == local_member_index_) {
+                continue;
+            }
+
+            auto iter = verify_map_.find(i);
+            if (iter == verify_map_.end()) {
                 SendGetVerifyInfo(i);
             }
         }
@@ -294,6 +306,8 @@ void BlsDkg::SendGetVerifyInfo(int32_t index) {
     }
 
     bls::protobuf::BlsMessage bls_msg;
+    bls_msg.set_index(local_member_index_);
+    bls_msg.set_elect_height(elect_hegiht_);
     auto check_verify_req = bls_msg.mutable_check_verify_req();
     check_verify_req->set_index(index);
     transport::protobuf::Header msg;
@@ -307,6 +321,7 @@ void BlsDkg::SendGetVerifyInfo(int32_t index) {
     msg.set_data(bls_msg.SerializeAsString());
     msg.set_hop_count(0);
     dht->RandomSend(msg);
+    BLS_DEBUG("send get verify req elect_height: %lu, index: %d", elect_hegiht_, index);
 }
 
 void BlsDkg::CheckSwapKeyAllValid() {
@@ -315,7 +330,8 @@ void BlsDkg::CheckSwapKeyAllValid() {
             now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8 - 5)) {
         std::lock_guard<std::mutex> guard(mutex_);
         for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
-            if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+            auto iter = valid_swapkey_set_.find(i);
+            if (iter == valid_swapkey_set_.end()) {
                 SendGetSwapKey(i);
             }
         }
@@ -336,6 +352,8 @@ void BlsDkg::SendGetSwapKey(int32_t index) {
     }
 
     bls::protobuf::BlsMessage bls_msg;
+    bls_msg.set_index(local_member_index_);
+    bls_msg.set_elect_height(elect_hegiht_);
     auto check_swapkey_req = bls_msg.mutable_check_swapkey_req();
     check_swapkey_req->set_index(index);
     transport::protobuf::Header msg;
@@ -349,6 +367,7 @@ void BlsDkg::SendGetSwapKey(int32_t index) {
     msg.set_data(bls_msg.SerializeAsString());
     msg.set_hop_count(0);
     dht->RandomSend(msg);
+    BLS_DEBUG("send get swap key req elect_height: %lu, index: %d", elect_hegiht_, index);
 }
 
 void BlsDkg::HandleCheckVerifyReq(
@@ -370,6 +389,7 @@ void BlsDkg::HandleCheckVerifyReq(
     msg.set_hop_count(0);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
+    BLS_DEBUG("handle get verfiy req elect_height: %lu, index: %d", elect_hegiht_, bls_msg.index());
 }
 
 void BlsDkg::HandleCheckSwapKeyReq(
@@ -391,6 +411,7 @@ void BlsDkg::HandleCheckSwapKeyReq(
     msg.set_hop_count(0);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
+    BLS_DEBUG("send get swap key req elect_height: %lu, index: %d", elect_hegiht_, bls_msg.index());
 }
 
 void BlsDkg::HandleSwapSecKey(
@@ -405,7 +426,7 @@ void BlsDkg::HandleSwapSecKey(
     }
 
     if (all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index()) {
-        BLS_ERROR("all_secret_key_contribution_[local_member_index_].size() <= bls_msg.index(): %d, %d",
+        BLS_ERROR("all_secret_key_contribution_ size() <= bls_msg.index(): %d, %d",
             all_secret_key_contribution_[local_member_index_].size(), bls_msg.index());
         return;
     }
@@ -620,9 +641,8 @@ void BlsDkg::FinishNoLock() try {
     if (members_ == nullptr ||
             local_member_index_ >= members_->size() ||
             valid_sec_key_count_ < min_aggree_member_count_) {
-        BLS_ERROR("valid count error.valid_sec_key_count_: %d, min_aggree_member_count_: %d, members_ == nullptr: %d, local_member_index_: %d, members_->size(): %d",
-            valid_sec_key_count_, min_aggree_member_count_, (members_ == nullptr), local_member_index_, members_->size());
-        BLS_INFO("bls create Finish error block elect_height: %lu", elect_hegiht_);
+        BLS_ERROR("elect_height: %lu, valid count error.valid_sec_key_count_: %d, min_aggree_member_count_: %d, members_ == nullptr: %d, local_member_index_: %d, members_->size(): %d",
+            elect_hegiht_, valid_sec_key_count_, min_aggree_member_count_, (members_ == nullptr), local_member_index_, members_->size());
         return;
     }
 
