@@ -57,12 +57,22 @@ message FinishBroadcast {
 	optional bytes bls_sign_y = 6;
 }
 
+message CheckVerfiyReq {
+    optional uint32 index = 1;
+}
+
+message CheckSwapKeyReq {
+    optional uint32 index = 1;
+}
+
 message BlsMessage {
     optional VerifyVecBrdReq verify_brd = 1;
     optional SwapSecKeyReq swap_req = 2;
     optional FinishBroadcast finish_req = 3;
-    optional uint32 index = 4;
-    optional bytes sign_ch = 5;
-	optional bytes sign_res = 6;
-    optional uint64 elect_height = 7;
+    optional CheckVerfiyReq check_verify_req = 4;
+    optional CheckSwapKeyReq check_swapkey_req = 5;
+    optional uint32 index = 6;
+    optional bytes sign_ch = 7;
+	optional bytes sign_res = 8;
+    optional uint64 elect_height = 9;
 }

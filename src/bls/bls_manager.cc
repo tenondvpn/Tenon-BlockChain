@@ -68,6 +68,7 @@ void BlsManager::ProcessNewElectBlock(
         libff::alt_bn128_G2::zero(),
         libff::alt_bn128_G2::zero());
     waiting_bls_->OnNewElectionBlock(elect_height, new_members);
+    BLS_DEBUG("success add new bls dkg, elect_height: %lu", elect_height);
 }
 
 libff::alt_bn128_Fr BlsManager::GetSeckFromDb(uint64_t elect_height, uint32_t network_id) {

@@ -106,8 +106,8 @@ void BlsDkg::OnNewElectionBlock(
         finish_offset = ver_offset + kDkgPeriodUs * 7;
     }
 
-    ver_offset += rand() % (kDkgPeriodUs * 2);
-    swap_offset += rand() % (kDkgPeriodUs * 2);
+    ver_offset += rand() % kDkgPeriodUs;
+    swap_offset += rand() % kDkgPeriodUs;
     finish_offset += rand() % kDkgPeriodUs;
     swapkey_valid_ = true;
     dkg_verify_brd_timer_.CutOff(
@@ -167,6 +167,10 @@ void BlsDkg::HandleMessage(const transport::TransportMessagePtr& header_ptr) try
 
     if (bls_msg.has_swap_req()) {
         HandleSwapSecKey(header, bls_msg);
+    }
+
+    if (bls_msg.has_check_verify_req()) {
+        HandleCheckVerifyReq(header, bls_msg);
     }
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
@@ -257,10 +261,144 @@ void BlsDkg::HandleVerifyBroadcast(
             z_coord);
     }
 
+    verify_map_[bls_msg.index()] = header.data();
     BLS_DEBUG("success hanlde verify broadcast: %d, elect_height: %lu",
         bls_msg.index(), bls_msg.elect_height());
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
+}
+
+void BlsDkg::CheckVerifyAllValid() {
+    auto now_tm_us = common::TimeUtils::TimestampUs();
+    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs + 5) && now_tm_us < (kDkgPeriodUs * 4 - 5)) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
+            if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+                SendGetVerifyInfo(i);
+            }
+        }
+    }
+
+    if (now_tm_us < (kDkgPeriodUs * 4 - 5)) {
+        check_verify_brd_timer_.CutOff(
+            3000000l,
+            std::bind(&BlsDkg::CheckVerifyAllValid, this));
+    }
+}
+
+void BlsDkg::SendGetVerifyInfo(int32_t index) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    bls::protobuf::BlsMessage bls_msg;
+    auto check_verify_req = bls_msg.mutable_check_verify_req();
+    check_verify_req->set_index(index);
+    transport::protobuf::Header msg;
+    dht->SetFrequently(msg);
+    msg.set_src_dht_key(local_node->dht_key());
+    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_priority(transport::kTransportPriorityHighest);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kBlsMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_data(bls_msg.SerializeAsString());
+    msg.set_hop_count(0);
+    dht->RandomSend(msg);
+}
+
+void BlsDkg::CheckSwapKeyAllValid() {
+    auto now_tm_us = common::TimeUtils::TimestampUs();
+    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs * 4 + 5) &&
+            now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8 - 5)) {
+        std::lock_guard<std::mutex> guard(mutex_);
+        for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
+            if (all_verification_vector_[i][0] == libff::alt_bn128_G2::zero()) {
+                SendGetSwapKey(i);
+            }
+        }
+    }
+
+    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8 - 5)) {
+        check_verify_brd_timer_.CutOff(
+            3000000l,
+            std::bind(&BlsDkg::CheckSwapKeyAllValid, this));
+    }
+}
+
+void BlsDkg::SendGetSwapKey(int32_t index) {
+    auto dht = network::DhtManager::Instance()->GetDht(
+        common::GlobalInfo::Instance()->network_id());
+    if (!dht) {
+        return;
+    }
+
+    bls::protobuf::BlsMessage bls_msg;
+    auto check_swapkey_req = bls_msg.mutable_check_swapkey_req();
+    check_swapkey_req->set_index(index);
+    transport::protobuf::Header msg;
+    dht->SetFrequently(msg);
+    msg.set_src_dht_key(local_node->dht_key());
+    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_priority(transport::kTransportPriorityHighest);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kBlsMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_data(bls_msg.SerializeAsString());
+    msg.set_hop_count(0);
+    dht->RandomSend(msg);
+}
+
+void BlsDkg::HandleCheckVerifyReq(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+    auto iter = verify_map_.find(bls_msg.check_verify_req().index());
+    if (iter == verify_map_.end()) {
+        return;
+    }
+
+    transport::protobuf::Header msg;
+    dht->SetFrequently(msg);
+    msg.set_src_dht_key(local_node->dht_key());
+    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_priority(transport::kTransportPriorityHighest);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kBlsMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_data(iter->second);
+    msg.set_hop_count(0);
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        header.from_ip(), header.from_port(), 0, msg);
+}
+
+void BlsDkg::HandleCheckSwapKeyReq(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+    auto iter = swap_key_map_.find(bls_msg.check_swapkey_req().index());
+    if (iter == swap_key_map_.end()) {
+        return;
+    }
+
+    transport::protobuf::Header msg;
+    dht->SetFrequently(msg);
+    msg.set_src_dht_key(local_node->dht_key());
+    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_priority(transport::kTransportPriorityHighest);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kBlsMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_data(iter->second);
+    msg.set_hop_count(0);
+    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
+        header.from_ip(), header.from_port(), 0, msg);
+}
+
+void BlsDkg::HandleCheckSwapKeyRes(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg) {
+
 }
 
 void BlsDkg::HandleSwapSecKey(
@@ -336,6 +474,7 @@ void BlsDkg::HandleSwapSecKey(
     BLS_DEBUG("HandleSwapSecKey success, index: %d, elect_height: %lu",
         bls_msg.index(), bls_msg.elect_height());
     has_swaped_keys_[bls_msg.index()] = true;
+    swap_key_map_[bls_msg.index()] = header.data();
 } catch (std::exception& e) {
     BLS_ERROR("catch error: %s", e.what());
 }

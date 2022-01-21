@@ -69,6 +69,12 @@ private:
     void HandleSwapSecKey(
         const transport::protobuf::Header& header,
         const protobuf::BlsMessage& bls_msg);
+    void HandleCheckVerifyReq(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg);
+    void HandleCheckSwapKeyReq(
+        const transport::protobuf::Header& header,
+        const protobuf::BlsMessage& bls_msg);
     bool IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* msg_hash);
     void BroadcastVerfify();
     void SwapSecKey();
@@ -84,6 +90,11 @@ private:
     void DumpLocalPrivateKey();
     void BroadcastFinish(const common::Bitmap& bitmap);
     void CreateSwapKey(uint32_t member_idx, std::string* seckey, int32_t* seckey_len);
+    void CheckVerifyAllValid();
+    void SendGetVerifyInfo(int32_t index);
+    void CheckSwapKeyAllValid();
+    void SendGetSwapKey(int32_t index);
+
     bool IsVerifyBrdPeriod() {
         auto now_tm_us = common::TimeUtils::TimestampUs();
         if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
@@ -109,7 +120,9 @@ private:
     elect::MembersPtr members_{ nullptr };
     uint64_t elect_hegiht_{ 0 };
     common::Tick dkg_verify_brd_timer_;
+    common::Tick check_verify_brd_timer_;
     common::Tick dkg_swap_seckkey_timer_;
+    common::Tick check_swap_seckkey_timer_;
     common::Tick dkg_finish_timer_;
     std::vector<std::vector<libff::alt_bn128_Fr>> all_secret_key_contribution_;
     std::vector<libff::alt_bn128_Fr> local_src_secret_key_contribution_;
@@ -134,6 +147,8 @@ private:
     bool valid_swaped_keys_[common::kEachShardMaxNodeCount];
     bool has_swaped_keys_[common::kEachShardMaxNodeCount];
     uint64_t begin_time_us_{ 0 };
+    std::unordered_map<int32_t, std::string> verify_map_;
+    std::unordered_map<int32_t, std::string> swap_key_map_;
 
 #ifdef TENON_UNITTEST
     transport::protobuf::Header ver_brd_msg_;
