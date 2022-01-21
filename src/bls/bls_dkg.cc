@@ -298,12 +298,12 @@ void BlsDkg::SendGetVerifyInfo(int32_t index) {
     check_verify_req->set_index(index);
     transport::protobuf::Header msg;
     dht->SetFrequently(msg);
-    msg.set_src_dht_key(local_node->dht_key());
-    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_src_dht_key(dht->local_node()->dht_key());
+    msg.set_des_dht_key(dht->local_node()->dht_key());
     msg.set_priority(transport::kTransportPriorityHighest);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBlsMessage);
-    msg.set_client(local_node->client_mode);
+    msg.set_client(false);
     msg.set_data(bls_msg.SerializeAsString());
     msg.set_hop_count(0);
     dht->RandomSend(msg);
@@ -340,12 +340,12 @@ void BlsDkg::SendGetSwapKey(int32_t index) {
     check_swapkey_req->set_index(index);
     transport::protobuf::Header msg;
     dht->SetFrequently(msg);
-    msg.set_src_dht_key(local_node->dht_key());
-    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_src_dht_key(dht->local_node()->dht_key());
+    msg.set_des_dht_key(dht->local_node()->dht_key());
     msg.set_priority(transport::kTransportPriorityHighest);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBlsMessage);
-    msg.set_client(local_node->client_mode);
+    msg.set_client(false);
     msg.set_data(bls_msg.SerializeAsString());
     msg.set_hop_count(0);
     dht->RandomSend(msg);
@@ -360,13 +360,12 @@ void BlsDkg::HandleCheckVerifyReq(
     }
 
     transport::protobuf::Header msg;
-    dht->SetFrequently(msg);
-    msg.set_src_dht_key(local_node->dht_key());
-    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_src_dht_key(header.des_dht_key());
+    msg.set_des_dht_key(header.src_dht_key());
     msg.set_priority(transport::kTransportPriorityHighest);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBlsMessage);
-    msg.set_client(local_node->client_mode);
+    msg.set_client(false);
     msg.set_data(iter->second);
     msg.set_hop_count(0);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
@@ -382,23 +381,16 @@ void BlsDkg::HandleCheckSwapKeyReq(
     }
 
     transport::protobuf::Header msg;
-    dht->SetFrequently(msg);
-    msg.set_src_dht_key(local_node->dht_key());
-    msg.set_des_dht_key(local_node->dht_key());
+    msg.set_src_dht_key(header.des_dht_key());
+    msg.set_des_dht_key(header.src_dht_key());
     msg.set_priority(transport::kTransportPriorityHighest);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kBlsMessage);
-    msg.set_client(local_node->client_mode);
+    msg.set_client(false);
     msg.set_data(iter->second);
     msg.set_hop_count(0);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
-}
-
-void BlsDkg::HandleCheckSwapKeyRes(
-        const transport::protobuf::Header& header,
-        const protobuf::BlsMessage& bls_msg) {
-
 }
 
 void BlsDkg::HandleSwapSecKey(
