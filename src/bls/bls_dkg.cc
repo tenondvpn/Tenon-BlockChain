@@ -276,7 +276,7 @@ void BlsDkg::HandleVerifyBroadcast(
 
 void BlsDkg::CheckVerifyAllValid() {
     auto now_tm_us = common::TimeUtils::TimestampUs();
-    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs + 5) &&
+    if (now_tm_us > (begin_time_us_ + kDkgPeriodUs * 2 + 5) &&
             now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4 - 5)) {
         std::lock_guard<std::mutex> guard(mutex_);
         for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
@@ -291,7 +291,7 @@ void BlsDkg::CheckVerifyAllValid() {
         }
     }
 
-    if (now_tm_us < (kDkgPeriodUs * 4 - 5)) {
+    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4 - 5)) {
         check_verify_brd_timer_.CutOff(
             3000000l,
             std::bind(&BlsDkg::CheckVerifyAllValid, this));
@@ -338,7 +338,7 @@ void BlsDkg::CheckSwapKeyAllValid() {
     }
 
     if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8 - 5)) {
-        check_verify_brd_timer_.CutOff(
+        check_swap_seckkey_timer_.CutOff(
             3000000l,
             std::bind(&BlsDkg::CheckSwapKeyAllValid, this));
     }
@@ -411,7 +411,7 @@ void BlsDkg::HandleCheckSwapKeyReq(
     msg.set_hop_count(0);
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
-    BLS_DEBUG("send get swap key req elect_height: %lu, index: %d", elect_hegiht_, bls_msg.index());
+    BLS_DEBUG("handle get swap key req elect_height: %lu, index: %d", elect_hegiht_, bls_msg.index());
 }
 
 void BlsDkg::HandleSwapSecKey(

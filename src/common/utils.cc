@@ -219,6 +219,38 @@ bool IsVlanIp(const std::string& ip_str)
     return false;
 }
 
+uint32_t MicTimestampToDate(int64_t timestamp) {
+#ifndef _WIN32
+    int64_t milli = timestamp + (int64_t)(8 * 60 * 60 * 1000);
+    auto mTime = std::chrono::milliseconds(milli);
+    auto tp = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>(mTime);
+    auto tt = std::chrono::system_clock::to_time_t(tp);
+    std::tm* now = std::gmtime(&tt);
+    char time_str[64];
+    snprintf(time_str, sizeof(time_str), "%4d%02d%02d",
+        now->tm_year + 1900,
+        now->tm_mon + 1,
+        now->tm_mday);
+    uint32_t val;
+    StringUtil::ToUint32(time_str, &val);
+    return val;
+#else
+    int64_t milli = timestamp + (int64_t)(8 * 60 * 60 * 1000);
+    auto mTime = std::chrono::milliseconds(milli);
+    auto tp = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>(mTime);
+    __time64_t tt = std::chrono::system_clock::to_time_t(tp);
+    struct tm  now;
+    _localtime64_s(&now, &tt);
+    char time_str[64];
+    snprintf(time_str, sizeof(time_str), "%4d%02d%02d",
+        now.tm_year + 1900,
+        now.tm_mon + 1,
+        now.tm_mday);
+    uint32_t val;
+    StringUtil::ToUint32(time_str, &val);
+    return val;
+#endif
+}
 }  // namespace common
 
 }  // namespace tenon
