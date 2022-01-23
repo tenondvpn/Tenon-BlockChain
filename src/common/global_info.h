@@ -217,6 +217,10 @@ public:
         consensus_shard_net_id_ = net_id;
     }
 
+    int32_t data_service_node_for_net_id() {
+        return data_service_node_for_net_id_;
+    }
+
 private:
     GlobalInfo();
     ~GlobalInfo();
@@ -263,6 +267,7 @@ private:
     volatile uint64_t gas_price_{ 10 };
     bool missing_node_{ false };
     uint32_t consensus_shard_net_id_{ common::kInvalidUint32 };
+    int32_t data_service_node_for_net_id_{ -1 };
 
     DISALLOW_COPY_AND_ASSIGN(GlobalInfo);
 };

@@ -754,6 +754,10 @@ int32_t ElectManager::GetNetworkLeaderCount(uint32_t network_id) {
 }
 
 void ElectManager::WaitingNodeSendHeartbeat() {
+    if (common::GlobalInfo::Instance()->data_service_node_for_net_id() > 0) {
+        return;
+    }
+
     uint32_t net_id = common::GlobalInfo::Instance()->network_id();
     if (net_id >= network::kRootCongressWaitingNetworkId &&
             net_id < network::kConsensusWaitingShardEndNetworkId) {

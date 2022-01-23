@@ -18,6 +18,7 @@ public:
     bool AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& block_item);
 
 private:
+    void CheckBlockFinished();
 
     clickhouse::Client client_;
 

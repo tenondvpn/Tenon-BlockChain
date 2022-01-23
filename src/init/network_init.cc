@@ -125,12 +125,6 @@ int NetworkInit::Init(int argc, char** argv) {
     transport::MultiThreadHandler::Instance()->Init(
             transport_,
             tcp_transport_);
-//     if (InitHttpTransport() != kInitSuccess) {
-//         INIT_ERROR("init http transport failed!");
-//         return kInitError;
-//     }
-    // get the latest elect block from root network
-
     if (InitNetworkSingleton() != kInitSuccess) {
         INIT_ERROR("InitNetworkSingleton failed!");
         return kInitError;
@@ -188,6 +182,22 @@ int NetworkInit::Init(int argc, char** argv) {
 }
 
 int NetworkInit::CheckJoinWaitingPool() {
+    if (common::GlobalInfo::Instance()->data_service_node_for_net_id() > 0) {
+        if (elect::ElectManager::Instance()->Join(
+                common::GlobalInfo::Instance()->data_service_node_for_net_id() +
+                network::kConsensusWaitingShardOffset) != elect::kElectSuccess) {
+            INIT_ERROR("join waiting pool network[%u] failed!",
+                common::GlobalInfo::Instance()->data_service_node_for_net_id() +
+                network::kConsensusWaitingShardOffset);
+            return kInitError;
+        }
+
+        common::GlobalInfo::Instance()->set_network_id(
+            common::GlobalInfo::Instance()->data_service_node_for_net_id() +
+            network::kConsensusWaitingShardOffset);
+        return kInitSuccess;
+    }
+
     if (common::GlobalInfo::Instance()->network_id() != common::kInvalidUint32) {
         INIT_INFO("init with network id: %u", common::GlobalInfo::Instance()->network_id());
         return kInitSuccess;

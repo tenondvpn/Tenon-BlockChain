@@ -110,6 +110,7 @@ int GlobalInfo::Init(const common::Config& config) {
     config.Get("tenon", "is_lego_leader", is_lego_leader_);
     config.Get("tenon", "client", is_client_);
     config.Get("tenon", "node_tag", node_tag_);
+    config.Get("tenon", "data_service_node_for_net_count", data_service_node_for_net_count_);
     if (config.Get("tenon", "udp_mtu", udp_mtu_) && udp_mtu_ > 1400) {
         udp_mtu_ -= 100;  // reserve 100 bytes for package header and udp header
     }

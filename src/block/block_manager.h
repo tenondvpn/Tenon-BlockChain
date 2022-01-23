@@ -3,6 +3,7 @@
 #include <deque>
 
 #include "common/config.h"
+#include "ck/ck_client.h"
 #include "db/db.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -106,6 +107,7 @@ private:
     std::unordered_map<std::string, int64_t> account_reward_map_;
     std::mutex account_reward_map_mutex_;
     std::mutex block_mutex_;
+    std::shared_ptr<ck::ClickHouseClient> ck_client_{ nullptr };
 
     DISALLOW_COPY_AND_ASSIGN(BlockManager);
 };
