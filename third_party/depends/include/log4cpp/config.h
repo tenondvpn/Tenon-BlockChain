@@ -5,13 +5,13 @@
 #define LOG4CPP_HAVE_SSTREAM
 
 /* Define if you have the `gettimeofday' function. */
-/* #undef LOG4CPP_HAVE_GETTIMEOFDAY */
+#define LOG4CPP_HAVE_GETTIMEOFDAY
 
 /* Define if you have the <stdint.h> header file. */
 /* #undef LOG4CPP_HAVE_STDINT_H */
 
 /* Define if you have the <unistd.h> header file. */
-/* #undef LOG4CPP_HAVE_UNISTD_H */
+#define LOG4CPP_HAVE_UNISTD_H
 
 /* Define if you have the <io.h> header file. */
 /* #undef LOG4CPP_HAVE_IO_H */
@@ -20,10 +20,10 @@
 #define LOG4CPP_HAVE_SNPRINTF
 
 /* Define if you have the `syslog' function. */
-/* #undef LOG4CPP_HAVE_SYSLOG */
+#define LOG4CPP_HAVE_SYSLOG
 
 /* define if the C library has localtime_r */
-/* #undef LOG4CPP_HAVE_LOCALTIME_R */
+#define LOG4CPP_HAVE_LOCALTIME_R
 
 /* define if the C library has ftime */
 #define LOG4CPP_HAVE_FTIME
@@ -35,12 +35,12 @@
 #define LOG4CPP_HAVE_NAMESPACES
 
 /* define if you have threading support */
-/* #undef LOG4CPP_HAVE_THREADING */
+#define LOG4CPP_HAVE_THREADING
 
 /* define if you use win32 thread */
 /* #undef LOG4CPP_USE_MSTHREADS */
 
 /* define if you use pthreads */
-/* #undef LOG4CPP_USE_PTHREADS */
+#define LOG4CPP_USE_PTHREADS
 
 #endif
