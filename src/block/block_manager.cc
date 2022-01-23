@@ -133,11 +133,11 @@ int BlockManager::Init(common::Config& conf) {
 
     if (common::GlobalInfo::Instance()->data_service_node_for_net_id() > 0) {
         std::string ck_ip;
-        conf.get("tenon", "ck_ip", ck_ip);
+        conf.Get("tenon", "ck_ip", ck_ip);
         std::string ck_user;
-        conf.get("tenon", "ck_user", ck_user);
+        conf.Get("tenon", "ck_user", ck_user);
         std::string ck_password;
-        conf.get("tenon", "ck_password", ck_password);
+        conf.Get("tenon", "ck_password", ck_password);
         ck_client_ = std::make_shared<ck::ClickHouseClient>(ck_ip, ck_user, ck_password);
         if (!ck_client_->CreateTable()) {
             BLOCK_ERROR("init ck failed!");
