@@ -9,7 +9,8 @@ namespace tenon {
 
 namespace ck {
 
-static const std::string kClickhouseTableName = "tenon_ck_block_table";
+static const std::string kClickhouseTransTableName = "tenon_ck_transaction_table";
+static const std::string kClickhouseBlockTableName = "tenon_ck_block_table";
 
 };  // namespace ck
 

@@ -19,6 +19,8 @@ public:
 
 private:
     void CheckBlockFinished();
+    bool CreateTransactionTable();
+    bool CreateBlockTable();
 
     clickhouse::Client client_;
 
