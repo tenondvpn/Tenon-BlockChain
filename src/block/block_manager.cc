@@ -680,7 +680,7 @@ int BlockManager::AddNewBlock(
 
     AccountManager::Instance()->AddBlockItemToDb(block_item, db_batch, is_kv_sync);
     ShardStatistic::Instance()->AddStatistic(block_item);
-    if (common::GlobalInfo::Instance()->data_service_node_for_net_id() > 0) {
+    if (common::GlobalInfo::Instance()->data_service_node_for_net_id() == block_item->network_id()) {
         ck_client_->AddNewBlock(block_item);
     }
 
