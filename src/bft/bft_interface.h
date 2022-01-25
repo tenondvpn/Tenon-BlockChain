@@ -18,7 +18,6 @@
 #include "election/member_manager.h"
 #include "security/signature.h"
 #include "security/security.h"
-#include "security/response.h"
 #include "transport/transport_utils.h"
 #include "tvm/tvm_utils.h"
 #include "tvm/execution.h"
