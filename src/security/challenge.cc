@@ -65,65 +65,7 @@ int Challenge::Deserialize(const std::string& src) {
 void Challenge::Set(
         const CommitPoint& agg_commit,
         const PublicKey& agg_pubkey,
-        const std::string& message) {
-    if (!agg_commit.inited()) {
-        CRYPTO_ERROR("Aggregated commit not initialized");
-        return;
-    }
-
-    if (message.size() == 0) {
-        CRYPTO_ERROR("Empty message");
-        return;
-    }
-
-    Sha256 sha2;
-    std::string tmp_func_byte((char)kThirdHashFunctionByte, 1);
-    sha2.Update(tmp_func_byte);
-    inited_ = false;
-    bytes buf(kPublicCompresssedSizeBytes);
-    const Curve& curve = Schnorr::Instance()->curve();
-    if (EC_POINT_point2oct(
-            curve.group_.get(),
-            agg_commit.ec_point().get(),
-            POINT_CONVERSION_COMPRESSED,
-            buf.data(),
-            kPublicCompresssedSizeBytes,
-            NULL) != kPublicCompresssedSizeBytes) {
-        CRYPTO_ERROR("Could not convert commitment to octets");
-        return;
-    }
-
-    std::string tmp_buf2((char*)buf.data(), buf.size());
-    sha2.Update(tmp_buf2);
-    fill(buf.begin(), buf.end(), 0x00);
-
-    if (EC_POINT_point2oct(
-            curve.group_.get(),
-            agg_pubkey.ec_point().get(),
-            POINT_CONVERSION_COMPRESSED,
-            buf.data(),
-            kPublicCompresssedSizeBytes,
-            NULL) != kPublicCompresssedSizeBytes) {
-        CRYPTO_ERROR("Could not convert public key to octets");
-        return;
-    }
-
-    std::string tmp_buf((char*)buf.data(), buf.size());
-    sha2.Update(tmp_buf);
-    sha2.Update(message);
-    std::string digest = sha2.Finalize();
-    if ((BN_bin2bn((unsigned char*)digest.c_str(), digest.size(), bignum_.get())) == NULL) {
-        CRYPTO_ERROR("Digest to challenge failed");
-        return;
-    }
-
-    if (BN_nnmod(bignum_.get(), bignum_.get(), curve.order_.get(), NULL) == 0) {
-        CRYPTO_ERROR("Could not reduce challenge modulo group order");
-        return;
-    }
-
-    inited_ = true;
-}
+        const std::string& message) {}
 
 Challenge& Challenge::operator=(const Challenge& src) {
     if (this == &src) {
