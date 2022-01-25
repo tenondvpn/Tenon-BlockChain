@@ -177,16 +177,16 @@ void Command::AddBaseCommands() {
 
         std::string msg = common::Encode::HexDecode(args[0]);
         security::Signature result;
-        security::Schnorr::Instance()->Sign(
+        security::Security::Instance()->Sign(
             msg,
-            *security::Schnorr::Instance()->prikey(),
-            *security::Schnorr::Instance()->pubkey(),
+            *security::Security::Instance()->prikey(),
+            *security::Security::Instance()->pubkey(),
             result);
         std::string ch;
         std::string re;
         result.Serialize(ch, re);
         security::Signature sig(ch, re);
-        auto veres = security::Schnorr::Instance()->Verify(msg, sig, *security::Schnorr::Instance()->pubkey());
+        auto veres = security::Security::Instance()->Verify(msg, sig, *security::Security::Instance()->pubkey());
         std::cout << common::Encode::HexEncode(ch) << ":" << common::Encode::HexEncode(re) << ", ver: " << veres << std::endl;
     });
     AddCommand("prt", [this](const std::vector<std::string>& args) {
@@ -898,7 +898,7 @@ void Command::CreateNewVpnVersion(const std::string& download_url) {
 	if (uni_dht == nullptr) {
 		return;
 	}
-	auto ver_gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+	auto ver_gid = common::CreateGID(security::Security::Instance()->str_pubkey());
 	uint32_t type = common::kConsensusTransaction;
 	client::ClientProto::CreateClientNewVersion(
 			uni_dht->local_node(),

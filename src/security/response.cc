@@ -4,7 +4,7 @@
 #include <cassert>
 
 #include "security/crypto_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/security_string_trans.h"
 
 namespace tenon {
@@ -96,7 +96,7 @@ void Response::Set(
         return;
     }
 
-    const Curve& curve = Schnorr::Instance()->curve();
+    const Curve& curve = Security::Instance()->curve();
     if (BN_mod_mul(
             bignum_.get(),
             challenge.bignum().get(),

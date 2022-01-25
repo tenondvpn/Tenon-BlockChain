@@ -3,7 +3,7 @@
 
 #include "common/encode.h"
 #include "transport/proto/transport.pb.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "network/universal.h"
 #include "network/network_utils.h"
 #include "network/route.h"
@@ -39,7 +39,7 @@ int TransactionClient::Transaction(
         return kClientError;
     }
 
-    tx_gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+    tx_gid = common::CreateGID(security::Security::Instance()->str_pubkey());
     ClientProto::CreateTransactionWithAttr(
             uni_dht->local_node(),
             tx_gid,

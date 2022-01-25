@@ -5,7 +5,7 @@
 
 #include "security/crypto_utils.h"
 #include "security/sha256.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/security_string_trans.h"
 
 namespace tenon {

@@ -17,7 +17,7 @@
 #include "security/public_key.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/ecdh_create_key.h"
 #include "transport/udp/udp_transport.h"
 #include "transport/multi_thread.h"
@@ -66,7 +66,7 @@ public:
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        security::Security::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);
@@ -92,7 +92,7 @@ public:
             common::GlobalInfo::Instance()->config_local_port(),
             common::GlobalInfo::Instance()->config_local_ip(),
             common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             common::GlobalInfo::Instance()->node_tag());
         local_node->first_node = true;
         transport::TransportPtr transport;

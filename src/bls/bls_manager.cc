@@ -15,7 +15,7 @@
 #include "init/init_utils.h"
 #include "network/route.h"
 #include "security/crypto.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/secp256k1.h"
 
 namespace tenon {
@@ -93,7 +93,7 @@ libff::alt_bn128_Fr BlsManager::GetSeckFromDb(uint64_t elect_height, uint32_t ne
         }
     } else {
         if (security::Crypto::Instance()->GetDecryptData(
-                security::Schnorr::Instance()->str_prikey(),
+                security::Security::Instance()->str_prikey(),
                 val,
                 &dec_data) != security::kSecuritySuccess) {
             return libff::alt_bn128_Fr::zero();
@@ -251,7 +251,7 @@ bool BlsManager::IsSignValid(
 //         << ", id: " << common::Encode::HexEncode(security::Secp256k1::Instance()->ToAddressWithPublicKey(pk_str)) << std::endl;
 
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
+    if (!security::Security::Instance()->Verify(*content_to_hash, sign, pubkey)) {
         return false;
     }
 

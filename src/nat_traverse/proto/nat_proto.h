@@ -2,7 +2,7 @@
 
 #include "common/utils.h"
 #include "common/global_info.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_utils.h"
@@ -34,7 +34,7 @@ public:
         detection_req->set_local_ip(local_node->local_ip());
         detection_req->set_local_port(local_node->local_port);
         detection_req->set_id(local_node->id());
-        detection_req->set_public_key(security::Schnorr::Instance()->str_pubkey());
+        detection_req->set_public_key(security::Security::Instance()->str_pubkey());
         detection_req->set_nat_type(local_node->nat_type);
         detection_req->set_dht_key(local_node->dht_key());
         detection_req->set_client(local_node->client_mode);

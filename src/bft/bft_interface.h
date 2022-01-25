@@ -18,7 +18,7 @@
 #include "election/member_manager.h"
 #include "security/signature.h"
 #include "security/commit_secret.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/commit_point.h"
 #include "security/challenge.h"
 #include "security/multi_sign.h"

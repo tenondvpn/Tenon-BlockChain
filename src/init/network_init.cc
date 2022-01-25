@@ -82,7 +82,7 @@ int NetworkInit::Init(int argc, char** argv) {
         return kInitError;
     }
 
-    if (security::Schnorr::Instance()->str_pubkey().empty()) {
+    if (security::Security::Instance()->str_pubkey().empty()) {
         INIT_ERROR("create security public key failed, empty!");
         return kInitError;
     }
@@ -707,17 +707,17 @@ int NetworkInit::SetPriAndPubKey(const std::string&) {
         }
     }
 
-    security::Schnorr::Instance()->set_prikey(prikey_ptr);
+    security::Security::Instance()->set_prikey(prikey_ptr);
     std::string account_id = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey);
     std::string account_id_with_pubkey = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey());
+        security::Security::Instance()->str_pubkey());
     common::GlobalInfo::Instance()->set_id(account_id);
     conf_.Set("tenon", "prikey", common::Encode::HexEncode(
-        security::Schnorr::Instance()->str_prikey()));
+        security::Security::Instance()->str_prikey()));
     conf_.Set("tenon", "pubkey", common::Encode::HexEncode(
-        security::Schnorr::Instance()->str_pubkey()));
+        security::Security::Instance()->str_pubkey()));
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey_uncompress());
+        security::Security::Instance()->str_pubkey_uncompress());
     common::GlobalInfo::Instance()->set_id(account_address);
     conf_.Set("tenon", "id", common::Encode::HexEncode(
         common::GlobalInfo::Instance()->id()));

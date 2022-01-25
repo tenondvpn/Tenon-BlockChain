@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "security/commit_point.h"
 
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
 
@@ -11,14 +11,14 @@ namespace security {
 
 CommitPoint::CommitPoint()
         : ec_point_(
-          EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+          EC_POINT_new(Security::Instance()->curve().group_.get()),
           EC_POINT_clear_free) {
     assert(ec_point_ != nullptr);
 }
 
 CommitPoint::CommitPoint(CommitSecret& secret)
         : ec_point_(
-          EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+          EC_POINT_new(Security::Instance()->curve().group_.get()),
           EC_POINT_clear_free) {
     assert(ec_point_ != nullptr);
     Set(secret);
@@ -41,7 +41,7 @@ CommitPoint::CommitPoint(const std::string& src) {
 
 CommitPoint::CommitPoint(const CommitPoint& src)
         : ec_point_(
-          EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+          EC_POINT_new(Security::Instance()->curve().group_.get()),
           EC_POINT_clear_free) {
     if (ec_point_ == nullptr) {
         CRYPTO_ERROR("Memory allocation failure");
@@ -64,7 +64,7 @@ void CommitPoint::Set(CommitSecret& secret) {
     }
 
     if (EC_POINT_mul(
-            Schnorr::Instance()->curve().group_.get(),
+            Security::Instance()->curve().group_.get(),
             ec_point_.get(),
             secret.bignum().get(),
             NULL,
@@ -92,7 +92,7 @@ bool CommitPoint::operator==(const CommitPoint& r) const {
 
     return (inited_ && r.inited_ &&
         (EC_POINT_cmp(
-                Schnorr::Instance()->curve().group_.get(),
+                Security::Instance()->curve().group_.get(),
                 ec_point_.get(),
                 r.ec_point_.get(),
                 ctx.get()) == 0));

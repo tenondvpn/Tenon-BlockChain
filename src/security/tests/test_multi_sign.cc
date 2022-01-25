@@ -8,7 +8,7 @@
 #include "openssl/aes.h"
 
 #include "common/random.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/multi_sign.h"
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
@@ -36,7 +36,7 @@ public:
 
 TEST_F(TestMultiSign, TestCurveSetup) {
     std::cout << "test 1" << std::endl;
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     std::cout << "test 2" << std::endl;
 
     std::unique_ptr<BIGNUM, void(*)(BIGNUM*)> a(BN_new(), BN_clear_free);
@@ -95,7 +95,7 @@ TEST_F(TestMultiSign, TestCurveSetup) {
 }
 
 TEST_F(TestMultiSign, TestKeys) {
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
 
     std::unique_ptr<EC_POINT, void(*)(EC_POINT*)> P(EC_POINT_new(
             schnorr.curve().group_.get()),
@@ -122,7 +122,7 @@ TEST_F(TestMultiSign, TestKeys) {
 }
 
 TEST_F(TestMultiSign, TestSignVerif) {
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     PrivateKey prikey;
     PublicKey pubkey;
     schnorr.GenPublicKey(prikey, pubkey);
@@ -144,7 +144,7 @@ TEST_F(TestMultiSign, TestSignVerif) {
 }
 
 TEST_F(TestMultiSign, TestPerformance) {
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     PrivateKey prikey;
     PublicKey pubkey;
     schnorr.GenPublicKey(prikey, pubkey);
@@ -179,7 +179,7 @@ TEST_F(TestMultiSign, TestPerformance) {
 }
 
 TEST_F(TestMultiSign, SchnorrTestSerialization) {
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     PrivateKey prikey;
     PublicKey pubkey;
     schnorr.GenPublicKey(prikey, pubkey);
@@ -252,7 +252,7 @@ TEST_F(TestMultiSign, TestErrorDeserializationSignature) {
 TEST_F(TestMultiSign, TestEcdhCreateKey) {
     PrivateKey prikey;
     PublicKey pubkey(prikey);
-    Schnorr::Instance()->set_prikey(std::make_shared<PrivateKey>(prikey));
+    Security::Instance()->set_prikey(std::make_shared<PrivateKey>(prikey));
     ASSERT_TRUE(EcdhCreateKey::Instance()->Init() == kSecuritySuccess);
     std::string sec_key;
 
@@ -263,7 +263,7 @@ TEST_F(TestMultiSign, TestEcdhCreateKey) {
             peer_pubkey,
             sec_key1) == kSecuritySuccess);
 
-    Schnorr::Instance()->set_prikey(std::make_shared<PrivateKey>(peer_prikey));
+    Security::Instance()->set_prikey(std::make_shared<PrivateKey>(peer_prikey));
     std::string sec_key2;
     ASSERT_TRUE(EcdhCreateKey::Instance()->Init() == kSecuritySuccess);
     EcdhCreateKey::Instance()->CreateKey(pubkey, sec_key2);
@@ -303,7 +303,7 @@ TEST_F(TestMultiSign, TestEcdhCreateKey) {
 
 TEST_F(TestMultiSign, TestMultisign) {
     using namespace std;
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     MultiSign& multisig = *MultiSign::Instance();
 
     const uint32_t nbsigners = 2000;
@@ -378,7 +378,7 @@ TEST_F(TestMultiSign, TestMultisign) {
 }
 
 TEST_F(TestMultiSign, TestSerialization) {
-    Schnorr& schnorr = *Schnorr::Instance();
+    Security& schnorr = *Security::Instance();
     MultiSign& multisig = *MultiSign::Instance();
 
     const uint32_t nbsigners = 80;

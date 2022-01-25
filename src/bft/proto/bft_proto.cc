@@ -9,7 +9,7 @@
 #include "dht/dht_key.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto.h"
 #include "transport/transport_utils.h"
 
@@ -66,10 +66,10 @@ void BftProto::LeaderCreatePrepare(
         std::to_string(bft_msg.bft_step()) + "_" +
         bft_ptr->prepare_hash());
     security::Signature leader_sig;
-    if (!security::Schnorr::Instance()->Sign(
+    if (!security::Security::Instance()->Sign(
             msg_to_hash,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
+            *(security::Security::Instance()->prikey()),
+            *(security::Security::Instance()->pubkey()),
             leader_sig)) {
         BFT_ERROR("leader signature error.");
         return;
@@ -170,10 +170,10 @@ void BftProto::LeaderCreatePreCommit(
         auto& bls_precommit_sign = bft_ptr->bls_precommit_agg_sign();
         bft_msg.set_bls_sign_x(libBLS::ThresholdUtils::fieldElementToString(bls_precommit_sign->X));
         bft_msg.set_bls_sign_y(libBLS::ThresholdUtils::fieldElementToString(bls_precommit_sign->Y));
-        if (!security::Schnorr::Instance()->Sign(
+        if (!security::Security::Instance()->Sign(
                 bft_ptr->precommit_hash(),
-                *(security::Schnorr::Instance()->prikey()),
-                *(security::Schnorr::Instance()->pubkey()),
+                *(security::Security::Instance()->prikey()),
+                *(security::Security::Instance()->pubkey()),
                 leader_sign)) {
             BFT_ERROR("leader pre commit signature failed!");
             return;
@@ -184,10 +184,10 @@ void BftProto::LeaderCreatePreCommit(
             std::to_string(bft_msg.agree()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_ptr->prepare_hash());
-        if (!security::Schnorr::Instance()->Sign(
+        if (!security::Security::Instance()->Sign(
                 msg_to_hash,
-                *(security::Schnorr::Instance()->prikey()),
-                *(security::Schnorr::Instance()->pubkey()),
+                *(security::Security::Instance()->prikey()),
+                *(security::Security::Instance()->pubkey()),
                 leader_sign)) {
             BFT_ERROR("leader pre commit signature failed!");
             return;
@@ -296,10 +296,10 @@ void BftProto::LeaderCreateCommit(
     }
 
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         hash_to_sign,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         BFT_ERROR("signature error.");
@@ -351,10 +351,10 @@ void BftProto::CreateLeaderBroadcastToAccount(
     auto block_hash = GetBlockHash(*block);
     block->set_hash(block_hash);
 //     security::Signature sign;
-//     bool sign_res = security::Schnorr::Instance()->Sign(
+//     bool sign_res = security::Security::Instance()->Sign(
 //         block_hash,
-//         *(security::Schnorr::Instance()->prikey()),
-//         *(security::Schnorr::Instance()->pubkey()),
+//         *(security::Security::Instance()->prikey()),
+//         *(security::Security::Instance()->pubkey()),
 //         sign);
 //     if (!sign_res) {
 //         BFT_ERROR("signature error.");

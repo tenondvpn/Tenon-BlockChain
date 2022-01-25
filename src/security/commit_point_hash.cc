@@ -6,7 +6,7 @@
 #include "security/crypto_utils.h"
 #include "security/sha256.h"
 #include "security/curve.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/security_string_trans.h"
 
 namespace tenon {
@@ -55,7 +55,7 @@ void CommitPointHash::Set(const CommitPoint& point) {
     Sha256 sha2;
     std::string tmp_func_byte((char)kSecondHashFunctionByte, 1);
     sha2.Update(tmp_func_byte);
-    const Curve& curve = Schnorr::Instance()->curve();
+    const Curve& curve = Security::Instance()->curve();
     if (EC_POINT_point2oct(
             curve.group_.get(),
             point.ec_point().get(),

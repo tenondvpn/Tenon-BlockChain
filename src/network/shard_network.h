@@ -14,7 +14,7 @@
 #include "election/elect_node_detail.h"
 #include "security/aes.h"
 #include "security/ecdh_create_key.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 
 namespace tenon {
 
@@ -188,7 +188,7 @@ int ShardNetwork<DhtType>::JoinNewNodeValid(dht::NodePtr& node) {
 
         security::PublicKey pubkey(node->pubkey_str());
         auto sign = security::Signature(node->sign_ch, node->sign_re);
-        if (!security::Schnorr::Instance()->Verify(node->enc_data, sign, pubkey)) {
+        if (!security::Security::Instance()->Verify(node->enc_data, sign, pubkey)) {
             NETWORK_ERROR("verify invalid.");
             return dht::kDhtError;
         }

@@ -14,7 +14,7 @@
 #include "statistics/statistics.h"
 #include "security/secp256k1.h"
 #include "db/db.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/sha256.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_key.h"
@@ -63,7 +63,7 @@ static const uint32_t kBftNeighborCount = 7u;
 //         uint64_t amount,
 //         transport::protobuf::Header& msg) {
 //     if (gid.empty()) {
-//         gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+//         gid = common::CreateGID(security::Security::Instance()->str_pubkey());
 //     }
 // 
 //     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
@@ -91,12 +91,12 @@ static const uint32_t kBftNeighborCount = 7u;
 //     bft_msg.set_leader(false);
 //     bft_msg.set_net_id(des_net_id);
 //     bft_msg.set_node_id(common::GlobalInfo::Instance()->id());
-//     bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+//     bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
 //     bft::protobuf::TxBft tx_bft;
 //     auto new_tx = tx_bft.mutable_new_tx();
 //     new_tx->set_gid(gid);
 //     new_tx->set_from(common::GlobalInfo::Instance()->id());
-//     new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+//     new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
 //     new_tx->set_to(to);
 //     new_tx->set_amount(amount);
 //     auto tx_data = tx_bft.SerializeAsString();
@@ -104,10 +104,10 @@ static const uint32_t kBftNeighborCount = 7u;
 // 
 //     auto hash128 = common::Hash::Hash128(tx_data);
 //     security::Signature sign;
-//     if (!security::Schnorr::Instance()->Sign(
+//     if (!security::Security::Instance()->Sign(
 //             hash128,
-//             *(security::Schnorr::Instance()->prikey()),
-//             *(security::Schnorr::Instance()->pubkey()),
+//             *(security::Security::Instance()->prikey()),
+//             *(security::Security::Instance()->pubkey()),
 //             sign)) {
 //         TRANSPORT_ERROR("leader pre commit signature failed!");
 //         return "";
@@ -125,9 +125,9 @@ static void UseLocalCreateTxRequest(
         const nlohmann::json& data,
         std::string& account_address,
         transport::protobuf::Header& msg) {
-    auto prikey = *security::Schnorr::Instance()->prikey();
-    auto pubkey = *security::Schnorr::Instance()->pubkey();
-    std::string str_pubkey = security::Schnorr::Instance()->str_pubkey();
+    auto prikey = *security::Security::Instance()->prikey();
+    auto pubkey = *security::Security::Instance()->pubkey();
+    std::string str_pubkey = security::Security::Instance()->str_pubkey();
     auto gid = common::Encode::HexDecode(data["gid"].get<std::string>());
     auto to = common::Encode::HexDecode(data["to"].get<std::string>());
     auto uni_dht = std::dynamic_pointer_cast<network::Universal>(
@@ -171,7 +171,7 @@ static void UseLocalCreateTxRequest(
         data["amount"].get<uint64_t>());
     auto hash128 = common::Hash::Hash128(tx_data);
     security::Signature sign;
-    if (!security::Schnorr::Instance()->Sign(
+    if (!security::Security::Instance()->Sign(
             hash128,
             prikey,
             pubkey,
@@ -259,7 +259,7 @@ static void CreateTxRequest(
     bft_msg.set_data(tx_data);
     auto hash128 = common::Hash::Hash128(tx_data);
     security::Signature sign;
-    if (!security::Schnorr::Instance()->Sign(
+    if (!security::Security::Instance()->Sign(
             hash128,
             prikey,
             pubkey,

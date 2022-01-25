@@ -85,12 +85,12 @@ static std::string CreateAdRewardRequest(
     bft_msg.set_bft_step(bft::kBftInit);
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
     new_tx->set_from(common::GlobalInfo::Instance()->id());
-    new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+    new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
     new_tx->set_to(to);
     new_tx->set_amount(amount);
     auto tx_data = tx_bft.SerializeAsString();
@@ -98,10 +98,10 @@ static std::string CreateAdRewardRequest(
 
     auto hash128 = common::Hash::Hash128(tx_data);
     security::Signature sign;
-    if (!security::Schnorr::Instance()->Sign(
+    if (!security::Security::Instance()->Sign(
             hash128,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
+            *(security::Security::Instance()->prikey()),
+            *(security::Security::Instance()->pubkey()),
             sign)) {
         TRANSPORT_ERROR("leader pre commit signature failed!");
         return "";

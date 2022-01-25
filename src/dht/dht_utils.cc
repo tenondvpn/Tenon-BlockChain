@@ -6,7 +6,7 @@
 #include "security/crypto_utils.h"
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 
 namespace tenon {
 
@@ -45,10 +45,10 @@ int DefaultDhtSignCallback(
     *enc_data = std::string(tmp_out_enc, data_size);
     free(tmp_out_enc);
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         *enc_data,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         return dht::kDhtError;

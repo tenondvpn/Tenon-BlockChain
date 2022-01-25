@@ -2,7 +2,7 @@
 #include "security/security_string_trans.h"
 
 #include "common/encode.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto_utils.h"
 
 namespace tenon {
@@ -61,7 +61,7 @@ std::shared_ptr<EC_POINT> SecurityStringTrans::StringToEcPoint(const std::string
 
     auto ret = std::shared_ptr<EC_POINT>(
         EC_POINT_bn2point(
-                Schnorr::Instance()->curve().group_.get(),
+                Security::Instance()->curve().group_.get(),
                 bnvalue.get(),
                 NULL,
                 ctx.get()),
@@ -85,7 +85,7 @@ void SecurityStringTrans::EcPointToString(
         auto tag = compress ? POINT_CONVERSION_COMPRESSED : POINT_CONVERSION_UNCOMPRESSED;
         bnvalue.reset(
             EC_POINT_point2bn(
-                    Schnorr::Instance()->curve().group_.get(),
+                    Security::Instance()->curve().group_.get(),
                     value.get(),
                     tag,
                     NULL,

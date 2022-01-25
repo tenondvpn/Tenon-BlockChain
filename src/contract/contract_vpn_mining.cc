@@ -57,7 +57,7 @@ static void CreateTransaction(
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey_uncompress());
+        security::Security::Instance()->str_pubkey_uncompress());
     uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
     dht::DhtKeyManager dht_key(des_net_id, 0);
     msg.set_des_dht_key(dht_key.StrKey());
@@ -71,14 +71,14 @@ static void CreateTransaction(
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid(gid);
     bft_msg.set_bft_step(bft::kBftInit);
-    bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
     new_tx->set_from(account_address);
-    new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+    new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
     new_tx->set_type(common::kConsensusVpnMiningPayToNode);
     new_tx->set_to(to);
     new_tx->set_amount(amount);
@@ -89,9 +89,9 @@ static void CreateTransaction(
     bft_msg.set_data(data);
     auto hash128 = common::Hash::Hash128(data);
     security::Signature sign;
-    auto& prikey = *security::Schnorr::Instance()->prikey();
-    auto& pubkey = *security::Schnorr::Instance()->pubkey();
-    if (!security::Schnorr::Instance()->Sign(
+    auto& prikey = *security::Security::Instance()->prikey();
+    auto& pubkey = *security::Security::Instance()->pubkey();
+    if (!security::Security::Instance()->Sign(
             hash128,
             prikey,
             pubkey,

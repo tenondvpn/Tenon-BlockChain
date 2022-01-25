@@ -14,7 +14,7 @@
 #include "election/elect_utils.h"
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "transport/transport_utils.h"
 
 namespace tenon {
@@ -44,10 +44,10 @@ void ElectProto::CreateLeaderRotation(
     std::string hash_str = leader_id + std::to_string(pool_mod_num);
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         message_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         ELECT_ERROR("signature error.");
@@ -59,7 +59,7 @@ void ElectProto::CreateLeaderRotation(
     sign.Serialize(sign_challenge_str, sign_response_str);
     ec_msg.set_sign_ch(sign_challenge_str);
     ec_msg.set_sign_res(sign_response_str);
-    ec_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    ec_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());
@@ -91,10 +91,10 @@ void ElectProto::CreateElectWaitingNodes(
     waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         message_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         ELECT_ERROR("signature error.");
@@ -106,7 +106,7 @@ void ElectProto::CreateElectWaitingNodes(
     sign.Serialize(sign_challenge_str, sign_response_str);
     ec_msg.set_sign_ch(sign_challenge_str);
     ec_msg.set_sign_res(sign_response_str);
-    ec_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    ec_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());
@@ -139,10 +139,10 @@ void ElectProto::CreateWaitingHeartbeat(
         ec_msg.waiting_heartbeat().network_id(),
         ec_msg.waiting_heartbeat().timestamp_sec());
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         message_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         ELECT_ERROR("signature error.");
@@ -154,7 +154,7 @@ void ElectProto::CreateWaitingHeartbeat(
     sign.Serialize(sign_challenge_str, sign_response_str);
     ec_msg.set_sign_ch(sign_challenge_str);
     ec_msg.set_sign_res(sign_response_str);
-    ec_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    ec_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(ec_msg.SerializeAsString());

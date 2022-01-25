@@ -5,7 +5,7 @@
 
 #include "security/crypto_utils.h"
 #include "security/curve.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/security_string_trans.h"
 
 namespace tenon {
@@ -16,7 +16,7 @@ CommitSecret::CommitSecret() : bignum_(BN_new(), BN_clear_free) {
     assert(bignum_ != nullptr);
     bool err = false;
     do {
-        const Curve& curve = Schnorr::Instance()->curve();
+        const Curve& curve = Security::Instance()->curve();
         err = (BN_rand_range(bignum_.get(), curve.order_.get()) == 0);
         if (err) {
             CRYPTO_ERROR("Value to commit rand failed");

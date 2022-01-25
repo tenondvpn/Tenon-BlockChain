@@ -337,8 +337,8 @@ void VssManager::HandleFirstPeriodHash(const protobuf::VssMessage& vss_msg) {
     auto message_hash = common::Hash::keccak256(hash_str);
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        VSS_ERROR("security::Schnorr::Instance()->Verify failed");
+    if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Security::Instance()->Verify failed");
         return;
     }
 
@@ -369,8 +369,8 @@ void VssManager::HandleSecondPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto message_hash = common::Hash::keccak256(hash_str);
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        VSS_ERROR("security::Schnorr::Instance()->Verify failed!");
+    if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Security::Instance()->Verify failed!");
         return;
     }
 
@@ -430,8 +430,8 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
     auto message_hash = common::Hash::keccak256(hash_str);
     auto pubkey = security::PublicKey(vss_msg.pubkey());
     auto sign = security::Signature(vss_msg.sign_ch(), vss_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
-        VSS_ERROR("security::Schnorr::Instance()->Verify error.");
+    if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
+        VSS_ERROR("security::Security::Instance()->Verify error.");
         return;
     }
 

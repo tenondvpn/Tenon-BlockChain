@@ -183,7 +183,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
 //     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
 //     std::string str_pubkey;
 //     leader_mem_ptr_->pubkey.Serialize(str_pubkey);
-//     if (!security::Schnorr::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
+//     if (!security::Security::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
 //         BFT_ERROR("leader signature verify failed!");
 //         return false;
 //     }

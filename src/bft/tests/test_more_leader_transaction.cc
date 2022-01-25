@@ -639,12 +639,12 @@ public:
             auto hash128 = GetTxMessageHash(*new_tx);
             auto tx_data = tx_bft.SerializeAsString();
             bft_msg.set_data(tx_data);
-            bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+            bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
             security::Signature sign;
-            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+            ASSERT_TRUE(security::Security::Instance()->Sign(
                 hash128,
-                *(security::Schnorr::Instance()->prikey()),
-                *(security::Schnorr::Instance()->pubkey()),
+                *(security::Security::Instance()->prikey()),
+                *(security::Security::Instance()->pubkey()),
                 sign));
             std::string sign_challenge_str;
             std::string sign_response_str;
@@ -710,7 +710,7 @@ public:
             auto tx_data = tx_bft.SerializeAsString();
             bft_msg.set_data(tx_data);
             security::Signature sign;
-            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+            ASSERT_TRUE(security::Security::Instance()->Sign(
                 hash128,
                 from_private_key,
                 from_pubkey,
@@ -811,7 +811,7 @@ public:
         auto tx_data = tx_bft.SerializeAsString();
         bft_msg.set_data(tx_data);
         security::Signature sign;
-        ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+        ASSERT_TRUE(security::Security::Instance()->Sign(
             block->hash(),
             from_private_key,
             from_pubkey,
@@ -849,7 +849,7 @@ public:
                 waiting_hb_msg->network_id(),
                 waiting_hb_msg->timestamp_sec());
             security::Signature sign;
-            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+            ASSERT_TRUE(security::Security::Instance()->Sign(
                 hash_str,
                 prikey,
                 pubkey,
@@ -887,7 +887,7 @@ public:
             auto message_hash = common::Hash::keccak256(hash_str);
             elect_msg.set_pubkey(str_pubkey);
             security::Signature sign;
-            ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+            ASSERT_TRUE(security::Security::Instance()->Sign(
                 message_hash,
                 prikey,
                 pubkey,
@@ -967,7 +967,7 @@ public:
             common::GlobalInfo::Instance()->config_local_port(),
             common::GlobalInfo::Instance()->config_local_ip(),
             common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             common::GlobalInfo::Instance()->node_tag());
         local_node->first_node = true;
         transport::TransportPtr transport;
@@ -1022,7 +1022,7 @@ public:
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        security::Security::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);
@@ -3034,7 +3034,7 @@ TEST_F(TestMoreLeaderTransaction, InitBft) {
     auto tx_data = tx_bft.SerializeAsString();
     bft_msg.set_data(tx_data);
     security::Signature sign;
-    ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+    ASSERT_TRUE(security::Security::Instance()->Sign(
         hash128,
         private_key,
         pubkey,

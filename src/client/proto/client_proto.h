@@ -2,7 +2,7 @@
 
 #include "common/global_info.h"
 #include "common/user_property_key_define.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/secp256k1.h"
 #include "transport/proto/transport.pb.h"
 #include "transport/transport_utils.h"
@@ -35,7 +35,7 @@ public:
         msg.set_hop_count(0);
         service::protobuf::ServiceMessage svr_msg;
         auto vpn_req = svr_msg.mutable_vpn_req();
-        vpn_req->set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        vpn_req->set_pubkey(security::Security::Instance()->str_pubkey());
         vpn_req->set_method("aes-128-cfb");
         msg.set_data(svr_msg.SerializeAsString());
     }
@@ -66,12 +66,12 @@ public:
         bft_msg.set_bft_step(kBftInit);
         bft_msg.set_leader(false);
         bft_msg.set_net_id(common::GlobalInfo::Instance()->consensus_shard_net_id());
-        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
         new_tx->set_from(common::GlobalInfo::Instance()->id());
-        new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+        new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
         new_tx->set_to(to);
         new_tx->set_amount(amount);
         new_tx->set_type(type);
@@ -85,9 +85,9 @@ public:
         bft_msg.set_data(data);
         auto hash128 = bft::GetTxMessageHash(*new_tx);// common::Hash::Hash128(data);
         security::Signature sign;
-        auto& prikey = *security::Schnorr::Instance()->prikey();
-        auto& pubkey = *security::Schnorr::Instance()->pubkey();
-        if (!security::Schnorr::Instance()->Sign(
+        auto& prikey = *security::Security::Instance()->prikey();
+        auto& pubkey = *security::Security::Instance()->pubkey();
+        if (!security::Security::Instance()->Sign(
                 hash128,
                 prikey,
                 pubkey,
@@ -111,7 +111,7 @@ public:
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            security::Schnorr::Instance()->str_pubkey_uncompress());
+            security::Security::Instance()->str_pubkey_uncompress());
         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
         dht::DhtKeyManager dht_key(des_net_id, 0);
         msg.set_des_dht_key(dht_key.StrKey());
@@ -125,14 +125,14 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
-        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
         new_tx->set_from(account_address);
-        new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+        new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
         new_tx->set_type(common::kConsensusLogin);
         auto server_attr = new_tx->add_attr();
         server_attr->set_key(common::kVpnLoginAttrKey);
@@ -142,9 +142,9 @@ public:
         auto hash128 = common::Hash::Hash128(data);
 
         security::Signature sign;
-        auto& prikey = *security::Schnorr::Instance()->prikey();
-        auto& pubkey = *security::Schnorr::Instance()->pubkey();
-        if (!security::Schnorr::Instance()->Sign(
+        auto& prikey = *security::Security::Instance()->prikey();
+        auto& pubkey = *security::Security::Instance()->pubkey();
+        if (!security::Security::Instance()->Sign(
                 hash128,
                 prikey,
                 pubkey,
@@ -171,7 +171,7 @@ public:
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            security::Schnorr::Instance()->str_pubkey_uncompress());
+            security::Security::Instance()->str_pubkey_uncompress());
         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
         dht::DhtKeyManager dht_key(des_net_id, 0);
         msg.set_des_dht_key(dht_key.StrKey());
@@ -185,14 +185,14 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
-        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
         new_tx->set_from(account_address);
-        new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+        new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
         new_tx->set_type(type);
         new_tx->set_to(to);
         new_tx->set_amount(amount);
@@ -207,9 +207,9 @@ public:
         auto hash128 = common::Hash::Hash128(data);
 
         security::Signature sign;
-        auto& prikey = *security::Schnorr::Instance()->prikey();
-        auto& pubkey = *security::Schnorr::Instance()->pubkey();
-        if (!security::Schnorr::Instance()->Sign(
+        auto& prikey = *security::Security::Instance()->prikey();
+        auto& pubkey = *security::Security::Instance()->pubkey();
+        if (!security::Security::Instance()->Sign(
                 hash128,
                 prikey,
                 pubkey,
@@ -234,7 +234,7 @@ public:
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            security::Schnorr::Instance()->str_pubkey_uncompress());
+            security::Security::Instance()->str_pubkey_uncompress());
         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
         dht::DhtKeyManager dht_key(des_net_id, 0);
         msg.set_des_dht_key(dht_key.StrKey());
@@ -248,14 +248,14 @@ public:
         bft::protobuf::BftMessage bft_msg;
         bft_msg.set_gid(gid);
         bft_msg.set_bft_step(kBftInit);
-        bft_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
         bft_msg.set_leader(false);
         bft_msg.set_net_id(des_net_id);
         bft::protobuf::TxBft tx_bft;
         auto new_tx = tx_bft.mutable_new_tx();
         new_tx->set_gid(gid);
         new_tx->set_from(account_address);
-        new_tx->set_from_pubkey(security::Schnorr::Instance()->str_pubkey());
+        new_tx->set_from_pubkey(security::Security::Instance()->str_pubkey());
         new_tx->set_type(common::kConsensusKeyValue);
 		auto down_attr = new_tx->add_attr();
 		down_attr->set_key("tenon_vpn_url");
@@ -264,9 +264,9 @@ public:
         bft_msg.set_data(data);
         auto hash128 = common::Hash::Hash128(data);
         security::Signature sign;
-        auto& prikey = *security::Schnorr::Instance()->prikey();
-        auto& pubkey = *security::Schnorr::Instance()->pubkey();
-        if (!security::Schnorr::Instance()->Sign(
+        auto& prikey = *security::Security::Instance()->prikey();
+        auto& pubkey = *security::Security::Instance()->pubkey();
+        if (!security::Security::Instance()->Sign(
                 hash128,
                 prikey,
                 pubkey,
@@ -291,7 +291,7 @@ public:
             transport::protobuf::Header& msg) {
         msg.set_src_dht_key(local_node->dht_key());
         std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            security::Schnorr::Instance()->str_pubkey_uncompress());
+            security::Security::Instance()->str_pubkey_uncompress());
         uint32_t des_net_id = common::GlobalInfo::Instance()->network_id();
         dht::DhtKeyManager dht_key(
                 des_net_id,
@@ -370,13 +370,13 @@ public:
         msg.set_hop_count(0);
         service::protobuf::ServiceMessage svr_msg;
         auto vpn_req = svr_msg.mutable_vpn_req();
-        vpn_req->set_pubkey(security::Schnorr::Instance()->str_pubkey());
+        vpn_req->set_pubkey(security::Security::Instance()->str_pubkey());
 
-        auto hash128 = common::Hash::Hash128(security::Schnorr::Instance()->str_pubkey());
+        auto hash128 = common::Hash::Hash128(security::Security::Instance()->str_pubkey());
         security::Signature sign;
-        auto& prikey = *security::Schnorr::Instance()->prikey();
-        auto& pubkey = *security::Schnorr::Instance()->pubkey();
-        if (!security::Schnorr::Instance()->Sign(
+        auto& prikey = *security::Security::Instance()->prikey();
+        auto& pubkey = *security::Security::Instance()->pubkey();
+        if (!security::Security::Instance()->Sign(
                 hash128,
                 prikey,
                 pubkey,

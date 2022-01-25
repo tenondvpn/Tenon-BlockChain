@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "dht/proto/dht_proto.h"
 
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "ip/ip_with_country.h"
 #include "dht/dht_key.h"
 
@@ -29,7 +29,7 @@ void DhtProto::CreateBootstrapRequest(
     msg.set_type(common::kDhtMessage);
     msg.set_client(local_node->client_mode);
     msg.set_hop_count(0);
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
 
     dht::protobuf::DhtMessage dht_msg;
@@ -102,7 +102,7 @@ void DhtProto::CreateBootstrapResponse(
         msg.set_client_dht_key(header.client_dht_key());
         msg.set_client_handled(true);
     }
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
     dht::protobuf::DhtMessage res_dht_msg;
     auto* bootstrap_res = res_dht_msg.mutable_bootstrap_res();
@@ -164,7 +164,7 @@ void DhtProto::CreateRefreshNeighborsRequest(
     msg.set_type(common::kDhtMessage);
     msg.set_client(local_node->client_mode);
     msg.set_hop_count(0);
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
 
     dht::protobuf::DhtMessage dht_msg;
@@ -234,7 +234,7 @@ void DhtProto::CreateRefreshNeighborsResponse(
         msg.set_client_handled(true);
     }
     msg.set_hop_count(0);
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
 
     dht::protobuf::DhtMessage dht_msg;
@@ -342,7 +342,7 @@ int32_t DhtProto::CreateConnectRequest(
     msg.set_client(local_node->client_mode);
     msg.set_hop_count(0);
     msg.set_des_dht_key_hash(des_node->dht_key_hash);
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
 
     dht::protobuf::DhtMessage dht_msg;

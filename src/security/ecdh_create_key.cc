@@ -5,7 +5,7 @@
 #include <openssl/ecdh.h>
 #include <openssl/evp.h>
 
-#include "security/schnorr.h"
+#include "security/security.h"
 
 namespace tenon {
 
@@ -17,7 +17,7 @@ EcdhCreateKey* EcdhCreateKey::Instance() {
 }
 
 int EcdhCreateKey::Init() {
-    const Curve& curve = Schnorr::Instance()->curve();
+    const Curve& curve = Security::Instance()->curve();
     ec_key_ = EC_KEY_new();
     if (ec_key_ == NULL) {
         CRYPTO_ERROR("create ec ec_key_ failed!");
@@ -29,13 +29,13 @@ int EcdhCreateKey::Init() {
         return kSecurityError;
     }
 
-    auto prikey = Schnorr::Instance()->prikey()->bignum().get();
+    auto prikey = Security::Instance()->prikey()->bignum().get();
     if (EC_KEY_set_private_key(ec_key_, prikey) != 1) {
         CRYPTO_ERROR("ec_key_ set private ec_key_ failed!");
         return kSecurityError;
     }
 
-    auto pubkey = Schnorr::Instance()->pubkey()->ec_point().get();
+    auto pubkey = Security::Instance()->pubkey()->ec_point().get();
     if (EC_KEY_set_public_key(ec_key_, pubkey) != 1) {
         CRYPTO_ERROR("ec_key_ set public ec_key_ failed!");
         return kSecurityError;

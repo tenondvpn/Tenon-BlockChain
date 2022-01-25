@@ -11,7 +11,7 @@
 #include "election/elect_manager.h"
 #include "vss/vss_manager.h"
 #include "security/secp256k1.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/private_key.h"
 #include "security/public_key.h"
 #include "network/network_utils.h"

@@ -5,7 +5,7 @@
 #include "common/encode.h"
 #include "common/hash.h"
 #include "ip/ip_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "transport/transport_utils.h"
 #include "dht/dht_key.h"
 #include "network/proto/network.pb.h"
@@ -32,7 +32,7 @@ void NetworkProto::CreateGetNetworkNodesRequest(
     msg.set_type(common::kNetworkMessage);
     msg.set_client(local_node->client_mode);
     msg.set_hop_count(0);
-    msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    msg.set_pubkey(security::Security::Instance()->str_pubkey());
     // TODO(tt): add sign
 
     network::protobuf::NetworkMessage net_msg;

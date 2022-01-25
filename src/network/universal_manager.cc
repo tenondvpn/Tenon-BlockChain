@@ -8,7 +8,7 @@
 #include "common/country_code.h"
 #include "common/time_utils.h"
 #include "ip/ip_with_country.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "dht/dht_key.h"
 #include "init/update_vpn_init.h"
 #include "network/network_utils.h"
@@ -119,7 +119,7 @@ int UniversalManager::CreateNetwork(
         common::GlobalInfo::Instance()->config_local_port(),
         common::GlobalInfo::Instance()->config_local_ip(),
         common::GlobalInfo::Instance()->config_local_port(),
-        security::Schnorr::Instance()->str_pubkey(),
+        security::Security::Instance()->str_pubkey(),
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     if (local_node->first_node) {

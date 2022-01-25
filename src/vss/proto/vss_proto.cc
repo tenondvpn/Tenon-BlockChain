@@ -4,7 +4,7 @@
 #include "dht/dht_key.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/ecdh_create_key.h"
 #include "security/crypto.h"
 #include "transport/transport_utils.h"
@@ -40,10 +40,10 @@ void VssProto::CreateHashMessage(
         common::GlobalInfo::Instance()->id();
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         message_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         VSS_ERROR("signature error.");
@@ -55,7 +55,7 @@ void VssProto::CreateHashMessage(
     sign.Serialize(sign_challenge_str, sign_response_str);
     vss_msg.set_sign_ch(sign_challenge_str);
     vss_msg.set_sign_res(sign_response_str);
-    vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    vss_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(vss_msg.SerializeAsString());
@@ -87,10 +87,10 @@ void VssProto::CreateRandomMessage(
         common::GlobalInfo::Instance()->id();
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;
-    bool sign_res = security::Schnorr::Instance()->Sign(
+    bool sign_res = security::Security::Instance()->Sign(
         message_hash,
-        *(security::Schnorr::Instance()->prikey()),
-        *(security::Schnorr::Instance()->pubkey()),
+        *(security::Security::Instance()->prikey()),
+        *(security::Security::Instance()->pubkey()),
         sign);
     if (!sign_res) {
         VSS_ERROR("signature error.");
@@ -102,7 +102,7 @@ void VssProto::CreateRandomMessage(
     sign.Serialize(sign_challenge_str, sign_response_str);
     vss_msg.set_sign_ch(sign_challenge_str);
     vss_msg.set_sign_res(sign_response_str);
-    vss_msg.set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    vss_msg.set_pubkey(security::Security::Instance()->str_pubkey());
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     msg.set_data(vss_msg.SerializeAsString());

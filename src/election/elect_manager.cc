@@ -140,7 +140,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
             auto message_hash = common::Hash::keccak256(hash_str);
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
-            if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+            if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
                 ELECT_ERROR("leader rotation verify signature error.");
                 return;
             }
@@ -164,7 +164,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
             auto message_hash = common::Hash::keccak256(hash_str);
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
-            if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+            if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
                 return;
             }
 
@@ -199,7 +199,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
                     ec_msg.waiting_heartbeat().timestamp_sec());
                 auto pubkey = security::PublicKey(ec_msg.pubkey());
                 auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
-                if (!security::Schnorr::Instance()->Verify(message_hash, sign, pubkey)) {
+                if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
                     ELECT_ERROR("verify signature failed!");
                     return;
                 }

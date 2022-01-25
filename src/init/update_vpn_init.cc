@@ -27,7 +27,7 @@
 #ifdef _WIN32
 #define MAKE_CLIENT_LIB
 #endif
-#include "security/schnorr.h"
+#include "security/security.h"
 
 
 namespace tenon {
@@ -589,7 +589,7 @@ void UpdateVpnInit::CreateVlanRleayNodes(dht::protobuf::InitMessage& init_msg) {
     new_node->set_max_route_port(common::GlobalInfo::Instance()->max_route_port());
     new_node->set_min_udp_port(common::GlobalInfo::Instance()->min_udp_port());
     new_node->set_max_udp_port(common::GlobalInfo::Instance()->max_udp_port());
-    new_node->set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    new_node->set_pubkey(security::Security::Instance()->str_pubkey());
     new_node->set_node_tag(common::GlobalInfo::Instance()->node_tag());
     if (dht->local_node()->dht_key().size() == dht::kDhtKeySize) {
         new_node->set_dhkey(dht->local_node()->dht_key());

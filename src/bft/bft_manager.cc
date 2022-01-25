@@ -24,7 +24,7 @@
 #include "network/dht_manager.h"
 #include "network/route.h"
 #include "network/universal_manager.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/secp256k1.h"
 #include "security/crypto.h"
 #include "sync/key_value_sync.h"
@@ -229,7 +229,7 @@ void BftManager::BackupHandleBftOppose(
         std::to_string(bft_msg.bft_step()) + "_" +
         bft_msg.prepare_hash());
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    if (!security::Schnorr::Instance()->Verify(
+    if (!security::Security::Instance()->Verify(
             msg_to_hash,
             sign,
             bft_ptr->leader_mem_ptr()->pubkey)) {
@@ -270,7 +270,7 @@ void BftManager::LeaderHandleBftOppose(
         std::to_string(bft_msg.bft_step()) + "_" +
         bft_ptr->prepare_hash());
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    if (!security::Schnorr::Instance()->Verify(msg_to_hash, sign, member_ptr->pubkey)) {
+    if (!security::Security::Instance()->Verify(msg_to_hash, sign, member_ptr->pubkey)) {
         BFT_ERROR("check signature error!");
         return;
     }
@@ -326,10 +326,10 @@ void BftManager::BackupSendOppose(
         std::to_string(bft_msg.agree()) + "_" +
         std::to_string(bft_msg.bft_step()) + "_" +
         from_bft_msg.prepare_hash());
-    if (!security::Schnorr::Instance()->Sign(
+    if (!security::Security::Instance()->Sign(
             msg_to_hash,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
+            *(security::Security::Instance()->prikey()),
+            *(security::Security::Instance()->pubkey()),
             sign)) {
         BFT_ERROR("leader pre commit signature failed!");
         return;
@@ -1553,7 +1553,7 @@ int BftManager::VerifySignatureWithBftMessage(
     auto pubkey = security::PublicKey(bft_msg.pubkey());
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     *tx_hash = GetTxMessageHash(tx_bft.new_tx());
-    if (!security::Schnorr::Instance()->Verify(*tx_hash, sign, pubkey)) {
+    if (!security::Security::Instance()->Verify(*tx_hash, sign, pubkey)) {
         BFT_ERROR("check signature error![pubkey: %s][hash: %s][data: %s][challen: %s][res: %s]",
             common::Encode::HexEncode(bft_msg.pubkey()).c_str(),
             common::Encode::HexEncode(*tx_hash).c_str(),
@@ -1577,7 +1577,7 @@ int BftManager::VerifySignature(
     }
 
     sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
-    if (!security::Schnorr::Instance()->Verify(sha128, sign, mem_ptr->pubkey)) {
+    if (!security::Security::Instance()->Verify(sha128, sign, mem_ptr->pubkey)) {
         BFT_ERROR("check signature error!");
         return kBftError;
     }
@@ -1636,7 +1636,7 @@ int BftManager::VerifyLeaderSignature(
         }
     }
 
-    if (!security::Schnorr::Instance()->Verify(
+    if (!security::Security::Instance()->Verify(
             *sign_hash,
             sign,
             mem_ptr->pubkey)) {

@@ -13,7 +13,7 @@
 #include "election/elect_manager.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "network/network_utils.h"
 #include "common/random.h"
 #include "common/time_utils.h"
@@ -135,7 +135,7 @@ public:
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        security::Security::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);

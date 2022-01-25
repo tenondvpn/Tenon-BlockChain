@@ -516,7 +516,7 @@ public:
         auto tx_data = tx_bft.SerializeAsString();
         bft_msg.set_data(tx_data);
         security::Signature sign;
-        ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+        ASSERT_TRUE(security::Security::Instance()->Sign(
             hash128,
             from_private_key,
             from_pubkey,
@@ -615,7 +615,7 @@ public:
         auto tx_data = tx_bft.SerializeAsString();
         bft_msg.set_data(tx_data);
         security::Signature sign;
-        ASSERT_TRUE(security::Schnorr::Instance()->Sign(
+        ASSERT_TRUE(security::Security::Instance()->Sign(
             block->hash(),
             from_private_key,
             from_pubkey,
@@ -684,7 +684,7 @@ public:
             common::GlobalInfo::Instance()->config_local_port(),
             common::GlobalInfo::Instance()->config_local_ip(),
             common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             common::GlobalInfo::Instance()->node_tag());
         local_node->first_node = true;
         transport::TransportPtr transport;
@@ -731,7 +731,7 @@ public:
         std::string pubkey_str;
         ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
         std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-        security::Schnorr::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
+        security::Security::Instance()->set_prikey(std::make_shared<security::PrivateKey>(prikey));
         common::GlobalInfo::Instance()->set_id(id);
         common::GlobalInfo::Instance()->set_consensus_shard_count(1);
         common::GlobalInfo::Instance()->set_network_id(network_id);

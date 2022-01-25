@@ -17,7 +17,7 @@
 #include "network/universal_manager.h"
 #include "dht/dht_key.h"
 #include "dht/base_dht.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "election/elect_dht.h"
 #include "db/db.h"
 
@@ -61,7 +61,7 @@ public:
             common::GlobalInfo::Instance()->config_local_port(),
             common::GlobalInfo::Instance()->config_local_ip(),
             common::GlobalInfo::Instance()->config_local_port(),
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             common::GlobalInfo::Instance()->node_tag());
         local_node->first_node = true;
         transport::TransportPtr transport;

@@ -18,7 +18,7 @@
 #include "common/time_utils.h"
 #include "security/private_key.h"
 #include "security/public_key.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
 #include "security/secp256k1.h"
@@ -262,7 +262,7 @@ void VpnClient::AdReward(const std::string& str) {
     block::protobuf::BlockMessage block_msg;
     auto attr_req = block_msg.mutable_ad_reward_req();
     attr_req->set_id(common::GlobalInfo::Instance()->id());
-    auto gid = common::FixedCreateGID(security::Schnorr::Instance()->str_pubkey() +
+    auto gid = common::FixedCreateGID(security::Security::Instance()->str_pubkey() +
             std::to_string(common::TimeUtils::TimestampSeconds() / 10));
     attr_req->set_gid(gid);
     attr_req->set_reward_key(version);
@@ -635,14 +635,14 @@ std::string VpnClient::Init(
     }
 
     config.Set("tenon", "prikey", common::Encode::HexEncode(
-            security::Schnorr::Instance()->str_prikey()));
+            security::Security::Instance()->str_prikey()));
     config.Set("tenon", "pubkey", common::Encode::HexEncode(
-            security::Schnorr::Instance()->str_pubkey()));
+            security::Security::Instance()->str_pubkey()));
     CLIENT_ERROR("set private key[%s], public key[%s]",
-        common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey()).c_str(),
-        common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey()).c_str());
+        common::Encode::HexEncode(security::Security::Instance()->str_prikey()).c_str(),
+        common::Encode::HexEncode(security::Security::Instance()->str_pubkey()).c_str());
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-            security::Schnorr::Instance()->str_pubkey_uncompress());
+            security::Security::Instance()->str_pubkey_uncompress());
     common::GlobalInfo::Instance()->set_id(account_address);
     config.Set("tenon", "id", common::Encode::HexEncode(
             common::GlobalInfo::Instance()->id()));
@@ -726,7 +726,7 @@ std::string VpnClient::Init(
             "," +
             common::Encode::HexEncode(common::GlobalInfo::Instance()->id()) +
             "," +
-            common::Encode::HexEncode(security::Schnorr::Instance()->str_prikey()) +
+            common::Encode::HexEncode(security::Security::Instance()->str_prikey()) +
             "," + def_conf +
             "," + init::UpdateVpnInit::Instance()->init_vpn_count_info());
 }
@@ -747,11 +747,11 @@ std::string VpnClient::ResetPrivateKey(const std::string& prikey) {
     }
 
     config.Set("tenon", "prikey", common::Encode::HexEncode(
-            security::Schnorr::Instance()->str_prikey()));
+            security::Security::Instance()->str_prikey()));
     config.Set("tenon", "pubkey", common::Encode::HexEncode(
-            security::Schnorr::Instance()->str_pubkey()));
+            security::Security::Instance()->str_pubkey()));
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey_uncompress());
+        security::Security::Instance()->str_pubkey_uncompress());
     common::GlobalInfo::Instance()->set_id(account_address);
     
     {
@@ -777,12 +777,12 @@ std::string VpnClient::ResetPrivateKey(const std::string& prikey) {
     paied_vip_info_[1] = nullptr;
     paied_vip_valid_idx_ = 0;
     check_times_ = 0;
-    return common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey())
+    return common::Encode::HexEncode(security::Security::Instance()->str_pubkey())
             + "," + common::Encode::HexEncode(account_address);
 }
 
 std::string VpnClient::GetPublicKey() {
-    return common::Encode::HexEncode(security::Schnorr::Instance()->str_pubkey());
+    return common::Encode::HexEncode(security::Security::Instance()->str_pubkey());
 }
 
 std::string VpnClient::GetSecretKey(const std::string& peer_pubkey) {
@@ -947,7 +947,7 @@ int VpnClient::SetPriAndPubKey(const std::string& prikey) {
     }
     security::PublicKey pubkey(*(prikey_ptr.get()));
     auto pubkey_ptr = std::make_shared<security::PublicKey>(pubkey);
-    security::Schnorr::Instance()->set_prikey(prikey_ptr);
+    security::Security::Instance()->set_prikey(prikey_ptr);
 
     std::string pubkey_str;
     pubkey.Serialize(pubkey_str, false);
@@ -988,7 +988,7 @@ int VpnClient::CreateClientUniversalNetwork() {
         common::GlobalInfo::Instance()->config_local_port(),
         common::GlobalInfo::Instance()->config_local_ip(),
         common::GlobalInfo::Instance()->config_local_port(),
-        security::Schnorr::Instance()->str_pubkey(),
+        security::Security::Instance()->str_pubkey(),
         common::GlobalInfo::Instance()->node_tag());
     local_node->first_node = common::GlobalInfo::Instance()->config_first_node();
     root_dht_ = std::make_shared<ClientUniversalDht>(udp_transport_, local_node);
@@ -1018,7 +1018,7 @@ std::string VpnClient::PayForVPN(const std::string& to, const std::string& gid, 
     if (uni_dht == nullptr) {
         return "ERROR";
     }
-    auto tx_gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+    auto tx_gid = common::CreateGID(security::Security::Instance()->str_pubkey());
     if (gid.size() == 32 * 2) {
         tx_gid = common::Encode::HexDecode(gid);
     }
@@ -1281,7 +1281,7 @@ int VpnClient::VpnLogin(
         CLIENT_ERROR("VpnLogin error");
         return kClientError;
     }
-    login_gid = common::CreateGID(security::Schnorr::Instance()->str_pubkey());
+    login_gid = common::CreateGID(security::Security::Instance()->str_pubkey());
     uint32_t type = common::kConsensusTransaction;
     ClientProto::CreateVpnLoginRequest(
             uni_dht->local_node(),
@@ -1365,7 +1365,7 @@ void VpnClient::GetAccountHeight() {
     transport::protobuf::Header msg;
     uni_dht->SetFrequently(msg);
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey_uncompress());
+        security::Security::Instance()->str_pubkey_uncompress());
     ClientProto::GetAccountHeight(uni_dht->local_node(), msg, account_address);
     uni_dht->SendToClosestNode(msg);
 }
@@ -1385,7 +1385,7 @@ void VpnClient::GetAccountBlockWithHeight() {
 
     uint32_t sended_req = 0;
     std::string account_address = security::Secp256k1::Instance()->ToAddressWithPublicKey(
-        security::Schnorr::Instance()->str_pubkey_uncompress());
+        security::Security::Instance()->str_pubkey_uncompress());
     for (auto iter = height_set.rbegin(); iter != height_set.rend(); ++iter) {
         auto height = *iter;
         {

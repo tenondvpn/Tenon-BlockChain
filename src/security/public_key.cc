@@ -3,7 +3,7 @@
 #include "security/public_key.h"
 
 #include "common/encode.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
 #include "security/secp256k1.h"
@@ -14,17 +14,17 @@ namespace security {
 
 PublicKey::PublicKey()
         : ec_point_(
-            EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+            EC_POINT_new(Security::Instance()->curve().group_.get()),
             EC_POINT_clear_free) {
     assert(ec_point_ != nullptr);
 }
 
 PublicKey::PublicKey(PrivateKey& privkey)
         : ec_point_(
-            EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+            EC_POINT_new(Security::Instance()->curve().group_.get()),
             EC_POINT_clear_free) {
     assert(ec_point_ != nullptr);
-    const Curve& curve = Schnorr::Instance()->curve();
+    const Curve& curve = Security::Instance()->curve();
     if (BN_is_zero(privkey.bignum().get()) ||
             (BN_cmp(privkey.bignum().get(), curve.order_.get()) != -1)) {
         CRYPTO_ERROR("Input private key is invalid. Public key "
@@ -57,7 +57,7 @@ PublicKey::PublicKey(const std::string& src) {
 
 PublicKey::PublicKey(const PublicKey& src)
         : ec_point_(
-            EC_POINT_new(Schnorr::Instance()->curve().group_.get()),
+            EC_POINT_new(Security::Instance()->curve().group_.get()),
             EC_POINT_clear_free) {
     assert(ec_point_ != nullptr);
     if (EC_POINT_copy(ec_point_.get(), src.ec_point_.get()) != 1) {
@@ -96,7 +96,7 @@ bool PublicKey::operator<(const PublicKey& r) const {
     std::shared_ptr<BIGNUM> lhs_bnvalue;
     lhs_bnvalue.reset(
             EC_POINT_point2bn(
-                    Schnorr::Instance()->curve().group_.get(),
+                    Security::Instance()->curve().group_.get(),
                     ec_point_.get(),
                     POINT_CONVERSION_COMPRESSED,
                     NULL,
@@ -105,7 +105,7 @@ bool PublicKey::operator<(const PublicKey& r) const {
     std::shared_ptr<BIGNUM> rhs_bnvalue;
     rhs_bnvalue.reset(
             EC_POINT_point2bn(
-                    Schnorr::Instance()->curve().group_.get(),
+                    Security::Instance()->curve().group_.get(),
                     r.ec_point_.get(),
                     POINT_CONVERSION_COMPRESSED,
                     NULL,

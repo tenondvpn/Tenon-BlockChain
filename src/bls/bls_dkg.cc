@@ -17,7 +17,7 @@
 #include "json/json.hpp"
 #include "security/signature.h"
 #include "security/crypto_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto.h"
 #include "timeblock/time_block_manager.h"
 #include "vss/vss_manager.h"
@@ -211,7 +211,7 @@ bool BlsDkg::IsSignValid(const protobuf::BlsMessage& bls_msg, std::string* conte
     auto& pubkey = (*members_)[bls_msg.index()]->pubkey;
     assert(pubkey.ec_point() != nullptr);
     auto sign = security::Signature(bls_msg.sign_ch(), bls_msg.sign_res());
-    if (!security::Schnorr::Instance()->Verify(*content_to_hash, sign, pubkey)) {
+    if (!security::Security::Instance()->Verify(*content_to_hash, sign, pubkey)) {
         BLS_INFO("bls create IsSignValid error block elect_height: %lu", elect_hegiht_);
         return false;
     }
@@ -618,7 +618,7 @@ void BlsDkg::DumpLocalPrivateKey() {
     std::string sec_key = libBLS::ThresholdUtils::fieldElementToString(local_sec_key_);
     BLS_DEBUG("DumpLocalPrivateKey sec_key: %s, size: %d", sec_key.c_str(), sec_key.size());
     if (security::Crypto::Instance()->GetEncryptData(
-            security::Schnorr::Instance()->str_prikey(),
+            security::Security::Instance()->str_prikey(),
             sec_key,
             &enc_data) != security::kSecuritySuccess) {
         return;
@@ -859,10 +859,10 @@ void BlsDkg::CreateDkgMessage(
     msg.set_debug("dkg_msg_debug");
     if (!message_hash.empty()) {
         security::Signature sign;
-        bool sign_res = security::Schnorr::Instance()->Sign(
+        bool sign_res = security::Security::Instance()->Sign(
             message_hash,
-            *(security::Schnorr::Instance()->prikey()),
-            *(security::Schnorr::Instance()->pubkey()),
+            *(security::Security::Instance()->prikey()),
+            *(security::Security::Instance()->pubkey()),
             sign);
         if (!sign_res) {
             BLS_ERROR("signature error.");

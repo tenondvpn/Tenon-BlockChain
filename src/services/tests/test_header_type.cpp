@@ -21,7 +21,7 @@ extern "C" {
 #include "common/global_info.h"
 #include "common/header_type.h"
 #include "common/time_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "services/proto/service_proto.h"
 
 namespace tenon {

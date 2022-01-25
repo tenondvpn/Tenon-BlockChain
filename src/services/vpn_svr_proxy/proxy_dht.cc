@@ -4,7 +4,7 @@
 #include "common/global_info.h"
 #include "common/country_code.h"
 #include "security/ecdh_create_key.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/public_key.h"
 #include "network/route.h"
 #include "client/trans_client.h"
@@ -52,7 +52,7 @@ int ProxyDht::CheckSign(const service::protobuf::GetVpnInfoRequest& vpn_req) {
     auto sign = security::Signature(vpn_req.sign_challenge(), vpn_req.sign_response());
     auto sha128 = common::Hash::Hash128(vpn_req.pubkey());
     security::PublicKey pubkey(vpn_req.pubkey());
-    if (!security::Schnorr::Instance()->Verify(sha128, sign, pubkey)) {
+    if (!security::Security::Instance()->Verify(sha128, sign, pubkey)) {
         PROXY_ERROR("check signature error!");
         return kProxyError;
     }
@@ -125,7 +125,7 @@ void ProxyDht::HandleGetSocksRequest(
     }
 
     vpn_res->set_secnum(peer_ptr->sec_num);
-    vpn_res->set_pubkey(security::Schnorr::Instance()->str_pubkey());
+    vpn_res->set_pubkey(security::Security::Instance()->str_pubkey());
     vpn_res->set_country(common::global_code_to_country_map[
             common::GlobalInfo::Instance()->country()]);
     transport::protobuf::Header res_msg;

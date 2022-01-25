@@ -37,9 +37,9 @@ namespace tenon {
 
 namespace security {
 
-class Schnorr {
+class Security {
 public:
-    static Schnorr* Instance();
+    static Security* Instance();
     void GenPublicKey(PrivateKey& prikey, PublicKey& pubkey);
     bool Sign(
             const std::string& message,
@@ -78,8 +78,8 @@ public:
     }
 
 private:
-    Schnorr();
-    ~Schnorr();
+    Security();
+    ~Security();
 
     Curve curve_;
     std::mutex schonorr_mutex_;
@@ -89,7 +89,7 @@ private:
     std::string str_pubkey_;
     std::string str_pubkey_uncompress_;
 
-    DISALLOW_COPY_AND_ASSIGN(Schnorr);
+    DISALLOW_COPY_AND_ASSIGN(Security);
 };
 
 }  // namespace security

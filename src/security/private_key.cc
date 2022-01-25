@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
 
@@ -12,7 +12,7 @@ namespace tenon {
 namespace security {
 
 PrivateKey::PrivateKey() {
-    const Curve& curve = Schnorr::Instance()->curve();
+    const Curve& curve = Security::Instance()->curve();
     do {
         if (BN_rand_range(bignum_.get(), curve.order_.get()) == 0) {
             CRYPTO_ERROR("Private key generation failed");

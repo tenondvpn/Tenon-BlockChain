@@ -7,7 +7,7 @@
 #include "common/encode.h"
 #include "dht/dht_key.h"
 #include "security/crypto_utils.h"
-#include "security/schnorr.h"
+#include "security/security.h"
 #include "network/network_utils.h"
 
 namespace tenon {
@@ -77,14 +77,14 @@ int Bootstrap::Init(common::Config& config) {
             root_dht_key.StrKey(),
             std::string(field_split[1], field_split.SubLen(1)),
             port,
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             ""));
         node_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
             std::string(field_split[0], field_split.SubLen(0)),
             node_dht_key.StrKey(),
             std::string(field_split[1], field_split.SubLen(1)),
             port,
-            security::Schnorr::Instance()->str_pubkey(),
+            security::Security::Instance()->str_pubkey(),
             ""));
         NETWORK_INFO("bootstrap[%s][%d][%s][%s][%s]",
                 field_split[0], field_split.SubLen(0), field_split[1], field_split[2],
