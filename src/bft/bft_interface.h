@@ -27,13 +27,6 @@ namespace tenon {
 
 namespace bft {
 
-struct BackupResponse {
-    uint32_t index;
-    security::Response response;
-    security::CommitSecret secret;
-};
-typedef std::shared_ptr<BackupResponse> BackupResponsePtr;
-
 class BftInterface {
 public:
     virtual int Init();

@@ -350,7 +350,6 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
 
     uint32_t leader_count = 0;
     for (int32_t i = 0; i < in.size(); ++i) {
-        security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
         shard_members_ptr->push_back(std::make_shared<BftMember>(
             prev_elect_block.shard_network_id(),
@@ -490,7 +489,6 @@ void ElectManager::ProcessNewElectBlock(
     auto shard_members_ptr = std::make_shared<Members>();
     uint32_t member_index = 0;
     for (int32_t i = 0; i < in.size(); ++i) {
-        security::CommitSecret secret;
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
         shard_members_ptr->push_back(std::make_shared<BftMember>(
             elect_block.shard_network_id(),
