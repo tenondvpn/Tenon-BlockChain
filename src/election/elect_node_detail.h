@@ -11,8 +11,6 @@
 #include "common/utils.h"
 #include "common/user_property_key_define.h"
 #include "security/public_key.h"
-#include "security/commit_secret.h"
-#include "security/commit_point.h"
 
 namespace tenon {
 
@@ -83,8 +81,6 @@ struct BftMember {
     std::string public_ip;
     uint16_t public_port;
     std::string dht_key;
-    security::CommitSecret secret;
-    security::CommitPoint commit_point;
     int32_t pool_index_mod_num;
     std::string backup_ecdh_key;
     std::string leader_ecdh_key;

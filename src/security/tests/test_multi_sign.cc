@@ -9,7 +9,6 @@
 
 #include "common/random.h"
 #include "security/security.h"
-#include "security/multi_sign.h"
 #include "security/ecdh_create_key.h"
 #include "security/aes.h"
 

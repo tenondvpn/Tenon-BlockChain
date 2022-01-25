@@ -4,8 +4,6 @@
 #include <mutex>
 
 #include "security/public_key.h"
-#include "security/commit_secret.h"
-#include "security/commit_point.h"
 #include "dht/dht_utils.h"
 #include "bft/bft_utils.h"
 #include "election/elect_node_detail.h"
