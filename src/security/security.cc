@@ -103,7 +103,7 @@ Security::Security() {}
 Security::~Security() {}
 
 void Security::GenPublicKey(PrivateKey& prikey, PublicKey& pubkey) {
-    std::lock_guard<std::mutex> guard(schonorr_mutex_);
+    std::lock_guard<std::mutex> guard(sec_mutex_);
     pubkey = PublicKey(prikey);
 }
 

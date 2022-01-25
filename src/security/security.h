@@ -82,7 +82,7 @@ private:
     ~Security();
 
     Curve curve_;
-    std::mutex schonorr_mutex_;
+    std::mutex sec_mutex_;
     std::shared_ptr<PrivateKey> prikey_ptr_{ nullptr };
     std::shared_ptr<PublicKey> pubkey_ptr_{ nullptr };
     std::string str_prikey_;
