@@ -7,6 +7,7 @@
 #include <secp256k1/secp256k1_recovery.h>
 
 #include "common/utils.h"
+#include "security/public_key.h"
 #include "security/signature.h"
 
 namespace tenon {

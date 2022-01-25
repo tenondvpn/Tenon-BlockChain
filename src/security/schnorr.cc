@@ -121,7 +121,7 @@ bool Schnorr::Sign(
         const PrivateKey& privkey,
         const PublicKey& pubkey,
         Signature& result) {
-    security::Secp256k1::Instance()->Secp256k1Sign(
+    return security::Secp256k1::Instance()->Secp256k1Sign(
         message,
         privkey,
         &result.str_sign());
@@ -256,7 +256,7 @@ bool Schnorr::Verify(
         const std::string& message,
         const Signature& toverify,
         const PublicKey& pubkey) {
-    security::Secp256k1::Instance()->Secp256k1Verify(message, pubkey, toverify);
+    return security::Secp256k1::Instance()->Secp256k1Verify(message, pubkey, toverify);
 //     std::lock_guard<std::mutex> guard(schonorr_mutex_);
 //     assert(!message.empty());
 //     try {
@@ -372,10 +372,10 @@ bool Schnorr::Verify(
 //             return false;
 //         }
 //         return (!err) && (BN_cmp(challenge_built.get(), toverify.challenge().get()) == 0);
-    } catch (const std::exception& e) {
-        CRYPTO_ERROR("Error with Schnorr::Verify.[%s]", e.what());
-        return false;
-    }
+//     } catch (const std::exception& e) {
+//         CRYPTO_ERROR("Error with Schnorr::Verify.[%s]", e.what());
+//         return false;
+//     }
 }
 
 }  // namespace security
