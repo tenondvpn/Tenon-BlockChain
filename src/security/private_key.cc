@@ -11,8 +11,7 @@ namespace tenon {
 
 namespace security {
 
-PrivateKey::PrivateKey() : bignum_(BN_new(), BN_clear_free) {
-    assert(bignum_ != nullptr);
+PrivateKey::PrivateKey() {
     const Curve& curve = Schnorr::Instance()->curve();
     do {
         if (BN_rand_range(bignum_.get(), curve.order_.get()) == 0) {
@@ -20,14 +19,14 @@ PrivateKey::PrivateKey() : bignum_(BN_new(), BN_clear_free) {
             break;
         }
     } while (BN_is_zero(bignum_.get()));
-    std::string pri_str;
-    Serialize(pri_str);
+    Serialize(private_key_);
 }
 
 PrivateKey::PrivateKey(const std::string& src)
         : bignum_(BN_new(), BN_clear_free) {
     assert(bignum_ != nullptr);
     bignum_ = SecurityStringTrans::Instance()->StringToBignum(src);
+    private_key_ = src;
 }
 
 PrivateKey::PrivateKey(const PrivateKey& src) : bignum_(BN_new(), BN_clear_free) {
@@ -36,23 +35,26 @@ PrivateKey::PrivateKey(const PrivateKey& src) : bignum_(BN_new(), BN_clear_free)
         CRYPTO_ERROR("copy big num failed!");
         assert(false);
     }
-}
 
-PrivateKey PrivateKey::GetPrivateKeyFromString(const std::string& key) {
-    assert(key.size() == 64);
-    return PrivateKey(key);
+    Serialize(private_key_);
 }
 
 PrivateKey& PrivateKey::operator=(const PrivateKey& src) {
+    if (this == &src) {
+        return *this;
+    }
+
     if (BN_copy(bignum_.get(), src.bignum_.get()) == NULL) {
         CRYPTO_ERROR("copy big num failed!");
         assert(false);
     }
+
+    private_key_ = src.private_key_;
     return *this;
 }
 
 bool PrivateKey::operator==(const PrivateKey& r) const {
-    return BN_cmp(bignum_.get(), r.bignum_.get()) == 0;
+    return private_key_ == r.private_key_;
 }
 
 uint32_t PrivateKey::Serialize(std::string& dst) const {

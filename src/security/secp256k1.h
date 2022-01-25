@@ -7,6 +7,7 @@
 #include <secp256k1/secp256k1_recovery.h>
 
 #include "common/utils.h"
+#include "security/signature.h"
 
 namespace tenon {
 
@@ -23,6 +24,14 @@ public:
         return s_ctx.get();
     }
 
+    bool Secp256k1Sign(
+        const std::string& msg,
+        const PrivateKey& privkey,
+        std::string* sign);
+    bool Secp256k1Verify(
+        const std::string& msg,
+        const PublicKey& pubkey,
+        const Signature& toverify);
     std::string recover(const std::string& sign, const std::string& hash);
     std::string sha3(const std::string& input);
     bool ToPublic(const std::string& prikey, bool compress, std::string* pub_key);

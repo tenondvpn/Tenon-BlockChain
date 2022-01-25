@@ -25,6 +25,36 @@ Secp256k1* Secp256k1::Instance() {
     return &ins;
 }
 
+bool Secp256k1::Secp256k1Sign(const std::string& msg, const PrivateKey& privkey, std::string* sign) {
+    secp256k1_ecdsa_signature sig;
+    secp256k1_ecdsa_sign(
+        getCtx(),
+        &sig,
+        (const uint8_t*)msg.c_str(),
+        (const uint8_t*)privkey.private_key().c_str(),
+        NULL,
+        NULL);
+    uint8_t data[kSignatureSize];
+    secp256k1_ecdsa_signature_serialize_compact(getCtx(), data, &sig);
+    *sign = std::string((char*)data, sizeof(data));
+    return true;
+}
+
+bool Secp256k1::Secp256k1Verify(
+        const std::string& msg,
+        const PublicKey& pubkey,
+        const Signature& toverify) {
+    if (secp256k1_ecdsa_verify(
+            getCtx(),
+            toverify.sig(),
+            (uint8_t*)msg.c_str(),
+            pubkey.pubkey()) != 1) {
+        return false;
+    }
+
+    return true;
+}
+
 std::string Secp256k1::recover(const std::string& sign, const std::string& hash) {
     std::string str_v = sign.substr(0, 32);
     std::string str_sig = sign.substr(32, sign.size() - 32);

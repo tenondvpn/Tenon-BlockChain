@@ -170,6 +170,25 @@ void Command::AddBaseCommands() {
     AddCommand("help", [this](const std::vector<std::string>& args) {
         Help();
     });
+    AddCommand("sig", [this](const std::vector<std::string>& args) {
+        if (args.size() <= 0) {
+            return;
+        }
+
+        std::string msg = common::Encode::HexDecode(args[0]);
+        security::Signature result;
+        security::Schnorr::Instance()->Sign(
+            msg,
+            *security::Schnorr::Instance()->prikey(),
+            *security::Schnorr::Instance()->pubkey(),
+            result);
+        std::string ch;
+        std::string re;
+        result.Serialize(ch, re);
+        security::Signature sig(ch, re);
+        auto veres = security::Schnorr::Instance()->Verify(msg, sig, *security::Schnorr::Instance()->pubkey());
+        std::cout << common::Encode::HexEncode(ch) << ":" << common::Encode::HexEncode(re) << ", ver: " << veres << std::endl;
+    });
     AddCommand("prt", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {
             return;

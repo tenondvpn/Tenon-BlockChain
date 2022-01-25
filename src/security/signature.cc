@@ -5,87 +5,70 @@
 
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
+#include "security/secp256k1.h"
 
 namespace tenon {
 
 namespace security {
 
-Signature::Signature()
-        : challenge_(BN_new(), BN_clear_free),
-          response_(BN_new(), BN_clear_free) {
-    assert(challenge_ != nullptr);
-    assert(response_ != nullptr);
+Signature::Signature() {}
+
+Signature::Signature(const secp256k1_ecdsa_signature& sig) : sig_(sig) {
+    uint8_t data[kSignatureSize];
+    secp256k1_ecdsa_signature_serialize_compact(
+        Secp256k1::Instance()->getCtx(),
+        data,
+        &sig_);
+    str_sign_ = std::string((char*)data, sizeof(data));
+    r_ = str_sign_.substr(0, 32);
+    s_ = str_sign_.substr(32, 32);
 }
 
 Signature::Signature(const std::string& challenge_src, const std::string& response_src) {
-    challenge_ = SecurityStringTrans::Instance()->StringToBignum(challenge_src);
-    response_ = SecurityStringTrans::Instance()->StringToBignum(response_src);
-    assert(challenge_ != nullptr);
-    assert(response_ != nullptr);
+    Deserialize(challenge_src, response_src);
 }
 
 Signature::Signature(const Signature& src)
-        : challenge_(BN_new(), BN_clear_free),
-          response_(BN_new(), BN_clear_free) {
-    assert(challenge_ != nullptr);
-    assert(response_ != nullptr);
-    if (BN_copy(challenge_.get(), src.challenge_.get()) == NULL) {
-        CRYPTO_ERROR("Signature challenge copy failed");
-        assert(false);
-    }
-
-    if (BN_copy(response_.get(), src.response_.get()) == NULL) {
-        CRYPTO_ERROR("Signature response copy failed");
-        assert(false);
-    }
-}
+        : r_(src.r_),
+          s_(src.s_),
+          sig_(src.sig_),
+          str_sign_(src.r_ + src.s_){}
 
 Signature& Signature::operator=(const Signature& src) {
-    if (BN_copy(challenge_.get(), src.challenge_.get()) == NULL) {
-        CRYPTO_ERROR("Signature challenge copy failed");
-        assert(false);
+    if (this == &src) {
+        return *this;
     }
 
-    if (BN_copy(response_.get(), src.response_.get()) == NULL) {
-        CRYPTO_ERROR("Signature response copy failed");
-        assert(false);
-    }
-
+    r_ = src.r_;
+    s_ = src.s_;
+    sig_ = src.sig_;
+    str_sign_ = r_ + s_;
     return *this;
 }
 
 bool Signature::operator==(const Signature& r) const {
-    return (BN_cmp(challenge_.get(), r.challenge_.get()) == 0) &&
-            (BN_cmp(response_.get(), r.response_.get()) == 0);
+    return str_sign_ == r.str_sign_;
 }
 
 Signature::~Signature() {}
 
 uint32_t Signature::Serialize(std::string& challenge_dst, std::string& response_dst) const {
-    SecurityStringTrans::Instance()->BignumToString(challenge_, challenge_dst);
-    SecurityStringTrans::Instance()->BignumToString(response_, response_dst);
+    challenge_dst = r_;
+    response_dst = s_;
     return kChallengeSize + kResponseSize;
 }
 
 int Signature::Deserialize(const std::string& challenge_src, const std::string& response_src) {
-    std::shared_ptr<BIGNUM> r_challenge = SecurityStringTrans::Instance()->StringToBignum(challenge_src);
-    std::shared_ptr<BIGNUM> r_response = SecurityStringTrans::Instance()->StringToBignum(response_src);
-
-    if ((r_challenge == nullptr) || (r_response == nullptr)) {
-        CRYPTO_ERROR("BIGNUMSerialize::GetNumber failed");
-        return -1;
+    r_ = challenge_src;
+    s_ = response_src;
+    if (secp256k1_ecdsa_signature_parse_compact(
+            Secp256k1::Instance()->getCtx(),
+            &sig_,
+            (uint8_t*)(r_ + s_).c_str()) != 1) {
+        return 1;
     }
 
-    if (BN_copy(challenge_.get(), r_challenge.get()) == NULL) {
-        CRYPTO_ERROR("Signature challenge copy failed");
-        return -1;
-    }
-
-    if (BN_copy(response_.get(), r_response.get()) == NULL) {
-        CRYPTO_ERROR("Signature response copy failed");
-        return -1;
-    }
-
+    str_sign_ = r_ + s_;
     return 0;
 }
 

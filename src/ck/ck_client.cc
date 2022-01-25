@@ -1,5 +1,7 @@
 #include "ck/ck_client.h"
 
+#include "common/encode.h"
+
 namespace tenon {
 
 namespace ck {
@@ -66,6 +68,7 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     auto block_bls_agg_sign_x = std::make_shared<clickhouse::ColumnString>();
     auto block_bls_agg_sign_y = std::make_shared<clickhouse::ColumnString>();
     auto block_commit_bitmap = std::make_shared<clickhouse::ColumnString>();
+    auto block_tx_size = std::make_shared<clickhouse::ColumnUInt32>();
     auto block_date = std::make_shared<clickhouse::ColumnUInt32>();
 
     std::string bitmap_str;
@@ -81,40 +84,41 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     block_shard_id->Append(block_item->network_id());
     block_pool_index->Append(block_item->pool_index());
     block_height->Append(block_item->height());
-    block_prehash->Append(block_item->prehash());
-    block_hash->Append(block_item->hash());
+    block_prehash->Append(common::Encode::HexEncode(block_item->prehash()));
+    block_hash->Append(common::Encode::HexEncode(block_item->hash()));
     block_version->Append(block_item->version());
     block_vss->Append(block_item->consistency_random());
     block_elect_height->Append(block_item->electblock_height());
-    block_bitmap->Append(bitmap_str);
-    block_commit_bitmap->Append(commit_bitmap_str);
+    block_bitmap->Append(common::Encode::HexEncode(bitmap_str));
+    block_commit_bitmap->Append(common::Encode::HexEncode(commit_bitmap_str));
     block_timestamp->Append(block_item->timestamp());
     block_timeblock_height->Append(block_item->timeblock_height());
-    block_bls_agg_sign_x->Append(block_item->bls_agg_sign_x());
-    block_bls_agg_sign_y->Append(block_item->bls_agg_sign_y());
+    block_bls_agg_sign_x->Append(common::Encode::HexEncode(block_item->bls_agg_sign_x()));
+    block_bls_agg_sign_y->Append(common::Encode::HexEncode(block_item->bls_agg_sign_y()));
     block_date->Append(common::MicTimestampToDate(block_item->timestamp()));
+    block_tx_size->Append(tx_list.size());
 
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         shard_id->Append(block_item->network_id());
         pool_index->Append(block_item->pool_index());
         height->Append(block_item->height());
-        prehash->Append(block_item->prehash());
-        hash->Append(block_item->hash());
+        prehash->Append(common::Encode::HexEncode(block_item->prehash()));
+        hash->Append(common::Encode::HexEncode(block_item->hash()));
         version->Append(block_item->version());
         vss->Append(block_item->consistency_random());
         elect_height->Append(block_item->electblock_height());
-        bitmap->Append(bitmap_str);
-        commit_bitmap->Append(commit_bitmap_str);
+        bitmap->Append(common::Encode::HexEncode(bitmap_str));
+        commit_bitmap->Append(common::Encode::HexEncode(commit_bitmap_str));
         timestamp->Append(block_item->timestamp());
         timeblock_height->Append(block_item->timeblock_height());
-        bls_agg_sign_x->Append(block_item->bls_agg_sign_x());
-        bls_agg_sign_y->Append(block_item->bls_agg_sign_y());
+        bls_agg_sign_x->Append(common::Encode::HexEncode(block_item->bls_agg_sign_x()));
+        bls_agg_sign_y->Append(common::Encode::HexEncode(block_item->bls_agg_sign_y()));
         date->Append(common::MicTimestampToDate(block_item->timestamp()));
-        gid->Append(tx_list[i].gid());
-        from->Append(tx_list[i].from());
-        from_pubkey->Append(tx_list[i].from_pubkey());
-        from_sign->Append(tx_list[i].from_sign());
-        to->Append(tx_list[i].to());
+        gid->Append(common::Encode::HexEncode(tx_list[i].gid()));
+        from->Append(common::Encode::HexEncode(tx_list[i].from()));
+        from_pubkey->Append(common::Encode::HexEncode(tx_list[i].from_pubkey()));
+        from_sign->Append(common::Encode::HexEncode(tx_list[i].from_sign()));
+        to->Append(common::Encode::HexEncode(tx_list[i].to()));
         amount->Append(tx_list[i].amount());
         gas_limit->Append(tx_list[i].gas_limit());
         gas_used->Append(tx_list[i].gas_used());
@@ -124,7 +128,7 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         type->Append(tx_list[i].type());
         attrs->Append("");
         status->Append(tx_list[i].status());
-        tx_hash->Append(tx_list[i].tx_hash());
+        tx_hash->Append(common::Encode::HexEncode(tx_list[i].tx_hash()));
         call_contract_step->Append(tx_list[i].call_contract_step());
         storages->Append("");
         transfers->Append("");
@@ -145,6 +149,7 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     blocks.AppendColumn("bls_agg_sign_y", block_bls_agg_sign_y);
     blocks.AppendColumn("commit_bitmap", block_commit_bitmap);
     blocks.AppendColumn("date", block_date);
+    blocks.AppendColumn("tx_size", block_tx_size);
 
     trans.AppendColumn("shard_id", shard_id);
     trans.AppendColumn("pool_index", pool_index);
