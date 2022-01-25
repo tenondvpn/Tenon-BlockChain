@@ -16,16 +16,18 @@ public:
     PrivateKey();
     PrivateKey(const PrivateKey& src);
     explicit PrivateKey(const std::string& src);
-    const std::shared_ptr<BIGNUM>& bignum() const {
-        return bignum_;
-    }
     PrivateKey& operator=(const PrivateKey&);
     bool operator==(const PrivateKey& r) const;
+    uint32_t Serialize(std::string& dst) const;
+    int Deserialize(const std::string& src);
+
     const std::string& private_key() const {
         return private_key_;
     }
-    uint32_t Serialize(std::string& dst) const;
-    int Deserialize(const std::string& src);
+
+    const std::shared_ptr<BIGNUM>& bignum() const {
+        return bignum_;
+    }
 
 private:
 

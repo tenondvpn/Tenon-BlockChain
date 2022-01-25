@@ -24,6 +24,11 @@ Signature::Signature(const secp256k1_ecdsa_signature& sig) : sig_(sig) {
     s_ = str_sign_.substr(32, 32);
 }
 
+Signature::Signature(const std::string& sig) {
+    str_sign_ = sig;
+    Deserialize(str_sign_.substr(0, 32), str_sign_.substr(32, 32));
+}
+
 Signature::Signature(const std::string& challenge_src, const std::string& response_src) {
     Deserialize(challenge_src, response_src);
 }

@@ -17,6 +17,7 @@ class Signature {
 public:
     Signature();
     Signature(const std::string& challenge_src, const std::string& response_src);
+    Signature(const std::string& sig);
     Signature(const secp256k1_ecdsa_signature& sig);
     Signature(const Signature& src);
     ~Signature();
@@ -24,7 +25,7 @@ public:
     bool operator==(const Signature& r) const;
     uint32_t Serialize(std::string& challenge_dst, std::string& response_dst) const;
     int Deserialize(const std::string& challenge_src, const std::string& response_src);
-    std::string& str_sign() {
+    const std::string& str_sign() const {
         return str_sign_;
     }
 
@@ -33,9 +34,9 @@ public:
     }
 
 private:
-    secp256k1_ecdsa_signature sig_;
     std::string r_;
     std::string s_;
+    secp256k1_ecdsa_signature sig_;
     std::string str_sign_;
 };
 

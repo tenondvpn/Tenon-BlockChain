@@ -7,6 +7,7 @@
 #include "common/encode.h"
 #include "dht/dht_key.h"
 #include "security/crypto_utils.h"
+#include "security/schnorr.h"
 #include "network/network_utils.h"
 
 namespace tenon {
@@ -51,12 +52,12 @@ int Bootstrap::Init(common::Config& config) {
         if (field_split.Count() != 3) {
             continue;
         }
-        security::PrivateKey prikey;
-        security::PublicKey pubkey(prikey);
-        std::string str_pubkey;
-        if (pubkey.Serialize(str_pubkey) != security::kPublicKeySize) {
-            continue;
-        }
+//         security::PrivateKey prikey;
+//         security::PublicKey pubkey(prikey);
+//         std::string str_pubkey;
+//         if (pubkey.Serialize(str_pubkey) != security::kPublicKeySize) {
+//             continue;
+//         }
 
         tenon::dht::DhtKeyManager root_dht_key(
                 kUniversalNetworkId,
@@ -76,14 +77,14 @@ int Bootstrap::Init(common::Config& config) {
             root_dht_key.StrKey(),
             std::string(field_split[1], field_split.SubLen(1)),
             port,
-            str_pubkey,
+            security::Schnorr::Instance()->str_pubkey(),
             ""));
         node_bootstrap_.push_back(std::make_shared<tenon::dht::Node>(
             std::string(field_split[0], field_split.SubLen(0)),
             node_dht_key.StrKey(),
             std::string(field_split[1], field_split.SubLen(1)),
             port,
-            str_pubkey,
+            security::Schnorr::Instance()->str_pubkey(),
             ""));
         NETWORK_INFO("bootstrap[%s][%d][%s][%s][%s]",
                 field_split[0], field_split.SubLen(0), field_split[1], field_split[2],
