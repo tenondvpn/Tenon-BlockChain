@@ -42,6 +42,7 @@
 #ifndef _WIN32
 #include "security/private_key.h"
 #include "security/public_key.h"
+#include "security/secp256k1.h"
 #include "tvm/execution.h"
 #include "tvm/tenon_host.h"
 #include "init/genesis_block_init.h"
@@ -169,6 +170,23 @@ void Command::AddCommand(const std::string& cmd_name, CommandFunction cmd_func) 
 void Command::AddBaseCommands() {
     AddCommand("help", [this](const std::vector<std::string>& args) {
         Help();
+    });
+    AddCommand("addr", [this](const std::vector<std::string>& args) {
+        if (args.size() <= 0) {
+            return;
+        }
+
+        std::string prikey = common::Encode::HexDecode(args[0]);
+        std::string pub_key;
+        if (!security::Secp256k1::Instance()->ToPublic(prikey, false, &pub_key)) {
+            return;
+        }
+
+        std::string hash = common::Hash::keccak256(pub_key.substr(1, 64));
+        std::string id = hash.substr(hash.size() - 20, 20);
+        std::cout << "pub_key: " << common::Encode::HexEncode(pub_key)
+            << ", hash: " << common::Encode::HexEncode(hash)
+            << ", addr: " << common::Encode::HexEncode(id) << std::endl;
     });
     AddCommand("sig", [this](const std::vector<std::string>& args) {
         if (args.size() <= 0) {

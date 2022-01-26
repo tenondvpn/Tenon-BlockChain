@@ -349,28 +349,6 @@ int AccountManager::AddBlockItemToDb(
                 account_info->ClearAttr(tx_list[i].storages(attr_idx).key());
             }
         }
-        
-        if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-            std::string account_gid;
-            if (tx_list[i].type() != common::kConsensusCallContract &&
-                    tx_list[i].type() != common::kConsensusCreateContract) {
-                if (tx_list[i].to_add()) {
-                    account_gid = tx_list[i].to() + tx_list[i].gid();
-                } else {
-                    account_gid = tx_list[i].from() + tx_list[i].gid();
-                }
-            } else {
-                if (tx_list[i].call_contract_step() == contract::kCallStepContractCalled) {
-                    account_gid = tx_list[i].to() + tx_list[i].gid();
-                } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
-                    account_gid = tx_list[i].from() + tx_list[i].gid();
-                }
-            }
-            
-            if (!account_gid.empty()) {
-                db_batch.Put(account_gid, block_item->hash());
-            }
-        }
     }
 
     block_pools_[consistent_pool_index]->SetHeightTree(block_item->height());
@@ -603,19 +581,6 @@ int AccountManager::UpdateAccountInfo(
         if (iter == acc_map_.end()) {
             account_info = std::make_shared<block::DbAccountInfo>(account_id);
             if (!block::DbAccountInfo::AccountExists(account_id)) {
-//                 if (tx_info.type() == common::kConsensusCreateGenesisAcount ||
-//                         bft::IsRootSingleBlockTx(tx_info.type()) ||
-//                         common::IsBaseAddress(account_id)) {
-//                     if (GenesisAddAccountInfo(account_id, db_batch, account_info.get()) != kBlockSuccess) {
-//                         return kBlockError;
-//                     }
-//                 } else if (tx_info.type() == common::kConsensusCreateAcount &&
-//                     tx_info.network_id() != 0) {
-//                 } else {
-//                     BLOCK_ERROR("account id not exists[%s]!",
-//                         common::Encode::HexEncode(account_id).c_str());
-//                     return kBlockError;
-//                 }
                 if (!block::DbAccountInfo::AddNewAccountToDb(account_id, db_batch)) {
                     BLOCK_ERROR("fromAddNewAccountToDb failed: %s, %llu",
                         common::Encode::HexEncode(account_id).c_str());

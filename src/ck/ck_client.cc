@@ -20,6 +20,8 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     const auto& tx_list = block_item->tx_list();
     clickhouse::Block trans;
     clickhouse::Block blocks;
+    clickhouse::Block accounts;
+    clickhouse::Block account_attrs;
     auto shard_id = std::make_shared<clickhouse::ColumnUInt32>();
     auto pool_index = std::make_shared<clickhouse::ColumnUInt32>();
     auto height = std::make_shared<clickhouse::ColumnUInt64>();
@@ -70,6 +72,16 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     auto block_commit_bitmap = std::make_shared<clickhouse::ColumnString>();
     auto block_tx_size = std::make_shared<clickhouse::ColumnUInt32>();
     auto block_date = std::make_shared<clickhouse::ColumnUInt32>();
+
+    auto acc_account = std::make_shared<clickhouse::ColumnString>();
+    auto acc_shard_id = std::make_shared<clickhouse::ColumnUInt32>();
+    auto acc_pool_index = std::make_shared<clickhouse::ColumnUInt32>();
+    auto acc_balance = std::make_shared<clickhouse::ColumnUInt64>();
+
+    auto attr_account = std::make_shared<clickhouse::ColumnString>();
+    auto attr_shard_id = std::make_shared<clickhouse::ColumnUInt32>();
+    auto attr_key = std::make_shared<clickhouse::ColumnString>();
+    auto attr_value = std::make_shared<clickhouse::ColumnString>();
 
     std::string bitmap_str;
     for (int32_t i = 0; i < block_item->bitmap_size(); ++i) {
@@ -132,6 +144,32 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         call_contract_step->Append(tx_list[i].call_contract_step());
         storages->Append("");
         transfers->Append("");
+
+        if (tx_list[i].to_add()) {
+            acc_account->Append(common::Encode::HexEncode(tx_list[i].to()));
+            acc_shard_id->Append(block_item->network_id());
+            acc_pool_index->Append(block_item->pool_index());
+            acc_balance->Append(tx_list[i].balance());
+        } else {
+            acc_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+            acc_shard_id->Append(block_item->network_id());
+            acc_pool_index->Append(block_item->pool_index());
+            acc_balance->Append(tx_list[i].balance());
+
+            for (int32_t i = 0; i < tx_list[i].attr_size(); ++i) {
+                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                attr_shard_id->Append(block_item->network_id());
+                attr_key->Append(tx_list[i].attr(i).key());
+                attr_value->Append(tx_list[i].attr(i).value());
+            }
+
+            for (int32_t i = 0; i < tx_list[i].storages_size(); ++i) {
+                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                attr_shard_id->Append(block_item->network_id());
+                attr_key->Append(tx_list[i].storages(i).key());
+                attr_value->Append(tx_list[i].storages(i).value());
+            }
+        }
     }
 
     blocks.AppendColumn("shard_id", block_shard_id);
@@ -184,8 +222,21 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     trans.AppendColumn("storages", storages);
     trans.AppendColumn("transfers", transfers);
     trans.AppendColumn("date", date);
+
+    accounts.AppendColumn("id", acc_account);
+    accounts.AppendColumn("shard_id", acc_shard_id);
+    accounts.AppendColumn("pool_index", acc_pool_index);
+    accounts.AppendColumn("balance", acc_balance);
+
+    account_attrs.AppendColumn("id", attr_account);
+    account_attrs.AppendColumn("shard_id", attr_shard_id);
+    account_attrs.AppendColumn("key", attr_key);
+    account_attrs.AppendColumn("value", attr_value);
+
     client_.Insert(kClickhouseTransTableName, trans);
     client_.Insert(kClickhouseBlockTableName, blocks);
+    client_.Insert(kClickhouseAccountTableName, accounts);
+    client_.Insert(kClickhouseAccountKvTableName, account_attrs);
     return true;
 } catch (std::exception& e) {
     TENON_ERROR("add new block failed[%s]", e.what());
@@ -194,9 +245,9 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
 
 bool ClickHouseClient::CreateTransactionTable() {
     std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseTransTableName + " ( "
-        "`shard_id` UInt32 COMMENT '分片网络id' CODEC(T64, LZ4), "
-        "`pool_index` UInt32 COMMENT '交易池id' CODEC(T64, LZ4), "
-        "`height` UInt64 COMMENT '高度' CODEC(T64, LZ4), "
+        "`shard_id` UInt32 COMMENT 'shard_id' CODEC(T64, LZ4), "
+        "`pool_index` UInt32 COMMENT 'pool_index' CODEC(T64, LZ4), "
+        "`height` UInt64 COMMENT 'height' CODEC(T64, LZ4), "
         "`prehash` String COMMENT 'prehash' CODEC(LZ4), "
         "`hash` String COMMENT 'hash' CODEC(LZ4), "
         "`version` UInt32 COMMENT 'version' CODEC(LZ4), "
@@ -238,9 +289,9 @@ bool ClickHouseClient::CreateTransactionTable() {
 
 bool ClickHouseClient::CreateBlockTable() {
     std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseBlockTableName + " ( "
-        "`shard_id` UInt32 COMMENT '分片网络id' CODEC(T64, LZ4), "
-        "`pool_index` UInt32 COMMENT '交易池id' CODEC(T64, LZ4), "
-        "`height` UInt64 COMMENT '高度' CODEC(T64, LZ4), "
+        "`shard_id` UInt32 COMMENT 'shard_id' CODEC(T64, LZ4), "
+        "`pool_index` UInt32 COMMENT 'pool_index' CODEC(T64, LZ4), "
+        "`height` UInt64 COMMENT 'height' CODEC(T64, LZ4), "
         "`prehash` String COMMENT 'prehash' CODEC(LZ4), "
         "`hash` String COMMENT 'hash' CODEC(LZ4), "
         "`version` UInt32 COMMENT 'version' CODEC(LZ4), "
@@ -263,15 +314,41 @@ bool ClickHouseClient::CreateBlockTable() {
     return true;
 }
 
+bool ClickHouseClient::CreateAccountTable() {
+    std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseAccountTableName + " ( "
+        "`id` String COMMENT 'prehash' CODEC(LZ4), "
+        "`shard_id` UInt32 COMMENT 'shard_id' CODEC(T64, LZ4), "
+        "`pool_index` UInt32 COMMENT 'pool_index' CODEC(T64, LZ4), "
+        "`balance` UInt64 COMMENT 'balance' CODEC(T64, LZ4) "
+        ") "
+        "ENGINE = ReplacingMergeTree "
+        "PARTITION BY(shard_id) "
+        "ORDER BY(id,pool_index,height) "
+        "SETTINGS index_granularity = 8192;";
+    client_.Execute(create_cmd);
+    return true;
+}
+
+bool ClickHouseClient::CreateAccountKeyValueTable() {
+    std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseAccountKvTableName + " ( "
+        "`id` String COMMENT 'prehash' CODEC(LZ4), "
+        "`shard_id` UInt32 COMMENT 'shard_id' CODEC(T64, LZ4), "
+        "`key` String COMMENT 'key' CODEC(LZ4), "
+        "`value` String COMMENT 'value' CODEC(LZ4) "
+        ") "
+        "ENGINE = ReplacingMergeTree "
+        "PARTITION BY(shard_id) "
+        "ORDER BY(id) "
+        "SETTINGS index_granularity = 8192;";
+    client_.Execute(create_cmd);
+    return true;
+}
+
 bool ClickHouseClient::CreateTable() try {
-    if (!CreateTransactionTable()) {
-        return false;
-    }
-
-    if (!CreateBlockTable()) {
-        return false;
-    }
-
+    CreateTransactionTable();
+    CreateBlockTable();
+    CreateAccountTable();
+    CreateAccountKeyValueTable();
     return true;
 } catch (std::exception& e) {
     TENON_ERROR("add new block failed[%s]", e.what());

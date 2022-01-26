@@ -21,6 +21,8 @@ private:
     void CheckBlockFinished();
     bool CreateTransactionTable();
     bool CreateBlockTable();
+    bool CreateAccountTable();
+    bool CreateAccountKeyValueTable();
 
     clickhouse::Client client_;
 

@@ -11,6 +11,8 @@ namespace ck {
 
 static const std::string kClickhouseTransTableName = "tenon_ck_transaction_table";
 static const std::string kClickhouseBlockTableName = "tenon_ck_block_table";
+static const std::string kClickhouseAccountTableName = "tenon_ck_account_table";
+static const std::string kClickhouseAccountKvTableName = "tenon_ck_account_key_value_table";
 
 };  // namespace ck
 
