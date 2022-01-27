@@ -73,7 +73,6 @@ private:
     }
 
     TcpServer tcp_server_;
-    task::TaskManager* task_manager_{ nullptr };
     bool inited_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(TcpCall);

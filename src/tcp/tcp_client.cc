@@ -86,14 +86,14 @@ static void WriteCb(struct bufferevent *bev, void *arg) {
 static void EventCb(struct bufferevent *bev, short events, void * arg) {
     dag::tcp::TcpClient* c = (dag::tcp::TcpClient*)arg;
     if (events & BEV_EVENT_EOF) {
-        DAG_INFO("connection closed");
+        TENON_INFO("connection closed");
     } else if (events & BEV_EVENT_ERROR) {
-        DAG_ERROR("some other error\n");
+        TENON_ERROR("some other error\n");
     } else if (events & BEV_EVENT_CONNECTED) {
         evutil_socket_t fd = bufferevent_getfd(bev);
         int one = 1;
         setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
-        DAG_INFO("connected");
+        TENON_INFO("connected");
         c->closed = false;
         if (c->event_cb != nullptr) {
             c->event_cb(dag::tcp::kConnected);
@@ -106,7 +106,7 @@ static void EventCb(struct bufferevent *bev, short events, void * arg) {
         c->event_cb(dag::tcp::kClosed);
     }
 
-    DAG_INFO("connection closed");
+    TENON_INFO("connection closed");
 }
 
 namespace tenon {
@@ -134,7 +134,7 @@ static std::mutex loop_mutex;
 
 static void RunClientLoop(struct event_base* base) {
     while (event_base_dispatch(base) != 0 && !common::global_stop) {
-        DAG_WARN("event base dispatch error.");
+        TENON_WARN("event base dispatch error.");
         usleep(1000000);
     }
 }
@@ -202,7 +202,7 @@ int TcpClient::Reconnect() {
     int32_t wait_times = 0;
     usleep(100000);
     while (closed && wait_times++ <= 30) {
-        DAG_WARN("waiting connect to: %s:%d", server_ip_.c_str(), server_port_);
+        TENON_WARN("waiting connect to: %s:%d", server_ip_.c_str(), server_port_);
         usleep(100000);
     }
 

@@ -87,10 +87,10 @@ static void EventCallback(struct bufferevent *bev, short events, void *arg) {
     dag::tcp::TcpConnection* c = (dag::tcp::TcpConnection*)arg;
     if (events & BEV_EVENT_EOF) {
     } else if (events & BEV_EVENT_ERROR) {
-        DAG_ERROR("Got an error on the connection: %s", strerror(errno));
+        TENON_ERROR("Got an error on the connection: %s", strerror(errno));
     }
 
-    DAG_INFO("close socket called: %s:%d", c->client_ip, c->client_port);
+    TENON_INFO("close socket called: %s:%d", c->client_ip, c->client_port);
     if (c->recv_buff != nullptr) {
         FreeTcpConnection(c);
     }
@@ -178,11 +178,11 @@ static int tcp_serv_setsockopts(evutil_socket_t sock) {
 
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (void *)&on, sizeof(on)) == -1) {
         if (errno != EOPNOTSUPP) {
-            DAG_ERROR("SO_REUSEPORT error");
+            TENON_ERROR("SO_REUSEPORT error");
             return -1;
         }
 
-        DAG_WARN("SO_REUSEPORT NOT SUPPORTED");
+        TENON_WARN("SO_REUSEPORT NOT SUPPORTED");
     }
 
     return 0;
@@ -238,7 +238,7 @@ int TcpServer::Init(
 
     base_ = event_base_new();
     if (!base_) {
-        DAG_ERROR("Could not initialize libevent!");
+        TENON_ERROR("Could not initialize libevent!");
         return 1;
     }
 
@@ -249,7 +249,7 @@ int TcpServer::Init(
     struct sockaddr* sa = (struct sockaddr *)&sin;
     listen_fd_ = -1;
     if ((listen_fd_ = socket(sa->sa_family, SOCK_STREAM, 0)) == -1) {
-        DAG_ERROR("couldn't create socket");
+        TENON_ERROR("couldn't create socket");
         return 1;
     }
 
@@ -270,7 +270,7 @@ int TcpServer::Init(
         -1,
         listen_fd_);
     if (!listener_) {
-        DAG_ERROR("Could not create a listener!");
+        TENON_ERROR("Could not create a listener!");
         evutil_closesocket(listen_fd_);
         listen_fd_ = -1;
         return 1;
@@ -284,7 +284,7 @@ int TcpServer::Init(
     }
 
     evthr_pool_start(pool_);
-    DAG_INFO("create tcp server success: %s:%d", ip, port);
+    TENON_INFO("create tcp server success: %s:%d", ip, port);
     return 0;
 }
 
@@ -304,7 +304,7 @@ void TcpServer::Stop() {
 
     struct timeval delay = { 0, 100000 };
     int res = event_base_loopexit(base_, NULL);
-    DAG_INFO("exit: %d, got: %d\n", res, event_base_got_exit(base_));
+    TENON_INFO("exit: %d, got: %d\n", res, event_base_got_exit(base_));
 }
 
 int TcpServer::Send(TcpConnection* con, const char* data, int32_t len) {

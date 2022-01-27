@@ -73,14 +73,9 @@ int32_t HttpServer::Init(
         "/dags",
         HttpReqCallback,
         NULL);
-    evhtp_set_cb(
-        htp_,
-        "/quote/v2/AhSort",
-        HttpReqCallback141,
-        NULL);
     evhtp_use_threads_wexit(htp_, NULL, NULL, thread_count, NULL);
     evhtp_bind_socket(htp_, ip, port, 1024);
-    DAG_INFO("start http server: %s: %d", ip, port);
+    TENON_INFO("start http server: %s: %d", ip, port);
     return kHttpSuccess;
 }
 
