@@ -58,19 +58,27 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
             return false;
         }
     }
+
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-        uint32_t network_id = 0;
-        if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
-                tx_bft.new_tx().from(),
-                &network_id) != block::kBlockSuccess) {
+        auto account_info = block::AccountManager::Instance()->GetAcountInfo(
+            tx_bft.new_tx().from());
+        if (account_info == nullptr) {
             BFT_ERROR("get from addr network id failed! account address not exists[%s]",
                 common::Encode::HexEncode(tx_bft.new_tx().from()).c_str());
             return false;
         }
 
+        uint32_t network_id = 0;
+        account_info->GetConsensuseNetId(network_id);
         if (network_id != common::GlobalInfo::Instance()->network_id()) {
             BFT_ERROR("get from addr network id failed! network_id [%u] not equal local [%u]",
                 network_id, common::GlobalInfo::Instance()->network_id());
+            return false;
+        }
+
+        uint64_t balance = 0;
+        account_info->GetBalance(&balance);
+        if (balance == 0) {
             return false;
         }
     } else {

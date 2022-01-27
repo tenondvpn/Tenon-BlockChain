@@ -827,15 +827,15 @@ void Command::AddBaseCommands() {
         std::string to;
         std::string from;
         if (args.size() > 0) {
-            tx_gid = (args[0]);
+            tx_gid = common::Encode::HexDecode(args[0]);
         }
 
         if (args.size() > 1) {
-            from = (args[1]);
+            from = common::Encode::HexDecode(args[1]);
         }
 
         if (args.size() > 2) {
-            to = (args[2]);
+            to = common::Encode::HexDecode(args[2]);
         }
 
         uint64_t amount = 0;

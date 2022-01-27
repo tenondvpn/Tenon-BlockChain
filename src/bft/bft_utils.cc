@@ -27,26 +27,27 @@ std::string StatusToString(uint32_t status) {
 
 // hash128(gid + from + to + amount + type + attrs(k:v))
 std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
-    std::string message = tx_info.gid() + "-" +
-        tx_info.from() + "-" +
-        tx_info.to() + "-" +
+    std::string message = common::Encode::HexEncode(tx_info.gid()) + "-" +
+        common::Encode::HexEncode(tx_info.from()) + "-" +
+        common::Encode::HexEncode(tx_info.to()) + "-" +
         std::to_string(tx_info.amount()) + "-" +
         std::to_string(tx_info.gas_limit()) + "-" +
         std::to_string(tx_info.gas_price()) + "-" +
         std::to_string(tx_info.type()) + "-";
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-        message += tx_info.attr(i).key() + tx_info.attr(i).value();
+        message += common::Encode::HexEncode(tx_info.attr(i).key()) +
+            common::Encode::HexEncode(tx_info.attr(i).value());
     }
 
     for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
-        message += tx_info.transfers(i).from() +
-            tx_info.transfers(i).to() +
+        message += common::Encode::HexEncode(tx_info.transfers(i).from()) +
+            common::Encode::HexEncode(tx_info.transfers(i).to()) +
             std::to_string(tx_info.transfers(i).amount());
     }
 
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
-        message += tx_info.storages(i).key() +
-            tx_info.storages(i).value();
+        message += common::Encode::HexEncode(tx_info.storages(i).key()) +
+            common::Encode::HexEncode(tx_info.storages(i).value());
     }
 
     return common::Hash::keccak256(message);
