@@ -154,6 +154,9 @@ set(LINK_ARGS
     tnet
     contract
     limit
+    ck
+    http
+    tcp
     common
     dbsvr
     protobuf
@@ -191,6 +194,8 @@ set(CLIENT_LINK_ARGS
     limit
     tnet
     contract
+    http
+    tcp
     common
     dbsvr
     protobuf
@@ -244,6 +249,8 @@ else()
     add_subdirectory(${SRC_DIR}/services services)
     add_subdirectory(${SRC_DIR}/dbsvr dbsvr)
     add_subdirectory(${SRC_DIR}/ck ck)
+    add_subdirectory(${SRC_DIR}/http http)
+    add_subdirectory(${SRC_DIR}/tcp tcp)
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         add_subdirectory(${SRC_DIR}/common/tests common_test)
@@ -255,5 +262,7 @@ else()
         add_subdirectory(${SRC_DIR}/bft/tests bft_test)
         add_subdirectory(${SRC_DIR}/bls/tests bls_test)
         add_subdirectory(${SRC_DIR}/ck/tests ck_test)
+        add_subdirectory(${SRC_DIR}/http/tests http_test)
+        add_subdirectory(${SRC_DIR}/tcp/tests tcp_test)
     endif()
 endif()
