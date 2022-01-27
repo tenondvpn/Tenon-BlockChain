@@ -31,6 +31,8 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
         tx_info.from() + "-" +
         tx_info.to() + "-" +
         std::to_string(tx_info.amount()) + "-" +
+        std::to_string(tx_info.gas_limit()) + "-" +
+        std::to_string(tx_info.gas_price()) + "-" +
         std::to_string(tx_info.type()) + "-";
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         message += tx_info.attr(i).key() + tx_info.attr(i).value();
@@ -47,7 +49,7 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
             tx_info.storages(i).value();
     }
 
-    return common::Hash::Hash128(message);
+    return common::Hash::keccak256(message);
 }
 
 // prehash + network_id + height + random + elect version + txes's hash

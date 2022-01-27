@@ -822,6 +822,48 @@ void Command::AddBaseCommands() {
             block_hash = block_item.prehash();
         }
     });
+    AddCommand("txh", [this](const std::vector<std::string>& args) {
+        std::string tx_gid;
+        std::string to;
+        std::string from;
+        if (args.size() > 0) {
+            tx_gid = (args[0]);
+        }
+
+        if (args.size() > 1) {
+            from = (args[1]);
+        }
+
+        if (args.size() > 2) {
+            to = (args[2]);
+        }
+
+        uint64_t amount = 0;
+        if (args.size() > 3) {
+            common::StringUtil::ToUint64(args[3], &amount);
+        }
+
+        uint64_t gas_limit = 0;
+        if (args.size() > 4) {
+            common::StringUtil::ToUint64(args[4], &gas_limit);
+        }
+
+        uint64_t gas_price = 0;
+        if (args.size() > 5) {
+            common::StringUtil::ToUint64(args[5], &gas_price);
+        }
+
+        std::string message = tx_gid + "-" +
+            from + "-" +
+            to + "-" +
+            std::to_string(amount) + "-" +
+            std::to_string(gas_limit) + "-" +
+            std::to_string(gas_price) + "-" +
+            std::to_string(5) + "-";
+        std::cout << message << ", " << common::Encode::HexEncode(common::Hash::Hash128(message)) << ", "
+            << common::Encode::HexEncode(common::Hash::keccak256(message)) << std::endl;
+
+    });
     AddCommand("tx", [this](const std::vector<std::string>& args) {
         std::string tx_gid;
         std::string to;

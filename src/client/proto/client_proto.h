@@ -83,12 +83,12 @@ public:
         }
         auto data = tx_bft.SerializeAsString();
         bft_msg.set_data(data);
-        auto hash128 = bft::GetTxMessageHash(*new_tx);// common::Hash::Hash128(data);
+        auto txhash = bft::GetTxMessageHash(*new_tx);// common::Hash::Hash128(data);
         security::Signature sign;
         auto& prikey = *security::Security::Instance()->prikey();
         auto& pubkey = *security::Security::Instance()->pubkey();
         if (!security::Security::Instance()->Sign(
-                hash128,
+                txhash,
                 prikey,
                 pubkey,
                 sign)) {
