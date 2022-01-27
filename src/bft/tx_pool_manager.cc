@@ -69,7 +69,7 @@ bool TxPoolManager::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
         }
 
         uint32_t network_id = 0;
-        account_info->GetConsensuseNetId(network_id);
+        account_info->GetConsensuseNetId(&network_id);
         if (network_id != common::GlobalInfo::Instance()->network_id()) {
             BFT_ERROR("get from addr network id failed! network_id [%u] not equal local [%u]",
                 network_id, common::GlobalInfo::Instance()->network_id());
