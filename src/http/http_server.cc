@@ -32,12 +32,12 @@ static void HttpReqCallback(evhtp_request_t* req, void* data) {
 
 
     std::string res;
-    if (task->HttpCall(req->uri->query, req->buffer_out) != task::kTaskSuccess) {
-        std::string res("call task failed.");
-        evbuffer_add(req->buffer_out, res.c_str(), res.size());
-        evhtp_send_reply(req, EVHTP_RES_OK);
-        return;
-    }
+//     if (task->HttpCall(req->uri->query, req->buffer_out) != task::kTaskSuccess) {
+//         std::string res("call task failed.");
+//         evbuffer_add(req->buffer_out, res.c_str(), res.size());
+//         evhtp_send_reply(req, EVHTP_RES_OK);
+//         return;
+//     }
 
     evhtp_send_reply(req, EVHTP_RES_OK);
 }
@@ -54,7 +54,6 @@ HttpServer* HttpServer::Instance() {
 }
 
 int32_t HttpServer::Init(
-        task::TaskManager* task_mgr,
         const char* ip,
         uint16_t port,
         int32_t thread_count) {

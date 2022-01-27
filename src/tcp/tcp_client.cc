@@ -135,7 +135,7 @@ static std::mutex loop_mutex;
 static void RunClientLoop(struct event_base* base) {
     while (event_base_dispatch(base) != 0 && !common::global_stop) {
         TENON_WARN("event base dispatch error.");
-        usleep(1000000);
+        std::this_thread::sleep_for(std::chrono::microseconds(1000000l));
     }
 }
 
@@ -200,10 +200,10 @@ int TcpClient::Reconnect() {
     bufferevent_enable(bev_, EV_READ);
     bufferevent_socket_connect(bev_, (struct sockaddr*)&serv, sizeof(serv));
     int32_t wait_times = 0;
-    usleep(100000);
+    std::this_thread::sleep_for(std::chrono::microseconds(100000));
     while (closed && wait_times++ <= 30) {
         TENON_WARN("waiting connect to: %s:%d", server_ip_.c_str(), server_port_);
-        usleep(100000);
+        std::this_thread::sleep_for(std::chrono::microseconds(100000));
     }
 
     return closed ? 1 : 0;
