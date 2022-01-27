@@ -5,23 +5,23 @@
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 
-static int32_t ParsePackage(dag::tcp::TcpClient* c, char* buf, size_t len) {
+static int32_t ParsePackage(tenon::tcp::TcpClient* c, char* buf, size_t len) {
     int ret_len = 0;
     if (c->need_length <= 0) {
-        if (len <= dag::tcp::kTcpHeaderLen) {
+        if (len <= tenon::tcp::kTcpHeaderLen) {
             return 0;
         }
 
         uint32_t* lens = (uint32_t*)buf;
         c->need_length = ntohl(lens[0]) - sizeof(uint32_t);
-        if (evhtp_unlikely(c->need_length >= (int32_t)dag::tcp::kReceiveBuffMaxSize ||
+        if (evhtp_unlikely(c->need_length >= (int32_t)tenon::tcp::kReceiveBuffMaxSize ||
                 c->need_length <= 0)) {
             return -1;
         }
 
-        buf += dag::tcp::kTcpHeaderLen;
-        len -= dag::tcp::kTcpHeaderLen;
-        ret_len = dag::tcp::kTcpHeaderLen;
+        buf += tenon::tcp::kTcpHeaderLen;
+        len -= tenon::tcp::kTcpHeaderLen;
+        ret_len = tenon::tcp::kTcpHeaderLen;
     }
 
     if ((int32_t)len >= c->need_length) {
@@ -40,7 +40,7 @@ static int32_t ParsePackage(dag::tcp::TcpClient* c, char* buf, size_t len) {
 }
 
 static void ReadCallback(struct bufferevent *bev, void *arg) {
-    dag::tcp::TcpClient* c = (dag::tcp::TcpClient*)arg;
+    tenon::tcp::TcpClient* c = (tenon::tcp::TcpClient*)arg;
     evbuffer* input = bufferevent_get_input(bev);
     while (true) {
         auto avail = evbuffer_get_length(input);
@@ -84,7 +84,7 @@ static void WriteCb(struct bufferevent *bev, void *arg) {
 }
 
 static void EventCb(struct bufferevent *bev, short events, void * arg) {
-    dag::tcp::TcpClient* c = (dag::tcp::TcpClient*)arg;
+    tenon::tcp::TcpClient* c = (tenon::tcp::TcpClient*)arg;
     if (events & BEV_EVENT_EOF) {
         TENON_INFO("connection closed");
     } else if (events & BEV_EVENT_ERROR) {
@@ -96,14 +96,14 @@ static void EventCb(struct bufferevent *bev, short events, void * arg) {
         TENON_INFO("connected");
         c->closed = false;
         if (c->event_cb != nullptr) {
-            c->event_cb(dag::tcp::kConnected);
+            c->event_cb(tenon::tcp::kConnected);
         }
         return;
     }
 
     c->closed = true;
     if (c->event_cb != nullptr) {
-        c->event_cb(dag::tcp::kClosed);
+        c->event_cb(tenon::tcp::kClosed);
     }
 
     TENON_INFO("connection closed");
