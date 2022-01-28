@@ -18,6 +18,7 @@ enum HttpStatusCode: int32_t {
 };
 
 static const std::string kHttpParamTaskId = "tid";
+
 static const std::map<int, std::string> kStatusMap = {
     {kHttpSuccess, "kHttpSuccess"},
     {kHttpError, "kHttpError"},
@@ -26,6 +27,15 @@ static const std::map<int, std::string> kStatusMap = {
     {kShardIdInvalid, "kShardIdInvalid"},
     {kSignatureInvalid, "kSignatureInvalid"},
 };
+
+inline static const char* GetStatus(int status) {
+    auto iter = kStatusMap.find(status);
+    if (iter != kStatusMap.end()) {
+        return iter->second;
+    }
+
+    return "unknown";
+}
 
 };  // namespace tenon
 

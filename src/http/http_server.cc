@@ -184,7 +184,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         attrs,
         msg);
     if (status != kHttpSuccess) {
-        std::string res = std::string("transaction invalid: ") + kStatusMap[status];
+        std::string res = std::string("transaction invalid: ") + GetStatus(status);
         evbuffer_add(req->buffer_out, res.c_str(), res.size());
         evhtp_send_reply(req, EVHTP_RES_OK);
         return;
