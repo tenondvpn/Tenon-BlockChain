@@ -210,6 +210,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         return;
     }
 
+    network::Route::Instance)->Send(msg);
     std::string res = std::string("ok");
     evbuffer_add(req->buffer_out, res.c_str(), res.size());
     evhtp_send_reply(req, EVHTP_RES_OK);
