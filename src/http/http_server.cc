@@ -49,7 +49,7 @@ static int CreateTransactionWithAttr(
     }
 
     uint32_t des_net_id = 0;
-    if (account_info->SetConsensuseNetid(&des_net_id) != block::kBlockSuccess) {
+    if (account_info->GetConsensuseNetId(&des_net_id) != block::kBlockSuccess) {
         return kShardIdInvalid;
     }
 
@@ -87,7 +87,7 @@ static int CreateTransactionWithAttr(
 
     auto sechash = bft::GetTxMessageHash(*new_tx);
     auto sign = security::Signature(sign_r, sign_s);
-    auto pk = PublicKey(from_pk);
+    auto pk = security::PublicKey(from_pk);
     if (!security::Security::Instance()->Verify(sechash, sign, pk)) {
         return kSignatureInvalid;
     }
@@ -161,7 +161,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
     }
 
     int32_t type_val = 0;
-    if (!common::StringUtil::ToUint64(std::string(type), &type_val)) {
+    if (!common::StringUtil::ToInt32(std::string(type), &type_val)) {
         std::string res = std::string("type not integer: ") + type;
         evbuffer_add(req->buffer_out, res.c_str(), res.size());
         evhtp_send_reply(req, EVHTP_RES_OK);
