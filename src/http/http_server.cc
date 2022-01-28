@@ -5,6 +5,7 @@
 #include <map>
 
 #include "common/string_utils.h"
+#include "transport/multi_thread.h"
 
 namespace tenon {
 
@@ -12,7 +13,7 @@ namespace http {
 
 static HttpServer* http_server = nullptr;
 
-static void HttpReqCallback(evhtp_request_t* req, void* data) {
+static void TransactionCallback(evhtp_request_t* req, void* data) {
 //     auto b_time_1 = common::GetTimestampUs();
     const char* tid = evhtp_kv_find(req->uri->query, kHttpParamTaskId.c_str());
     if (tid == nullptr) {
@@ -69,8 +70,8 @@ int32_t HttpServer::Init(
 
     evhtp_set_cb(
         htp_,
-        "/dags",
-        HttpReqCallback,
+        "/do_transaction",
+        TransactionCallback,
         NULL);
     evhtp_use_threads_wexit(htp_, NULL, NULL, thread_count, NULL);
     evhtp_bind_socket(htp_, ip, port, 1024);

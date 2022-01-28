@@ -18,6 +18,7 @@
 #include "election/elect_dht.h"
 #include "election/proto/elect_proto.h"
 #include "election/elect_manager.h"
+#include "http/http_server.h"
 #include "ip/ip_with_country.h"
 #include "init/init_utils.h"
 #include "init/genesis_block_init.h"
@@ -160,6 +161,15 @@ int NetworkInit::Init(int argc, char** argv) {
     }
 
     if (block::AccountManager::Instance()->Init(net_id) != block::kBlockSuccess) {
+        return kInitError;
+    }
+
+    std::string http_ip = "0.0.0.0";
+    std::string http_port = 19801;
+    conf_.Get("tenon", "http_ip", http_ip);
+    conf_.Get("tenon", "http_port", http_port);
+    if (http::HttpServer::Instance()->Init(http_ip.c_str(), http_port, 2) != 0) {
+        INIT_ERROR("init http server failed! %s:%d", http_ip.c_str(), http_port);
         return kInitError;
     }
 

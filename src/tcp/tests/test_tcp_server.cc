@@ -35,51 +35,9 @@ static void conn_eventcb(struct bufferevent *, short, void *);
 #define private public
 #include "tcp/tcp_server.h"
 #include "tcp/tcp_client.h"
-#include "task/task_manager.h"
 
 #define BUFFSIZE 1024
 volatile bool stop = false;
-
-int client_main(int argc, char **argv)
-{
-    struct event_base *base;
-
-    struct sockaddr_in sin;
-
-    base = event_base_new();
-    if (!base) {
-        fprintf(stderr, "Could not initialize libevent!\n");
-        return 1;
-    }
-
-    memset(&sin, 0, sizeof(sin));
-    sin.sin_addr.s_addr = inet_addr("192.168.233.250");
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(PORT);
-
-    struct bufferevent* bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-    if (bev == NULL)
-    {
-        fprintf(stderr, "socket init failed\n");
-        return 1;
-    }
-    bufferevent_setcb(bev, conn_readcb, conn_writecb, conn_eventcb, NULL);
-
-    //Connect the server
-    int flag = bufferevent_socket_connect(bev, (struct sockaddr*)&sin, sizeof(sin));
-    if (-1 == flag)
-    {
-        fprintf(stderr, "connect failed\n");
-        return 1;
-    }
-    bufferevent_enable(bev, EV_READ | EV_WRITE);
-
-    event_base_dispatch(base);
-    event_base_free(base);
-
-    printf("done\n");
-    return 0;
-}
 
 static void
 conn_writecb(struct bufferevent *bev, void *user_data)
