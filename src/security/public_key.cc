@@ -51,7 +51,7 @@ PublicKey::PublicKey(const std::string& src) {
     assert(src.size() == kPublicKeyUncompressSize || src.size() == kPublicKeySize);
     ec_point_ = SecurityStringTrans::Instance()->StringToEcPoint(src);
     assert(ec_point_ != nullptr);
-    str_pubkey_ = src;
+    Serialize(str_pubkey_);
     DeserializeToSecp256k1(str_pubkey_);
 }
 

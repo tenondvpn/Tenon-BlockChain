@@ -38,6 +38,11 @@ static int CreateTransactionWithAttr(
         const std::map<std::string, std::string>& attrs,
         transport::protobuf::Header& msg) {
     auto from = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pk);
+    std::cout << common::Encode::HexEncode(from_pk) << ", " << common::Encode::HexEncode(from) << ", " << common::Encode::HexEncode(to) << std::endl;
+    if (from.empty()) {
+        return kAccountNotExists;
+    }
+
     if (from == to) {
         return kFromEqualToInvalid;
     }
