@@ -33,25 +33,29 @@ static int CreateTransactionWithAttr(
         uint64_t gas_limit,
         uint64_t gas_price,
         uint32_t type,
+        int32_t des_net_id,
         const std::string& contract_addr,
         const std::map<std::string, std::string>& attrs,
         transport::protobuf::Header& msg) {
     auto from = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pk);
-    auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
-    if (account_info == nullptr) {
-        return kAccountNotExists;
+    if (from == to) {
+        return kFromEqualToInvalid;
     }
-
-    uint64_t balance = 0;
-    if (account_info->GetBalance(&balance) != block::kBlockSuccess ||
-            (balance + gas_limit * gas_price) < amount) {
-        return kBalanceInvalid;
-    }
-
-    uint32_t des_net_id = 0;
-    if (account_info->GetConsensuseNetId(&des_net_id) != block::kBlockSuccess) {
-        return kShardIdInvalid;
-    }
+//     auto account_info = block::AccountManager::Instance()->GetAcountInfo(from);
+//     if (account_info == nullptr) {
+//         return kAccountNotExists;
+//     }
+// 
+//     uint64_t balance = 0;
+//     if (account_info->GetBalance(&balance) != block::kBlockSuccess ||
+//             (balance + gas_limit * gas_price) < amount) {
+//         return kBalanceInvalid;
+//     }
+// 
+//     uint32_t des_net_id = 0;
+//     if (account_info->GetConsensuseNetId(&des_net_id) != block::kBlockSuccess) {
+//         return kShardIdInvalid;
+//     }
 
     dht::DhtKeyManager dht_key(des_net_id, 0);
     msg.set_src_dht_key(dht_key.StrKey());
@@ -120,17 +124,19 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
     const char* sigR = evhtp_kv_find(req->uri->query, "sigR");
     const char* sigS = evhtp_kv_find(req->uri->query, "sigS");
     const char* type = evhtp_kv_find(req->uri->query, "type");
+    const char* shard_id = evhtp_kv_find(req->uri->query, "shard_id");
     if (gid == nullptr || frompk == nullptr || to == nullptr ||
             amount == nullptr || gas_limit == nullptr ||
             gas_price == nullptr || sigR == nullptr ||
-            sigS == nullptr || type == nullptr) {
+            sigS == nullptr || type == nullptr || shard_id == nullptr) {
         std::string res = common::StringUtil::Format(
             "param invalid gid: %d, frompk: %d, to: %d,"
-            "amount: %d, gas_limit: %d, gas_price: %d, sigR: %d, sigS: %d, type: %d \n",
+            "amount: %d, gas_limit: %d, gas_price: %d, sigR: %d, sigS: %d,"
+            "type: %d, shard_id: %d \n",
             (gid != nullptr), (frompk != nullptr), (to != nullptr),
             (amount != nullptr), (gas_limit != nullptr),
             (gas_price != nullptr), (sigR != nullptr),
-            (sigS != nullptr), (type != nullptr));
+            (sigS != nullptr), (type != nullptr), (shard_id != nullptr));
         evbuffer_add(req->buffer_out, res.c_str(), res.size());
         evhtp_send_reply(req, EVHTP_RES_OK);
         return;
@@ -168,6 +174,14 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         return;
     }
 
+    int32_t shard_id_val = 0;
+    if (!common::StringUtil::ToInt32(std::string(shard_id), &shard_id_val)) {
+        std::string res = std::string("type not integer: ") + shard_id;
+        evbuffer_add(req->buffer_out, res.c_str(), res.size());
+        evhtp_send_reply(req, EVHTP_RES_OK);
+        return;
+    }
+
     const std::map<std::string, std::string> attrs;
     transport::protobuf::Header msg;
     int status = CreateTransactionWithAttr(
@@ -180,6 +194,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         gas_limit_val,
         gas_price_val,
         type_val,
+        shard_id_val,
         "",
         attrs,
         msg);

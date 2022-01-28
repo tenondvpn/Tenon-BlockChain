@@ -15,17 +15,19 @@ enum HttpStatusCode: int32_t {
     kBalanceInvalid = 3,
     kShardIdInvalid = 4,
     kSignatureInvalid = 5,
+    kFromEqualToInvalid = 6,
 };
 
 static const std::string kHttpParamTaskId = "tid";
 
-static const std::map<int, std::string> kStatusMap = {
+static const std::map<int, const char*> kStatusMap = {
     {kHttpSuccess, "kHttpSuccess"},
     {kHttpError, "kHttpError"},
     {kAccountNotExists, "kAccountNotExists"},
     {kBalanceInvalid, "kBalanceInvalid"},
     {kShardIdInvalid, "kShardIdInvalid"},
     {kSignatureInvalid, "kSignatureInvalid"},
+    {kFromEqualToInvalid, "kFromEqualToInvalid"},
 };
 
 inline static const char* GetStatus(int status) {
