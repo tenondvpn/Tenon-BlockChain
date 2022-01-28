@@ -847,7 +847,7 @@ void AccountManager::CheckMissingHeight() {
         }
     }
 
-    BLOCK_DEBUG("missing_heihts: %s", missing_heihts.c_str());
+//     BLOCK_DEBUG("missing_heihts: %s", missing_heihts.c_str());
     check_missing_height_tick_.CutOff(
         kCheckMissingHeightPeriod,
         std::bind(&AccountManager::CheckMissingHeight, this));

@@ -77,7 +77,6 @@ int KeyValueSync::AddSyncHeight(uint32_t network_id, uint32_t pool_idx, uint64_t
         std::string key = std::to_string(network_id) + "_" +
             std::to_string(pool_idx) + "_" +
             std::to_string(height);
-        SYNC_DEBUG("add sync height: %s", key.c_str());
         std::lock_guard<std::mutex> guard(added_key_set_mutex_);
         auto iter = added_key_set_.find(key);
         if (iter != added_key_set_.end()) {
