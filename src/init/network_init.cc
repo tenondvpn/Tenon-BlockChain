@@ -165,12 +165,15 @@ int NetworkInit::Init(int argc, char** argv) {
     }
 
     std::string http_ip = "0.0.0.0";
-    uint16_t http_port = 19801;
+    uint16_t http_port = 0;
     conf_.Get("tenon", "http_ip", http_ip);
-    conf_.Get("tenon", "http_port", http_port);
-    if (http::HttpServer::Instance()->Init(http_ip.c_str(), http_port, 2) != 0) {
-        INIT_ERROR("init http server failed! %s:%d", http_ip.c_str(), http_port);
-        return kInitError;
+    if (conf_.Get("tenon", "http_port", http_port) && http_port != 0) {
+        if (http::HttpServer::Instance()->Init(http_ip.c_str(), http_port, 2) != 0) {
+            INIT_ERROR("init http server failed! %s:%d", http_ip.c_str(), http_port);
+            return kInitError;
+        }
+
+        http::HttpServer::Instance()->Start();
     }
 
     if (InitCommand() != kInitSuccess) {
