@@ -13,6 +13,8 @@
 #include "dht/dht_key.h"
 #include "network/dht_manager.h"
 #include "security/security.h"
+#include "security/public_key.h"
+#include "security/signature.h"
 #include "transport/multi_thread.h"
 
 namespace tenon {
@@ -40,14 +42,14 @@ static int CreateTransactionWithAttr(
         return kAccountNotExists;
     }
 
-    int64_t balance = 0;
+    uint64_t balance = 0;
     if (account_info->GetBalance(&balance) != block::kBlockSuccess ||
             (balance + gas_limit * gas_price) < amount) {
         return kBalanceInvalid;
     }
 
     uint32_t des_net_id = 0;
-    if (account_info->SetConsensuseNetid(&network_id) != block::kBlockSuccess) {
+    if (account_info->SetConsensuseNetid(&des_net_id) != block::kBlockSuccess) {
         return kShardIdInvalid;
     }
 
@@ -85,7 +87,8 @@ static int CreateTransactionWithAttr(
 
     auto sechash = bft::GetTxMessageHash(*new_tx);
     auto sign = security::Signature(sign_r, sign_s);
-    if (!security::Security::Instance()->Verify(sechash, sign, from_pk)) {
+    auto pk = PublicKey(from_pk);
+    if (!security::Security::Instance()->Verify(sechash, sign, pk)) {
         return kSignatureInvalid;
     }
 
@@ -117,14 +120,14 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
     const char* sigR = evhtp_kv_find(req->uri->query, "sigR");
     const char* sigS = evhtp_kv_find(req->uri->query, "sigS");
     const char* type = evhtp_kv_find(req->uri->query, "type");
-    if (gid == nullptr || from == nullptr || to == nullptr ||
+    if (gid == nullptr || frompk == nullptr || to == nullptr ||
             amount == nullptr || gas_limit == nullptr ||
             gas_price == nullptr || sigR == nullptr ||
             sigS == nullptr || type == nullptr) {
         std::string res = common::StringUtil::Format(
-            "param invalid gid: %d, from: %d, to: %d,"
+            "param invalid gid: %d, frompk: %d, to: %d,"
             "amount: %d, gas_limit: %d, gas_price: %d, sigR: %d, sigS: %d, type: %d \n",
-            (gid != nullptr), (from != nullptr), (to != nullptr),
+            (gid != nullptr), (frompk != nullptr), (to != nullptr),
             (amount != nullptr), (gas_limit != nullptr),
             (gas_price != nullptr), (sigR != nullptr),
             (sigS != nullptr), (type != nullptr));
