@@ -144,30 +144,31 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         call_contract_step->Append(tx_list[i].call_contract_step());
         storages->Append("");
         transfers->Append("");
+        if (block_item->network_id() != 2) {
+            if (tx_list[i].to_add()) {
+                acc_account->Append(common::Encode::HexEncode(tx_list[i].to()));
+                acc_shard_id->Append(block_item->network_id());
+                acc_pool_index->Append(block_item->pool_index());
+                acc_balance->Append(tx_list[i].balance());
+            } else {
+                acc_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                acc_shard_id->Append(block_item->network_id());
+                acc_pool_index->Append(block_item->pool_index());
+                acc_balance->Append(tx_list[i].balance());
 
-        if (tx_list[i].to_add()) {
-            acc_account->Append(common::Encode::HexEncode(tx_list[i].to()));
-            acc_shard_id->Append(block_item->network_id());
-            acc_pool_index->Append(block_item->pool_index());
-            acc_balance->Append(tx_list[i].balance());
-        } else {
-            acc_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-            acc_shard_id->Append(block_item->network_id());
-            acc_pool_index->Append(block_item->pool_index());
-            acc_balance->Append(tx_list[i].balance());
+                for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
+                    attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                    attr_shard_id->Append(block_item->network_id());
+                    attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
+                    attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
+                }
 
-            for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
-                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                attr_shard_id->Append(block_item->network_id());
-                attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
-                attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
-            }
-
-            for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
-                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                attr_shard_id->Append(block_item->network_id());
-                attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
-                attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
+                for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
+                    attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                    attr_shard_id->Append(block_item->network_id());
+                    attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
+                    attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
+                }
             }
         }
     }

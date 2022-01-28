@@ -76,14 +76,13 @@ static int CreateTransactionWithAttr(
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid(gid);
     bft_msg.set_bft_step(bft::kBftInit);
-    bft_msg.set_pubkey(security::Security::Instance()->str_pubkey());
+    bft_msg.set_pubkey(from_pk);
     bft_msg.set_leader(false);
     bft_msg.set_net_id(des_net_id);
     bft::protobuf::TxBft tx_bft;
     auto new_tx = tx_bft.mutable_new_tx();
     new_tx->set_gid(gid);
     new_tx->set_from(from);
-    new_tx->set_from_pubkey(from_pk);
     new_tx->set_type(type);
     new_tx->set_to(to);
     new_tx->set_amount(amount);
