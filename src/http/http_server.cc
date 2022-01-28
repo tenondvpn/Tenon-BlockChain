@@ -12,6 +12,7 @@
 #include "dht/base_dht.h"
 #include "dht/dht_key.h"
 #include "network/dht_manager.h"
+#include "network/route.h"
 #include "security/security.h"
 #include "security/public_key.h"
 #include "security/signature.h"
