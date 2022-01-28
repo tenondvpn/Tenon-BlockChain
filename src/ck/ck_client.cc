@@ -132,12 +132,19 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         from_sign->Append(common::Encode::HexEncode(tx_list[i].from_sign()));
         to->Append(common::Encode::HexEncode(tx_list[i].to()));
         amount->Append(tx_list[i].amount());
-        gas_limit->Append(tx_list[i].gas_limit());
-        gas_used->Append(tx_list[i].gas_used());
-        gas_price->Append(tx_list[i].gas_price());
+        if (block_item->network_id() == 2 && tx_list[i].type() == 5) {
+            gas_limit->Append(0);
+            gas_used->Append(0);
+            gas_price->Append(0);
+            type->Append(3);
+        } else {
+            gas_limit->Append(tx_list[i].gas_limit());
+            gas_used->Append(tx_list[i].gas_used());
+            gas_price->Append(tx_list[i].gas_price());
+            type->Append(tx_list[i].type());
+        }
         balance->Append(tx_list[i].balance());
         to_add->Append(tx_list[i].to_add());
-        type->Append(tx_list[i].type());
         attrs->Append("");
         status->Append(tx_list[i].status());
         tx_hash->Append(common::Encode::HexEncode(tx_list[i].tx_hash()));
