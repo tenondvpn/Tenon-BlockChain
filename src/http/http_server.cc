@@ -89,14 +89,14 @@ static int CreateTransactionWithAttr(
     new_tx->set_gas_limit(gas_limit);
     new_tx->set_gas_price(gas_price);
 
-    const char* attr_size_param = evhtp_kv_find(req->uri->query, "attrs_size");
+    const char* attr_size_param = evhtp_kv_find(evhtp_kvs, "attrs_size");
     if (attr_size_param != nullptr) {
         int32_t attr_size = 0;
         if (!common::StringUtil::ToInt32(std::string(attr_size_param), &attr_size)) {
             std::string res = std::string("attr_size not integer: ") + attr_size_param;
             evbuffer_add(req->buffer_out, res.c_str(), res.size());
             evhtp_send_reply(req, EVHTP_RES_OK);
-            return;
+            return kHttpError;
         }
 
         for (int32_t i = 0; i < attr_size; ++i) {
@@ -108,7 +108,7 @@ static int CreateTransactionWithAttr(
                 std::string res = std::string("attr invalid: ") + key + " or " + val;
                 evbuffer_add(req->buffer_out, res.c_str(), res.size());
                 evhtp_send_reply(req, EVHTP_RES_OK);
-                return;
+                return kHttpError;
             }
 
             auto server_attr = new_tx->add_attr();
