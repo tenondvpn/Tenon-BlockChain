@@ -93,9 +93,6 @@ static int CreateTransactionWithAttr(
     if (attr_size_param != nullptr) {
         int32_t attr_size = 0;
         if (!common::StringUtil::ToInt32(std::string(attr_size_param), &attr_size)) {
-            std::string res = std::string("attr_size not integer: ") + attr_size_param;
-            evbuffer_add(req->buffer_out, res.c_str(), res.size());
-            evhtp_send_reply(req, EVHTP_RES_OK);
             return kHttpError;
         }
 
@@ -105,15 +102,12 @@ static int CreateTransactionWithAttr(
             const char* key_p = evhtp_kv_find(evhtp_kvs, key.c_str());
             const char* val_p = evhtp_kv_find(evhtp_kvs, val.c_str());
             if (key_p == nullptr || val_p == nullptr) {
-                std::string res = std::string("attr invalid: ") + key + " or " + val;
-                evbuffer_add(req->buffer_out, res.c_str(), res.size());
-                evhtp_send_reply(req, EVHTP_RES_OK);
                 return kHttpError;
             }
 
             auto server_attr = new_tx->add_attr();
-            server_attr->set_key(key_p);
-            server_attr->set_value(val_p);
+            server_attr->set_key(common::Encode::HexDecode(key_p));
+            server_attr->set_value(common::Encode::HexDecode(val_p));
         }
     }
 
@@ -204,7 +198,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
 
     int32_t shard_id_val = 0;
     if (!common::StringUtil::ToInt32(std::string(shard_id), &shard_id_val)) {
-        std::string res = std::string("type not integer: ") + shard_id;
+        std::string res = std::string("shard_id not integer: ") + shard_id;
         evbuffer_add(req->buffer_out, res.c_str(), res.size());
         evhtp_send_reply(req, EVHTP_RES_OK);
         return;

@@ -149,6 +149,8 @@ static const std::string kRootCreateNewAccountAttrKey("kRootNewAddr_netid");
 // transaction contract attr keys
 static const std::string kContractAddress = "__caddress";
 static const std::string kContractBytesCode = "__cbytescode";
+static const std::string kContractSourceCode = "__csourcecode";
+static const std::string kContractBytesStartCode = "60806040";
 static const std::string kContractName = "__ctname";
 static const std::string kContractDesc = "__ctdesc";
 static const std::string kContractCreatedBytesCode = "__cbytescodecreated";
