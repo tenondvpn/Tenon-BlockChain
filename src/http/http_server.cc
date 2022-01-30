@@ -36,7 +36,7 @@ static int CreateTransactionWithAttr(
         uint32_t type,
         int32_t des_net_id,
         const std::string& contract_addr,
-        const std::map<std::string, std::string>& attrs,
+        evhtp_kvs_t* evhtp_kvs,
         transport::protobuf::Header& msg) {
     auto from = security::Secp256k1::Instance()->ToAddressWithPublicKey(from_pk);
     std::cout << common::Encode::HexEncode(from_pk) << ", " << common::Encode::HexEncode(from) << ", " << common::Encode::HexEncode(to) << std::endl;
@@ -88,10 +88,33 @@ static int CreateTransactionWithAttr(
     new_tx->set_amount(amount);
     new_tx->set_gas_limit(gas_limit);
     new_tx->set_gas_price(gas_price);
-    for (auto iter = attrs.begin(); iter != attrs.end(); ++iter) {
-        auto server_attr = new_tx->add_attr();
-        server_attr->set_key(iter->first);
-        server_attr->set_value(iter->second);
+
+    const char* attr_size_param = evhtp_kv_find(req->uri->query, "attrs_size");
+    if (attr_size_param != nullptr) {
+        int32_t attr_size = 0;
+        if (!common::StringUtil::ToInt32(std::string(attr_size_param), &attr_size)) {
+            std::string res = std::string("attr_size not integer: ") + attr_size_param;
+            evbuffer_add(req->buffer_out, res.c_str(), res.size());
+            evhtp_send_reply(req, EVHTP_RES_OK);
+            return;
+        }
+
+        for (int32_t i = 0; i < attr_size; ++i) {
+            std::string key = std::string("key") + std::to_string(i);
+            std::string val = std::string("val") + std::to_string(i);
+            const char* key_p = evhtp_kv_find(evhtp_kvs, key.c_str());
+            const char* val_p = evhtp_kv_find(evhtp_kvs, val.c_str());
+            if (key_p == nullptr || val_p == nullptr) {
+                std::string res = std::string("attr invalid: ") + key + " or " + val;
+                evbuffer_add(req->buffer_out, res.c_str(), res.size());
+                evhtp_send_reply(req, EVHTP_RES_OK);
+                return;
+            }
+
+            auto server_attr = new_tx->add_attr();
+            server_attr->set_key(key_p);
+            server_attr->set_value(val_p);
+        }
     }
 
     auto sechash = bft::GetTxMessageHash(*new_tx);
@@ -187,7 +210,6 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         return;
     }
 
-    const std::map<std::string, std::string> attrs;
     transport::protobuf::Header msg;
     int status = CreateTransactionWithAttr(
         common::Encode::HexDecode(gid),
@@ -201,7 +223,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         type_val,
         shard_id_val,
         "",
-        attrs,
+        req->uri->query,
         msg);
     if (status != kHttpSuccess) {
         std::string res = std::string("transaction invalid: ") + GetStatus(status);

@@ -162,7 +162,10 @@ std::string Secp256k1::GetContractAddress(
 //         common::Encode::HexEncode(from + gid + bytes_code).c_str(),
 //         common::Hash::keccak256(from + gid + bytes_code).c_str(),
 //         block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code)).c_str());
-    return block::UnicastAddress(common::Hash::keccak256(from + gid + bytes_code));
+    return block::UnicastAddress(common::Hash::keccak256(
+        common::Encode::HexEncode(from) +
+        common::Encode::HexEncode(gid) +
+        common::Encode::HexEncode(bytes_code)));
 }
 
 }  // namespace security
