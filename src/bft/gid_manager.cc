@@ -53,6 +53,8 @@ bool GidManager::NewGidTxValid(
 
     if (save_to_db) {
         db::Db::Instance()->Put(db_for_gid, "");
+        BFT_ERROR("add gid: %s, call_contract_step: %d, tx_type: %d",
+            common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.call_contract_step(), tx_info.type());
     }
 
     return true;
@@ -79,6 +81,9 @@ bool GidManager::NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr) {
     }
 
     db::Db::Instance()->Put(db_for_gid, "");
+    BFT_ERROR("add gid: %s, call_contract_step: %d, tx_type: %d",
+        common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(), tx_ptr->tx.call_contract_step(), tx_ptr->tx.type());
+
     return true;
 }
 
