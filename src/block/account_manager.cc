@@ -290,10 +290,10 @@ int AccountManager::AddBlockItemToDb(
         }
 
         uint32_t pool_idx = common::GetPoolIndex(account_id);
-        if (bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true)) {
-            BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
-                common::Encode::HexEncode(tx_list[i].gid()).c_str(), tx_list[i].call_contract_step(), tx_list[i].type());
-        }
+//         if (bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true)) {
+//             BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
+//                 common::Encode::HexEncode(tx_list[i].gid()).c_str(), tx_list[i].call_contract_step(), tx_list[i].type());
+//         }
 
         bft::DispatchPool::Instance()->RemoveTx(
             pool_idx,
