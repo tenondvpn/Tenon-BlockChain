@@ -34,8 +34,8 @@ int DispatchPool::Dispatch(const bft::protobuf::BftMessage& bft_msg, const std::
 int DispatchPool::Dispatch(const protobuf::TxInfo& tx_info) {
     auto tx_ptr = std::make_shared<TxItem>(tx_info);
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
-        BFT_ERROR("global check gid exists: %s",
-            common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
+        BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
+            common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(), tx_info.call_contract_step(), tx_info.type());
         return kBftError;
     }
 
@@ -140,7 +140,8 @@ int DispatchPool::AddTx(const bft::protobuf::BftMessage& bft_msg, const std::str
 
     auto tx_ptr = std::make_shared<TxItem>(tx_bft.new_tx());
     if (!GidManager::Instance()->NewGidTxValid(tx_ptr->tx.gid(), tx_ptr)) {
-        BFT_ERROR("gid invalid.[%s]", common::Encode::HexEncode(tx_ptr->tx.gid()).c_str());
+        BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
+            common::Encode::HexEncode(tx_ptr->tx.gid()).c_str(), tx_ptr->tx.call_contract_step(), tx_ptr->tx.type());
         return kBftError;
     }
 

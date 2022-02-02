@@ -79,7 +79,9 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     auto acc_balance = std::make_shared<clickhouse::ColumnUInt64>();
 
     auto attr_account = std::make_shared<clickhouse::ColumnString>();
+    auto attr_to = std::make_shared<clickhouse::ColumnString>();
     auto attr_shard_id = std::make_shared<clickhouse::ColumnUInt32>();
+    auto attr_tx_type = std::make_shared<clickhouse::ColumnUInt32>();
     auto attr_key = std::make_shared<clickhouse::ColumnString>();
     auto attr_value = std::make_shared<clickhouse::ColumnString>();
 
@@ -162,20 +164,24 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
                 acc_shard_id->Append(block_item->network_id());
                 acc_pool_index->Append(block_item->pool_index());
                 acc_balance->Append(tx_list[i].balance());
+            }
 
-                for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
-                    attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                    attr_shard_id->Append(block_item->network_id());
-                    attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
-                    attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
-                }
+            for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
+                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
+                attr_tx_type->Append(tx_list[i].type());
+                attr_shard_id->Append(block_item->network_id());
+                attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
+                attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
+            }
 
-                for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
-                    attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                    attr_shard_id->Append(block_item->network_id());
-                    attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
-                    attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
-                }
+            for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
+                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+                attr_tx_type->Append(tx_list[i].type());
+                attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
+                attr_shard_id->Append(block_item->network_id());
+                attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
+                attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
             }
         }
     }
@@ -236,10 +242,12 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
     accounts.AppendColumn("pool_index", acc_pool_index);
     accounts.AppendColumn("balance", acc_balance);
 
-    account_attrs.AppendColumn("id", attr_account);
+    account_attrs.AppendColumn("from", attr_account);
     account_attrs.AppendColumn("shard_id", attr_shard_id);
     account_attrs.AppendColumn("key", attr_key);
     account_attrs.AppendColumn("value", attr_value);
+    account_attrs.AppendColumn("to", attr_to);
+    account_attrs.AppendColumn("type", attr_tx_type);
 
     client_.Insert(kClickhouseTransTableName, trans);
     client_.Insert(kClickhouseBlockTableName, blocks);
@@ -339,14 +347,16 @@ bool ClickHouseClient::CreateAccountTable() {
 
 bool ClickHouseClient::CreateAccountKeyValueTable() {
     std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseAccountKvTableName + " ( "
-        "`id` String COMMENT 'prehash' CODEC(LZ4), "
+        "`from` String COMMENT 'prehash' CODEC(LZ4), "
+        "`to` String COMMENT 'prehash' CODEC(LZ4), "
+        "`type` UInt32 COMMENT 'type' CODEC(T64, LZ4), "
         "`shard_id` UInt32 COMMENT 'shard_id' CODEC(T64, LZ4), "
         "`key` String COMMENT 'key' CODEC(LZ4), "
         "`value` String COMMENT 'value' CODEC(LZ4) "
         ") "
         "ENGINE = ReplacingMergeTree "
         "PARTITION BY(shard_id) "
-        "ORDER BY(id) "
+        "ORDER BY(type, key, from, to) "
         "SETTINGS index_granularity = 8192;";
     client_.Execute(create_cmd);
     return true;

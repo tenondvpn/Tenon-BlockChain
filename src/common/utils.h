@@ -240,7 +240,6 @@ uint16_t GetUdpRoutePort(
         uint16_t max_port);
 int RemoteReachable(const std::string& ip, uint16_t port, bool* reachable);
 bool IsVlanIp(const std::string& ip);
-int32_t RunShellCmdToGetOutput(const std::string& cmd, std::string* res);
 inline static uint32_t GetSignerCount(uint32_t n) {
     auto t = n * 2 / 3;
     if ((n * 2) % 3 > 0) {

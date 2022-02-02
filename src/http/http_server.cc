@@ -25,6 +25,7 @@ namespace http {
 static HttpServer* http_server = nullptr;
 
 static int CreateTransactionWithAttr(
+        bool just_call,
         const std::string& gid,
         const std::string& from_pk,
         const std::string& to,
@@ -71,8 +72,11 @@ static int CreateTransactionWithAttr(
     msg.set_type(common::kBftMessage);
     msg.set_client(false);
     msg.set_hop_count(0);
-    auto broad_param = msg.mutable_broadcast();
-    transport::SetDefaultBroadcastParam(broad_param);
+    if (!just_call) {
+        auto broad_param = msg.mutable_broadcast();
+        transport::SetDefaultBroadcastParam(broad_param);
+    }
+
     bft::protobuf::BftMessage bft_msg;
     bft_msg.set_gid(gid);
     bft_msg.set_bft_step(bft::kBftInit);
@@ -147,6 +151,7 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
     const char* sigS = evhtp_kv_find(req->uri->query, "sigS");
     const char* type = evhtp_kv_find(req->uri->query, "type");
     const char* shard_id = evhtp_kv_find(req->uri->query, "shard_id");
+    const char* just_call = evhtp_kv_find(req->uri->query, "just_call");
     if (gid == nullptr || frompk == nullptr || to == nullptr ||
             amount == nullptr || gas_limit == nullptr ||
             gas_price == nullptr || sigR == nullptr ||
@@ -204,8 +209,18 @@ static void TransactionCallback(evhtp_request_t* req, void* data) {
         return;
     }
 
+    bool bool_just_call = false;
+    if (just_call != nullptr) {
+        if (!common::StringUtil::ToBool(std::string(just_call), &bool_just_call)) {
+            std::string res = std::string("just_call not integer: ") + just_call;
+            evbuffer_add(req->buffer_out, res.c_str(), res.size());
+            evhtp_send_reply(req, EVHTP_RES_OK);
+            return;
+        }
+    }
     transport::protobuf::Header msg;
     int status = CreateTransactionWithAttr(
+        bool_just_call,
         common::Encode::HexDecode(gid),
         common::Encode::HexDecode(frompk),
         common::Encode::HexDecode(to),

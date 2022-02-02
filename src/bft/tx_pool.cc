@@ -180,11 +180,12 @@ void TxPool::CheckTimeoutTx() {
 
             iter->second->valid = false;
 //             db::Db::Instance()->hdel(pool_name_, iter->second->uni_gid);
-            BFT_DEBUG("timeout remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
+            BFT_DEBUG("timeout remove tx tx index: %lu, from: %s, to: %s, gid: %s, call_contract_step: %d, amount: %lu.",
                 iter->first,
                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+                iter->second->tx.call_contract_step(),
                 iter->second->tx.amount());
 
             tx_pool_.erase(iter++);
@@ -507,16 +508,6 @@ void TxPool::RemoveTx(
     last_bft_over_tm_sec_ = common::TimeUtils::TimestampSeconds();
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {
-        BFT_DEBUG("not uni_gid RemoveTx remove tx tx index [to: %d] [pool idx: %d] type: %d,"
-            "call_contract_step: %d not has tx[%s]to[%s][%s], uni_gid[%s]!",
-            add_to,
-            pool_index_,
-            tx_type,
-            call_contract_step,
-            "",
-            "",
-            common::Encode::HexEncode(gid).c_str(),
-            common::Encode::HexEncode(uni_gid).c_str());
         return;
     }
 
@@ -569,11 +560,12 @@ void TxPool::BftOver(BftInterfacePtr& bft_ptr) {
         auto iter = tx_pool_.find(item_vec[i]);
         if (iter != tx_pool_.end()) {
 //             if (iter->second->tx.type() == common::kConsensusRootTimeBlock) {
-            BFT_DEBUG("over remove tx tx index: %lu, from: %s, to: %s, gid: %s, amount: %lu.",
+            BFT_DEBUG("over remove tx index: %lu, from: %s, to: %s, gid: %s, call_contract_step: %d, amount: %lu.",
                 item_vec[i],
                 common::Encode::HexEncode(iter->second->tx.from()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.to()).c_str(),
                 common::Encode::HexEncode(iter->second->tx.gid()).c_str(),
+                iter->second->tx.call_contract_step(),
                 iter->second->tx.amount());
 //             }
 

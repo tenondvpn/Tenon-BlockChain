@@ -252,20 +252,6 @@ uint32_t MicTimestampToDate(int64_t timestamp) {
 #endif
 }
 
-int32_t RunShellCmdToGetOutput(const std::string& cmd, std::string* res) {
-    FILE* fp = popen(cmd.c_str(), "r");
-    if (fp == NULL) {
-        return 1;
-    }
-
-    char data[2048] = { 0 };
-    while (fgets(data, sizeof(data), fp) != nullptr) {
-        *res += data;
-    }
-
-    return 0;
-}
-
 }  // namespace common
 
 }  // namespace tenon
