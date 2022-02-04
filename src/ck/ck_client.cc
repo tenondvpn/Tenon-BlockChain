@@ -1,17 +1,18 @@
 #include "ck/ck_client.h"
 
 #include "common/encode.h"
+#include "common/time_utils.h"
 
 namespace tenon {
 
 namespace ck {
 
 ClickHouseClient::ClickHouseClient(
-    const std::string& host,
-    const std::string& user,
-    const std::string& passwd)
-//     : client_(clickhouse::ClientOptions().SetHost(host).SetUser("default").SetPassword("default123")) {}
-    : client_(clickhouse::ClientOptions().SetHost(host)) {}
+        const std::string& host,
+        const std::string& user,
+        const std::string& passwd)
+        : client_(clickhouse::ClientOptions().SetHost(host)) {
+}
 
 ClickHouseClient::~ClickHouseClient() {}
 
@@ -153,36 +154,35 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         call_contract_step->Append(tx_list[i].call_contract_step());
         storages->Append("");
         transfers->Append("");
-        if (block_item->network_id() != 2) {
-            if (tx_list[i].to_add()) {
-                acc_account->Append(common::Encode::HexEncode(tx_list[i].to()));
-                acc_shard_id->Append(block_item->network_id());
-                acc_pool_index->Append(block_item->pool_index());
-                acc_balance->Append(tx_list[i].balance());
-            } else {
-                acc_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                acc_shard_id->Append(block_item->network_id());
-                acc_pool_index->Append(block_item->pool_index());
-                acc_balance->Append(tx_list[i].balance());
-            }
+        if (tx_list[i].to_add()) {
+            acc_account->Append(common::Encode::HexEncode(tx_list[i].to()));
+            acc_shard_id->Append(block_item->network_id());
+            acc_pool_index->Append(block_item->pool_index());
+            acc_balance->Append(tx_list[i].balance());
+        }
+        else {
+            acc_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+            acc_shard_id->Append(block_item->network_id());
+            acc_pool_index->Append(block_item->pool_index());
+            acc_balance->Append(tx_list[i].balance());
+        }
 
-            for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
-                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
-                attr_tx_type->Append(tx_list[i].type());
-                attr_shard_id->Append(block_item->network_id());
-                attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
-                attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
-            }
+        for (int32_t j = 0; j < tx_list[i].attr_size(); ++j) {
+            attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+            attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
+            attr_tx_type->Append(tx_list[i].type());
+            attr_shard_id->Append(block_item->network_id());
+            attr_key->Append(common::Encode::HexEncode(tx_list[i].attr(j).key()));
+            attr_value->Append(common::Encode::HexEncode(tx_list[i].attr(j).value()));
+        }
 
-            for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
-                attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
-                attr_tx_type->Append(tx_list[i].type());
-                attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
-                attr_shard_id->Append(block_item->network_id());
-                attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
-                attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
-            }
+        for (int32_t j = 0; j < tx_list[i].storages_size(); ++j) {
+            attr_account->Append(common::Encode::HexEncode(tx_list[i].from()));
+            attr_tx_type->Append(tx_list[i].type());
+            attr_to->Append(common::Encode::HexEncode(tx_list[i].to()));
+            attr_shard_id->Append(block_item->network_id());
+            attr_key->Append(common::Encode::HexEncode(tx_list[i].storages(j).key()));
+            attr_value->Append(common::Encode::HexEncode(tx_list[i].storages(j).value()));
         }
     }
 
@@ -362,11 +362,35 @@ bool ClickHouseClient::CreateAccountKeyValueTable() {
     return true;
 }
 
-bool ClickHouseClient::CreateTable() try {
+bool ClickHouseClient::CreateStatisticTable() {
+    std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseStatisticTableName + " ( "
+        "`time` UInt64 COMMENT 'time' CODEC(LZ4), "
+        "`all_tenon` UInt32 COMMENT 'tenon' CODEC(LZ4), "
+        "`all_address` UInt32 COMMENT 'address' CODEC(T64, LZ4), "
+        "`all_contracts` UInt32 COMMENT 'contracts' CODEC(T64, LZ4), "
+        "`all_transactions` UInt32 COMMENT 'transactions' CODEC(LZ4), "
+        "`all_nodes` UInt32 COMMENT 'nodes' CODEC(LZ4), "
+        "`all_waiting_nodes` UInt32 COMMENT 'waiting_nodes' CODEC(LZ4), "
+        "`date` UInt32 COMMENT 'date' CODEC(T64, LZ4) "
+        ") "
+        "ENGINE = ReplacingMergeTree "
+        "PARTITION BY(date) "
+        "ORDER BY(time) "
+        "SETTINGS index_granularity = 8192;";
+    client_.Execute(create_cmd);
+    return true;
+}
+
+
+bool ClickHouseClient::CreateTable(bool statistic) try {
     CreateTransactionTable();
     CreateBlockTable();
     CreateAccountTable();
     CreateAccountKeyValueTable();
+    CreateStatisticTable();
+    if (statistic) {
+        statistic_tick_.CutOff(5000000l, std::bind(&ClickHouseClient::Statistic, this));
+    }
     return true;
 } catch (std::exception& e) {
     TENON_ERROR("add new block failed[%s]", e.what());
@@ -374,8 +398,72 @@ bool ClickHouseClient::CreateTable() try {
     return false;
 }
 
-void ClickHouseClient::CheckBlockFinished() {
+void ClickHouseClient::TickStatistic() {
+    Statistic();
+    statistic_tick_.CutOff(5000000l, std::bind(&ClickHouseClient::Statistic, this));
+}
 
+void ClickHouseClient::Statistic() try {
+    std::string cmd = "select count(*) from tenon_ck_transaction_table;";
+    uint32_t all_transactions = 0;
+    client_.Select(cmd, [&all_transactions](const clickhouse::Block& ck_block) {
+        if (ck_block.GetRowCount() > 0) {
+            all_transactions = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+        }
+    });
+
+    cmd = "select count(*) from tenon_ck_account_table;";
+    uint32_t all_address = 0;
+    client_.Select(cmd, [&all_address](const clickhouse::Block& ck_block) {
+        if (ck_block.GetRowCount() > 0) {
+            all_address = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+        }
+    });
+
+    cmd = "select sum(balance) from tenon_ck_account_table;";
+    uint32_t sum_balance = 0;
+    client_.Select(cmd, [&sum_balance](const clickhouse::Block& ck_block) {
+        if (ck_block.GetRowCount() > 0) {
+            sum_balance = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+        }
+    });
+
+    cmd = "select count(*) from tenon_ck_account_key_value_table where type = 4 and key = '5f5f636279746573636f6465'";
+    uint32_t all_contracts = 0;
+    client_.Select(cmd, [&all_contracts](const clickhouse::Block& ck_block) {
+        if (ck_block.GetRowCount() > 0) {
+            all_contracts = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+        }
+    });
+
+    auto st_time = std::make_shared<clickhouse::ColumnUInt64>();
+    auto st_tenon = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_address = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_contracts = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_transactions = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_nodes = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_wnodes = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_date = std::make_shared<clickhouse::ColumnUInt32>();
+    st_time->Append(common::TimeUtils::TimestampSeconds());
+    st_date->Append(common::TimeUtils::TimestampDays());
+    st_tenon->Append(sum_balance);
+    st_address->Append(all_address);
+    st_contracts->Append(all_contracts);
+    st_transactions->Append(all_transactions);
+    st_nodes->Append(0);
+    st_wnodes->Append(0);
+    clickhouse::Block statistics;
+    statistics.AppendColumn("time", st_time);
+    statistics.AppendColumn("all_tenon", st_tenon);
+    statistics.AppendColumn("all_address", st_address);
+    statistics.AppendColumn("all_contracts", st_contracts);
+    statistics.AppendColumn("all_transactions", st_transactions);
+    statistics.AppendColumn("all_nodes", st_nodes);
+    statistics.AppendColumn("all_waiting_nodes", st_wnodes);
+    statistics.AppendColumn("date", st_date);
+    client_.Insert(kClickhouseStatisticTableName, statistics);
+} catch (std::exception& e) {
+    TENON_ERROR("add new block failed[%s]", e.what());
 }
 
 };  // namespace ck

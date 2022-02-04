@@ -138,8 +138,10 @@ int BlockManager::Init(common::Config& conf) {
         conf.Get("tenon", "ck_user", ck_user);
         std::string ck_password;
         conf.Get("tenon", "ck_password", ck_password);
+        bool statistic_ck = false;
+        conf.Get("tenon", "statistic_ck", statistic_ck);
         ck_client_ = std::make_shared<ck::ClickHouseClient>(ck_ip, ck_user, ck_password);
-        if (!ck_client_->CreateTable()) {
+        if (!ck_client_->CreateTable(statistic_ck)) {
             BLOCK_ERROR("init ck failed!");
             return kBlockError;
         }
