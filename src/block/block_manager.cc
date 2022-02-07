@@ -243,10 +243,10 @@ void BlockManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
-    if (block_msg.has_block_req()) {
-        HandleGetBlockRequest(header, block_msg);
-        return;
-    }
+//     if (block_msg.has_block_req()) {
+//         HandleGetBlockRequest(header, block_msg);
+//         return;
+//     }
 
     if (block_msg.has_height_req()) {
         HandleGetHeightRequest(header, block_msg);
@@ -258,10 +258,10 @@ void BlockManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
-    if (block_msg.has_account_init_req()) {
-        HandleGetAccountInitRequest(header, block_msg);
-        return;
-    }
+//     if (block_msg.has_account_init_req()) {
+//         HandleGetAccountInitRequest(header, block_msg);
+//         return;
+//     }
 
     if (block_msg.has_ad_reward_req()) {
         HandleAdRewardRequest(header, block_msg);

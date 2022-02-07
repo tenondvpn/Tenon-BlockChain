@@ -175,7 +175,7 @@ int DbAccountInfo::GetPoolIndex(uint32_t* pool_idx) {
     if (account_id_ == common::kRootChainSingleBlockTxAddress ||
             account_id_ == common::kRootChainTimeBlockTxAddress ||
             account_id_ == common::kRootChainElectionBlockTxAddress) {
-        *pool_idx = kRootChainPoolIndex;
+        *pool_idx = common::kRootChainPoolIndex;
         pool_index_ = *pool_idx;
         return kBlockSuccess;
     }
@@ -188,7 +188,7 @@ int DbAccountInfo::GetPoolIndex(uint32_t* pool_idx) {
         return kBlockError;
     }
 
-    if (!common::StringUtil::ToUint64(str_pool_index, pool_idx)) {
+    if (!common::StringUtil::ToUint32(str_pool_index, pool_idx)) {
         return kBlockError;
     }
 

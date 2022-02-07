@@ -258,13 +258,13 @@ int TxBft::RootBackupCheckCreateAccountAddressPrepare(
         if (tx_info.to() == common::kRootChainSingleBlockTxAddress ||
                 tx_info.to() == common::kRootChainTimeBlockTxAddress ||
                 tx_info.to() == common::kRootChainElectionBlockTxAddress) {
-            local_pool_idx = kRootChainPoolIndex;
+            local_pool_idx = common::kRootChainPoolIndex;
         } else {
             std::mt19937_64 g2(prpare_block_->height());
-            local_pool_idx = g2() % common::kImmutablePoolSize();
+            local_pool_idx = g2() % common::kImmutablePoolSize;
         }
 
-        if (local_pool_idx != tx.pool_index()) {
+        if (local_pool_idx != tx_info.pool_index()) {
             BFT_ERROR("local tx account pool index[%d] not eq to leader[%d].",
                 local_pool_idx, tx_info.pool_index());
             return kBftError;
@@ -1790,13 +1790,13 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
         if (tx.to() == common::kRootChainSingleBlockTxAddress ||
                 tx.to() == common::kRootChainTimeBlockTxAddress ||
                 tx.to() == common::kRootChainElectionBlockTxAddress) {
-            local_pool_idx = kRootChainPoolIndex;
+            local_pool_idx = common::kRootChainPoolIndex;
         } else {
             std::mt19937_64 g2(prpare_block_->height());
-            local_pool_idx = g2() % common::kImmutablePoolSize();
+            local_pool_idx = g2() % common::kImmutablePoolSize;
         }
 
-        tx.set_pool_index(g2() % common::kImmutablePoolSize());
+        tx.set_pool_index(local_pool_idx);
         add_item_index_vec(tx_vec[i]->index);
         push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();

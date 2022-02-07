@@ -142,7 +142,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
     if (account_id == common::kRootChainSingleBlockTxAddress ||
             account_id == common::kRootChainTimeBlockTxAddress ||
             account_id == common::kRootChainElectionBlockTxAddress) {
-        pool_index = kRootChainPoolIndex;
+        pool_index = common::kRootChainPoolIndex;
     } else {
         auto acc_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
         if (acc_info == nullptr) {
