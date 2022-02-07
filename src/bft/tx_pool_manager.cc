@@ -139,20 +139,22 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
     }
 
-    if (account_id == common::kRootChainSingleBlockTxAddress ||
-            account_id == common::kRootChainTimeBlockTxAddress ||
-            account_id == common::kRootChainElectionBlockTxAddress) {
+    if (common::IsBaseAddress(account_id)) {
         pool_index = common::kRootChainPoolIndex;
     } else {
-        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(account_id);
-        if (acc_info == nullptr) {
-            BFT_ERROR("tx invalid. account address not exists[%s]",
-                common::Encode::HexEncode(account_id).c_str());
-            return kBftError;
-        }
+        if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+            pool_index = common::GetBasePoolIndex(account_id);
+        } else {
+            auto acc_info = block::AccountManager::Instance()->GetAcountInfo(account_id);
+            if (acc_info == nullptr) {
+                BFT_ERROR("tx invalid. account address not exists[%s]",
+                    common::Encode::HexEncode(account_id).c_str());
+                return kBftError;
+            }
 
-        if (acc_info->GetPoolIndex(&pool_index) != block::kBlockSuccess) {
-            return kBftError;
+            if (acc_info->GetPoolIndex(&pool_index) != block::kBlockSuccess) {
+                return kBftError;
+            }
         }
     }
 

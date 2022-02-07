@@ -606,12 +606,16 @@ int AccountManager::UpdateAccountInfo(
 
                 account_info->SetConsensuseNetid(tx_info.network_id(), db_batch);
                 account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
-                if (!tx_info.has_pool_index() || tx_info.pool_index() == common::kInvalidPoolIndex) {
-                    BLOCK_ERROR("fromAddNewAccountToDb pool index failed!");
-                    return kBlockError;
-                }
+                if (!common::IsBaseAddress(account_id)) {
+                    if (!tx_info.has_pool_index() || tx_info.pool_index() == common::kInvalidPoolIndex) {
+                        BLOCK_ERROR("fromAddNewAccountToDb [%s] pool index failed: %u!",
+                            common::Encode::HexEncode(account_id).c_str(), tx_info.pool_index());
+                        return kBlockError;
+                    }
 
-                account_info->SetPoolIndex(tx_info.pool_index(), db_batch);
+                    account_info->SetPoolIndex(tx_info.pool_index(), db_batch);
+                }
+                
                 account_info->SetBalance(tx_info.balance(), db_batch);
                 exist_height = block_item->height();
                 BLOCK_DEBUG("add account info by not create block: %s",
