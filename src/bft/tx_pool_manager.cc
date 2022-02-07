@@ -105,6 +105,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
 
     // call contract and init
     uint32_t pool_index = common::kInvalidPoolIndex;
+    std::string account_id;
     if (tx_ptr->tx.type() == common::kConsensusCallContract ||
             tx_ptr->tx.type() == common::kConsensusCreateContract) {
         if (tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
@@ -113,16 +114,16 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            account_id = tx_ptr->tx.from();
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            account_id = tx_ptr->tx.to();
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
             // just contract's network handle this message and unlock it
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            account_id = tx_ptr->tx.from();
         } else {
             return kBftError;
         }
@@ -132,9 +133,26 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
 
         if (!tx_ptr->tx.to_add()) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            account_id = tx_ptr->tx.from();
         } else {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            account_id = tx_ptr->tx.to();
+        }
+    }
+
+    if (account_id == common::kRootChainSingleBlockTxAddress ||
+            account_id == common::kRootChainTimeBlockTxAddress ||
+            account_id == common::kRootChainElectionBlockTxAddress) {
+        pool_index = kRootChainPoolIndex;
+    } else {
+        auto acc_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        if (acc_info == nullptr) {
+            BFT_ERROR("tx invalid. account address not exists[%s]",
+                common::Encode::HexEncode(contract_addr).c_str());
+            return kBftError;
+        }
+
+        if (acc_info->GetPoolIndex(&pool_index) != block::kBlockSuccess) {
+            return kBftError;
         }
     }
 

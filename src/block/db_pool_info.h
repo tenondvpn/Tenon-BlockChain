@@ -20,6 +20,7 @@ namespace block {
 
 class DbPoolInfo {
 public:
+    static uint32_t GetBasePoolIndex(const std::string& acc_addr);
     DbPoolInfo(uint32_t pool_index, uint32_t net_id);
     ~DbPoolInfo();
     int InitWithGenesisBlock();
@@ -41,6 +42,7 @@ public:
     void FlushTreeToDb();
 
 private:
+
     std::string dict_key_;
     std::string hash_;
     std::string last_block_str_;

@@ -568,7 +568,7 @@ std::string GenesisBlockInit::GetValidPoolBaseAddr(uint32_t network_id, uint32_t
             network_id,
             common::kStatisticFromAddressMidllefix.c_str(),
             id_idx++));
-        uint32_t pool_idx = common::GetPoolIndex(addr);
+        uint32_t pool_idx = common::GetBasePoolIndex(addr);
         if (pool_idx == pool_index) {
             return addr;
         }
@@ -594,7 +594,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kConsensusShardBeginNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetBasePoolIndex(address)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -610,7 +610,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kRootCongressNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetBasePoolIndex(address)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -730,7 +730,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kConsensusShardBeginNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetBasePoolIndex(address)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -746,7 +746,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kRootCongressNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetBasePoolIndex(address)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -837,7 +837,7 @@ void GenesisBlockInit::InitGenesisAccount() {
 //         std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
 //         std::string address1 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey_str);
 //         assert(address == address1);
-//         auto pool_index = common::GetPoolIndex(address);
+//         auto pool_index = common::GetBasePoolIndex(address);
 //         auto iter = pool_index_map_.find(pool_index);
 //         if (iter != pool_index_map_.end()) {
 //             continue;
@@ -1380,7 +1380,7 @@ void GenesisBlockInit::GenerateRootAccounts() {
     //         std::string address = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
     //         std::string address1 = security::Secp256k1::Instance()->ToAddressWithPrivateKey(prikey_str);
     //         assert(address == address1);
-    //         auto pool_index = common::GetPoolIndex(address);
+    //         auto pool_index = common::GetBasePoolIndex(address);
     //         auto iter = root_account_with_pool_index_map_.find(pool_index);
     //         if (iter != root_account_with_pool_index_map_.end()) {
     //             continue;

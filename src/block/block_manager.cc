@@ -444,77 +444,6 @@ int64_t BlockManager::FixRewardWithHistory(const std::string& id, int64_t new_am
     return new_amount;
 }
 
-void BlockManager::HandleGetAccountInitRequest(
-        const transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg) {
-    if (block_msg.account_init_req().net_id() != common::GlobalInfo::Instance()->network_id()) {
-        return;
-    }
-
-    auto account_ptr = block::AccountManager::Instance()->GetAcountInfo(
-            block_msg.account_init_req().id());
-    if (account_ptr == nullptr) {
-        return;
-    }
-
-    protobuf::BlockMessage block_res;
-    auto account_init_res = block_res.mutable_account_init_res();
-    uint64_t balance = 0;
-    account_ptr->GetBalance(&balance);
-    account_init_res->set_balance(balance);
-    account_init_res->set_id(block_msg.account_init_req().id());
-    account_init_res->set_max_index(account_ptr->max_index());
-    uint32_t count = 0;
-    std::vector<uint64_t> heights;
-    account_ptr->GetLatestHeights(
-        block_msg.account_init_req().height(),
-        block_msg.account_init_req().count(),
-        &heights);
-    uint32_t pool_idx = common::GetPoolIndex(block_msg.account_init_req().id());
-    for (uint32_t i = 0; i < heights.size(); ++i) {
-        if (block_msg.account_init_req().height() != common::kInvalidUint64 &&
-                heights[i] <= block_msg.account_init_req().height()) {
-            continue;
-        }
-
-        bft::protobuf::Block block_item;
-        if (GetBlockWithHeight(
-                block_msg.account_init_req().net_id(),
-                pool_idx,
-                heights[i],
-                block_item) != kBlockSuccess) {
-            return;
-        }
-
-        for (int32_t tx_idx = 0; tx_idx < block_item.tx_list_size(); ++tx_idx) {
-            if (block_item.tx_list(tx_idx).from() == block_msg.account_init_req().id() ||
-                    block_item.tx_list(tx_idx).to() == block_msg.account_init_req().id()) {
-                auto res_block = account_init_res->add_block_list();
-                *res_block = block_item;
-                break;
-            }
-        }
-    }
-
-    if (account_init_res->block_list_size() <= 0) {
-        return;
-    }
-
-    transport::protobuf::Header msg;
-    auto dht_ptr = network::UniversalManager::Instance()->GetUniversal(
-            network::kUniversalNetworkId);
-    assert(dht_ptr != nullptr);
-    BlockProto::CreateGetBlockResponse(
-            dht_ptr->local_node(),
-            header,
-            block_res.SerializeAsString(),
-            msg);
-    DHT_ERROR("get account block_list size: %u, from: %s:%d",
-        account_init_res->block_list_size(), header.from_ip().c_str(), header.from_port());
-    transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
-        header.from_ip(), header.from_port(), 0, msg);
-}
-
 void BlockManager::HandleGetHeightRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
@@ -572,58 +501,6 @@ void BlockManager::SendBlockNotExists(const transport::protobuf::Header& header)
         transport::MultiThreadHandler::Instance()->transport()->Send(
                 header.from_ip(), header.from_port(), 0, msg);
     }
-}
-
-int BlockManager::HandleGetBlockRequest(
-        const transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg) {
-    std::string block_hash;
-    if (block_msg.block_req().has_block_hash()) {
-        block_hash = block_msg.block_req().block_hash();
-    } else if (block_msg.block_req().has_tx_gid()) {
-        std::string tx_gid;
-        if (block_msg.block_req().from()) {
-            tx_gid = common::GetTxDbKey(true, block_msg.block_req().tx_gid());
-        } else {
-            tx_gid = common::GetTxDbKey(false, block_msg.block_req().tx_gid());
-        }
-
-        auto st = db::Db::Instance()->Get(tx_gid, &block_hash);
-        if (!st.ok()) {
-            SendBlockNotExists(header);
-            return kBlockError;
-        }
-    } else if (block_msg.block_req().has_height()) {
-        auto acc_ptr = AccountManager::Instance()->GetAcountInfo(
-                block_msg.block_req().account_address());
-        if (acc_ptr == nullptr) {
-            SendBlockNotExists(header);
-            return kBlockError;
-        }
-
-        if (acc_ptr->GetBlockHashWithHeight(
-                block_msg.block_req().height(),
-                &block_hash) != block::kBlockSuccess) {
-            SendBlockNotExists(header);
-            return kBlockError;
-        }
-    }
-
-    if (block_hash.empty()) {
-        SendBlockNotExists(header);
-        return kBlockError;
-    }
-
-    std::string* block_data = new std::string();
-    auto st = db::Db::Instance()->Get(block_hash, block_data);
-    if (!st.ok()) {
-        delete block_data;
-        SendBlockNotExists(header);
-        return kBlockError;
-    }
-
-    SendBlockResponse(header, *block_data);
-    return kBlockSuccess;
 }
 
 void BlockManager::SendBlockResponse(

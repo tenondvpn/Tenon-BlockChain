@@ -11,6 +11,7 @@ namespace tenon {
 namespace block {
 
 static const std::string kFieldBalance("balance");
+static const std::string kFieldPoolIndex("pool_index");
 static const std::string kFieldNetworkId("net_id");
 static const std::string kFieldHeight("height");
 static const std::string kFieldOutCount("out_count");
@@ -74,39 +75,11 @@ bool DbAccountInfo::AddNewAccountToDb(
 DbAccountInfo::DbAccountInfo(const std::string& account_id)
         : account_id_(account_id), tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()) {
     dict_key_ = db::kGlobalDickKeyAccountInfo + account_id_;
-    pool_index_ = common::GetPoolIndex(account_id_);
 }
 
 DbAccountInfo::~DbAccountInfo() {
     std::lock_guard<std::mutex> guard(elect_blocks_map_mutex_);
     elect_blocks_map_.clear();
-}
-
-int DbAccountInfo::GetBlockWithHeight(uint64_t height, std::string* block_str) {
-    std::string hash;
-    if (GetBlockHashWithHeight(height, &hash) != kBlockSuccess) {
-        return kBlockError;
-    }
-
-    auto st = db::Db::Instance()->Get(hash, block_str);
-    if (!st.ok()) {
-        return kBlockError;
-    }
-
-    return kBlockSuccess;
-}
-
-int DbAccountInfo::GetBlockHashWithHeight(uint64_t height, std::string* hash) {
-    std::string height_db_key = common::GetHeightDbKey(
-            consensuse_net_id_,
-            pool_index_,
-            height);
-    auto st = db::Db::Instance()->Get(height_db_key, hash);
-    if (!st.ok()) {
-        return kBlockError;
-    }
-
-    return kBlockSuccess;
 }
 
 int DbAccountInfo::SetConsensuseNetid(uint32_t network_id, db::DbWriteBach& db_batch) {
@@ -177,6 +150,49 @@ int DbAccountInfo::GetBalance(uint64_t* balance) {
     }
 
     balance_ = *balance;
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::SetPoolIndex(uint32_t pool_idx, db::DbWriteBach& db_batch) {
+    if (!db::Dict::Instance()->Hset(
+            dict_key_,
+            kFieldPoolIndex,
+            std::to_string(pool_idx),
+            db_batch)) {
+        return kBlockError;
+    }
+
+    pool_index_ = pool_idx;
+    return kBlockSuccess;
+}
+
+int DbAccountInfo::GetPoolIndex(uint32_t* pool_idx) {
+    if (pool_index_ != common::kInvalidUint32) {
+        *pool_idx = pool_index_;
+        return kBlockSuccess;
+    }
+
+    if (account_id_ == common::kRootChainSingleBlockTxAddress ||
+            account_id_ == common::kRootChainTimeBlockTxAddress ||
+            account_id_ == common::kRootChainElectionBlockTxAddress) {
+        *pool_idx = kRootChainPoolIndex;
+        pool_index_ = *pool_idx;
+        return kBlockSuccess;
+    }
+
+    std::string str_pool_index;
+    if (!db::Dict::Instance()->Hget(
+            dict_key_,
+            kFieldPoolIndex,
+            &str_pool_index)) {
+        return kBlockError;
+    }
+
+    if (!common::StringUtil::ToUint64(str_pool_index, pool_idx)) {
+        return kBlockError;
+    }
+
+    pool_index_ = *pool_idx;
     return kBlockSuccess;
 }
 

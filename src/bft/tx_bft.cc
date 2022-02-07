@@ -254,6 +254,22 @@ int TxBft::RootBackupCheckCreateAccountAddressPrepare(
             return kBftError;
         }
 
+        uint32_t local_pool_idx = common::kInvalidPoolIndex;
+        if (tx_info.to() == common::kRootChainSingleBlockTxAddress ||
+                tx_info.to() == common::kRootChainTimeBlockTxAddress ||
+                tx_info.to() == common::kRootChainElectionBlockTxAddress) {
+            local_pool_idx = kRootChainPoolIndex;
+        } else {
+            std::mt19937_64 g2(prpare_block_->height());
+            local_pool_idx = g2() % common::kImmutablePoolSize();
+        }
+
+        if (local_pool_idx != tx.pool_index()) {
+            BFT_ERROR("local tx account pool index[%d] not eq to leader[%d].",
+                local_pool_idx, tx_info.pool_index());
+            return kBftError;
+        }
+
         if (local_tx_info->tx.type() == common::kConsensusCreateContract) {
                 uint32_t network_id = 0;
                 if (block::AccountManager::Instance()->GetAddressConsensusNetworkId(
@@ -1713,9 +1729,9 @@ int TxBft::CheckTxInfo(
     } else {
         // check amount is 0
         // new account address
-        if (common::GetPoolIndex(tx_info.from()) != pool_index()) {
-            return kBftPoolIndexError;
-        }
+//         if (common::GetPoolIndex(tx_info.from()) != pool_index()) {
+//             return kBftPoolIndexError;
+//         }
     }
 
     add_item_index_vec(local_tx_info->index);
@@ -1770,6 +1786,17 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
             tx.set_network_id(NewAccountGetNetworkId(tx.to()));
         }
 
+        uint32_t local_pool_idx = common::kInvalidPoolIndex;
+        if (tx.to() == common::kRootChainSingleBlockTxAddress ||
+                tx.to() == common::kRootChainTimeBlockTxAddress ||
+                tx.to() == common::kRootChainElectionBlockTxAddress) {
+            local_pool_idx = kRootChainPoolIndex;
+        } else {
+            std::mt19937_64 g2(prpare_block_->height());
+            local_pool_idx = g2() % common::kImmutablePoolSize();
+        }
+
+        tx.set_pool_index(g2() % common::kImmutablePoolSize());
         add_item_index_vec(tx_vec[i]->index);
         push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();

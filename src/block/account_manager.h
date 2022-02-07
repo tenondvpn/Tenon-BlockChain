@@ -65,6 +65,7 @@ private:
         const std::string& account_id,
         const bft::protobuf::TxInfo& tx_info,
         const std::shared_ptr<bft::protobuf::Block>& block_item,
+        uint32_t* pool_index,
         db::DbWriteBach& db_batch);
     void SetPool(
         uint32_t pool_index,

@@ -76,9 +76,6 @@ private:
     BlockManager();
     ~BlockManager();
     void HandleMessage(const transport::TransportMessagePtr& header);
-    int HandleGetBlockRequest(
-        const transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg);
     void HandleGetHeightRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
@@ -89,9 +86,6 @@ private:
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void HandleAccountShardResponse(
-        const transport::protobuf::Header& header,
-        protobuf::BlockMessage& block_msg);
-    void HandleGetAccountInitRequest(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg);
     void SendBlockNotExists(const transport::protobuf::Header& header);

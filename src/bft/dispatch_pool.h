@@ -11,7 +11,9 @@ namespace bft {
 class DispatchPool {
 public:
     static DispatchPool* Instance();
-    int Dispatch(const bft::protobuf::BftMessage& bft_msg, const std::string& tx_hash);
+    int Dispatch(
+        const bft::protobuf::BftMessage& bft_msg,
+        const std::string& tx_hash);
     int Dispatch(const protobuf::TxInfo& tx_info);
     void CheckTimeoutTx();
     void GetTx(uint32_t& pool_index, int32_t pool_mod_idx, std::vector<TxItemPtr>& res_vec);

@@ -27,7 +27,9 @@ bool DispatchPool::InitCheckTxValid(const bft::protobuf::BftMessage& bft_msg) {
     return tx_pool_.InitCheckTxValid(bft_msg);
 }
 
-int DispatchPool::Dispatch(const bft::protobuf::BftMessage& bft_msg, const std::string& tx_hash) {
+int DispatchPool::Dispatch(
+        const bft::protobuf::BftMessage& bft_msg,
+        const std::string& tx_hash) {
     return AddTx(bft_msg, tx_hash);
 }
 

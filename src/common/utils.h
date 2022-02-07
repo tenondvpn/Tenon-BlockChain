@@ -117,9 +117,9 @@ static const uint64_t kInvalidUint64 = (std::numeric_limits<uint64_t>::max)();
 static const uint32_t kInvalidUint32 = (std::numeric_limits<uint32_t>::max)();
 static const uint32_t kInvalidFloat = (std::numeric_limits<float>::max)();
 
-uint32_t GetPoolIndex(const std::string& acc_addr);
 std::string CreateGID(const std::string& pubkey);
 std::string FixedCreateGID(const std::string& str);
+
 inline static std::string GetTxDbKey(bool from, const std::string& gid) {
     if (from) {
         return std::string("TX_from_") + gid;

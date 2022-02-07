@@ -48,7 +48,7 @@ int DbPoolInfo::InitWithGenesisBlock() {
             common::GlobalInfo::Instance()->network_id(),
             common::kStatisticFromAddressMidllefix.c_str(),
             id_idx++));
-        uint32_t pool_idx = common::GetPoolIndex(addr);
+        uint32_t pool_idx = common::GetBasePoolIndex(addr);
         if (pool_idx == pool_index_) {
             std::lock_guard<std::mutex> guard(base_addr_mutex_);
             base_addr_ = addr;

@@ -109,6 +109,18 @@ static inline bool IsBaseAddress(const std::string& address) {
         kStatisticFromAddressMidllefixDecode);
 }
 
+inline static uint32_t GetBasePoolIndex(const std::string& acc_addr) {
+    if (acc_addr == common::kRootChainSingleBlockTxAddress ||
+            acc_addr == common::kRootChainTimeBlockTxAddress ||
+            acc_addr == common::kRootChainElectionBlockTxAddress) {
+        return kRootChainPoolIndex;
+    }
+
+    uint32_t pool_index = common::Hash::Hash32(acc_addr);
+    pool_index %= kImmutablePoolSize;
+    return pool_index;
+}
+
 }  // namespace  common
 
 }  // namespace tenon 

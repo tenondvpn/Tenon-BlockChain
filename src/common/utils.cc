@@ -38,18 +38,6 @@ namespace common {
     
 volatile bool global_stop = false;
 
-uint32_t GetPoolIndex(const std::string& acc_addr) {
-    if (acc_addr == common::kRootChainSingleBlockTxAddress ||
-            acc_addr == common::kRootChainTimeBlockTxAddress ||
-            acc_addr == common::kRootChainElectionBlockTxAddress) {
-        return kRootChainPoolIndex;
-    }
-
-    uint32_t pool_index = common::Hash::Hash32(acc_addr);
-    pool_index %= kImmutablePoolSize;
-    return pool_index;
-}
-
 std::string CreateGID(const std::string& pubkey) {
     std::string str = (pubkey + Random::RandomString(1024u));
     return common::Hash::Hash256(str);
