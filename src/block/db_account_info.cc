@@ -172,6 +172,12 @@ int DbAccountInfo::GetPoolIndex(uint32_t* pool_idx) {
         return kBlockSuccess;
     }
 
+    if (common::IsBaseAddress(account_id_)) {
+        *pool_idx = common::GetBasePoolIndex(account_id_);
+        pool_index_ = *pool_idx;
+        return kBlockSuccess;
+    }
+
     if (account_id_ == common::kRootChainSingleBlockTxAddress ||
             account_id_ == common::kRootChainTimeBlockTxAddress ||
             account_id_ == common::kRootChainElectionBlockTxAddress) {

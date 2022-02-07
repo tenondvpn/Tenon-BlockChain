@@ -601,6 +601,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_amount(0);
             tx_info->set_balance(0);
             tx_info->set_gas_limit(0);
+            tx_info->set_pool_index(i);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         }
@@ -616,6 +617,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_to("");
             tx_info->set_amount(0);
             tx_info->set_balance(0);
+            tx_info->set_pool_index(i);
             tx_info->set_gas_limit(0);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kRootCongressNetworkId);
@@ -631,6 +633,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_to("");
             tx_info->set_amount(genesis_account_balance);
             tx_info->set_balance(genesis_account_balance);
+            tx_info->set_pool_index(i);
             tx_info->set_gas_limit(0);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kRootCongressNetworkId);
@@ -646,6 +649,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_to("");
             tx_info->set_amount(genesis_account_balance);
             tx_info->set_balance(genesis_account_balance);
+            tx_info->set_pool_index(i);
             tx_info->set_gas_limit(0);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
@@ -736,6 +740,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_to("");
             tx_info->set_amount(0);
             tx_info->set_balance(0);
+            tx_info->set_pool_index(iter->first);
             tx_info->set_gas_limit(0);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
@@ -753,6 +758,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_amount(0);
             tx_info->set_balance(0);
             tx_info->set_gas_limit(0);
+            tx_info->set_pool_index(iter->first);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kRootCongressNetworkId);
         }
@@ -772,6 +778,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_amount(genesis_account_balance);
             tx_info->set_balance(genesis_account_balance);
             tx_info->set_gas_limit(0);
+            tx_info->set_pool_index(iter->first);
             tx_info->set_type(common::kConsensusCreateGenesisAcount);
             tx_info->set_network_id(network::kConsensusShardBeginNetworkId);
         }

@@ -37,7 +37,7 @@ message TxInfo {
     optional uint32 status = 15;
     optional bytes tx_hash = 16;
     optional uint32 network_id = 17;
-    optional uint32 pool_index = 18;
+    optional uint32 pool_index = 18 [default=257];
     optional uint32 call_contract_step = 19;
     repeated StorageItem storages = 20;
     repeated TransferItem transfers = 21;
