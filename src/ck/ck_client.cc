@@ -365,7 +365,7 @@ bool ClickHouseClient::CreateAccountKeyValueTable() {
 bool ClickHouseClient::CreateStatisticTable() {
     std::string create_cmd = std::string("CREATE TABLE if not exists ") + kClickhouseStatisticTableName + " ( "
         "`time` UInt64 COMMENT 'time' CODEC(LZ4), "
-        "`all_tenon` UInt32 COMMENT 'tenon' CODEC(LZ4), "
+        "`all_tenon` UInt64 COMMENT 'tenon' CODEC(LZ4), "
         "`all_address` UInt32 COMMENT 'address' CODEC(T64, LZ4), "
         "`all_contracts` UInt32 COMMENT 'contracts' CODEC(T64, LZ4), "
         "`all_transactions` UInt32 COMMENT 'transactions' CODEC(LZ4), "
@@ -381,6 +381,19 @@ bool ClickHouseClient::CreateStatisticTable() {
     return true;
 }
 
+bool ClickHouseClient::CreatePrivateKeyTable() {
+    std::string create_cmd = std::string("CREATE TABLE if not exists private_key_table ( "
+        "`seckey` String COMMENT 'seckey' CODEC(LZ4), "
+        "`ecn_prikey` String COMMENT 'ecn_prikey' CODEC(LZ4), "
+        "`date` UInt32 COMMENT 'date' CODEC(T64, LZ4) "
+        ") "
+        "ENGINE = ReplacingMergeTree "
+        "PARTITION BY(date) "
+        "ORDER BY(seckey) "
+        "SETTINGS index_granularity = 8192;");
+    client_.Execute(create_cmd);
+    return true;
+}
 
 bool ClickHouseClient::CreateTable(bool statistic) try {
     CreateTransactionTable();
@@ -388,8 +401,9 @@ bool ClickHouseClient::CreateTable(bool statistic) try {
     CreateAccountTable();
     CreateAccountKeyValueTable();
     CreateStatisticTable();
+    CreatePrivateKeyTable();
     if (statistic) {
-        statistic_tick_.CutOff(5000000l, std::bind(&ClickHouseClient::Statistic, this));
+        statistic_tick_.CutOff(5000000l, std::bind(&ClickHouseClient::TickStatistic, this));
     }
     return true;
 } catch (std::exception& e) {
@@ -400,15 +414,15 @@ bool ClickHouseClient::CreateTable(bool statistic) try {
 
 void ClickHouseClient::TickStatistic() {
     Statistic();
-    statistic_tick_.CutOff(5000000l, std::bind(&ClickHouseClient::Statistic, this));
+    statistic_tick_.CutOff(10000000l, std::bind(&ClickHouseClient::TickStatistic, this));
 }
 
 void ClickHouseClient::Statistic() try {
-    std::string cmd = "select count(*) from tenon_ck_transaction_table;";
+    std::string cmd = "select count(*) as cnt from tenon_ck_transaction_table;";
     uint32_t all_transactions = 0;
     client_.Select(cmd, [&all_transactions](const clickhouse::Block& ck_block) {
         if (ck_block.GetRowCount() > 0) {
-            all_transactions = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+            all_transactions = (*ck_block[0]->As<clickhouse::ColumnUInt64>())[0];
         }
     });
 
@@ -416,15 +430,15 @@ void ClickHouseClient::Statistic() try {
     uint32_t all_address = 0;
     client_.Select(cmd, [&all_address](const clickhouse::Block& ck_block) {
         if (ck_block.GetRowCount() > 0) {
-            all_address = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+            all_address = (*ck_block[0]->As<clickhouse::ColumnUInt64>())[0];
         }
     });
 
     cmd = "select sum(balance) from tenon_ck_account_table;";
-    uint32_t sum_balance = 0;
+    uint64_t sum_balance = 0;
     client_.Select(cmd, [&sum_balance](const clickhouse::Block& ck_block) {
         if (ck_block.GetRowCount() > 0) {
-            sum_balance = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+            sum_balance = (*ck_block[0]->As<clickhouse::ColumnUInt64>())[0];
         }
     });
 
@@ -432,12 +446,12 @@ void ClickHouseClient::Statistic() try {
     uint32_t all_contracts = 0;
     client_.Select(cmd, [&all_contracts](const clickhouse::Block& ck_block) {
         if (ck_block.GetRowCount() > 0) {
-            all_contracts = (*ck_block[0]->As<clickhouse::ColumnUInt32>())[0];
+            all_contracts = (*ck_block[0]->As<clickhouse::ColumnUInt64>())[0];
         }
     });
 
     auto st_time = std::make_shared<clickhouse::ColumnUInt64>();
-    auto st_tenon = std::make_shared<clickhouse::ColumnUInt32>();
+    auto st_tenon = std::make_shared<clickhouse::ColumnUInt64>();
     auto st_address = std::make_shared<clickhouse::ColumnUInt32>();
     auto st_contracts = std::make_shared<clickhouse::ColumnUInt32>();
     auto st_transactions = std::make_shared<clickhouse::ColumnUInt32>();

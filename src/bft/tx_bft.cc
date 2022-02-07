@@ -1713,7 +1713,9 @@ int TxBft::CheckTxInfo(
     } else {
         // check amount is 0
         // new account address
-        if (common::GetPoolIndex(tx_info.from()) != pool_index()) {
+        if (common::GetPoolIndex(
+                tx_info.from(),
+                block_info.network_id()) != pool_index()) {
             return kBftPoolIndexError;
         }
     }

@@ -24,6 +24,7 @@ private:
     bool CreateAccountTable();
     bool CreateAccountKeyValueTable();
     bool CreateStatisticTable();
+    bool CreatePrivateKeyTable();
     void Statistic();
     void TickStatistic();
 

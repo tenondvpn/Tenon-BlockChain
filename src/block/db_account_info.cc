@@ -71,10 +71,10 @@ bool DbAccountInfo::AddNewAccountToDb(
     return true;
 }
 
-DbAccountInfo::DbAccountInfo(const std::string& account_id)
+DbAccountInfo::DbAccountInfo(const std::string& account_id, uint32_t net_id)
         : account_id_(account_id), tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()) {
     dict_key_ = db::kGlobalDickKeyAccountInfo + account_id_;
-    pool_index_ = common::GetPoolIndex(account_id_);
+    pool_index_ = common::GetPoolIndex(account_id_, net_id);
 }
 
 DbAccountInfo::~DbAccountInfo() {

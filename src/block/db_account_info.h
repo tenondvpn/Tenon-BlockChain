@@ -21,7 +21,7 @@ class DbAccountInfo {
 public:
     static bool AccountExists(const std::string& account_id);
     static bool AddNewAccountToDb(const std::string& account_id, db::DbWriteBach& db_batch);
-    DbAccountInfo(const std::string& account_id);
+    DbAccountInfo(const std::string& account_id, uint32_t net_id);
     ~DbAccountInfo();
     int SetBalance(uint64_t balance, db::DbWriteBach& db_batch);
     int GetBalance(uint64_t* balance);

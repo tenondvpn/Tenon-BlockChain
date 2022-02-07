@@ -105,6 +105,7 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
 
     // call contract and init
     uint32_t pool_index = common::kInvalidPoolIndex;
+    uint32_t net_id = common::GlobalInfo::Instance()->network_id();
     if (tx_ptr->tx.type() == common::kConsensusCallContract ||
             tx_ptr->tx.type() == common::kConsensusCreateContract) {
         if (tx_ptr->tx.call_contract_step() == contract::kCallStepDefault) {
@@ -113,16 +114,16 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from(), net_id);
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepCallerInited) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to(), net_id);
         } else if (tx_ptr->tx.call_contract_step() == contract::kCallStepContractCalled) {
             // just contract's network handle this message and unlock it
             if (!CheckCallerAccountInfoValid(tx_ptr->tx.from())) {
                 return kBftError;
             }
 
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from(), net_id);
         } else {
             return kBftError;
         }
@@ -132,9 +133,9 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
 
         if (!tx_ptr->tx.to_add()) {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.from());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.from(), net_id);
         } else {
-            pool_index = common::GetPoolIndex(tx_ptr->tx.to());
+            pool_index = common::GetPoolIndex(tx_ptr->tx.to(), net_id);
         }
     }
 

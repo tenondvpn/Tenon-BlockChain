@@ -38,14 +38,14 @@ namespace common {
     
 volatile bool global_stop = false;
 
-uint32_t GetPoolIndex(const std::string& acc_addr) {
+uint32_t GetPoolIndex(const std::string& acc_addr, uint32_t shard_id) {
     if (acc_addr == common::kRootChainSingleBlockTxAddress ||
             acc_addr == common::kRootChainTimeBlockTxAddress ||
             acc_addr == common::kRootChainElectionBlockTxAddress) {
         return kRootChainPoolIndex;
     }
 
-    uint32_t pool_index = common::Hash::Hash32(acc_addr);
+    uint32_t pool_index = common::Hash::Hash32(acc_addr + std::to_string(shard_id));
     pool_index %= kImmutablePoolSize;
     return pool_index;
 }

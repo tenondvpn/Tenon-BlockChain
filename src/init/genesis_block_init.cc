@@ -568,7 +568,7 @@ std::string GenesisBlockInit::GetValidPoolBaseAddr(uint32_t network_id, uint32_t
             network_id,
             common::kStatisticFromAddressMidllefix.c_str(),
             id_idx++));
-        uint32_t pool_idx = common::GetPoolIndex(addr);
+        uint32_t pool_idx = common::GetPoolIndex(addr, network_id);
         if (pool_idx == pool_index) {
             return addr;
         }
@@ -594,7 +594,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kConsensusShardBeginNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetPoolIndex(address, network::kConsensusShardBeginNetworkId)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -610,7 +610,7 @@ int GenesisBlockInit::CreateRootGenesisBlocks(
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kRootCongressNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetPoolIndex(address, network::kRootCongressNetworkId)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -730,7 +730,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kConsensusShardBeginNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetPoolIndex(address, network::kConsensusShardBeginNetworkId)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
@@ -746,7 +746,7 @@ int GenesisBlockInit::CreateShardGenesisBlocks(uint32_t net_id) {
             tx_info->set_gid(common::CreateGID(""));
             tx_info->set_from(GetValidPoolBaseAddr(
                 network::kRootCongressNetworkId,
-                common::GetPoolIndex(address)));
+                common::GetPoolIndex(address, network::kRootCongressNetworkId)));
             tx_info->set_from_pubkey("");
             tx_info->set_from_sign("");
             tx_info->set_to("");
