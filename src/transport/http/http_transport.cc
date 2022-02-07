@@ -455,7 +455,7 @@ void HttpTransport::HandleListTransactions(const httplib::Request &req, httplib:
             acc_addr = common::Encode::HexDecode(json_obj["acc_addr"].get<std::string>());
             if (!acc_addr.empty()) {
                 // just get 100 this user block
-                auto pool_idx = common::GetPoolIndex(acc_addr, common::GlobalInfo::Instance()->network_id());
+                auto pool_idx = common::GetPoolIndex(acc_addr);
                 std::string key = block::GetLastBlockHash(
                         common::GlobalInfo::Instance()->network_id(),
                         pool_idx);
@@ -497,12 +497,10 @@ void HttpTransport::HandleListTransactions(const httplib::Request &req, httplib:
                         res_json["data"][block_idx]["from"] = common::Encode::HexEncode(tx_list[i].from());
                         res_json["data"][block_idx]["to"] = common::Encode::HexEncode(tx_list[i].to());
                         if (tx_list[i].to_add()) {
-                            res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(
-                                tx_list[i].to(), common::GlobalInfo::Instance()->network_id());
+                            res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(tx_list[i].to());
                         }
                         else {
-                            res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(
-                                tx_list[i].from(), common::GlobalInfo::Instance()->network_id());
+                            res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(tx_list[i].from());
                         }
                         res_json["data"][block_idx]["gas_price"] = tx_list[i].gas_price();
                         res_json["data"][block_idx]["amount"] = tx_list[i].amount();
@@ -577,11 +575,9 @@ void HttpTransport::HandleListTransactions(const httplib::Request &req, httplib:
                 res_json["data"][block_idx]["from"] = common::Encode::HexEncode(tx_list[i].from());
                 res_json["data"][block_idx]["to"] = common::Encode::HexEncode(tx_list[i].to());
                 if (tx_list[i].to_add()) {
-                    res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(
-                        tx_list[i].to(), common::GlobalInfo::Instance()->network_id());
+                    res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(tx_list[i].to());
                 } else {
-                    res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(
-                        tx_list[i].from(), common::GlobalInfo::Instance()->network_id());
+                    res_json["data"][block_idx]["pool_idx"] = common::GetPoolIndex(tx_list[i].from());
                 }
                 res_json["data"][block_idx]["gas_price"] = tx_list[i].gas_price();
                 res_json["data"][block_idx]["amount"] = tx_list[i].amount();

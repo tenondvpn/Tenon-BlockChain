@@ -289,7 +289,7 @@ int AccountManager::AddBlockItemToDb(
             }
         }
 
-        uint32_t pool_idx = common::GetPoolIndex(account_id, block_item->network_id());
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
 //         if (bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true)) {
 //             BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
 //                 common::Encode::HexEncode(tx_list[i].gid()).c_str(), tx_list[i].call_contract_step(), tx_list[i].type());
@@ -416,7 +416,7 @@ int AccountManager::AddBlockItemToCache(
             continue;
         }
 
-        uint32_t pool_idx = common::GetPoolIndex(account_id, block_item->network_id());
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (consistent_pool_index == common::kInvalidPoolIndex) {
             consistent_pool_index = pool_idx;
         }
@@ -616,9 +616,9 @@ int AccountManager::UpdateAccountInfo(
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
     }
 
-    uint32_t pool_idx = common::GetPoolIndex(account_id, block_item->network_id());
+    uint32_t pool_idx = common::GetPoolIndex(account_id);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
-        uint32_t pool_idx = common::GetPoolIndex(account_id, block_item->network_id());
+        uint32_t pool_idx = common::GetPoolIndex(account_id);
         if (exist_height <= block_item->height()) {
             account_info->SetBalance(tx_info.balance(), db_batch);
         }

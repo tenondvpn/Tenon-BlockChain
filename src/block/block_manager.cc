@@ -470,9 +470,7 @@ void BlockManager::HandleGetAccountInitRequest(
         block_msg.account_init_req().height(),
         block_msg.account_init_req().count(),
         &heights);
-    uint32_t pool_idx = common::GetPoolIndex(
-        block_msg.account_init_req().id(),
-        block_msg.account_init_req().net_id());
+    uint32_t pool_idx = common::GetPoolIndex(block_msg.account_init_req().id());
     for (uint32_t i = 0; i < heights.size(); ++i) {
         if (block_msg.account_init_req().height() != common::kInvalidUint64 &&
                 heights[i] <= block_msg.account_init_req().height()) {
