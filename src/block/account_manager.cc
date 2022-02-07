@@ -629,7 +629,7 @@ int AccountManager::UpdateAccountInfo(
         account_info->SetMaxHeightHash(block_item->height(), block_item->hash(), db_batch);
     }
 
-    if (account_info->GetPoolIndex(pool_idx) != kBlockSuccess) {
+    if (account_info->GetPoolIndex(pool_index) != kBlockSuccess) {
         return kBlockError;
     }
 
