@@ -144,10 +144,10 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
             account_id == common::kRootChainElectionBlockTxAddress) {
         pool_index = common::kRootChainPoolIndex;
     } else {
-        auto acc_info = block::AccountManager::Instance()->GetContractInfoByAddress(contract_addr);
+        auto acc_info = block::AccountManager::Instance()->GetAcountInfo(account_id);
         if (acc_info == nullptr) {
             BFT_ERROR("tx invalid. account address not exists[%s]",
-                common::Encode::HexEncode(contract_addr).c_str());
+                common::Encode::HexEncode(account_id).c_str());
             return kBftError;
         }
 
