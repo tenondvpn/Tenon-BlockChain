@@ -224,7 +224,7 @@ std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
 
     for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
         all_msg += tx_info.transfers(i).from() + tx_info.transfers(i).to() +
-            std::string(tx_info.transfers(i).amount());
+            std::to_string(tx_info.transfers(i).amount());
     }
 
     return common::Hash::keccak256(all_msg);
