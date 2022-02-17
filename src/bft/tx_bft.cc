@@ -195,6 +195,83 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     return kBftSuccess;
 }
 
+std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
+    std::string all_msg;
+    DbAccountInfoPtr account_info = nullptr;
+    if (tx_info.to_add()) {
+        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.from());
+    } else {
+        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.to());
+    }
+
+    uint64_t balance = 0;
+    if (!account_info->GetBalance(&balance) != block::kBlockSuccess) {
+        return "";
+    }
+
+    // just use before tx balance
+    all_msg += tx_info.gid() + std::string(tx_info.status()) + tx_info.from() +
+        std::to_string(balance) + std::to_string(tx_info.gas_limit()) +
+        std::to_string(tx_info.gas_price()) + tx_info.to() +
+        std::to_string(tx_info.amount());
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        all_msg += tx_info.attr(i).key() + tx_info.attr(i).value()
+    }
+
+    for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
+        all_msg += tx_info.storages(i).key() + tx_info.storages(i).value()
+    }
+
+    for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
+        all_msg += tx_info.transfers(i).from() + tx_info.transfers(i).to() +
+            std::string(tx_info.transfers(i).amount())
+    }
+
+    return common::Hash::keccak256(all_msg);
+}
+
+std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
+        std::shared_ptr<bft::protobuf::Block>& block_ptr) {
+    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>();
+    auto prepare_txs = prepare_block->mutable_prepare_txs();
+    std::string tbft_prepare_str_for_hash;
+    std::string tbft_prepare_txs_str_for_hash;
+    for (int32_t i = 0; i < block_ptr->tx_list_size(); ++i) {
+        auto tx_hash = GetPrepareTxsHash(block_ptr->tx_list(i));
+        if (tx_hash.empty()) {
+            continue;
+        }
+
+        auto prepare_txs_item = prepare_txs->add_prepare_txs();
+        prepare_txs_item->set_gid(block_ptr->tx_list(i).gid());
+        prepare_txs_item->set_tx_hash(tx_hash);
+        prepare_txs_item->set_balance(block_ptr->tx_list(i).balance());
+        tbft_prepare_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash;
+        tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash +
+            std::to_string(block_ptr->tx_list(i).balance());
+        if (block_ptr->tx_list(i).to_add()) {
+            prepare_txs_item->set_address(block_ptr->tx_list(i).to());
+            tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).to();
+        } else {
+            prepare_txs_item->set_address(block_ptr->tx_list(i).from());
+            tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).from();
+        }
+    }
+
+    std::string block_info = block_ptr->prehash() +
+        std::to_string(block_ptr->timeblock_height()) +
+        std::to_string(block_ptr->electblock_height()) +
+        std::to_string(block_ptr->network_id()) +
+        std::to_string(block_ptr->pool_index()) + gid_;
+    tbft_prepare_str_for_hash += block_info;
+    tbft_prepare_txs_str_for_hash += block_info;
+    prepare_block->set_prepare_hash(
+        common::Hash::keccak256(tbft_prepare_str_for_hash));
+    prepare_block->set_prepare_final_hash(
+        common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
+    return prepare_block;
+}
+
 int TxBft::RootBackupCheckCreateAccountAddressPrepare(
         const bft::protobuf::Block& block,
         int32_t* invalid_tx_idx) {

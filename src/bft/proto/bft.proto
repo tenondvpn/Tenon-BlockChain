@@ -69,18 +69,10 @@ message TbftPrepareTransactionInfo {
 	optional uint64 balance = 4;
 }
 
-message PrepareBlockInfo {
-    optional bytes prehash = 1;
-	optional uint64 timer_height = 2;
-	optional uint64 elect_height = 3;
-    optional uint32 shard_id = 4;
-    optional uint32 pool_id = 5;
-    optional bytes tbft_id = 6;
-}
-
 message TbftLeaderPrepare {
 	repeated TbftPrepareTransactionInfo prepare_txs = 1;
-    optional PrepareBlockInfo prepare_block_info = 2;
+    optional bytes prepare_hash = 2;
+    optional bytes prepare_final_hash = 3;
 }
 
 message TxPrepareItem {
@@ -92,6 +84,7 @@ message LeaderTxPrepare {
 	repeated TxPrepareItem txs = 1;
 	optional Block block = 2;
 	optional bytes prepare_hash = 3;
+	optional TbftLeaderPrepare prepare = 4;
 }
 
 message BackupTxPrepare {
@@ -117,13 +110,12 @@ message ToAccountTx {
 message TxBft {
 	optional TxInfo new_tx = 1;
 	optional ToAccountTx to_tx = 2;
+    // TBFT protocal 
 	optional LeaderTxPrepare ltx_prepare = 3;
 	optional BackupTxPrepare btx_prepare = 4;
 	optional LeaderTxPreCommit ltx_precommit = 5;
 	optional BackupTxPreCommit btx_precommit = 6;
 	optional LeaderTxCommit ltx_commit = 7;
-    // TBFT protocal 
-	optional LeaderTxPrepare leader_prepare = 8;
 }
 
 message BftMessage {
