@@ -915,33 +915,39 @@ int BftManager::LeaderPrecommit(
     sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
     sign.Z = libff::alt_bn128_Fq::one();
-    if (bls::BlsManager::Instance()->Verify(
-            t,
-            bft_ptr->members_ptr()->size(),
-            member_ptr->bls_publick_key,
-            sign,
-            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
-        BFT_ERROR("verify failed and now exit all.");
-        if (member_ptr->bls_publick_key != libff::alt_bn128_G2::zero()) {
-            system("ps -ef | grep tenon | awk -F' ' '{print $2}' | xargs kill -9");
-        }
+//     if (bls::BlsManager::Instance()->Verify(
+//             t,
+//             bft_ptr->members_ptr()->size(),
+//             member_ptr->bls_publick_key,
+//             sign,
+//             bft_msg.prepare_hash()) != bls::kBlsSuccess) {
+//         BFT_ERROR("verify failed and now exit all.");
+//         if (member_ptr->bls_publick_key != libff::alt_bn128_G2::zero()) {
+//             system("ps -ef | grep tenon | awk -F' ' '{print $2}' | xargs kill -9");
+//         }
+// 
+//         auto failed_count = bft_ptr->add_prepare_verify_failed_count();
+//         if (failed_count >= bft_ptr->min_oppose_member_count() &&
+//                 bft_ptr->elect_height() <
+//                 elect::ElectManager::Instance()->latest_height(bft_ptr->network_id())) {
+//             BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
+//                 " pool_index: %u, bft: %s",
+//                 bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
+//             bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
+//             LeaderCallPrecommitOppose(bft_ptr);
+//             RemoveBft(bft_ptr->gid(), false);
+//         }
+// 
+//         return kBftError;
+//     }
 
-        auto failed_count = bft_ptr->add_prepare_verify_failed_count();
-        if (failed_count >= bft_ptr->min_oppose_member_count() &&
-                bft_ptr->elect_height() <
-                elect::ElectManager::Instance()->latest_height(bft_ptr->network_id())) {
-            BFT_DEBUG("elect height error, LeaderPrecommit RemoveBft kBftOppose"
-                " pool_index: %u, bft: %s",
-                bft_ptr->pool_index(), common::Encode::HexEncode(member_ptr->id).c_str());
-            bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
-            LeaderCallPrecommitOppose(bft_ptr);
-            RemoveBft(bft_ptr->gid(), false);
-        }
-
+    bft::protobuf::LeaderTxPrepare tx_prepare;
+    if (!tx_prepare.ParseFromString(bft_msg.data())) {
         return kBftError;
     }
 
     int res = bft_ptr->LeaderPrecommitOk(
+        tx_prepare,
         bft_msg.member_index(),
         bft_ptr->gid(),
         header.id(),

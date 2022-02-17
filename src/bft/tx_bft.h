@@ -29,7 +29,10 @@ public:
 
 private:
     int LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str);
-    int BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx);
+    int BackupCheckPrepare(
+        const bft::protobuf::BftMessage& bft_msg,
+        int32_t* invalid_tx_idx,
+        std::string* prepare);
     int LeaderCreatePreCommit(std::string& bft_str);
     int LeaderCreateCommit(std::string& bft_str);
     int CheckBlockInfo(const protobuf::Block& block_info);

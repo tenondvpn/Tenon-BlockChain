@@ -41,6 +41,7 @@ public:
 public:
     bool CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg);
     int LeaderPrecommitOk(
+        const bft::protobuf::LeaderTxPrepare& tx_prepare,
         uint32_t index,
         const std::string& bft_gid,
         uint32_t msg_id,

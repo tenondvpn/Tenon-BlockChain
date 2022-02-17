@@ -114,13 +114,14 @@ void BftProto::BackupCreatePrepare(
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_epoch(from_bft_msg.epoch());
     bft_msg.set_member_index(bft_ptr->local_member_index());
+    bft_msg.set_prepare_hash(bft_ptr->prepare_block()->prepare_final_hash());
     std::string bls_sign_x;
     std::string bls_sign_y;
     if (bls::BlsManager::Instance()->Sign(
             bft_ptr->min_aggree_member_count(),
             bft_ptr->member_count(),
             bft_ptr->local_sec_key(),
-            from_bft_msg.prepare_hash(),
+            bft_ptr->prepare_block()->prepare_final_hash(),
             &bls_sign_x,
             &bls_sign_y) != bls::kBlsSuccess) {
         return;

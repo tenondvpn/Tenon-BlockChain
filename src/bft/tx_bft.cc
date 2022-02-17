@@ -66,34 +66,15 @@ int TxBft::Prepare(
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         res = RootBackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
     } else {
-        res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
+        res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx, prepare);
     }
 
     if (res != kBftSuccess) {
         BFT_ERROR("backup prepare failed: %d", res);
-        if (res == kBftBlockPreHashError) {
-            std::string pool_hash;
-            uint64_t pool_height = 0;
-            uint64_t tm_height;
-            uint64_t tm_with_block_height;
-            uint32_t last_pool_index = common::kInvalidPoolIndex;
-            int res = block::AccountManager::Instance()->GetBlockInfo(
-                pool_index(),
-                &pool_height,
-                &pool_hash,
-                &tm_height,
-                &tm_with_block_height);
-            if (res == block::kBlockSuccess) {
-                *prepare = pool_hash;
-            }
-        } else if (invalid_tx_idx >= 0) {
-            *prepare = std::to_string(invalid_tx_idx);
-        }
-
+        *prepare = std::to_string(invalid_tx_idx);
         return res;
     }
 
-    *prepare = "";
     return kBftSuccess;
 }
 
@@ -666,7 +647,8 @@ int TxBft::GetTimeBlockInfoFromTx(
 
 int TxBft::BackupCheckPrepare(
         const bft::protobuf::BftMessage& bft_msg,
-        int32_t* invalid_tx_idx) {
+        int32_t* invalid_tx_idx,
+        std::string* prepare) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
@@ -696,6 +678,8 @@ int TxBft::BackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
+    ltx_msg.clear_block();
+    *prepare = ltx_msg.SerializeAsString();
     return kBftSuccess;
 }
 

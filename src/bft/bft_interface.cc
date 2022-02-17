@@ -273,11 +273,15 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 }
 
 int BftInterface::LeaderPrecommitOk(
+        const bft::protobuf::LeaderTxPrepare& tx_prepare,
         uint32_t index,
         const std::string& bft_gid,
         uint32_t msg_id,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
+    BFT_DEBUG("node index: %d, final prepare hash: %s",
+        index,
+        common::Encode::HexEncode(tx_prepare.prepare().prepare_final_hash()));
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_precommit_) {
 //         BFT_DEBUG("leader_handled_precommit_: %d", leader_handled_precommit_);
