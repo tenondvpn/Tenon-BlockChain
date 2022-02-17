@@ -80,7 +80,7 @@ message PrepareBlockInfo {
 
 message TbftLeaderPrepare {
 	repeated TbftPrepareTransactionInfo prepare_txs = 1;
-    PrepareBlockInfo prepare_block_info = 2;
+    optional PrepareBlockInfo prepare_block_info = 2;
 }
 
 message TxPrepareItem {
