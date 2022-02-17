@@ -375,7 +375,7 @@ protected:
 
     void SetPrepareBlock(
             const std::string& prepare_hash,
-            std::shared_ptr<bft::protobuf::Block>& prpare_block) {
+            std::shared_ptr<bft::protobuf::TbftLeaderPrepare>& prpare_block) {
         auto iter = prepare_count_map_.find(prepare_hash);
         if (iter == prepare_count_map_.end()) {
             prepare_block_map_[prepare_hash] = prpare_block;
