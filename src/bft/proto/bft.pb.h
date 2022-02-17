@@ -38,7 +38,7 @@ namespace protobuf_bft_2fproto_2fbft_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[14];
+  static const ::google::protobuf::internal::ParseTable schema[17];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -72,9 +72,18 @@ extern LeaderTxPreCommitDefaultTypeInternal _LeaderTxPreCommit_default_instance_
 class LeaderTxPrepare;
 class LeaderTxPrepareDefaultTypeInternal;
 extern LeaderTxPrepareDefaultTypeInternal _LeaderTxPrepare_default_instance_;
+class PrepareBlockInfo;
+class PrepareBlockInfoDefaultTypeInternal;
+extern PrepareBlockInfoDefaultTypeInternal _PrepareBlockInfo_default_instance_;
 class StorageItem;
 class StorageItemDefaultTypeInternal;
 extern StorageItemDefaultTypeInternal _StorageItem_default_instance_;
+class TbftLeaderPrepare;
+class TbftLeaderPrepareDefaultTypeInternal;
+extern TbftLeaderPrepareDefaultTypeInternal _TbftLeaderPrepare_default_instance_;
+class TbftPrepareTransactionInfo;
+class TbftPrepareTransactionInfoDefaultTypeInternal;
+extern TbftPrepareTransactionInfoDefaultTypeInternal _TbftPrepareTransactionInfo_default_instance_;
 class ToAccountTx;
 class ToAccountTxDefaultTypeInternal;
 extern ToAccountTxDefaultTypeInternal _ToAccountTx_default_instance_;
@@ -103,7 +112,10 @@ template<> ::tenon::bft::protobuf::Block* Arena::CreateMaybeMessage<::tenon::bft
 template<> ::tenon::bft::protobuf::LeaderTxCommit* Arena::CreateMaybeMessage<::tenon::bft::protobuf::LeaderTxCommit>(Arena*);
 template<> ::tenon::bft::protobuf::LeaderTxPreCommit* Arena::CreateMaybeMessage<::tenon::bft::protobuf::LeaderTxPreCommit>(Arena*);
 template<> ::tenon::bft::protobuf::LeaderTxPrepare* Arena::CreateMaybeMessage<::tenon::bft::protobuf::LeaderTxPrepare>(Arena*);
+template<> ::tenon::bft::protobuf::PrepareBlockInfo* Arena::CreateMaybeMessage<::tenon::bft::protobuf::PrepareBlockInfo>(Arena*);
 template<> ::tenon::bft::protobuf::StorageItem* Arena::CreateMaybeMessage<::tenon::bft::protobuf::StorageItem>(Arena*);
+template<> ::tenon::bft::protobuf::TbftLeaderPrepare* Arena::CreateMaybeMessage<::tenon::bft::protobuf::TbftLeaderPrepare>(Arena*);
+template<> ::tenon::bft::protobuf::TbftPrepareTransactionInfo* Arena::CreateMaybeMessage<::tenon::bft::protobuf::TbftPrepareTransactionInfo>(Arena*);
 template<> ::tenon::bft::protobuf::ToAccountTx* Arena::CreateMaybeMessage<::tenon::bft::protobuf::ToAccountTx>(Arena*);
 template<> ::tenon::bft::protobuf::TransferItem* Arena::CreateMaybeMessage<::tenon::bft::protobuf::TransferItem>(Arena*);
 template<> ::tenon::bft::protobuf::TxBft* Arena::CreateMaybeMessage<::tenon::bft::protobuf::TxBft>(Arena*);
@@ -671,10 +683,10 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::AccountAttributes >&
       attr() const;
 
-  // repeated .tenon.bft.protobuf.StorageItem storages = 19;
+  // repeated .tenon.bft.protobuf.StorageItem storages = 20;
   int storages_size() const;
   void clear_storages();
-  static const int kStoragesFieldNumber = 19;
+  static const int kStoragesFieldNumber = 20;
   ::tenon::bft::protobuf::StorageItem* mutable_storages(int index);
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::StorageItem >*
       mutable_storages();
@@ -683,10 +695,10 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::StorageItem >&
       storages() const;
 
-  // repeated .tenon.bft.protobuf.TransferItem transfers = 20;
+  // repeated .tenon.bft.protobuf.TransferItem transfers = 21;
   int transfers_size() const;
   void clear_transfers();
-  static const int kTransfersFieldNumber = 20;
+  static const int kTransfersFieldNumber = 21;
   ::tenon::bft::protobuf::TransferItem* mutable_transfers(int index);
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TransferItem >*
       mutable_transfers();
@@ -855,19 +867,26 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 network_id() const;
   void set_network_id(::google::protobuf::uint32 value);
 
-  // optional uint32 call_contract_step = 18;
+  // optional uint32 call_contract_step = 19;
   bool has_call_contract_step() const;
   void clear_call_contract_step();
-  static const int kCallContractStepFieldNumber = 18;
+  static const int kCallContractStepFieldNumber = 19;
   ::google::protobuf::uint32 call_contract_step() const;
   void set_call_contract_step(::google::protobuf::uint32 value);
 
-  // optional uint64 timestamp = 21;
+  // optional uint64 timestamp = 22;
   bool has_timestamp() const;
   void clear_timestamp();
-  static const int kTimestampFieldNumber = 21;
+  static const int kTimestampFieldNumber = 22;
   ::google::protobuf::uint64 timestamp() const;
   void set_timestamp(::google::protobuf::uint64 value);
+
+  // optional uint32 pool_index = 18 [default = 257];
+  bool has_pool_index() const;
+  void clear_pool_index();
+  static const int kPoolIndexFieldNumber = 18;
+  ::google::protobuf::uint32 pool_index() const;
+  void set_pool_index(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.TxInfo)
  private:
@@ -903,6 +922,8 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_tx_hash();
   void set_has_network_id();
   void clear_has_network_id();
+  void set_has_pool_index();
+  void clear_has_pool_index();
   void set_has_call_contract_step();
   void clear_has_call_contract_step();
   void set_has_timestamp();
@@ -932,6 +953,7 @@ class TxInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::uint32 network_id_;
   ::google::protobuf::uint32 call_contract_step_;
   ::google::protobuf::uint64 timestamp_;
+  ::google::protobuf::uint32 pool_index_;
   friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1231,6 +1253,486 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 };
 // -------------------------------------------------------------------
 
+class TbftPrepareTransactionInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bft.protobuf.TbftPrepareTransactionInfo) */ {
+ public:
+  TbftPrepareTransactionInfo();
+  virtual ~TbftPrepareTransactionInfo();
+
+  TbftPrepareTransactionInfo(const TbftPrepareTransactionInfo& from);
+
+  inline TbftPrepareTransactionInfo& operator=(const TbftPrepareTransactionInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  TbftPrepareTransactionInfo(TbftPrepareTransactionInfo&& from) noexcept
+    : TbftPrepareTransactionInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline TbftPrepareTransactionInfo& operator=(TbftPrepareTransactionInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TbftPrepareTransactionInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TbftPrepareTransactionInfo* internal_default_instance() {
+    return reinterpret_cast<const TbftPrepareTransactionInfo*>(
+               &_TbftPrepareTransactionInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  void Swap(TbftPrepareTransactionInfo* other);
+  friend void swap(TbftPrepareTransactionInfo& a, TbftPrepareTransactionInfo& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TbftPrepareTransactionInfo* New() const final {
+    return CreateMaybeMessage<TbftPrepareTransactionInfo>(NULL);
+  }
+
+  TbftPrepareTransactionInfo* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<TbftPrepareTransactionInfo>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const TbftPrepareTransactionInfo& from);
+  void MergeFrom(const TbftPrepareTransactionInfo& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TbftPrepareTransactionInfo* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes gid = 1;
+  bool has_gid() const;
+  void clear_gid();
+  static const int kGidFieldNumber = 1;
+  const ::std::string& gid() const;
+  void set_gid(const ::std::string& value);
+  #if LANG_CXX11
+  void set_gid(::std::string&& value);
+  #endif
+  void set_gid(const char* value);
+  void set_gid(const void* value, size_t size);
+  ::std::string* mutable_gid();
+  ::std::string* release_gid();
+  void set_allocated_gid(::std::string* gid);
+
+  // optional bytes tx_hash = 2;
+  bool has_tx_hash() const;
+  void clear_tx_hash();
+  static const int kTxHashFieldNumber = 2;
+  const ::std::string& tx_hash() const;
+  void set_tx_hash(const ::std::string& value);
+  #if LANG_CXX11
+  void set_tx_hash(::std::string&& value);
+  #endif
+  void set_tx_hash(const char* value);
+  void set_tx_hash(const void* value, size_t size);
+  ::std::string* mutable_tx_hash();
+  ::std::string* release_tx_hash();
+  void set_allocated_tx_hash(::std::string* tx_hash);
+
+  // optional bytes address = 3;
+  bool has_address() const;
+  void clear_address();
+  static const int kAddressFieldNumber = 3;
+  const ::std::string& address() const;
+  void set_address(const ::std::string& value);
+  #if LANG_CXX11
+  void set_address(::std::string&& value);
+  #endif
+  void set_address(const char* value);
+  void set_address(const void* value, size_t size);
+  ::std::string* mutable_address();
+  ::std::string* release_address();
+  void set_allocated_address(::std::string* address);
+
+  // optional uint64 balance = 4;
+  bool has_balance() const;
+  void clear_balance();
+  static const int kBalanceFieldNumber = 4;
+  ::google::protobuf::uint64 balance() const;
+  void set_balance(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.TbftPrepareTransactionInfo)
+ private:
+  void set_has_gid();
+  void clear_has_gid();
+  void set_has_tx_hash();
+  void clear_has_tx_hash();
+  void set_has_address();
+  void clear_has_address();
+  void set_has_balance();
+  void clear_has_balance();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr gid_;
+  ::google::protobuf::internal::ArenaStringPtr tx_hash_;
+  ::google::protobuf::internal::ArenaStringPtr address_;
+  ::google::protobuf::uint64 balance_;
+  friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class PrepareBlockInfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bft.protobuf.PrepareBlockInfo) */ {
+ public:
+  PrepareBlockInfo();
+  virtual ~PrepareBlockInfo();
+
+  PrepareBlockInfo(const PrepareBlockInfo& from);
+
+  inline PrepareBlockInfo& operator=(const PrepareBlockInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PrepareBlockInfo(PrepareBlockInfo&& from) noexcept
+    : PrepareBlockInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline PrepareBlockInfo& operator=(PrepareBlockInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PrepareBlockInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PrepareBlockInfo* internal_default_instance() {
+    return reinterpret_cast<const PrepareBlockInfo*>(
+               &_PrepareBlockInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  void Swap(PrepareBlockInfo* other);
+  friend void swap(PrepareBlockInfo& a, PrepareBlockInfo& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PrepareBlockInfo* New() const final {
+    return CreateMaybeMessage<PrepareBlockInfo>(NULL);
+  }
+
+  PrepareBlockInfo* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PrepareBlockInfo>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PrepareBlockInfo& from);
+  void MergeFrom(const PrepareBlockInfo& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PrepareBlockInfo* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes prehash = 1;
+  bool has_prehash() const;
+  void clear_prehash();
+  static const int kPrehashFieldNumber = 1;
+  const ::std::string& prehash() const;
+  void set_prehash(const ::std::string& value);
+  #if LANG_CXX11
+  void set_prehash(::std::string&& value);
+  #endif
+  void set_prehash(const char* value);
+  void set_prehash(const void* value, size_t size);
+  ::std::string* mutable_prehash();
+  ::std::string* release_prehash();
+  void set_allocated_prehash(::std::string* prehash);
+
+  // optional bytes tbft_id = 6;
+  bool has_tbft_id() const;
+  void clear_tbft_id();
+  static const int kTbftIdFieldNumber = 6;
+  const ::std::string& tbft_id() const;
+  void set_tbft_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_tbft_id(::std::string&& value);
+  #endif
+  void set_tbft_id(const char* value);
+  void set_tbft_id(const void* value, size_t size);
+  ::std::string* mutable_tbft_id();
+  ::std::string* release_tbft_id();
+  void set_allocated_tbft_id(::std::string* tbft_id);
+
+  // optional uint64 timer_height = 2;
+  bool has_timer_height() const;
+  void clear_timer_height();
+  static const int kTimerHeightFieldNumber = 2;
+  ::google::protobuf::uint64 timer_height() const;
+  void set_timer_height(::google::protobuf::uint64 value);
+
+  // optional uint64 elect_height = 3;
+  bool has_elect_height() const;
+  void clear_elect_height();
+  static const int kElectHeightFieldNumber = 3;
+  ::google::protobuf::uint64 elect_height() const;
+  void set_elect_height(::google::protobuf::uint64 value);
+
+  // optional uint32 shard_id = 4;
+  bool has_shard_id() const;
+  void clear_shard_id();
+  static const int kShardIdFieldNumber = 4;
+  ::google::protobuf::uint32 shard_id() const;
+  void set_shard_id(::google::protobuf::uint32 value);
+
+  // optional uint32 pool_id = 5;
+  bool has_pool_id() const;
+  void clear_pool_id();
+  static const int kPoolIdFieldNumber = 5;
+  ::google::protobuf::uint32 pool_id() const;
+  void set_pool_id(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.PrepareBlockInfo)
+ private:
+  void set_has_prehash();
+  void clear_has_prehash();
+  void set_has_timer_height();
+  void clear_has_timer_height();
+  void set_has_elect_height();
+  void clear_has_elect_height();
+  void set_has_shard_id();
+  void clear_has_shard_id();
+  void set_has_pool_id();
+  void clear_has_pool_id();
+  void set_has_tbft_id();
+  void clear_has_tbft_id();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr prehash_;
+  ::google::protobuf::internal::ArenaStringPtr tbft_id_;
+  ::google::protobuf::uint64 timer_height_;
+  ::google::protobuf::uint64 elect_height_;
+  ::google::protobuf::uint32 shard_id_;
+  ::google::protobuf::uint32 pool_id_;
+  friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class TbftLeaderPrepare : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bft.protobuf.TbftLeaderPrepare) */ {
+ public:
+  TbftLeaderPrepare();
+  virtual ~TbftLeaderPrepare();
+
+  TbftLeaderPrepare(const TbftLeaderPrepare& from);
+
+  inline TbftLeaderPrepare& operator=(const TbftLeaderPrepare& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  TbftLeaderPrepare(TbftLeaderPrepare&& from) noexcept
+    : TbftLeaderPrepare() {
+    *this = ::std::move(from);
+  }
+
+  inline TbftLeaderPrepare& operator=(TbftLeaderPrepare&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TbftLeaderPrepare& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TbftLeaderPrepare* internal_default_instance() {
+    return reinterpret_cast<const TbftLeaderPrepare*>(
+               &_TbftLeaderPrepare_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  void Swap(TbftLeaderPrepare* other);
+  friend void swap(TbftLeaderPrepare& a, TbftLeaderPrepare& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TbftLeaderPrepare* New() const final {
+    return CreateMaybeMessage<TbftLeaderPrepare>(NULL);
+  }
+
+  TbftLeaderPrepare* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<TbftLeaderPrepare>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const TbftLeaderPrepare& from);
+  void MergeFrom(const TbftLeaderPrepare& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TbftLeaderPrepare* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .tenon.bft.protobuf.TbftPrepareTransactionInfo prepare_txs = 1;
+  int prepare_txs_size() const;
+  void clear_prepare_txs();
+  static const int kPrepareTxsFieldNumber = 1;
+  ::tenon::bft::protobuf::TbftPrepareTransactionInfo* mutable_prepare_txs(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TbftPrepareTransactionInfo >*
+      mutable_prepare_txs();
+  const ::tenon::bft::protobuf::TbftPrepareTransactionInfo& prepare_txs(int index) const;
+  ::tenon::bft::protobuf::TbftPrepareTransactionInfo* add_prepare_txs();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TbftPrepareTransactionInfo >&
+      prepare_txs() const;
+
+  // optional .tenon.bft.protobuf.PrepareBlockInfo prepare_block_info = 2;
+  bool has_prepare_block_info() const;
+  void clear_prepare_block_info();
+  static const int kPrepareBlockInfoFieldNumber = 2;
+  private:
+  const ::tenon::bft::protobuf::PrepareBlockInfo& _internal_prepare_block_info() const;
+  public:
+  const ::tenon::bft::protobuf::PrepareBlockInfo& prepare_block_info() const;
+  ::tenon::bft::protobuf::PrepareBlockInfo* release_prepare_block_info();
+  ::tenon::bft::protobuf::PrepareBlockInfo* mutable_prepare_block_info();
+  void set_allocated_prepare_block_info(::tenon::bft::protobuf::PrepareBlockInfo* prepare_block_info);
+
+  // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.TbftLeaderPrepare)
+ private:
+  void set_has_prepare_block_info();
+  void clear_has_prepare_block_info();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TbftPrepareTransactionInfo > prepare_txs_;
+  ::tenon::bft::protobuf::PrepareBlockInfo* prepare_block_info_;
+  friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class TxPrepareItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.bft.protobuf.TxPrepareItem) */ {
  public:
   TxPrepareItem();
@@ -1273,7 +1775,7 @@ class TxPrepareItem : public ::google::protobuf::Message /* @@protoc_insertion_p
                &_TxPrepareItem_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    8;
 
   void Swap(TxPrepareItem* other);
   friend void swap(TxPrepareItem& a, TxPrepareItem& b) {
@@ -1413,7 +1915,7 @@ class LeaderTxPrepare : public ::google::protobuf::Message /* @@protoc_insertion
                &_LeaderTxPrepare_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    9;
 
   void Swap(LeaderTxPrepare* other);
   friend void swap(LeaderTxPrepare& a, LeaderTxPrepare& b) {
@@ -1477,6 +1979,21 @@ class LeaderTxPrepare : public ::google::protobuf::Message /* @@protoc_insertion
   const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxPrepareItem >&
       txs() const;
 
+  // optional bytes prepare_hash = 3;
+  bool has_prepare_hash() const;
+  void clear_prepare_hash();
+  static const int kPrepareHashFieldNumber = 3;
+  const ::std::string& prepare_hash() const;
+  void set_prepare_hash(const ::std::string& value);
+  #if LANG_CXX11
+  void set_prepare_hash(::std::string&& value);
+  #endif
+  void set_prepare_hash(const char* value);
+  void set_prepare_hash(const void* value, size_t size);
+  ::std::string* mutable_prepare_hash();
+  ::std::string* release_prepare_hash();
+  void set_allocated_prepare_hash(::std::string* prepare_hash);
+
   // optional .tenon.bft.protobuf.Block block = 2;
   bool has_block() const;
   void clear_block();
@@ -1493,11 +2010,14 @@ class LeaderTxPrepare : public ::google::protobuf::Message /* @@protoc_insertion
  private:
   void set_has_block();
   void clear_has_block();
+  void set_has_prepare_hash();
+  void clear_has_prepare_hash();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TxPrepareItem > txs_;
+  ::google::protobuf::internal::ArenaStringPtr prepare_hash_;
   ::tenon::bft::protobuf::Block* block_;
   friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
 };
@@ -1545,7 +2065,7 @@ class BackupTxPrepare : public ::google::protobuf::Message /* @@protoc_insertion
                &_BackupTxPrepare_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    10;
 
   void Swap(BackupTxPrepare* other);
   friend void swap(BackupTxPrepare& a, BackupTxPrepare& b) {
@@ -1659,7 +2179,7 @@ class LeaderTxPreCommit : public ::google::protobuf::Message /* @@protoc_inserti
                &_LeaderTxPreCommit_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    11;
 
   void Swap(LeaderTxPreCommit* other);
   friend void swap(LeaderTxPreCommit& a, LeaderTxPreCommit& b) {
@@ -1773,7 +2293,7 @@ class BackupTxPreCommit : public ::google::protobuf::Message /* @@protoc_inserti
                &_BackupTxPreCommit_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    12;
 
   void Swap(BackupTxPreCommit* other);
   friend void swap(BackupTxPreCommit& a, BackupTxPreCommit& b) {
@@ -1887,7 +2407,7 @@ class LeaderTxCommit : public ::google::protobuf::Message /* @@protoc_insertion_
                &_LeaderTxCommit_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    13;
 
   void Swap(LeaderTxCommit* other);
   friend void swap(LeaderTxCommit& a, LeaderTxCommit& b) {
@@ -2001,7 +2521,7 @@ class ToAccountTx : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_ToAccountTx_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    14;
 
   void Swap(ToAccountTx* other);
   friend void swap(ToAccountTx& a, ToAccountTx& b) {
@@ -2120,7 +2640,7 @@ class TxBft : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
                &_TxBft_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    15;
 
   void Swap(TxBft* other);
   friend void swap(TxBft& a, TxBft& b) {
@@ -2256,6 +2776,18 @@ class TxBft : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::tenon::bft::protobuf::LeaderTxCommit* mutable_ltx_commit();
   void set_allocated_ltx_commit(::tenon::bft::protobuf::LeaderTxCommit* ltx_commit);
 
+  // optional .tenon.bft.protobuf.LeaderTxPrepare leader_prepare = 8;
+  bool has_leader_prepare() const;
+  void clear_leader_prepare();
+  static const int kLeaderPrepareFieldNumber = 8;
+  private:
+  const ::tenon::bft::protobuf::LeaderTxPrepare& _internal_leader_prepare() const;
+  public:
+  const ::tenon::bft::protobuf::LeaderTxPrepare& leader_prepare() const;
+  ::tenon::bft::protobuf::LeaderTxPrepare* release_leader_prepare();
+  ::tenon::bft::protobuf::LeaderTxPrepare* mutable_leader_prepare();
+  void set_allocated_leader_prepare(::tenon::bft::protobuf::LeaderTxPrepare* leader_prepare);
+
   // @@protoc_insertion_point(class_scope:tenon.bft.protobuf.TxBft)
  private:
   void set_has_new_tx();
@@ -2272,6 +2804,8 @@ class TxBft : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_btx_precommit();
   void set_has_ltx_commit();
   void clear_has_ltx_commit();
+  void set_has_leader_prepare();
+  void clear_has_leader_prepare();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2283,6 +2817,7 @@ class TxBft : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::tenon::bft::protobuf::LeaderTxPreCommit* ltx_precommit_;
   ::tenon::bft::protobuf::BackupTxPreCommit* btx_precommit_;
   ::tenon::bft::protobuf::LeaderTxCommit* ltx_commit_;
+  ::tenon::bft::protobuf::LeaderTxPrepare* leader_prepare_;
   friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -2329,7 +2864,7 @@ class BftMessage : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_BftMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    16;
 
   void Swap(BftMessage* other);
   friend void swap(BftMessage& a, BftMessage& b) {
@@ -3870,7 +4405,31 @@ inline void TxInfo::set_network_id(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TxInfo.network_id)
 }
 
-// optional uint32 call_contract_step = 18;
+// optional uint32 pool_index = 18 [default = 257];
+inline bool TxInfo::has_pool_index() const {
+  return (_has_bits_[0] & 0x00040000u) != 0;
+}
+inline void TxInfo::set_has_pool_index() {
+  _has_bits_[0] |= 0x00040000u;
+}
+inline void TxInfo::clear_has_pool_index() {
+  _has_bits_[0] &= ~0x00040000u;
+}
+inline void TxInfo::clear_pool_index() {
+  pool_index_ = 257u;
+  clear_has_pool_index();
+}
+inline ::google::protobuf::uint32 TxInfo::pool_index() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TxInfo.pool_index)
+  return pool_index_;
+}
+inline void TxInfo::set_pool_index(::google::protobuf::uint32 value) {
+  set_has_pool_index();
+  pool_index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TxInfo.pool_index)
+}
+
+// optional uint32 call_contract_step = 19;
 inline bool TxInfo::has_call_contract_step() const {
   return (_has_bits_[0] & 0x00010000u) != 0;
 }
@@ -3894,7 +4453,7 @@ inline void TxInfo::set_call_contract_step(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TxInfo.call_contract_step)
 }
 
-// repeated .tenon.bft.protobuf.StorageItem storages = 19;
+// repeated .tenon.bft.protobuf.StorageItem storages = 20;
 inline int TxInfo::storages_size() const {
   return storages_.size();
 }
@@ -3924,7 +4483,7 @@ TxInfo::storages() const {
   return storages_;
 }
 
-// repeated .tenon.bft.protobuf.TransferItem transfers = 20;
+// repeated .tenon.bft.protobuf.TransferItem transfers = 21;
 inline int TxInfo::transfers_size() const {
   return transfers_.size();
 }
@@ -3954,7 +4513,7 @@ TxInfo::transfers() const {
   return transfers_;
 }
 
-// optional uint64 timestamp = 21;
+// optional uint64 timestamp = 22;
 inline bool TxInfo::has_timestamp() const {
   return (_has_bits_[0] & 0x00020000u) != 0;
 }
@@ -4530,6 +5089,556 @@ Block::mutable_commit_bitmap() {
 
 // -------------------------------------------------------------------
 
+// TbftPrepareTransactionInfo
+
+// optional bytes gid = 1;
+inline bool TbftPrepareTransactionInfo::has_gid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TbftPrepareTransactionInfo::set_has_gid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TbftPrepareTransactionInfo::clear_has_gid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TbftPrepareTransactionInfo::clear_gid() {
+  gid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_gid();
+}
+inline const ::std::string& TbftPrepareTransactionInfo::gid() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+  return gid_.GetNoArena();
+}
+inline void TbftPrepareTransactionInfo::set_gid(const ::std::string& value) {
+  set_has_gid();
+  gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+}
+#if LANG_CXX11
+inline void TbftPrepareTransactionInfo::set_gid(::std::string&& value) {
+  set_has_gid();
+  gid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+}
+#endif
+inline void TbftPrepareTransactionInfo::set_gid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_gid();
+  gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+}
+inline void TbftPrepareTransactionInfo::set_gid(const void* value, size_t size) {
+  set_has_gid();
+  gid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+}
+inline ::std::string* TbftPrepareTransactionInfo::mutable_gid() {
+  set_has_gid();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+  return gid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* TbftPrepareTransactionInfo::release_gid() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+  if (!has_gid()) {
+    return NULL;
+  }
+  clear_has_gid();
+  return gid_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void TbftPrepareTransactionInfo::set_allocated_gid(::std::string* gid) {
+  if (gid != NULL) {
+    set_has_gid();
+  } else {
+    clear_has_gid();
+  }
+  gid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gid);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TbftPrepareTransactionInfo.gid)
+}
+
+// optional bytes tx_hash = 2;
+inline bool TbftPrepareTransactionInfo::has_tx_hash() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void TbftPrepareTransactionInfo::set_has_tx_hash() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void TbftPrepareTransactionInfo::clear_has_tx_hash() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void TbftPrepareTransactionInfo::clear_tx_hash() {
+  tx_hash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_tx_hash();
+}
+inline const ::std::string& TbftPrepareTransactionInfo::tx_hash() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+  return tx_hash_.GetNoArena();
+}
+inline void TbftPrepareTransactionInfo::set_tx_hash(const ::std::string& value) {
+  set_has_tx_hash();
+  tx_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+}
+#if LANG_CXX11
+inline void TbftPrepareTransactionInfo::set_tx_hash(::std::string&& value) {
+  set_has_tx_hash();
+  tx_hash_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+}
+#endif
+inline void TbftPrepareTransactionInfo::set_tx_hash(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_tx_hash();
+  tx_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+}
+inline void TbftPrepareTransactionInfo::set_tx_hash(const void* value, size_t size) {
+  set_has_tx_hash();
+  tx_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+}
+inline ::std::string* TbftPrepareTransactionInfo::mutable_tx_hash() {
+  set_has_tx_hash();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+  return tx_hash_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* TbftPrepareTransactionInfo::release_tx_hash() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+  if (!has_tx_hash()) {
+    return NULL;
+  }
+  clear_has_tx_hash();
+  return tx_hash_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void TbftPrepareTransactionInfo::set_allocated_tx_hash(::std::string* tx_hash) {
+  if (tx_hash != NULL) {
+    set_has_tx_hash();
+  } else {
+    clear_has_tx_hash();
+  }
+  tx_hash_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tx_hash);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TbftPrepareTransactionInfo.tx_hash)
+}
+
+// optional bytes address = 3;
+inline bool TbftPrepareTransactionInfo::has_address() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TbftPrepareTransactionInfo::set_has_address() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TbftPrepareTransactionInfo::clear_has_address() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TbftPrepareTransactionInfo::clear_address() {
+  address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_address();
+}
+inline const ::std::string& TbftPrepareTransactionInfo::address() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+  return address_.GetNoArena();
+}
+inline void TbftPrepareTransactionInfo::set_address(const ::std::string& value) {
+  set_has_address();
+  address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+}
+#if LANG_CXX11
+inline void TbftPrepareTransactionInfo::set_address(::std::string&& value) {
+  set_has_address();
+  address_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+}
+#endif
+inline void TbftPrepareTransactionInfo::set_address(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_address();
+  address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+}
+inline void TbftPrepareTransactionInfo::set_address(const void* value, size_t size) {
+  set_has_address();
+  address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+}
+inline ::std::string* TbftPrepareTransactionInfo::mutable_address() {
+  set_has_address();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+  return address_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* TbftPrepareTransactionInfo::release_address() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+  if (!has_address()) {
+    return NULL;
+  }
+  clear_has_address();
+  return address_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void TbftPrepareTransactionInfo::set_allocated_address(::std::string* address) {
+  if (address != NULL) {
+    set_has_address();
+  } else {
+    clear_has_address();
+  }
+  address_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), address);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TbftPrepareTransactionInfo.address)
+}
+
+// optional uint64 balance = 4;
+inline bool TbftPrepareTransactionInfo::has_balance() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void TbftPrepareTransactionInfo::set_has_balance() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void TbftPrepareTransactionInfo::clear_has_balance() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void TbftPrepareTransactionInfo::clear_balance() {
+  balance_ = GOOGLE_ULONGLONG(0);
+  clear_has_balance();
+}
+inline ::google::protobuf::uint64 TbftPrepareTransactionInfo::balance() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftPrepareTransactionInfo.balance)
+  return balance_;
+}
+inline void TbftPrepareTransactionInfo::set_balance(::google::protobuf::uint64 value) {
+  set_has_balance();
+  balance_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.TbftPrepareTransactionInfo.balance)
+}
+
+// -------------------------------------------------------------------
+
+// PrepareBlockInfo
+
+// optional bytes prehash = 1;
+inline bool PrepareBlockInfo::has_prehash() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void PrepareBlockInfo::set_has_prehash() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void PrepareBlockInfo::clear_has_prehash() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void PrepareBlockInfo::clear_prehash() {
+  prehash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_prehash();
+}
+inline const ::std::string& PrepareBlockInfo::prehash() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+  return prehash_.GetNoArena();
+}
+inline void PrepareBlockInfo::set_prehash(const ::std::string& value) {
+  set_has_prehash();
+  prehash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+}
+#if LANG_CXX11
+inline void PrepareBlockInfo::set_prehash(::std::string&& value) {
+  set_has_prehash();
+  prehash_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+}
+#endif
+inline void PrepareBlockInfo::set_prehash(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_prehash();
+  prehash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+}
+inline void PrepareBlockInfo::set_prehash(const void* value, size_t size) {
+  set_has_prehash();
+  prehash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+}
+inline ::std::string* PrepareBlockInfo::mutable_prehash() {
+  set_has_prehash();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+  return prehash_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PrepareBlockInfo::release_prehash() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+  if (!has_prehash()) {
+    return NULL;
+  }
+  clear_has_prehash();
+  return prehash_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrepareBlockInfo::set_allocated_prehash(::std::string* prehash) {
+  if (prehash != NULL) {
+    set_has_prehash();
+  } else {
+    clear_has_prehash();
+  }
+  prehash_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), prehash);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.PrepareBlockInfo.prehash)
+}
+
+// optional uint64 timer_height = 2;
+inline bool PrepareBlockInfo::has_timer_height() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void PrepareBlockInfo::set_has_timer_height() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void PrepareBlockInfo::clear_has_timer_height() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void PrepareBlockInfo::clear_timer_height() {
+  timer_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_timer_height();
+}
+inline ::google::protobuf::uint64 PrepareBlockInfo::timer_height() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.timer_height)
+  return timer_height_;
+}
+inline void PrepareBlockInfo::set_timer_height(::google::protobuf::uint64 value) {
+  set_has_timer_height();
+  timer_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.timer_height)
+}
+
+// optional uint64 elect_height = 3;
+inline bool PrepareBlockInfo::has_elect_height() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void PrepareBlockInfo::set_has_elect_height() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void PrepareBlockInfo::clear_has_elect_height() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void PrepareBlockInfo::clear_elect_height() {
+  elect_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_elect_height();
+}
+inline ::google::protobuf::uint64 PrepareBlockInfo::elect_height() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.elect_height)
+  return elect_height_;
+}
+inline void PrepareBlockInfo::set_elect_height(::google::protobuf::uint64 value) {
+  set_has_elect_height();
+  elect_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.elect_height)
+}
+
+// optional uint32 shard_id = 4;
+inline bool PrepareBlockInfo::has_shard_id() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void PrepareBlockInfo::set_has_shard_id() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void PrepareBlockInfo::clear_has_shard_id() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void PrepareBlockInfo::clear_shard_id() {
+  shard_id_ = 0u;
+  clear_has_shard_id();
+}
+inline ::google::protobuf::uint32 PrepareBlockInfo::shard_id() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.shard_id)
+  return shard_id_;
+}
+inline void PrepareBlockInfo::set_shard_id(::google::protobuf::uint32 value) {
+  set_has_shard_id();
+  shard_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.shard_id)
+}
+
+// optional uint32 pool_id = 5;
+inline bool PrepareBlockInfo::has_pool_id() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void PrepareBlockInfo::set_has_pool_id() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void PrepareBlockInfo::clear_has_pool_id() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void PrepareBlockInfo::clear_pool_id() {
+  pool_id_ = 0u;
+  clear_has_pool_id();
+}
+inline ::google::protobuf::uint32 PrepareBlockInfo::pool_id() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.pool_id)
+  return pool_id_;
+}
+inline void PrepareBlockInfo::set_pool_id(::google::protobuf::uint32 value) {
+  set_has_pool_id();
+  pool_id_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.pool_id)
+}
+
+// optional bytes tbft_id = 6;
+inline bool PrepareBlockInfo::has_tbft_id() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void PrepareBlockInfo::set_has_tbft_id() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void PrepareBlockInfo::clear_has_tbft_id() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void PrepareBlockInfo::clear_tbft_id() {
+  tbft_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_tbft_id();
+}
+inline const ::std::string& PrepareBlockInfo::tbft_id() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+  return tbft_id_.GetNoArena();
+}
+inline void PrepareBlockInfo::set_tbft_id(const ::std::string& value) {
+  set_has_tbft_id();
+  tbft_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+}
+#if LANG_CXX11
+inline void PrepareBlockInfo::set_tbft_id(::std::string&& value) {
+  set_has_tbft_id();
+  tbft_id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+}
+#endif
+inline void PrepareBlockInfo::set_tbft_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_tbft_id();
+  tbft_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+}
+inline void PrepareBlockInfo::set_tbft_id(const void* value, size_t size) {
+  set_has_tbft_id();
+  tbft_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+}
+inline ::std::string* PrepareBlockInfo::mutable_tbft_id() {
+  set_has_tbft_id();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+  return tbft_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PrepareBlockInfo::release_tbft_id() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+  if (!has_tbft_id()) {
+    return NULL;
+  }
+  clear_has_tbft_id();
+  return tbft_id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrepareBlockInfo::set_allocated_tbft_id(::std::string* tbft_id) {
+  if (tbft_id != NULL) {
+    set_has_tbft_id();
+  } else {
+    clear_has_tbft_id();
+  }
+  tbft_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tbft_id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.PrepareBlockInfo.tbft_id)
+}
+
+// -------------------------------------------------------------------
+
+// TbftLeaderPrepare
+
+// repeated .tenon.bft.protobuf.TbftPrepareTransactionInfo prepare_txs = 1;
+inline int TbftLeaderPrepare::prepare_txs_size() const {
+  return prepare_txs_.size();
+}
+inline void TbftLeaderPrepare::clear_prepare_txs() {
+  prepare_txs_.Clear();
+}
+inline ::tenon::bft::protobuf::TbftPrepareTransactionInfo* TbftLeaderPrepare::mutable_prepare_txs(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TbftLeaderPrepare.prepare_txs)
+  return prepare_txs_.Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TbftPrepareTransactionInfo >*
+TbftLeaderPrepare::mutable_prepare_txs() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.bft.protobuf.TbftLeaderPrepare.prepare_txs)
+  return &prepare_txs_;
+}
+inline const ::tenon::bft::protobuf::TbftPrepareTransactionInfo& TbftLeaderPrepare::prepare_txs(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftLeaderPrepare.prepare_txs)
+  return prepare_txs_.Get(index);
+}
+inline ::tenon::bft::protobuf::TbftPrepareTransactionInfo* TbftLeaderPrepare::add_prepare_txs() {
+  // @@protoc_insertion_point(field_add:tenon.bft.protobuf.TbftLeaderPrepare.prepare_txs)
+  return prepare_txs_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::bft::protobuf::TbftPrepareTransactionInfo >&
+TbftLeaderPrepare::prepare_txs() const {
+  // @@protoc_insertion_point(field_list:tenon.bft.protobuf.TbftLeaderPrepare.prepare_txs)
+  return prepare_txs_;
+}
+
+// optional .tenon.bft.protobuf.PrepareBlockInfo prepare_block_info = 2;
+inline bool TbftLeaderPrepare::has_prepare_block_info() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TbftLeaderPrepare::set_has_prepare_block_info() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TbftLeaderPrepare::clear_has_prepare_block_info() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TbftLeaderPrepare::clear_prepare_block_info() {
+  if (prepare_block_info_ != NULL) prepare_block_info_->Clear();
+  clear_has_prepare_block_info();
+}
+inline const ::tenon::bft::protobuf::PrepareBlockInfo& TbftLeaderPrepare::_internal_prepare_block_info() const {
+  return *prepare_block_info_;
+}
+inline const ::tenon::bft::protobuf::PrepareBlockInfo& TbftLeaderPrepare::prepare_block_info() const {
+  const ::tenon::bft::protobuf::PrepareBlockInfo* p = prepare_block_info_;
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TbftLeaderPrepare.prepare_block_info)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bft::protobuf::PrepareBlockInfo*>(
+      &::tenon::bft::protobuf::_PrepareBlockInfo_default_instance_);
+}
+inline ::tenon::bft::protobuf::PrepareBlockInfo* TbftLeaderPrepare::release_prepare_block_info() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.TbftLeaderPrepare.prepare_block_info)
+  clear_has_prepare_block_info();
+  ::tenon::bft::protobuf::PrepareBlockInfo* temp = prepare_block_info_;
+  prepare_block_info_ = NULL;
+  return temp;
+}
+inline ::tenon::bft::protobuf::PrepareBlockInfo* TbftLeaderPrepare::mutable_prepare_block_info() {
+  set_has_prepare_block_info();
+  if (prepare_block_info_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bft::protobuf::PrepareBlockInfo>(GetArenaNoVirtual());
+    prepare_block_info_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TbftLeaderPrepare.prepare_block_info)
+  return prepare_block_info_;
+}
+inline void TbftLeaderPrepare::set_allocated_prepare_block_info(::tenon::bft::protobuf::PrepareBlockInfo* prepare_block_info) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete prepare_block_info_;
+  }
+  if (prepare_block_info) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      prepare_block_info = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, prepare_block_info, submessage_arena);
+    }
+    set_has_prepare_block_info();
+  } else {
+    clear_has_prepare_block_info();
+  }
+  prepare_block_info_ = prepare_block_info;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TbftLeaderPrepare.prepare_block_info)
+}
+
+// -------------------------------------------------------------------
+
 // TxPrepareItem
 
 // optional bytes acc_addr = 1;
@@ -4700,13 +5809,13 @@ LeaderTxPrepare::txs() const {
 
 // optional .tenon.bft.protobuf.Block block = 2;
 inline bool LeaderTxPrepare::has_block() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void LeaderTxPrepare::set_has_block() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void LeaderTxPrepare::clear_has_block() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void LeaderTxPrepare::clear_block() {
   if (block_ != NULL) block_->Clear();
@@ -4754,6 +5863,72 @@ inline void LeaderTxPrepare::set_allocated_block(::tenon::bft::protobuf::Block* 
   }
   block_ = block;
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.LeaderTxPrepare.block)
+}
+
+// optional bytes prepare_hash = 3;
+inline bool LeaderTxPrepare::has_prepare_hash() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LeaderTxPrepare::set_has_prepare_hash() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LeaderTxPrepare::clear_has_prepare_hash() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LeaderTxPrepare::clear_prepare_hash() {
+  prepare_hash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_prepare_hash();
+}
+inline const ::std::string& LeaderTxPrepare::prepare_hash() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+  return prepare_hash_.GetNoArena();
+}
+inline void LeaderTxPrepare::set_prepare_hash(const ::std::string& value) {
+  set_has_prepare_hash();
+  prepare_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+}
+#if LANG_CXX11
+inline void LeaderTxPrepare::set_prepare_hash(::std::string&& value) {
+  set_has_prepare_hash();
+  prepare_hash_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+}
+#endif
+inline void LeaderTxPrepare::set_prepare_hash(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_prepare_hash();
+  prepare_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+}
+inline void LeaderTxPrepare::set_prepare_hash(const void* value, size_t size) {
+  set_has_prepare_hash();
+  prepare_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+}
+inline ::std::string* LeaderTxPrepare::mutable_prepare_hash() {
+  set_has_prepare_hash();
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+  return prepare_hash_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* LeaderTxPrepare::release_prepare_hash() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
+  if (!has_prepare_hash()) {
+    return NULL;
+  }
+  clear_has_prepare_hash();
+  return prepare_hash_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void LeaderTxPrepare::set_allocated_prepare_hash(::std::string* prepare_hash) {
+  if (prepare_hash != NULL) {
+    set_has_prepare_hash();
+  } else {
+    clear_has_prepare_hash();
+  }
+  prepare_hash_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), prepare_hash);
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.LeaderTxPrepare.prepare_hash)
 }
 
 // -------------------------------------------------------------------
@@ -5338,6 +6513,64 @@ inline void TxBft::set_allocated_ltx_commit(::tenon::bft::protobuf::LeaderTxComm
   }
   ltx_commit_ = ltx_commit;
   // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TxBft.ltx_commit)
+}
+
+// optional .tenon.bft.protobuf.LeaderTxPrepare leader_prepare = 8;
+inline bool TxBft::has_leader_prepare() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void TxBft::set_has_leader_prepare() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void TxBft::clear_has_leader_prepare() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void TxBft::clear_leader_prepare() {
+  if (leader_prepare_ != NULL) leader_prepare_->Clear();
+  clear_has_leader_prepare();
+}
+inline const ::tenon::bft::protobuf::LeaderTxPrepare& TxBft::_internal_leader_prepare() const {
+  return *leader_prepare_;
+}
+inline const ::tenon::bft::protobuf::LeaderTxPrepare& TxBft::leader_prepare() const {
+  const ::tenon::bft::protobuf::LeaderTxPrepare* p = leader_prepare_;
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.TxBft.leader_prepare)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::bft::protobuf::LeaderTxPrepare*>(
+      &::tenon::bft::protobuf::_LeaderTxPrepare_default_instance_);
+}
+inline ::tenon::bft::protobuf::LeaderTxPrepare* TxBft::release_leader_prepare() {
+  // @@protoc_insertion_point(field_release:tenon.bft.protobuf.TxBft.leader_prepare)
+  clear_has_leader_prepare();
+  ::tenon::bft::protobuf::LeaderTxPrepare* temp = leader_prepare_;
+  leader_prepare_ = NULL;
+  return temp;
+}
+inline ::tenon::bft::protobuf::LeaderTxPrepare* TxBft::mutable_leader_prepare() {
+  set_has_leader_prepare();
+  if (leader_prepare_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::bft::protobuf::LeaderTxPrepare>(GetArenaNoVirtual());
+    leader_prepare_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.bft.protobuf.TxBft.leader_prepare)
+  return leader_prepare_;
+}
+inline void TxBft::set_allocated_leader_prepare(::tenon::bft::protobuf::LeaderTxPrepare* leader_prepare) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete leader_prepare_;
+  }
+  if (leader_prepare) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      leader_prepare = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, leader_prepare, submessage_arena);
+    }
+    set_has_leader_prepare();
+  } else {
+    clear_has_leader_prepare();
+  }
+  leader_prepare_ = leader_prepare;
+  // @@protoc_insertion_point(field_set_allocated:tenon.bft.protobuf.TxBft.leader_prepare)
 }
 
 // -------------------------------------------------------------------
@@ -6307,6 +7540,12 @@ BftMessage::mutable_commit_bitmap() {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
