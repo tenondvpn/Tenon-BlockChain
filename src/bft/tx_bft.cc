@@ -148,6 +148,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     }
 // 
     set_pool_index(pool_index);
+    bft::protobuf::LeaderTxPrepare ltx_prepare;
     if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
         return kBftError;
     }
@@ -181,7 +182,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     return kBftSuccess;
 }
 
-void TxBft::DoTransaction(
+int TxBft::DoTransaction(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
     if (InitTenonTvmContext() != kBftSuccess) {

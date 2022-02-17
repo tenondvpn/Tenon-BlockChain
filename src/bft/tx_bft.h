@@ -129,7 +129,7 @@ private:
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> CreatePrepareTxInfo(
         std::shared_ptr<bft::protobuf::Block>& block_ptr);
     std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info);
-    void DoTransaction(
+    int DoTransaction(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
 
