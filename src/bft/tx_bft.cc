@@ -167,7 +167,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    auto blok_hash = GetBlockHash(*prepare_block());
+    auto blok_hash = GetBlockHash(prpare_block_);
     SetPrepareBlock(tbft_prepare_block_->prepare_final_hash(), tbft_prepare_block_);
     ltx_prepare.clear_block();
     *bft_str = ltx_prepare.SerializeAsString();
