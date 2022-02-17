@@ -81,10 +81,8 @@ message TxPrepareItem {
 }
 
 message LeaderTxPrepare {
-	repeated TxPrepareItem txs = 1;
-	optional Block block = 2;
-	optional bytes prepare_hash = 3;
-	optional TbftLeaderPrepare prepare = 4;
+	optional Block block = 1;
+	optional TbftLeaderPrepare prepare = 2;
 }
 
 message BackupTxPrepare {

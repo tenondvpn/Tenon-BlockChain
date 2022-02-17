@@ -85,6 +85,7 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    TxItemPtr GetTx(const std::string& uni_gid);
     void BftOver(BftInterfacePtr& bft_ptr);
     int Init(uint32_t pool_idx);
 

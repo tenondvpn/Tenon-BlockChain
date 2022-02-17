@@ -361,6 +361,10 @@ public:
         handle_last_error_msg_ = error_msg;
     }
 
+    std::shared_ptr<bft::protobuf::TbftLeaderPrepare> prepare_block() {
+        return prepair_block_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -442,7 +446,7 @@ protected:
     std::string handle_last_error_msg_;
     std::unordered_map<std::string, std::shared_ptr<bft::protobuf::Block>> prepare_block_map_;
     std::unordered_map<std::string, uint32_t> prepare_count_map_;
-
+    std::shared_ptr<bft::protobuf::TbftLeaderPrepare> prepair_block_{ nullptr };
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 

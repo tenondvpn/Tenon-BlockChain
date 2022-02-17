@@ -172,6 +172,12 @@ TxItemPtr DispatchPool::GetTx(
      return tx_pool_.GetTx(pool_index, add_to, tx_type, call_contract_step, gid);
 }
 
+TxItemPtr DispatchPool::GetTx(
+        uint32_t pool_index,
+        const std::string& uni_gid) {
+    return tx_pool_.GetTx(pool_index, uni_gid);
+}
+
 void DispatchPool::RemoveTx(
         uint32_t pool_index,
         bool add_to,

@@ -430,26 +430,7 @@ bool TxPool::IsTxContractLocked(TxItemPtr& tx_ptr) {
     return false;
 }
 
-TxItemPtr TxPool::GetTx(
-        bool add_to,
-        uint32_t tx_type,
-        uint32_t call_contract_step,
-        const std::string& gid) {
-    std::string uni_gid = GidManager::Instance()->GetUniversalGid(
-        add_to,
-        tx_type,
-        call_contract_step,
-        gid);
-//     BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
-//         "call_contract_step: %d get tx[%s]to[%s][%s], uni_gid[%s]!",
-//         add_to,
-//         pool_index_,
-//         tx_type,
-//         call_contract_step,
-//         "",
-//         "",
-//         common::Encode::HexEncode(gid).c_str(),  
-//         common::Encode::HexEncode(uni_gid).c_str());
+TxItemPtr TxPool::GetTx(const std::string& uni_gid) {
     std::lock_guard<std::mutex> guard(tx_pool_mutex_);
     auto iter = added_tx_map_.find(uni_gid);
     if (iter == added_tx_map_.end()) {
@@ -492,6 +473,29 @@ TxItemPtr TxPool::GetTx(
         common::Encode::HexEncode(gid).c_str(),
         common::Encode::HexEncode(uni_gid).c_str());
     return nullptr;
+}
+
+TxItemPtr TxPool::GetTx(
+        bool add_to,
+        uint32_t tx_type,
+        uint32_t call_contract_step,
+        const std::string& gid) {
+    std::string uni_gid = GidManager::Instance()->GetUniversalGid(
+        add_to,
+        tx_type,
+        call_contract_step,
+        gid);
+//     BFT_DEBUG("prepare [to: %d] [pool idx: %d] type: %d,"
+//         "call_contract_step: %d get tx[%s]to[%s][%s], uni_gid[%s]!",
+//         add_to,
+//         pool_index_,
+//         tx_type,
+//         call_contract_step,
+//         "",
+//         "",
+//         common::Encode::HexEncode(gid).c_str(),  
+//         common::Encode::HexEncode(uni_gid).c_str());
+    return GetTx(uni_gid);
 }
 
 void TxPool::RemoveTx(

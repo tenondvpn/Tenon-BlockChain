@@ -777,7 +777,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
             bft_ptr->min_aggree_member_count(),
             bft_ptr->member_count(),
             bft_ptr->local_sec_key(),
-            bft_ptr->prepare_hash(),
+            bft_ptr->prepare_block()->prepare_hash(),
             &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
         return kBftError;
@@ -790,7 +790,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
             bft_ptr->members_ptr()->size(),
             member_ptr->bls_publick_key,
             sign,
-            bft_ptr->prepare_hash()) != bls::kBlsSuccess) {
+            bft_ptr->prepare_block()->prepare_hash()) != bls::kBlsSuccess) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     } else {

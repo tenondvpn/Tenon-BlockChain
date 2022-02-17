@@ -451,6 +451,11 @@ TxItemPtr TxPoolManager::GetTx(
     return tx_pool_[pool_index].GetTx(add_to, tx_type, call_contract_step, gid);
 }
 
+TxItemPtr TxPoolManager::GetTx(uint32_t pool_index, const std::string& uni_gid) {
+    assert(pool_index < common::kInvalidPoolIndex);
+    return tx_pool_[pool_index].GetTx(uni_gid);
+}
+
 void TxPoolManager::RemoveTx(
         uint32_t pool_index,
         bool add_to,

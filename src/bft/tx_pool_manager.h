@@ -26,6 +26,9 @@ public:
         uint32_t tx_type,
         uint32_t call_contract_step,
         const std::string& gid);
+    TxItemPtr GetTx(
+        uint32_t pool_index,
+        const std::string& uni_gid);
     TxItemPtr GetRootTx();
     void RemoveTx(
         uint32_t pool_index,

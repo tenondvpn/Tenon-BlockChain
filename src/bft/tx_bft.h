@@ -37,10 +37,10 @@ private:
         const protobuf::Block& block_info,
         const protobuf::TxInfo& tx_info,
         TxItemPtr local_tx);
-    void LeaderCreateTxBlock(
+    void DoTransactionAndCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
-    void RootLeaderCreateTxBlock(
+    void RootDoTransactionAndCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
@@ -129,6 +129,9 @@ private:
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> CreatePrepareTxInfo(
         std::shared_ptr<bft::protobuf::Block>& block_ptr);
     std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info);
+    void DoTransaction(
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& ltx_msg);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

@@ -179,7 +179,7 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
+//     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
 //     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
 //     std::string str_pubkey;
 //     leader_mem_ptr_->pubkey.Serialize(str_pubkey);

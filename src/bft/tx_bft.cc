@@ -148,21 +148,8 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     }
 // 
     set_pool_index(pool_index);
-    if (InitTenonTvmContext() != kBftSuccess) {
+    if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
         return kBftError;
-    }
-
-    bft::protobuf::TxBft tx_bft;
-    auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        RootLeaderCreateTxBlock(pool_index, tx_vec, ltx_prepare);
-    } else {
-        LeaderCreateTxBlock(tx_vec, ltx_prepare);
-    }
-
-    if (ltx_prepare.block().tx_list_size() <= 0) {
-        BFT_ERROR("all choosed tx invalid!");
-        return kBftNoNewTxs;
     }
 
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
@@ -171,7 +158,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         network_id(),
         common::GlobalInfo::Instance()->id());
     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
-            common::GlobalInfo::Instance()->network_id())) {
+        common::GlobalInfo::Instance()->network_id())) {
         BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
             elect_height_,
             elect::ElectManager::Instance()->latest_height(
@@ -179,10 +166,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
-    SetBlock(block_ptr);
-    SetPrepareBlock(ltx_prepare.prepare_hash(), block_ptr);
-    *bft_str = tx_bft.SerializeAsString();
+    SetPrepareBlock(ltx_prepare.prepare_hash(), prepair_block_);
+    ltx_prepare.clear_block();
+    *bft_str = ltx_prepare.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
 //         return kBftError;
@@ -192,6 +178,36 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //         common::Encode::HexEncode(ltx_prepare.block().prehash()).c_str());
     BFT_INFO("leader check leader success elect height: %lu, local_member_index_: %lu, gid: %s",
         elect_height_, local_member_index_, common::Encode::HexEncode(gid_).c_str());
+    return kBftSuccess;
+}
+
+void TxBft::DoTransaction(
+        std::vector<TxItemPtr>& tx_vec,
+        bft::protobuf::LeaderTxPrepare& ltx_msg) {
+    if (InitTenonTvmContext() != kBftSuccess) {
+        return kBftError;
+    }
+
+    bft::protobuf::TxBft tx_bft;
+    auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        RootDoTransactionAndCreateTxBlock(pool_index, tx_vec, ltx_prepare);
+    } else {
+        DoTransactionAndCreateTxBlock(tx_vec, ltx_prepare);
+    }
+
+    if (ltx_prepare.block().tx_list_size() <= 0) {
+        BFT_ERROR("all choosed tx invalid!");
+        return kBftNoNewTxs;
+    }
+
+    auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
+    SetBlock(block_ptr);
+    prepair_block_ = CreatePrepareTxInfo(block_ptr);
+    if (prepair_block_ == nullptr) {
+        return kBftError;
+    }
+
     return kBftSuccess;
 }
 
@@ -242,7 +258,12 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         }
 
         auto prepare_txs_item = prepare_block->add_prepare_txs();
-        prepare_txs_item->set_gid(block_ptr->tx_list(i).gid());
+        std::string uni_gid = GidManager::Instance()->GetUniversalGid(
+            block_ptr->tx_list(i).to_add(),
+            block_ptr->tx_list(i).type(),
+            block_ptr->tx_list(i).call_contract_step(),
+            block_ptr->tx_list(i).gid());
+        prepare_txs_item->set_gid(uni_gid);
         prepare_txs_item->set_tx_hash(tx_hash);
         prepare_txs_item->set_balance(block_ptr->tx_list(i).balance());
         tbft_prepare_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash;
@@ -255,6 +276,10 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
             prepare_txs_item->set_address(block_ptr->tx_list(i).from());
             tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).from();
         }
+    }
+
+    if (tbft_prepare_str_for_hash.empty()) {
+        return nullptr;
     }
 
     std::string block_info = block_ptr->prehash() +
@@ -638,119 +663,38 @@ int TxBft::GetTimeBlockInfoFromTx(
     return kBftSuccess;
 }
 
-int TxBft::BackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx) {
+int TxBft::BackupCheckPrepare(
+        const bft::protobuf::BftMessage& bft_msg,
+        int32_t* invalid_tx_idx) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
         return kBftInvalidPackage;
     }
 
-    if (!tx_bft.ltx_prepare().has_block()) {
+    if (!tx_bft.ltx_prepare().has_prepare()) {
         BFT_ERROR("prepare has no transaction!");
         return kBftInvalidPackage;
     }
 
-    const auto& block = tx_bft.ltx_prepare().block();
-    int res = CheckBlockInfo(block);
-    if (res != kBftSuccess) {
-        BFT_ERROR("bft check block info failed[%d]", res);
-        return res;
-    }
-
-    std::unordered_map<std::string, int64_t> acc_balance_map;
-    std::unordered_map<std::string, bool> locked_account_map;
-    for (int32_t i = 0; i < block.tx_list_size(); ++i) {
-        *invalid_tx_idx = i;
-        const auto& tx_info = block.tx_list(i);
-        uint32_t call_contract_step = common::kConsensusInvalidType;
-        if (tx_info.type() == common::kConsensusCallContract ||
-            tx_info.type() == common::kConsensusCreateContract) {
-            if (tx_info.call_contract_step() <= contract::kCallStepDefault) {
-                return kBftLeaderTxInfoInvalid;
-            }
-
-            call_contract_step = tx_info.call_contract_step() - 1;
-        }
-
+    const auto& leader_prepare = tx_bft.ltx_prepare().prepare();
+    std::vector<TxItemPtr> tx_vec;
+    for (int32_t i = 0; i < leader_prepare.prepare_txs_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
-            tx_info.to_add(),
-            tx_info.type(),
-            call_contract_step,
-            tx_info.gid());
-        int tmp_res = CheckTxInfo(block, tx_info, local_tx_info);
-        if (tmp_res != kBftSuccess || local_tx_info == nullptr) {
-            BFT_ERROR("check transaction failed![%d]", tmp_res);
-            return tmp_res;
+            leader_prepare.prepare_txs(i).gid());
+        if (local_tx_info == nullptr) {
+            continue;
         }
 
-        if (local_tx_info->tx.type() == common::kConsensusFinalStatistic) {
-            int check_res = BackupCheckFinalStatistic(local_tx_info, tx_info);
-            if (check_res != kBftSuccess) {
-                BFT_ERROR("BackupCheckFinalStatistic transaction failed![%d]", tmp_res);
-                return check_res;
-            }
-        } else if (local_tx_info->tx.type() == common::kConsensusCallContract ||
-                local_tx_info->tx.type() == common::kConsensusCreateContract) {
-            switch (local_tx_info->tx.call_contract_step()) {
-            case contract::kCallStepDefault: {
-                int check_res = BackupCheckContractDefault(
-                    local_tx_info,
-                    tx_info,
-                    locked_account_map,
-                    acc_balance_map);
-                if (check_res != kBftSuccess) {
-                    BFT_ERROR("BackupCheckContractDefault transaction failed![%d]", tmp_res);
-                    return check_res;
-                }
-
-                break;
-            }
-            case contract::kCallStepCallerInited: {
-                int check_res = BackupCheckContractExceute(
-                    local_tx_info,
-                    tx_info,
-                    acc_balance_map);
-                if (check_res != kBftSuccess) {
-                    BFT_ERROR("BackupCheckContractExceute transaction failed![%d]", tmp_res);
-                    return check_res;
-                }
-
-                break;
-            }
-            case contract::kCallStepContractCalled: {
-                int check_res = BackupCheckContractCalled(local_tx_info, tx_info, acc_balance_map);
-                if (check_res != kBftSuccess) {
-                    BFT_ERROR("BackupCheckContractCalled transaction failed![%d]", check_res);
-                    return check_res;
-                }
-
-                break;
-            }
-            default:
-                return kBftInvalidPackage;
-            }
-        } else {
-            int check_res = BackupNormalCheck(
-                local_tx_info,
-                tx_info,
-                locked_account_map,
-                acc_balance_map);
-            if (check_res != kBftSuccess) {
-                BFT_ERROR("BackupNormalCheck failed!");
-                return check_res;
-            }
-        }
+        tx_vec.push_back(local_tx_info);
     }
 
-    auto block_hash = GetBlockHash(block);
-    if (block_hash != block.hash()) {
-        BFT_ERROR("block hash error!");
-        return kBftError;
+    bft::protobuf::LeaderTxPrepare ltx_msg;
+    if (DoTransaction(tx_vec, ltx_msg) != kBftSuccess) {
+        return kBftInvalidPackage;
     }
 
-    auto block_ptr = std::make_shared<bft::protobuf::Block>(block);
-    SetBlock(block_ptr);
     return kBftSuccess;
 }
 
@@ -1970,7 +1914,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
-void TxBft::RootLeaderCreateTxBlock(
+void TxBft::RootDoTransactionAndCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
@@ -2145,7 +2089,7 @@ int TxBft::GetTempAccountBalance(
     return kBftSuccess;
 }
 
-void TxBft::LeaderCreateTxBlock(
+void TxBft::DoTransactionAndCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
@@ -2164,7 +2108,7 @@ void TxBft::LeaderCreateTxBlock(
                     acc_balance_map,
                     locked_account_map,
                     tx) != kBftSuccess) {
-                BFT_ERROR("leader call cotnract failed!");
+                BFT_ERROR("leader call contract failed!");
                 continue;
             }
         } else if (tx.type() == common::kConsensusFinalStatistic) {
