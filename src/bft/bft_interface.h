@@ -441,7 +441,7 @@ protected:
     int32_t handle_last_error_code_{ 0 };
     std::string handle_last_error_msg_;
     std::unordered_map<std::string, std::shared_ptr<bft::protobuf::Block>> prepare_block_map_;
-    std::unordered_map<std::string, count> prepare_count_map_;
+    std::unordered_map<std::string, uint32_t> prepare_count_map_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
