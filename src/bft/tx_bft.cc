@@ -167,10 +167,11 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    SetPrepareBlock(ltx_prepare.prepare().prepare_hash(), prepair_block_);
+    auto blok_hash = GetBlockHash(prepare_block());
+    SetPrepareBlock(tbft_prepare_block_->prepare_final_hash(), tbft_prepare_block_);
     ltx_prepare.clear_block();
     *bft_str = ltx_prepare.SerializeAsString();
-    set_prepare_hash(ltx_prepare.block().hash());
+    set_prepare_hash(blok_hash);
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
 //         return kBftError;
 //     }
@@ -198,14 +199,14 @@ int TxBft::DoTransaction(
     }
 
     if (ltx_prepare.block().tx_list_size() <= 0) {
-        BFT_ERROR("all choosed tx invalid!");
+        BFT_ERROR("all choose tx invalid!");
         return kBftNoNewTxs;
     }
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
     SetBlock(block_ptr);
-    prepair_block_ = CreatePrepareTxInfo(block_ptr);
-    if (prepair_block_ == nullptr) {
+    tbft_prepare_block_ = CreatePrepareTxInfo(block_ptr);
+    if (tbft_prepare_block_ == nullptr) {
         return kBftError;
     }
 

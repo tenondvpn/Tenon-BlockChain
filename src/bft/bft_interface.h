@@ -362,7 +362,7 @@ public:
     }
 
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> prepare_block() {
-        return prepair_block_;
+        return tbft_prepare_block_;
     }
 
 protected:
@@ -444,9 +444,9 @@ protected:
     std::mutex vss_random_map_mutex_;
     int32_t handle_last_error_code_{ 0 };
     std::string handle_last_error_msg_;
-    std::unordered_map<std::string, std::shared_ptr<bft::protobuf::Block>> prepare_block_map_;
+    std::unordered_map<std::string, std::shared_ptr<bft::protobuf::TbftLeaderPrepare>> prepare_block_map_;
     std::unordered_map<std::string, uint32_t> prepare_count_map_;
-    std::shared_ptr<bft::protobuf::TbftLeaderPrepare> prepair_block_{ nullptr };
+    std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 
