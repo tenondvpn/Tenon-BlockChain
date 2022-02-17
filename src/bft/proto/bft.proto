@@ -62,6 +62,27 @@ message Block {
 	repeated uint64 commit_bitmap = 15;
 }
 
+message TbftPrepareTransactionInfo {
+    optional bytes gid = 1;
+    optional bytes tx_hash = 2;
+    optional bytes address = 3;
+	optional uint64 balance = 3;
+}
+
+message PrepareBlockInfo {
+    optional bytes prehash = 1;
+	optional uint64 timer_height = 2;
+	optional uint64 elect_height = 3;
+    optional uint32 shard_id = 4;
+    optional uint32 pool_id = 5;
+    optional bytes tbft_id = 6;
+}
+
+message TbftLeaderPrepare {
+	repeated TbftPrepareTransactionInfo prepare_txs = 1;
+    PrepareBlockInfo prepare_block_info = 2;
+}
+
 message TxPrepareItem {
 	optional bytes acc_addr = 1;
 	optional bytes gid = 2;
@@ -70,6 +91,7 @@ message TxPrepareItem {
 message LeaderTxPrepare {
 	repeated TxPrepareItem txs = 1;
 	optional Block block = 2;
+	optional bytes prepare_hash = 3;
 }
 
 message BackupTxPrepare {
@@ -100,6 +122,8 @@ message TxBft {
 	optional LeaderTxPreCommit ltx_precommit = 5;
 	optional BackupTxPreCommit btx_precommit = 6;
 	optional LeaderTxCommit ltx_commit = 7;
+    // TBFT protocal 
+	optional LeaderTxPrepare leader_prepare = 8;
 }
 
 message BftMessage {
@@ -125,4 +149,5 @@ message BftMessage {
 	optional bytes bls_sign_x = 20;
 	optional bytes bls_sign_y = 21;
 	repeated uint64 commit_bitmap = 22;
+
 }

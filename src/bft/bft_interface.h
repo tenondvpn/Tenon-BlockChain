@@ -369,6 +369,18 @@ protected:
         prpare_block_ = prpare_block;
     }
 
+    void SetPrepareBlock(
+            const std::string& prepare_hash,
+            std::shared_ptr<bft::protobuf::Block>& prpare_block) {
+        auto iter = prepare_count_map_.find(prepare_hash);
+        if (iter == prepare_count_map_.end()) {
+            prepare_block_map_[prepare_hash] = prpare_block;
+            prepare_count_map_[prepare_hash] = 1;
+        } else {
+            ++iter->second;
+        }
+    }
+
     int LeaderCreatePreCommitAggChallenge();
     int LeaderCreateCommitAggSign();
     void RechallengePrecommitClear();
@@ -428,6 +440,8 @@ protected:
     std::mutex vss_random_map_mutex_;
     int32_t handle_last_error_code_{ 0 };
     std::string handle_last_error_msg_;
+    std::unordered_map<std::string, std::shared_ptr<bft::protobuf::Block>> prepare_block_map_;
+    std::unordered_map<std::string, count> prepare_count_map_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

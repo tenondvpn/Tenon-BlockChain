@@ -181,6 +181,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
     SetBlock(block_ptr);
+    SetPrepareBlock(ltx_prepare.prepare_hash(), block_ptr);
     *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
@@ -260,7 +261,7 @@ int TxBft::RootBackupCheckCreateAccountAddressPrepare(
                 tx_info.to() == common::kRootChainElectionBlockTxAddress) {
             local_pool_idx = common::kRootChainPoolIndex;
         } else {
-            std::mt19937_64 g2(prpare_block_->height());
+            std::mt19937_64 g2(block.height() - 1);
             local_pool_idx = g2() % common::kImmutablePoolSize;
         }
 
@@ -1754,6 +1755,21 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
+    std::string pool_hash;
+    uint64_t pool_height = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_idx,
+        &pool_height,
+        &pool_hash,
+        &tm_height,
+        &tm_with_block_height);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return;
+    }
+
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     auto tx_list = tenon_block.mutable_tx_list();
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
@@ -1792,8 +1808,9 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
                 tx.to() == common::kRootChainElectionBlockTxAddress) {
             local_pool_idx = common::kRootChainPoolIndex;
         } else {
-            std::mt19937_64 g2(prpare_block_->height());
+            std::mt19937_64 g2(pool_height);
             local_pool_idx = g2() % common::kImmutablePoolSize;
+            BFT_DEBUG("set random pool index, pool_height: %lu, local_pool_idx: %d", pool_height, local_pool_idx);
         }
 
         tx.set_pool_index(local_pool_idx);
@@ -1805,22 +1822,6 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
 
     if (tx_list->empty()) {
         BFT_ERROR("leader has no tx to consensus.");
-        return;
-    }
-
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_idx,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
         return;
     }
 
@@ -2154,7 +2155,7 @@ void TxBft::LeaderCreateTxBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    tenon_block.set_hash(GetBlockHash(tenon_block));
+    ltx_msg.set_prepare_hash(GetBlockHash(tenon_block));
 }
 
 int TxBft::LeaderAddNormalTransaction(
