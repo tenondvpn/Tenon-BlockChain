@@ -167,7 +167,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    SetPrepareBlock(ltx_prepare.prepare_hash(), prepair_block_);
+    SetPrepareBlock(ltx_prepare.prepare().prepare_hash(), prepair_block_);
     ltx_prepare.clear_block();
     *bft_str = ltx_prepare.SerializeAsString();
     set_prepare_hash(ltx_prepare.block().hash());
@@ -192,7 +192,7 @@ int TxBft::DoTransaction(
     bft::protobuf::TxBft tx_bft;
     auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        RootDoTransactionAndCreateTxBlock(pool_index, tx_vec, ltx_prepare);
+        RootDoTransactionAndCreateTxBlock(pool_index(), tx_vec, ltx_prepare);
     } else {
         DoTransactionAndCreateTxBlock(tx_vec, ltx_prepare);
     }
@@ -2176,7 +2176,7 @@ void TxBft::DoTransactionAndCreateTxBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
-    ltx_msg.set_prepare_hash(GetBlockHash(tenon_block));
+    //ltx_msg.set_prepare_hash(GetBlockHash(tenon_block));
 }
 
 int TxBft::LeaderAddNormalTransaction(

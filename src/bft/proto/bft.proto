@@ -4,34 +4,34 @@ package tenon.bft.protobuf;
 
 message AccountAttributes {
     optional bytes key = 1;
-	optional bytes value = 2;
+    optional bytes value = 2;
 }
 
 message StorageItem {
-	optional bytes id = 1;
-	optional bytes key = 2;
-	optional bytes value = 3;
+    optional bytes id = 1;
+    optional bytes key = 2;
+    optional bytes value = 3;
 }
 
 message TransferItem {
     optional bytes from = 1;
-	optional bytes to = 2;
-	optional uint64 amount = 3;
+    optional bytes to = 2;
+    optional uint64 amount = 3;
 }
 
 message TxInfo {
-	optional uint32 version = 1;
-	optional bytes gid = 2;
-	optional bytes from = 3;
-	optional bytes from_pubkey = 4;
-	optional bytes from_sign = 5;
-	optional bytes to = 6;
-	optional uint64 amount = 7;
-	optional uint64 gas_limit = 8;
+    optional uint32 version = 1;
+    optional bytes gid = 2;
+    optional bytes from = 3;
+    optional bytes from_pubkey = 4;
+    optional bytes from_sign = 5;
+    optional bytes to = 6;
+    optional uint64 amount = 7;
+    optional uint64 gas_limit = 8;
     optional uint64 gas_used = 9;
     optional uint64 gas_price = 10;
-	optional uint64 balance = 11;
-	optional bool to_add = 12;
+    optional uint64 balance = 11;
+    optional bool to_add = 12;
     optional uint32 type = 13;
     repeated AccountAttributes attr = 14; 
     optional uint32 status = 15;
@@ -41,103 +41,103 @@ message TxInfo {
     optional uint32 call_contract_step = 19;
     repeated StorageItem storages = 20;
     repeated TransferItem transfers = 21;
-	optional uint64 timestamp = 22;
+    optional uint64 timestamp = 22;
 }
 
 message Block {
-	optional uint32 network_id = 1;
-	optional uint32 pool_index = 2;
+    optional uint32 network_id = 1;
+    optional uint32 pool_index = 2;
     optional bytes prehash = 3;
     optional bytes hash = 4;
     optional uint32 version = 5;
-	optional uint64 height = 6;
+    optional uint64 height = 6;
     optional uint64 consistency_random = 7;
     optional uint64 electblock_height = 8;
-	repeated uint64 bitmap = 9;
+    repeated uint64 bitmap = 9;
     repeated TxInfo tx_list = 10;
-	optional uint64 timestamp = 11;
-	optional uint64 timeblock_height = 12;
+    optional uint64 timestamp = 11;
+    optional uint64 timeblock_height = 12;
     optional bytes bls_agg_sign_x = 13;
-	optional bytes bls_agg_sign_y = 14;
-	repeated uint64 commit_bitmap = 15;
+    optional bytes bls_agg_sign_y = 14;
+    repeated uint64 commit_bitmap = 15;
 }
 
 message TbftPrepareTransactionInfo {
     optional bytes gid = 1;
     optional bytes tx_hash = 2;
     optional bytes address = 3;
-	optional uint64 balance = 4;
+    optional uint64 balance = 4;
 }
 
 message TbftLeaderPrepare {
-	repeated TbftPrepareTransactionInfo prepare_txs = 1;
+    repeated TbftPrepareTransactionInfo prepare_txs = 1;
     optional bytes prepare_hash = 2;
     optional bytes prepare_final_hash = 3;
 }
 
 message TxPrepareItem {
-	optional bytes acc_addr = 1;
-	optional bytes gid = 2;
+    optional bytes acc_addr = 1;
+    optional bytes gid = 2;
 }
 
 message LeaderTxPrepare {
-	optional Block block = 1;
-	optional TbftLeaderPrepare prepare = 2;
+    optional Block block = 1;
+    optional TbftLeaderPrepare prepare = 2;
 }
 
 message BackupTxPrepare {
-	optional int32 status = 1;
+    optional int32 status = 1;
 }
 
 message LeaderTxPreCommit {
-	optional int32 status = 1;
+    optional int32 status = 1;
 }
 
 message BackupTxPreCommit {
-	optional int32 status = 1;
+    optional int32 status = 1;
 }
 
 message LeaderTxCommit {
-	optional int32 status = 1;
+    optional int32 status = 1;
 }
 
 message ToAccountTx {
-	optional Block block = 1;
+    optional Block block = 1;
 }
 
 message TxBft {
-	optional TxInfo new_tx = 1;
-	optional ToAccountTx to_tx = 2;
+    optional TxInfo new_tx = 1;
+    optional ToAccountTx to_tx = 2;
     // TBFT protocal 
-	optional LeaderTxPrepare ltx_prepare = 3;
-	optional BackupTxPrepare btx_prepare = 4;
-	optional LeaderTxPreCommit ltx_precommit = 5;
-	optional BackupTxPreCommit btx_precommit = 6;
-	optional LeaderTxCommit ltx_commit = 7;
+    optional LeaderTxPrepare ltx_prepare = 3;
+    optional BackupTxPrepare btx_prepare = 4;
+    optional LeaderTxPreCommit ltx_precommit = 5;
+    optional BackupTxPreCommit btx_precommit = 6;
+    optional LeaderTxCommit ltx_commit = 7;
 }
 
 message BftMessage {
-	optional bytes gid = 1;
-	optional int32 bft_step = 2;
-	optional bool leader = 3;
-	optional uint32 net_id = 4;
-	optional bytes sign_challenge = 5;
-	optional bytes sign_response = 6;
-	repeated uint64 bitmap = 7;
-	optional bool agree = 8;
-	optional uint32 pool_index = 9;
-	optional int32 error = 10;
-	optional bytes data = 11;
-	optional bytes prepare_hash = 12;
-	optional bytes node_ip = 13;
-	optional uint32 node_port = 14;
-	optional uint32 epoch = 15;
-	optional uint32 member_index = 16;
-	optional bytes pubkey = 17;
-	optional bytes backup_enc_data = 18;
-	optional uint64 elect_height = 19;
-	optional bytes bls_sign_x = 20;
-	optional bytes bls_sign_y = 21;
-	repeated uint64 commit_bitmap = 22;
+    optional bytes gid = 1;
+    optional int32 bft_step = 2;
+    optional bool leader = 3;
+    optional uint32 net_id = 4;
+    optional bytes sign_challenge = 5;
+    optional bytes sign_response = 6;
+    repeated uint64 bitmap = 7;
+    optional bool agree = 8;
+    optional uint32 pool_index = 9;
+    optional int32 error = 10;
+    optional bytes data = 11;
+    optional bytes prepare_hash = 12;
+    optional bytes node_ip = 13;
+    optional uint32 node_port = 14;
+    optional uint32 epoch = 15;
+    optional uint32 member_index = 16;
+    optional bytes pubkey = 17;
+    optional bytes backup_enc_data = 18;
+    optional uint64 elect_height = 19;
+    optional bytes bls_sign_x = 20;
+    optional bytes bls_sign_y = 21;
+    repeated uint64 commit_bitmap = 22;
 
 }
