@@ -152,7 +152,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     }
 
     SetPrepareBlock(tbft_prepare_block_->prepare_final_hash(), tbft_prepare_block_);
-    ltx_prepare.clear_block();
+    ltx_prepare->clear_block();
     *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(GetBlockHash(*prpare_block_));
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
@@ -236,13 +236,14 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         bft::protobuf::LeaderTxPrepare& ltx_prepare) {
     std::string tbft_prepare_str_for_hash;
     std::string tbft_prepare_txs_str_for_hash;
+    auto prepare = ltx_prepare.mutable_prepare();
     for (int32_t i = 0; i < block_ptr->tx_list_size(); ++i) {
         auto tx_hash = GetPrepareTxsHash(block_ptr->tx_list(i));
         if (tx_hash.empty()) {
             continue;
         }
 
-        auto prepare_txs_item = ltx_prepare.add_prepare_txs();
+        auto prepare_txs_item = prepare->add_prepare_txs();
         std::string uni_gid = GidManager::Instance()->GetUniversalGid(
             block_ptr->tx_list(i).to_add(),
             block_ptr->tx_list(i).type(),
@@ -274,9 +275,9 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         std::to_string(block_ptr->pool_index()) + gid_;
     tbft_prepare_str_for_hash += block_info;
     tbft_prepare_txs_str_for_hash += block_info;
-    ltx_prepare.set_prepare_hash(
+    prepare->set_prepare_hash(
         common::Hash::keccak256(tbft_prepare_str_for_hash));
-    ltx_prepare.set_prepare_final_hash(
+    prepare->set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
     auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(ltx_prepare);
     return prepare_block;
