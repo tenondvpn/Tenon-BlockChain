@@ -775,12 +775,17 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
+    std::string msg_to_hash = common::Hash::Hash256(
+        std::to_string(1) + "_" +
+        std::to_string(kBftPrepare) + "_" +
+        bft_ptr->prepare_block()->prepare_hash());
+    BFT_DEBUG("leader prepare hash: %s", common::Encode::HexEncode(msg_to_hash).c_str());
     libff::alt_bn128_G1 sign;
     if (bls::BlsManager::Instance()->Sign(
             bft_ptr->min_aggree_member_count(),
             bft_ptr->member_count(),
             bft_ptr->local_sec_key(),
-            bft_ptr->prepare_block()->prepare_hash(),
+            msg_to_hash,
             &sign) != bls::kBlsSuccess) {
         BFT_ERROR("leader signature error.");
         return kBftError;

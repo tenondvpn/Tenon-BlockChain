@@ -64,6 +64,7 @@ void BftProto::LeaderCreatePrepare(
         std::to_string(bft_msg.agree()) + "_" +
         std::to_string(bft_msg.bft_step()) + "_" +
         bft_ptr->prepare_block()->prepare_hash());
+    BFT_DEBUG("create prepare msg hash: %s", common::Encode::HexEncode(msg_to_hash).c_str());
     security::Signature leader_sig;
     if (!security::Security::Instance()->Sign(
             msg_to_hash,
