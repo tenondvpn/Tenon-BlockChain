@@ -280,6 +280,7 @@ int ShardNetwork<DhtType>::JoinShard() {
     network::DhtManager::Instance()->RegisterDht(network_id_, elect_dht_);
     auto boot_nodes = network::Bootstrap::Instance()->GetNetworkBootstrap(network_id_, 3);
     if (boot_nodes.empty()) {
+        NETWORK_DEBUG("no bootstrap nodes.");
         return kNetworkSuccess;
     }
 
@@ -287,6 +288,7 @@ int ShardNetwork<DhtType>::JoinShard() {
         NETWORK_ERROR("join shard network [%u] failed!", network_id_);
     }
 
+    NETWORK_DEBUG("join network: %d success.", network_id_);
     return kNetworkSuccess;
 }
 

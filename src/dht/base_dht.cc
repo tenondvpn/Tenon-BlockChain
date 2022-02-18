@@ -953,11 +953,15 @@ bool BaseDht::NodeValid(NodePtr& node) {
 
     if (node->public_ip() == local_node_->public_ip() &&
             node->public_port == local_node_->public_port) {
+        DHT_ERROR("public ip and port eq to local: %s:%d, remote: %s:%d",
+            local_node_->public_ip().c_str(), local_node_->public_port,
+            node->public_ip().c_str(), node->public_port);
         return false;
     }
 
     auto dht_key_country_code = DhtKeyManager::DhtKeyGetCountry(node->dht_key());
     if (dht_key_country_code > common::CountryCode::FX) {
+        DHT_ERROR("dht_key_country_code error: %d.", dht_key_country_code);
         return false;
     }
 
