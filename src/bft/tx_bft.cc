@@ -64,7 +64,7 @@ int TxBft::Prepare(
     int32_t invalid_tx_idx = -1;
     int res = kBftSuccess;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        res = RootBackupCheckPrepare(leader_bft_msg, &invalid_tx_idx);
+        res = RootBackupCheckPrepare(leader_bft_msg, &invalid_tx_idx, prepare);
     } else {
         res = BackupCheckPrepare(leader_bft_msg, &invalid_tx_idx, prepare);
     }
@@ -279,7 +279,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         common::Hash::keccak256(tbft_prepare_str_for_hash));
     prepare->set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
-    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(ltx_prepare);
+    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
     return prepare_block;
 }
 
@@ -539,46 +539,69 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
 
 int TxBft::RootBackupCheckPrepare(
         const bft::protobuf::BftMessage& bft_msg,
-        int32_t* invalid_tx_idx) {
+        int32_t* invalid_tx_idx,
+        std::string* prepare) {
     bft::protobuf::TxBft tx_bft;
     if (!tx_bft.ParseFromString(bft_msg.data())) {
         BFT_ERROR("bft::protobuf::TxBft ParseFromString failed!");
         return kBftInvalidPackage;
     }
 
-    if (!tx_bft.ltx_prepare().has_block()) {
-        BFT_ERROR("prepare has no transaction!");
+    const auto& leader_prepare = tx_bft.ltx_prepare().prepare();
+    std::vector<TxItemPtr> tx_vec;
+    for (int32_t i = 0; i < leader_prepare.prepare_txs_size(); ++i) {
+        TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
+            pool_index(),
+            leader_prepare.prepare_txs(i).gid());
+        if (local_tx_info == nullptr) {
+            continue;
+        }
+
+        tx_vec.push_back(local_tx_info);
+    }
+
+    bft::protobuf::TxBft res_tx_bft;
+    auto ltx_msg = res_tx_bft.mutable_ltx_prepare();
+    if (DoTransaction(tx_vec, *ltx_msg) != kBftSuccess) {
         return kBftInvalidPackage;
     }
 
-    const auto& block = tx_bft.ltx_prepare().block();
-    int res = CheckBlockInfo(block);
-    if (res != kBftSuccess) {
-        BFT_ERROR("bft check block info failed[%d]", res);
-        return res;
-    }
-
-    if (block.tx_list_size() == 1) {
-        *invalid_tx_idx = 0;
-        switch (block.tx_list(0).type())
-        {
-        case common::kConsensusRootElectShard:
-            return RootBackupCheckElectConsensusShardPrepare(block);
-            break;
-        case common::kConsensusRootTimeBlock:
-            return RootBackupCheckTimerBlockPrepare(block);
-            break;
-        case common::kConsensusFinalStatistic:
-            return RootBackupCheckFinalStatistic(block);
-            break;
-        default:
-            return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
-            break;
-        }
-    } else {
-        return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
-    }
-    
+    ltx_msg.clear_block();
+    *prepare = res_tx_bft.SerializeAsString();
+// 
+//     if (!tx_bft.ltx_prepare().has_prepare()) {
+//         BFT_ERROR("prepare has no transaction!");
+//         return kBftInvalidPackage;
+//     }
+// 
+//     const auto& block = tx_bft.ltx_prepare().block();
+//     int res = CheckBlockInfo(block);
+//     if (res != kBftSuccess) {
+//         BFT_ERROR("bft check block info failed[%d]", res);
+//         return res;
+//     }
+// 
+//     if (block.tx_list_size() == 1) {
+//         *invalid_tx_idx = 0;
+//         switch (block.tx_list(0).type())
+//         {
+//         case common::kConsensusRootElectShard:
+//             return RootBackupCheckElectConsensusShardPrepare(block);
+//             break;
+//         case common::kConsensusRootTimeBlock:
+//             return RootBackupCheckTimerBlockPrepare(block);
+//             break;
+//         case common::kConsensusFinalStatistic:
+//             return RootBackupCheckFinalStatistic(block);
+//             break;
+//         default:
+//             return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
+//             break;
+//         }
+//     } else {
+//         return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
+//     }
+//     
     return kBftInvalidPackage;
 }
 

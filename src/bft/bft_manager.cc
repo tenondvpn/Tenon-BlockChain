@@ -1661,7 +1661,6 @@ int BftManager::VerifyLeaderSignature(
             *sign_hash = common::Hash::Hash256(msg_hash_src);
         } else if (bft_msg.bft_step() == kBftPrepare) {
             *sign_hash = common::Hash::Hash256(
-                bft_msg.gid() +
                 std::to_string(bft_msg.agree()) + "_" +
                 std::to_string(bft_msg.bft_step()) + "_" +
                 bft_msg.prepare_hash());

@@ -63,7 +63,10 @@ private:
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
-    int RootBackupCheckPrepare(const bft::protobuf::BftMessage& bft_msg, int32_t* invalid_tx_idx);
+    int RootBackupCheckPrepare(
+        const bft::protobuf::BftMessage& bft_msg,
+        int32_t* invalid_tx_idx,
+        std::string* prepare);
     int RootBackupCheckCreateAccountAddressPrepare(
         const bft::protobuf::Block& block,
         int32_t* invalid_tx_idx);
