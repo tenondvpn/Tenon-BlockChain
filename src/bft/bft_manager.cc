@@ -760,6 +760,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     BFT_DEBUG("bft leader prepare 0.");
     bft::protobuf::BftMessage bft_msg;
     int res = bft_ptr->Prepare(true, pool_mod_idx, bft_msg, &prepare_data);
+    BFT_DEBUG("bft leader prepare 0 1: %d, %d.", res, prepare_data.size());
     if (res != kBftSuccess || prepare_data.empty()) {
         return kBftError;
     }

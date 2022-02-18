@@ -130,7 +130,8 @@ private:
         const protobuf::TxInfo& tx_info);
     int GetTimeBlockInfoFromTx(const protobuf::TxInfo& tx_info, uint64_t* tm_height, uint64_t* tm);
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> CreatePrepareTxInfo(
-        std::shared_ptr<bft::protobuf::Block>& block_ptr);
+        std::shared_ptr<bft::protobuf::Block>& block_ptr,
+        bft::protobuf::LeaderTxPrepare& ltx_prepare);
     std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info);
     int DoTransaction(
         std::vector<TxItemPtr>& tx_vec,

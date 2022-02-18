@@ -130,8 +130,9 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     }
 // 
     set_pool_index(pool_index);
-    bft::protobuf::LeaderTxPrepare ltx_prepare;
-    if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
+    bft::protobuf::TxBft tx_bft;
+    auto ltx_prepare = tx_bft.mutable_ltx_prepare();
+    if (DoTransaction(tx_vec, *ltx_prepare) != kBftSuccess) {
         BFT_ERROR("DoTransaction error.");
         return kBftError;
     }
@@ -152,7 +153,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
     SetPrepareBlock(tbft_prepare_block_->prepare_final_hash(), tbft_prepare_block_);
     ltx_prepare.clear_block();
-    *bft_str = ltx_prepare.SerializeAsString();
+    *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(GetBlockHash(*prpare_block_));
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
 //         return kBftError;
@@ -167,13 +168,11 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
 int TxBft::DoTransaction(
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg) {
+        bft::protobuf::LeaderTxPrepare& ltx_prepare) {
     if (InitTenonTvmContext() != kBftSuccess) {
         return kBftError;
     }
 
-    bft::protobuf::TxBft tx_bft;
-    auto& ltx_prepare = *(tx_bft.mutable_ltx_prepare());
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
         RootDoTransactionAndCreateTxBlock(pool_index(), tx_vec, ltx_prepare);
     } else {
@@ -187,7 +186,7 @@ int TxBft::DoTransaction(
 
     auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
     SetBlock(block_ptr);
-    tbft_prepare_block_ = CreatePrepareTxInfo(block_ptr);
+    tbft_prepare_block_ = CreatePrepareTxInfo(block_ptr, ltx_prepare);
     if (tbft_prepare_block_ == nullptr) {
         return kBftError;
     }
@@ -233,8 +232,8 @@ std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
 }
 
 std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
-        std::shared_ptr<bft::protobuf::Block>& block_ptr) {
-    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>();
+        std::shared_ptr<bft::protobuf::Block>& block_ptr,
+        bft::protobuf::LeaderTxPrepare& ltx_prepare) {
     std::string tbft_prepare_str_for_hash;
     std::string tbft_prepare_txs_str_for_hash;
     for (int32_t i = 0; i < block_ptr->tx_list_size(); ++i) {
@@ -243,7 +242,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
             continue;
         }
 
-        auto prepare_txs_item = prepare_block->add_prepare_txs();
+        auto prepare_txs_item = ltx_prepare.add_prepare_txs();
         std::string uni_gid = GidManager::Instance()->GetUniversalGid(
             block_ptr->tx_list(i).to_add(),
             block_ptr->tx_list(i).type(),
@@ -275,10 +274,11 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         std::to_string(block_ptr->pool_index()) + gid_;
     tbft_prepare_str_for_hash += block_info;
     tbft_prepare_txs_str_for_hash += block_info;
-    prepare_block->set_prepare_hash(
+    ltx_prepare.set_prepare_hash(
         common::Hash::keccak256(tbft_prepare_str_for_hash));
-    prepare_block->set_prepare_final_hash(
+    ltx_prepare.set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
+    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(ltx_prepare);
     return prepare_block;
 }
 
@@ -2011,6 +2011,7 @@ void TxBft::RootLeaderCreateTimerBlock(
     tx.set_status(kBftSuccess);
     // create address must to and have transfer amount
     if (tx.type() != common::kConsensusRootTimeBlock) {
+        BFT_ERROR("tx is not timeblock tx");
         return;
     }
 
@@ -2048,6 +2049,7 @@ void TxBft::RootLeaderCreateTimerBlock(
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
     tenon_block.set_hash(GetBlockHash(tenon_block));
+    BFT_DEBUG("success create timeblock block.");
 }
 
 int TxBft::GetTempAccountBalance(
