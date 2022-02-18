@@ -119,6 +119,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     if (tx_vec.empty()) {
         DispatchPool::Instance()->GetTx(pool_index, pool_mod_idx, tx_vec);
         if (tx_vec.empty()) {
+            BFT_ERROR("no tx.");
             return kBftNoNewTxs;
         }
     }
@@ -131,6 +132,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     set_pool_index(pool_index);
     bft::protobuf::LeaderTxPrepare ltx_prepare;
     if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
+        BFT_ERROR("DoTransaction error.");
         return kBftError;
     }
 
