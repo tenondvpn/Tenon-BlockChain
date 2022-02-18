@@ -281,7 +281,9 @@ int BftInterface::LeaderPrecommitOk(
         const std::string& id) {
     BFT_DEBUG("node index: %d, final prepare hash: %s",
         index,
-        common::Encode::HexEncode(tx_prepare.prepare().prepare_final_hash()));
+        common::Encode::HexEncode(tx_prepare.prepare().prepare_final_hash()).c_str());
+    auto tbft_prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(
+        tx_prepare.prepare());
     std::lock_guard<std::mutex> guard(mutex_);
     if (leader_handled_precommit_) {
 //         BFT_DEBUG("leader_handled_precommit_: %d", leader_handled_precommit_);
@@ -291,8 +293,12 @@ int BftInterface::LeaderPrecommitOk(
     precommit_aggree_set_.insert(id);
     prepare_bitmap_.Set(index);
     backup_precommit_signs_[index] = backup_sign;
-    if (precommit_aggree_set_.size() >= min_aggree_member_count_) {
-        if (LeaderCreatePreCommitAggChallenge() != kBftSuccess) {
+    auto valid_count =  SetPrepareBlock(
+        tx_prepare.prepare().prepare_final_hash(),
+        tbft_prepare_block);
+    if (valid_count >= min_aggree_member_count_) {
+        if (LeaderCreatePreCommitAggChallenge(
+                tx_prepare.prepare().prepare_final_hash()) != kBftSuccess) {
             BFT_ERROR("create bls precommit agg sign failed!");
             return kBftOppose;
         }
@@ -356,7 +362,7 @@ int BftInterface::CheckTimeout() {
         if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
                 (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
                 now_timestamp >= prepare_timeout_)) {
-            LeaderCreatePreCommitAggChallenge();
+            LeaderCreatePreCommitAggChallenge("");
             leader_handled_precommit_ = true;
             BFT_ERROR("kTimeoutCallPrecommit %s,", common::Encode::HexEncode(gid()).c_str());
             return kTimeoutCallPrecommit;
@@ -373,7 +379,7 @@ int BftInterface::CheckTimeout() {
             }
 
             prepare_bitmap_ = precommit_bitmap_;
-            LeaderCreatePreCommitAggChallenge();
+            LeaderCreatePreCommitAggChallenge("");
             RechallengePrecommitClear();
             BFT_ERROR("kTimeoutCallReChallenge %s,", common::Encode::HexEncode(gid()).c_str());
             return kTimeoutCallReChallenge;
@@ -395,7 +401,7 @@ void BftInterface::RechallengePrecommitClear() {
     commit_oppose_set_.clear();
 }
 
-int BftInterface::LeaderCreatePreCommitAggChallenge() {
+int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_hash) {
     std::vector<libff::alt_bn128_G1> all_signs;
     uint32_t bit_size = prepare_bitmap_.data().size() * 64;
     uint32_t t = min_aggree_member_count_;
@@ -438,7 +444,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge() {
                 n,
                 common_pk,
                 *bls_precommit_agg_sign_,
-                prepare_hash_) != bls::kBlsSuccess) {
+                prpare_hash) != bls::kBlsSuccess) {
             common_pk.to_affine_coordinates();
             auto cpk = std::make_shared<BLSPublicKey>(common_pk);
             auto cpk_strs = cpk->toString();

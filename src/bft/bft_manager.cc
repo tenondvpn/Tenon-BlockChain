@@ -798,13 +798,13 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     } else {
-        bft::protobuf::LeaderTxPrepare tx_prepare;
-        if (!tx_prepare.ParseFromString(prepare_data)) {
+        bft::protobuf::TxBft tx_bft;
+        if (!tx_bft.ParseFromString(prepare_data)) {
             return kBftError;
         }
 
         bft_ptr->LeaderPrecommitOk(
-            tx_prepare,
+            tx_bft.ltx_prepare(),
             member_idx,
             bft_ptr->gid(),
             0,
@@ -956,13 +956,13 @@ int BftManager::LeaderPrecommit(
 //         return kBftError;
 //     }
 
-    bft::protobuf::LeaderTxPrepare tx_prepare;
-    if (!tx_prepare.ParseFromString(bft_msg.data())) {
+    bft::protobuf::TxBft tx_bft;
+    if (!tx_bft.ParseFromString(bft_msg.data())) {
         return kBftError;
     }
 
     int res = bft_ptr->LeaderPrecommitOk(
-        tx_prepare,
+        tx_bft.ltx_prepare(),
         bft_msg.member_index(),
         bft_ptr->gid(),
         header.id(),

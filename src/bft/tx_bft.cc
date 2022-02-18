@@ -151,7 +151,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    SetPrepareBlock(tbft_prepare_block_->prepare_final_hash(), tbft_prepare_block_);
     ltx_prepare->clear_block();
     *bft_str = tx_bft.SerializeAsString();
     set_prepare_hash(GetBlockHash(*prpare_block_));
@@ -566,8 +565,9 @@ int TxBft::RootBackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
-    ltx_msg.clear_block();
+    ltx_msg->clear_block();
     *prepare = res_tx_bft.SerializeAsString();
+    return kBftSuccess;
 // 
 //     if (!tx_bft.ltx_prepare().has_prepare()) {
 //         BFT_ERROR("prepare has no transaction!");
@@ -602,7 +602,7 @@ int TxBft::RootBackupCheckPrepare(
 //         return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
 //     }
 //     
-    return kBftInvalidPackage;
+//     return kBftInvalidPackage;
 }
 
 int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
