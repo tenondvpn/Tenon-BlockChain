@@ -74,8 +74,8 @@ int BaseDht::Join(NodePtr& node) {
 
     int res = CheckJoin(node);
     if (res != kDhtSuccess) {
-//         DHT_ERROR("CheckJoin join node failed! %s, res: %d",
-//             common::Encode::HexEncode(node->id()).c_str(), res);
+        DHT_ERROR("CheckJoin join node failed! %s, res: %d",
+            common::Encode::HexEncode(node->id()).c_str(), res);
         return res;
     }
 
@@ -112,7 +112,7 @@ int BaseDht::Join(NodePtr& node) {
 
     nat_detection_->Remove(node->dht_key_hash);
     auto iter = node_map_.insert(std::make_pair(node->dht_key_hash, node));
-//     DHT_DEBUG("MMMMMMMM node_map_ size: %u", node_map_.size());
+    DHT_DEBUG("MMMMMMMM node_map_ size: %u", node_map_.size());
     if (!iter.second) {
         DHT_ERROR("kDhtNodeJoined join node failed! %s",
             common::Encode::HexEncode(node->id()).c_str());
@@ -131,29 +131,29 @@ int BaseDht::Join(NodePtr& node) {
         readonly_hash_sort_dht_ = dht_;
     }
 
-//     if (node->node_tag() == common::kVpnVipNodeTag) {
-//         DHT_ERROR("vip node coming: %s", node->public_ip().c_str());
-//     }
+    if (node->node_tag() == common::kVpnVipNodeTag) {
+        DHT_ERROR("vip node coming: %s", node->public_ip().c_str());
+    }
 
-//     auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
-//     auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
-//     DHT_DEBUG("join new node public ip: %s:%d, net: %d dht key: %s, id: %s,"
-//         "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
-//         node->public_ip().c_str(),
-//         node->public_port,
-//         DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
-//         common::Encode::HexEncode(node->dht_key()).c_str(),
-//         common::Encode::HexEncode(node->id()).c_str(),
-//         node->min_svr_port,
-//         node->max_svr_port,
-//         node->min_route_port,
-//         node->max_route_port,
-//         svr_port,
-//         route_port);
-//     uint32_t e_dht_size = dht_.size();
-//     uint32_t e_map_size = node_map_.size();
-//     assert((b_dht_size + 1) == e_dht_size);
-//     assert((b_map_size + 1) == e_map_size);
+    auto svr_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_svr_port, node->max_svr_port);
+    auto route_port = common::GetVpnServerPort(node->dht_key(), common::TimeUtils::TimestampDays(), node->min_route_port, node->max_route_port);
+    DHT_DEBUG("join new node public ip: %s:%d, net: %d dht key: %s, id: %s,"
+        "min_svr_port: %d, max_svr_port: %d, min_r_port: %d. max_r_port: %d., srv_port: %d, route_port: %d",
+        node->public_ip().c_str(),
+        node->public_port,
+        DhtKeyManager::DhtKeyGetNetId(node->dht_key()),
+        common::Encode::HexEncode(node->dht_key()).c_str(),
+        common::Encode::HexEncode(node->id()).c_str(),
+        node->min_svr_port,
+        node->max_svr_port,
+        node->min_route_port,
+        node->max_route_port,
+        svr_port,
+        route_port);
+    uint32_t e_dht_size = dht_.size();
+    uint32_t e_map_size = node_map_.size();
+    assert((b_dht_size + 1) == e_dht_size);
+    assert((b_map_size + 1) == e_map_size);
 //     assert(readonly_hash_sort_dht_->size() == e_map_size);
     return kDhtSuccess;
 }
@@ -367,6 +367,10 @@ void BaseDht::SendToDesNetworkNodes(const transport::protobuf::Header& message) 
 
 void BaseDht::RandomSend(const transport::protobuf::Header& msg) {
     auto dhts = readonly_hash_sort_dht();
+    if (dhts.empty()) {
+        return;
+    }
+
     auto pos = rand() % dhts.size();
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         dhts[pos]->public_ip(),

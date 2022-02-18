@@ -203,8 +203,10 @@ std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
     }
 
     uint64_t balance = 0;
-    if (!account_info->GetBalance(&balance) != block::kBlockSuccess) {
-        return "";
+    if (account_info != nullptr) {
+        if (!account_info->GetBalance(&balance) != block::kBlockSuccess) {
+            return "";
+        }
     }
 
     // just use before tx balance

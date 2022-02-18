@@ -794,7 +794,13 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     } else {
+        bft::protobuf::LeaderTxPrepare tx_prepare;
+        if (!tx_prepare.ParseFromString(prepare_data)) {
+            return kBftError;
+        }
+
         bft_ptr->LeaderPrecommitOk(
+            tx_prepare,
             member_idx,
             bft_ptr->gid(),
             0,
