@@ -293,7 +293,7 @@ int BftInterface::LeaderPrecommitOk(
     precommit_aggree_set_.insert(id);
     prepare_bitmap_.Set(index);
     backup_precommit_signs_[index] = backup_sign;
-    auto valid_count =  SetPrepareBlock(
+    auto valid_count = SetPrepareBlock(
         tx_prepare.prepare().prepare_final_hash(),
         tbft_prepare_block);
     if (valid_count >= min_aggree_member_count_) {
@@ -439,23 +439,19 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             assert(false);
         }
 
-        std::string msg_to_hash = common::Hash::Hash256(
-            std::to_string(1) + "_" +
-            std::to_string(kBftPrepare) + "_" +
-            prpare_hash);
         precommit_hash_ = common::Hash::Hash256(prpare_hash);        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
                 common_pk,
                 *bls_precommit_agg_sign_,
-                msg_to_hash) != bls::kBlsSuccess) {
+                prpare_hash) != bls::kBlsSuccess) {
             common_pk.to_affine_coordinates();
             auto cpk = std::make_shared<BLSPublicKey>(common_pk);
             auto cpk_strs = cpk->toString();
             BFT_ERROR("leader verify leader precommit agg sign failed! t: %u, n: %u,"
                 "common public key: %s, %s, %s, %s, elect height: %lu, network id: %u, prepare hash: %s",
                 t, n, cpk_strs->at(0).c_str(), cpk_strs->at(1).c_str(), cpk_strs->at(2).c_str(), cpk_strs->at(3).c_str(),
-                elect_height_, network_id_, common::Encode::HexEncode(msg_to_hash).c_str());
+                elect_height_, network_id_, common::Encode::HexEncode(prpare_hash).c_str());
             assert(false);
             return kBftError;
         }
