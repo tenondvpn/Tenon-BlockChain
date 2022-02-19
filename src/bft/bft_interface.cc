@@ -290,12 +290,12 @@ int BftInterface::LeaderPrecommitOk(
         return kBftHandled;
     }
 
-    precommit_aggree_set_.insert(id);
-    prepare_bitmap_.Set(index);
-    backup_precommit_signs_[index] = backup_sign;
     auto valid_count = SetPrepareBlock(
+        id,
+        index,
         tx_prepare.prepare().prepare_final_hash(),
-        tbft_prepare_block);
+        tbft_prepare_block,
+        backup_sign);
     if (valid_count >= min_aggree_member_count_) {
         if (LeaderCreatePreCommitAggChallenge(
                 tx_prepare.prepare().prepare_final_hash()) != kBftSuccess) {
@@ -324,7 +324,7 @@ int BftInterface::LeaderCommitOk(
 //         return kBftWaitingBackup;
 //     }
 
-    auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
+//     auto mem_ptr = elect::ElectManager::Instance()->GetMember(network_id_, index);
     commit_aggree_set_.insert(id);
     precommit_bitmap_.Set(index);
     backup_commit_signs_[index] = backup_sign;
@@ -402,18 +402,23 @@ void BftInterface::RechallengePrecommitClear() {
 }
 
 int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_hash) {
+    auto iter = prepare_block_map_.find(prpare_hash);
+    if (iter == prepare_block_map_.end()) {
+        return kBftError;
+    }
+
     std::vector<libff::alt_bn128_G1> all_signs;
-    uint32_t bit_size = prepare_bitmap_.data().size() * 64;
+    uint32_t bit_size = iter->second->prepare_bitmap_.data().size() * 64;
     uint32_t t = min_aggree_member_count_;
     uint32_t n = members_ptr_->size();
     std::vector<size_t> idx_vec;
     for (uint32_t i = 0; i < n; ++i) {
-        if (!prepare_bitmap_.Valid(i)) {
+        if (!iter->second->prepare_bitmap_.Valid(i)) {
             continue;
         }
 
-        assert(backup_precommit_signs_[i] != libff::alt_bn128_G1::zero());
-        all_signs.push_back(backup_precommit_signs_[i]);
+        assert(iter->second->backup_precommit_signs_[i] != libff::alt_bn128_G1::zero());
+        all_signs.push_back(iter->second->backup_precommit_signs_[i]);
         idx_vec.push_back(i + 1);
         if (idx_vec.size() >= t) {
             break;
@@ -427,9 +432,10 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));
+        set_prepare_hash(prpare_hash);
         std::string msg_hash_src = prepare_hash();
-        for (uint32_t i = 0; i < prepare_bitmap_.data().size(); ++i) {
-            msg_hash_src += std::to_string(prepare_bitmap_.data()[i]);
+        for (uint32_t i = 0; i < iter->second->prepare_bitmap_.data().size(); ++i) {
+            msg_hash_src += std::to_string(iter->second->prepare_bitmap_.data()[i]);
         }
 
         auto common_pk = elect::ElectManager::Instance()->GetCommonPublicKey(
@@ -439,7 +445,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             assert(false);
         }
 
-        precommit_hash_ = common::Hash::Hash256(prpare_hash);        if (bls::BlsManager::Instance()->Verify(
+        precommit_hash_ = common::Hash::Hash256(msg_hash_src);        if (bls::BlsManager::Instance()->Verify(
                 t,
                 n,
                 common_pk,

@@ -114,6 +114,14 @@ struct WaitingBlockItem {
     uint32_t type;
 };
 
+struct LeaderPrepareItem {
+    std::shared_ptr<bft::protobuf::TbftLeaderPrepare> prpare_block{ nullptr };
+    std::vector<libff::alt_bn128_G1> backup_sign;
+    std::unordered_set<std::string> precommit_aggree_set_;
+    common::Bitmap prepare_bitmap_{ common::kEachShardMaxNodeCount };
+    libff::alt_bn128_G1 backup_precommit_signs_[common::kEachShardMaxNodeCount];
+};
+
 typedef std::shared_ptr<BlockToDbItem> BlockToDbItemPtr;
 typedef std::shared_ptr<WaitingBlockItem> WaitingBlockItemPtr;
 typedef common::ThreadSafeQueue<BlockToDbItemPtr> BlockQueue;

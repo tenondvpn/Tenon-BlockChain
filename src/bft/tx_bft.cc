@@ -567,6 +567,7 @@ int TxBft::RootBackupCheckPrepare(
 
     ltx_msg->clear_block();
     *prepare = res_tx_bft.SerializeAsString();
+    set_prepare_hash(ltx_msg->prepare().prepare_final_hash());
     return kBftSuccess;
 // 
 //     if (!tx_bft.ltx_prepare().has_prepare()) {

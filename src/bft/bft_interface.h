@@ -375,16 +375,27 @@ protected:
     }
 
     int32_t SetPrepareBlock(
+            const std::string& id,
+            uint32_t index,
             const std::string& prepare_hash,
-            std::shared_ptr<bft::protobuf::TbftLeaderPrepare>& prpare_block) {
+            std::shared_ptr<bft::protobuf::TbftLeaderPrepare>& prpare_block,
+            const libff::alt_bn128_G1& sign) {
         auto iter = prepare_count_map_.find(prepare_hash);
         if (iter == prepare_count_map_.end()) {
-            prepare_block_map_[prepare_hash] = prpare_block;
-            prepare_count_map_[prepare_hash] = 1;
+            auto item = std::make_shared<LeaderPrepareItem>();
+            item->backup_sign.push_back(sign);
+            item->prpare_block = prpare_block;
+            item->precommit_aggree_set_.insert(id);
+            item->prepare_bitmap_.Set(index);
+            item->backup_precommit_signs_[index] = backup_sign;
+            prepare_block_map_[prepare_hash] = item;
             return 1;
         } else {
-            ++iter->second;
-            return iter->second;
+            iter->second->backup_sign.push_back(sign);
+            iter->second->precommit_aggree_set_.insert(id);
+            iter->second->prepare_bitmap_.Set(index);
+            iter->second->backup_precommit_signs_[index] = backup_sign;
+            return iter->second->backup_sign.size();
         }
     }
 
@@ -406,7 +417,6 @@ protected:
     uint32_t min_aggree_member_count_{ 0 };
     uint32_t min_oppose_member_count_{ 0 };
     uint32_t min_prepare_member_count_{ 0 };
-    common::Bitmap prepare_bitmap_{ common::kEachShardMaxNodeCount };
     common::Bitmap precommit_bitmap_{ common::kEachShardMaxNodeCount };
     uint32_t status_{ kBftInit };
     std::vector<uint64_t> item_index_vec_;
@@ -418,7 +428,6 @@ protected:
     std::vector<std::string> bft_item_vec_;
     std::mutex bft_item_vec_mutex_;
     std::shared_ptr<bft::protobuf::Block> prpare_block_{ nullptr };
-    std::unordered_set<std::string> precommit_aggree_set_;
     std::unordered_set<std::string> precommit_oppose_set_;
     std::unordered_set<std::string> commit_aggree_set_;
     std::unordered_set<std::string> commit_oppose_set_;
@@ -432,7 +441,6 @@ protected:
     std::mutex prepare_enc_failed_nodes_mutex_;
     bool this_node_is_leader_{ false };
     uint64_t elect_height_{ 0 };
-    libff::alt_bn128_G1 backup_precommit_signs_[common::kEachShardMaxNodeCount];
     libff::alt_bn128_G1 backup_commit_signs_[common::kEachShardMaxNodeCount];
     std::shared_ptr<libff::alt_bn128_G1> bls_precommit_agg_sign_{ nullptr };
     std::shared_ptr<libff::alt_bn128_G1> bls_commit_agg_sign_{ nullptr };
@@ -447,9 +455,9 @@ protected:
     std::mutex vss_random_map_mutex_;
     int32_t handle_last_error_code_{ 0 };
     std::string handle_last_error_msg_;
-    std::unordered_map<std::string, std::shared_ptr<bft::protobuf::TbftLeaderPrepare>> prepare_block_map_;
-    std::unordered_map<std::string, uint32_t> prepare_count_map_;
+    std::unordered_map<std::string, std::shared_ptr<LeaderPrepareItem>> prepare_block_map_;
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
+
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
 
