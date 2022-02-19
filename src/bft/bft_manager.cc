@@ -281,7 +281,7 @@ void BftManager::LeaderHandleBftOppose(
         bft_msg.gid() +
         std::to_string(bft_msg.agree()) + "_" +
         std::to_string(bft_msg.bft_step()) + "_" +
-        bft_ptr->prepare_hash());
+        bft_ptr->local_prepare_hash());
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     if (!security::Security::Instance()->Verify(msg_to_hash, sign, member_ptr->pubkey)) {
         BFT_ERROR("check signature error!");
@@ -1078,7 +1078,7 @@ int BftManager::BackupPrecommit(
         return kBftSuccess;
     }
 
-    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->prepare_hash()) != kBftSuccess) {
+    if (VerifyBlsAggSignature(bft_ptr, bft_msg, bft_ptr->local_prepare_hash()) != kBftSuccess) {
         BFT_INFO("VerifyBlsAggSignature error gid: %s",
             common::Encode::HexEncode(bft_ptr->gid()).c_str());
         return kBftError;

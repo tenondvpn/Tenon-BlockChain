@@ -162,7 +162,7 @@ public:
         return min_aggree_member_count_;
     }
 
-    const std::string& prepare_hash() const {
+    const std::string& local_prepare_hash() const {
         return prepare_hash_;
     }
 
@@ -360,6 +360,10 @@ public:
         return tbft_prepare_block_;
     }
 
+    std::string leader_tbft_prepare_hash() {
+        return leader_tbft_prepare_hash_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -452,6 +456,7 @@ protected:
     std::unordered_map<std::string, std::shared_ptr<LeaderPrepareItem>> prepare_block_map_;
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
     common::Bitmap prepare_bitmap_;
+    std::string leader_tbft_prepare_hash_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

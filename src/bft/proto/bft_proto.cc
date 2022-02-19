@@ -152,7 +152,7 @@ void BftProto::LeaderCreatePreCommit(
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
-    bft_msg.set_data(bft_ptr->prepare_hash());
+    bft_msg.set_data(bft_ptr->leader_tbft_prepare_hash());
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_net_id(bft_ptr->network_id());
@@ -184,7 +184,7 @@ void BftProto::LeaderCreatePreCommit(
             bft_msg.gid() +
             std::to_string(bft_msg.agree()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
-            bft_ptr->prepare_hash());
+            bft_ptr->leader_tbft_prepare_hash());
         if (!security::Security::Instance()->Sign(
                 msg_to_hash,
                 *(security::Security::Instance()->prikey()),
@@ -200,7 +200,7 @@ void BftProto::LeaderCreatePreCommit(
     leader_sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
-    bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    bft_msg.set_prepare_hash(bft_ptr->leader_tbft_prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader precommit pool index: %d, step: %d, bft gid: %s",
@@ -268,7 +268,7 @@ void BftProto::LeaderCreateCommit(
     auto broad_param = msg.mutable_broadcast();
     transport::SetDefaultBroadcastParam(broad_param);
     bft::protobuf::BftMessage bft_msg;
-    bft_msg.set_data(bft_ptr->prepare_hash());
+    bft_msg.set_data(bft_ptr->leader_tbft_prepare_hash());
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());
     bft_msg.set_net_id(bft_ptr->network_id());
@@ -281,7 +281,7 @@ void BftProto::LeaderCreateCommit(
         bft_msg.add_bitmap(bitmap_data[i]);
     }
 
-    std::string hash_to_sign = bft_ptr->prepare_hash();
+    std::string hash_to_sign = bft_ptr->leader_tbft_prepare_hash();
     if (agree) {
         auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
         bft_msg.set_bls_sign_x(libBLS::ThresholdUtils::fieldElementToString(bls_commit_sign->X));
@@ -312,7 +312,7 @@ void BftProto::LeaderCreateCommit(
     sign.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
-    bft_msg.set_prepare_hash(bft_ptr->prepare_hash());
+    bft_msg.set_prepare_hash(bft_ptr->leader_tbft_prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     SetLocalPublicIpPort(local_node, bft_msg);
 //     msg.set_debug(common::StringUtil::Format("msg id: %lu, leader kBftCommit pool index: %d, step: %d, bft gid: %s",

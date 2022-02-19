@@ -359,15 +359,14 @@ int BftInterface::CheckTimeout() {
 
     std::lock_guard<std::mutex> guard(mutex_);
     if (!leader_handled_precommit_) {
-        if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
-                (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
-                now_timestamp >= prepare_timeout_)) {
-            LeaderCreatePreCommitAggChallenge("");
-            leader_handled_precommit_ = true;
-            BFT_ERROR("kTimeoutCallPrecommit %s,", common::Encode::HexEncode(gid()).c_str());
-            return kTimeoutCallPrecommit;
-        }
-
+//         if (precommit_aggree_set_.size() >= min_prepare_member_count_ ||
+//                 (precommit_aggree_set_.size() >= min_aggree_member_count_ &&
+//                 now_timestamp >= prepare_timeout_)) {
+//             LeaderCreatePreCommitAggChallenge("");
+//             leader_handled_precommit_ = true;
+//             BFT_ERROR("kTimeoutCallPrecommit %s,", common::Encode::HexEncode(gid()).c_str());
+//             return kTimeoutCallPrecommit;
+//        
         return kTimeoutWaitingBackup;
     }
 
@@ -396,7 +395,7 @@ void BftInterface::RechallengePrecommitClear() {
     init_precommit_timeout();
     precommit_bitmap_.clear();
     commit_aggree_set_.clear();
-    precommit_aggree_set_.clear();
+//     precommit_aggree_set_.clear();
     precommit_oppose_set_.clear();
     commit_oppose_set_.clear();
 }
@@ -432,8 +431,8 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             bls_instance.SignatureRecover(
             all_signs,
             lagrange_coeffs));
-        set_prepare_hash(prpare_hash);
-        std::string msg_hash_src = prepare_hash();
+        leader_tbft_prepare_hash_ = prpare_hash;
+        std::string msg_hash_src = prpare_hash;
         for (uint32_t i = 0; i < iter->second->prepare_bitmap_.data().size(); ++i) {
             msg_hash_src += std::to_string(iter->second->prepare_bitmap_.data()[i]);
         }

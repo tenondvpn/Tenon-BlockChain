@@ -153,7 +153,6 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
     ltx_prepare->clear_block();
     *bft_str = tx_bft.SerializeAsString();
-    set_prepare_hash(GetBlockHash(*prpare_block_));
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
 //         return kBftError;
 //     }
@@ -278,6 +277,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         common::Hash::keccak256(tbft_prepare_str_for_hash));
     prepare->set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
+    set_prepare_hash(prepare->prepare_final_hash());
     auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
     return prepare_block;
 }
@@ -567,7 +567,6 @@ int TxBft::RootBackupCheckPrepare(
 
     ltx_msg->clear_block();
     *prepare = res_tx_bft.SerializeAsString();
-    set_prepare_hash(ltx_msg->prepare().prepare_final_hash());
     return kBftSuccess;
 // 
 //     if (!tx_bft.ltx_prepare().has_prepare()) {
