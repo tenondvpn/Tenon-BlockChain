@@ -381,14 +381,14 @@ protected:
             item->prpare_block = prpare_block;
             item->precommit_aggree_set_.insert(id);
             item->prepare_bitmap_.Set(index);
-            item->backup_precommit_signs_[index] = backup_sign;
+            item->backup_precommit_signs_[index] = sign;
             prepare_block_map_[prepare_hash] = item;
             return 1;
         } else {
             iter->second->backup_sign.push_back(sign);
             iter->second->precommit_aggree_set_.insert(id);
             iter->second->prepare_bitmap_.Set(index);
-            iter->second->backup_precommit_signs_[index] = backup_sign;
+            iter->second->backup_precommit_signs_[index] = sign;
             return iter->second->backup_sign.size();
         }
     }
