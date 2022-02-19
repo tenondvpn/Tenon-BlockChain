@@ -5,7 +5,6 @@
 #include <mutex>
 #include <unordered_map>
 
-#include <libbls/tools/utils.h>
 #include <evmc/evmc.hpp>
 
 #include "bft/bft_utils.h"

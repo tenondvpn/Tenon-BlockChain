@@ -2,6 +2,8 @@
 
 #include <limits>
 
+#include <libbls/tools/utils.h>
+
 #include "common/utils.h"
 #include "common/log.h"
 #include "common/hash.h"
