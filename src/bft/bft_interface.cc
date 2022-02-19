@@ -462,6 +462,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             return kBftError;
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
+        prepare_bitmap_ = iter->second->prepare_bitmap_;
     } catch (std::exception& e) {
         BFT_ERROR("catch bls exception: %s", e.what());
         return kBftError;

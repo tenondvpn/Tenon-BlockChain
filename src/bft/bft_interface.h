@@ -99,11 +99,6 @@ public:
         return min_prepare_member_count_;
     }
 
-    uint32_t precommit_aggree_count() {
-        std::lock_guard<std::mutex> guard(mutex_);
-        return precommit_aggree_set_.size();
-    }
-
     uint32_t commit_aggree_count() {
         std::lock_guard<std::mutex> guard(mutex_);
         return commit_aggree_set_.size();
@@ -379,8 +374,8 @@ protected:
             const std::string& prepare_hash,
             std::shared_ptr<bft::protobuf::TbftLeaderPrepare>& prpare_block,
             const libff::alt_bn128_G1& sign) {
-        auto iter = prepare_count_map_.find(prepare_hash);
-        if (iter == prepare_count_map_.end()) {
+        auto iter = prepare_block_map_.find(prepare_hash);
+        if (iter == prepare_block_map_.end()) {
             auto item = std::make_shared<LeaderPrepareItem>();
             item->backup_sign.push_back(sign);
             item->prpare_block = prpare_block;
@@ -456,6 +451,7 @@ protected:
     std::string handle_last_error_msg_;
     std::unordered_map<std::string, std::shared_ptr<LeaderPrepareItem>> prepare_block_map_;
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
+    common::Bitmap prepare_bitmap_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };
