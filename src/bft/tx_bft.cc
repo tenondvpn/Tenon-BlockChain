@@ -265,7 +265,6 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
             block_ptr->tx_list(i).call_contract_step(),
             block_ptr->tx_list(i).gid());
         prepare_txs_item->set_gid(uni_gid);
-        prepare_txs_item->set_tx_hash(tx_hash);
         prepare_txs_item->set_balance(block_ptr->tx_list(i).balance());
         tbft_prepare_str_for_hash += block_ptr->tx_list(i).gid();
         tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash +

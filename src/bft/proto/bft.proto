@@ -64,9 +64,8 @@ message Block {
 
 message TbftPrepareTransactionInfo {
     optional bytes gid = 1;
-    optional bytes tx_hash = 2;
-    optional bytes address = 3;
-    optional uint64 balance = 4;
+    optional bytes address = 2;
+    optional uint64 balance = 3;
 }
 
 message TbftLeaderPrepare {
