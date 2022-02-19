@@ -109,6 +109,10 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
             if (((int32_t)common::kRootChainPoolIndex % leader_count) == pool_mod_idx) {
                 auto tx_ptr = DispatchPool::Instance()->GetRootTx();
                 if (tx_ptr != nullptr) {
+                    for (int32_t i = 0; i < tx_ptr->tx.attr_size(); ++i) {
+                        BFT_DEBUG("tx hash attr get: %s, %s", tx_ptr->tx.attr(i).key().c_str(), tx_ptr->tx.attr(i).value().c_str());
+                    }
+
                     pool_index = common::kRootChainPoolIndex;
                     tx_vec.push_back(tx_ptr);
                 }
@@ -213,17 +217,30 @@ std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
         std::to_string(balance) + std::to_string(tx_info.gas_limit()) +
         std::to_string(tx_info.gas_price()) + tx_info.to() +
         std::to_string(tx_info.amount());
+    BFT_DEBUG("tx hash gid: %s, status: %d, from: %s, balance: %lu, gas limit: %lu, gas price: %lu, to: %s, amount: %lu",
+        common::Encode::HexEncode(tx_info.gid()).c_str(),
+        tx_info.status(),
+        common::Encode::HexEncode(tx_info.from()).c_str(),
+        balance, tx_info.gas_limit(), tx_info.gas_price(),
+        common::Encode::HexEncode(tx_info.to()).c_str(),
+        tx_info.amount());
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         all_msg += tx_info.attr(i).key() + tx_info.attr(i).value();
+        BFT_DEBUG("tx hash attr: %s, %s", tx_info.attr(i).key().c_str(), tx_info.attr(i).value().c_str());
     }
 
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         all_msg += tx_info.storages(i).key() + tx_info.storages(i).value();
+        BFT_DEBUG("tx hash atstoragestr: %s, %s", tx_info.storages(i).key().c_str(), tx_info.storages(i).value().c_str());
     }
 
     for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
         all_msg += tx_info.transfers(i).from() + tx_info.transfers(i).to() +
             std::to_string(tx_info.transfers(i).amount());
+        BFT_DEBUG("tx hash trans: %s, %s, %lu",
+            common::Encode::HexEncode(tx_info.transfers(i).from()).c_str(),
+            common::Encode::HexEncode(tx_info.transfers(i).to()).c_str(),
+            tx_info.transfers(i).amount());
     }
 
     return common::Hash::keccak256(all_msg);
@@ -250,7 +267,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         prepare_txs_item->set_gid(uni_gid);
         prepare_txs_item->set_tx_hash(tx_hash);
         prepare_txs_item->set_balance(block_ptr->tx_list(i).balance());
-        tbft_prepare_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash;
+        tbft_prepare_str_for_hash += block_ptr->tx_list(i).gid();
         tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).gid() + tx_hash +
             std::to_string(block_ptr->tx_list(i).balance());
         if (block_ptr->tx_list(i).to_add()) {
@@ -260,6 +277,12 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
             prepare_txs_item->set_address(block_ptr->tx_list(i).from());
             tbft_prepare_txs_str_for_hash += block_ptr->tx_list(i).from();
         }
+
+        BFT_DEBUG("gid: %s, tx_hash: %s, balance: %lu, to_add: %d, add: %s",
+            common::Encode::HexEncode(uni_gid).c_str(),
+            common::Encode::HexEncode(tx_hash).c_str(),
+            block_ptr->tx_list(i).balance(),
+            common::Encode::HexEncode(prepare_txs_item->address()).c_str());
     }
 
     if (tbft_prepare_str_for_hash.empty()) {
@@ -271,14 +294,24 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         std::to_string(block_ptr->electblock_height()) +
         std::to_string(block_ptr->network_id()) +
         std::to_string(block_ptr->pool_index()) + gid_;
+    BFT_DEBUG("prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, gid_: %s",
+        common::Encode::HexEncode(block_ptr->prehash()).c_str(),
+        block_ptr->timeblock_height(),
+        block_ptr->electblock_height(),
+        block_ptr->network_id(),
+        block_ptr->pool_index(),
+        common::Encode::HexEncode(gid_).c_str());
+
     tbft_prepare_str_for_hash += block_info;
     tbft_prepare_txs_str_for_hash += block_info;
-    prepare->set_prepare_hash(
-        common::Hash::keccak256(tbft_prepare_str_for_hash));
+    leader_init_prepare_hash_ = common::Hash::keccak256(tbft_prepare_str_for_hash);
     prepare->set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
     set_prepare_hash(prepare->prepare_final_hash());
     auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
+    BFT_DEBUG("prepare final hash: %s, for: %s",
+        common::Encode::HexEncode(prepare->prepare_final_hash()).c_str(),
+        common::Encode::HexEncode(tbft_prepare_txs_str_for_hash).c_str());
     return prepare_block;
 }
 

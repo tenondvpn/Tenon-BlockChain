@@ -364,6 +364,10 @@ public:
         return leader_tbft_prepare_hash_;
     }
 
+    std::string leader_init_prepare_hash() {
+        return leader_init_prepare_hash_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -457,6 +461,7 @@ protected:
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
     common::Bitmap prepare_bitmap_;
     std::string leader_tbft_prepare_hash_;
+    std::string leader_init_prepare_hash_;
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

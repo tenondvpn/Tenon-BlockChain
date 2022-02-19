@@ -1635,7 +1635,6 @@ int BftManager::VerifyLeaderSignature(
     auto sign = security::Signature(bft_msg.sign_challenge(), bft_msg.sign_response());
     if (!bft_msg.agree()) {
         *sign_hash = common::Hash::Hash256(
-            bft_msg.gid() +
             std::to_string(bft_msg.agree()) + "_" +
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_msg.prepare_hash());

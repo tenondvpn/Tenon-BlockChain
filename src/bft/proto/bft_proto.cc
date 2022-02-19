@@ -63,7 +63,7 @@ void BftProto::LeaderCreatePrepare(
     std::string msg_to_hash = common::Hash::Hash256(
         std::to_string(bft_msg.agree()) + "_" +
         std::to_string(bft_msg.bft_step()) + "_" +
-        bft_ptr->prepare_block()->prepare_hash());
+        bft_ptr->leader_init_prepare_hash());
     BFT_DEBUG("create prepare msg hash: %s", common::Encode::HexEncode(msg_to_hash).c_str());
     security::Signature leader_sig;
     if (!security::Security::Instance()->Sign(
@@ -80,7 +80,7 @@ void BftProto::LeaderCreatePrepare(
     leader_sig.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
-    bft_msg.set_prepare_hash(bft_ptr->prepare_block()->prepare_hash());
+    bft_msg.set_prepare_hash(bft_ptr->leader_init_prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     bft_msg.set_member_index(bft_ptr->local_member_index());
     bft_msg.set_elect_height(bft_ptr->elect_height());

@@ -458,6 +458,19 @@ TxItemPtr TxPool::GetTx(const std::string& uni_gid) {
 //             "",
 //             common::Encode::HexEncode(gid).c_str(),
 //             common::Encode::HexEncode(uni_gid).c_str());
+        if (item_iter->second->tx.type() == common::kConsensusRootTimeBlock) {
+            item_iter->second->tx.mutable_attr(1)->set_value(
+                std::to_string(vss::VssManager::Instance()->GetConsensusFinalRandom()));
+            for (int32_t i = 0; i < item_iter->second->tx.attr_size(); ++i) {
+                BFT_DEBUG("common::kConsensusRootTimeBlock leader set key value %s: %s, vss: %lu",
+                    item_iter->second->tx.attr(i).key().c_str(), item_iter->second->tx.attr(i).value().c_str(),
+                    vss::VssManager::Instance()->GetConsensusFinalRandom());
+            }
+        }
+
+        for (int32_t i = 0; i < item_iter->second->tx.attr_size(); ++i) {
+            BFT_DEBUG("tx hash attr get: %s, %s", item_iter->second->tx.attr(i).key().c_str(), item_iter->second->tx.attr(i).value().c_str());
+        }
         return item_iter->second;
     }
 

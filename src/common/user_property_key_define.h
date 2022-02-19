@@ -12,22 +12,22 @@ namespace  common {
 
 enum ConsensusType {
     kConsensusInvalidType = 0,
-    kConsensusCreateGenesisConsensusNetwork,
-    kConsensusCreateGenesisAcount,
-    kConsensusCreateAcount,
-    kConsensusCreateContract,
-    kConsensusTransaction,
-    kConsensusCallContract,
-    kConsensusMining,
-    kConsensusLogin,
-    kConsensusKeyValue,
-    kConsensusPayForCommonVpn,
-    kConsensusVpnBandwidth,
-    kConsensusVpnMining,
-    kConsensusVpnMiningPayToNode,
-    kConsensusRootElectShard,  // shard consensus network election
-    kConsensusRootTimeBlock,  // create time block
-    kConsensusFinalStatistic,  // create shard time block's final statistic block
+    kConsensusCreateGenesisConsensusNetwork = 1,
+    kConsensusCreateGenesisAcount = 2,
+    kConsensusCreateAcount = 3,
+    kConsensusCreateContract = 4,
+    kConsensusTransaction = 5,
+    kConsensusCallContract = 6,
+    kConsensusMining = 7,
+    kConsensusLogin = 8,
+    kConsensusKeyValue = 9,
+    kConsensusPayForCommonVpn = 10,
+    kConsensusVpnBandwidth = 11,
+    kConsensusVpnMining = 12,
+    kConsensusVpnMiningPayToNode = 13,
+    kConsensusRootElectShard = 14,  // shard consensus network election
+    kConsensusRootTimeBlock = 15,  // create time block
+    kConsensusFinalStatistic = 16,  // create shard time block's final statistic block
 };
 
 enum ClientStatus {

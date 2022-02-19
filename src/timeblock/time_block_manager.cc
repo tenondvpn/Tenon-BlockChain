@@ -148,7 +148,7 @@ void TimeBlockManager::CreateTimeBlockTx() {
         TMBLOCK_ERROR("dispatch timeblock tx info failed!");
     }
 
-    TMBLOCK_INFO("dispatch timeblock tx info success： %lu, vss: %s, real: %s!",
+    TMBLOCK_INFO("dispatch timeblock tx info success: %lu, vss: %s, real: %s!",
         new_time_block_tm, final_random_attr->value().c_str(), tx_info.attr(1).value().c_str());
 }
 
