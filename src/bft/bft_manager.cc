@@ -1362,7 +1362,7 @@ int BftManager::BackupCommit(
                 sync::kSyncHighest);
         } else {
             sync::KeyValueSync::Instance()->AddSyncHeight(
-                net_id,
+                bft_ptr->network_id(),
                 bft_ptr->pool_index(),
                 tx_bft.ltx_commit().latest_hegight(),
                 sync::kSyncHighest);
