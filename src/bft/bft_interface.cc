@@ -463,7 +463,17 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
         prepare_bitmap_ = iter->second->prepare_bitmap_;
-        prepare_latest_height_ = iter->second->prpare_block->height();
+        uint64_t max_height = 0;
+        uint64_t max_count = 0;
+        for (auto hiter = iter->second->height_count_map.begin();
+                hiter != iter->second->height_count_map.end(); ++hiter) {
+            if (hiter->second > max_count) {
+                max_height = hiter->first;
+                max_count = hiter->second;
+            }
+        }
+
+        prepare_latest_height_ = max_height;
     } catch (std::exception& e) {
         BFT_ERROR("catch bls exception: %s", e.what());
         return kBftError;

@@ -406,6 +406,7 @@ protected:
             item->precommit_aggree_set_.insert(id);
             item->prepare_bitmap_.Set(index);
             item->backup_precommit_signs_[index] = sign;
+            item->height_count_map[prpare_block->height()] = 1;
             prepare_block_map_[prepare_hash] = item;
             return 1;
         } else {
@@ -413,6 +414,13 @@ protected:
             iter->second->precommit_aggree_set_.insert(id);
             iter->second->prepare_bitmap_.Set(index);
             iter->second->backup_precommit_signs_[index] = sign;
+            auto hiter = item->height_count_map.find(prpare_block->height());
+            if (hiter == item->height_count_map.end()) {
+                item->height_count_map[prpare_block->height()] = 1;
+            } else {
+                ++hiter->second;
+            }
+
             return iter->second->backup_sign.size();
         }
     }
