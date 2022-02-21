@@ -1084,6 +1084,12 @@ int BftManager::BackupPrecommit(
         return kBftError;
     }
 
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
+        bitmap_data.push_back(bft_msg.bitmap(i));
+    }
+
+    bft_ptr->set_prepare_bitmap(bitmap_data);
     // check prepare multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
@@ -1199,7 +1205,7 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     return kBftSuccess;
 }
 
-void BftManager::HandleLocalCommitBlock() {
+void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft_ptr) {
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_pool_index(bft_ptr->pool_index());
     const auto& prepare_bitmap_data = bft_ptr->prepare_bitmap().data();
@@ -1238,10 +1244,10 @@ void BftManager::HandleLocalCommitBlock() {
             queue_item_ptr->block_ptr,
             queue_item_ptr->db_batch) != block::kBlockSuccess) {
         BFT_ERROR("leader add block to db failed!");
-        return kBftError;
+        return;
     }
 
-    block_queue_[header.thread_idx()].push(queue_item_ptr);
+    block_queue_[thread_idx].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     LeaderBroadcastToAcc(bft_ptr, true);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
@@ -1261,7 +1267,7 @@ int BftManager::LeaderCallCommit(
     }
 
     if (bft_ptr->local_prepare_hash() == bft_ptr->leader_tbft_prepare_hash()) {
-        HandleLocalCommitBlock();
+        HandleLocalCommitBlock(header.thread_idx(), bft_ptr);
     } else {
         // sync block from neighbor nodes
     }
@@ -1314,8 +1320,19 @@ int BftManager::BackupCommit(
         return kBftError;
     }
 
-    if (bft_ptr->local_prepare_hash() == bft_ptr->leader_tbft_prepare_hash()) {
-        HandleLocalCommitBlock();
+    std::vector<uint64_t> bitmap_data;
+    for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
+        bitmap_data.push_back(bft_msg.commit_bitmap(i));
+    }
+
+    bft_ptr->set_precommit_bitmap(bitmap_data);
+    libff::alt_bn128_G1 sign;
+    sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
+    sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
+    sign.Z = libff::alt_bn128_Fq::one();
+    bft_ptr->set_bls_commit_agg_sign(sign);
+    if (bft_ptr->local_prepare_hash() == bft_msg.prepare_hash()) {
+        HandleLocalCommitBlock(header.thread_idx(), bft_ptr);
     } else {
         // sync block from neighbor nodes
     }

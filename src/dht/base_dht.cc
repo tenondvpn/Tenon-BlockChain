@@ -367,6 +367,10 @@ void BaseDht::SendToDesNetworkNodes(const transport::protobuf::Header& message) 
 
 void BaseDht::RandomSend(const transport::protobuf::Header& msg) {
     auto dhts = readonly_hash_sort_dht();
+    if (dhts.empty()) {
+        return;
+    }
+
     auto pos = rand() % dhts.size();
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         dhts[pos]->public_ip(),

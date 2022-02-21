@@ -122,6 +122,10 @@ public:
 //         }
     }
 
+    void set_precommit_bitmap(const std::vector<uint64_t>& bitmap_data) {
+        precommit_bitmap_ = common::Bitmap(bitmap_data);
+    }
+
     const common::Bitmap& precommit_bitmap() const {
         return precommit_bitmap_;
     }
@@ -178,6 +182,10 @@ public:
         return leader_index_;
     }
 
+    void set_prepare_bitmap(const std::vector<uint64_t>& bitmap_data) {
+        prepare_bitmap_ = common::Bitmap(bitmap_data);
+    }
+
     const common::Bitmap& prepare_bitmap() const {
         return prepare_bitmap_;
     }
@@ -189,6 +197,10 @@ public:
     const std::shared_ptr<libff::alt_bn128_G1>& bls_precommit_agg_sign() const {
         assert(bls_precommit_agg_sign_ != nullptr);
         return bls_precommit_agg_sign_;
+    }
+
+    void set_bls_commit_agg_sign(const libff::alt_bn128_G1& agg_sign) {
+        bls_commit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(agg_sign);
     }
 
     const std::shared_ptr<libff::alt_bn128_G1>& bls_commit_agg_sign() const {
