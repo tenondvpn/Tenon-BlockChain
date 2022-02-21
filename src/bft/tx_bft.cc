@@ -217,30 +217,17 @@ std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
         std::to_string(balance) + std::to_string(tx_info.gas_limit()) +
         std::to_string(tx_info.gas_price()) + tx_info.to() +
         std::to_string(tx_info.amount());
-    BFT_DEBUG("tx hash gid: %s, status: %d, from: %s, balance: %lu, gas limit: %lu, gas price: %lu, to: %s, amount: %lu",
-        common::Encode::HexEncode(tx_info.gid()).c_str(),
-        tx_info.status(),
-        common::Encode::HexEncode(tx_info.from()).c_str(),
-        balance, tx_info.gas_limit(), tx_info.gas_price(),
-        common::Encode::HexEncode(tx_info.to()).c_str(),
-        tx_info.amount());
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         all_msg += tx_info.attr(i).key() + tx_info.attr(i).value();
-        BFT_DEBUG("tx hash attr: %s, %s", tx_info.attr(i).key().c_str(), tx_info.attr(i).value().c_str());
     }
 
     for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
         all_msg += tx_info.storages(i).key() + tx_info.storages(i).value();
-        BFT_DEBUG("tx hash atstoragestr: %s, %s", tx_info.storages(i).key().c_str(), tx_info.storages(i).value().c_str());
     }
 
     for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
         all_msg += tx_info.transfers(i).from() + tx_info.transfers(i).to() +
             std::to_string(tx_info.transfers(i).amount());
-        BFT_DEBUG("tx hash trans: %s, %s, %lu",
-            common::Encode::HexEncode(tx_info.transfers(i).from()).c_str(),
-            common::Encode::HexEncode(tx_info.transfers(i).to()).c_str(),
-            tx_info.transfers(i).amount());
     }
 
     return common::Hash::keccak256(all_msg);

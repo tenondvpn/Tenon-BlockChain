@@ -1196,21 +1196,10 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
-    return kBftSuccess;}
+    return kBftSuccess;
+}
 
-int BftManager::LeaderCallCommit(
-        const transport::protobuf::Header& header,
-        BftInterfacePtr& bft_ptr) {
-    // check pre-commit multi sign and leader commit
-    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-    auto local_node = dht_ptr->local_node();
-    transport::protobuf::Header msg;
-    BftProto::LeaderCreateCommit(local_node, bft_ptr, true, msg);
-    if (!msg.has_data()) {
-        BFT_ERROR("leader create commit message failed!");
-        return kBftError;
-    }
-
+void BftManager::HandleLocalCommitBlock() {
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_pool_index(bft_ptr->pool_index());
     const auto& prepare_bitmap_data = bft_ptr->prepare_bitmap().data();
@@ -1254,9 +1243,30 @@ int BftManager::LeaderCallCommit(
 
     block_queue_[header.thread_idx()].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
-    network::Route::Instance()->Send(msg);
     LeaderBroadcastToAcc(bft_ptr, true);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
+}
+
+int BftManager::LeaderCallCommit(
+        const transport::protobuf::Header& header,
+        BftInterfacePtr& bft_ptr) {
+    // check pre-commit multi sign and leader commit
+    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
+    auto local_node = dht_ptr->local_node();
+    transport::protobuf::Header msg;
+    BftProto::LeaderCreateCommit(local_node, bft_ptr, true, msg);
+    if (!msg.has_data()) {
+        BFT_ERROR("leader create commit message failed!");
+        return kBftError;
+    }
+
+    if (bft_ptr->local_prepare_hash() == bft_ptr->leader_tbft_prepare_hash()) {
+        HandleLocalCommitBlock();
+    } else {
+        // sync block from neighbor nodes
+    }
+    
+    network::Route::Instance()->Send(msg);
     RemoveBft(bft_ptr->gid(), true);
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
@@ -1304,60 +1314,11 @@ int BftManager::BackupCommit(
         return kBftError;
     }
 
-    auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
-    auto local_node = dht_ptr->local_node();
-    transport::protobuf::Header msg;
-    std::string commit_data;
-    if (bft_ptr->Commit(false, commit_data) != kBftSuccess) {
-        BFT_ERROR("bft backup commit failed!");
+    if (bft_ptr->local_prepare_hash() == bft_ptr->leader_tbft_prepare_hash()) {
+        HandleLocalCommitBlock();
+    } else {
+        // sync block from neighbor nodes
     }
-
-    if (!bft_ptr->prpare_block()) {
-        BFT_ERROR("bft_ptr->prpare_block failed!");
-        return kBftError;
-    }
-
-    auto& tenon_block = bft_ptr->prpare_block();
-    tenon_block->set_pool_index(bft_ptr->pool_index());
-    tenon_block->set_bls_agg_sign_x(bft_msg.bls_sign_x());
-    tenon_block->set_bls_agg_sign_y(bft_msg.bls_sign_y());
-    for (int32_t i = 0; i < bft_msg.bitmap_size(); ++i) {
-        tenon_block->add_bitmap(bft_msg.bitmap(i));
-    }
-
-    for (int32_t i = 0; i < bft_msg.commit_bitmap_size(); ++i) {
-        tenon_block->add_commit_bitmap(bft_msg.commit_bitmap(i));
-    }
-
-    assert(tenon_block->bitmap_size() > 0);
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        if (tenon_block->tx_list_size() == 1 &&
-                (tenon_block->tx_list(0).type() == common::kConsensusFinalStatistic ||
-                tenon_block->tx_list(0).type() == common::kConsensusRootElectShard ||
-                tenon_block->tx_list(0).type() == common::kConsensusRootTimeBlock)) {
-        } else {
-            db::DbWriteBach db_batch;
-            RootCommitAddNewAccount(*tenon_block, db_batch);
-            auto st = db::Db::Instance()->Put(db_batch);
-            if (!st.ok()) {
-                exit(0);
-            }
-        }
-    }
-
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block());
-    if (block::AccountManager::Instance()->AddBlockItemToCache(
-            queue_item_ptr->block_ptr,
-            queue_item_ptr->db_batch) != block::kBlockSuccess) {
-        BFT_ERROR("backup add block to db failed!");
-        return kBftError;
-    }
-
-    block_queue_[header.thread_idx()].push(queue_item_ptr);
-    bft_ptr->set_status(kBftCommited);
-    assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
-    BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
-        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
 
     // start new bft
     RemoveBft(bft_ptr->gid(), true);

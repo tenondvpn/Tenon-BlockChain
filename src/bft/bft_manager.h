@@ -153,6 +153,7 @@ private:
     void SetBftGidPrepareInvalid(BftItemPtr& bft_item_ptr);
     void CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr);
     bool IsCreateContractLibraray(const bft::protobuf::TxInfo& tx_info);
+    void HandleLocalCommitBlock();
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 
