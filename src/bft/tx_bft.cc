@@ -293,6 +293,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
     leader_init_prepare_hash_ = common::Hash::keccak256(tbft_prepare_str_for_hash);
     prepare->set_prepare_final_hash(
         common::Hash::keccak256(tbft_prepare_txs_str_for_hash));
+    prepare->set_height(block_ptr->height());
     set_prepare_hash(prepare->prepare_final_hash());
     auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
     BFT_DEBUG("prepare final hash: %s, for: %s",

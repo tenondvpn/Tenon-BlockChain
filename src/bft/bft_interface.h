@@ -380,6 +380,10 @@ public:
         return leader_init_prepare_hash_;
     }
 
+    uint64_t prepare_latest_height() {
+        return prepare_latest_height_;
+    }
+
 protected:
     BftInterface();
     virtual ~BftInterface() {}
@@ -474,6 +478,7 @@ protected:
     common::Bitmap prepare_bitmap_;
     std::string leader_tbft_prepare_hash_;
     std::string leader_init_prepare_hash_;
+    uint64_t prepare_latest_height_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
 };

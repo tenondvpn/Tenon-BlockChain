@@ -290,6 +290,7 @@ int BftInterface::LeaderPrecommitOk(
         return kBftHandled;
     }
 
+    // TODO: check back hash eqal to it's signed hash
     auto valid_count = SetPrepareBlock(
         id,
         index,
@@ -462,6 +463,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
         }
         bls_precommit_agg_sign_->to_affine_coordinates();
         prepare_bitmap_ = iter->second->prepare_bitmap_;
+        prepare_latest_height_ = iter->second->prpare_block->height();
     } catch (std::exception& e) {
         BFT_ERROR("catch bls exception: %s", e.what());
         return kBftError;

@@ -1270,6 +1270,19 @@ int BftManager::LeaderCallCommit(
         HandleLocalCommitBlock(header.thread_idx(), bft_ptr);
     } else {
         // sync block from neighbor nodes
+        if (bft_ptr->pool_index() == common::kImmutablePoolSize) {
+            sync::KeyValueSync::Instance()->AddSyncHeight(
+                network::kRootCongressNetworkId,
+                bft_ptr->pool_index(),
+                tx_bft.ltx_commit().latest_hegight(),
+                sync::kSyncHighest);
+        } else {
+            sync::KeyValueSync::Instance()->AddSyncHeight(
+                net_id,
+                bft_ptr->pool_index(),
+                tx_bft.ltx_commit().latest_hegight(),
+                sync::kSyncHighest);
+        }
     }
     
     network::Route::Instance()->Send(msg);
@@ -1335,10 +1348,31 @@ int BftManager::BackupCommit(
         HandleLocalCommitBlock(header.thread_idx(), bft_ptr);
     } else {
         // sync block from neighbor nodes
+        bft::protobuf::TxBft tx_bft;
+        if (!tx_bft.ParseFromString(bft_msg.data())) {
+            BFT_ERROR("protobuf::TxBft ParseFromString failed!");
+            return kBftError;
+        }
+
+        if (bft_ptr->pool_index() == common::kImmutablePoolSize) {
+            sync::KeyValueSync::Instance()->AddSyncHeight(
+                network::kRootCongressNetworkId,
+                bft_ptr->pool_index(),
+                tx_bft.ltx_commit().latest_hegight(),
+                sync::kSyncHighest);
+        } else {
+            sync::KeyValueSync::Instance()->AddSyncHeight(
+                net_id,
+                bft_ptr->pool_index(),
+                tx_bft.ltx_commit().latest_hegight(),
+                sync::kSyncHighest);
+        }
     }
 
     // start new bft
     RemoveBft(bft_ptr->gid(), true);
+    BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
+        bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
 }
 
