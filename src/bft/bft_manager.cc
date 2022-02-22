@@ -820,6 +820,7 @@ int BftManager::BackupPrepare(
     }
 
     std::string data;
+    assert(bft_ptr->pool_index() == 256);
     int prepare_res = bft_ptr->Prepare(false, -1, bft_msg, &data);
     if (prepare_res != kBftSuccess) {
         BackupSendOppose(header, bft_msg, bft_ptr);

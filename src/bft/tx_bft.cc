@@ -1983,6 +1983,7 @@ void TxBft::RootLeaderCreateTimerBlock(
 
     add_item_index_vec(tx_vec[0]->index);
     push_bft_item_vec(tx_vec[0]->tx.gid());
+    tenon_block.set_pool_index(pool_idx);
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());

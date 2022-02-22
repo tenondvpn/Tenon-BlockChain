@@ -100,13 +100,20 @@ std::string GetBlockHash(const protobuf::Block& block) {
             continue;
         }
 
-        tbft_prepare_txs_str_for_hash += block.tx_list(i).gid() + tx_hash +
-            std::to_string(block.tx_list(i).balance());
+        tbft_prepare_txs_str_for_hash += tx_hash + std::to_string(block.tx_list(i).balance());
+        std::string text_addr;
         if (block.tx_list(i).to_add()) {
             tbft_prepare_txs_str_for_hash += block.tx_list(i).to();
+            text_addr = block.tx_list(i).to();
         } else {
             tbft_prepare_txs_str_for_hash += block.tx_list(i).from();
+            text_addr = block.tx_list(i).from();
         }
+
+        BLS_DEBUG("tx hash: %s, addr: %s, balance: %lu",
+            common::Encode::HexEncode(tx_hash).c_str(),
+            common::Encode::HexEncode(text_addr).c_str(),
+            block.tx_list(i).balance());
     }
 
     if (tbft_prepare_txs_str_for_hash.empty()) {
@@ -120,6 +127,15 @@ std::string GetBlockHash(const protobuf::Block& block) {
         std::to_string(block.pool_index()) +
         std::to_string(block.height());
     tbft_prepare_txs_str_for_hash += block_info;
+    BFT_DEBUG("block_info: %s, prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, height: %lu, get block hash: %s",
+        common::Encode::HexEncode(block_info).c_str(),
+        common::Encode::HexEncode(block.prehash()).c_str(),
+        block.timeblock_height(),
+        block.electblock_height(),
+        block.network_id(),
+        block.pool_index(),
+        block.height(),
+        common::Encode::HexEncode(common::Hash::keccak256(tbft_prepare_txs_str_for_hash)).c_str());
     return common::Hash::keccak256(tbft_prepare_txs_str_for_hash);
 }
 
