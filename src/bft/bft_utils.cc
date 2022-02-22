@@ -100,11 +100,6 @@ std::string GetBlockHash(const protobuf::Block& block) {
             continue;
         }
 
-        std::string uni_gid = GidManager::Instance()->GetUniversalGid(
-            block.tx_list(i).to_add(),
-            block.tx_list(i).type(),
-            block.tx_list(i).call_contract_step(),
-            block.tx_list(i).gid());
         tbft_prepare_txs_str_for_hash += block.tx_list(i).gid() + tx_hash +
             std::to_string(block.tx_list(i).balance());
         if (block.tx_list(i).to_add()) {

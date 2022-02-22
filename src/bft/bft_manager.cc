@@ -1213,7 +1213,7 @@ void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft
         tenon_block->add_commit_bitmap(commit_bitmap_data[i]);
     }
 
-    auto& bls_commit_sign = bft_ptr->bls_commit_agg_sign();
+    auto& bls_commit_sign = bft_ptr->bls_precommit_agg_sign();
     tenon_block->set_bls_agg_sign_x(
         libBLS::ThresholdUtils::fieldElementToString(bls_commit_sign->X));
     tenon_block->set_bls_agg_sign_y(
