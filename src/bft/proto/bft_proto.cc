@@ -185,7 +185,7 @@ void BftProto::LeaderCreatePreCommit(
             std::to_string(bft_msg.bft_step()) + "_" +
             bft_ptr->leader_tbft_prepare_hash());
         if (!security::Security::Instance()->Sign(
-                msg_to_hash,
+                bft_ptr->leader_tbft_prepare_hash(),
                 *(security::Security::Instance()->prikey()),
                 *(security::Security::Instance()->pubkey()),
                 leader_sign)) {

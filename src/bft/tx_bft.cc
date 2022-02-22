@@ -207,15 +207,14 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         }
     }
 
-    if (prepare.prepare_txs_size() <= 0) {
+    if (prepare->prepare_txs_size() <= 0) {
         return nullptr;
     }
 
-    prepare->set_prepare_final_hash(common::GetBlockHash(*block_ptr));
+    prepare->set_prepare_final_hash(GetBlockHash(*block_ptr));
     prepare->set_height(block_ptr->height());
     set_prepare_hash(prepare->prepare_final_hash());
-    auto prepare_block = std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
-    return prepare_block;
+    return std::make_shared<bft::protobuf::TbftLeaderPrepare>(*prepare);
 }
 
 int TxBft::RootBackupCheckCreateAccountAddressPrepare(

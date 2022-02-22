@@ -437,12 +437,12 @@ int BftManager::CreateGenisisBlock(
 bool BftManager::VerifyAggSignWithMembers(
         const elect::MembersPtr& members,
         const bft::protobuf::Block& block) {
-    auto block_hash = GetBlockHash(block);
-    for (int32_t i = 0; i < block.bitmap_size(); ++i) {
-        block_hash += std::to_string(block.bitmap(i));
-    }
-
-    auto hash = common::Hash::Hash256(block_hash);
+    auto hash = GetBlockHash(block);
+//     for (int32_t i = 0; i < block.bitmap_size(); ++i) {
+//         block_hash += std::to_string(block.bitmap(i));
+//     }
+// 
+//     auto hash = common::Hash::Hash256(block_hash);
     libff::alt_bn128_G1 sign;
     sign.X = libff::alt_bn128_Fq(block.bls_agg_sign_x().c_str());
     sign.Y = libff::alt_bn128_Fq(block.bls_agg_sign_y().c_str());
