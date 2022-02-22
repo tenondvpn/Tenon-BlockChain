@@ -757,15 +757,12 @@ void BftManager::RemoveBft(const std::string& gid, bool remove_tx) {
 
 int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
     std::string prepare_data;
-    BFT_DEBUG("bft leader prepare 0.");
     bft::protobuf::BftMessage bft_msg;
     int res = bft_ptr->Prepare(true, pool_mod_idx, bft_msg, &prepare_data);
-    BFT_DEBUG("bft leader prepare 0 1: %d, %d.", res, prepare_data.size());
     if (res != kBftSuccess || prepare_data.empty()) {
         return kBftError;
     }
 
-    BFT_DEBUG("bft leader prepare 1.");
     uint32_t member_idx = bft_ptr->local_member_index();
     if (member_idx == elect::kInvalidMemberIndex) {
         BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
@@ -786,7 +783,6 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
-    BFT_DEBUG("bft leader prepare 2.");
     auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
     if (bls::BlsManager::Instance()->Verify(
@@ -812,21 +808,18 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
             common::GlobalInfo::Instance()->id());
     }
     
-    BFT_DEBUG("bft leader prepare 3.");
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
         BFT_ERROR("this node has not joined consensus network[%u].", bft_ptr->network_id());
         return kBftError;
     }
 
-    BFT_DEBUG("bft leader prepare 4.");
     res = AddBft(bft_ptr);
     if (res != kBftSuccess) {
         BFT_ERROR("AddBft failed[%u].", res);
         return res;
     }
 
-    BFT_DEBUG("bft leader prepare 5.");
     auto local_node = dht_ptr->local_node();
     auto prepare_msg = std::make_shared<transport::protobuf::Header>();
     BftProto::LeaderCreatePrepare(
@@ -834,10 +827,8 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         prepare_data,
         bft_ptr,
         *prepare_msg);
-    BFT_DEBUG("bft leader prepare 6.");
     network::Route::Instance()->Send(*prepare_msg);
     bft_ptr->init_prepare_timeout();
-    BFT_DEBUG("bft leader prepare 7.");
 
     // (TODO): just for test
 #ifdef TENON_UNITTEST
@@ -1674,7 +1665,7 @@ int BftManager::VerifyLeaderSignature(
             *sign_hash = common::Hash::Hash256(
                 std::to_string(bft_msg.agree()) + "_" +
                 std::to_string(bft_msg.bft_step()) + "_" +
-                bft_msg.prepare_hash());
+                bft_msg.data());
         } else {
             return kBftError;
         }

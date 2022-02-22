@@ -168,26 +168,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
         return false;
     }
 
-    if (!bft_msg.has_sign_challenge() || !bft_msg.has_sign_response()) {
-        BFT_ERROR("bft message has no sign challenge or sign response.");
-        return false;
-    }
-
-    bft::protobuf::TxBft tx_bft;
-    if (!tx_bft.ParseFromString(bft_msg.data())) {
-        BFT_ERROR("tx_bft.ParseFromString failed.");
-        return false;
-    }
-
-//     set_prepare_hash(GetBlockHash(tx_bft.ltx_prepare().block()));
-//     security::Signature sign(bft_msg.sign_challenge(), bft_msg.sign_response());
-//     std::string str_pubkey;
-//     leader_mem_ptr_->pubkey.Serialize(str_pubkey);
-//     if (!security::Security::Instance()->Verify(prepare_hash(), sign, leader_mem_ptr_->pubkey)) {
-//         BFT_ERROR("leader signature verify failed!");
-//         return false;
-//     }
-
     leader_index_ = leader_mem_ptr_->index;
     auto local_mem_ptr = elect::ElectManager::Instance()->local_mem_ptr(bft_msg.net_id());
     if (local_mem_ptr == nullptr) {
@@ -201,15 +181,6 @@ bool BftInterface::CheckLeaderPrepare(const bft::protobuf::BftMessage& bft_msg) 
             elect_height_,
             elect::ElectManager::Instance()->latest_height(
                 common::GlobalInfo::Instance()->network_id()));
-        return false;
-    }
-
-    // keep the latest election
-    if (elect::ElectManager::Instance()->latest_height(
-            common::GlobalInfo::Instance()->network_id()) != bft_msg.elect_height()) {
-        BFT_ERROR("leader elect height not equal to local. "
-            "local elect height: %lu, leader elect height: %lu",
-            elect_height_, bft_msg.elect_height());
         return false;
     }
 

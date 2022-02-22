@@ -134,9 +134,8 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //     }
 // 
     set_pool_index(pool_index);
-    bft::protobuf::TxBft tx_bft;
-    auto ltx_prepare = tx_bft.mutable_ltx_prepare();
-    if (DoTransaction(tx_vec, *ltx_prepare) != kBftSuccess) {
+    bft::protobuf::LeaderTxPrepare ltx_prepare;
+    if (DoTransaction(tx_vec, &ltx_prepare) != kBftSuccess) {
         BFT_ERROR("DoTransaction error.");
         return kBftError;
     }
@@ -155,7 +154,12 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         return kBftError;
     }
 
-    ltx_prepare->clear_block();
+    bft::protobuf::TxBft tx_bft;
+    auto ltxp = tx_bft.mutable_ltx_prepare();
+    for (int32_t i = 0; i < ltx_prepare.prepare().prepare_txs_size(); ++i) {
+        ltxp->add_gid(ltx_prepare.prepare().prepare_txs(i).gid());
+    }
+
     *bft_str = tx_bft.SerializeAsString();
 //     if (tx_vec.size() != 1 || tx_vec[0]->tx.type() != common::kConsensusRootTimeBlock) {
 //         return kBftError;
@@ -569,10 +573,10 @@ int TxBft::RootBackupCheckPrepare(
 
     const auto& leader_prepare = tx_bft.ltx_prepare().prepare();
     std::vector<TxItemPtr> tx_vec;
-    for (int32_t i = 0; i < leader_prepare.prepare_txs_size(); ++i) {
+    for (int32_t i = 0; i < leader_prepare.gid_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
-            leader_prepare.prepare_txs(i).gid());
+            leader_prepare..gid(i));
         if (local_tx_info == nullptr) {
             continue;
         }
@@ -589,41 +593,6 @@ int TxBft::RootBackupCheckPrepare(
     ltx_msg->clear_block();
     *prepare = res_tx_bft.SerializeAsString();
     return kBftSuccess;
-// 
-//     if (!tx_bft.ltx_prepare().has_prepare()) {
-//         BFT_ERROR("prepare has no transaction!");
-//         return kBftInvalidPackage;
-//     }
-// 
-//     const auto& block = tx_bft.ltx_prepare().block();
-//     int res = CheckBlockInfo(block);
-//     if (res != kBftSuccess) {
-//         BFT_ERROR("bft check block info failed[%d]", res);
-//         return res;
-//     }
-// 
-//     if (block.tx_list_size() == 1) {
-//         *invalid_tx_idx = 0;
-//         switch (block.tx_list(0).type())
-//         {
-//         case common::kConsensusRootElectShard:
-//             return RootBackupCheckElectConsensusShardPrepare(block);
-//             break;
-//         case common::kConsensusRootTimeBlock:
-//             return RootBackupCheckTimerBlockPrepare(block);
-//             break;
-//         case common::kConsensusFinalStatistic:
-//             return RootBackupCheckFinalStatistic(block);
-//             break;
-//         default:
-//             return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
-//             break;
-//         }
-//     } else {
-//         return RootBackupCheckCreateAccountAddressPrepare(block, invalid_tx_idx);
-//     }
-//     
-//     return kBftInvalidPackage;
 }
 
 int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
