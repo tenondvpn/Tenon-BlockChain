@@ -180,43 +180,6 @@ int TxBft::DoTransaction(
     return kBftSuccess;
 }
 
-std::string TxBft::GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
-    std::string all_msg;
-    block::DbAccountInfoPtr account_info = nullptr;
-    if (tx_info.to_add()) {
-        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.from());
-    } else {
-        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.to());
-    }
-
-    uint64_t balance = 0;
-    if (account_info != nullptr) {
-        if (!account_info->GetBalance(&balance) != block::kBlockSuccess) {
-            return "";
-        }
-    }
-
-    // just use before tx balance
-    all_msg += tx_info.gid() + std::to_string(tx_info.status()) + tx_info.from() +
-        std::to_string(balance) + std::to_string(tx_info.gas_limit()) +
-        std::to_string(tx_info.gas_price()) + tx_info.to() +
-        std::to_string(tx_info.amount());
-    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
-        all_msg += tx_info.attr(i).key() + tx_info.attr(i).value();
-    }
-
-    for (int32_t i = 0; i < tx_info.storages_size(); ++i) {
-        all_msg += tx_info.storages(i).key() + tx_info.storages(i).value();
-    }
-
-    for (int32_t i = 0; i < tx_info.transfers_size(); ++i) {
-        all_msg += tx_info.transfers(i).from() + tx_info.transfers(i).to() +
-            std::to_string(tx_info.transfers(i).amount());
-    }
-
-    return common::Hash::keccak256(all_msg);
-}
-
 std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         std::shared_ptr<bft::protobuf::Block>& block_ptr,
         bft::protobuf::LeaderTxPrepare& ltx_prepare) {

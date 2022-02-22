@@ -140,5 +140,4 @@ message BftMessage {
     optional bytes bls_sign_x = 20;
     optional bytes bls_sign_y = 21;
     repeated uint64 commit_bitmap = 22;
-
 }

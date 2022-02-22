@@ -194,6 +194,10 @@ public:
         return precommit_hash_;
     }
 
+    void set_bls_precommit_agg_sign(const libff::alt_bn128_G1& agg_sign) {
+        bls_precommit_agg_sign_ = std::make_shared<libff::alt_bn128_G1>(agg_sign);
+    }
+
     const std::shared_ptr<libff::alt_bn128_G1>& bls_precommit_agg_sign() const {
         assert(bls_precommit_agg_sign_ != nullptr);
         return bls_precommit_agg_sign_;

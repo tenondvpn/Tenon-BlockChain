@@ -1049,6 +1049,11 @@ int BftManager::BackupPrecommit(
     }
 
     bft_ptr->set_prepare_bitmap(bitmap_data);
+    libff::alt_bn128_G1 sign;
+    sign.X = libff::alt_bn128_Fq(bft_msg.bls_sign_x().c_str());
+    sign.Y = libff::alt_bn128_Fq(bft_msg.bls_sign_y().c_str());
+    sign.Z = libff::alt_bn128_Fq::one();
+    bft_ptr->set_bls_precommit_agg_sign(sign);
     // check prepare multi sign
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     auto local_node = dht_ptr->local_node();
