@@ -106,7 +106,7 @@ void BftManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
 
     // leader 
     if (bft_msg.leader()) {
-        auto bft_ptr = GetBft(bft_msg.gid());
+        auto bft_ptr = GetBft(bft_msg.gid(), true);
         if (bft_ptr == nullptr) {
             BFT_DEBUG("leader get bft gid failed[%s]",
                 common::Encode::HexEncode(bft_msg.gid()).c_str());
@@ -172,7 +172,7 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
             return;
         }
     } else {
-        bft_ptr = GetBft(bft_item_ptr->bft_msg.gid());
+        bft_ptr = GetBft(bft_item_ptr->bft_msg.gid(), false);
         if (bft_ptr == nullptr) {
             // if commit, check agg sign and just commit
             if (bft_item_ptr->bft_msg.bft_step() == kBftCommit) {
@@ -364,12 +364,12 @@ void BftManager::HandleBftMessage(
         bft::protobuf::BftMessage& bft_msg,
         const std::string& sign_hash,
         const transport::TransportMessagePtr& header_ptr) {
-    if (!bft_msg.leader()) {
-        if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-            return;
-        }
-    }
-
+//     if (!bft_msg.leader()) {
+//         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
+//             return;
+//         }
+//     }
+// 
     auto& header = *header_ptr;
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {
@@ -712,21 +712,31 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
 }
 
 int BftManager::AddBft(BftInterfacePtr& bft_ptr) {
+    auto gid = bft_ptr->gid();
+    if (bft_ptr->this_node_is_leader()) {
+        gid += "L";
+    }
+
     std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
-    auto iter = bft_hash_map_.find(bft_ptr->gid());
+    auto iter = bft_hash_map_.find(gid);
     if (iter != bft_hash_map_.end()) {
         return kBftAdded;
     }
 
-    bft_hash_map_[bft_ptr->gid()] = bft_ptr;
+    bft_hash_map_[gid] = bft_ptr;
 //     BFT_DEBUG("add bft and now size: %d", bft_hash_map_.size());
     return kBftSuccess;
 }
 
-BftInterfacePtr BftManager::GetBft(const std::string& gid) {
+BftInterfacePtr BftManager::GetBft(const std::string& in_gid, bool leader) {
+    auto gid = in_gid;
+    if (leader) {
+        gid += "L";
+    }
+
     std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
     auto iter = bft_hash_map_.find(gid);
-    if (iter == bft_hash_map_.end()) {
+    if (iter != bft_hash_map_.end()) {
         return nullptr;
     }
 
@@ -782,31 +792,31 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         BFT_ERROR("leader signature error.");
         return kBftError;
     }
-
-    auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
-    uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
-    if (bls::BlsManager::Instance()->Verify(
-            t,
-            bft_ptr->members_ptr()->size(),
-            member_ptr->bls_publick_key,
-            sign,
-            bft_ptr->prepare_block()->prepare_final_hash()) != bls::kBlsSuccess) {
-        BFT_ERROR("verify prepare hash error!");
-        return kBftError;
-    } else {
-        bft::protobuf::TxBft tx_bft;
-        if (!tx_bft.ParseFromString(prepare_data)) {
-            return kBftError;
-        }
-
-        bft_ptr->LeaderPrecommitOk(
-            tx_bft.ltx_prepare(),
-            member_idx,
-            bft_ptr->gid(),
-            0,
-            sign,
-            common::GlobalInfo::Instance()->id());
-    }
+// 
+//     auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
+//     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
+//     if (bls::BlsManager::Instance()->Verify(
+//             t,
+//             bft_ptr->members_ptr()->size(),
+//             member_ptr->bls_publick_key,
+//             sign,
+//             bft_ptr->prepare_block()->prepare_final_hash()) != bls::kBlsSuccess) {
+//         BFT_ERROR("verify prepare hash error!");
+//         return kBftError;
+//     } else {
+//         bft::protobuf::TxBft tx_bft;
+//         if (!tx_bft.ParseFromString(prepare_data)) {
+//             return kBftError;
+//         }
+// 
+//         bft_ptr->LeaderPrecommitOk(
+//             tx_bft.ltx_prepare(),
+//             member_idx,
+//             bft_ptr->gid(),
+//             0,
+//             sign,
+//             common::GlobalInfo::Instance()->id());
+//     }
     
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
@@ -827,6 +837,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         prepare_data,
         bft_ptr,
         *prepare_msg);
+    network::Route::Instance()->SendToLocal(*prepare_msg);
     network::Route::Instance()->Send(*prepare_msg);
     bft_ptr->init_prepare_timeout();
 

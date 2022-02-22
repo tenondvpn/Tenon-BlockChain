@@ -24,7 +24,7 @@ public:
     // load bft code by bft addr
     int StartBft(const std::string& gid, int32_t pool_mod_index);
     int AddBft(BftInterfacePtr& bft_ptr);
-    BftInterfacePtr GetBft(const std::string& gid);
+    BftInterfacePtr GetBft(const std::string& gid, bool leader);
     uint32_t GetMemberIndex(uint32_t network_id, const std::string& node_id);
     elect::MembersPtr GetNetworkMembers(uint32_t network_id);
     int AddGenisisBlock(const std::shared_ptr<bft::protobuf::Block>& genesis_block);
