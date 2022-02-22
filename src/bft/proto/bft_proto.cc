@@ -60,7 +60,6 @@ void BftProto::LeaderCreatePrepare(
     bft_msg.set_bft_step(kBftPrepare);
     bft_msg.set_agree(true);
     bft_msg.set_pool_index(bft_ptr->pool_index());
-    assert(bft_ptr->pool_index() == 256);
     std::string msg_to_hash = common::Hash::Hash256(
         std::to_string(bft_msg.agree()) + "_" +
         std::to_string(bft_msg.bft_step()) + "_" +
