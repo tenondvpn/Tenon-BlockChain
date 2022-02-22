@@ -143,7 +143,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     bft::protobuf::TxBft tx_bft;
     auto ltxp = tx_bft.mutable_ltx_prepare();
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
-        ltxp->add_gid(tx_vec[i]->tx.gid());
+        ltxp->add_gid(tx_vec[i]->uni_gid);
     }
 
     *bft_str = tx_bft.SerializeAsString();
@@ -561,6 +561,17 @@ int TxBft::RootBackupCheckPrepare(
         }
 
         tx_vec.push_back(local_tx_info);
+        BFT_ERROR("get tx, pool index: %d, gid: %s, type: %d",
+            pool_index(),
+            common::Encode::HexEncode(tx_bft.ltx_prepare().gid(i)).c_str(),
+            local_tx_info->tx.type());
+    }
+
+    if (tx_vec.empty()) {
+        BFT_ERROR("no tx, pool index: %d, gid: %s",
+            pool_index(),
+            common::Encode::HexEncode(tx_bft.ltx_prepare().gid(0)).c_str());
+        return kBftInvalidPackage;
     }
 
     bft::protobuf::TxBft res_tx_bft;
@@ -667,6 +678,17 @@ int TxBft::BackupCheckPrepare(
         }
 
         tx_vec.push_back(local_tx_info);
+        BFT_ERROR("get tx, pool index: %d, gid: %s, type: %d",
+            pool_index(),
+            common::Encode::HexEncode(tx_bft.ltx_prepare().gid(i)).c_str(),
+            local_tx_info->tx.type());
+    }
+
+    if (tx_vec.empty()) {
+        BFT_ERROR("no tx, pool index: %d, gid: %s",
+            pool_index(),
+            common::Encode::HexEncode(tx_bft.ltx_prepare().gid(0)).c_str());
+        return kBftInvalidPackage;
     }
 
     bft::protobuf::LeaderTxPrepare ltx_msg;

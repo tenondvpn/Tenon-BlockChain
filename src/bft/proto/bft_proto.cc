@@ -270,7 +270,7 @@ void BftProto::LeaderCreateCommit(
     bft::protobuf::BftMessage bft_msg;
     bft::protobuf::TxBft tx_bft;
     auto ltx_commit_msg = tx_bft.mutable_ltx_commit();
-    ltx_commit_msg->set_latest_hegight(bft_ptr->prpare_block()->height());
+    ltx_commit_msg->set_latest_hegight(bft_ptr->prepare_latest_height());
     bft_msg.set_data(tx_bft.SerializeAsString());
     bft_msg.set_leader(false);
     bft_msg.set_gid(bft_ptr->gid());

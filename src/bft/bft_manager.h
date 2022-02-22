@@ -154,6 +154,10 @@ private:
     void CacheBftPrecommitMsg(BftItemPtr& bft_item_ptr);
     bool IsCreateContractLibraray(const bft::protobuf::TxInfo& tx_info);
     void HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft_ptr);
+    void RandomNodesToBroadcastBlock(
+        BftInterfacePtr& bft_ptr,
+        std::shared_ptr<bft::protobuf::Block>& block,
+        const common::Bitmap& bitmap);
 
     static const uint32_t kBlockToDbPeriod = 10000llu;
 

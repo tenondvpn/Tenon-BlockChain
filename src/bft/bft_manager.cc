@@ -736,7 +736,7 @@ BftInterfacePtr BftManager::GetBft(const std::string& in_gid, bool leader) {
 
     std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
     auto iter = bft_hash_map_.find(gid);
-    if (iter != bft_hash_map_.end()) {
+    if (iter == bft_hash_map_.end()) {
         return nullptr;
     }
 
@@ -773,54 +773,10 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
-//     uint32_t member_idx = bft_ptr->local_member_index();
-//     if (member_idx == elect::kInvalidMemberIndex) {
-//         BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
-//             member_idx,
-//             bft_ptr->network_id(),
-//             common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str());
-//         return kBftError;
-//     }
-// 
-//     libff::alt_bn128_G1 sign;
-//     if (bls::BlsManager::Instance()->Sign(
-//             bft_ptr->min_aggree_member_count(),
-//             bft_ptr->member_count(),
-//             bft_ptr->local_sec_key(),
-//             bft_ptr->prepare_block()->prepare_final_hash(),
-//             &sign) != bls::kBlsSuccess) {
-//         BFT_ERROR("leader signature error.");
-//         return kBftError;
-//     }
-// 
-//     auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
-//     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
-//     if (bls::BlsManager::Instance()->Verify(
-//             t,
-//             bft_ptr->members_ptr()->size(),
-//             member_ptr->bls_publick_key,
-//             sign,
-//             bft_ptr->prepare_block()->prepare_final_hash()) != bls::kBlsSuccess) {
-//         BFT_ERROR("verify prepare hash error!");
-//         return kBftError;
-//     } else {
-//         bft::protobuf::TxBft tx_bft;
-//         if (!tx_bft.ParseFromString(prepare_data)) {
-//             return kBftError;
-//         }
-// 
-//         bft_ptr->LeaderPrecommitOk(
-//             tx_bft.ltx_prepare(),
-//             member_idx,
-//             bft_ptr->gid(),
-//             0,
-//             sign,
-//             common::GlobalInfo::Instance()->id());
-//     }
-    
     auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     if (dht_ptr == nullptr) {
-        BFT_ERROR("this node has not joined consensus network[%u].", bft_ptr->network_id());
+        BFT_ERROR("this node has not joined consensus network[%u].",
+            bft_ptr->network_id());
         return kBftError;
     }
 
@@ -838,7 +794,7 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         bft_ptr,
         *prepare_msg);
     network::Route::Instance()->Send(*prepare_msg);
-    network::Route::Instance()->SendToLocal(*prepare_msg);
+//     network::Route::Instance()->SendToLocal(*prepare_msg);
     bft_ptr->init_prepare_timeout();
 
     // (TODO): just for test
@@ -923,7 +879,8 @@ int BftManager::LeaderPrecommit(
     }
 
     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
-    if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) || !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
+    if (!bls::IsValidBigInt(bft_msg.bls_sign_x()) ||
+            !bls::IsValidBigInt(bft_msg.bls_sign_y())) {
         BFT_ERROR("verify prepare hash error!");
         return kBftError;
     }
@@ -1207,14 +1164,45 @@ auto dht_ptr = network::DhtManager::Instance()->GetDht(bft_ptr->network_id());
     return kBftSuccess;
 }
 
+void BftManager::RandomNodesToBroadcastBlock(
+        BftInterfacePtr& bft_ptr,
+        std::shared_ptr<bft::protobuf::Block>& block,
+        const common::Bitmap& bitmap) {
+    // select 7 random nodes to broadcast, rand seed base by epoch vss-random and block height
+    std::vector<int32_t> index_vec;
+    for (int32_t i = 0; i < bitmap.data().size() * 64; ++i) {
+        if (bitmap.Valid(i)) {
+            index_vec.push_back(i);
+        }
+    }
+
+    struct RangGen {
+        int operator() (int n) {
+            return std::rand() / (1.0 + RAND_MAX) * n;
+        }
+    };
+
+    std::srand(static_cast<uint32_t>(
+        (block->height() + vss::VssManager::Instance()->EpochRandom()) % RAND_MAX));
+    std::random_shuffle(index_vec.begin(), index_vec.end(), RangGen());
+    for (int32_t i = 0; i < common::kDefaultBroadcastNeighborCount; ++i) {
+        if (index_vec[i] == bft_ptr->local_member_index()) {
+            LeaderBroadcastToAcc(bft_ptr, true);
+        }
+    }
+}
+
 void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft_ptr) {
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_pool_index(bft_ptr->pool_index());
     const auto& prepare_bitmap_data = bft_ptr->prepare_bitmap().data();
+    std::vector<uint64_t> bitmap_data;
     for (uint32_t i = 0; i < prepare_bitmap_data.size(); ++i) {
         tenon_block->add_bitmap(prepare_bitmap_data[i]);
+        bitmap_data.push_back(prepare_bitmap_data[i]);
     }
 
+    common::Bitmap brd_bitmap(bitmap_data);
     const auto& commit_bitmap_data = bft_ptr->precommit_bitmap().data();
     for (uint32_t i = 0; i < commit_bitmap_data.size(); ++i) {
         tenon_block->add_commit_bitmap(commit_bitmap_data[i]);
@@ -1251,7 +1239,7 @@ void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft
 
     block_queue_[thread_idx].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
-    LeaderBroadcastToAcc(bft_ptr, true);
+    RandomNodesToBroadcastBlock(bft_ptr, tenon_block, brd_bitmap);
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
 }
 
