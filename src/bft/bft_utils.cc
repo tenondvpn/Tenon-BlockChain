@@ -1,5 +1,6 @@
 #include "bft/bft_utils.h"
 
+#include "block/account_manager.h"
 #include "election/elect_manager.h"
 #include "network/network_utils.h"
 #include "vss/vss_manager.h"

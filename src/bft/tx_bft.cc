@@ -226,7 +226,7 @@ std::shared_ptr<bft::protobuf::TbftLeaderPrepare> TxBft::CreatePrepareTxInfo(
         std::to_string(block_ptr->timeblock_height()) +
         std::to_string(block_ptr->electblock_height()) +
         std::to_string(block_ptr->network_id()) +
-        std::to_string(block_ptr->pool_index()) + gid_ +
+        std::to_string(block_ptr->pool_index()) +
         std::to_string(block_ptr->height());
     BFT_DEBUG("prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, gid_: %s",
         common::Encode::HexEncode(block_ptr->prehash()).c_str(),
