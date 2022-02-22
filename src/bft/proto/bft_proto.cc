@@ -80,7 +80,6 @@ void BftProto::LeaderCreatePrepare(
     leader_sig.Serialize(sign_challenge_str, sign_response_str);
     bft_msg.set_sign_challenge(sign_challenge_str);
     bft_msg.set_sign_response(sign_response_str);
-    bft_msg.set_prepare_hash(bft_ptr->leader_init_prepare_hash());
     bft_msg.set_epoch(bft_ptr->GetEpoch());
     bft_msg.set_member_index(bft_ptr->local_member_index());
     bft_msg.set_elect_height(bft_ptr->elect_height());

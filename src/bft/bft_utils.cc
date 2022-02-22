@@ -110,7 +110,7 @@ std::string GetBlockHash(const protobuf::Block& block) {
     }
 
     if (tbft_prepare_txs_str_for_hash.empty()) {
-        return nullptr;
+        return "";
     }
 
     std::string block_info = block.prehash() +

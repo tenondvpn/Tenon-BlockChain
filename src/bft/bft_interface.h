@@ -380,10 +380,6 @@ public:
         return leader_tbft_prepare_hash_;
     }
 
-    std::string leader_init_prepare_hash() {
-        return leader_init_prepare_hash_;
-    }
-
     uint64_t prepare_latest_height() {
         return prepare_latest_height_;
     }
@@ -489,7 +485,6 @@ protected:
     std::shared_ptr<bft::protobuf::TbftLeaderPrepare> tbft_prepare_block_{ nullptr };
     common::Bitmap prepare_bitmap_;
     std::string leader_tbft_prepare_hash_;
-    std::string leader_init_prepare_hash_;
     uint64_t prepare_latest_height_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(BftInterface);
