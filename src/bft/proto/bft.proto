@@ -82,7 +82,7 @@ message TxPrepareItem {
 message LeaderTxPrepare {
     optional Block block = 1;
     optional TbftLeaderPrepare prepare = 2;
-    optional bytes gid = 3;
+    repeated bytes gid = 3;
 }
 
 message BackupTxPrepare {
