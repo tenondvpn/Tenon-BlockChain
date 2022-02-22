@@ -111,6 +111,7 @@ private:
     common::Tick refresh_pool_max_height_tick_;
     uint64_t prev_refresh_heights_tm_{ 0 };
     common::LimitHashSet<std::string> block_hash_limit_set_{ 2048u };
+    bool inited_{ false };
 
     DISALLOW_COPY_AND_ASSIGN(AccountManager);
 };

@@ -203,7 +203,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
         common::GlobalInfo::Instance()->network_id(),
         &common_pk_,
         &local_sec_key_);
-    if (members == nullptr || bft_msg.member_index() >= members->size() ||
+    if (members == nullptr ||
             common_pk_ == libff::alt_bn128_G2::zero() ||
             local_sec_key_ == libff::alt_bn128_Fr::zero()) {
         if (members == nullptr) {
@@ -213,7 +213,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
                 (common_pk_ == libff::alt_bn128_G2::zero()),
                 (local_sec_key_ == libff::alt_bn128_Fr::zero()));
         } else {
-            BFT_ERROR("get members failed!.");
+            BFT_ERROR("get members failed!: %lu, net id: %d", local_elect_height, common::GlobalInfo::Instance()->network_id());
         }
         return false;
     }

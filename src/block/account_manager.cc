@@ -78,6 +78,7 @@ int AccountManager::Init(uint32_t network_id) {
     refresh_pool_max_height_tick_.CutOff(
         kRefreshPoolMaxHeightPeriod,
         std::bind(&AccountManager::RefreshPoolMaxHeight, this));
+    inited_ = true;
     return kBlockSuccess;
 }
 
@@ -972,6 +973,10 @@ void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Heade
 int AccountManager::HandleRefreshHeightsReq(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
+    if (!inited_) {
+        return kBlockSuccess;
+    }
+
     for (int32_t i = 0; i < block_msg.ref_heights_req().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_req().heights(i));
     }
