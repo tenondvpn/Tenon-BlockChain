@@ -773,25 +773,25 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         return kBftError;
     }
 
-    uint32_t member_idx = bft_ptr->local_member_index();
-    if (member_idx == elect::kInvalidMemberIndex) {
-        BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
-            member_idx,
-            bft_ptr->network_id(),
-            common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str());
-        return kBftError;
-    }
-
-    libff::alt_bn128_G1 sign;
-    if (bls::BlsManager::Instance()->Sign(
-            bft_ptr->min_aggree_member_count(),
-            bft_ptr->member_count(),
-            bft_ptr->local_sec_key(),
-            bft_ptr->prepare_block()->prepare_final_hash(),
-            &sign) != bls::kBlsSuccess) {
-        BFT_ERROR("leader signature error.");
-        return kBftError;
-    }
+//     uint32_t member_idx = bft_ptr->local_member_index();
+//     if (member_idx == elect::kInvalidMemberIndex) {
+//         BFT_ERROR("get local member index invalid![%u] network id[%u], id[%s]",
+//             member_idx,
+//             bft_ptr->network_id(),
+//             common::Encode::HexEncode(common::GlobalInfo::Instance()->id()).c_str());
+//         return kBftError;
+//     }
+// 
+//     libff::alt_bn128_G1 sign;
+//     if (bls::BlsManager::Instance()->Sign(
+//             bft_ptr->min_aggree_member_count(),
+//             bft_ptr->member_count(),
+//             bft_ptr->local_sec_key(),
+//             bft_ptr->prepare_block()->prepare_final_hash(),
+//             &sign) != bls::kBlsSuccess) {
+//         BFT_ERROR("leader signature error.");
+//         return kBftError;
+//     }
 // 
 //     auto& member_ptr = (*bft_ptr->members_ptr())[member_idx];
 //     uint32_t t = common::GetSignerCount(bft_ptr->members_ptr()->size());
@@ -837,8 +837,8 @@ int BftManager::LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx) {
         prepare_data,
         bft_ptr,
         *prepare_msg);
-    network::Route::Instance()->SendToLocal(*prepare_msg);
     network::Route::Instance()->Send(*prepare_msg);
+    network::Route::Instance()->SendToLocal(*prepare_msg);
     bft_ptr->init_prepare_timeout();
 
     // (TODO): just for test

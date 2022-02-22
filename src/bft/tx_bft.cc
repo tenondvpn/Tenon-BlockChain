@@ -56,11 +56,6 @@ int TxBft::Prepare(
         return kBftInvalidPackage;
     }
 
-//     if (!DispatchPool::Instance()->LockPool(pool_index())) {
-//         BFT_ERROR("pool index has locked by other leader[%d]!", pool_index());
-//         return kBftInvalidPackage;
-//     }
-
     int32_t invalid_tx_idx = -1;
     int res = kBftSuccess;
     if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
@@ -124,7 +119,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
         }
     }
 
-//     set_pool_index(pool_index);
+    set_pool_index(pool_index);
 //     bft::protobuf::LeaderTxPrepare ltx_prepare;
 //     if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
 //         BFT_ERROR("DoTransaction error.");
@@ -147,8 +142,8 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 
     bft::protobuf::TxBft tx_bft;
     auto ltxp = tx_bft.mutable_ltx_prepare();
-    for (int32_t i = 0; i < ltx_prepare.prepare().prepare_txs_size(); ++i) {
-        ltxp->add_gid(ltx_prepare.prepare().prepare_txs(i).gid());
+    for (uint32_t i = 0; i < tx_vec.size(); ++i) {
+        ltxp->add_gid(tx_vec[i]->tx.gid());
     }
 
     *bft_str = tx_bft.SerializeAsString();
