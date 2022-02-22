@@ -503,21 +503,19 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftPrepareTransactionInfo, gid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftPrepareTransactionInfo, tx_hash_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftPrepareTransactionInfo, address_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftPrepareTransactionInfo, balance_),
   0,
   1,
   2,
-  3,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, prepare_txs_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, prepare_hash_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, prepare_final_hash_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::TbftLeaderPrepare, height_),
   ~0u,
   0,
   1,
@@ -537,8 +535,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::LeaderTxPrepare, block_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::LeaderTxPrepare, prepare_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::LeaderTxPrepare, gid_),
   0,
   1,
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BackupTxPrepare, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::BackupTxPrepare, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -566,6 +566,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::LeaderTxCommit, status_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::LeaderTxCommit, latest_hegight_),
+  1,
   0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::ToAccountTx, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::bft::protobuf::ToAccountTx, _internal_metadata_),
@@ -649,17 +651,17 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 20, 28, sizeof(::tenon::bft::protobuf::TransferItem)},
   { 31, 58, sizeof(::tenon::bft::protobuf::TxInfo)},
   { 80, 100, sizeof(::tenon::bft::protobuf::Block)},
-  { 115, 124, sizeof(::tenon::bft::protobuf::TbftPrepareTransactionInfo)},
-  { 128, 136, sizeof(::tenon::bft::protobuf::TbftLeaderPrepare)},
-  { 139, 146, sizeof(::tenon::bft::protobuf::TxPrepareItem)},
-  { 148, 155, sizeof(::tenon::bft::protobuf::LeaderTxPrepare)},
+  { 115, 123, sizeof(::tenon::bft::protobuf::TbftPrepareTransactionInfo)},
+  { 126, 134, sizeof(::tenon::bft::protobuf::TbftLeaderPrepare)},
+  { 137, 144, sizeof(::tenon::bft::protobuf::TxPrepareItem)},
+  { 146, 154, sizeof(::tenon::bft::protobuf::LeaderTxPrepare)},
   { 157, 163, sizeof(::tenon::bft::protobuf::BackupTxPrepare)},
   { 164, 170, sizeof(::tenon::bft::protobuf::LeaderTxPreCommit)},
   { 171, 177, sizeof(::tenon::bft::protobuf::BackupTxPreCommit)},
-  { 178, 184, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
-  { 185, 191, sizeof(::tenon::bft::protobuf::ToAccountTx)},
-  { 192, 204, sizeof(::tenon::bft::protobuf::TxBft)},
-  { 211, 238, sizeof(::tenon::bft::protobuf::BftMessage)},
+  { 178, 185, sizeof(::tenon::bft::protobuf::LeaderTxCommit)},
+  { 187, 193, sizeof(::tenon::bft::protobuf::ToAccountTx)},
+  { 194, 206, sizeof(::tenon::bft::protobuf::TxBft)},
+  { 213, 240, sizeof(::tenon::bft::protobuf::BftMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -728,46 +730,46 @@ void AddDescriptorsImpl() {
       "n.bft.protobuf.TxInfo\022\021\n\ttimestamp\030\013 \001(\004"
       "\022\030\n\020timeblock_height\030\014 \001(\004\022\026\n\016bls_agg_si"
       "gn_x\030\r \001(\014\022\026\n\016bls_agg_sign_y\030\016 \001(\014\022\025\n\rco"
-      "mmit_bitmap\030\017 \003(\004\"\\\n\032TbftPrepareTransact"
-      "ionInfo\022\013\n\003gid\030\001 \001(\014\022\017\n\007tx_hash\030\002 \001(\014\022\017\n"
-      "\007address\030\003 \001(\014\022\017\n\007balance\030\004 \001(\004\"\212\001\n\021Tbft"
-      "LeaderPrepare\022C\n\013prepare_txs\030\001 \003(\0132..ten"
-      "on.bft.protobuf.TbftPrepareTransactionIn"
-      "fo\022\024\n\014prepare_hash\030\002 \001(\014\022\032\n\022prepare_fina"
-      "l_hash\030\003 \001(\014\".\n\rTxPrepareItem\022\020\n\010acc_add"
-      "r\030\001 \001(\014\022\013\n\003gid\030\002 \001(\014\"s\n\017LeaderTxPrepare\022"
-      "(\n\005block\030\001 \001(\0132\031.tenon.bft.protobuf.Bloc"
-      "k\0226\n\007prepare\030\002 \001(\0132%.tenon.bft.protobuf."
-      "TbftLeaderPrepare\"!\n\017BackupTxPrepare\022\016\n\006"
-      "status\030\001 \001(\005\"#\n\021LeaderTxPreCommit\022\016\n\006sta"
-      "tus\030\001 \001(\005\"#\n\021BackupTxPreCommit\022\016\n\006status"
-      "\030\001 \001(\005\" \n\016LeaderTxCommit\022\016\n\006status\030\001 \001(\005"
-      "\"7\n\013ToAccountTx\022(\n\005block\030\001 \001(\0132\031.tenon.b"
-      "ft.protobuf.Block\"\213\003\n\005TxBft\022*\n\006new_tx\030\001 "
-      "\001(\0132\032.tenon.bft.protobuf.TxInfo\022.\n\005to_tx"
-      "\030\002 \001(\0132\037.tenon.bft.protobuf.ToAccountTx\022"
-      "8\n\013ltx_prepare\030\003 \001(\0132#.tenon.bft.protobu"
-      "f.LeaderTxPrepare\0228\n\013btx_prepare\030\004 \001(\0132#"
-      ".tenon.bft.protobuf.BackupTxPrepare\022<\n\rl"
-      "tx_precommit\030\005 \001(\0132%.tenon.bft.protobuf."
-      "LeaderTxPreCommit\022<\n\rbtx_precommit\030\006 \001(\013"
-      "2%.tenon.bft.protobuf.BackupTxPreCommit\022"
-      "6\n\nltx_commit\030\007 \001(\0132\".tenon.bft.protobuf"
-      ".LeaderTxCommit\"\247\003\n\nBftMessage\022\013\n\003gid\030\001 "
-      "\001(\014\022\020\n\010bft_step\030\002 \001(\005\022\016\n\006leader\030\003 \001(\010\022\016\n"
-      "\006net_id\030\004 \001(\r\022\026\n\016sign_challenge\030\005 \001(\014\022\025\n"
-      "\rsign_response\030\006 \001(\014\022\016\n\006bitmap\030\007 \003(\004\022\r\n\005"
-      "agree\030\010 \001(\010\022\022\n\npool_index\030\t \001(\r\022\r\n\005error"
-      "\030\n \001(\005\022\014\n\004data\030\013 \001(\014\022\024\n\014prepare_hash\030\014 \001"
-      "(\014\022\017\n\007node_ip\030\r \001(\014\022\021\n\tnode_port\030\016 \001(\r\022\r"
-      "\n\005epoch\030\017 \001(\r\022\024\n\014member_index\030\020 \001(\r\022\016\n\006p"
-      "ubkey\030\021 \001(\014\022\027\n\017backup_enc_data\030\022 \001(\014\022\024\n\014"
-      "elect_height\030\023 \001(\004\022\022\n\nbls_sign_x\030\024 \001(\014\022\022"
-      "\n\nbls_sign_y\030\025 \001(\014\022\025\n\rcommit_bitmap\030\026 \003("
-      "\004"
+      "mmit_bitmap\030\017 \003(\004\"K\n\032TbftPrepareTransact"
+      "ionInfo\022\013\n\003gid\030\001 \001(\014\022\017\n\007address\030\002 \001(\014\022\017\n"
+      "\007balance\030\003 \001(\004\"\204\001\n\021TbftLeaderPrepare\022C\n\013"
+      "prepare_txs\030\001 \003(\0132..tenon.bft.protobuf.T"
+      "bftPrepareTransactionInfo\022\032\n\022prepare_fin"
+      "al_hash\030\002 \001(\014\022\016\n\006height\030\003 \001(\004\".\n\rTxPrepa"
+      "reItem\022\020\n\010acc_addr\030\001 \001(\014\022\013\n\003gid\030\002 \001(\014\"\200\001"
+      "\n\017LeaderTxPrepare\022(\n\005block\030\001 \001(\0132\031.tenon"
+      ".bft.protobuf.Block\0226\n\007prepare\030\002 \001(\0132%.t"
+      "enon.bft.protobuf.TbftLeaderPrepare\022\013\n\003g"
+      "id\030\003 \003(\014\"!\n\017BackupTxPrepare\022\016\n\006status\030\001 "
+      "\001(\005\"#\n\021LeaderTxPreCommit\022\016\n\006status\030\001 \001(\005"
+      "\"#\n\021BackupTxPreCommit\022\016\n\006status\030\001 \001(\005\"8\n"
+      "\016LeaderTxCommit\022\016\n\006status\030\001 \001(\005\022\026\n\016lates"
+      "t_hegight\030\002 \001(\004\"7\n\013ToAccountTx\022(\n\005block\030"
+      "\001 \001(\0132\031.tenon.bft.protobuf.Block\"\213\003\n\005TxB"
+      "ft\022*\n\006new_tx\030\001 \001(\0132\032.tenon.bft.protobuf."
+      "TxInfo\022.\n\005to_tx\030\002 \001(\0132\037.tenon.bft.protob"
+      "uf.ToAccountTx\0228\n\013ltx_prepare\030\003 \001(\0132#.te"
+      "non.bft.protobuf.LeaderTxPrepare\0228\n\013btx_"
+      "prepare\030\004 \001(\0132#.tenon.bft.protobuf.Backu"
+      "pTxPrepare\022<\n\rltx_precommit\030\005 \001(\0132%.teno"
+      "n.bft.protobuf.LeaderTxPreCommit\022<\n\rbtx_"
+      "precommit\030\006 \001(\0132%.tenon.bft.protobuf.Bac"
+      "kupTxPreCommit\0226\n\nltx_commit\030\007 \001(\0132\".ten"
+      "on.bft.protobuf.LeaderTxCommit\"\247\003\n\nBftMe"
+      "ssage\022\013\n\003gid\030\001 \001(\014\022\020\n\010bft_step\030\002 \001(\005\022\016\n\006"
+      "leader\030\003 \001(\010\022\016\n\006net_id\030\004 \001(\r\022\026\n\016sign_cha"
+      "llenge\030\005 \001(\014\022\025\n\rsign_response\030\006 \001(\014\022\016\n\006b"
+      "itmap\030\007 \003(\004\022\r\n\005agree\030\010 \001(\010\022\022\n\npool_index"
+      "\030\t \001(\r\022\r\n\005error\030\n \001(\005\022\014\n\004data\030\013 \001(\014\022\024\n\014p"
+      "repare_hash\030\014 \001(\014\022\017\n\007node_ip\030\r \001(\014\022\021\n\tno"
+      "de_port\030\016 \001(\r\022\r\n\005epoch\030\017 \001(\r\022\024\n\014member_i"
+      "ndex\030\020 \001(\r\022\016\n\006pubkey\030\021 \001(\014\022\027\n\017backup_enc"
+      "_data\030\022 \001(\014\022\024\n\014elect_height\030\023 \001(\004\022\022\n\nbls"
+      "_sign_x\030\024 \001(\014\022\022\n\nbls_sign_y\030\025 \001(\014\022\025\n\rcom"
+      "mit_bitmap\030\026 \003(\004"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2481);
+      descriptor, 2496);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "bft/proto/bft.proto", &protobuf_RegisterTypes);
 }
@@ -3710,7 +3712,6 @@ void TbftPrepareTransactionInfo::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TbftPrepareTransactionInfo::kGidFieldNumber;
-const int TbftPrepareTransactionInfo::kTxHashFieldNumber;
 const int TbftPrepareTransactionInfo::kAddressFieldNumber;
 const int TbftPrepareTransactionInfo::kBalanceFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -3731,10 +3732,6 @@ TbftPrepareTransactionInfo::TbftPrepareTransactionInfo(const TbftPrepareTransact
   if (from.has_gid()) {
     gid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.gid_);
   }
-  tx_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_tx_hash()) {
-    tx_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tx_hash_);
-  }
   address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_address()) {
     address_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.address_);
@@ -3745,7 +3742,6 @@ TbftPrepareTransactionInfo::TbftPrepareTransactionInfo(const TbftPrepareTransact
 
 void TbftPrepareTransactionInfo::SharedCtor() {
   gid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  tx_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   balance_ = GOOGLE_ULONGLONG(0);
 }
@@ -3757,7 +3753,6 @@ TbftPrepareTransactionInfo::~TbftPrepareTransactionInfo() {
 
 void TbftPrepareTransactionInfo::SharedDtor() {
   gid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  tx_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -3782,14 +3777,11 @@ void TbftPrepareTransactionInfo::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
       gid_.ClearNonDefaultToEmptyNoArena();
     }
     if (cached_has_bits & 0x00000002u) {
-      tx_hash_.ClearNonDefaultToEmptyNoArena();
-    }
-    if (cached_has_bits & 0x00000004u) {
       address_.ClearNonDefaultToEmptyNoArena();
     }
   }
@@ -3820,22 +3812,10 @@ bool TbftPrepareTransactionInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes tx_hash = 2;
+      // optional bytes address = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_tx_hash()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional bytes address = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_address()));
         } else {
@@ -3844,10 +3824,10 @@ bool TbftPrepareTransactionInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // optional uint64 balance = 4;
-      case 4: {
+      // optional uint64 balance = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
           set_has_balance();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
@@ -3891,21 +3871,15 @@ void TbftPrepareTransactionInfo::SerializeWithCachedSizes(
       1, this->gid(), output);
   }
 
-  // optional bytes tx_hash = 2;
+  // optional bytes address = 2;
   if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->tx_hash(), output);
+      2, this->address(), output);
   }
 
-  // optional bytes address = 3;
+  // optional uint64 balance = 3;
   if (cached_has_bits & 0x00000004u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->address(), output);
-  }
-
-  // optional uint64 balance = 4;
-  if (cached_has_bits & 0x00000008u) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->balance(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->balance(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3930,23 +3904,16 @@ void TbftPrepareTransactionInfo::SerializeWithCachedSizes(
         1, this->gid(), target);
   }
 
-  // optional bytes tx_hash = 2;
+  // optional bytes address = 2;
   if (cached_has_bits & 0x00000002u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->tx_hash(), target);
+        2, this->address(), target);
   }
 
-  // optional bytes address = 3;
+  // optional uint64 balance = 3;
   if (cached_has_bits & 0x00000004u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->address(), target);
-  }
-
-  // optional uint64 balance = 4;
-  if (cached_has_bits & 0x00000008u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->balance(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->balance(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3966,7 +3933,7 @@ size_t TbftPrepareTransactionInfo::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 15u) {
+  if (_has_bits_[0 / 32] & 7u) {
     // optional bytes gid = 1;
     if (has_gid()) {
       total_size += 1 +
@@ -3974,21 +3941,14 @@ size_t TbftPrepareTransactionInfo::ByteSizeLong() const {
           this->gid());
     }
 
-    // optional bytes tx_hash = 2;
-    if (has_tx_hash()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->tx_hash());
-    }
-
-    // optional bytes address = 3;
+    // optional bytes address = 2;
     if (has_address()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->address());
     }
 
-    // optional uint64 balance = 4;
+    // optional uint64 balance = 3;
     if (has_balance()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt64Size(
@@ -4024,20 +3984,16 @@ void TbftPrepareTransactionInfo::MergeFrom(const TbftPrepareTransactionInfo& fro
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 15u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_gid();
       gid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.gid_);
     }
     if (cached_has_bits & 0x00000002u) {
-      set_has_tx_hash();
-      tx_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tx_hash_);
-    }
-    if (cached_has_bits & 0x00000004u) {
       set_has_address();
       address_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.address_);
     }
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000004u) {
       balance_ = from.balance_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -4070,8 +4026,6 @@ void TbftPrepareTransactionInfo::InternalSwap(TbftPrepareTransactionInfo* other)
   using std::swap;
   gid_.Swap(&other->gid_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  tx_hash_.Swap(&other->tx_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
   address_.Swap(&other->address_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(balance_, other->balance_);
@@ -4091,8 +4045,8 @@ void TbftLeaderPrepare::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TbftLeaderPrepare::kPrepareTxsFieldNumber;
-const int TbftLeaderPrepare::kPrepareHashFieldNumber;
 const int TbftLeaderPrepare::kPrepareFinalHashFieldNumber;
+const int TbftLeaderPrepare::kHeightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TbftLeaderPrepare::TbftLeaderPrepare()
@@ -4108,20 +4062,17 @@ TbftLeaderPrepare::TbftLeaderPrepare(const TbftLeaderPrepare& from)
       _has_bits_(from._has_bits_),
       prepare_txs_(from.prepare_txs_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  prepare_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_prepare_hash()) {
-    prepare_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_hash_);
-  }
   prepare_final_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_prepare_final_hash()) {
     prepare_final_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_final_hash_);
   }
+  height_ = from.height_;
   // @@protoc_insertion_point(copy_constructor:tenon.bft.protobuf.TbftLeaderPrepare)
 }
 
 void TbftLeaderPrepare::SharedCtor() {
-  prepare_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   prepare_final_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  height_ = GOOGLE_ULONGLONG(0);
 }
 
 TbftLeaderPrepare::~TbftLeaderPrepare() {
@@ -4130,7 +4081,6 @@ TbftLeaderPrepare::~TbftLeaderPrepare() {
 }
 
 void TbftLeaderPrepare::SharedDtor() {
-  prepare_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   prepare_final_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -4156,14 +4106,10 @@ void TbftLeaderPrepare::Clear() {
 
   prepare_txs_.Clear();
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      prepare_hash_.ClearNonDefaultToEmptyNoArena();
-    }
-    if (cached_has_bits & 0x00000002u) {
-      prepare_final_hash_.ClearNonDefaultToEmptyNoArena();
-    }
+  if (cached_has_bits & 0x00000001u) {
+    prepare_final_hash_.ClearNonDefaultToEmptyNoArena();
   }
+  height_ = GOOGLE_ULONGLONG(0);
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -4190,24 +4136,26 @@ bool TbftLeaderPrepare::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes prepare_hash = 2;
+      // optional bytes prepare_final_hash = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_prepare_hash()));
+                input, this->mutable_prepare_final_hash()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional bytes prepare_final_hash = 3;
+      // optional uint64 height = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_prepare_final_hash()));
+            static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
+          set_has_height();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &height_)));
         } else {
           goto handle_unusual;
         }
@@ -4250,16 +4198,15 @@ void TbftLeaderPrepare::SerializeWithCachedSizes(
   }
 
   cached_has_bits = _has_bits_[0];
-  // optional bytes prepare_hash = 2;
+  // optional bytes prepare_final_hash = 2;
   if (cached_has_bits & 0x00000001u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      2, this->prepare_hash(), output);
+      2, this->prepare_final_hash(), output);
   }
 
-  // optional bytes prepare_final_hash = 3;
+  // optional uint64 height = 3;
   if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      3, this->prepare_final_hash(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->height(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -4285,18 +4232,16 @@ void TbftLeaderPrepare::SerializeWithCachedSizes(
   }
 
   cached_has_bits = _has_bits_[0];
-  // optional bytes prepare_hash = 2;
+  // optional bytes prepare_final_hash = 2;
   if (cached_has_bits & 0x00000001u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->prepare_hash(), target);
+        2, this->prepare_final_hash(), target);
   }
 
-  // optional bytes prepare_final_hash = 3;
+  // optional uint64 height = 3;
   if (cached_has_bits & 0x00000002u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        3, this->prepare_final_hash(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->height(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -4328,18 +4273,18 @@ size_t TbftLeaderPrepare::ByteSizeLong() const {
   }
 
   if (_has_bits_[0 / 32] & 3u) {
-    // optional bytes prepare_hash = 2;
-    if (has_prepare_hash()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->prepare_hash());
-    }
-
-    // optional bytes prepare_final_hash = 3;
+    // optional bytes prepare_final_hash = 2;
     if (has_prepare_final_hash()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
           this->prepare_final_hash());
+    }
+
+    // optional uint64 height = 3;
+    if (has_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->height());
     }
 
   }
@@ -4374,13 +4319,13 @@ void TbftLeaderPrepare::MergeFrom(const TbftLeaderPrepare& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
-      set_has_prepare_hash();
-      prepare_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_hash_);
-    }
-    if (cached_has_bits & 0x00000002u) {
       set_has_prepare_final_hash();
       prepare_final_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.prepare_final_hash_);
     }
+    if (cached_has_bits & 0x00000002u) {
+      height_ = from.height_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -4409,10 +4354,9 @@ void TbftLeaderPrepare::Swap(TbftLeaderPrepare* other) {
 void TbftLeaderPrepare::InternalSwap(TbftLeaderPrepare* other) {
   using std::swap;
   CastToBase(&prepare_txs_)->InternalSwap(CastToBase(&other->prepare_txs_));
-  prepare_hash_.Swap(&other->prepare_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
   prepare_final_hash_.Swap(&other->prepare_final_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  swap(height_, other->height_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
@@ -4727,6 +4671,7 @@ void LeaderTxPrepare::InitAsDefaultInstance() {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int LeaderTxPrepare::kBlockFieldNumber;
 const int LeaderTxPrepare::kPrepareFieldNumber;
+const int LeaderTxPrepare::kGidFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 LeaderTxPrepare::LeaderTxPrepare()
@@ -4739,7 +4684,8 @@ LeaderTxPrepare::LeaderTxPrepare()
 LeaderTxPrepare::LeaderTxPrepare(const LeaderTxPrepare& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_) {
+      _has_bits_(from._has_bits_),
+      gid_(from.gid_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_block()) {
     block_ = new ::tenon::bft::protobuf::Block(*from.block_);
@@ -4790,6 +4736,7 @@ void LeaderTxPrepare::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  gid_.Clear();
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
@@ -4839,6 +4786,18 @@ bool LeaderTxPrepare::MergePartialFromCodedStream(
         break;
       }
 
+      // repeated bytes gid = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->add_gid()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -4878,6 +4837,12 @@ void LeaderTxPrepare::SerializeWithCachedSizes(
       2, this->_internal_prepare(), output);
   }
 
+  // repeated bytes gid = 3;
+  for (int i = 0, n = this->gid_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      3, this->gid(i), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -4907,6 +4872,12 @@ void LeaderTxPrepare::SerializeWithCachedSizes(
         2, this->_internal_prepare(), deterministic, target);
   }
 
+  // repeated bytes gid = 3;
+  for (int i = 0, n = this->gid_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteBytesToArray(3, this->gid(i), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -4924,6 +4895,14 @@ size_t LeaderTxPrepare::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
+  // repeated bytes gid = 3;
+  total_size += 1 *
+      ::google::protobuf::internal::FromIntSize(this->gid_size());
+  for (int i = 0, n = this->gid_size(); i < n; i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
+      this->gid(i));
+  }
+
   if (_has_bits_[0 / 32] & 3u) {
     // optional .tenon.bft.protobuf.Block block = 1;
     if (has_block()) {
@@ -4967,6 +4946,7 @@ void LeaderTxPrepare::MergeFrom(const LeaderTxPrepare& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  gid_.MergeFrom(from.gid_);
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 3u) {
     if (cached_has_bits & 0x00000001u) {
@@ -5002,6 +4982,7 @@ void LeaderTxPrepare::Swap(LeaderTxPrepare* other) {
 }
 void LeaderTxPrepare::InternalSwap(LeaderTxPrepare* other) {
   using std::swap;
+  gid_.InternalSwap(CastToBase(&other->gid_));
   swap(block_, other->block_);
   swap(prepare_, other->prepare_);
   swap(_has_bits_[0], other->_has_bits_[0]);
@@ -5704,6 +5685,7 @@ void LeaderTxCommit::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int LeaderTxCommit::kStatusFieldNumber;
+const int LeaderTxCommit::kLatestHegightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 LeaderTxCommit::LeaderTxCommit()
@@ -5718,12 +5700,16 @@ LeaderTxCommit::LeaderTxCommit(const LeaderTxCommit& from)
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  status_ = from.status_;
+  ::memcpy(&latest_hegight_, &from.latest_hegight_,
+    static_cast<size_t>(reinterpret_cast<char*>(&status_) -
+    reinterpret_cast<char*>(&latest_hegight_)) + sizeof(status_));
   // @@protoc_insertion_point(copy_constructor:tenon.bft.protobuf.LeaderTxCommit)
 }
 
 void LeaderTxCommit::SharedCtor() {
-  status_ = 0;
+  ::memset(&latest_hegight_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&status_) -
+      reinterpret_cast<char*>(&latest_hegight_)) + sizeof(status_));
 }
 
 LeaderTxCommit::~LeaderTxCommit() {
@@ -5754,7 +5740,12 @@ void LeaderTxCommit::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  status_ = 0;
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 3u) {
+    ::memset(&latest_hegight_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&status_) -
+        reinterpret_cast<char*>(&latest_hegight_)) + sizeof(status_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -5777,6 +5768,20 @@ bool LeaderTxCommit::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &status_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 latest_hegight = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_latest_hegight();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &latest_hegight_)));
         } else {
           goto handle_unusual;
         }
@@ -5811,8 +5816,13 @@ void LeaderTxCommit::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional int32 status = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->status(), output);
+  }
+
+  // optional uint64 latest_hegight = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->latest_hegight(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5831,8 +5841,13 @@ void LeaderTxCommit::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional int32 status = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->status(), target);
+  }
+
+  // optional uint64 latest_hegight = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->latest_hegight(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5852,13 +5867,22 @@ size_t LeaderTxCommit::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // optional int32 status = 1;
-  if (has_status()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->status());
-  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional uint64 latest_hegight = 2;
+    if (has_latest_hegight()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->latest_hegight());
+    }
 
+    // optional int32 status = 1;
+    if (has_status()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->status());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -5886,8 +5910,15 @@ void LeaderTxCommit::MergeFrom(const LeaderTxCommit& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.has_status()) {
-    set_status(from.status());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      latest_hegight_ = from.latest_hegight_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      status_ = from.status_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -5915,6 +5946,7 @@ void LeaderTxCommit::Swap(LeaderTxCommit* other) {
 }
 void LeaderTxCommit::InternalSwap(LeaderTxCommit* other) {
   using std::swap;
+  swap(latest_hegight_, other->latest_hegight_);
   swap(status_, other->status_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
