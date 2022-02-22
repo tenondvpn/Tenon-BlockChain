@@ -565,12 +565,11 @@ int TxBft::RootBackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
-    const auto& leader_prepare = tx_bft.ltx_prepare().prepare();
     std::vector<TxItemPtr> tx_vec;
-    for (int32_t i = 0; i < leader_prepare.gid_size(); ++i) {
+    for (int32_t i = 0; i < tx_bft.ltx_prepare().gid_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
-            leader_prepare.gid(i));
+            tx_bft.ltx_prepare().gid(i));
         if (local_tx_info == nullptr) {
             continue;
         }
@@ -672,12 +671,11 @@ int TxBft::BackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
-    const auto& leader_prepare = tx_bft.ltx_prepare().prepare();
     std::vector<TxItemPtr> tx_vec;
-    for (int32_t i = 0; i < leader_prepare.prepare_txs_size(); ++i) {
+    for (int32_t i = 0; i < tx_bft.ltx_prepare().gid_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
-            leader_prepare.prepare_txs(i).gid());
+            tx_bft.ltx_prepare().gid(i));
         if (local_tx_info == nullptr) {
             continue;
         }
