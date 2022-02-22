@@ -570,7 +570,7 @@ int TxBft::RootBackupCheckPrepare(
     for (int32_t i = 0; i < leader_prepare.gid_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
             pool_index(),
-            leader_prepare..gid(i));
+            leader_prepare.gid(i));
         if (local_tx_info == nullptr) {
             continue;
         }
