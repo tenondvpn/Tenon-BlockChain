@@ -144,6 +144,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     auto ltxp = tx_bft.mutable_ltx_prepare();
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
         ltxp->add_gid(tx_vec[i]->uni_gid);
+        BFT_DEBUG("leader get tx: %s", common::Encode::HexEncode(tx_vec[i]->tx.gid()).c_str());
     }
 
     *bft_str = tx_bft.SerializeAsString();

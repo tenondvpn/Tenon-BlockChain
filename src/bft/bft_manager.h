@@ -40,7 +40,7 @@ private:
     int InitBft(
         const transport::protobuf::Header& header,
         bft::protobuf::BftMessage& bft_msg);
-    void RemoveBft(const std::string& gid, bool remove_tx);
+    void RemoveBft(const std::string& gid, bool remove_tx, bool is_leader);
     int LeaderPrepare(BftInterfacePtr& bft_ptr, int32_t pool_mod_idx);
     int BackupPrepare(
         BftInterfacePtr& bft_ptr,

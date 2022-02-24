@@ -5,6 +5,7 @@
 
 #include "bls/bls_manager.h"
 #include "block/account_manager.h"
+#include "bft/dispatch_pool.h"
 #include "common/encode.h"
 #include "common/global_info.h"
 #include "common/time_utils.h"
@@ -456,7 +457,7 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
             auto tx_info = DispatchPool::Instance()->GetTx(
                 pool_index_,
                 iter->second->prpare_block->prepare_txs(i).gid());
-            if (tx_info == nullptr) {
+            if (!tx_info) {
                 assert(false);
                 continue;
             }

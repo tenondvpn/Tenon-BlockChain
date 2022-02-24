@@ -218,7 +218,7 @@ void BftManager::BackupHandleBftMessage(BftItemPtr& bft_item_ptr) {
     }
     
     if (!bft_ptr->aggree()) {
-        RemoveBft(bft_ptr->gid(), false);
+        RemoveBft(bft_ptr->gid(), false, false);
         DispatchPool::Instance()->BftOver(bft_ptr);
     }
 }
@@ -299,7 +299,7 @@ void BftManager::LeaderHandleBftOppose(
 
     if (res == kBftOppose) {
         LeaderCallPrecommitOppose(bft_ptr);
-        RemoveBft(bft_ptr->gid(), false);
+        RemoveBft(bft_ptr->gid(), false, true);
         bft::DispatchPool::Instance()->SetTimeout(bft_ptr->pool_index());
     }
 }
@@ -743,7 +743,12 @@ BftInterfacePtr BftManager::GetBft(const std::string& in_gid, bool leader) {
     return iter->second;
 }
 
-void BftManager::RemoveBft(const std::string& gid, bool remove_tx) {
+void BftManager::RemoveBft(const std::string& in_gid, bool remove_tx, bool leader) {
+    auto gid = in_gid;
+    if (leader) {
+        gid += "L";
+    }
+
     BftInterfacePtr bft_ptr{ nullptr };
     {
         std::lock_guard<std::mutex> guard(bft_hash_map_mutex_);
@@ -1007,7 +1012,7 @@ int BftManager::LeaderCallPrecommit(BftInterfacePtr& bft_ptr) {
             sign,
             common::GlobalInfo::Instance()->id()) != kBftWaitingBackup) {
         BFT_ERROR("leader commit failed!");
-        RemoveBft(bft_ptr->gid(), false);
+        RemoveBft(bft_ptr->gid(), false, true);
         return kBftError;
     }
 
@@ -1283,7 +1288,7 @@ int BftManager::LeaderCallCommit(
     }
     
     network::Route::Instance()->Send(msg);
-    RemoveBft(bft_ptr->gid(), true);
+    RemoveBft(bft_ptr->gid(), true, true);
 #ifdef TENON_UNITTEST
     leader_commit_msg_ = msg;
 #endif
@@ -1367,7 +1372,7 @@ int BftManager::BackupCommit(
     }
 
     // start new bft
-    RemoveBft(bft_ptr->gid(), true);
+    RemoveBft(bft_ptr->gid(), true, false);
     BFT_DEBUG("BackupCommit success waiting pool_index: %u, bft gid: %s",
         bft_ptr->pool_index(), common::Encode::HexEncode(bft_ptr->gid()).c_str());
     return kBftSuccess;
