@@ -944,7 +944,6 @@ void AccountManager::SendRefreshHeightsRequest() {
 
     msg.set_data(block_msg.SerializeAsString());
     dht->RandomSend(msg);
-    BLOCK_DEBUG("sent refresh max height.");
 }
 
 void AccountManager::SendRefreshHeightsResponse(const transport::protobuf::Header& header) {
@@ -989,13 +988,13 @@ int AccountManager::HandleRefreshHeightsReq(
 int AccountManager::HandleRefreshHeightsRes(
         const transport::protobuf::Header& header,
         protobuf::BlockMessage& block_msg) {
-    std::string pool_heights;
+//     std::string pool_heights;
     for (int32_t i = 0; i < block_msg.ref_heights_res().heights_size(); ++i) {
         block_pools_[i]->SetMaxHeight(block_msg.ref_heights_res().heights(i));
-        pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i)) + ",";
+//         pool_heights += std::to_string(i) + ":" + std::to_string(block_msg.ref_heights_res().heights(i)) + ",";
     }
 
-    BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
+//     BLOCK_DEBUG("HandleRefreshHeightsRes %s", pool_heights.c_str());
 //     prev_refresh_heights_tm_ = common::TimeUtils::TimestampSeconds();
     return kBlockSuccess;
 }

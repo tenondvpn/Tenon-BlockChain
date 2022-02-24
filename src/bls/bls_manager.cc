@@ -455,7 +455,6 @@ void BlsManager::CheckAggSignValid(
     uint32_t i = start_pos;
     uint32_t valid_count = 0;
     uint32_t min_pos = common::kInvalidUint32;
-    auto test_common_public_key = libff::alt_bn128_G2::zero();
     while (true) {
         if (i >= n) {
             i = 0;
@@ -475,7 +474,6 @@ void BlsManager::CheckAggSignValid(
             continue;
         }
 
-        test_common_public_key = test_common_public_key + finish_item->all_public_keys[i];
         all_signs[i] = finish_item->all_bls_signs[i];
         idx_vec[i] = i + 1;
         ++valid_count;
@@ -501,19 +499,6 @@ void BlsManager::CheckAggSignValid(
             finish_item,
             all_signs,
             idx_vec)) {
-        if (CheckAndVerifyAll(
-                t,
-                n,
-                test_common_public_key,
-                finish_item,
-                all_signs,
-                idx_vec)) {
-            BLS_ERROR("success");
-            std::cout << "success" << std::endl;
-        } else {
-            BLS_ERROR("error");
-            std::cout << "error" << std::endl;
-        }
         return;
     }
 

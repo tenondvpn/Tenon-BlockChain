@@ -580,8 +580,8 @@ int ElectPoolManager::SelectLeader(
 
     int32_t mode_idx = 0;
     std::unordered_map<std::string, int32_t> leader_mode_idx_map;
-    ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, random: %lu",
-        expect_leader_count, leader_nodes.size(), members->size(), vss::VssManager::Instance()->EpochRandom());
+//     ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, random: %lu",
+//         expect_leader_count, leader_nodes.size(), members->size(), vss::VssManager::Instance()->EpochRandom());
     for (int32_t i = 0; i < ec_block->prev_members().bls_pubkey_size(); ++i) {
         ec_block->mutable_prev_members()->mutable_bls_pubkey(i)->set_pool_idx_mod_num(-1);
     }
@@ -593,8 +593,8 @@ int ElectPoolManager::SelectLeader(
 
         auto* bls_key = ec_block->mutable_prev_members()->mutable_bls_pubkey((*iter)->index);
         bls_key->set_pool_idx_mod_num(mode_idx++);
-        ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, index: %d",
-            expect_leader_count, leader_nodes.size(), members->size(), (*iter)->index);
+//         ELECT_ERROR("SelectLeader expect_leader_count: %u, leader_nodes: size: %d, all size: %d, index: %d",
+//             expect_leader_count, leader_nodes.size(), members->size(), (*iter)->index);
     }
 
     if (mode_idx != expect_leader_count) {

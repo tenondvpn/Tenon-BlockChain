@@ -1203,8 +1203,6 @@ void BftManager::RandomNodesToBroadcastBlock(
 void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft_ptr) {
     auto& tenon_block = bft_ptr->prpare_block();
     tenon_block->set_pool_index(bft_ptr->pool_index());
-    std::cout << "tenon_block->set_pool_index: " << bft_ptr->pool_index() << std::endl;
-    BFT_DEBUG("tenon_block->set_pool_index: %d", bft_ptr->pool_index());
     const auto& prepare_bitmap_data = bft_ptr->prepare_bitmap().data();
     std::vector<uint64_t> bitmap_data;
     for (uint32_t i = 0; i < prepare_bitmap_data.size(); ++i) {

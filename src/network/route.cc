@@ -51,7 +51,6 @@ int Route::SendToLocal(const transport::protobuf::Header& message) {
 
 int Route::Send(const transport::protobuf::Header& message) {
     uint32_t des_net_id = dht::DhtKeyManager::DhtKeyGetNetId(message.des_dht_key());
-    NETWORK_DEBUG("now send by route des: %d", des_net_id);
     dht::BaseDhtPtr dht_ptr{ nullptr };
     if (message.universal() ||
             des_net_id == network::kUniversalNetworkId ||
@@ -63,7 +62,6 @@ int Route::Send(const transport::protobuf::Header& message) {
 
     if (dht_ptr != nullptr) {
         if (message.has_broadcast()) {
-            NETWORK_DEBUG("broadcast message init: %u, hash: %lu", message.id(), message.hash());
             broadcast_->Broadcasting(dht_ptr, message);
         } else {
             if (message.has_to_ip() && message.has_to_port()) {
@@ -78,8 +76,6 @@ int Route::Send(const transport::protobuf::Header& message) {
             }
         }
         return kNetworkSuccess;
-    } else {
-        NETWORK_DEBUG("route by universal.");
     }
     // this node not in this network, relay by universal
     RouteByUniversal(message);
