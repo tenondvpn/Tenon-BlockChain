@@ -222,20 +222,6 @@ public:
                 std::chrono::microseconds(kBftLeaderPrepareWaitPeriod));
     }
 
-    std::vector<std::string> bft_item_vec() {
-        std::lock_guard<std::mutex> guard(bft_item_vec_mutex_);
-        return bft_item_vec_;
-    }
-
-    void push_bft_item_vec(const std::string& gid) {
-        std::lock_guard<std::mutex> guard(bft_item_vec_mutex_);
-        bft_item_vec_.push_back(gid);
-    }
-
-    uint32_t bft_item_count() {
-        return bft_item_vec_.size();
-    }
-
     std::shared_ptr<bft::protobuf::Block>& prpare_block() {
         return prpare_block_;
     }
@@ -451,7 +437,6 @@ protected:
     std::string prepare_hash_;
     std::chrono::steady_clock::time_point prepare_timeout_;
     std::chrono::steady_clock::time_point precommit_timeout_;
-    std::vector<std::string> bft_item_vec_;
     std::mutex bft_item_vec_mutex_;
     std::shared_ptr<bft::protobuf::Block> prpare_block_{ nullptr };
     std::unordered_set<std::string> precommit_oppose_set_;

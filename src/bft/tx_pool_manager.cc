@@ -478,6 +478,7 @@ void TxPoolManager::BftOver(BftInterfacePtr& bft_ptr) {
     }
 
     timeout_pools_[bft_ptr->pool_index()] = 0;
+    BFT_DEBUG("bft over called and release pool lock: %d", bft_ptr->pool_index());
 }
 
 void TxPoolManager::CheckTimeoutTx() {

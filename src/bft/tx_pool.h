@@ -58,7 +58,7 @@ struct TxItem {
     std::chrono::steady_clock::time_point timeout;
     std::chrono::steady_clock::time_point delta_time;
     uint64_t time_valid{ 0 };
-    uint32_t index{ common::kInvalidPoolIndex };
+    uint64_t index{ -1 };
     std::string uni_gid;
     bool valid{ true };
     uint64_t timeblock_tx_tm_sec_{ 0 };

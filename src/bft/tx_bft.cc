@@ -313,7 +313,6 @@ int TxBft::RootBackupCheckCreateAccountAddressPrepare(
             }
         }
 
-        push_bft_item_vec(tx_info.gid());
         add_item_index_vec(local_tx_info->index);
     }
 
@@ -386,7 +385,6 @@ int TxBft::RootBackupCheckTimerBlockPrepare(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    push_bft_item_vec(tx_info.gid());
     add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
@@ -458,7 +456,6 @@ int TxBft::RootBackupCheckElectConsensusShardPrepare(const bft::protobuf::Block&
         return kBftError;
     }
 
-    push_bft_item_vec(tx_info.gid());
     add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
@@ -540,7 +537,6 @@ int TxBft::RootBackupCheckFinalStatistic(const bft::protobuf::Block& block) {
         return kBftError;
     }
 
-    push_bft_item_vec(tx_info.gid());
     add_item_index_vec(local_tx_info->index);
     auto block_hash = GetBlockHash(block);
     if (block_hash != block.hash()) {
@@ -593,11 +589,6 @@ int TxBft::BackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
-    if (!tx_bft.ltx_prepare().has_prepare()) {
-        BFT_ERROR("prepare has no transaction!");
-        return kBftInvalidPackage;
-    }
-
     std::vector<TxItemPtr> tx_vec;
     for (int32_t i = 0; i < tx_bft.ltx_prepare().gid_size(); ++i) {
         TxItemPtr local_tx_info = DispatchPool::Instance()->GetTx(
@@ -621,13 +612,15 @@ int TxBft::BackupCheckPrepare(
         return kBftInvalidPackage;
     }
 
-    bft::protobuf::LeaderTxPrepare ltx_msg;
-    if (DoTransaction(tx_vec, ltx_msg) != kBftSuccess) {
+
+    bft::protobuf::TxBft res_tx_bft;
+    auto ltx_msg = res_tx_bft.mutable_ltx_prepare();
+    if (DoTransaction(tx_vec, *ltx_msg) != kBftSuccess) {
         return kBftInvalidPackage;
     }
 
-    ltx_msg.clear_block();
-    *prepare = ltx_msg.SerializeAsString();
+    ltx_msg->clear_block();
+    *prepare = res_tx_bft.SerializeAsString();
     return kBftSuccess;
 }
 
@@ -1495,8 +1488,6 @@ int TxBft::BackupNormalCheck(
         acc_balance_map[local_tx_ptr->tx.from()] = from_balance;
     }
     
-
-    push_bft_item_vec(local_tx_ptr->tx.gid());
     return kBftSuccess;
 }
 
@@ -1768,7 +1759,6 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
 
         tx.set_pool_index(local_pool_idx);
         add_item_index_vec(tx_vec[i]->index);
-        push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -1778,6 +1768,7 @@ void TxBft::RootLeaderCreateAccountAddressBlock(
         return;
     }
 
+    tenon_block.set_pool_index(pool_index());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1834,7 +1825,7 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
     }
 
     add_item_index_vec(tx_vec[0]->index);
-    push_bft_item_vec(tx_vec[0]->tx.gid());
+    tenon_block.set_pool_index(pool_index());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1928,7 +1919,7 @@ void TxBft::RootLeaderCreateFinalStatistic(
     }
 
     add_item_index_vec(tx_vec[0]->index);
-    push_bft_item_vec(tx_vec[0]->tx.gid());
+    tenon_block.set_pool_index(pool_index());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
@@ -1982,7 +1973,6 @@ void TxBft::RootLeaderCreateTimerBlock(
     }
 
     add_item_index_vec(tx_vec[0]->index);
-    push_bft_item_vec(tx_vec[0]->tx.gid());
     tenon_block.set_pool_index(pool_idx);
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
@@ -2077,7 +2067,6 @@ void TxBft::DoTransactionAndCreateTxBlock(
         }
 
         add_item_index_vec(tx_vec[i]->index);
-        push_bft_item_vec(tx_vec[i]->tx.gid());
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
@@ -2102,6 +2091,7 @@ void TxBft::DoTransactionAndCreateTxBlock(
         return;
     }
 
+    tenon_block.set_pool_index(pool_index());
     tenon_block.set_prehash(pool_hash);
     tenon_block.set_version(common::kTransactionVersion);
     tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());

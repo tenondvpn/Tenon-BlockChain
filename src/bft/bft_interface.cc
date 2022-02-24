@@ -17,7 +17,6 @@ namespace bft {
 
 BftInterface::BftInterface() {
     reset_timeout();
-    bft_item_vec_.reserve(kBftOneConsensusMaxCount);
 }
 
 int BftInterface::Init() {
@@ -452,6 +451,18 @@ int BftInterface::LeaderCreatePreCommitAggChallenge(const std::string& prpare_ha
         }
 
         prepare_latest_height_ = max_height;
+        clear_item_index_vec();
+        for (int32_t i = 0; i < iter->second->prpare_block->prepare_txs_size(); ++i) {
+            auto tx_info = DispatchPool::Instance()->GetTx(
+                pool_index_,
+                iter->second->prpare_block->prepare_txs(i).gid());
+            if (tx_info == nullptr) {
+                assert(false);
+                continue;
+            }
+
+            add_item_index_vec(tx_info->index);
+        }
     } catch (std::exception& e) {
         BFT_ERROR("catch bls exception: %s", e.what());
         return kBftError;
@@ -501,17 +512,6 @@ int BftInterface::LeaderCreateCommitAggSign() {
             BFT_ERROR("leader verify leader commit agg sign failed!");
             return kBftError;
         }
-//         if (bls::BlsSign::Verify(
-//                 t,
-//                 n,
-//                 *bls_commit_agg_sign_,
-//                 precommit_hash_,
-//                 elect::ElectManager::Instance()->GetCommonPublicKey(
-//                 elect_height_,
-//                 network_id_)) != bls::kBlsSuccess) {
-//             BFT_ERROR("leader verify leader commit agg sign failed!");
-//             return kBftError;
-//         }
 
         bls_commit_agg_sign_->to_affine_coordinates();
     } catch (...) {

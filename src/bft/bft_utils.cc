@@ -56,25 +56,11 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
 
 std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
     std::string all_msg;
-    block::DbAccountInfoPtr account_info = nullptr;
-    if (tx_info.to_add()) {
-        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.from());
-    } else {
-        account_info = block::AccountManager::Instance()->GetAcountInfo(tx_info.to());
-    }
-
-    uint64_t balance = 0;
-    if (account_info != nullptr) {
-        if (!account_info->GetBalance(&balance) != block::kBlockSuccess) {
-            return "";
-        }
-    }
-
     // just use before tx balance
     all_msg += tx_info.gid() + std::to_string(tx_info.status()) + tx_info.from() +
-        std::to_string(balance) + std::to_string(tx_info.gas_limit()) +
+        std::to_string(tx_info.balance()) + std::to_string(tx_info.gas_limit()) +
         std::to_string(tx_info.gas_price()) + tx_info.to() +
-        std::to_string(tx_info.amount());
+        std::to_string(tx_info.amount()) + std::to_string(tx_info.type());
     for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
         all_msg += tx_info.attr(i).key() + tx_info.attr(i).value();
     }
@@ -88,6 +74,7 @@ std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
             std::to_string(tx_info.transfers(i).amount());
     }
 
+    BLS_DEBUG("TTTT GetPrepareTxsHash gid: %s, type: %d", common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.type());
     return common::Hash::keccak256(all_msg);
 }
 
@@ -100,7 +87,7 @@ std::string GetBlockHash(const protobuf::Block& block) {
             continue;
         }
 
-        tbft_prepare_txs_str_for_hash += tx_hash + std::to_string(block.tx_list(i).balance());
+        tbft_prepare_txs_str_for_hash += tx_hash;
         std::string text_addr;
         if (block.tx_list(i).to_add()) {
             tbft_prepare_txs_str_for_hash += block.tx_list(i).to();
@@ -110,7 +97,7 @@ std::string GetBlockHash(const protobuf::Block& block) {
             text_addr = block.tx_list(i).from();
         }
 
-        BLS_DEBUG("tx hash: %s, addr: %s, balance: %lu",
+        BLS_DEBUG("TTTT tx hash: %s, addr: %s, balance: %lu",
             common::Encode::HexEncode(tx_hash).c_str(),
             common::Encode::HexEncode(text_addr).c_str(),
             block.tx_list(i).balance());
@@ -127,7 +114,7 @@ std::string GetBlockHash(const protobuf::Block& block) {
         std::to_string(block.pool_index()) +
         std::to_string(block.height());
     tbft_prepare_txs_str_for_hash += block_info;
-    BFT_DEBUG("block_info: %s, prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, height: %lu, get block hash: %s",
+    BFT_DEBUG("TTTT block_info: %s, prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, height: %lu, get block hash: %s",
         common::Encode::HexEncode(block_info).c_str(),
         common::Encode::HexEncode(block.prehash()).c_str(),
         block.timeblock_height(),
