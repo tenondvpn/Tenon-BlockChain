@@ -42,8 +42,6 @@ public:
     int LeaderPrecommitOk(
         const bft::protobuf::LeaderTxPrepare& tx_prepare,
         uint32_t index,
-        const std::string& bft_gid,
-        uint32_t msg_id,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id);
     int LeaderCommitOk(

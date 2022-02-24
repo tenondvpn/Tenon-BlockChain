@@ -140,6 +140,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
 //         return kBftError;
 //     }
 
+    LeaderCallTransaction(tx_vec);
     bft::protobuf::TxBft tx_bft;
     auto ltxp = tx_bft.mutable_ltx_prepare();
     for (uint32_t i = 0; i < tx_vec.size(); ++i) {
@@ -151,6 +152,35 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     BFT_INFO("leader check leader success elect height: %lu, local_member_index_: %lu, gid: %s",
         elect_height_, local_member_index_, common::Encode::HexEncode(gid_).c_str());
     return kBftSuccess;
+}
+
+void TxBft::LeaderCallTransaction(const std::vector<TxItemPtr>& tx_vec) {
+    bft::protobuf::TxBft res_tx_bft;
+    auto ltx_msg = res_tx_bft.mutable_ltx_prepare();
+    if (DoTransaction(tx_vec, *ltx_msg) != kBftSuccess) {
+        BFT_ERROR("leader do transaction failed!");
+        return;
+    }
+
+    libff::alt_bn128_G1 bn_sign;
+    if (bls::BlsManager::Instance()->Sign(
+            min_aggree_member_count(),
+            member_count(),
+            local_sec_key(),
+            prepare_block()->prepare_final_hash(),
+            &bn_sign) != bls::kBlsSuccess) {
+        BFT_ERROR("leader do transaction sign data failed!");
+        return;
+    }
+
+    if (LeaderPrecommitOk(
+            *ltx_msg,
+            leader_index_,
+            bn_sign,
+            leader_mem_ptr_->id) != bls::kBlsSuccess) {
+        BFT_ERROR("leader call LeaderPrecommitOk failed!");
+        return;
+    }
 }
 
 int TxBft::DoTransaction(

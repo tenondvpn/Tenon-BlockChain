@@ -246,8 +246,6 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
 int BftInterface::LeaderPrecommitOk(
         const bft::protobuf::LeaderTxPrepare& tx_prepare,
         uint32_t index,
-        const std::string& bft_gid,
-        uint32_t msg_id,
         const libff::alt_bn128_G1& backup_sign,
         const std::string& id) {
     BFT_DEBUG("node index: %d, final prepare hash: %s",

@@ -138,6 +138,7 @@ private:
     int DoTransaction(
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg);
+    void LeaderCallTransaction(const std::vector<TxItemPtr>& tx_vec);
 
     DISALLOW_COPY_AND_ASSIGN(TxBft);
 };

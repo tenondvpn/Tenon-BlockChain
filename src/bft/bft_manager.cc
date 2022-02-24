@@ -928,8 +928,6 @@ int BftManager::LeaderPrecommit(
     int res = bft_ptr->LeaderPrecommitOk(
         tx_bft.ltx_prepare(),
         bft_msg.member_index(),
-        bft_ptr->gid(),
-        header.id(),
         sign,
         member_ptr->id);
     if (!bft_msg.agree()) {
