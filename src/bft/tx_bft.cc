@@ -154,7 +154,7 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     return kBftSuccess;
 }
 
-void TxBft::LeaderCallTransaction(const std::vector<TxItemPtr>& tx_vec) {
+void TxBft::LeaderCallTransaction(std::vector<TxItemPtr>& tx_vec) {
     bft::protobuf::TxBft res_tx_bft;
     auto ltx_msg = res_tx_bft.mutable_ltx_prepare();
     if (DoTransaction(tx_vec, *ltx_msg) != kBftSuccess) {
