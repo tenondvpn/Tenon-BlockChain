@@ -702,7 +702,6 @@ int BftManager::StartBft(const std::string& gid1, int32_t pool_mod_index) {
             DispatchPool::Instance()->BftOver(bft_ptr);
         }
 
-        BFT_ERROR("LeaderPrepare bft failed!");
         return leader_pre;
     }
 
