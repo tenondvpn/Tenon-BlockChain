@@ -1236,7 +1236,7 @@ void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft
         }
     }
 
-    auto queue_item_ptr = std::make_shared<BlockToDbItem>(bft_ptr->prpare_block());
+    auto queue_item_ptr = std::make_shared<BlockToDbItem>(tenon_block);
     if (block::AccountManager::Instance()->AddBlockItemToCache(
             queue_item_ptr->block_ptr,
             queue_item_ptr->db_batch) != block::kBlockSuccess) {
@@ -1247,6 +1247,7 @@ void BftManager::HandleLocalCommitBlock(int32_t thread_idx, BftInterfacePtr& bft
     block_queue_[thread_idx].push(queue_item_ptr);
     bft_ptr->set_status(kBftCommited);
     RandomNodesToBroadcastBlock(bft_ptr, tenon_block, brd_bitmap);
+    BFT_DEBUG("add new block network: %d, height: %lu", tenon_block->network_id(), tenon_block->height());
     assert(bft_ptr->prpare_block()->bitmap_size() == tenon_block->bitmap_size());
 }
 

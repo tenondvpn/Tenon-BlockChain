@@ -379,6 +379,8 @@ int AccountManager::AddBlockItemToCache(
         const std::shared_ptr<bft::protobuf::Block>& block_item,
         db::DbWriteBach& db_batch) {
     if (!block_hash_limit_set_.Push(block_item->hash())) {
+        BLOCK_ERROR("block_hash_limit_set_.Push error: %s",
+            common::Encode::HexEncode(block_item->hash()).c_str());
         return kBlockSuccess;
     }
 
@@ -442,6 +444,10 @@ int AccountManager::AddBlockItemToCache(
         }
     }
 
+    BLOCK_ERROR("set pool block_item->network_id(): %d, common::GlobalInfo::Instance()->network_id(): %d, consistent_pool_index: %d",
+        block_item->network_id(),
+        common::GlobalInfo::Instance()->network_id(),
+        consistent_pool_index);
     if (block_item->network_id() == common::GlobalInfo::Instance()->network_id() ||
             consistent_pool_index == common::kRootChainPoolIndex ||
             (block_item->network_id() >= network::kRootCongressNetworkId &&
@@ -811,6 +817,7 @@ int AccountManager::GetBlockInfo(
         return kBlockError;
     }
 
+    BLOCK_DEBUG("FFFF get pool index: %d, height: %lu", pool_idx, *height);
     return kBlockSuccess;
 }
 
@@ -821,6 +828,8 @@ void AccountManager::SetPool(
     uint64_t height = 0;
     if (block_pools_[pool_index]->GetHeight(&height) == block::kBlockSuccess) {
         if (height > block_item->height()) {
+            BLOCK_DEBUG("FFFF set net: %d, pool index: %d, old: %lu, height: %lu",
+                block_item->network_id(), pool_index, height, block_item->height());
             return;
         }
     }
@@ -831,6 +840,8 @@ void AccountManager::SetPool(
         block_item->timeblock_height(),
         block_item->height(),
         db_batch);
+    BLOCK_DEBUG("FFFF set net: %d, pool index: %d, height: %lu",
+        block_item->network_id(), pool_index, block_item->height());
 }
 
 std::string AccountManager::GetPoolBaseAddr(uint32_t pool_index) {

@@ -74,7 +74,7 @@ std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
             std::to_string(tx_info.transfers(i).amount());
     }
 
-//     BLS_DEBUG("TTTT GetPrepareTxsHash gid: %s, type: %d", common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.type());
+    BLS_DEBUG("TTTT GetPrepareTxsHash gid: %s, type: %d", common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.type());
     return common::Hash::keccak256(all_msg);
 }
 
@@ -96,11 +96,11 @@ std::string GetBlockHash(const protobuf::Block& block) {
             tbft_prepare_txs_str_for_hash += block.tx_list(i).from();
             text_addr = block.tx_list(i).from();
         }
-// 
-//         BLS_DEBUG("TTTT tx hash: %s, addr: %s, balance: %lu",
-//             common::Encode::HexEncode(tx_hash).c_str(),
-//             common::Encode::HexEncode(text_addr).c_str(),
-//             block.tx_list(i).balance());
+
+        BLS_DEBUG("TTTT tx hash: %s, addr: %s, balance: %lu",
+            common::Encode::HexEncode(tx_hash).c_str(),
+            common::Encode::HexEncode(text_addr).c_str(),
+            block.tx_list(i).balance());
     }
 
     if (tbft_prepare_txs_str_for_hash.empty()) {
@@ -114,15 +114,15 @@ std::string GetBlockHash(const protobuf::Block& block) {
         std::to_string(block.pool_index()) +
         std::to_string(block.height());
     tbft_prepare_txs_str_for_hash += block_info;
-//     BFT_DEBUG("TTTT block_info: %s, prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, height: %lu, get block hash: %s",
-//         common::Encode::HexEncode(block_info).c_str(),
-//         common::Encode::HexEncode(block.prehash()).c_str(),
-//         block.timeblock_height(),
-//         block.electblock_height(),
-//         block.network_id(),
-//         block.pool_index(),
-//         block.height(),
-//         common::Encode::HexEncode(common::Hash::keccak256(tbft_prepare_txs_str_for_hash)).c_str());
+    BFT_DEBUG("TTTT block_info: %s, prehash: %s, timeblock_height: %lu, electblock_height: %lu, network_id: %d, pool_index: %d, height: %lu, get block hash: %s",
+        common::Encode::HexEncode(block_info).c_str(),
+        common::Encode::HexEncode(block.prehash()).c_str(),
+        block.timeblock_height(),
+        block.electblock_height(),
+        block.network_id(),
+        block.pool_index(),
+        block.height(),
+        common::Encode::HexEncode(common::Hash::keccak256(tbft_prepare_txs_str_for_hash)).c_str());
     return common::Hash::keccak256(tbft_prepare_txs_str_for_hash);
 }
 

@@ -77,10 +77,10 @@ void VssManager::OnTimeBlock(
             auto offset_tm = 13l * 1000l * 1000l;
             if (begin_time_us_ < tmblock_tm + offset_tm) {
                 kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
-                first_offset = tmblock_tm + offset_tm - begin_time_us_;
+                first_offset = tmblock_tm + offset_tm - begin_time_us_ + std::rand() % 10;
                 begin_time_us_ = tmblock_tm + offset_tm - kDkgPeriodUs;
-                second_offset = first_offset + kDkgPeriodUs * 3;
-                third_offset = first_offset + kDkgPeriodUs * 7;
+                second_offset = first_offset + kDkgPeriodUs * 3 + std::rand() % 10;
+                third_offset = first_offset + kDkgPeriodUs * 7 + std::rand() % 10;
             }
 
             // waiting elect block coming.

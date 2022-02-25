@@ -2131,6 +2131,7 @@ void TxBft::DoTransactionAndCreateTxBlock(
     tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
         common::GlobalInfo::Instance()->network_id()));
+    tenon_block.set_hash(GetBlockHash(tenon_block));
     //ltx_msg.set_prepare_hash(GetBlockHash(tenon_block));
 }
 

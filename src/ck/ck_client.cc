@@ -186,6 +186,8 @@ bool ClickHouseClient::AddNewBlock(const std::shared_ptr<bft::protobuf::Block>& 
         }
     }
 
+    TENON_DEBUG("add new ck block block_shard_id: %d, block_height: %lu", block_shard_id, block_height);
+
     blocks.AppendColumn("shard_id", block_shard_id);
     blocks.AppendColumn("pool_index", block_pool_index);
     blocks.AppendColumn("height", block_height);

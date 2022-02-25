@@ -206,7 +206,7 @@ bool BftInterface::BackupCheckLeaderValid(const bft::protobuf::BftMessage& bft_m
     if (members == nullptr ||
             common_pk_ == libff::alt_bn128_G2::zero() ||
             local_sec_key_ == libff::alt_bn128_Fr::zero()) {
-        if (members == nullptr) {
+        if (members != nullptr) {
             BFT_ERROR("get members failed!. bft_msg.member_index(): %d, members->size(): %d, "
                 "common_pk_ == libff::alt_bn128_G2::zero(), local_sec_key_ == libff::alt_bn128_Fr::zero()",
                 bft_msg.member_index(), members->size(),
