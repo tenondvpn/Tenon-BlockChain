@@ -35,14 +35,14 @@ void VssManager::OnTimeBlock(
         uint64_t tm_height,
         uint64_t elect_height,
         uint64_t epoch_random) {
-    VSS_DEBUG("OnTimeBlock comming tm_block_tm: %lu, tm_height: %lu, elect_height: %lu, epoch_random: %lu",
-        tm_block_tm, tm_height, elect_height, epoch_random);
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
-            GlobalInfo::Instance()->network_id() !=
+            common::GlobalInfo::Instance()->network_id() !=
             (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
         return;
     }
 
+    VSS_DEBUG("OnTimeBlock comming tm_block_tm: %lu, tm_height: %lu, elect_height: %lu, epoch_random: %lu",
+        tm_block_tm, tm_height, elect_height, epoch_random);
     {
         std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
         if ((max_count_ * 3 / 2 + 1) < member_count_ || max_count_random_ == 0) {
@@ -65,7 +65,7 @@ void VssManager::OnTimeBlock(
                 return;
             }
 
-            if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex ||
+            if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex &&
                     elect::ElectManager::Instance()->local_waiting_node_member_index() == elect::kInvalidMemberIndex) {
                 VSS_ERROR("not elected.");
                 return;
@@ -287,7 +287,13 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
     if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
             common::GlobalInfo::Instance()->network_id() !=
             (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
-        VSS_DEBUG("invalid vss message network_id: %d", common::GlobalInfo::Instance()->network_id());
+        //VSS_DEBUG("invalid vss message network_id: %d", common::GlobalInfo::Instance()->network_id());
+        return;
+    }
+
+    if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex &&
+            elect::ElectManager::Instance()->local_waiting_node_member_index() == elect::kInvalidMemberIndex) {
+        VSS_ERROR("not elected.");
         return;
     }
 
@@ -298,8 +304,8 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    if (vss_msg.type() != kVssFinalRandom && local_index_ == elect::kInvalidMemberIndex) {
-        VSS_DEBUG("invalid vss message: %d, %d", vss_msg.type(), local_index_);
+    if (vss_msg.type() != kVssFinalRandom/* && local_index_ == elect::kInvalidMemberIndex*/) {
+        VSS_DEBUG("invalid vss message: %d, %d", vss_msg.type());
         return;
     }
 
@@ -431,12 +437,12 @@ void VssManager::HandleThirdPeriodRandom(const protobuf::VssMessage& vss_msg) {
         return;
     }
 
-    if (mem_index == elect::kInvalidMemberIndex) {
-        VSS_ERROR("mem_index == elect::kInvalidMemberIndex, id: %s, pk: %s",
-            common::Encode::HexEncode(id).c_str(),
-            common::Encode::HexEncode(vss_msg.pubkey()).c_str());
-        return;
-    }
+//     if (mem_index == elect::kInvalidMemberIndex) {
+//         VSS_ERROR("mem_index == elect::kInvalidMemberIndex, id: %s, pk: %s",
+//             common::Encode::HexEncode(id).c_str(),
+//             common::Encode::HexEncode(vss_msg.pubkey()).c_str());
+//         return;
+//     }
 
     std::string hash_str = std::to_string(vss_msg.random()) + "_" +
         std::to_string(vss_msg.tm_height()) + "_" +

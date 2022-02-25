@@ -488,6 +488,10 @@ void ElectManager::ProcessNewElectBlock(
     auto& in = elect_block.in();
     auto shard_members_ptr = std::make_shared<Members>();
     uint32_t member_index = 0;
+    if (elect_block.shard_network_id() == common::GlobalInfo::Instance()->network_id()) {
+        local_waiting_node_member_index_ = kInvalidMemberIndex;
+    }
+
     for (int32_t i = 0; i < in.size(); ++i) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(in[i].pubkey());
         shard_members_ptr->push_back(std::make_shared<BftMember>(
@@ -505,10 +509,12 @@ void ElectManager::ProcessNewElectBlock(
 
         now_elected_ids_.insert(id);
         ELECT_DEBUG("FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: %d,"
-            "member leader: %s,, (*iter)->pool_index_mod_num: %d",
+            "member leader: %s,, (*iter)->pool_index_mod_num: %d, "
+            "local_waiting_node_member_index_: %d",
             elect_block.shard_network_id(),
             common::Encode::HexEncode(id).c_str(),
-            in[i].pool_idx_mod_num());
+            in[i].pool_idx_mod_num(),
+            local_waiting_node_member_index_);
 //         std::cout << "FFFFFFFFFFFFFFFFFFF ProcessNewElectBlock network: "
 //             << elect_block.shard_network_id()
 //             << ", member leader: " << common::Encode::HexEncode(id)
