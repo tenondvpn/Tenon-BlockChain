@@ -500,6 +500,7 @@ void ElectManager::ProcessNewElectBlock(
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
         if (id == common::GlobalInfo::Instance()->id()) {
             *elected = true;
+            local_waiting_node_member_index_ = i;
         }
 
         now_elected_ids_.insert(id);

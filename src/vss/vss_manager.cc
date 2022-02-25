@@ -35,6 +35,14 @@ void VssManager::OnTimeBlock(
         uint64_t tm_height,
         uint64_t elect_height,
         uint64_t epoch_random) {
+    VSS_DEBUG("OnTimeBlock comming tm_block_tm: %lu, tm_height: %lu, elect_height: %lu, epoch_random: %lu",
+        tm_block_tm, tm_height, elect_height, epoch_random);
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId &&
+            GlobalInfo::Instance()->network_id() !=
+            (network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset)) {
+        return;
+    }
+
     {
         std::lock_guard<std::mutex> guard(final_consensus_nodes_mutex_);
         if ((max_count_ * 3 / 2 + 1) < member_count_ || max_count_random_ == 0) {
@@ -57,9 +65,9 @@ void VssManager::OnTimeBlock(
                 return;
             }
 
-            local_index_ = elect::ElectManager::Instance()->local_node_member_index();
-            if (local_index_ == elect::kInvalidMemberIndex) {
-                VSS_ERROR("local_index_ == elect::kInvalidMemberIndex.");
+            if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex ||
+                    elect::ElectManager::Instance()->local_waiting_node_member_index() == elect::kInvalidMemberIndex) {
+                VSS_ERROR("not elected.");
                 return;
             }
 
@@ -68,32 +76,33 @@ void VssManager::OnTimeBlock(
 
         prev_tm_height_ = tm_height;
         int64_t local_offset_us = 0;
-        if (member_count_ > 0 && local_index_ < member_count_) {
-            auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
-            begin_time_us_ = common::TimeUtils::TimestampUs();
-            auto first_offset = kDkgPeriodUs;
-            auto second_offset = kDkgPeriodUs * 4;
-            auto third_offset = kDkgPeriodUs * 8;
-            auto offset_tm = 13l * 1000l * 1000l;
-            if (begin_time_us_ < tmblock_tm + offset_tm) {
-                kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
-                first_offset = tmblock_tm + offset_tm - begin_time_us_ + std::rand() % 10;
-                begin_time_us_ = tmblock_tm + offset_tm - kDkgPeriodUs;
-                second_offset = first_offset + kDkgPeriodUs * 3 + std::rand() % 10;
-                third_offset = first_offset + kDkgPeriodUs * 7 + std::rand() % 10;
-            }
-
-            // waiting elect block coming.
-            vss_first_tick_.CutOff(
-                first_offset,
-                std::bind(&VssManager::BroadcastFirstPeriodHash, this));
-            vss_second_tick_.CutOff(
-                second_offset,
-                std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
-            vss_third_tick_.CutOff(
-                third_offset,
-                std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
+        auto tmblock_tm = tmblock::TimeBlockManager::Instance()->LatestTimestamp() * 1000l * 1000l;
+        begin_time_us_ = common::TimeUtils::TimestampUs();
+        kDkgPeriodUs = common::kTimeBlockCreatePeriodSeconds / 10 * 1000u * 1000u;
+        auto first_offset = kDkgPeriodUs;
+        auto second_offset = kDkgPeriodUs * 4;
+        auto third_offset = kDkgPeriodUs * 8;
+        auto offset_tm = 13l * 1000l * 1000l;
+        if (begin_time_us_ < tmblock_tm + offset_tm) {
+            kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
+            first_offset = tmblock_tm + offset_tm - begin_time_us_;
+            begin_time_us_ = tmblock_tm + offset_tm - kDkgPeriodUs;
+            second_offset = first_offset + kDkgPeriodUs * 3;
+            third_offset = first_offset + kDkgPeriodUs * 7;
         }
+
+        // waiting elect block coming.
+        vss_first_tick_.CutOff(
+            first_offset + std::rand() % 10,
+            std::bind(&VssManager::BroadcastFirstPeriodHash, this));
+        vss_second_tick_.CutOff(
+            second_offset + std::rand() % 10,
+            std::bind(&VssManager::BroadcastSecondPeriodRandom, this));
+        vss_third_tick_.CutOff(
+            third_offset + std::rand() % 10,
+            std::bind(&VssManager::BroadcastThirdPeriodRandom, this));
+        VSS_DEBUG("tmblock_tm: %lu, begin_time_us_: %lu, first_offset: %lu, second_offset: %lu, third_offset: %lu, kDkgPeriodUs: %lu",
+            tmblock_tm, begin_time_us_, first_offset, second_offset, third_offset, kDkgPeriodUs);
     }
 }
 
@@ -151,6 +160,8 @@ bool VssManager::IsVssFirstPeriodsHandleMessage() {
         return true;
     }
 
+    VSS_DEBUG("IsVssFirstPeriodsHandleMessage now_tm_us: %lu, (begin_time_us_ + kDkgPeriodUs * 4): %lu",
+        now_tm_us, (begin_time_us_ + kDkgPeriodUs * 4));
     return false;
 }
 
@@ -164,6 +175,8 @@ bool VssManager::IsVssSecondPeriodsHandleMessage() {
         return true;
     }
 
+    VSS_DEBUG("IsVssSecondPeriodsHandleMessage now_tm_us: %lu, (begin_time_us_ + kDkgPeriodUs * 8): %lu, (begin_time_us_ + kDkgPeriodUs * 4): %lu",
+        now_tm_us, (begin_time_us_ + kDkgPeriodUs * 8), (begin_time_us_ + kDkgPeriodUs * 4));
     return false;
 }
 
@@ -176,6 +189,8 @@ bool VssManager::IsVssThirdPeriodsHandleMessage() {
         return true;
     }
 
+    VSS_DEBUG("IsVssThirdPeriodsHandleMessage now_tm_us: %lu, (begin_time_us_ + kDkgPeriodUs * 8): %lu",
+        now_tm_us, (begin_time_us_ + kDkgPeriodUs * 8));
     return false;
 }
 
