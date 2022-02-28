@@ -189,18 +189,47 @@ int TxBft::DoTransaction(
         return kBftError;
     }
 
-    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
-        RootDoTransactionAndCreateTxBlock(pool_index(), tx_vec, ltx_prepare);
-    } else {
-        DoTransactionAndCreateTxBlock(tx_vec, ltx_prepare);
+    std::string pool_hash;
+    uint64_t pool_height = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_index(),
+        &pool_height,
+        &pool_hash,
+        &tm_height,
+        &tm_with_block_height);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return;
     }
 
-    if (ltx_prepare.block().tx_list_size() <= 0) {
+    protobuf::Block& tenon_block = *(ltx_prepare.mutable_block());
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        RootDoTransactionAndCreateTxBlock(pool_index(), pool_height, tx_vec, tenon_block);
+    } else {
+        DoTransactionAndCreateTxBlock(tx_vec, tenon_block);
+    }
+
+    if (tenon_block.tx_list_size() <= 0) {
         BFT_ERROR("all choose tx invalid!");
         return kBftNoNewTxs;
     }
 
-    auto block_ptr = std::make_shared<bft::protobuf::Block>(ltx_prepare.block());
+    tenon_block.set_pool_index(pool_index());
+    tenon_block.set_prehash(pool_hash);
+    tenon_block.set_version(common::kTransactionVersion);
+    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
+    tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
+    tenon_block.set_height(pool_height + 1);
+    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
+    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
+    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id()));
+    tenon_block.set_leader_index(leader_index_);
+    tenon_block.set_hash(GetBlockHash(tenon_block));
+    auto block_ptr = std::make_shared<bft::protobuf::Block>(tenon_block);
     SetBlock(block_ptr);
     tbft_prepare_block_ = CreatePrepareTxInfo(block_ptr, ltx_prepare);
     if (tbft_prepare_block_ == nullptr) {
@@ -1787,7 +1816,6 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
         return;
     }
 
-    protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     protobuf::TxInfo tx = tx_vec[0]->tx;
     if (tx.type() != common::kConsensusRootElectShard) {
         assert(false);
@@ -1810,25 +1838,9 @@ void TxBft::RootLeaderCreateElectConsensusShardBlock(
 
 void TxBft::RootDoTransactionAndCreateTxBlock(
         uint32_t pool_idx,
+        int64_t pool_height,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_idx,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
-        return;
-    }
-
-    protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     if (tx_vec.size() == 1) {
         switch (tx_vec[0]->tx.type())
         {
@@ -1848,23 +1860,6 @@ void TxBft::RootDoTransactionAndCreateTxBlock(
     } else {
         RootLeaderCreateAccountAddressBlock(pool_idx, pool_height, tx_vec, tenon_block);
     }
-
-    if (tenon_block.tx_list_size() <= 0) {
-        BFT_ERROR("no tx.");
-        return;
-    }
-
-    tenon_block.set_pool_index(pool_index());
-    tenon_block.set_prehash(pool_hash);
-    tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
-    tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
-        common::GlobalInfo::Instance()->network_id()));
-    tenon_block.set_hash(GetBlockHash(tenon_block));
 }
 
 void TxBft::RootLeaderCreateFinalStatistic(
@@ -1964,8 +1959,7 @@ int TxBft::GetTempAccountBalance(
 
 void TxBft::DoTransactionAndCreateTxBlock(
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg) {
-    protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
+        bft::protobuf::Block& tenon_block) {
     auto tx_list = tenon_block.mutable_tx_list();
     std::unordered_map<std::string, int64_t> acc_balance_map;
     std::unordered_map<std::string, bool> locked_account_map;
@@ -2017,39 +2011,6 @@ void TxBft::DoTransactionAndCreateTxBlock(
         auto add_tx = tx_list->Add();
         *add_tx = tx;
     }
-
-    if (tx_list->empty()) {
-        return;
-    }
-
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_index(),
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
-        return;
-    }
-
-    tenon_block.set_pool_index(pool_index());
-    tenon_block.set_prehash(pool_hash);
-    tenon_block.set_version(common::kTransactionVersion);
-    tenon_block.set_network_id(common::GlobalInfo::Instance()->network_id());
-    tenon_block.set_consistency_random(vss::VssManager::Instance()->EpochRandom());
-    tenon_block.set_height(pool_height + 1);
-    tenon_block.set_timestamp(common::TimeUtils::TimestampMs());
-    tenon_block.set_timeblock_height(tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
-    tenon_block.set_electblock_height(elect::ElectManager::Instance()->latest_height(
-        common::GlobalInfo::Instance()->network_id()));
-    tenon_block.set_hash(GetBlockHash(tenon_block));
-    //ltx_msg.set_prepare_hash(GetBlockHash(tenon_block));
 }
 
 int TxBft::LeaderAddNormalTransaction(

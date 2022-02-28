@@ -45,8 +45,9 @@ private:
         bft::protobuf::LeaderTxPrepare& ltx_msg);
     void RootDoTransactionAndCreateTxBlock(
         uint32_t pool_idx,
+        int64_t pool_height,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
+        bft::protobuf::Block& tenon_block);
     void RootLeaderCreateAccountAddressBlock(
         uint32_t pool_idx,
         int64_t pool_height,
