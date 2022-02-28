@@ -30,7 +30,6 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     }
 
     if (block_item->network_id() != common::GlobalInfo::Instance()->network_id()) {
-        // handle time block
         return;
     }
 

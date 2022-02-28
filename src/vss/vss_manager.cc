@@ -82,7 +82,7 @@ void VssManager::OnTimeBlock(
         auto first_offset = kDkgPeriodUs;
         auto second_offset = kDkgPeriodUs * 4;
         auto third_offset = kDkgPeriodUs * 8;
-        auto offset_tm = 13l * 1000l * 1000l;
+        auto offset_tm = 30l * 1000l * 1000l;
         if (begin_time_us_ < tmblock_tm + offset_tm) {
             kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
             first_offset = tmblock_tm + offset_tm - begin_time_us_;
@@ -304,10 +304,10 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    if (vss_msg.type() != kVssFinalRandom/* && local_index_ == elect::kInvalidMemberIndex*/) {
-        VSS_DEBUG("invalid vss message: %d, %d", vss_msg.type());
-        return;
-    }
+//     if (vss_msg.type() != kVssFinalRandom/* && local_index_ == elect::kInvalidMemberIndex*/) {
+//         VSS_DEBUG("invalid vss message: %d, %d", vss_msg.type());
+//         return;
+//     }
 
     if (!security::IsValidPublicKey(vss_msg.pubkey())) {
         ELECT_ERROR("invalid public key: %s!", common::Encode::HexEncode(vss_msg.pubkey()));

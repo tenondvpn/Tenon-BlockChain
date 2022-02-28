@@ -50,19 +50,19 @@ private:
     void RootLeaderCreateAccountAddressBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
+        bft::protobuf::Block& tenon_block);
     void RootLeaderCreateElectConsensusShardBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
+        bft::protobuf::Block& tenon_block);
     void RootLeaderCreateTimerBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
+        bft::protobuf::Block& tenon_block);
     void RootLeaderCreateFinalStatistic(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
-        bft::protobuf::LeaderTxPrepare& ltx_msg);
+        bft::protobuf::Block& tenon_block);
     int RootBackupCheckPrepare(
         const bft::protobuf::BftMessage& bft_msg,
         int32_t* invalid_tx_idx,
