@@ -1193,6 +1193,13 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint64 timeblock_height() const;
   void set_timeblock_height(::google::protobuf::uint64 value);
 
+  // optional uint64 leader_index = 16;
+  bool has_leader_index() const;
+  void clear_leader_index();
+  static const int kLeaderIndexFieldNumber = 16;
+  ::google::protobuf::uint64 leader_index() const;
+  void set_leader_index(::google::protobuf::uint64 value);
+
   // optional uint32 version = 5;
   bool has_version() const;
   void clear_version();
@@ -1226,6 +1233,8 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_bls_agg_sign_x();
   void set_has_bls_agg_sign_y();
   void clear_has_bls_agg_sign_y();
+  void set_has_leader_index();
+  void clear_has_leader_index();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1244,6 +1253,7 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::uint64 electblock_height_;
   ::google::protobuf::uint64 timestamp_;
   ::google::protobuf::uint64 timeblock_height_;
+  ::google::protobuf::uint64 leader_index_;
   ::google::protobuf::uint32 version_;
   friend struct ::protobuf_bft_2fproto_2fbft_2eproto::TableStruct;
 };
@@ -4536,13 +4546,13 @@ inline void Block::set_allocated_hash(::std::string* hash) {
 
 // optional uint32 version = 5;
 inline bool Block::has_version() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void Block::set_has_version() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void Block::clear_has_version() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void Block::clear_version() {
   version_ = 0u;
@@ -4898,6 +4908,30 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 Block::mutable_commit_bitmap() {
   // @@protoc_insertion_point(field_mutable_list:tenon.bft.protobuf.Block.commit_bitmap)
   return &commit_bitmap_;
+}
+
+// optional uint64 leader_index = 16;
+inline bool Block::has_leader_index() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Block::set_has_leader_index() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Block::clear_has_leader_index() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void Block::clear_leader_index() {
+  leader_index_ = GOOGLE_ULONGLONG(0);
+  clear_has_leader_index();
+}
+inline ::google::protobuf::uint64 Block::leader_index() const {
+  // @@protoc_insertion_point(field_get:tenon.bft.protobuf.Block.leader_index)
+  return leader_index_;
+}
+inline void Block::set_leader_index(::google::protobuf::uint64 value) {
+  set_has_leader_index();
+  leader_index_ = value;
+  // @@protoc_insertion_point(field_set:tenon.bft.protobuf.Block.leader_index)
 }
 
 // -------------------------------------------------------------------
