@@ -1727,6 +1727,7 @@ int TxBft::LeaderCreateCommit(std::string& bft_str) {
 
 void TxBft::RootLeaderCreateAccountAddressBlock(
         uint32_t pool_idx,
+        int64_t pool_height,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::Block& tenon_block) {
     auto tx_list = tenon_block.mutable_tx_list();
@@ -1811,6 +1812,22 @@ void TxBft::RootDoTransactionAndCreateTxBlock(
         uint32_t pool_idx,
         std::vector<TxItemPtr>& tx_vec,
         bft::protobuf::LeaderTxPrepare& ltx_msg) {
+    std::string pool_hash;
+    uint64_t pool_height = 0;
+    uint64_t tm_height;
+    uint64_t tm_with_block_height;
+    uint32_t last_pool_index = common::kInvalidPoolIndex;
+    int res = block::AccountManager::Instance()->GetBlockInfo(
+        pool_idx,
+        &pool_height,
+        &pool_hash,
+        &tm_height,
+        &tm_with_block_height);
+    if (res != block::kBlockSuccess) {
+        assert(false);
+        return;
+    }
+
     protobuf::Block& tenon_block = *(ltx_msg.mutable_block());
     if (tx_vec.size() == 1) {
         switch (tx_vec[0]->tx.type())
@@ -1825,31 +1842,15 @@ void TxBft::RootDoTransactionAndCreateTxBlock(
             RootLeaderCreateFinalStatistic(pool_idx, tx_vec, tenon_block);
             break;
         default:
-            RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, tenon_block);
+            RootLeaderCreateAccountAddressBlock(pool_idx, pool_height, tx_vec, tenon_block);
             break;
         }
     } else {
-        RootLeaderCreateAccountAddressBlock(pool_idx, tx_vec, tenon_block);
+        RootLeaderCreateAccountAddressBlock(pool_idx, pool_height, tx_vec, tenon_block);
     }
 
     if (tenon_block.tx_list_size() <= 0) {
         BFT_ERROR("no tx.");
-        return;
-    }
-
-    std::string pool_hash;
-    uint64_t pool_height = 0;
-    uint64_t tm_height;
-    uint64_t tm_with_block_height;
-    uint32_t last_pool_index = common::kInvalidPoolIndex;
-    int res = block::AccountManager::Instance()->GetBlockInfo(
-        pool_idx,
-        &pool_height,
-        &pool_hash,
-        &tm_height,
-        &tm_with_block_height);
-    if (res != block::kBlockSuccess) {
-        assert(false);
         return;
     }
 
