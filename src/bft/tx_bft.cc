@@ -109,26 +109,11 @@ int TxBft::LeaderCreatePrepare(int32_t pool_mod_idx, std::string* bft_str) {
     }
 
     set_pool_index(pool_index);
-//     bft::protobuf::LeaderTxPrepare ltx_prepare;
-//     if (DoTransaction(tx_vec, ltx_prepare) != kBftSuccess) {
-//         BFT_ERROR("DoTransaction error.");
-//         return kBftError;
-//     }
-// 
     mem_manager_ptr_ = elect::ElectManager::Instance()->GetMemberManager(
         common::GlobalInfo::Instance()->network_id());
     local_member_index_ = mem_manager_ptr_->GetMemberIndex(
         network_id(),
         common::GlobalInfo::Instance()->id());
-//     if (elect_height_ != elect::ElectManager::Instance()->latest_height(
-//         common::GlobalInfo::Instance()->network_id())) {
-//         BFT_ERROR("elect_height_ %lu not equal to latest election height: %lu!",
-//             elect_height_,
-//             elect::ElectManager::Instance()->latest_height(
-//                 common::GlobalInfo::Instance()->network_id()));
-//         return kBftError;
-//     }
-
     LeaderCallTransaction(tx_vec);
     bft::protobuf::TxBft tx_bft;
     auto ltxp = tx_bft.mutable_ltx_prepare();

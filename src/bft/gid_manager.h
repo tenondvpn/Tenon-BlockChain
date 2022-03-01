@@ -15,11 +15,6 @@ public:
     static GidManager* Instance();
     bool NewGidTxValid(const std::string& gid, TxItemPtr& tx_ptr);
     bool NewGidTxValid(const std::string& gid, const bft::protobuf::TxInfo& tx_info, bool save_to_db);
-//     TxItemPtr GetTx(
-//         bool add_to,
-//         uint32_t tx_type,
-//         uint32_t call_contract_step,
-//         const std::string& gid);
     std::string GetUniversalGid(
         bool add_to,
         uint32_t tx_type,
@@ -29,9 +24,6 @@ public:
 private:
     GidManager() {}
     ~GidManager() {}
-
-//     std::unordered_map<std::string, TxItemPtr> tx_map_;
-//     std::mutex tx_map_mutex_;
 };
 
 }  // namespace bft

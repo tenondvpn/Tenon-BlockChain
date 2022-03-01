@@ -26,7 +26,6 @@ std::string StatusToString(uint32_t status) {
     }
 }
 
-// hash128(gid + from + to + amount + type + attrs(k:v))
 std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
     std::string message = common::Encode::HexEncode(tx_info.gid()) + "-" +
         common::Encode::HexEncode(tx_info.from()) + "-" +
@@ -56,7 +55,6 @@ std::string GetTxMessageHash(const protobuf::TxInfo& tx_info) {
 
 std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
     std::string all_msg;
-    // just use before tx balance
     all_msg += tx_info.gid() + std::to_string(tx_info.status()) + tx_info.from() +
         std::to_string(tx_info.balance()) + std::to_string(tx_info.gas_limit()) +
         std::to_string(tx_info.gas_price()) + tx_info.to() +
@@ -74,11 +72,15 @@ std::string GetPrepareTxsHash(const protobuf::TxInfo& tx_info) {
             std::to_string(tx_info.transfers(i).amount());
     }
 
-    BLS_DEBUG("TTTT GetPrepareTxsHash gid: %s, type: %d", common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.type());
+    BLS_DEBUG("TTTT GetPrepareTxsHash gid: %s, type: %d, status: %d, from: %s, balance: %lu, gas limit: %lu, gas price: %lu, to: %s, amount: %lu, attr size: %d",
+        common::Encode::HexEncode(tx_info.gid()).c_str(), tx_info.type(),
+        tx_info.status(), common::Encode::HexEncode(tx_info.from()).c_str(),
+        tx_info.balance(), tx_info.gas_limit(), tx_info.gas_price(),
+        common::Encode::HexEncode(tx_info.to()).c_str(),
+        tx_info.amount(), tx_info.attr_size());
     return common::Hash::keccak256(all_msg);
 }
 
-// prehash + network_id + height + random + elect version + txes's hash
 std::string GetBlockHash(const protobuf::Block& block) {
     std::string tbft_prepare_txs_str_for_hash;
     for (int32_t i = 0; i < block.tx_list_size(); ++i) {
