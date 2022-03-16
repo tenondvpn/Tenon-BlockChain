@@ -54,10 +54,12 @@ struct StatisticElectItem {
     void Clear() {
         elect_height = 0;
         memset(succ_tx_count, 0, sizeof(succ_tx_count));
+        leader_lof_map.clear();
     }
 
     uint64_t elect_height{ 0 };
     uint32_t succ_tx_count[common::kEachShardMaxNodeCount];
+    std::unordered_map<int32_t, std::shared_ptr<common::Point>> leader_lof_map;
 };
 
 typedef std::shared_ptr<StatisticElectItem> StatisticElectItemPtr;
@@ -83,7 +85,6 @@ struct StatisticItem {
     uint32_t all_tx_count{ 0 };
     std::unordered_set<uint64_t> added_height;
     uint64_t tmblock_height{ 0 };
-    std::unordered_map<int32_t, std::shared_ptr<common::Point>> leader_lof_map;
 };
 
 

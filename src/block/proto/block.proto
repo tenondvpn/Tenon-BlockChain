@@ -86,6 +86,7 @@ message AdRewardRequest {
 message ElectStatisticInfo {
     optional uint64 elect_height = 1;
     repeated uint32 succ_tx_count = 2;
+    repeated uint32 lof_leaders = 3;
 }
 
 message StatisticInfo {

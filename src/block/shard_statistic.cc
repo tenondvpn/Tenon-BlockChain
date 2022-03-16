@@ -22,6 +22,7 @@ ShardStatistic* ShardStatistic::Instance() {
 }
 
 void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
+    std::lock_guard<std::mutex> g(mutex_);
     if (block_item->network_id() == network::kRootCongressNetworkId) {
         if (block_item->tx_list_size() == 1 &&
                 block_item->tx_list(0).type() == common::kConsensusRootTimeBlock) {
@@ -89,9 +90,13 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     assert(member_count <= bit_size);
     assert(member_count <= common::kEachShardMaxNodeCount);
     std::shared_ptr<common::Point> point_ptr = nullptr;
-    auto iter = leader_lof_map_.find(leader_idx);
-    if (iter == leader_lof_map_.end()) {
-        point_ptr = std::make_shared<common::Point>(common::kEachShardMaxNodeCount, leader_idx);
+    match_ec_ptr->elect_height = block_item->electblock_height();
+    auto iter = match_ec_ptr->leader_lof_map.find(block_item->leader_index());
+    if (iter == match_ec_ptr->leader_lof_map.end()) {
+        point_ptr = std::make_shared<common::Point>(
+            common::kEachShardMaxNodeCount,
+            block_item->leader_index());
+        match_ec_ptr->leader_lof_map[block_item->leader_index()] = point_ptr;
     } else {
         point_ptr = iter->second;
     }
@@ -103,12 +108,14 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
 
         ++match_ec_ptr->succ_tx_count[i];
         (*point_ptr)[i] += 1.0;
+        std::cout << "leader: " << block_item->leader_index() << ", node: " << i << ", value: " << (*point_ptr)[i] << ", elect height: " << match_ec_ptr->elect_height << std::endl;
     }
 }
 
 void ShardStatistic::GetStatisticInfo(
         uint64_t timeblock_height,
         block::protobuf::StatisticInfo* statistic_info) {
+    std::lock_guard<std::mutex> g(mutex_);
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
         if (statistic_items_[i]->tmblock_height != timeblock_height) {
             continue;
@@ -122,6 +129,23 @@ void ShardStatistic::GetStatisticInfo(
             }
 
             auto elect_st = statistic_info->add_elect_statistic();
+            auto& leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
+            if (leader_lof_map.size() >= 4) {
+                std::vector<common::Point> points;
+                for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
+                    points.push_back(*iter->second);
+                }
+
+                common::Lof lof(points);
+                auto out = lof.GetOutliers(5);
+                for (auto iter = out.begin(); iter != out.end(); ++iter) {
+                    elect_st->add_lof_leaders(*iter);
+                }
+            }
+            std::cout << "height: " << statistic_items_[i]->elect_items[elect_idx]->elect_height
+                << ", map size: " << statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size()
+                << std::endl;
+
             elect_st->set_elect_height(
                 statistic_items_[i]->elect_items[elect_idx]->elect_height);
             auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
