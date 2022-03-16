@@ -54,13 +54,16 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
 
     StatisticElectItemPtr min_ec_ptr = match_st_ptr->elect_items[0];
     StatisticElectItemPtr match_ec_ptr = nullptr;
+    uint32_t choosed_idx = 0;
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
-        if (min_ec_ptr->elect_height < match_st_ptr->elect_items[i]->elect_height) {
+        if (min_ec_ptr->elect_height > match_st_ptr->elect_items[i]->elect_height) {
             min_ec_ptr = match_st_ptr->elect_items[i];
+            choosed_idx = i;
         }
 
         if (block_item->electblock_height() == match_st_ptr->elect_items[i]->elect_height) {
             match_ec_ptr = match_st_ptr->elect_items[i];
+            choosed_idx = i;
             break;
         }
     }
@@ -108,7 +111,6 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
 
         ++match_ec_ptr->succ_tx_count[i];
         (*point_ptr)[i] += 1.0;
-        std::cout << "leader: " << block_item->leader_index() << ", node: " << i << ", value: " << (*point_ptr)[i] << ", elect height: " << match_ec_ptr->elect_height << std::endl;
     }
 }
 
@@ -142,9 +144,6 @@ void ShardStatistic::GetStatisticInfo(
                     elect_st->add_lof_leaders(*iter);
                 }
             }
-            std::cout << "height: " << statistic_items_[i]->elect_items[elect_idx]->elect_height
-                << ", map size: " << statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size()
-                << std::endl;
 
             elect_st->set_elect_height(
                 statistic_items_[i]->elect_items[elect_idx]->elect_height);
