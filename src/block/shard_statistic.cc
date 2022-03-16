@@ -54,16 +54,13 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
 
     StatisticElectItemPtr min_ec_ptr = match_st_ptr->elect_items[0];
     StatisticElectItemPtr match_ec_ptr = nullptr;
-    uint32_t choosed_idx = 0;
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
         if (min_ec_ptr->elect_height > match_st_ptr->elect_items[i]->elect_height) {
             min_ec_ptr = match_st_ptr->elect_items[i];
-            choosed_idx = i;
         }
 
         if (block_item->electblock_height() == match_st_ptr->elect_items[i]->elect_height) {
             match_ec_ptr = match_st_ptr->elect_items[i];
-            choosed_idx = i;
             break;
         }
     }
