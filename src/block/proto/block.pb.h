@@ -2203,6 +2203,18 @@ class ElectStatisticInfo : public ::google::protobuf::Message /* @@protoc_insert
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
       mutable_succ_tx_count();
 
+  // repeated uint32 lof_leaders = 3;
+  int lof_leaders_size() const;
+  void clear_lof_leaders();
+  static const int kLofLeadersFieldNumber = 3;
+  ::google::protobuf::uint32 lof_leaders(int index) const;
+  void set_lof_leaders(int index, ::google::protobuf::uint32 value);
+  void add_lof_leaders(::google::protobuf::uint32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      lof_leaders() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_lof_leaders();
+
   // optional uint64 elect_height = 1;
   bool has_elect_height() const;
   void clear_elect_height();
@@ -2219,6 +2231,7 @@ class ElectStatisticInfo : public ::google::protobuf::Message /* @@protoc_insert
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > succ_tx_count_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > lof_leaders_;
   ::google::protobuf::uint64 elect_height_;
   friend struct ::protobuf_block_2fproto_2fblock_2eproto::TableStruct;
 };
@@ -5271,6 +5284,36 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
 ElectStatisticInfo::mutable_succ_tx_count() {
   // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.ElectStatisticInfo.succ_tx_count)
   return &succ_tx_count_;
+}
+
+// repeated uint32 lof_leaders = 3;
+inline int ElectStatisticInfo::lof_leaders_size() const {
+  return lof_leaders_.size();
+}
+inline void ElectStatisticInfo::clear_lof_leaders() {
+  lof_leaders_.Clear();
+}
+inline ::google::protobuf::uint32 ElectStatisticInfo::lof_leaders(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.block.protobuf.ElectStatisticInfo.lof_leaders)
+  return lof_leaders_.Get(index);
+}
+inline void ElectStatisticInfo::set_lof_leaders(int index, ::google::protobuf::uint32 value) {
+  lof_leaders_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tenon.block.protobuf.ElectStatisticInfo.lof_leaders)
+}
+inline void ElectStatisticInfo::add_lof_leaders(::google::protobuf::uint32 value) {
+  lof_leaders_.Add(value);
+  // @@protoc_insertion_point(field_add:tenon.block.protobuf.ElectStatisticInfo.lof_leaders)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+ElectStatisticInfo::lof_leaders() const {
+  // @@protoc_insertion_point(field_list:tenon.block.protobuf.ElectStatisticInfo.lof_leaders)
+  return lof_leaders_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+ElectStatisticInfo::mutable_lof_leaders() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.block.protobuf.ElectStatisticInfo.lof_leaders)
+  return &lof_leaders_;
 }
 
 // -------------------------------------------------------------------
