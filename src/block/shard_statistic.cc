@@ -88,12 +88,21 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     uint32_t bit_size = final_bitmap.data().size() * 64;
     assert(member_count <= bit_size);
     assert(member_count <= common::kEachShardMaxNodeCount);
+    std::shared_ptr<common::Point> point_ptr = nullptr;
+    auto iter = leader_lof_map_.find(leader_idx);
+    if (iter == leader_lof_map_.end()) {
+        point_ptr = std::make_shared<common::Point>(common::kEachShardMaxNodeCount, leader_idx);
+    } else {
+        point_ptr = iter->second;
+    }
+
     for (uint32_t i = 0; i < member_count; ++i) {
         if (!final_bitmap.Valid(i)) {
             continue;
         }
 
         ++match_ec_ptr->succ_tx_count[i];
+        (*point_ptr)[i] += 1.0;
     }
 }
 

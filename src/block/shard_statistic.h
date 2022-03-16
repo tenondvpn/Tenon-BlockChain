@@ -7,6 +7,7 @@
 
 #include "common/utils.h"
 #include "common/bitmap.h"
+#include "common/lof.h"
 #include "common/thread_safe_queue.h"
 #include "common/tick.h"
 #include "block/block_utils.h"

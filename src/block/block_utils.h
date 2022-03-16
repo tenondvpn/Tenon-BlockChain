@@ -82,6 +82,7 @@ struct StatisticItem {
     uint32_t all_tx_count{ 0 };
     std::unordered_set<uint64_t> added_height;
     uint64_t tmblock_height{ 0 };
+    std::unordered_map<int32_t, std::shared_ptr<common::Point>> leader_lof_map;
 };
 
 

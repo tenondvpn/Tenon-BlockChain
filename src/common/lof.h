@@ -16,22 +16,38 @@ namespace common {
 
 class Point {
 public:
-    Point(int32_t node_count, int32_t idx, ...) {
+//     Point(int32_t node_count, int32_t idx, ...) {
+//         dimension_ = node_count;
+//         idx_ = idx;
+//         va_list ap;
+//         va_start(ap, dimension_);
+//         double temp;
+//         for (int32_t i = 0; i < dimension_; i++) {
+//             temp = va_arg(ap, double);
+//             coordinate_.push_back(temp);
+//         }
+// 
+//         va_end(ap);
+//     }
+// 
+    Point(int32_t node_count, int32_t idx) {
         dimension_ = node_count;
         idx_ = idx;
-        va_list ap;
-        va_start(ap, dimension_);
-        double temp;
         for (int32_t i = 0; i < dimension_; i++) {
-            temp = va_arg(ap, double);
-            coordinate_.push_back(temp);
+            coordinate_.push_back(0);
         }
-
-        va_end(ap);
     }
 
     ~Point() {
         coordinate_.clear();
+    }
+
+    double& operator [](int32_t idx) {
+        return coordinate_[idx];
+    }
+
+    double operator [](int32_t idx) const {
+        return coordinate_[idx];
     }
 
     void SetValue(int32_t index, double value) {
