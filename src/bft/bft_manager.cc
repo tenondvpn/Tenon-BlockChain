@@ -364,12 +364,6 @@ void BftManager::HandleBftMessage(
         bft::protobuf::BftMessage& bft_msg,
         const std::string& sign_hash,
         const transport::TransportMessagePtr& header_ptr) {
-//     if (!bft_msg.leader()) {
-//         if (bft_ptr->ThisNodeIsLeader(bft_msg)) {
-//             return;
-//         }
-//     }
-// 
     auto& header = *header_ptr;
     switch (bft_msg.bft_step()) {
     case kBftPrepare: {

@@ -1,0 +1,71 @@
+#include <gtest/gtest.h>
+
+#include <iostream>
+
+#define private public
+#include "common/lof.h"
+
+namespace tenon {
+
+namespace common {
+
+namespace test {
+
+class TestLof : public testing::Test {
+public:
+    static void SetUpTestCase() {
+    }
+
+    static void TearDownTestCase() {
+    }
+
+    virtual void SetUp() {
+    }
+
+    virtual void TearDown() {
+    }
+};
+
+TEST_F(TestLof, lof) {
+    std::vector<Point> instances;
+    int32_t idx = 0;
+    instances.push_back(Point(2, idx++, -4.8447532242074978, -5.6869538132901658));
+    instances.push_back(Point(2, idx++, 1.7265577109364076, -2.5446963280374302));
+    instances.push_back(Point(2, idx++, -1.9885982441038819, 1.705719643962865));
+    instances.push_back(Point(2, idx++, -1.999050026772494, -4.0367551415711844));
+    instances.push_back(Point(2, idx++, -2.0550860126898964, -3.6247409893236426));
+    instances.push_back(Point(2, idx++, -1.4456945632547327, -3.7669258809535102));
+    instances.push_back(Point(2, idx++, -4.6676062022635554, 1.4925324371089148));
+    instances.push_back(Point(2, idx++, -3.6526420667796877, -3.5582661345085662));
+    instances.push_back(Point(2, idx++, 6.4551493172954029, -0.45434966683144573));
+    instances.push_back(Point(2, idx++, -0.56730591589443669, -5.5859532963153349));
+    instances.push_back(Point(2, idx++, -5.1400897823762239, -1.3359248994019064));
+    instances.push_back(Point(2, idx++, 5.2586932439960243, 0.032431285797532586));
+    instances.push_back(Point(2, idx++, 6.3610915734502838, -0.99059648246991894));
+    instances.push_back(Point(2, idx++, -0.31086913190231447, -2.8352818694180644));
+    instances.push_back(Point(2, idx++, 1.2288582719783967, -1.1362795178325829));
+    instances.push_back(Point(2, idx++, -0.17986204466346614, -0.32813130288006365));
+    instances.push_back(Point(2, idx++, 2.2532002509929216, -0.5142311840491649));
+    instances.push_back(Point(2, idx++, -0.75397166138399296, 2.2465141276038754));
+    instances.push_back(Point(2, idx++, 1.9382517648161239, -1.7276112460593251));
+    instances.push_back(Point(2, idx++, 1.6809250808549676, -2.3433636210337503));
+    instances.push_back(Point(2, idx++, 0.68466572523884783, 1.4374914487477481));
+    instances.push_back(Point(2, idx++, 2.0032364431791514, -2.9191062023123635));
+    instances.push_back(Point(2, idx++, -1.7565895138024741, 0.96995712544043267));
+    instances.push_back(Point(2, idx++, 3.3809644295064505, 6.7497121359292684));
+    instances.push_back(Point(2, idx++, -4.2764152718650896, 5.6551328734397766));
+    instances.push_back(Point(2, idx++, -3.6347215445083019, -0.85149861984875741));
+    instances.push_back(Point(2, idx++, -5.6249411288060385, -3.9251965527768755));
+    instances.push_back(Point(2, idx++, 4.6033708001912093, 1.3375110154658127));
+    instances.push_back(Point(2, idx++, -0.685421751407983, -0.73115552984211407));
+    instances.push_back(Point(2, idx++, -2.3744241805625044, 1.3443896265777866));
+    Lof lof(instances);
+    auto out = lof.GetOutliers(5);
+    ASSERT_EQ(out, std::vector<int32_t>({ 0, 6, 8, 10, 11, 12, 20, 23, 24, 26, 27 }));
+}
+
+}  // namespace test
+
+}  // namespace common
+
+}  // namespace tenon
