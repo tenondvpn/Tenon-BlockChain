@@ -949,7 +949,7 @@ void BftManager::HandleOpposeNodeMsg(
         uint64_t random_num = 0;
         if (common::StringUtil::ToUint64(bft_msg.data(), &random_num)) {
             auto count = bft_ptr->AddVssRandomOppose(bft_msg.member_index(), random_num);
-            if (count >= bft_ptr->min_agree_member_count()) {
+            if ((uint32_t)count >= bft_ptr->min_agree_member_count()) {
                 vss::VssManager::Instance()->SetFinalVss(random_num);
             }
         }
@@ -1171,7 +1171,7 @@ void BftManager::RandomNodesToBroadcastBlock(
         const common::Bitmap& bitmap) {
     // select 7 random nodes to broadcast, rand seed base by epoch vss-random and block height
     std::vector<int32_t> index_vec;
-    for (int32_t i = 0; i < bitmap.data().size() * 64; ++i) {
+    for (uint32_t i = 0; i < bitmap.data().size() * 64; ++i) {
         if (bitmap.Valid(i)) {
             index_vec.push_back(i);
         }
@@ -1186,8 +1186,8 @@ void BftManager::RandomNodesToBroadcastBlock(
     std::srand(static_cast<uint32_t>(
         (block->height() + vss::VssManager::Instance()->EpochRandom()) % RAND_MAX));
     std::random_shuffle(index_vec.begin(), index_vec.end(), RangGen());
-    for (int32_t i = 0; i < common::kDefaultBroadcastNeighborCount; ++i) {
-        if (index_vec[i] == bft_ptr->local_member_index()) {
+    for (uint32_t i = 0; i < common::kDefaultBroadcastNeighborCount; ++i) {
+        if (index_vec[i] == (int32_t)bft_ptr->local_member_index()) {
             LeaderBroadcastToAcc(bft_ptr, true);
         }
     }
@@ -1462,7 +1462,7 @@ void BftManager::LeaderBroadcastToAcc(BftInterfacePtr& bft_ptr, bool is_bft_lead
                 id = tx_list[i].from();
             } else if (tx_list[i].call_contract_step() == contract::kCallStepContractFinal) {
                 if (IsCreateContractLibraray(tx_list[i])) {
-                    for (int32_t i = 0;
+                    for (uint32_t i = 0;
                             i < common::GlobalInfo::Instance()->consensus_shard_count(); ++i) {
                         if ((network::kConsensusShardBeginNetworkId + i) !=
                                 common::GlobalInfo::Instance()->network_id()) {

@@ -279,7 +279,7 @@ void BlsDkg::CheckVerifyAllValid() {
     if (now_tm_us > (begin_time_us_ + kDkgPeriodUs * 2 + 5) &&
             now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4 - 5)) {
         std::lock_guard<std::mutex> guard(mutex_);
-        for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
+        for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
             if (i == local_member_index_) {
                 continue;
             }
@@ -329,7 +329,7 @@ void BlsDkg::CheckSwapKeyAllValid() {
     if (now_tm_us > (begin_time_us_ + kDkgPeriodUs * 4 + 5) &&
             now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8 - 5)) {
         std::lock_guard<std::mutex> guard(mutex_);
-        for (int32_t i = 0; i < all_verification_vector_.size(); ++i) {
+        for (uint32_t i = 0; i < all_verification_vector_.size(); ++i) {
             auto iter = valid_swapkey_set_.find(i);
             if (iter == valid_swapkey_set_.end()) {
                 SendGetSwapKey(i);
@@ -431,7 +431,7 @@ void BlsDkg::HandleSwapSecKey(
         return;
     }
 
-    if (bls_msg.swap_req().keys_size() <= local_member_index_) {
+    if (bls_msg.swap_req().keys_size() <= (int32_t)local_member_index_) {
         return;
     }
 

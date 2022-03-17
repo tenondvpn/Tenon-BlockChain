@@ -65,8 +65,8 @@ void VssManager::OnTimeBlock(
                 return;
             }
 
-            if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex &&
-                    elect::ElectManager::Instance()->local_waiting_node_member_index() == elect::kInvalidMemberIndex) {
+            if (elect::ElectManager::Instance()->local_node_member_index() == (int32_t)elect::kInvalidMemberIndex &&
+                    elect::ElectManager::Instance()->local_waiting_node_member_index() == (int32_t)elect::kInvalidMemberIndex) {
                 VSS_ERROR("not elected.");
                 return;
             }
@@ -83,7 +83,7 @@ void VssManager::OnTimeBlock(
         auto second_offset = kDkgPeriodUs * 4;
         auto third_offset = kDkgPeriodUs * 8;
         auto offset_tm = 30l * 1000l * 1000l;
-        if (begin_time_us_ < tmblock_tm + offset_tm) {
+        if (begin_time_us_ < (int64_t)tmblock_tm + offset_tm) {
             kDkgPeriodUs = (common::kTimeBlockCreatePeriodSeconds - 20) * 1000l * 1000l / 10l;
             first_offset = tmblock_tm + offset_tm - begin_time_us_;
             begin_time_us_ = tmblock_tm + offset_tm - kDkgPeriodUs;
@@ -156,7 +156,7 @@ bool VssManager::IsVssFirstPeriodsHandleMessage() {
     return true;
 #endif
     auto now_tm_us = common::TimeUtils::TimestampUs();
-    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
+    if ((int64_t)now_tm_us < (begin_time_us_ + kDkgPeriodUs * 4)) {
         return true;
     }
 
@@ -170,8 +170,8 @@ bool VssManager::IsVssSecondPeriodsHandleMessage() {
     return true;
 #endif
     auto now_tm_us = common::TimeUtils::TimestampUs();
-    if (now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8) &&
-            now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
+    if ((int64_t)now_tm_us < (begin_time_us_ + kDkgPeriodUs * 8) &&
+            (int64_t)now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 4)) {
         return true;
     }
 
@@ -185,7 +185,7 @@ bool VssManager::IsVssThirdPeriodsHandleMessage() {
     return true;
 #endif
     auto now_tm_us = common::TimeUtils::TimestampUs();
-    if (now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 8)) {
+    if ((int64_t)now_tm_us >= (begin_time_us_ + kDkgPeriodUs * 8)) {
         return true;
     }
 
@@ -291,8 +291,8 @@ void VssManager::HandleMessage(const transport::TransportMessagePtr& header_ptr)
         return;
     }
 
-    if (elect::ElectManager::Instance()->local_node_member_index() == elect::kInvalidMemberIndex &&
-            elect::ElectManager::Instance()->local_waiting_node_member_index() == elect::kInvalidMemberIndex) {
+    if (elect::ElectManager::Instance()->local_node_member_index() == (int32_t)elect::kInvalidMemberIndex &&
+            elect::ElectManager::Instance()->local_waiting_node_member_index() == (int32_t)elect::kInvalidMemberIndex) {
         VSS_ERROR("not elected.");
         return;
     }

@@ -171,10 +171,11 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
 }
 
 void TxPoolManager::AddTxCount(int32_t pool) {
-    auto elect_height = elect::ElectManager::Instance()->latest_height();
+    auto elect_height = elect::ElectManager::Instance()->latest_height(
+        common::GlobalInfo::Instance()->network_id());
     int32_t min_idx = 0;
     uint64_t min_height = elect_height;
-    for (int32_t i = 0; i < kPoolTxCountMaxItem; ++i) {
+    for (uint32_t i = 0; i < kPoolTxCountMaxItem; ++i) {
         if (tx_counts_[i].elect_height == elect_height) {
             ++tx_counts_[i].pool_tx_counts[pool];
             return;

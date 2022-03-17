@@ -144,7 +144,7 @@ void ShardStatistic::NormalizePoints(
             continue;
         }
 
-        for (int32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
+        for (uint32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
             auto need_mod_index = i % leader_count;
             if (need_mod_index == (*members)[iter->first]->pool_index_mod_num) {
                 iter->second->AddPoolTxCount(tx_counts->pool_tx_counts[i]);
@@ -165,7 +165,7 @@ void ShardStatistic::NormalizePoints(
             continue;
         }
 
-        for (uint32_t i = 0; i < iter->second->GetDimension(); ++i) {
+        for (int32_t i = 0; i < iter->second->GetDimension(); ++i) {
             (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount();
         }
 

@@ -337,7 +337,7 @@ void TenonHost::emit_log(const evmc::address& addr,
     std::string id((char*)addr.bytes, sizeof(addr.bytes));
     std::string str_data((char*)data, data_size);
     std::string topics_str;
-    for (int32_t i = 0; i < topics_count; ++i) {
+    for (uint32_t i = 0; i < topics_count; ++i) {
         topics_str += std::string((char*)topics[i].bytes, sizeof(topics[i].bytes)) + ", ";
     }
 
