@@ -146,7 +146,7 @@ void ShardStatistic::NormalizePoints(
 
         for (uint32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
             auto need_mod_index = i % leader_count;
-            if (need_mod_index == (*members)[iter->first]->pool_index_mod_num) {
+            if ((int32_t)need_mod_index == (*members)[iter->first]->pool_index_mod_num) {
                 iter->second->AddPoolTxCount(tx_counts->pool_tx_counts[i]);
             }
         }
