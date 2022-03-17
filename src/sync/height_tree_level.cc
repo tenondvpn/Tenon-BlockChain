@@ -10,7 +10,7 @@ namespace tenon {
 namespace sync {
 
 HeightTreeLevel::HeightTreeLevel(const std::string& db_prefix, uint64_t max_height)
-        : db_prefix_(db_prefix), max_height_(max_height) {
+        : max_height_(max_height), db_prefix_(db_prefix) {
     max_level_ = GetMaxLevel();
     LoadFromDb();
 }
@@ -261,7 +261,7 @@ void HeightTreeLevel::GetTreeData(std::vector<uint64_t>* data_vec) {
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
-        if (i == max_level_) {
+        if (i == (int32_t)max_level_) {
             auto iter = level_map->begin();
             iter->second->GetTreeData(data_vec);
             level_vec_index = iter->second->max_vec_index() + 1;
@@ -298,7 +298,7 @@ void HeightTreeLevel::PrintTree() {
     int32_t max_level = (int32_t)(log(kBranchMaxCount) / log(2));
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = tree_level_[i];
-        if (i == max_level_) {
+        if (i == (int32_t)max_level_) {
             auto iter = level_map->begin();
             iter->second->PrintTree();
             level_vec_index = iter->second->max_vec_index() + 1;
@@ -348,7 +348,7 @@ void HeightTreeLevel::LoadFromDb() {
     for (int32_t i = (int32_t)max_level_; i >= 0; --i) {
         auto level_map = std::make_shared<TreeNodeMap>();
         tree_level_[i] = level_map;
-        if (i == max_level_) {
+        if (i == (int32_t)max_level_) {
             LeafHeightTreePtr branch_ptr = std::make_shared<LeafHeightTree>(db_prefix_, i, 0);
             (*level_map)[0] = branch_ptr;
             level_vec_index = branch_ptr->max_vec_index() + 1;
@@ -374,7 +374,7 @@ void HeightTreeLevel::FlushToDb() {
             return;
         }
 
-        if (i == max_level_) {
+        if (i == (int32_t)max_level_) {
             auto iter = level_map->begin();
             iter->second->SyncToDb();
             level_vec_index = iter->second->max_vec_index() + 1;
