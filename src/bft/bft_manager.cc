@@ -1866,7 +1866,6 @@ void BftManager::HandleToWaitingBlock(
 
             if (account_ptr != nullptr) {
                 // root just create account address and assignment consensus network id
-                just_broadcast = true;
                 BFT_ERROR("account address exists error and broadcast it from [%s] to [%s]!",
                     common::Encode::HexEncode(new_tx.from()).c_str(),
                     common::Encode::HexEncode(new_tx.to()).c_str());

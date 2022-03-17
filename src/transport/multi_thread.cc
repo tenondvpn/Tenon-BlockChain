@@ -237,7 +237,7 @@ void MultiThreadHandler::HandleRemoteMessage(
 	}
 
     if (message_ptr->has_broadcast()) {
-        int32_t count = MessageFilter::Instance()->StopBroadcast(*message_ptr);
+        uint32_t count = MessageFilter::Instance()->StopBroadcast(*message_ptr);
 		if (count > kBroadcastMaxRelayTimes) {
 			return;
 		}
