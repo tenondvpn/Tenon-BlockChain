@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include "common//random.h"
 #include "security/security.h"
 #include "security/crypto_utils.h"
 #include "security/security_string_trans.h"
@@ -11,7 +12,7 @@ namespace tenon {
 
 namespace security {
 
-PrivateKey::PrivateKey() {
+PrivateKey::PrivateKey() : bignum_(BN_new(), BN_clear_free) {
     const Curve& curve = Security::Instance()->curve();
     do {
         if (BN_rand_range(bignum_.get(), curve.order_.get()) == 0) {
@@ -19,7 +20,6 @@ PrivateKey::PrivateKey() {
             break;
         }
     } while (BN_is_zero(bignum_.get()));
-    Serialize(private_key_);
 }
 
 PrivateKey::PrivateKey(const std::string& src)

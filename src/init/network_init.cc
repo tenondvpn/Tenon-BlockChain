@@ -235,6 +235,8 @@ int NetworkInit::CheckJoinWaitingPool() {
         waiting_network_id = valid_ids[rand_idx] + network::kConsensusWaitingShardOffset;
     }
 
+    // TODO(): for test
+    waiting_network_id = network::kRootCongressNetworkId + network::kConsensusWaitingShardOffset;
     if (elect::ElectManager::Instance()->Join(waiting_network_id) != elect::kElectSuccess) {
         INIT_ERROR("join waiting pool network[%u] failed!", waiting_network_id);
         return kInitError;

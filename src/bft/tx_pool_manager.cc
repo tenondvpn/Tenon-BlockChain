@@ -162,7 +162,33 @@ int TxPoolManager::AddTx(TxItemPtr& tx_ptr) {
         }
     }
 
-    return tx_pool_[pool_index].AddTx(tx_ptr, false);
+    auto res = tx_pool_[pool_index].AddTx(tx_ptr, false);
+    if (res == kBftSuccess) {
+        AddTxCount(pool_index);
+    }
+
+    return res;
+}
+
+void TxPoolManager::AddTxCount(int32_t pool) {
+    auto elect_height = elect::ElectManager::Instance()->latest_height();
+    int32_t min_idx = 0;
+    uint64_t min_height = elect_height;
+    for (int32_t i = 0; i < kPoolTxCountMaxItem; ++i) {
+        if (tx_counts_[i].elect_height == elect_height) {
+            ++tx_counts_[i].pool_tx_counts[pool];
+            return;
+        }
+
+        if (tx_counts_[i].elect_height < min_height) {
+            min_height = tx_counts_[i].elect_height;
+            min_idx = i;
+        }
+    }
+
+    tx_counts_[min_idx].Clear();
+    tx_counts_[min_idx].elect_height = elect_height;
+    ++tx_counts_[min_idx].pool_tx_counts[pool];
 }
 
 bool TxPoolManager::CheckCallContractAddressValid(const std::string& contract_addr) {

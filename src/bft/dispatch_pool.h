@@ -57,6 +57,10 @@ public:
         tx_pool_.SetTimeout(pool_idx);
     }
 
+    const PoolTxCountItem* GetTxPoolCount(uint64_t elect_height) {
+        return tx_pool_.GetTxPoolCount(elect_height);
+    }
+
 private:
     DispatchPool();
     ~DispatchPool();

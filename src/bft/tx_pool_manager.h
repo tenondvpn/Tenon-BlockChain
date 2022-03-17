@@ -45,11 +45,23 @@ public:
 
     void ChangeLeader(uint32_t pool_index);
     void SetTimeout(uint32_t pool_idx);
+    const PoolTxCountItem* GetTxPoolCount(uint64_t elect_height) {
+        for (int32_t i = 0; i < kPoolTxCountMaxItem; ++i) {
+            if (tx_counts_[i].elect_height = elect_height) {
+                return &tx_counts_[i];
+            }
+        }
+
+        return nullptr;
+    }
 
 private:
     bool CheckCallContractAddressValid(const std::string& contract_address);
     bool CheckDispatchNormalTransaction(TxItemPtr& tx_ptr);
     bool CheckCallerAccountInfoValid(const std::string& caller_address);
+    void AddTxCount(int32_t pool);
+
+    static const uint32_t kPoolTxCountMaxItem = 3u;
 
     TxPool* tx_pool_{ nullptr };
     common::Bitmap waiting_pools_{ common::kImmutablePoolSize };
@@ -58,6 +70,7 @@ private:
     std::mutex waiting_pools_mutex_;
     uint32_t prev_pool_index_{ 0 };
     std::atomic<bool> root_tx_pool_valid_{ true };
+    PoolTxCountItem tx_counts_[kPoolTxCountMaxItem];
 
     DISALLOW_COPY_AND_ASSIGN(TxPoolManager);
 };

@@ -126,6 +126,19 @@ struct LeaderPrepareItem {
     std::unordered_map<uint64_t, uint32_t> height_count_map;
 };
 
+struct PoolTxCountItem {
+    PoolTxCountItem() {
+        Clear();
+    }
+
+    uint64_t elect_height;
+    int32_t pool_tx_counts[512];
+    void Clear() {
+        elect_height = 0;
+        memset(pool_tx_counts, 0, sizeof(pool_tx_counts));
+    }
+};
+
 typedef std::shared_ptr<BlockToDbItem> BlockToDbItemPtr;
 typedef std::shared_ptr<WaitingBlockItem> WaitingBlockItemPtr;
 typedef common::ThreadSafeQueue<BlockToDbItemPtr> BlockQueue;

@@ -101,13 +101,75 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
         point_ptr = iter->second;
     }
 
+    point_ptr->AddAllCount(block_item->tx_list_size());
     for (uint32_t i = 0; i < member_count; ++i) {
         if (!final_bitmap.Valid(i)) {
             continue;
         }
 
         ++match_ec_ptr->succ_tx_count[i];
-        (*point_ptr)[i] += 1.0;
+        (*point_ptr)[i] += block_item->tx_list_size();
+    }
+}
+
+void ShardStatistic::NormalizePoints(
+        uint64_t elect_height,
+        std::unordered_map<int32_t, std::shared_ptr<common::Point>>& leader_lof_map) {
+    libff::alt_bn128_G2 common_pk;
+    libff::alt_bn128_Fr sec_key;
+    auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+        elect_height,
+        common::GlobalInfo::Instance()->network_id(),
+        &common_pk,
+        &sec_key);
+    if (members == nullptr) {
+        return;
+    }
+
+    auto leader_count = elect::ElectManager::Instance()->GetNetworkLeaderCount(
+        common::GlobalInfo::Instance()->network_id());
+    if (leader_count <= 0) {
+        BFT_ERROR("leader_count invalid[%d] net: %d.",
+            leader_count, common::GlobalInfo::Instance()->network_id());
+        return;
+    }
+
+    PoolTxCountItem* tx_counts = DispatchPool::Instance()->GetTxPoolCount(elect_height);
+    if (tx_counts == nullptr) {
+        return;
+    }
+
+    for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
+        if (members[iter->first]->pool_index_mod_num < 0) {
+            continue;
+        }
+
+        for (int32_t i = 0; i < kInvalidPoolIndex; ++i) {
+            auto need_mod_index = i % leader_count;
+            if (need_mod_index == members[iter->first]->pool_index_mod_num) {
+                iter->second->AddPoolTxCount(tx_counts->pool_tx_counts[i]);
+            }
+        }
+    }
+
+    int32_t max_count = 0;
+    for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
+        if (max_count < iter->second->GetPooTxCount()) {
+            max_count = iter->second->GetPooTxCount();
+        }
+    }
+
+    for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end();) {
+        if (iter->second->GetPooTxCount() <= 0) {
+            leader_lof_map.erase(iter++);
+            continue;
+        }
+
+        for (uint32_t i = 0; i < iter->second->GetDimension(); ++i) {
+            (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount()
+        }
+
+        ++iter;
     }
 }
 
@@ -123,33 +185,37 @@ void ShardStatistic::GetStatisticInfo(
         statistic_info->set_timeblock_height(statistic_items_[i]->tmblock_height);
         statistic_info->set_all_tx_count(statistic_items_[i]->all_tx_count);
         for (uint32_t elect_idx = 0; elect_idx < kStatisticMaxCount; ++elect_idx) {
-            if (statistic_items_[i]->elect_items[elect_idx]->elect_height == 0) {
+            auto elect_height = statistic_items_[i]->elect_items[elect_idx]->elect_height;
+            if (elect_height == 0) {
                 continue;
             }
 
             auto elect_st = statistic_info->add_elect_statistic();
-            auto& leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
-            if (leader_lof_map.size() >= 4) {
-                std::vector<common::Point> points;
-                for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
-                    points.push_back(*iter->second);
-                }
+            if (statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size() >= kLofMaxNodes) {
+                auto leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
+                NormalizePoints(elect_height, leader_lof_map);
+                if (leader_lof_map->size() >= kLofMaxNodes) {
+                    PoolTxCountItem* tx_counts = DispatchPool::Instance()->GetTxPoolCount(elect_height);
+                    std::vector<common::Point> points;
+                    for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
+                        points.push_back(*iter->second);
+                    }
 
-                common::Lof lof(points);
-                auto out = lof.GetOutliers(5);
-                for (auto iter = out.begin(); iter != out.end(); ++iter) {
-                    elect_st->add_lof_leaders(*iter);
+                    common::Lof lof(points);
+                    auto out = lof.GetOutliers(kLofRation);
+                    for (auto iter = out.begin(); iter != out.end(); ++iter) {
+                        elect_st->add_lof_leaders(*iter);
+                    }
                 }
             }
 
-            elect_st->set_elect_height(
-                statistic_items_[i]->elect_items[elect_idx]->elect_height);
+            elect_st->set_elect_height(elect_height);
             auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
                 elect_st->elect_height(),
                 common::GlobalInfo::Instance()->network_id());
-            for (uint32_t i = 0; i < member_count; ++i) {
+            for (uint32_t m = 0; m < member_count; ++m) {
                 elect_st->add_succ_tx_count(
-                    statistic_items_[i]->elect_items[elect_idx]->succ_tx_count[i]);
+                    statistic_items_[i]->elect_items[elect_idx]->succ_tx_count[m]);
             }
         }
     }
