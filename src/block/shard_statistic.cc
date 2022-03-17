@@ -101,7 +101,7 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
         point_ptr = iter->second;
     }
 
-    point_ptr->AddAllCount(block_item->tx_list_size());
+    point_ptr->IncAllCount(block_item->tx_list_size());
     for (uint32_t i = 0; i < member_count; ++i) {
         if (!final_bitmap.Valid(i)) {
             continue;
@@ -134,7 +134,7 @@ void ShardStatistic::NormalizePoints(
         return;
     }
 
-    PoolTxCountItem* tx_counts = DispatchPool::Instance()->GetTxPoolCount(elect_height);
+    auto* tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(elect_height);
     if (tx_counts == nullptr) {
         return;
     }
@@ -144,9 +144,9 @@ void ShardStatistic::NormalizePoints(
             continue;
         }
 
-        for (int32_t i = 0; i < kInvalidPoolIndex; ++i) {
+        for (int32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
             auto need_mod_index = i % leader_count;
-            if (need_mod_index == members[iter->first]->pool_index_mod_num) {
+            if (need_mod_index == (*members)[iter->first]->pool_index_mod_num) {
                 iter->second->AddPoolTxCount(tx_counts->pool_tx_counts[i]);
             }
         }
@@ -191,13 +191,16 @@ void ShardStatistic::GetStatisticInfo(
             }
 
             auto elect_st = statistic_info->add_elect_statistic();
-            if (statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size() >= kLofMaxNodes) {
+            if (statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size() >=
+                    kLofMaxNodes) {
                 auto leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
                 NormalizePoints(elect_height, leader_lof_map);
-                if (leader_lof_map->size() >= kLofMaxNodes) {
-                    PoolTxCountItem* tx_counts = DispatchPool::Instance()->GetTxPoolCount(elect_height);
+                if (leader_lof_map.size() >= kLofMaxNodes) {
+                    PoolTxCountItem* tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(
+                        elect_height);
                     std::vector<common::Point> points;
-                    for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
+                    for (auto iter = leader_lof_map.begin();
+                            iter != leader_lof_map.end(); ++iter) {
                         points.push_back(*iter->second);
                     }
 
