@@ -140,7 +140,7 @@ void ShardStatistic::NormalizePoints(
     }
 
     for (auto iter = leader_lof_map.begin(); iter != leader_lof_map.end(); ++iter) {
-        if (members[iter->first]->pool_index_mod_num < 0) {
+        if ((*members)[iter->first]->pool_index_mod_num < 0) {
             continue;
         }
 
@@ -166,7 +166,7 @@ void ShardStatistic::NormalizePoints(
         }
 
         for (uint32_t i = 0; i < iter->second->GetDimension(); ++i) {
-            (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount()
+            (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount();
         }
 
         ++iter;
@@ -196,8 +196,7 @@ void ShardStatistic::GetStatisticInfo(
                 auto leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
                 NormalizePoints(elect_height, leader_lof_map);
                 if (leader_lof_map.size() >= kLofMaxNodes) {
-                    PoolTxCountItem* tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(
-                        elect_height);
+                    auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(elect_height);
                     std::vector<common::Point> points;
                     for (auto iter = leader_lof_map.begin();
                             iter != leader_lof_map.end(); ++iter) {
