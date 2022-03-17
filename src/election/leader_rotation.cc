@@ -21,7 +21,7 @@ void LeaderRotation::OnElectBlock(const MembersPtr& members) {
     rotation_item_[invalid_idx].rotation_idx = 0;
     rotation_item_[invalid_idx].local_member = nullptr;
     rotation_item_[invalid_idx].valid_leaders.clear();
-    for (int32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
+    for (uint32_t i = 0; i < common::kInvalidPoolIndex; ++i) {
         rotation_item_[invalid_idx].pool_leader_map[i] = nullptr;
     }
 
@@ -167,7 +167,8 @@ void LeaderRotation::ChangeLeader(const std::string& id, int32_t pool_mod_num) {
         if (rotation_item_[valid_idx_].valid_leaders[i]->id == id) {
             new_leader = rotation_item_[valid_idx_].valid_leaders[i];
             rotation_item_[valid_idx_].rotation_idx = i + 1;
-            if (rotation_item_[valid_idx_].rotation_idx >= rotation_item_[valid_idx_].valid_leaders.size()) {
+            if (rotation_item_[valid_idx_].rotation_idx >=
+                    (int32_t)rotation_item_[valid_idx_].valid_leaders.size()) {
                 rotation_item_[valid_idx_].rotation_idx = 0;
             }
 

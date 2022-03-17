@@ -266,7 +266,7 @@ int BftInterface::LeaderPrecommitOk(
         tx_prepare.prepare().prepare_final_hash(),
         tbft_prepare_block,
         backup_sign);
-    if (valid_count >= min_aggree_member_count_) {
+    if ((uint32_t)valid_count >= min_aggree_member_count_) {
         if (LeaderCreatePreCommitAggChallenge(
                 tx_prepare.prepare().prepare_final_hash()) != kBftSuccess) {
             BFT_ERROR("create bls precommit agg sign failed!");

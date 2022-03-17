@@ -1807,7 +1807,6 @@ void BftManager::HandleToWaitingBlock(
         uint32_t thread_idx,
         const bft::protobuf::Block& block,
         BlockPtr& block_ptr) {
-    bool just_broadcast = false;
     auto& tx_list = block.tx_list();
     for (int32_t i = 0; i < tx_list.size(); ++i) {
         if (tx_list[i].type() == common::kConsensusFinalStatistic) {
