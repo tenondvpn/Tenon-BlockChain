@@ -30,9 +30,10 @@ public:
 //         va_end(ap);
 //     }
 // 
-    Point(int32_t node_count, int32_t idx) {
+    Point(int32_t node_count, int32_t idx, int32_t member_idx) {
         dimension_ = node_count;
         idx_ = idx;
+        member_idx_ = member_idx;
         for (int32_t i = 0; i < dimension_; i++) {
             coordinate_.push_back(0);
         }
@@ -85,12 +86,17 @@ public:
         return pool_tx_count_;
     }
 
+    const std::vector<double>& coordinate() const {
+        return coordinate_;
+    }
+
 private:
     std::vector<double> coordinate_;
     int32_t dimension_{ -1 };
     int32_t idx_{ -1 };
     int32_t all_count_{ 0 };
     int32_t pool_tx_count_{ 0 };
+    int32_t member_idx_{ -1 };
 
 };
 

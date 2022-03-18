@@ -93,8 +93,22 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     match_ec_ptr->elect_height = block_item->electblock_height();
     auto iter = match_ec_ptr->leader_lof_map.find(block_item->leader_index());
     if (iter == match_ec_ptr->leader_lof_map.end()) {
+        libff::alt_bn128_G2 common_pk;
+        libff::alt_bn128_Fr sec_key;
+        auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+            block_item->electblock_height(),
+            common::GlobalInfo::Instance()->network_id(),
+            &common_pk,
+            &sec_key);
+        if (members == nullptr || block_item->leader_index() >= members->size() ||
+                (*members)[block_item->leader_index()]->pool_index_mod_num < 0) {
+            std::cout << "get members failed!" << std::endl;
+            return;
+        }
+
         point_ptr = std::make_shared<common::Point>(
             common::kEachShardMaxNodeCount,
+            (*members)[block_item->leader_index()]->pool_index_mod_num,
             block_item->leader_index());
         match_ec_ptr->leader_lof_map[block_item->leader_index()] = point_ptr;
     } else {
@@ -123,6 +137,7 @@ void ShardStatistic::NormalizePoints(
         &common_pk,
         &sec_key);
     if (members == nullptr) {
+        std::cout << "get members failed!" << std::endl;
         return;
     }
 
@@ -131,11 +146,13 @@ void ShardStatistic::NormalizePoints(
     if (leader_count <= 0) {
         BFT_ERROR("leader_count invalid[%d] net: %d.",
             leader_count, common::GlobalInfo::Instance()->network_id());
+        std::cout << "leader_count error!" << std::endl;
         return;
     }
 
     auto* tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(elect_height);
     if (tx_counts == nullptr) {
+        std::cout << "tx_counts error!" << std::endl;
         return;
     }
 
@@ -166,7 +183,11 @@ void ShardStatistic::NormalizePoints(
         }
 
         for (int32_t i = 0; i < iter->second->GetDimension(); ++i) {
+            auto old = (*iter->second)[i];
             (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount();
+            std::cout << "norm: " << (*iter->second)[i] << ", max: "
+                << max_count << ", tx count: " << iter->second->GetPooTxCount()
+                << ", old: " << old << std::endl;
         }
 
         ++iter;
@@ -178,10 +199,12 @@ void ShardStatistic::GetStatisticInfo(
         block::protobuf::StatisticInfo* statistic_info) {
     std::lock_guard<std::mutex> g(mutex_);
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
+        std::cout << statistic_items_[i]->tmblock_height << ", " << timeblock_height << std::endl;
         if (statistic_items_[i]->tmblock_height != timeblock_height) {
             continue;
         }
 
+        std::cout << "timeblock_height: " << timeblock_height << std::endl;
         statistic_info->set_timeblock_height(statistic_items_[i]->tmblock_height);
         statistic_info->set_all_tx_count(statistic_items_[i]->all_tx_count);
         for (uint32_t elect_idx = 0; elect_idx < kStatisticMaxCount; ++elect_idx) {
@@ -190,6 +213,7 @@ void ShardStatistic::GetStatisticInfo(
                 continue;
             }
 
+            std::cout << "elect_height: " << elect_height << std::endl;
             auto elect_st = statistic_info->add_elect_statistic();
             if (statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size() >=
                     kLofMaxNodes) {
@@ -201,6 +225,8 @@ void ShardStatistic::GetStatisticInfo(
                     for (auto iter = leader_lof_map.begin();
                             iter != leader_lof_map.end(); ++iter) {
                         points.push_back(*iter->second);
+                        std::cout << "demension: " << iter->second->GetDimension()
+                            << ", data size: " << iter->second->coordinate().size() << std::endl;
                     }
 
                     common::Lof lof(points);
