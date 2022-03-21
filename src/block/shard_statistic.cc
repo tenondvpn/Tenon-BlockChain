@@ -204,8 +204,8 @@ void ShardStatistic::GetStatisticInfo(
             }
 
             auto elect_st = statistic_info->add_elect_statistic();
-            if (statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size() >=
-                    kLofMaxNodes) {
+            auto leader_count = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size();
+            if (leader_count >= kLofMaxNodes) {
                 auto leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
                 NormalizePoints(elect_height, leader_lof_map);
                 if (leader_lof_map.size() >= kLofMaxNodes) {
@@ -218,10 +218,13 @@ void ShardStatistic::GetStatisticInfo(
 
                     common::Lof lof(points);
                     auto out = lof.GetOutliers(kLofRation);
-                    std::cout << "out size: " << out.size() << std::endl;
+                    int32_t weedout_leader_count = leader_count / 10 + 1;
                     for (auto iter = out.begin(); iter != out.end(); ++iter) {
+                        if (elect_st->lof_leaders_size() >= weedout_leader_count || (*iter).second <= 2.0) {
+                            break;
+                        }
+
                         elect_st->add_lof_leaders((*iter).first);
-                        std::cout << (*iter).first << ":" << (*iter).second << std::endl;
                     }
                 }
             }
