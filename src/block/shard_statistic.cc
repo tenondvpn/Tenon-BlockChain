@@ -211,49 +211,41 @@ void ShardStatistic::GetStatisticInfo(
             continue;
         }
 
-        if (elect_item_ptr == nullptr) {
-            elect_item_ptr = statistic_ptr->elect_items[elect_idx];
-            continue;
-        }
-
-        if (elect_item_ptr->elect_height < elect_height) {
-            elect_item_ptr = statistic_ptr->elect_items[elect_idx];
-        }
-    }
-
-    auto elect_st = statistic_info->mutable_elect_statistic();
-    auto leader_count = elect_item_ptr->leader_lof_map.size();
-    if (leader_count >= kLofMaxNodes) {
-        auto leader_lof_map = elect_item_ptr->leader_lof_map;
-        NormalizePoints(elect_item_ptr->elect_height, leader_lof_map);
-        if (leader_lof_map.size() >= kLofMaxNodes) {
-            auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(
-                elect_item_ptr->elect_height);
-            std::vector<common::Point> points;
-            for (auto iter = leader_lof_map.begin();
-                    iter != leader_lof_map.end(); ++iter) {
-                points.push_back(*iter->second);
-            }
-
-            common::Lof lof(points);
-            auto out = lof.GetOutliers(kLofRation);
-            int32_t weedout_count = leader_count / 10 + 1;
-            for (auto iter = out.begin(); iter != out.end(); ++iter) {
-                if (elect_st->lof_leaders_size() >= weedout_count || (*iter).second <= 2.0) {
-                    break;
+        elect_item_ptr = statistic_ptr->elect_items[elect_idx];
+        auto elect_st = statistic_info->add_elect_statistic();
+        auto leader_count = elect_item_ptr->leader_lof_map.size();
+        if (leader_count >= kLofMaxNodes) {
+            auto leader_lof_map = elect_item_ptr->leader_lof_map;
+            NormalizePoints(elect_item_ptr->elect_height, leader_lof_map);
+            if (leader_lof_map.size() >= kLofMaxNodes) {
+                auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(
+                    elect_item_ptr->elect_height);
+                std::vector<common::Point> points;
+                for (auto iter = leader_lof_map.begin();
+                        iter != leader_lof_map.end(); ++iter) {
+                    points.push_back(*iter->second);
                 }
 
-                elect_st->add_lof_leaders((*iter).first);
+                common::Lof lof(points);
+                auto out = lof.GetOutliers(kLofRation);
+                int32_t weedout_count = leader_count / 10 + 1;
+                for (auto iter = out.begin(); iter != out.end(); ++iter) {
+                    if (elect_st->lof_leaders_size() >= weedout_count || (*iter).second <= 2.0) {
+                        break;
+                    }
+
+                    elect_st->add_lof_leaders((*iter).first);
+                }
             }
         }
-    }
 
-    elect_st->set_elect_height(elect_item_ptr->elect_height);
-    auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-        elect_st->elect_height(),
-        common::GlobalInfo::Instance()->network_id());
-    for (uint32_t m = 0; m < member_count; ++m) {
-        elect_st->add_succ_tx_count(elect_item_ptr->succ_tx_count[m]);
+        elect_st->set_elect_height(elect_item_ptr->elect_height);
+        auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
+            elect_st->elect_height(),
+            common::GlobalInfo::Instance()->network_id());
+        for (uint32_t m = 0; m < member_count; ++m) {
+            elect_st->add_succ_tx_count(elect_item_ptr->succ_tx_count[m]);
+        }
     }
 }
 
