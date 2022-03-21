@@ -8,6 +8,7 @@
 #include <math.h>
 #include <map>
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 namespace tenon {
@@ -16,20 +17,6 @@ namespace common {
 
 class Point {
 public:
-//     Point(int32_t node_count, int32_t idx, ...) {
-//         dimension_ = node_count;
-//         idx_ = idx;
-//         va_list ap;
-//         va_start(ap, dimension_);
-//         double temp;
-//         for (int32_t i = 0; i < dimension_; i++) {
-//             temp = va_arg(ap, double);
-//             coordinate_.push_back(temp);
-//         }
-// 
-//         va_end(ap);
-//     }
-// 
     Point(int32_t node_count, int32_t idx, int32_t member_idx) {
         dimension_ = node_count;
         idx_ = idx;
@@ -50,17 +37,6 @@ public:
     inline double operator [](int32_t idx) const {
         return coordinate_[idx];
     }
-
-//     void SetValue(int32_t index, double value) {
-//         assert(index < coordinate_.size());
-//         coordinate_.at(index) = value;
-// 
-//     }
-// 
-//     double GetValue(int32_t index) const {
-//         assert(index < coordinate_.size());
-//         return coordinate_.at(index);
-//     }
 
     int32_t GetDimension() const {
         return dimension_;
@@ -108,29 +84,47 @@ class Lof {
 public:
 	Lof(std::vector<Point>& points);
 	~Lof();
-	double LocalOutlierFactor(int32_t min_point, int32_t point_idx);
-    double KDistance(
+    std::vector<std::pair<int32_t, double>> GetOutliers(int32_t k);
+
+private:
+    double LocalOutlierFactor(int32_t min_point, int32_t point_idx);
+    void KDistance(
         int32_t k,
         int32_t point_idx,
-        const std::set<int32_t>& igns,
-        std::vector<int32_t>* neighbours);
+        int32_t igns,
+        std::vector<std::pair<double, int32_t>>* neighbours);
     double ReachabilityDist(
         int32_t k,
         int32_t point_idx,
         int32_t point_idx2,
-        const std::set<int32_t>& igns);
+        int32_t igns);
     double LocalReachabilityDensity(
         int min_pts,
         int32_t point_idx,
-        const std::set<int32_t>& igns);
-    std::vector<std::pair<int32_t, double>> GetOutliers(int32_t k);
+        int32_t igns);
+    inline double PointDistEuclidean(const Point& l, const Point& r) {
+        uint64_t key = (uint64_t)l.idx() << 32 | (uint64_t)r.idx();
+        auto iter = dist_map_.find(key);
+        if (iter != dist_map_.end()) {
+            return iter->second;
+        }
 
-private:
-    double PointDistEuclidean(const Point& l, const Point& r);
+        double sum = 0.0;
+        int32_t dimension = l.GetDimension();
+        for (int32_t i = 0; i < dimension; i++) {
+            sum += (l[i] - r[i]) * (l[i] - r[i]);
+        }
+
+        double res = std::sqrt(sum / (double)dimension);
+        dist_map_[key] = res;
+        return res;
+    }
 
     std::vector<Point>& points_;
     int32_t now_point_idx_;
+    std::unordered_map<uint64_t, double> dist_map_;
 
+    DISALLOW_COPY_AND_ASSIGN(Lof);
 };
 
 };  // namespace common

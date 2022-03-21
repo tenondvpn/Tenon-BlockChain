@@ -159,8 +159,14 @@ TEST_F(TestShardStatic, AllSuccess) {
     static const int32_t kBlockCount = 10;
     uint64_t block_height = 0;
     srand(time(NULL));
+    int32_t invalid_leader_count = 0;
     for (auto iter = leaders.begin(); iter != leaders.end(); ++iter) {
         int32_t rand_num = rand() % 100;
+        if (rand_num >= 90) {
+            std::cout << "invalid leader: " << ((*iter)->index) << std::endl;
+            ++invalid_leader_count;
+        }
+
         for (int32_t bidx = 0; bidx < kBlockCount; ++bidx) {
             auto block_item = std::make_shared<bft::protobuf::Block>();
             block_item->set_electblock_height(10);
@@ -178,7 +184,6 @@ TEST_F(TestShardStatic, AllSuccess) {
                 }
 
                 bitmap.Set(random_set_node[i]);
-                std::cout << random_set_node[i] << ", ";
             }
 
             if (rand_num >= 90) {
@@ -188,7 +193,6 @@ TEST_F(TestShardStatic, AllSuccess) {
                     }
 
                     bitmap.Set(random_set_node[i]);
-                    std::cout << random_set_node[i] << ", ";
                 }
             }
 
@@ -202,10 +206,8 @@ TEST_F(TestShardStatic, AllSuccess) {
                 }
 
                 bitmap.Set(valid_node_idx[i]);
-                std::cout << valid_node_idx[i] << ", ";
             }
 
-            std::cout << std::endl;
             auto datas = bitmap.data();
             for (uint32_t i = 0; i < datas.size(); ++i) {
                 block_item->add_bitmap(datas[i]);
@@ -224,6 +226,7 @@ TEST_F(TestShardStatic, AllSuccess) {
         }
     }
 
+    std::cout << "invalid_leader_count: " << invalid_leader_count << std::endl;
     block::protobuf::StatisticInfo statistic_info;
     ShardStatistic::Instance()->GetStatisticInfo(9, &statistic_info);
 }

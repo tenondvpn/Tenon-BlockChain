@@ -102,7 +102,6 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
             &sec_key);
         if (members == nullptr || block_item->leader_index() >= members->size() ||
                 (*members)[block_item->leader_index()]->pool_index_mod_num < 0) {
-            std::cout << "get members failed!" << std::endl;
             return;
         }
 
@@ -137,7 +136,6 @@ void ShardStatistic::NormalizePoints(
         &common_pk,
         &sec_key);
     if (members == nullptr) {
-        std::cout << "get members failed!" << std::endl;
         return;
     }
 
@@ -146,13 +144,11 @@ void ShardStatistic::NormalizePoints(
     if (leader_count <= 0) {
         BFT_ERROR("leader_count invalid[%d] net: %d.",
             leader_count, common::GlobalInfo::Instance()->network_id());
-        std::cout << "leader_count error!" << std::endl;
         return;
     }
 
     auto* tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(elect_height);
     if (tx_counts == nullptr) {
-        std::cout << "tx_counts error!" << std::endl;
         return;
     }
 
@@ -184,14 +180,8 @@ void ShardStatistic::NormalizePoints(
 
         for (int32_t i = 0; i < iter->second->GetDimension(); ++i) {
             (*iter->second)[i] = (*iter->second)[i] * max_count / iter->second->GetPooTxCount();
-            std::cout << (*iter->second)[i] << ", ";
         }
 
-        std::cout << std::endl;
-        std::cout << "all count: " << iter->second->GetAllCount() << ", max: "
-            << max_count << ", tx count: " << iter->second->GetPooTxCount()
-            << ", index: " << iter->second->member_idx()
-            << std::endl;
         ++iter;
     }
 }
@@ -231,6 +221,7 @@ void ShardStatistic::GetStatisticInfo(
                     std::cout << "out size: " << out.size() << std::endl;
                     for (auto iter = out.begin(); iter != out.end(); ++iter) {
                         elect_st->add_lof_leaders((*iter).first);
+                        std::cout << (*iter).first << ":" << (*iter).second << std::endl;
                     }
                 }
             }

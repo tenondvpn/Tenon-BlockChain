@@ -38,7 +38,7 @@ private:
         uint64_t elect_height,
         std::unordered_map<int32_t, std::shared_ptr<common::Point>>& leader_lof_map);
 
-    static const uint32_t kLofRation = 256 * 2 / 3u + 1;
+    static const uint32_t kLofRation = 5;
     static const uint32_t kLofMaxNodes = 8;
 
     std::shared_ptr<StatisticItem> statistic_items_[kStatisticMaxCount];
