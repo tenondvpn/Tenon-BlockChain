@@ -22,7 +22,7 @@ double Lof::LocalOutlierFactor(int32_t min_point, int32_t point_idx) {
 
     double sum = 0;
     for (uint32_t i = 0; i < lrd_ratios.size(); i++) {
-        sum += (double)lrd_ratios.at(i);
+        sum += (double)lrd_ratios[i];
     }
 
     return sum / (double)neighbours.size();
@@ -40,14 +40,14 @@ double Lof::KDistance(
             continue;
         }
 
-        auto dist = PointDistEuclidean(points_[point_idx], points_.at(i));
+        auto dist = PointDistEuclidean(points_[point_idx], points_[i]);
         int64_t int_val = static_cast<int64_t>(dist * kScaleValue);
         auto iter = dist_map.find(int_val);
         if (iter != dist_map.end()) {
-            dist_map[int_val].push_back(points_.at(i).idx());
+            dist_map[int_val].push_back(points_[i].idx());
         } else  {
             std::vector<int32_t> vec_temp;
-            vec_temp.push_back(points_.at(i).idx());
+            vec_temp.push_back(points_[i].idx());
             dist_map.insert(std::pair<int64_t, std::vector<int32_t>>(int_val, vec_temp));
         }
     }
@@ -57,7 +57,7 @@ double Lof::KDistance(
     for (auto iter = dist_map.begin(); iter != dist_map.end(); ++iter) {
         k_sero += iter->second.size();
         for (uint32_t i = 0; i < iter->second.size(); i++) {
-            neighbours->push_back(iter->second.at(i));
+            neighbours->push_back(iter->second[i]);
         }
 
         k_dist = (double)iter->first / kScaleValue;
@@ -107,14 +107,14 @@ double Lof::LocalReachabilityDensity(
     return (double)neighbours.size() / sumReachDist;
 }
 
-std::vector<int32_t> Lof::GetOutliers(int32_t k) {
+std::vector<std::pair<int32_t, double>> Lof::GetOutliers(int32_t k) {
     std::vector<Point> vec_InstancesBackUp;
-    std::vector<int32_t> res_vec;
+    std::vector<std::pair<int32_t, double>> res_vec;
     for (uint32_t i = 0; i < points_.size(); i++) {
         now_point_idx_ = i;
         double value = LocalOutlierFactor(k, i);
         if (value > 1.0) {
-            res_vec.push_back(i);
+            res_vec.push_back(std::pair<int32_t, double>(i, value));
         }
     }
 
@@ -125,12 +125,12 @@ double Lof::PointDistEuclidean(const Point& l, const Point& r) {
     int32_t dimension = l.GetDimension();
     std::vector<double>differences(dimension, 0.0);
     for (int32_t i = 0; i < dimension; i++) {
-        differences.at(i) = l.GetValue(i) - r.GetValue(i);
+        differences[i] = l[i] - r[i];
     }
 
     double sum = 0.0;
     for (int32_t i = 0; i < dimension; i++) {
-        sum += differences.at(i) * differences.at(i);
+        sum += differences[i] * differences[i];
     }
 
     return std::sqrt(sum / (double)dimension);

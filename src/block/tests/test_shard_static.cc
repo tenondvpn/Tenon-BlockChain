@@ -152,12 +152,15 @@ TEST_F(TestShardStatic, AllSuccess) {
         }
     }
 
+    elect::ElectManager::Instance()->latest_leader_count_[3] = leaders.size();
     libff::alt_bn128_G2 cpk;
     elect::ElectManager::Instance()->height_with_block_.AddNewHeightBlock(10, 3, members, cpk);
     static const int32_t kValidCount = 1024 * 2 / 3 + 1;
     static const int32_t kBlockCount = 10;
     uint64_t block_height = 0;
+    srand(time(NULL));
     for (auto iter = leaders.begin(); iter != leaders.end(); ++iter) {
+        int32_t rand_num = rand() % 100;
         for (int32_t bidx = 0; bidx < kBlockCount; ++bidx) {
             auto block_item = std::make_shared<bft::protobuf::Block>();
             block_item->set_electblock_height(10);
@@ -168,18 +171,41 @@ TEST_F(TestShardStatic, AllSuccess) {
             common::Bitmap bitmap(1024);
             std::vector<int32_t> random_set_node = valid_node_idx;
             std::random_shuffle(random_set_node.begin(), random_set_node.end());
-            for (int32_t i = 0; i < 10; ++i) {
-                bitmap.Set(random_set_node[i]);
-            }
-
-            for (int32_t i = 0; i < valid_node_idx.size(); ++i) {
+            static const uint32_t kRandomCount = 50;
+            for (uint32_t i = 0; i < kRandomCount; ++i) {
                 if (bitmap.valid_count() >= kValidCount) {
                     break;
                 }
 
-                bitmap.Set(valid_node_idx[i]);
+                bitmap.Set(random_set_node[i]);
+                std::cout << random_set_node[i] << ", ";
             }
 
+            if (rand_num >= 90) {
+                for (uint32_t i = kRandomCount; i < random_set_node.size(); ++i) {
+                    if (bitmap.valid_count() >= kValidCount) {
+                        break;
+                    }
+
+                    bitmap.Set(random_set_node[i]);
+                    std::cout << random_set_node[i] << ", ";
+                }
+            }
+
+            for (uint32_t i = 0; i < valid_node_idx.size(); ++i) {
+                if (bitmap.valid_count() >= kValidCount) {
+                    break;
+                }
+
+                if (bitmap.Valid(valid_node_idx[i])) {
+                    continue;
+                }
+
+                bitmap.Set(valid_node_idx[i]);
+                std::cout << valid_node_idx[i] << ", ";
+            }
+
+            std::cout << std::endl;
             auto datas = bitmap.data();
             for (uint32_t i = 0; i < datas.size(); ++i) {
                 block_item->add_bitmap(datas[i]);

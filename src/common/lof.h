@@ -43,24 +43,24 @@ public:
         coordinate_.clear();
     }
 
-    double& operator [](int32_t idx) {
+    inline double& operator [](int32_t idx) {
         return coordinate_[idx];
     }
 
-    double operator [](int32_t idx) const {
+    inline double operator [](int32_t idx) const {
         return coordinate_[idx];
     }
 
-    void SetValue(int32_t index, double value) {
-        assert(index < coordinate_.size());
-        coordinate_.at(index) = value;
-
-    }
-
-    double GetValue(int32_t index) const {
-        assert(index < coordinate_.size());
-        return coordinate_.at(index);
-    }
+//     void SetValue(int32_t index, double value) {
+//         assert(index < coordinate_.size());
+//         coordinate_.at(index) = value;
+// 
+//     }
+// 
+//     double GetValue(int32_t index) const {
+//         assert(index < coordinate_.size());
+//         return coordinate_.at(index);
+//     }
 
     int32_t GetDimension() const {
         return dimension_;
@@ -88,6 +88,10 @@ public:
 
     const std::vector<double>& coordinate() const {
         return coordinate_;
+    }
+
+    int32_t member_idx() const {
+        return member_idx_;
     }
 
 private:
@@ -119,7 +123,7 @@ public:
         int min_pts,
         int32_t point_idx,
         const std::set<int32_t>& igns);
-    std::vector<int32_t> GetOutliers(int32_t k);
+    std::vector<std::pair<int32_t, double>> GetOutliers(int32_t k);
 
 private:
     double PointDistEuclidean(const Point& l, const Point& r);
