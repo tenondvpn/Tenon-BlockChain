@@ -77,7 +77,6 @@ private:
     int32_t all_count_{ 0 };
     int32_t pool_tx_count_{ 0 };
     int32_t member_idx_{ -1 };
-
 };
 
 class Lof {
@@ -102,23 +101,7 @@ private:
         int min_pts,
         int32_t point_idx,
         int32_t igns);
-    inline double PointDistEuclidean(const Point& l, const Point& r) {
-        uint64_t key = (uint64_t)l.idx() << 32 | (uint64_t)r.idx();
-        auto iter = dist_map_.find(key);
-        if (iter != dist_map_.end()) {
-            return iter->second;
-        }
-
-        double sum = 0.0;
-        int32_t dimension = l.GetDimension();
-        for (int32_t i = 0; i < dimension; i++) {
-            sum += (l[i] - r[i]) * (l[i] - r[i]);
-        }
-
-        double res = std::sqrt(sum / (double)dimension);
-        dist_map_[key] = res;
-        return res;
-    }
+    double PointDistEuclidean(const Point& l, const Point& r);
 
     std::vector<Point>& points_;
     int32_t now_point_idx_;

@@ -22,7 +22,7 @@ ShardStatistic* ShardStatistic::Instance() {
 }
 
 void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& block_item) {
-    std::lock_guard<std::mutex> g(mutex_);
+//     std::lock_guard<std::mutex> g(mutex_);
     if (block_item->network_id() == network::kRootCongressNetworkId) {
         if (block_item->tx_list_size() == 1 &&
                 block_item->tx_list(0).type() == common::kConsensusRootTimeBlock) {
@@ -91,6 +91,7 @@ void ShardStatistic::AddStatistic(const std::shared_ptr<bft::protobuf::Block>& b
     assert(member_count <= common::kEachShardMaxNodeCount);
     std::shared_ptr<common::Point> point_ptr = nullptr;
     match_ec_ptr->elect_height = block_item->electblock_height();
+    std::lock_guard<std::mutex> g(match_ec_ptr->leader_lof_map_mutex);
     auto iter = match_ec_ptr->leader_lof_map.find(block_item->leader_index());
     if (iter == match_ec_ptr->leader_lof_map.end()) {
         libff::alt_bn128_G2 common_pk;
@@ -189,7 +190,7 @@ void ShardStatistic::NormalizePoints(
 void ShardStatistic::GetStatisticInfo(
         uint64_t timeblock_height,
         block::protobuf::StatisticInfo* statistic_info) {
-    std::lock_guard<std::mutex> g(mutex_);
+//     std::lock_guard<std::mutex> g(mutex_);
     std::shared_ptr<StatisticItem> statistic_ptr = nullptr;
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
         if (statistic_items_[i]->tmblock_height == timeblock_height) {
@@ -215,7 +216,12 @@ void ShardStatistic::GetStatisticInfo(
         auto elect_st = statistic_info->add_elect_statistic();
         auto leader_count = elect_item_ptr->leader_lof_map.size();
         if (leader_count >= kLofMaxNodes) {
-            auto leader_lof_map = elect_item_ptr->leader_lof_map;
+            std::unordered_map<int32_t, std::shared_ptr<common::Point>> leader_lof_map;
+            {
+                std::lock_guard<std::mutex> g(elect_item_ptr->leader_lof_map_mutex);
+                leader_lof_map = elect_item_ptr->leader_lof_map;
+            }
+
             NormalizePoints(elect_item_ptr->elect_height, leader_lof_map);
             if (leader_lof_map.size() >= kLofMaxNodes) {
                 auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(

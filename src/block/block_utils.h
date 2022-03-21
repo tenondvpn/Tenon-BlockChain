@@ -60,6 +60,7 @@ struct StatisticElectItem {
     uint64_t elect_height{ 0 };
     uint32_t succ_tx_count[common::kEachShardMaxNodeCount];
     std::unordered_map<int32_t, std::shared_ptr<common::Point>> leader_lof_map;
+    std::mutex leader_lof_map_mutex;
 };
 
 typedef std::shared_ptr<StatisticElectItem> StatisticElectItemPtr;

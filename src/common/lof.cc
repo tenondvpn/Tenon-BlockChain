@@ -73,6 +73,24 @@ double Lof::ReachabilityDist(
     return dist;
 }
 
+double Lof::PointDistEuclidean(const Point& l, const Point& r) {
+    uint64_t key = (uint64_t)l.idx() << 32 | (uint64_t)r.idx();
+    auto iter = dist_map_.find(key);
+    if (iter != dist_map_.end()) {
+        return iter->second;
+    }
+
+    double sum = 0.0;
+    int32_t dimension = l.GetDimension();
+    for (int32_t i = 0; i < dimension; i++) {
+        sum += (l[i] - r[i]) * (l[i] - r[i]);
+    }
+
+    double res = std::sqrt(sum / (double)dimension);
+    dist_map_[key] = res;
+    return res;
+}
+
 double Lof::LocalReachabilityDensity(
         int k,
         int32_t point_idx,
