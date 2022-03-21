@@ -92,7 +92,7 @@ message ElectStatisticInfo {
 message StatisticInfo {
     optional uint64 timeblock_height = 1;
     optional uint32 all_tx_count = 2;
-    repeated ElectStatisticInfo elect_statistic = 3;
+    optional ElectStatisticInfo elect_statistic = 3;
 }
 
 message RefreshPoolHeightRequest {

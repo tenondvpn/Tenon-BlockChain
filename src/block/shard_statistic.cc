@@ -221,7 +221,7 @@ void ShardStatistic::GetStatisticInfo(
         }
     }
 
-    auto elect_st = statistic_info->add_elect_statistic();
+    auto elect_st = statistic_info->mutable_elect_statistic();
     auto leader_count = elect_item_ptr->leader_lof_map.size();
     if (leader_count >= kLofMaxNodes) {
         auto leader_lof_map = elect_item_ptr->leader_lof_map;
