@@ -190,54 +190,70 @@ void ShardStatistic::GetStatisticInfo(
         uint64_t timeblock_height,
         block::protobuf::StatisticInfo* statistic_info) {
     std::lock_guard<std::mutex> g(mutex_);
+    std::shared_ptr<StatisticItem> statistic_ptr = nullptr;
     for (uint32_t i = 0; i < kStatisticMaxCount; ++i) {
-        if (statistic_items_[i]->tmblock_height != timeblock_height) {
+        if (statistic_items_[i]->tmblock_height == timeblock_height) {
+            statistic_ptr = statistic_items_[i];
+            break;
+        }
+    }
+
+    if (statistic_ptr == nullptr) {
+        return;
+    }
+
+    statistic_info->set_timeblock_height(statistic_ptr->tmblock_height);
+    statistic_info->set_all_tx_count(statistic_ptr->all_tx_count);
+    StatisticElectItemPtr elect_item_ptr = nullptr;
+    for (uint32_t elect_idx = 0; elect_idx < kStatisticMaxCount; ++elect_idx) {
+        auto elect_height = statistic_ptr->elect_items[elect_idx]->elect_height;
+        if (elect_height == 0) {
             continue;
         }
 
-        statistic_info->set_timeblock_height(statistic_items_[i]->tmblock_height);
-        statistic_info->set_all_tx_count(statistic_items_[i]->all_tx_count);
-        for (uint32_t elect_idx = 0; elect_idx < kStatisticMaxCount; ++elect_idx) {
-            auto elect_height = statistic_items_[i]->elect_items[elect_idx]->elect_height;
-            if (elect_height == 0) {
-                continue;
+        if (elect_item_ptr == nullptr) {
+            elect_item_ptr = statistic_ptr->elect_items[elect_idx];
+            continue;
+        }
+
+        if (elect_item_ptr->elect_height < elect_height) {
+            elect_item_ptr = statistic_ptr->elect_items[elect_idx];
+        }
+    }
+
+    auto elect_st = statistic_info->add_elect_statistic();
+    auto leader_count = elect_item_ptr->leader_lof_map.size();
+    if (leader_count >= kLofMaxNodes) {
+        auto leader_lof_map = elect_item_ptr->leader_lof_map;
+        NormalizePoints(elect_item_ptr->elect_height, leader_lof_map);
+        if (leader_lof_map.size() >= kLofMaxNodes) {
+            auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(
+                elect_item_ptr->elect_height);
+            std::vector<common::Point> points;
+            for (auto iter = leader_lof_map.begin();
+                    iter != leader_lof_map.end(); ++iter) {
+                points.push_back(*iter->second);
             }
 
-            auto elect_st = statistic_info->add_elect_statistic();
-            auto leader_count = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map.size();
-            if (leader_count >= kLofMaxNodes) {
-                auto leader_lof_map = statistic_items_[i]->elect_items[elect_idx]->leader_lof_map;
-                NormalizePoints(elect_height, leader_lof_map);
-                if (leader_lof_map.size() >= kLofMaxNodes) {
-                    auto tx_counts = bft::DispatchPool::Instance()->GetTxPoolCount(elect_height);
-                    std::vector<common::Point> points;
-                    for (auto iter = leader_lof_map.begin();
-                            iter != leader_lof_map.end(); ++iter) {
-                        points.push_back(*iter->second);
-                    }
-
-                    common::Lof lof(points);
-                    auto out = lof.GetOutliers(kLofRation);
-                    int32_t weedout_leader_count = leader_count / 10 + 1;
-                    for (auto iter = out.begin(); iter != out.end(); ++iter) {
-                        if (elect_st->lof_leaders_size() >= weedout_leader_count || (*iter).second <= 2.0) {
-                            break;
-                        }
-
-                        elect_st->add_lof_leaders((*iter).first);
-                    }
+            common::Lof lof(points);
+            auto out = lof.GetOutliers(kLofRation);
+            int32_t weedout_count = leader_count / 10 + 1;
+            for (auto iter = out.begin(); iter != out.end(); ++iter) {
+                if (elect_st->lof_leaders_size() >= weedout_count || (*iter).second <= 2.0) {
+                    break;
                 }
-            }
 
-            elect_st->set_elect_height(elect_height);
-            auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
-                elect_st->elect_height(),
-                common::GlobalInfo::Instance()->network_id());
-            for (uint32_t m = 0; m < member_count; ++m) {
-                elect_st->add_succ_tx_count(
-                    statistic_items_[i]->elect_items[elect_idx]->succ_tx_count[m]);
+                elect_st->add_lof_leaders((*iter).first);
             }
         }
+    }
+
+    elect_st->set_elect_height(elect_item_ptr->elect_height);
+    auto member_count = elect::ElectManager::Instance()->GetMemberCountWithHeight(
+        elect_st->elect_height(),
+        common::GlobalInfo::Instance()->network_id());
+    for (uint32_t m = 0; m < member_count; ++m) {
+        elect_st->add_succ_tx_count(elect_item_ptr->succ_tx_count[m]);
     }
 }
 
