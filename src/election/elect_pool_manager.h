@@ -70,7 +70,14 @@ private:
         const block::protobuf::StatisticInfo& statistic_info,
         uint32_t count,
         std::map<std::string, uint32_t>* nodes);
-    int SelectLeader(uint32_t network_id, const common::Bitmap& bitmap, elect::protobuf::ElectBlock* ec_block);
+    void GetInvalidLeaders(
+        uint32_t network_id,
+        const block::protobuf::StatisticInfo& statistic_info,
+        std::map<std::string, uint32_t>* nodes);
+    int SelectLeader(
+        uint32_t network_id,
+        const common::Bitmap& bitmap,
+        elect::protobuf::ElectBlock* ec_block);
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;

@@ -325,12 +325,44 @@ void ElectPoolManager::UpdateWaitingNodes(
     waiting_pool_ptr->UpdateWaitingNodes(root_node_id, nodes_filter);
 }
 
+void ElectPoolManager::GetInvalidLeaders(
+        uint32_t network_id,
+        const block::protobuf::StatisticInfo& statistic_info,
+        std::map<std::string, uint32_t>* nodes) {
+    for (int32_t i = 0; i < statistic_info.elect_statistic_size(); ++i) {
+        if (elect::ElectManager::Instance()->latest_height(network_id) !=
+                statistic_info.elect_statistic(i).elect_height()) {
+            continue;
+        }
+
+        auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
+            statistic_info.elect_statistic(i).elect_height(),
+            network_id,
+            nullptr,
+            nullptr);
+        for (uint32_t lof_idx = 0;
+                lof_idx < statistic_info.elect_statistic(i).lof_leaders_size(); ++lof_idx) {
+            if (statistic_info.elect_statistic(i).lof_leaders(lof_idx) >= members->size()) {
+                continue;
+            }
+
+            auto& id = (*members)[statistic_info.elect_statistic(i).lof_leaders(lof_idx)]->id;
+            (*nodes)[id] = 0;
+        }
+    }
+}
+
 void ElectPoolManager::GetMiniTopNInvalidNodes(
         uint32_t network_id,
         const block::protobuf::StatisticInfo& statistic_info,
         uint32_t count,
         std::map<std::string, uint32_t>* nodes) {
     for (int32_t i = 0; i < statistic_info.elect_statistic_size(); ++i) {
+        if (elect::ElectManager::Instance()->latest_height(network_id) !=
+                statistic_info.elect_statistic(i).elect_height()) {
+            continue;
+        }
+
         auto members = elect::ElectManager::Instance()->GetNetworkMembersWithHeight(
             statistic_info.elect_statistic(i).elect_height(),
             network_id,
@@ -466,6 +498,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         statistic_info,
         exists_shard_nodes.size() * kInvalidShardNodesRate / 100,
         &direct_weed_out);
+    GetInvalidLeaders(shard_netid, statistic_info, &direct_weed_out);
     for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
         auto eiter = id_node_map.find(iter->first);
         if (eiter == id_node_map.end()) {
@@ -477,6 +510,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         } else if (iter->second == 0) {
             weed_out_vec.push_back(eiter->second);
         }
+
+        std::cout << "weed out: " << common::Encode::HexEncode(iter->first) << ":" << iter->second << std::endl;
     }
 
     weed_out_count -= weed_out_vec.size();

@@ -8,15 +8,18 @@
 #include "bzlib.h"
 
 #define private public
+#include "bft/dispatch_pool.h"
+#include "block/shard_statistic.h"
+#include "common/random.h"
+#include "common/time_utils.h"
+#include "db/db.h"
 #include "election/elect_pool_manager.h"
 #include "election/elect_manager.h"
 #include "election/elect_manager.h"
+#include "network/network_utils.h"
 #include "security/secp256k1.h"
 #include "security/crypto_utils.h"
 #include "security/security.h"
-#include "network/network_utils.h"
-#include "common/random.h"
-#include "common/time_utils.h"
 
 namespace tenon {
 
@@ -24,7 +27,7 @@ namespace elect {
 
 namespace test {
 
-static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
+static const char* kRootNodeIdEndFix = "2f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b485";
 static const char* kWaitingNodeIdEndFix = "1f72f72efffee770264ec22dc21c9d2bab63aec39941aad09acda57b4851";
 
 class TestElectPoolManager : public testing::Test {
@@ -51,6 +54,7 @@ public:
                 "log4cpp.appender.programLog.layout.ConversionPattern = %d [%p] %m%n\n");
         fwrite(log_str.c_str(), log_str.size(), 1, file);
         fclose(file);
+        db::Db::Instance()->Init("./db");
     }
 
     static void SetUpTestCase() {    
@@ -148,7 +152,7 @@ public:
         std::vector<std::string> pri_vec;
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            snprintf(from_data, sizeof(from_data), "1%04d%s", i, kRootNodeIdEndFix);
             std::string prikey = common::Encode::HexDecode(from_data);
             pri_vec.push_back(prikey);
             auto net_id = network_id;
@@ -186,11 +190,11 @@ public:
         block_info.set_height(height);
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            snprintf(from_data, sizeof(from_data), "1%04d%s", i, kRootNodeIdEndFix);
             std::string prikey = common::Encode::HexDecode(from_data);
 
             char to_data[128];
-            snprintf(to_data, sizeof(to_data), "%04d%s", i + member_count + 1, kRootNodeIdEndFix);
+            snprintf(to_data, sizeof(to_data), "1%04d%s", i + member_count + 1, kRootNodeIdEndFix);
             std::string to_prikey = common::Encode::HexDecode(to_data);
 
             auto tx_list = block_info.mutable_tx_list();
@@ -230,7 +234,7 @@ public:
             0, 0, pick_all, pick_all_vec);
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
-            snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
+            snprintf(from_data, sizeof(from_data), "1%04d%s", i, kRootNodeIdEndFix);
             std::string prikey = common::Encode::HexDecode(from_data);
             elect_pool_manager_.waiting_pool_map_[
                 network::kConsensusShardBeginNetworkId +
@@ -292,7 +296,6 @@ public:
         for (auto iter = leaders.begin(); iter != leaders.end(); ++iter) {
             int32_t rand_num = rand() % 100;
             if (rand_num >= 90) {
-                std::cout << "invalid leader: " << ((*iter)->index) << std::endl;
                 ++invalid_leader_count;
             }
 
@@ -351,19 +354,18 @@ public:
                     start_pool_idx = (start_pool_idx + leaders.size()) % 256;
                 }
 
-                ShardStatistic::Instance()->AddStatistic(block_item);
+                block::ShardStatistic::Instance()->AddStatistic(block_item);
             }
         }
 
-        std::cout << "invalid_leader_count: " << invalid_leader_count << std::endl;
-        ShardStatistic::Instance()->GetStatisticInfo(9, &statistic_info);
+        block::ShardStatistic::Instance()->GetStatisticInfo(9, &statistic_info);
     }
 private:
     ElectPoolManager elect_pool_manager_;
 };
 
 TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
-    const uint32_t kMemberCount = 31;
+    const uint32_t kMemberCount = 1024;
     const uint32_t kWaitingCount = 11;
     CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
     CreateElectBlocks(kMemberCount, network::kRootCongressNetworkId);
