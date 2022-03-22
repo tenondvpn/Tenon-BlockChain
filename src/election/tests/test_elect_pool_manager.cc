@@ -89,13 +89,15 @@ public:
         return pubkey_str;
     }
 
-    void CreateElectionBlockMemeber(uint32_t network_id, std::vector<std::string>& pri_vec) {
+    void CreateElectionBlockMemeber(uint32_t net_id, std::vector<std::string>& pri_vec) {
         std::map<uint32_t, elect::MembersPtr> in_members;
         std::map<uint32_t, elect::MembersPtr> out_members;
         std::map<uint32_t, elect::NodeIndexMapPtr> in_index_members;
         std::map<uint32_t, uint32_t> begin_index_map_;
+        auto shard_members_ptr = std::make_shared<Members>();
+        auto shard_members_index_ptr = std::make_shared<
+            std::unordered_map<std::string, uint32_t>>();
         for (uint32_t i = 0; i < pri_vec.size(); ++i) {
-            auto net_id = network_id;
             auto iter = in_members.find(net_id);
             if (iter == in_members.end()) {
                 in_members[net_id] = std::make_shared<elect::Members>();
@@ -109,24 +111,22 @@ public:
             std::string pubkey_str;
             ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
             std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
-            security::CommitSecret secret;
             in_members[net_id]->push_back(std::make_shared<elect::BftMember>(
                 net_id, id, pubkey_str, begin_index_map_[net_id], "", i == 0 ? 0 : -1));
             in_index_members[net_id]->insert(std::make_pair(id, begin_index_map_[net_id]));
             ++begin_index_map_[net_id];
+            shard_members_ptr->push_back(std::make_shared<BftMember>(
+                net_id,
+                id,
+                pubkey_str,
+                i,
+                "dht_key",
+                -1));
+            (*shard_members_index_ptr)[id] = i;
         }
 
-        static uint64_t elect_height = 0;
-        for (auto iter = in_members.begin(); iter != in_members.end(); ++iter) {
-            auto index_map_iter = in_index_members.find(iter->first);
-            ASSERT_TRUE(index_map_iter != in_index_members.end());
-//             ElectManager::Instance()->SetNetworkMember(
-//                 elect_height++,
-//                 iter->first,
-//                 iter->second,
-//                 index_map_iter->second,
-//                 1);
-        }
+        ElectManager::Instance()->members_ptr_[net_id] = shard_members_ptr;
+        ElectManager::Instance()->node_index_map_[net_id] = shard_members_index_ptr;
     }
 
     void SetGloableInfo(const std::string& private_key, uint32_t network_id) {
@@ -227,7 +227,7 @@ public:
         elect_pool_manager_.waiting_pool_map_[
             network::kConsensusShardBeginNetworkId +
             network::kConsensusWaitingShardOffset]->GetAllValidHeartbeatNodes(
-            0, pick_all, pick_all_vec);
+            0, 0, pick_all, pick_all_vec);
         for (int32_t i = 0; i < member_count; ++i) {
             char from_data[128];
             snprintf(from_data, sizeof(from_data), "%04d%s", i, kRootNodeIdEndFix);
@@ -239,6 +239,125 @@ public:
         }
     }
 
+    void GetStatisticInfo(block::protobuf::StatisticInfo& statistic_info) {
+        common::GlobalInfo::Instance()->set_network_id(3);
+        static const uint32_t n = 1024;
+        elect::MembersPtr members = std::make_shared<elect::Members>();
+        std::vector<std::string> pri_vec;
+        for (uint32_t i = 0; i < n; ++i) {
+            pri_vec.push_back(common::Random::RandomString(32));
+        }
+
+        std::set<int32_t> leader_idx;
+        while(true) {
+            leader_idx.insert(rand() % 1024);
+            if (leader_idx.size() >= 256) {
+                break;
+            }
+        }
+
+        std::vector<int32_t> valid_node_idx;
+        for (int32_t i = 0; i < 1024; ++i) {
+            valid_node_idx.push_back(i);
+        }
+    
+        std::random_shuffle(valid_node_idx.begin(), valid_node_idx.end());
+        int32_t pool_idx = 0;
+        std::vector<elect::BftMemberPtr> leaders;
+        for (uint32_t i = 0; i < pri_vec.size(); ++i) {
+            security::PrivateKey prikey(pri_vec[i]);
+            security::PublicKey pubkey(prikey);
+            std::string pubkey_str;
+            ASSERT_EQ(pubkey.Serialize(pubkey_str, false), security::kPublicKeyUncompressSize);
+            std::string id = security::Secp256k1::Instance()->ToAddressWithPublicKey(pubkey_str);
+            auto member = std::make_shared<elect::BftMember>(
+                network::kConsensusShardBeginNetworkId, id, pubkey_str, i, "", i == 0 ? 0 : -1);
+            member->public_ip = "127.0.0.1";
+            member->public_port = 123;
+            members->push_back(member);
+            if (leader_idx.find(i) != leader_idx.end()) {
+                member->pool_index_mod_num = pool_idx++;
+                leaders.push_back(member);
+            }
+        }
+
+        elect::ElectManager::Instance()->latest_leader_count_[3] = leaders.size();
+        libff::alt_bn128_G2 cpk;
+        elect::ElectManager::Instance()->height_with_block_.AddNewHeightBlock(10, 3, members, cpk);
+        static const int32_t kValidCount = 1024 * 2 / 3 + 1;
+        static const int32_t kBlockCount = 10;
+        uint64_t block_height = 0;
+        srand(time(NULL));
+        int32_t invalid_leader_count = 0;
+        for (auto iter = leaders.begin(); iter != leaders.end(); ++iter) {
+            int32_t rand_num = rand() % 100;
+            if (rand_num >= 90) {
+                std::cout << "invalid leader: " << ((*iter)->index) << std::endl;
+                ++invalid_leader_count;
+            }
+
+            for (int32_t bidx = 0; bidx < kBlockCount; ++bidx) {
+                auto block_item = std::make_shared<bft::protobuf::Block>();
+                block_item->set_electblock_height(10);
+                block_item->set_timeblock_height(9);
+                block_item->set_network_id(3);
+                block_item->set_height(++block_height);
+                block_item->set_leader_index((*iter)->index);
+                common::Bitmap bitmap(1024);
+                std::vector<int32_t> random_set_node = valid_node_idx;
+                std::random_shuffle(random_set_node.begin(), random_set_node.end());
+                static const uint32_t kRandomCount = 50;
+                for (uint32_t i = 0; i < kRandomCount; ++i) {
+                    if (bitmap.valid_count() >= kValidCount) {
+                        break;
+                    }
+
+                    bitmap.Set(random_set_node[i]);
+                }
+
+                if (rand_num >= 90) {
+                    for (uint32_t i = kRandomCount; i < random_set_node.size(); ++i) {
+                        if (bitmap.valid_count() >= kValidCount) {
+                            break;
+                        }
+
+                        bitmap.Set(random_set_node[i]);
+                    }
+                }
+
+                for (uint32_t i = 0; i < valid_node_idx.size(); ++i) {
+                    if (bitmap.valid_count() >= kValidCount) {
+                        break;
+                    }
+
+                    if (bitmap.Valid(valid_node_idx[i])) {
+                        continue;
+                    }
+
+                    bitmap.Set(valid_node_idx[i]);
+                }
+
+                auto datas = bitmap.data();
+                for (uint32_t i = 0; i < datas.size(); ++i) {
+                    block_item->add_bitmap(datas[i]);
+                }
+
+                int32_t tx_size = rand() % 10 + 1;
+                int32_t start_pool_idx = (*iter)->pool_index_mod_num;
+                for (int32_t i = 0; i < tx_size; ++i) {
+                    auto tx = block_item->add_tx_list();
+                    tx->set_type(common::kConsensusTransaction);
+                    bft::DispatchPool::Instance()->tx_pool_.AddTxCount(start_pool_idx);
+                    start_pool_idx = (start_pool_idx + leaders.size()) % 256;
+                }
+
+                ShardStatistic::Instance()->AddStatistic(block_item);
+            }
+        }
+
+        std::cout << "invalid_leader_count: " << invalid_leader_count << std::endl;
+        ShardStatistic::Instance()->GetStatisticInfo(9, &statistic_info);
+    }
 private:
     ElectPoolManager elect_pool_manager_;
 };
@@ -264,7 +383,7 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     UpdateWaitingNodesConsensusCount(kMemberCount);
     ASSERT_EQ(waiting_pool_ptr->all_nodes_waiting_map_.size(), 1);
     auto waiting_iter = waiting_pool_ptr->all_nodes_waiting_map_.begin();
-    ASSERT_EQ(waiting_iter->second->same_root_count, kMemberCount);
+    ASSERT_EQ(waiting_iter->second->nodes_vec.size(), kWaitingCount);
     common::BloomFilter cons_all(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter cons_weed_out(kBloomfilterSize, kBloomfilterHashCount);
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
@@ -274,6 +393,7 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     std::vector<NodeDetailPtr> pick_in_vec;
     int32_t leader_count = 0;
     block::protobuf::StatisticInfo statistic_info;
+    GetStatisticInfo(statistic_info);
     uint32_t shard_netid = network::kConsensusShardBeginNetworkId;
     ASSERT_EQ(elect_pool_manager_.GetAllBloomFilerAndNodes(
         statistic_info,

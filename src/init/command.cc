@@ -38,7 +38,7 @@
 #include "statistics/statistics.h"
 // #include "services/vpn_server/server.h"
 // #include "services/vpn_server/vpn_server.h"
-#undef _WIN32
+#define  _WIN32
 #ifndef _WIN32
 #include "security/private_key.h"
 #include "security/public_key.h"

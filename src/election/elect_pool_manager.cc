@@ -521,7 +521,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
     };
 
     std::srand(static_cast<uint32_t>(vss::VssManager::Instance()->EpochRandom() % RAND_MAX));
-//     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
     std::random_shuffle(elected_nodes.begin(), elected_nodes.end(), RangGen());
     ELECT_DEBUG("pick_all_vec size: %d, pick_in_vec size: %d, weed_out_vec size: %d, elected_nodes size: %d",
         pick_all_vec.size(), pick_in_vec.size(), weed_out_vec.size(), elected_nodes.size());
