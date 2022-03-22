@@ -340,13 +340,14 @@ void ElectPoolManager::GetInvalidLeaders(
             network_id,
             nullptr,
             nullptr);
-        for (uint32_t lof_idx = 0;
+        for (int32_t lof_idx = 0;
                 lof_idx < statistic_info.elect_statistic(i).lof_leaders_size(); ++lof_idx) {
             if (statistic_info.elect_statistic(i).lof_leaders(lof_idx) >= members->size()) {
                 continue;
             }
 
             auto& id = (*members)[statistic_info.elect_statistic(i).lof_leaders(lof_idx)]->id;
+            std::cout << "leader: " << common::Encode::HexEncode(id) << ":" << 0 << std::endl;
             (*nodes)[id] = 0;
         }
     }
@@ -401,6 +402,7 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
     nodes->clear();
     while (nodes->size() < count && !item_queue.empty()) {
         nodes->insert(std::make_pair(item_queue.top().id, item_queue.top().count));
+        std::cout << "shard: " << common::Encode::HexEncode(item_queue.top().id) << ":" << item_queue.top().count << std::endl;
         item_queue.pop();
     }
 }
@@ -499,9 +501,11 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         exists_shard_nodes.size() * kInvalidShardNodesRate / 100,
         &direct_weed_out);
     GetInvalidLeaders(shard_netid, statistic_info, &direct_weed_out);
+    std::cout << "direct_weed_out size: " << direct_weed_out.size() << std::endl;
     for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
         auto eiter = id_node_map.find(iter->first);
         if (eiter == id_node_map.end()) {
+            std::cout << "not found: " << common::Encode::HexEncode(iter->first) << ":" << iter->second << std::endl;
             continue;
         }
 

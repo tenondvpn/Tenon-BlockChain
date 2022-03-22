@@ -249,7 +249,10 @@ public:
         elect::MembersPtr members = std::make_shared<elect::Members>();
         std::vector<std::string> pri_vec;
         for (uint32_t i = 0; i < n; ++i) {
-            pri_vec.push_back(common::Random::RandomString(32));
+            char from_data[128];
+            snprintf(from_data, sizeof(from_data), "1%04d%s", i, kRootNodeIdEndFix);
+            std::string prikey = common::Encode::HexDecode(from_data);
+            pri_vec.push_back(prikey);
         }
 
         std::set<int32_t> leader_idx;
@@ -365,6 +368,7 @@ private:
 };
 
 TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
+    elect::ElectManager::Instance()->elect_net_heights_map_[network::kConsensusShardBeginNetworkId] = 10;
     const uint32_t kMemberCount = 1024;
     const uint32_t kWaitingCount = 11;
     CreateElectBlocks(kMemberCount, network::kConsensusShardBeginNetworkId);
