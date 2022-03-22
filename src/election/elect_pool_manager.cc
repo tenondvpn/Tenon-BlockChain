@@ -347,7 +347,6 @@ void ElectPoolManager::GetInvalidLeaders(
             }
 
             auto& id = (*members)[statistic_info.elect_statistic(i).lof_leaders(lof_idx)]->id;
-            std::cout << "leader: " << common::Encode::HexEncode(id) << ":" << 0 << std::endl;
             (*nodes)[id] = 0;
         }
     }
@@ -402,7 +401,6 @@ void ElectPoolManager::GetMiniTopNInvalidNodes(
     nodes->clear();
     while (nodes->size() < count && !item_queue.empty()) {
         nodes->insert(std::make_pair(item_queue.top().id, item_queue.top().count));
-        std::cout << "shard: " << common::Encode::HexEncode(item_queue.top().id) << ":" << item_queue.top().count << std::endl;
         item_queue.pop();
     }
 }
@@ -501,11 +499,9 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         exists_shard_nodes.size() * kInvalidShardNodesRate / 100,
         &direct_weed_out);
     GetInvalidLeaders(shard_netid, statistic_info, &direct_weed_out);
-    std::cout << "direct_weed_out size: " << direct_weed_out.size() << std::endl;
     for (auto iter = direct_weed_out.begin(); iter != direct_weed_out.end(); ++iter) {
         auto eiter = id_node_map.find(iter->first);
         if (eiter == id_node_map.end()) {
-            std::cout << "not found: " << common::Encode::HexEncode(iter->first) << ":" << iter->second << std::endl;
             continue;
         }
 
@@ -514,11 +510,14 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         } else if (iter->second == 0) {
             weed_out_vec.push_back(eiter->second);
         }
-
-        std::cout << "weed out: " << common::Encode::HexEncode(iter->first) << ":" << iter->second << std::endl;
     }
 
-    weed_out_count -= weed_out_vec.size();
+    if (weed_out_count >= weed_out_vec.size()) {
+        weed_out_count -= weed_out_vec.size();
+    } else {
+        weed_out_count = 0;
+    }
+
     if (pick_in_vec.size() < weed_out_count + weed_out_vec.size()) {
         if (pick_in_vec.size() < weed_out_vec.size()) {
             weed_out_count = 0;
@@ -535,9 +534,10 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             cons_weed_out,
             exists_shard_nodes,
             weed_out_vec);
-        for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-            weed_out_id_set.insert((*iter)->id);
-        }
+    }
+
+    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
+        weed_out_id_set.insert((*iter)->id);
     }
 
     std::vector<NodeDetailPtr> elected_nodes;

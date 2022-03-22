@@ -42,7 +42,7 @@ static const uint32_t kInvalidMemberIndex = (std::numeric_limits<uint32_t>::max)
 static const uint32_t kMinShardingNetworkNodesCount = 7u;
 // weed out and pick 1/10 nodes each epoch
 static const uint32_t kFtsWeedoutDividRate = 10u;
-static const uint32_t kInvalidShardNodesRate = 6u;
+static const uint32_t kInvalidShardNodesRate = 5u;
 static const uint32_t kEachShardMaxTps = 2000u;
 // Tolerate 5% difference between leader and backup
 static const uint32_t kTolerateLeaderBackupFiffRate = 5u;  // kTolerateLeaderBackupFiffRate %;
