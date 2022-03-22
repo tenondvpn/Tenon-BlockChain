@@ -69,11 +69,11 @@ private:
         uint32_t network_id,
         const block::protobuf::StatisticInfo& statistic_info,
         uint32_t count,
-        std::map<std::string, uint32_t>* nodes);
+        std::map<int32_t, uint32_t>* nodes);
     void GetInvalidLeaders(
         uint32_t network_id,
         const block::protobuf::StatisticInfo& statistic_info,
-        std::map<std::string, uint32_t>* nodes);
+        std::map<int32_t, uint32_t>* nodes);
     int SelectLeader(
         uint32_t network_id,
         const common::Bitmap& bitmap,

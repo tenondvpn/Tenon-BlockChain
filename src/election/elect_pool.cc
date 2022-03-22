@@ -31,12 +31,12 @@ void ElectPool::GetAllValidNodes(
             nodes = elect_nodes_;
         }
 
-        for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
-            nodes_filter.Add(common::Hash::Hash64((*iter)->id));
-        }
+//         for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+//             nodes_filter.Add(common::Hash::Hash64((*iter)->id));
+//         }
     }
 
-    std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
+//     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
 }
 
 };  // namespace elect
