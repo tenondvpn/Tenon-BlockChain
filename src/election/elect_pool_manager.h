@@ -52,15 +52,15 @@ private:
         common::BloomFilter* pick_all,
         common::BloomFilter* pick_in,
         std::vector<NodeDetailPtr>& exists_shard_nodes,
-        std::vector<NodeDetailPtr>& weed_out_vec,
-        std::vector<NodeDetailPtr>& pick_in_vec,
+        std::set<int32_t>& weed_out_vec,
+        std::set<int32_t>& pick_in_vec,
         int32_t* leader_count);
     void FtsGetNodes(
         bool weed_out,
         uint32_t count,
         common::BloomFilter* nodes_filter,
         const std::vector<NodeDetailPtr>& src_nodes,
-        std::vector<NodeDetailPtr>& res_nodes);
+        std::set<int32_t>& res_nodes);
     void SmoothFtsValue(
         int32_t count,
         std::mt19937_64& g2,

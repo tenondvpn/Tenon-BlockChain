@@ -13,7 +13,7 @@ FtsTree::FtsTree() {}
 
 FtsTree::~FtsTree() {}
 
-void FtsTree::AppendFtsNode(uint64_t fts_value, void* data) {
+void FtsTree::AppendFtsNode(uint64_t fts_value, int32_t data) {
     fts_nodes_.push_back({ fts_value, 0, 0, 0, data });
 }
 
@@ -52,12 +52,7 @@ void FtsTree::CreateFtsTree() {
         }
 
         auto sum_val = fts_nodes_[i].fts_value + fts_nodes_[i + 1].fts_value;
-        fts_nodes_.push_back({
-            sum_val,
-            0,
-            i,
-            i + 1,
-            nullptr });
+        fts_nodes_.push_back({ sum_val, 0, i, i + 1, -1 });
     }
 }
 
@@ -73,9 +68,8 @@ void FtsTree::PrintFtsTree() {
         int32_t count = (int32_t)pow(2.0, (float)level_count);
         std::cout << "count: " << count << std::endl;
         for (int32_t i = end_idx - count + 1; i <= end_idx; ++i) {
-            if (fts_nodes_[i].data != nullptr) {
-                elect::NodeDetailPtr* node_ptr = (elect::NodeDetailPtr*)fts_nodes_[i].data;
-                std::cout << fts_nodes_[i].fts_value << ":" << common::Encode::HexEncode((*node_ptr)->id) << " ";
+            if (fts_nodes_[i].data != -1) {
+                std::cout << fts_nodes_[i].fts_value << ":" << fts_nodes_[i].data << " ";
             } else {
                 std::cout << fts_nodes_[i].fts_value << " ";
             }
@@ -91,9 +85,9 @@ void FtsTree::PrintFtsTree() {
     }
 }
 
-void* FtsTree::GetOneNode(std::mt19937_64& g2) {
+int32_t FtsTree::GetOneNode(std::mt19937_64& g2) {
     if (fts_nodes_.empty() || fts_nodes_.size() <= root_node_index_) {
-        return nullptr;
+        return -1;
     }
 
     assert(fts_nodes_.size() == root_node_index_ + 1);
@@ -131,7 +125,7 @@ void* FtsTree::GetOneNode(std::mt19937_64& g2) {
     }
 
     assert(false);
-    return nullptr;
+    return -1;
 }
 
 };  // namespace common

@@ -112,8 +112,8 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     common::BloomFilter pick_all(kBloomfilterWaitingSize, kBloomfilterWaitingHashCount);
     common::BloomFilter pick_in(kBloomfilterSize, kBloomfilterHashCount);
     std::vector<NodeDetailPtr> exists_shard_nodes;
-    std::vector<NodeDetailPtr> weed_out_vec;
-    std::vector<NodeDetailPtr> pick_in_vec;
+    std::set<int32_t> weed_out_vec;
+    std::set<int32_t> pick_in_vec;
     int32_t leader_count = 0;
     if (GetAllBloomFilerAndNodes(
             statistic_info,
@@ -142,14 +142,10 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     auto pick_in_attr = tx_info.add_attr();
     pick_in_attr->set_key(kElectNodeAttrKeyPickInBloomfilter);
     pick_in_attr->set_value(pick_in.Serialize());
-    std::set<std::string> weed_out_id_set;
-    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-        weed_out_id_set.insert((*iter)->id);
-    }
-
     elect::protobuf::ElectBlock ec_block;
+    int32_t idx = 0;
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
-        if (weed_out_id_set.find((*iter)->id) != weed_out_id_set.end()) {
+        if (weed_out_vec.find(idx++) != weed_out_vec.end()) {
             continue;
         }
 
@@ -408,8 +404,8 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         common::BloomFilter* pick_all,
         common::BloomFilter* pick_in,
         std::vector<NodeDetailPtr>& exists_shard_nodes,
-        std::vector<NodeDetailPtr>& weed_out_vec,
-        std::vector<NodeDetailPtr>& pick_in_vec,
+        std::set<int32_t>& weed_out_vec,
+        std::vector<int32_t>& pick_in_vec,
         int32_t* leader_count) {
     ElectPoolPtr consensus_pool_ptr = nullptr;
     {
@@ -491,7 +487,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
 
         if (pick_in_vec.size() >= weed_out_count || iter->second == 0) {
-            weed_out_vec.push_back(exists_shard_nodes[iter->first]);
+            weed_out_vec.insert(iter->first);
         }
     }
 
@@ -509,7 +505,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
         }
     }
 
-    int32_t weed_out_id_set[2048] = { 0 };
     if (weed_out_count > 0) {
         FtsGetNodes(
             true,
@@ -519,16 +514,12 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             weed_out_vec);
     }
 
-    for (auto iter = weed_out_vec.begin(); iter != weed_out_vec.end(); ++iter) {
-        weed_out_id_set[iter->first] = 1;
-    }
-
     std::set<std::string> elected_ids;
     std::vector<NodeDetailPtr> elected_nodes;
     int32_t idx = 0;
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {
         cons_all->Add(common::Hash::Hash64((*iter)->id));
-        if (weed_out_id_set[idx++] != 0) {
+        if (weed_out_vec.find(idx++) != weed_out_vec.end()) {
             continue;
         }
 
@@ -600,7 +591,7 @@ int ElectPoolManager::SelectLeader(
         elected_nodes.push_back(elect_node);
     }
 
-    std::vector<NodeDetailPtr> leader_nodes;
+    std::set<int32_t> leader_nodes;
     FtsGetNodes(
         false,
         expect_leader_count,
@@ -638,12 +629,13 @@ int ElectPoolManager::SelectLeader(
 
     return kElectSuccess;
 }
+
 void ElectPoolManager::FtsGetNodes(
         bool weed_out,
         uint32_t count,
         common::BloomFilter* nodes_filter,
         const std::vector<NodeDetailPtr>& src_nodes,
-        std::vector<NodeDetailPtr>& res_nodes) {
+        std::set<int32_t>& res_nodes) {
     auto sort_vec = src_nodes;
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
     SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
@@ -651,9 +643,9 @@ void ElectPoolManager::FtsGetNodes(
     uint32_t try_times = 0;
     while (tmp_res_nodes.size() < count) {
         common::FtsTree fts_tree;
-        for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter) {
-            void* data = (void*)&(*iter);
-            if (tmp_res_nodes.find(data) != tmp_res_nodes.end()) {
+        int32_t idx = 0;
+        for (auto iter = src_nodes.begin(); iter != src_nodes.end(); ++iter, ++idx) {
+            if (tmp_res_nodes.find(idx) != tmp_res_nodes.end()) {
                 continue;
             }
 
@@ -662,18 +654,15 @@ void ElectPoolManager::FtsGetNodes(
                 fts_value = common::kTenonMaxAmount - fts_value;
             }
 
-//             ELECT_DEBUG("fts append node value: %lu, node id: %s", fts_value, common::Encode::HexEncode((*iter)->id).c_str());
-            fts_tree.AppendFtsNode(fts_value, data);
+            fts_tree.AppendFtsNode(fts_value, idx);
         }
 
         fts_tree.CreateFtsTree();
-        void* data = fts_tree.GetOneNode(g2);
-        if (data == nullptr) {
+        int32_t data = fts_tree.GetOneNode(g2);
+        if (data == -1) {
             ++try_times;
             if (try_times > 5) {
-//                 fts_tree.PrintFtsTree();
                 ELECT_ERROR("fts get bft nodes failed! tmp_res_nodes size: %d", tmp_res_nodes.size());
-//                 assert(false);
                 return;
             }
             continue;
@@ -681,7 +670,7 @@ void ElectPoolManager::FtsGetNodes(
 
         try_times = 0;
         tmp_res_nodes.insert(data);
-        NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
+//         NodeDetailPtr node_ptr = *((NodeDetailPtr*)data);
         res_nodes.push_back(node_ptr);
         nodes_filter->Add(common::Hash::Hash64(node_ptr->id));
     }

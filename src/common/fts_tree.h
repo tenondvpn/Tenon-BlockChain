@@ -16,16 +16,16 @@ struct FtsNode {
     uint32_t parent;
     uint32_t left;
     uint32_t right;
-    void* data;
+    int32_t data{ -1 };
 };
 
 class FtsTree {
 public:
     FtsTree();
     ~FtsTree();
-    void AppendFtsNode(uint64_t fts_value, void* data);
+    void AppendFtsNode(uint64_t fts_value, int32_t data);
     void CreateFtsTree();
-    void* GetOneNode(std::mt19937_64& g2);
+    int32_t GetOneNode(std::mt19937_64& g2);
     void PrintFtsTree();
 
 private:
