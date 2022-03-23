@@ -789,6 +789,28 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::member >&
       in() const;
 
+  // repeated bytes weedout_ids = 6;
+  int weedout_ids_size() const;
+  void clear_weedout_ids();
+  static const int kWeedoutIdsFieldNumber = 6;
+  const ::std::string& weedout_ids(int index) const;
+  ::std::string* mutable_weedout_ids(int index);
+  void set_weedout_ids(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_weedout_ids(int index, ::std::string&& value);
+  #endif
+  void set_weedout_ids(int index, const char* value);
+  void set_weedout_ids(int index, const void* value, size_t size);
+  ::std::string* add_weedout_ids();
+  void add_weedout_ids(const ::std::string& value);
+  #if LANG_CXX11
+  void add_weedout_ids(::std::string&& value);
+  #endif
+  void add_weedout_ids(const char* value);
+  void add_weedout_ids(const void* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& weedout_ids() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_weedout_ids();
+
   // optional bytes acc_pubkey = 2;
   bool has_acc_pubkey() const;
   void clear_acc_pubkey();
@@ -853,6 +875,7 @@ class ElectBlock : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::member > in_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> weedout_ids_;
   ::google::protobuf::internal::ArenaStringPtr acc_pubkey_;
   ::google::protobuf::internal::ArenaStringPtr acc_sign_;
   ::tenon::elect::protobuf::PrevMembers* prev_members_;
@@ -2684,6 +2707,75 @@ inline void ElectBlock::set_allocated_prev_members(::tenon::elect::protobuf::Pre
   }
   prev_members_ = prev_members;
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectBlock.prev_members)
+}
+
+// repeated bytes weedout_ids = 6;
+inline int ElectBlock::weedout_ids_size() const {
+  return weedout_ids_.size();
+}
+inline void ElectBlock::clear_weedout_ids() {
+  weedout_ids_.Clear();
+}
+inline const ::std::string& ElectBlock::weedout_ids(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  return weedout_ids_.Get(index);
+}
+inline ::std::string* ElectBlock::mutable_weedout_ids(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  return weedout_ids_.Mutable(index);
+}
+inline void ElectBlock::set_weedout_ids(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  weedout_ids_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void ElectBlock::set_weedout_ids(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  weedout_ids_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void ElectBlock::set_weedout_ids(int index, const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  weedout_ids_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+inline void ElectBlock::set_weedout_ids(int index, const void* value, size_t size) {
+  weedout_ids_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+inline ::std::string* ElectBlock::add_weedout_ids() {
+  // @@protoc_insertion_point(field_add_mutable:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  return weedout_ids_.Add();
+}
+inline void ElectBlock::add_weedout_ids(const ::std::string& value) {
+  weedout_ids_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+#if LANG_CXX11
+inline void ElectBlock::add_weedout_ids(::std::string&& value) {
+  weedout_ids_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+#endif
+inline void ElectBlock::add_weedout_ids(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  weedout_ids_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+inline void ElectBlock::add_weedout_ids(const void* value, size_t size) {
+  weedout_ids_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tenon.elect.protobuf.ElectBlock.weedout_ids)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ElectBlock::weedout_ids() const {
+  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  return weedout_ids_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ElectBlock::mutable_weedout_ids() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.ElectBlock.weedout_ids)
+  return &weedout_ids_;
 }
 
 // -------------------------------------------------------------------

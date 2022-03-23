@@ -158,12 +158,13 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         }
     }
     
-    auto ec_block_attr = tx_info.add_attr();
-    ec_block_attr->set_key(kElectNodeAttrElectBlock);
-    ec_block_attr->set_value(ec_block.SerializeAsString());
     for (auto iter = weed_out_ids.begin(); iter != weed_out_ids.end(); ++iter) {
         ec_block.add_weedout_ids(*iter);
     }
+
+    auto ec_block_attr = tx_info.add_attr();
+    ec_block_attr->set_key(kElectNodeAttrElectBlock);
+    ec_block_attr->set_value(ec_block.SerializeAsString());
 
     std::cout << "success!" << std::endl;
     return kElectSuccess;
@@ -496,7 +497,6 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             exists_shard_nodes,
             weed_out_set);
     }
-
     std::set<std::string> elected_ids;
     int32_t idx = 0;
     for (auto iter = exists_shard_nodes.begin(); iter != exists_shard_nodes.end(); ++iter) {

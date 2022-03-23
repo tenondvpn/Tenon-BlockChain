@@ -271,11 +271,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, acc_sign_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, shard_network_id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, prev_members_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::ElectBlock, weedout_ids_),
   ~0u,
   0,
   1,
   3,
   2,
+  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -333,11 +335,11 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 0, 10, sizeof(::tenon::elect::protobuf::BlsPublicKey)},
   { 15, 31, sizeof(::tenon::elect::protobuf::member)},
   { 42, 50, sizeof(::tenon::elect::protobuf::PrevMembers)},
-  { 53, 63, sizeof(::tenon::elect::protobuf::ElectBlock)},
-  { 68, 75, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
-  { 77, 86, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
-  { 90, 97, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
-  { 99, 112, sizeof(::tenon::elect::protobuf::ElectMessage)},
+  { 53, 64, sizeof(::tenon::elect::protobuf::ElectBlock)},
+  { 70, 77, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
+  { 79, 88, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
+  { 92, 99, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
+  { 101, 114, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -384,30 +386,31 @@ void AddDescriptorsImpl() {
       "\n\nbls_pubkey\030\001 \003(\0132\".tenon.elect.protobu"
       "f.BlsPublicKey\022\031\n\021prev_elect_height\030\002 \001("
       "\004\0229\n\rcommon_pubkey\030\003 \001(\0132\".tenon.elect.p"
-      "rotobuf.BlsPublicKey\"\257\001\n\nElectBlock\022(\n\002i"
+      "rotobuf.BlsPublicKey\"\304\001\n\nElectBlock\022(\n\002i"
       "n\030\001 \003(\0132\034.tenon.elect.protobuf.member\022\022\n"
       "\nacc_pubkey\030\002 \001(\014\022\020\n\010acc_sign\030\003 \001(\014\022\030\n\020s"
       "hard_network_id\030\004 \001(\r\0227\n\014prev_members\030\005 "
-      "\001(\0132!.tenon.elect.protobuf.PrevMembers\"E"
-      "\n\023WaitingNodesMessage\022\024\n\014nodes_filter\030\001 "
-      "\003(\004\022\030\n\020waiting_shard_id\030\002 \001(\r\"i\n\024Waiting"
-      "NodeHeartbeat\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013publ"
-      "ic_port\030\002 \001(\r\022\022\n\nnetwork_id\030\003 \001(\r\022\025\n\rtim"
-      "estamp_sec\030\004 \001(\004\"@\n\025LeaderRotationMessag"
-      "e\022\021\n\tleader_id\030\001 \001(\014\022\024\n\014pool_mod_num\030\002 \001"
-      "(\r\"\203\003\n\014ElectMessage\0225\n\013elect_block\030\001 \001(\013"
-      "2 .tenon.elect.protobuf.ElectBlock\022:\n\020pr"
-      "ev_elect_block\030\002 \001(\0132 .tenon.elect.proto"
-      "buf.ElectBlock\022@\n\rwaiting_nodes\030\003 \001(\0132)."
-      "tenon.elect.protobuf.WaitingNodesMessage"
-      "\022\016\n\006pubkey\030\004 \001(\014\022\017\n\007sign_ch\030\005 \001(\014\022\020\n\010sig"
-      "n_res\030\006 \001(\014\022E\n\021waiting_heartbeat\030\007 \001(\0132*"
-      ".tenon.elect.protobuf.WaitingNodeHeartbe"
-      "at\022D\n\017leader_rotation\030\010 \001(\0132+.tenon.elec"
-      "t.protobuf.LeaderRotationMessage"
+      "\001(\0132!.tenon.elect.protobuf.PrevMembers\022\023"
+      "\n\013weedout_ids\030\006 \003(\014\"E\n\023WaitingNodesMessa"
+      "ge\022\024\n\014nodes_filter\030\001 \003(\004\022\030\n\020waiting_shar"
+      "d_id\030\002 \001(\r\"i\n\024WaitingNodeHeartbeat\022\021\n\tpu"
+      "blic_ip\030\001 \001(\014\022\023\n\013public_port\030\002 \001(\r\022\022\n\nne"
+      "twork_id\030\003 \001(\r\022\025\n\rtimestamp_sec\030\004 \001(\004\"@\n"
+      "\025LeaderRotationMessage\022\021\n\tleader_id\030\001 \001("
+      "\014\022\024\n\014pool_mod_num\030\002 \001(\r\"\203\003\n\014ElectMessage"
+      "\0225\n\013elect_block\030\001 \001(\0132 .tenon.elect.prot"
+      "obuf.ElectBlock\022:\n\020prev_elect_block\030\002 \001("
+      "\0132 .tenon.elect.protobuf.ElectBlock\022@\n\rw"
+      "aiting_nodes\030\003 \001(\0132).tenon.elect.protobu"
+      "f.WaitingNodesMessage\022\016\n\006pubkey\030\004 \001(\014\022\017\n"
+      "\007sign_ch\030\005 \001(\014\022\020\n\010sign_res\030\006 \001(\014\022E\n\021wait"
+      "ing_heartbeat\030\007 \001(\0132*.tenon.elect.protob"
+      "uf.WaitingNodeHeartbeat\022D\n\017leader_rotati"
+      "on\030\010 \001(\0132+.tenon.elect.protobuf.LeaderRo"
+      "tationMessage"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1312);
+      descriptor, 1333);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -1886,6 +1889,7 @@ const int ElectBlock::kAccPubkeyFieldNumber;
 const int ElectBlock::kAccSignFieldNumber;
 const int ElectBlock::kShardNetworkIdFieldNumber;
 const int ElectBlock::kPrevMembersFieldNumber;
+const int ElectBlock::kWeedoutIdsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ElectBlock::ElectBlock()
@@ -1899,7 +1903,8 @@ ElectBlock::ElectBlock(const ElectBlock& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_),
-      in_(from.in_) {
+      in_(from.in_),
+      weedout_ids_(from.weedout_ids_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   acc_pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_acc_pubkey()) {
@@ -1958,6 +1963,7 @@ void ElectBlock::Clear() {
   (void) cached_has_bits;
 
   in_.Clear();
+  weedout_ids_.Clear();
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
@@ -2048,6 +2054,18 @@ bool ElectBlock::MergePartialFromCodedStream(
         break;
       }
 
+      // repeated bytes weedout_ids = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->add_weedout_ids()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2107,6 +2125,12 @@ void ElectBlock::SerializeWithCachedSizes(
       5, this->_internal_prev_members(), output);
   }
 
+  // repeated bytes weedout_ids = 6;
+  for (int i = 0, n = this->weedout_ids_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      6, this->weedout_ids(i), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -2156,6 +2180,12 @@ void ElectBlock::SerializeWithCachedSizes(
         5, this->_internal_prev_members(), deterministic, target);
   }
 
+  // repeated bytes weedout_ids = 6;
+  for (int i = 0, n = this->weedout_ids_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteBytesToArray(6, this->weedout_ids(i), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -2182,6 +2212,14 @@ size_t ElectBlock::ByteSizeLong() const {
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           this->in(static_cast<int>(i)));
     }
+  }
+
+  // repeated bytes weedout_ids = 6;
+  total_size += 1 *
+      ::google::protobuf::internal::FromIntSize(this->weedout_ids_size());
+  for (int i = 0, n = this->weedout_ids_size(); i < n; i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
+      this->weedout_ids(i));
   }
 
   if (_has_bits_[0 / 32] & 15u) {
@@ -2242,6 +2280,7 @@ void ElectBlock::MergeFrom(const ElectBlock& from) {
   (void) cached_has_bits;
 
   in_.MergeFrom(from.in_);
+  weedout_ids_.MergeFrom(from.weedout_ids_);
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
@@ -2287,6 +2326,7 @@ void ElectBlock::Swap(ElectBlock* other) {
 void ElectBlock::InternalSwap(ElectBlock* other) {
   using std::swap;
   CastToBase(&in_)->InternalSwap(CastToBase(&other->in_));
+  weedout_ids_.InternalSwap(CastToBase(&other->weedout_ids_));
   acc_pubkey_.Swap(&other->acc_pubkey_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   acc_sign_.Swap(&other->acc_sign_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
