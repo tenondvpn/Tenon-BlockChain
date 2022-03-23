@@ -51,10 +51,8 @@ private:
         common::BloomFilter* cons_weed_out,
         common::BloomFilter* pick_all,
         common::BloomFilter* pick_in,
-        std::vector<NodeDetailPtr>& exists_shard_nodes,
-        std::set<int32_t>& weed_out_vec,
-        std::set<int32_t>& pick_in_vec,
-        int32_t* leader_count);
+        std::vector<NodeDetailPtr>& elected_nodes,
+        std::set<std::string>& weed_out_vec);
     void FtsGetNodes(
         bool weed_out,
         uint32_t count,
