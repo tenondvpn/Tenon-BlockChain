@@ -124,7 +124,6 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
             elected_nodes,
             weed_out_ids) != kElectSuccess) {
         ELECT_ERROR("GetAllBloomFilerAndNodes failed!");
-        std::cout << "GetAllBloomFilerAndNodes failed!" << std::endl;
         return kElectError;
     }
 
@@ -153,7 +152,6 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     if (bls::BlsManager::Instance()->AddBlsConsensusInfo(ec_block, &bitmap) == bls::kBlsSuccess) {
         if (SelectLeader(tx_info.network_id(), bitmap, &ec_block) != kElectSuccess) {
             BLS_ERROR("SelectLeader info failed!");
-            std::cout << "SelectLeader failed!" << std::endl;
             return kElectError;
         }
     }
@@ -165,8 +163,6 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     auto ec_block_attr = tx_info.add_attr();
     ec_block_attr->set_key(kElectNodeAttrElectBlock);
     ec_block_attr->set_value(ec_block.SerializeAsString());
-
-    std::cout << "success!" << std::endl;
     return kElectSuccess;
 }
 

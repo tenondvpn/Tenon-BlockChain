@@ -403,14 +403,6 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     uint32_t shard_netid = network::kConsensusShardBeginNetworkId;
     std::vector<NodeDetailPtr> elected_nodes;
     uint64_t etime3 = common::TimeUtils::TimestampMs();
-//     ASSERT_EQ(elect_pool_manager_.GetAllBloomFilerAndNodes(
-//         statistic_info,
-//         shard_netid,
-//         &cons_all,
-//         &cons_weed_out,
-//         &pick_all,
-//         &pick_in,
-//         elected_nodes), kElectSuccess);
     bft::protobuf::TxInfo tx_info;
     tx_info.set_network_id(3);
     auto attr = tx_info.add_attr();
@@ -418,7 +410,16 @@ TEST_F(TestElectPoolManager, GetAllBloomFilerAndNodes) {
     attr->set_value(statistic_info.SerializeAsString());
     ASSERT_EQ(elect_pool_manager_.GetElectionTxInfo(tx_info), kElectSuccess);
     auto res_str = tx_info.SerializeAsString();
-    std::cout << "elected_nodes: " << elected_nodes.size() << ", tx_info size: " << res_str.size() << std::endl;
+    elect::protobuf::ElectBlock ec_block;
+    for (int32_t i = 0; i < tx_info.attr_size(); ++i) {
+        std::cout << i << ": " << tx_info.attr(i).key() << ", " << kElectNodeAttrElectBlock << std::endl;
+        if (tx_info.attr(i).key() == kElectNodeAttrElectBlock) {
+            ASSERT_TRUE(ec_block.ParseFromString(tx_info.attr(i).value()));
+        }
+    }
+
+    ASSERT_EQ(ec_block.weedout_ids_size(), 25);
+    ASSERT_EQ(ec_block.in_size(), 1010);
 }
 
 }  // namespace test
