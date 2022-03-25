@@ -20,7 +20,7 @@ void NodeHistoryCredit::OnNewElectBlock(
         return;
     }
 
-    db::WriteBatch write_batch;
+    db::DbWriteBach write_batch;
     write_batch.Put(height_key, "1");
     for (int32_t i = 0; i < elect_block.in_size(); ++i) {
         auto id = security::Secp256k1::Instance()->ToAddressWithPublicKey(
@@ -31,12 +31,14 @@ void NodeHistoryCredit::OnNewElectBlock(
     for (int32_t i = 0; i < elect_block.weedout_ids_size(); ++i) {
         ChangeCredit(elect_block.weedout_ids(i), true, write_batch);
     }
+
+    db::Db::Instance()->Put(write_batch);
 }
 
 void NodeHistoryCredit::ChangeCredit(
         const std::string& id,
         bool weedout,
-        db::WriteBatch& write_batch) {
+        db::DbWriteBach& write_batch) {
     auto iter = credit_map_.find(id);
     std::string id_key = kElectionHistoryCredit + id;
     int32_t credit = kInitNodeCredit;
@@ -70,8 +72,6 @@ void NodeHistoryCredit::ChangeCredit(
             credit_map_[id] = add_credit;
         }
     }
-
-    db::Db::Instance()->Put(write_batch);
 }
 
 int NodeHistoryCredit::GetNodeHistoryCredit(const std::string& id, int32_t* credit) {
