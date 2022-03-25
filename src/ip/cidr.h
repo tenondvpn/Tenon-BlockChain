@@ -1,19 +1,5 @@
 #pragma once
 
-#ifndef _WIN32
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <err.h>
-#include <unistd.h>
-#else
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#endif // !_WIN32
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <unordered_map>
 
 #include "ip/ip_utils.h"
