@@ -1,5 +1,6 @@
 #pragma once
 
+#include "db/db.h"
 #include "election/elect_utils.h"
 #include "election/proto/elect.pb.h"
 
