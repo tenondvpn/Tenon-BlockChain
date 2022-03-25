@@ -2,6 +2,7 @@
 
 #include "common/string_utils.h"
 #include "db/db.h"
+#include "security/secp256k1.h"
 
 namespace tenon {
 
@@ -15,7 +16,7 @@ void NodeHistoryCredit::OnNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block) {
     std::lock_guard<std::mutex> g(mutex_);
-    std::string height_key = kElectionHistoryCredit + std::to_string(height);
+    std::string height_key = db::kElectionHistoryCredit + std::to_string(height);
     if (db::Db::Instance()->Exist(height_key)) {
         return;
     }
@@ -40,7 +41,7 @@ void NodeHistoryCredit::ChangeCredit(
         bool weedout,
         db::DbWriteBach& write_batch) {
     auto iter = credit_map_.find(id);
-    std::string id_key = kElectionHistoryCredit + id;
+    std::string id_key = db::kElectionHistoryCredit + id;
     int32_t credit = kInitNodeCredit;
     if (iter != credit_map_.end()) {
         credit = iter->second;
@@ -80,7 +81,7 @@ int NodeHistoryCredit::GetNodeHistoryCredit(const std::string& id, int32_t* cred
     if (iter != credit_map_.end()) {
         *credit = iter->second;
     } else {
-        std::string id_key = kElectionHistoryCredit + id;
+        std::string id_key = db::kElectionHistoryCredit + id;
         std::string value;
         auto st = db::Db::Instance()->Get(id_key, &value);
         if (!st.ok()) {

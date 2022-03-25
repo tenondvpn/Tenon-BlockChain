@@ -673,7 +673,7 @@ void ElectPoolManager::SmoothFtsValue(
     uint64_t diff_2b3 = sort_vec[sort_vec.size() * 2 / 3]->balance_diff;
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
     std::vector<int32_t> blance_weight;
-    blance_weight.resize(sort_vec->size());
+    blance_weight.resize(sort_vec.size());
     blance_weight[0] = 100;
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
@@ -692,7 +692,7 @@ void ElectPoolManager::SmoothFtsValue(
     }
 
     std::vector<int32_t> credit_weight;
-    credit_weight.resize(sort_vec->size());
+    credit_weight.resize(sort_vec.size());
     for (uint32_t i = 0; i < sort_vec.size(); ++i) {
         int32_t credit = 30;
         node_credit_.GetNodeHistoryCredit(sort_vec[i]->id, &credit);
@@ -700,7 +700,7 @@ void ElectPoolManager::SmoothFtsValue(
     }
 
     std::vector<int32_t> ip_weight;
-    ip_weight.resize(sort_vec->size());
+    ip_weight.resize(sort_vec.size());
 }
 
 int ElectPoolManager::GetAllTxInfoBloomFiler(
