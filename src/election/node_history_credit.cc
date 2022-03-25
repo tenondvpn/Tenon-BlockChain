@@ -2,6 +2,7 @@
 
 #include "common/string_utils.h"
 #include "db/db.h"
+#include "db/db_utils.h"
 #include "security/secp256k1.h"
 
 namespace tenon {
