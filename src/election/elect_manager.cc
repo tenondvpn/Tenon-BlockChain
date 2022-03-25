@@ -236,6 +236,7 @@ void ElectManager::OnNewElectBlock(
     }
 
     ElectedToConsensusShard(elect_block, elected);
+    pool_manager_.OnNewElectBlock(height, elect_block);
 }
 
 void ElectManager::ElectedToConsensusShard(protobuf::ElectBlock& elect_block, bool cons_elected) {

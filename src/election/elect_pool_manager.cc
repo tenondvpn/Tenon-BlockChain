@@ -90,6 +90,12 @@ int ElectPoolManager::CreateElectTransaction(
     return kElectSuccess;
 }
 
+void ElectPoolManager::OnNewElectBlock(
+        uint64_t height,
+        protobuf::ElectBlock& elect_block) {
+    node_credit_.OnNewElectBlock(height, elect_block);
+}
+
 int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
     block::protobuf::StatisticInfo statistic_info;
     bool statistic_valid = false;
@@ -426,7 +432,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
 
             uint32_t pick_in_count = weed_out_count;
             if (elect::ElectManager::Instance()->GetMemberCount(shard_netid) <
-                    (int32_t)common::kEachShardMaxNodeCount ) {
+                    (int32_t)common::kEachShardMaxNodeCount) {
                 pick_in_count += weed_out_count / 2;
                 if (pick_in_count <= 0) {
                     pick_in_count = 1;
@@ -666,22 +672,35 @@ void ElectPoolManager::SmoothFtsValue(
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceDiffCompare);
     uint64_t diff_2b3 = sort_vec[sort_vec.size() * 2 / 3]->balance_diff;
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
-    sort_vec[0]->fts_value = 100llu;  // diff with default node fts value 0
+    std::vector<int32_t> blance_weight;
+    blance_weight.resize(sort_vec->size());
+    blance_weight[0] = 100;
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
         if (fts_val_diff == 0) {
-            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value;
+            blance_weight[i] = blance_weight[i - 1];
             continue;
         }
 
         if (fts_val_diff < diff_2b3) {
             auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
-            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / diff_2b3;
+            blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / diff_2b3;
         } else {
             auto rand_val = diff_2b3 + g2() % (fts_val_diff + 1 - diff_2b3);
-            sort_vec[i]->fts_value = sort_vec[i - 1]->fts_value + (20 * rand_val) / fts_val_diff;
+            blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / fts_val_diff;
         }
     }
+
+    std::vector<int32_t> credit_weight;
+    credit_weight.resize(sort_vec->size());
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        int32_t credit = 30;
+        node_credit_.GetNodeHistoryCredit(sort_vec[i]->id, &credit);
+        credit_weight[i] = credit;
+    }
+
+    std::vector<int32_t> ip_weight;
+    ip_weight.resize(sort_vec->size());
 }
 
 int ElectPoolManager::GetAllTxInfoBloomFiler(

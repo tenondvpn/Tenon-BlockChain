@@ -30,10 +30,6 @@ public:
     uint32_t GetGeoId(const std::string& ip);
 
 private:
-    in_addr_t Netmask(int prefix);
-    in_addr_t atoh(char *s);
-    int ParseCidr(in_addr_t *addr, in_addr_t *mask, char *str);
-
     std::unordered_map<uint32_t, std::pair<uint32_t, uint32_t>> cicd_map_;
 
     DISALLOW_COPY_AND_ASSIGN(Cidr);

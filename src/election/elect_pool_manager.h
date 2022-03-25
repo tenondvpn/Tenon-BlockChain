@@ -9,6 +9,7 @@
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_waiting_nodes.h"
+#include "election/node_history_credit.h"
 
 namespace tenon {
 
@@ -35,6 +36,9 @@ public:
         bft::protobuf::TxInfo& tx_info);
     void OnTimeBlock(uint64_t tm_block_tm);
     int GetElectionTxInfo(bft::protobuf::TxInfo& tx_info);
+    void OnNewElectBlock(
+        uint64_t height,
+        protobuf::ElectBlock& elect_block);
 
 private:
     int GetAllTxInfoBloomFiler(
@@ -86,6 +90,7 @@ private:
     std::mutex all_node_map_mutex_;
     std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map_;
     std::mutex waiting_pool_map_mutex_;
+    NodeHistoryCredit node_credit_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectPoolManager);
 };

@@ -36,6 +36,8 @@ static const std::string kGlobalHeightTreeKey = kGlobalDbKeyVersion + "_kHT";
 // for pool index
 static const std::string kGlobalTxPoolKey = kGlobalDbKeyVersion + "_kTxPool";
 
+static const std::string kElectionHistoryCredit = kGlobalDbKeyVersion + "_kECHCredit_";
+
 }
 
 }

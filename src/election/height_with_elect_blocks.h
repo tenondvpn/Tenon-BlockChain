@@ -12,6 +12,7 @@
 #include "block/block_utils.h"
 #include "bls/bls_manager.h"
 #include "common/utils.h"
+#include "ip/ip_count.h"
 #include "db/db.h"
 #include "election/elect_node_detail.h"
 #include "election/proto/elect.pb.h"
@@ -25,11 +26,17 @@ namespace elect {
 
 class HeightWithElectBlock {
     struct HeightMembersItem {
-        HeightMembersItem(MembersPtr& m, uint64_t h) : members_ptr(m), height(h) {}
+        HeightMembersItem(MembersPtr& m, uint64_t h) : members_ptr(m), height(h) {
+            for (auto iter = m->begin(); iter != m->end(); ++iter) {
+                ip_weight.AddIp((*iter)->public_ip);
+            }
+        }
+
         MembersPtr members_ptr;
         uint64_t height;
         libff::alt_bn128_G2 common_bls_publick_key;
         libff::alt_bn128_Fr local_sec_key;
+        ip::IpWeight ip_weight;
     };
 
     typedef std::shared_ptr<HeightMembersItem> HeightMembersItemPtr;
