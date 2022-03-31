@@ -59,7 +59,7 @@ public:
     std::shared_ptr<MemberManager> GetMemberManager(uint32_t network_id);
     elect::MembersPtr GetWaitingNetworkMembers(uint32_t network_id);
     bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
-    bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
+//     bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
 
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         return height_with_block_.GetCommonPublicKey(height, network_id);
@@ -120,7 +120,7 @@ private:
 
     void HandleMessage(const transport::TransportMessagePtr& header);
     void WaitingNodeSendHeartbeat();
-    void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, const std::string& ip);
+    void AddNewNodeWithIdAndIp(uint32_t network_id, const std::string& id, uint32_t ip);
     void ClearExistsNetwork(uint32_t network_id);
     void UpdatePrevElectMembers(
         const elect::MembersPtr& members,

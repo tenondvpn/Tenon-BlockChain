@@ -803,15 +803,15 @@ bool ElectManager::IsIdExistsInAnyShard(uint32_t network_id, const std::string& 
     return false;
 }
 
-bool ElectManager::IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip) {
-    std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
-    auto iter = added_net_ip_set_.find(network_id);
-    if (iter != added_net_id_set_.end()) {
-        return iter->second.find(ip) != iter->second.end();
-    }
-
-    return false;
-}
+// bool ElectManager::IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip) {
+//     std::lock_guard<std::mutex> guard(added_net_ip_set_mutex_);
+//     auto iter = added_net_ip_set_.find(network_id);
+//     if (iter != added_net_id_set_.end()) {
+//         return iter->second.find(ip) != iter->second.end();
+//     }
+// 
+//     return false;
+// }
 
 void ElectManager::ClearExistsNetwork(uint32_t network_id) {
     {
