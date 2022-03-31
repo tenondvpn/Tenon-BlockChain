@@ -828,7 +828,7 @@ void ElectManager::ClearExistsNetwork(uint32_t network_id) {
 void ElectManager::AddNewNodeWithIdAndIp(
         uint32_t network_id,
         const std::string& id,
-        const std::string& ip) {
+        uint32_t ip) {
     {
         std::lock_guard<std::mutex> guard(added_net_id_set_mutex_);
         added_net_id_set_[network_id].insert(id);

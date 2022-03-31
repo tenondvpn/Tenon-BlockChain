@@ -155,7 +155,7 @@ private:
     common::Tick waiting_hb_tick_;
     std::unordered_map<uint32_t, std::unordered_set<std::string>> added_net_id_set_;
     std::mutex added_net_id_set_mutex_;
-    std::unordered_map<uint32_t, std::unordered_set<std::string>> added_net_ip_set_;
+    std::unordered_map<uint32_t, std::unordered_set<uint32_t>> added_net_ip_set_;
     std::mutex added_net_ip_set_mutex_;
     volatile int32_t local_node_member_index_{ kInvalidMemberIndex };
     volatile int32_t local_waiting_node_member_index_{ kInvalidMemberIndex };
