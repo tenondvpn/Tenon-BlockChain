@@ -205,7 +205,9 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
                 }
 
                 auto elect_node_ptr = std::make_shared<ElectNodeDetail>();
-                elect_node_ptr->public_ip = ip::IpToUint32(ec_msg.waiting_heartbeat().public_ip(), 32);
+                elect_node_ptr->public_ip = ip::IpToUint32(
+                    ec_msg.waiting_heartbeat().public_ip().c_str(),
+                    32);
                 elect_node_ptr->public_port = ec_msg.waiting_heartbeat().public_port();
                 elect_node_ptr->id = id;
                 elect_node_ptr->public_key = ec_msg.pubkey();
