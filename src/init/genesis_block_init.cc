@@ -5,6 +5,7 @@
 
 #include "common/encode.h"
 #include "common/db_key_prefix.h"
+#include "ip/ip_utils.h"
 #include "block/account_manager.h"
 #include "init/init_utils.h"
 #include "bft/proto/bft.pb.h"
@@ -160,6 +161,7 @@ int GenesisBlockInit::CreateElectBlock(
     int32_t node_idx = 0;
     for (auto iter = genesis_nodes.begin(); iter != genesis_nodes.end(); ++iter) {
         auto in = ec_block.add_in();
+        in->set_public_ip(ip::IpToUint32("127.0.0.1", 20));
         in->set_pubkey((*iter)->pubkey_str());
         in->set_pool_idx_mod_num(node_idx < expect_leader_count ? node_idx : -1);
         ++node_idx;

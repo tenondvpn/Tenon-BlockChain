@@ -25,6 +25,8 @@ public:
                 ipcount_map_[prefix] = 1;
             }
         }
+
+        std::cout << "add ip: " << ip::Uint32ToIp(ip) << std::endl;
     }
 
     int32_t GetIpCount(const std::string& ip) {

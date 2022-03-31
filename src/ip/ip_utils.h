@@ -179,6 +179,16 @@ inline static uint32_t IpToUint32(const char* ip, int32_t net_mask) {
     return atoh(ip) & Netmask(net_mask);
 }
 
+inline static std::string Uint32ToIp(uint32_t ip) {
+    char str_ip[32];
+    snprintf(str_ip, sizeof str_ip, "%u.%u.%u.%u",
+        (ip & 0xff000000) >> 24,
+        (ip & 0x00ff0000) >> 16,
+        (ip & 0x0000ff00) >> 8,
+        (ip & 0x000000ff));
+    return str_ip;
+}
+
 }  // namespace ip
 
 }  // namespace tenon
