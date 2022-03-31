@@ -61,6 +61,10 @@ public:
     bool IsIdExistsInAnyShard(uint32_t network_id, const std::string& id);
 //     bool IsIpExistsInAnyShard(uint32_t network_id, const std::string& ip);
 
+    ip::IpWeight GetIpWeight(uint64_t height, uint32_t network_id) {
+        return height_with_block_.GetIpWeight(height, network_id);
+    }
+
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         return height_with_block_.GetCommonPublicKey(height, network_id);
     }

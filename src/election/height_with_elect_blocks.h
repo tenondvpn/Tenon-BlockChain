@@ -88,6 +88,31 @@ public:
             bls::BlsManager::Instance()->GetSeckFromDb(height, network_id);
     }
 
+    ip::IpWeight GetIpWeight(uint64_t height, uint32_t network_id) {
+        if (network_id >= network::kConsensusShardEndNetworkId) {
+            return ip::IpWeight();
+        }
+
+        for (int32_t i = 0; i < 3; ++i) {
+            if (members_ptrs_[network_id][i] != nullptr &&
+                    members_ptrs_[network_id][i]->height == height) {
+                return members_ptrs_[network_id][i]->ip_weight;
+            }
+        }
+
+        auto members = GetMembersPtr(height, network_id, nullptr, nullptr);
+        if (members == nullptr) {
+            return ip::IpWeight();
+        }
+
+        ip::IpWeight weight;
+        for (auto iter = members->begin(); iter != members->end(); ++iter) {
+            weight.AddIp((*iter)->public_ip);
+        }
+
+        return weight;
+    }
+
     libff::alt_bn128_G2 GetCommonPublicKey(uint64_t height, uint32_t network_id) {
         if (network_id >= network::kConsensusShardEndNetworkId) {
             return libff::alt_bn128_G2::zero();
@@ -95,7 +120,7 @@ public:
 
         for (int32_t i = 0; i < 3; ++i) {
             if (members_ptrs_[network_id][i] != nullptr &&
-                    members_ptrs_[network_id][i]->height == height) {
+                members_ptrs_[network_id][i]->height == height) {
                 return members_ptrs_[network_id][i]->common_bls_publick_key;
             }
         }

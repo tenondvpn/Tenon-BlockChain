@@ -111,7 +111,8 @@ static const uint32_t kEachShardMinNodeCount = 3u;
 static const uint32_t kEachShardMaxNodeCount = 1024u;
 static const uint32_t kNetworkMaxDhtCount = 10240u;
 static const uint32_t kNodeModIndexMaxCount = 64u;
-static const uint32_t kNodePublicIpMaskLen = 20u;  // node public ip just Mask length to protect seurity
+static const uint32_t kNodePublicIpMaskLen = 22u;  // node public ip just Mask length to protect security
+static const int32_t kInitNodeCredit = 30;
 
 static const int64_t kInvalidInt64 = (std::numeric_limits<int64_t>::max)();
 static const uint64_t kInvalidUint64 = (std::numeric_limits<uint64_t>::max)();

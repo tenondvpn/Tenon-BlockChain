@@ -451,6 +451,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
             }
 
             FtsGetNodes(
+                shard_netid,
                 false,
                 pick_in_count,
                 pick_in,
@@ -494,6 +495,7 @@ int ElectPoolManager::GetAllBloomFilerAndNodes(
 
     if (weed_out_count > 0) {
         FtsGetNodes(
+            shard_netid,
             true,
             weed_out_count,
             cons_weed_out,
@@ -577,6 +579,7 @@ int ElectPoolManager::SelectLeader(
 
     std::set<int32_t> leader_nodes;
     FtsGetNodes(
+        network_id,
         false,
         expect_leader_count,
         &tmp_filter,
@@ -615,6 +618,7 @@ int ElectPoolManager::SelectLeader(
 }
 
 void ElectPoolManager::FtsGetNodes(
+        uint32_t shard_netid,
         bool weed_out,
         uint32_t count,
         common::BloomFilter* nodes_filter,
@@ -622,7 +626,7 @@ void ElectPoolManager::FtsGetNodes(
         std::set<int32_t>& res_nodes) {
     auto sort_vec = src_nodes;
     std::mt19937_64 g2(vss::VssManager::Instance()->EpochRandom());
-    SmoothFtsValue((src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
+    SmoothFtsValue(shard_netid, (src_nodes.size() - (src_nodes.size() / 3)), g2, sort_vec);
     std::set<int32_t> tmp_res_nodes;
     uint32_t try_times = 0;
     while (tmp_res_nodes.size() < count) {
@@ -661,6 +665,8 @@ void ElectPoolManager::FtsGetNodes(
 }
 
 void ElectPoolManager::SmoothFtsValue(
+        bool ip_weight_flip,
+        uint32_t shard_netid,
         int32_t count,
         std::mt19937_64& g2,
         std::vector<NodeDetailPtr>& sort_vec) {
@@ -676,32 +682,92 @@ void ElectPoolManager::SmoothFtsValue(
     std::vector<int32_t> blance_weight;
     blance_weight.resize(sort_vec.size());
     blance_weight[0] = 100;
+    uint64_t min_balance = (std::numeric_limits<uint64_t>::max)();
+    uint64_t max_balance = 0;
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
         uint64_t fts_val_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
         if (fts_val_diff == 0) {
             blance_weight[i] = blance_weight[i - 1];
-            continue;
+        } else {
+            if (fts_val_diff < diff_2b3) {
+                auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
+                blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / diff_2b3;
+            } else {
+                auto rand_val = diff_2b3 + g2() % (fts_val_diff + 1 - diff_2b3);
+                blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / fts_val_diff;
+            }
         }
 
-        if (fts_val_diff < diff_2b3) {
-            auto rand_val = fts_val_diff + g2() % (diff_2b3 - fts_val_diff);
-            blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / diff_2b3;
-        } else {
-            auto rand_val = diff_2b3 + g2() % (fts_val_diff + 1 - diff_2b3);
-            blance_weight[i] = blance_weight[i - 1] + (20 * rand_val) / fts_val_diff;
+        if (min_balance > blance_weight[i]) {
+            min_balance = blance_weight[i];
+        }
+
+        if (max_balance < blance_weight[i]) {
+            max_balance = blance_weight[i];
         }
     }
 
+    int32_t blance_diff = max_balance - min_balance;
     std::vector<int32_t> credit_weight;
     credit_weight.resize(sort_vec.size());
+    int32_t min_credit = (std::numeric_limits<int32_t>::max)();
+    int32_t max_credit = (std::numeric_limits<int32_t>::min)();
     for (uint32_t i = 0; i < sort_vec.size(); ++i) {
-        int32_t credit = 30;
+        int32_t credit = common::kInitNodeCredit;
         node_credit_.GetNodeHistoryCredit(sort_vec[i]->id, &credit);
         credit_weight[i] = credit;
+        if (min_credit > credit) {
+            min_credit = credit;
+        }
+
+        if (max_credit < credit) {
+            max_credit = credit;
+        }
+    }
+
+    int32_t credit_diff = max_credit - min_credit;
+    int32_t credit_index = blance_diff / credit_diff;
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        credit_weight[i] = min_balance + credit_index * (credit_weight[i] - min_credit);
     }
 
     std::vector<int32_t> ip_weight;
     ip_weight.resize(sort_vec.size());
+    auto choosed_ip_weight = elect::ElectManager::Instance()->GetIpWeight(
+        elect::ElectManager::Instance()->latest_height(shard_netid),
+        shard_netid);
+    int32_t min_ip_weight = (std::numeric_limits<int32_t>::max)();
+    int32_t max_ip_weight = (std::numeric_limits<int32_t>::min)();
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        int32_t prefix_len = 0;
+        auto count = choosed_ip_weight.GetIpCount(sort_vec[i]->public_ip, &prefix_len);
+        ip_weight[i] = prefix_len * count;
+        if (ip_weight[i] > max_ip_weight) {
+            max_ip_weight = ip_weight[i];
+        }
+
+        if (ip_weight[i] < min_ip_weight) {
+            min_ip_weight = ip_weight[i];
+        }
+    }
+
+    if (ip_weight_flip) {
+        ip_weight[i] = max_ip_weight - ip_weight[i];
+    }
+
+    int32_t weight_diff = max_ip_weight - min_ip_weight;
+    int32_t weight_index = blance_diff / weight_diff;
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        ip_weight[i] = min_balance + weight_index * (ip_weight[i] - min_ip_weight);
+    }
+
+    for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+        sort_vec[i]->fts_value = (3 * ip_weight[i] + 4 * credit_weight[i] + 3 * blance_weight[i]) / 10;
+        std::cout << sort_vec[i]->fts_value << ", "
+            << ip_weight[i] << ", "
+            << credit_weight[i] << ", "
+            << blance_weight[i] << std::endl;
+    }
 }
 
 int ElectPoolManager::GetAllTxInfoBloomFiler(

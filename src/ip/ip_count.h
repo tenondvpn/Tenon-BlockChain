@@ -25,21 +25,20 @@ public:
                 ipcount_map_[prefix] = 1;
             }
         }
-
-        std::cout << "add ip: " << ip::Uint32ToIp(ip) << std::endl;
     }
 
-    int32_t GetIpCount(const std::string& ip) {
-        in_addr_t addr = atoh((char*)ip.c_str());
+    int32_t GetIpCount(uint32_t addr, int32_t* prefix_len) {
         for (int32_t i = 32; i > 6; --i) {
             in_addr_t mask = Netmask(i);
             uint32_t prefix = addr & mask;
             auto iter = ipcount_map_.find(prefix);
             if (iter != ipcount_map_.end()) {
+                *prefix_len = i;
                 return iter->second;
             }
         }
 
+        *prefix_len = 0;
         return 0;
     }
 
