@@ -242,12 +242,12 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   0,
   1,
   2,
-  6,
-  3,
-  7,
-  4,
-  8,
   5,
+  3,
+  6,
+  7,
+  8,
+  4,
   9,
   10,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::PrevMembers, _has_bits_),
@@ -380,7 +380,7 @@ void AddDescriptorsImpl() {
       "mod_num\030\005 \001(\005\"\316\001\n\006member\022\n\n\002id\030\001 \001(\014\022\016\n\006"
       "pubkey\030\002 \001(\014\022\014\n\004sign\030\003 \001(\014\022\017\n\007country\030\004 "
       "\001(\r\022\017\n\007dht_key\030\005 \001(\014\022\020\n\010nat_type\030\006 \001(\005\022\021"
-      "\n\tpublic_ip\030\007 \001(\014\022\023\n\013public_port\030\010 \001(\r\022\020"
+      "\n\tpublic_ip\030\007 \001(\r\022\023\n\013public_port\030\010 \001(\r\022\020"
       "\n\010local_ip\030\t \001(\014\022\022\n\nlocal_port\030\n \001(\r\022\030\n\020"
       "pool_idx_mod_num\030\013 \001(\005\"\233\001\n\013PrevMembers\0226"
       "\n\nbls_pubkey\030\001 \003(\0132\".tenon.elect.protobu"
@@ -905,10 +905,6 @@ member::member(const member& from)
   if (from.has_dht_key()) {
     dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.dht_key_);
   }
-  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_public_ip()) {
-    public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
-  }
   local_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.has_local_ip()) {
     local_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.local_ip_);
@@ -924,7 +920,6 @@ void member::SharedCtor() {
   pubkey_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dht_key_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  public_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   local_ip_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&country_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&pool_idx_mod_num_) -
@@ -941,7 +936,6 @@ void member::SharedDtor() {
   pubkey_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   sign_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dht_key_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  public_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   local_ip_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -966,7 +960,7 @@ void member::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 63u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
       id_.ClearNonDefaultToEmptyNoArena();
     }
@@ -980,16 +974,13 @@ void member::Clear() {
       dht_key_.ClearNonDefaultToEmptyNoArena();
     }
     if (cached_has_bits & 0x00000010u) {
-      public_ip_.ClearNonDefaultToEmptyNoArena();
-    }
-    if (cached_has_bits & 0x00000020u) {
       local_ip_.ClearNonDefaultToEmptyNoArena();
     }
   }
-  if (cached_has_bits & 192u) {
+  if (cached_has_bits & 224u) {
     ::memset(&country_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&nat_type_) -
-        reinterpret_cast<char*>(&country_)) + sizeof(nat_type_));
+        reinterpret_cast<char*>(&public_ip_) -
+        reinterpret_cast<char*>(&country_)) + sizeof(public_ip_));
   }
   if (cached_has_bits & 1792u) {
     ::memset(&public_port_, 0, static_cast<size_t>(
@@ -1086,12 +1077,14 @@ bool member::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes public_ip = 7;
+      // optional uint32 public_ip = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_public_ip()));
+            static_cast< ::google::protobuf::uint8>(56u /* 56 & 0xFF */)) {
+          set_has_public_ip();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &public_ip_)));
         } else {
           goto handle_unusual;
         }
@@ -1198,7 +1191,7 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional uint32 country = 4;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000020u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->country(), output);
   }
 
@@ -1209,14 +1202,13 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional int32 nat_type = 6;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->nat_type(), output);
   }
 
-  // optional bytes public_ip = 7;
-  if (cached_has_bits & 0x00000010u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      7, this->public_ip(), output);
+  // optional uint32 public_ip = 7;
+  if (cached_has_bits & 0x00000080u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(7, this->public_ip(), output);
   }
 
   // optional uint32 public_port = 8;
@@ -1225,7 +1217,7 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional bytes local_ip = 9;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       9, this->local_ip(), output);
   }
@@ -1277,7 +1269,7 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional uint32 country = 4;
-  if (cached_has_bits & 0x00000040u) {
+  if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->country(), target);
   }
 
@@ -1289,15 +1281,13 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional int32 nat_type = 6;
-  if (cached_has_bits & 0x00000080u) {
+  if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->nat_type(), target);
   }
 
-  // optional bytes public_ip = 7;
-  if (cached_has_bits & 0x00000010u) {
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        7, this->public_ip(), target);
+  // optional uint32 public_ip = 7;
+  if (cached_has_bits & 0x00000080u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(7, this->public_ip(), target);
   }
 
   // optional uint32 public_port = 8;
@@ -1306,7 +1296,7 @@ void member::SerializeWithCachedSizes(
   }
 
   // optional bytes local_ip = 9;
-  if (cached_has_bits & 0x00000020u) {
+  if (cached_has_bits & 0x00000010u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         9, this->local_ip(), target);
@@ -1368,13 +1358,6 @@ size_t member::ByteSizeLong() const {
           this->dht_key());
     }
 
-    // optional bytes public_ip = 7;
-    if (has_public_ip()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->public_ip());
-    }
-
     // optional bytes local_ip = 9;
     if (has_local_ip()) {
       total_size += 1 +
@@ -1394,6 +1377,13 @@ size_t member::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->nat_type());
+    }
+
+    // optional uint32 public_ip = 7;
+    if (has_public_ip()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->public_ip());
     }
 
   }
@@ -1466,18 +1456,17 @@ void member::MergeFrom(const member& from) {
       dht_key_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.dht_key_);
     }
     if (cached_has_bits & 0x00000010u) {
-      set_has_public_ip();
-      public_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.public_ip_);
-    }
-    if (cached_has_bits & 0x00000020u) {
       set_has_local_ip();
       local_ip_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.local_ip_);
     }
-    if (cached_has_bits & 0x00000040u) {
+    if (cached_has_bits & 0x00000020u) {
       country_ = from.country_;
     }
-    if (cached_has_bits & 0x00000080u) {
+    if (cached_has_bits & 0x00000040u) {
       nat_type_ = from.nat_type_;
+    }
+    if (cached_has_bits & 0x00000080u) {
+      public_ip_ = from.public_ip_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -1527,12 +1516,11 @@ void member::InternalSwap(member* other) {
     GetArenaNoVirtual());
   dht_key_.Swap(&other->dht_key_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  public_ip_.Swap(&other->public_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
   local_ip_.Swap(&other->local_ip_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   swap(country_, other->country_);
   swap(nat_type_, other->nat_type_);
+  swap(public_ip_, other->public_ip_);
   swap(public_port_, other->public_port_);
   swap(local_port_, other->local_port_);
   swap(pool_idx_mod_num_, other->pool_idx_mod_num_);

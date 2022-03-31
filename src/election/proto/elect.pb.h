@@ -433,21 +433,6 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_dht_key();
   void set_allocated_dht_key(::std::string* dht_key);
 
-  // optional bytes public_ip = 7;
-  bool has_public_ip() const;
-  void clear_public_ip();
-  static const int kPublicIpFieldNumber = 7;
-  const ::std::string& public_ip() const;
-  void set_public_ip(const ::std::string& value);
-  #if LANG_CXX11
-  void set_public_ip(::std::string&& value);
-  #endif
-  void set_public_ip(const char* value);
-  void set_public_ip(const void* value, size_t size);
-  ::std::string* mutable_public_ip();
-  ::std::string* release_public_ip();
-  void set_allocated_public_ip(::std::string* public_ip);
-
   // optional bytes local_ip = 9;
   bool has_local_ip() const;
   void clear_local_ip();
@@ -476,6 +461,13 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   static const int kNatTypeFieldNumber = 6;
   ::google::protobuf::int32 nat_type() const;
   void set_nat_type(::google::protobuf::int32 value);
+
+  // optional uint32 public_ip = 7;
+  bool has_public_ip() const;
+  void clear_public_ip();
+  static const int kPublicIpFieldNumber = 7;
+  ::google::protobuf::uint32 public_ip() const;
+  void set_public_ip(::google::protobuf::uint32 value);
 
   // optional uint32 public_port = 8;
   bool has_public_port() const;
@@ -530,10 +522,10 @@ class member : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::internal::ArenaStringPtr pubkey_;
   ::google::protobuf::internal::ArenaStringPtr sign_;
   ::google::protobuf::internal::ArenaStringPtr dht_key_;
-  ::google::protobuf::internal::ArenaStringPtr public_ip_;
   ::google::protobuf::internal::ArenaStringPtr local_ip_;
   ::google::protobuf::uint32 country_;
   ::google::protobuf::int32 nat_type_;
+  ::google::protobuf::uint32 public_ip_;
   ::google::protobuf::uint32 public_port_;
   ::google::protobuf::uint32 local_port_;
   ::google::protobuf::int32 pool_idx_mod_num_;
@@ -2029,13 +2021,13 @@ inline void member::set_allocated_sign(::std::string* sign) {
 
 // optional uint32 country = 4;
 inline bool member::has_country() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void member::set_has_country() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void member::clear_has_country() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void member::clear_country() {
   country_ = 0u;
@@ -2119,13 +2111,13 @@ inline void member::set_allocated_dht_key(::std::string* dht_key) {
 
 // optional int32 nat_type = 6;
 inline bool member::has_nat_type() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void member::set_has_nat_type() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void member::clear_has_nat_type() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void member::clear_nat_type() {
   nat_type_ = 0;
@@ -2141,70 +2133,28 @@ inline void member::set_nat_type(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.nat_type)
 }
 
-// optional bytes public_ip = 7;
+// optional uint32 public_ip = 7;
 inline bool member::has_public_ip() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void member::set_has_public_ip() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void member::clear_has_public_ip() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void member::clear_public_ip() {
-  public_ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  public_ip_ = 0u;
   clear_has_public_ip();
 }
-inline const ::std::string& member::public_ip() const {
+inline ::google::protobuf::uint32 member::public_ip() const {
   // @@protoc_insertion_point(field_get:tenon.elect.protobuf.member.public_ip)
-  return public_ip_.GetNoArena();
+  return public_ip_;
 }
-inline void member::set_public_ip(const ::std::string& value) {
+inline void member::set_public_ip(::google::protobuf::uint32 value) {
   set_has_public_ip();
-  public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  public_ip_ = value;
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.member.public_ip)
-}
-#if LANG_CXX11
-inline void member::set_public_ip(::std::string&& value) {
-  set_has_public_ip();
-  public_ip_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.member.public_ip)
-}
-#endif
-inline void member::set_public_ip(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_public_ip();
-  public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.member.public_ip)
-}
-inline void member::set_public_ip(const void* value, size_t size) {
-  set_has_public_ip();
-  public_ip_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.member.public_ip)
-}
-inline ::std::string* member::mutable_public_ip() {
-  set_has_public_ip();
-  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.member.public_ip)
-  return public_ip_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* member::release_public_ip() {
-  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.member.public_ip)
-  if (!has_public_ip()) {
-    return NULL;
-  }
-  clear_has_public_ip();
-  return public_ip_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void member::set_allocated_public_ip(::std::string* public_ip) {
-  if (public_ip != NULL) {
-    set_has_public_ip();
-  } else {
-    clear_has_public_ip();
-  }
-  public_ip_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), public_ip);
-  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.member.public_ip)
 }
 
 // optional uint32 public_port = 8;
@@ -2233,13 +2183,13 @@ inline void member::set_public_port(::google::protobuf::uint32 value) {
 
 // optional bytes local_ip = 9;
 inline bool member::has_local_ip() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void member::set_has_local_ip() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void member::clear_has_local_ip() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void member::clear_local_ip() {
   local_ip_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
