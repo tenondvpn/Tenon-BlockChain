@@ -69,7 +69,6 @@ struct BftMember {
             pubkey(pkey),
             index(idx),
             public_ip(pubip),
-            public_ip(""),
             public_port(0),
             dht_key(dhtkey) {
         assert(pubkey.ec_point());

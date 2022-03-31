@@ -871,8 +871,8 @@ int BftManager::LeaderPrecommit(
     }
 
     auto& member_ptr = (*bft_ptr->members_ptr())[bft_msg.member_index()];
-    if (member_ptr->public_ip.empty()) {
-        member_ptr->public_ip = bft_msg.node_ip();
+    if (member_ptr->public_ip == 0) {
+        member_ptr->public_ip = ip::IpToUint32(bft_msg.node_ip().c_str(), 32);
         member_ptr->public_port = bft_msg.node_port();
     }
 

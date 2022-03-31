@@ -14,19 +14,10 @@ public:
 
     ~IpWeight() {}
 
-    void AddIp(const std::string& ip) {
-        for (int32_t i = (int32_t)ip.size(); i >= 7; --i) {
-            in_addr_t addr;
-            in_addr_t mask;
-            if (ParseIp(&addr, &mask, (char*)ip.c_str(), i) != kIpSuccess) {
-                continue;
-            }
-
-            if (addr == 0) {
-                continue;
-            }
-
-            uint32_t prefix = addr & mask;
+    void AddIp(uint32_t ip) {
+        for (int32_t i = 32; i > 6; --i) {
+            in_addr_t mask = Netmask(i);
+            uint32_t prefix = ip & mask;
             auto iter = ipcount_map_.find(prefix);
             if (iter != ipcount_map_.end()) {
                 ++iter->second;
