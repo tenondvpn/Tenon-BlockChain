@@ -151,9 +151,7 @@ int ElectPoolManager::GetElectionTxInfo(bft::protobuf::TxInfo& tx_info) {
         auto in = ec_block.add_in();
         in->set_pubkey((*iter)->public_key);
         in->set_pool_idx_mod_num((*iter)->init_pool_index_mod_num);
-        in->set_public_ip(ip::IpToUint32(
-            (*iter)->public_ip.c_str(),
-            common::kNodePublicIpMaskLen));
+        in->set_public_ip((*iter)->public_ip & ip::Netmask(common::kNodePublicIpMaskLen));
     }
 
     ec_block.set_shard_network_id(tx_info.network_id());

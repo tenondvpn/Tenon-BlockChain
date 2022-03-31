@@ -61,12 +61,14 @@ struct BftMember {
             const std::string& in_id,
             const std::string& pkey,
             uint32_t idx,
+            uint32_t pubip,
             const std::string& dhtkey,
             int32_t pool_mode_num)
             : net_id(nid),
             id(in_id),
             pubkey(pkey),
             index(idx),
+            public_ip(pubip),
             public_ip(""),
             public_port(0),
             dht_key(dhtkey) {
@@ -78,7 +80,7 @@ struct BftMember {
     std::string id;
     security::PublicKey pubkey;
     uint32_t index;
-    std::string public_ip;
+    uint32_t public_ip;
     uint16_t public_port;
     std::string dht_key;
     int32_t pool_index_mod_num;

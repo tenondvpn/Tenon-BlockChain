@@ -357,6 +357,7 @@ bool ElectManager::ProcessPrevElectMembers(protobuf::ElectBlock& elect_block, bo
             id,
             in[i].pubkey(),
             member_index,
+            in[i].public_ip(),
             in[i].dht_key(),
             prev_members_bls[i].pool_idx_mod_num()));
         if (prev_members_bls[i].pool_idx_mod_num() >= 0) {
@@ -500,6 +501,7 @@ void ElectManager::ProcessNewElectBlock(
             id,
             in[i].pubkey(),
             member_index,
+            in[i].public_ip(),
             in[i].dht_key(),
             in[i].pool_idx_mod_num()));
         AddNewNodeWithIdAndIp(elect_block.shard_network_id(), id, in[i].public_ip());
