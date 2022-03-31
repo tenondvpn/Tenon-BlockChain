@@ -112,7 +112,7 @@ inline static in_addr_t Netmask(int prefix) {
     return prefix == 0 ? 0 : ~(in_addr_t)0 << (32 - prefix);
 }
 
-inline static in_addr_t atoh(char *s) {
+inline static in_addr_t atoh(const char *s) {
 #ifdef _WIN32
     struct in_addr in;
     if (inet_pton(AF_INET, s, &in.s_addr) != 1) {
@@ -175,6 +175,9 @@ inline static int ParseIp(in_addr_t *addr, in_addr_t *mask, char *str, int32_t p
     return kIpError;
 }
 
+inline static uint32_t IpToUint32(const char* ip, int32_t net_mask) {
+    return atoh(ip) & Netmask(net_mask);
+}
 
 }  // namespace ip
 

@@ -69,8 +69,7 @@ void NodeHistoryCredit::ChangeCredit(
         write_batch.Put(id_key, std::to_string(add_credit));
         if (iter != credit_map_.end()) {
             iter->second = add_credit;
-        }
-        else {
+        } else {
             credit_map_[id] = add_credit;
         }
     }

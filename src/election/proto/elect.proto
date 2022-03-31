@@ -17,7 +17,7 @@ message member {
 	optional uint32 country = 4;
 	optional bytes dht_key = 5;
 	optional int32 nat_type = 6;
-	optional bytes public_ip = 7;
+	optional uint32 public_ip = 7;
 	optional uint32 public_port = 8;
     optional bytes local_ip = 9;
 	optional uint32 local_port = 10;

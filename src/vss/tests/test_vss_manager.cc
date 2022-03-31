@@ -211,7 +211,7 @@ public:
             new_node->id = GetIdByPrikey(prikey);
             new_node->public_key = GetPubkeyByPrikey(prikey);
             new_node->dht_key = "";
-            new_node->public_ip = "";
+            new_node->public_ip = 0;
             new_node->public_port = 0;
             new_node->join_tm = std::chrono::steady_clock::now() - std::chrono::microseconds(kElectAvailableJoinTime + 1000);
             new_node->choosed_balance = common::Random::RandomUint64() % (common::kTenonMaxAmount / 1000000);

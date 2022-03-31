@@ -19,7 +19,7 @@ namespace elect {
 struct ElectNodeDetail {
     std::string id;
     std::string public_key;
-    std::string public_ip;
+    uint32_t public_ip;
     uint16_t public_port;
     std::string dht_key;
     std::atomic<uint64_t> choosed_height;
