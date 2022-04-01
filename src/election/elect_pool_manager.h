@@ -65,7 +65,6 @@ private:
         const std::vector<NodeDetailPtr>& src_nodes,
         std::set<int32_t>& res_nodes);
     void SmoothFtsValue(
-        bool ip_weight_flip,
         uint32_t shard_netid,
         int32_t count,
         std::mt19937_64& g2,

@@ -1,6 +1,7 @@
 #include "election/node_history_credit.h"
 
 #include "common/string_utils.h"
+#include "common/encode.h"
 #include "db/db.h"
 #include "db/db_utils.h"
 #include "security/secp256k1.h"
@@ -73,6 +74,8 @@ void NodeHistoryCredit::ChangeCredit(
             credit_map_[id] = add_credit;
         }
     }
+
+    std::cout << common::Encode::HexEncode(id) << ": " << add_credit << ", weedout: " << weedout << std::endl;
 }
 
 int NodeHistoryCredit::GetNodeHistoryCredit(const std::string& id, int32_t* credit) {
