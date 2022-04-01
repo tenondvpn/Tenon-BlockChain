@@ -716,9 +716,11 @@ void ElectPoolManager::SmoothFtsValue(
         auto old_balance_diff = max_balance - min_balance;
         max_balance = min_balance + 1000;
         blance_diff = max_balance - min_balance;
-        int32_t balance_index = blance_diff / old_balance_diff;
-        for (uint32_t i = 0; i < sort_vec.size(); ++i) {
-            blance_weight[i] = min_balance + balance_index * (blance_weight[i] - min_balance);
+        if (old_balance_diff > 0) {
+            int32_t balance_index = blance_diff / old_balance_diff;
+            for (uint32_t i = 0; i < sort_vec.size(); ++i) {
+                blance_weight[i] = min_balance + balance_index * (blance_weight[i] - min_balance);
+            }
         }
     }
 
