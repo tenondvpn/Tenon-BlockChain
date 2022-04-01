@@ -45,7 +45,6 @@ public:
 private:
     std::unordered_map<uint32_t, int32_t> ipcount_map_;
 
-    DISALLOW_COPY_AND_ASSIGN(IpWeight);
 };
 
 }  // namespace ip
