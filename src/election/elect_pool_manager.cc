@@ -786,7 +786,7 @@ void ElectPoolManager::SmoothFtsValue(
         ELECT_DEBUG("fts smooth %s: %d, %d, %d, %d",
             common::Encode::HexEncode(sort_vec[i]->id).c_str(),
             sort_vec[i]->fts_value, ip_weight[i], credit_weight[i], blance_weight[i]);
-        std::cout << common::Encode::HexEncode(sort_vec[i]->id) << " : " 
+        std::cout << common::Encode::HexEncode(sort_vec[i]->id) << " : "
             << sort_vec[i]->fts_value << ", "
             << ip_weight[i] << ", "
             << credit_weight[i] << ", "

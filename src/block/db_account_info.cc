@@ -73,7 +73,9 @@ bool DbAccountInfo::AddNewAccountToDb(
 }
 
 DbAccountInfo::DbAccountInfo(const std::string& account_id)
-        : account_id_(account_id), tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()) {
+        : account_id_(account_id),
+          tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()),
+          id_timeblock_queue_("tm_latest_" + account_id, 3) {
     dict_key_ = db::kGlobalDickKeyAccountInfo + account_id_;
 }
 
@@ -204,6 +206,39 @@ int DbAccountInfo::GetPoolIndex(uint32_t* pool_idx) {
 
 void DbAccountInfo::NewHeight(uint64_t height, db::DbWriteBach& db_batch) {
     tx_queue_.push(std::to_string(height), db_batch);
+}
+
+void DbAccountInfo::NewTimeTxHeight(
+        uint64_t tm_height,
+        uint64_t height,
+        uint32_t network_id,
+        uint32_t pool_index,
+        db::DbWriteBach& db_batch) {
+    id_timeblock_queue_.push(std::to_string(tm_height), db_batch);
+    std::string key = "tm_latest_tx_h_" + account_id_;
+    std::string new_val = std::to_string(height) + "_" +
+        std::to_string(network_id) + "_" +
+        std::to_string(pool_index);
+    std::string val;
+    auto st = db::Db::Instance()->Get(key, &val);
+    if (!st.ok()) {
+        db_batch.Put(key, std::to_string(height));
+    } else {
+        common::Split<> tmp_split(val.c_str(), '_', val.size());
+        if (tmp_split.size() != 3) {
+            db_batch.Put(key, new_val);
+            return;
+        }
+
+        uint64_t old_height = 0;
+        if (!common::StringUtil::ToUint64(tmp_split[0], &old_height)) {
+            db_batch.Put(key, new_val);
+        } else {
+            if (old_height < height) {
+                db_batch.Put(key, new_val);
+            }
+        }
+    }
 }
 
 // get from end to begin, count's heights, one time max: 1024

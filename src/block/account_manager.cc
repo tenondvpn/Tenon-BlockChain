@@ -301,6 +301,13 @@ int AccountManager::AddBlockItemToDb(
             BLOCK_ERROR("get account pool index failed!");
             continue;
         }
+
+        account_info->NewTimeTxHeight(
+            block_item->timeblock_height(),
+            block_item->height(),
+            block_item->network_id(),
+            pool_idx,
+            db_batch);
 //         if (bft::GidManager::Instance()->NewGidTxValid(tx_list[i].gid(), tx_list[i], true)) {
 //             BFT_ERROR("global check gid exists: %s, call_contract_step: %d, tx_type: %d",
 //                 common::Encode::HexEncode(tx_list[i].gid()).c_str(), tx_list[i].call_contract_step(), tx_list[i].type());
@@ -817,7 +824,7 @@ int AccountManager::GetBlockInfo(
         return kBlockError;
     }
 
-    BLOCK_DEBUG("FFFF get pool index: %d, height: %lu", pool_idx, *height);
+    //BLOCK_DEBUG("FFFF get pool index: %d, height: %lu", pool_idx, *height);
     return kBlockSuccess;
 }
 

@@ -72,6 +72,10 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         all_nodes_waiting_map_[wait_ptr->nodes_hash] = wait_ptr;
     } else {
         iter->second->added_nodes.insert(root_node_id);
+        if (iter->second->added_nodes.size() > max_nodes_count_) {
+            max_nodes_count_ = iter->second->added_nodes.size();
+            max_nodes_hash_ = wait_ptr->nodes_hash;
+        }
     }
 }
 
@@ -87,30 +91,43 @@ void ElectWaitingNodes::OnTimeBlock(uint64_t tm_block_tm) {
 void ElectWaitingNodes::GetAllValidNodes(
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
-    std::vector<WaitingListPtr> waiting_nodes;
+//     std::vector<WaitingListPtr> waiting_nodes;
+    WaitingListPtr wait_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
-        for (auto iter = all_nodes_waiting_map_.begin();
-                iter != all_nodes_waiting_map_.end(); ++iter) {
-            waiting_nodes.push_back(iter->second);
+        if (max_nodes_hash_.empty()) {
+            return;
         }
+
+        auto iter = all_nodes_waiting_map_.find(max_nodes_hash_);
+        if (iter == all_nodes_waiting_map_.end()) {
+            return;
+        }
+
+        wait_ptr = iter->second;
+//         for (auto iter = all_nodes_waiting_map_.begin();
+//                 iter != all_nodes_waiting_map_.end(); ++iter) {
+//             waiting_nodes.push_back(iter->second);
+//         }
 
         all_nodes_waiting_map_.clear();
         coming_root_nodes_.clear();
+        max_nodes_count_ = 0;
+        max_nodes_hash_ = "";
     }
 
-    if (waiting_nodes.empty()) {
-        return;
-    }
-
-    std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
-    auto iter = waiting_nodes.begin();
-    for (auto siter = (*iter)->nodes_vec.begin(); siter != (*iter)->nodes_vec.end(); ++siter) {
+//     if (waiting_nodes.empty()) {
+//         return;
+//     }
+// 
+//     std::sort(waiting_nodes.begin(), waiting_nodes.end(), WaitingNodeCountCompare);
+//     auto iter = waiting_nodes.begin();
+    for (auto siter = wait_ptr->nodes_vec.begin(); siter != wait_ptr->nodes_vec.end(); ++siter) {
         ELECT_ERROR("all_nodes_waiting_map_ size: %d, waiting_shard_id_: %d, id: %s",
             (*iter)->nodes_vec.size(), waiting_shard_id_, common::Encode::HexEncode((*siter)->id).c_str());
         if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
-            waiting_shard_id_ - network::kConsensusWaitingShardOffset,
-            (*siter)->id)) {
+                waiting_shard_id_ - network::kConsensusWaitingShardOffset,
+                (*siter)->id)) {
             continue;
         }
 
@@ -246,6 +263,27 @@ void ElectWaitingNodes::WaitingNodesUpdate() {
     waiting_nodes_tick_.CutOff(
         kWaitingHeartbeatPeriod,
         std::bind(&ElectWaitingNodes::WaitingNodesUpdate, this));
+}
+
+void ElectWaitingNodes::UpdateWaitingNodeStoke() {
+    WaitingListPtr wait_ptr = nullptr;
+    {
+        std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
+        if (max_nodes_hash_.empty()) {
+            return;
+        }
+
+        auto iter = all_nodes_waiting_map_.find(max_nodes_hash_);
+        if (iter == all_nodes_waiting_map_.end()) {
+            return;
+        }
+
+        wait_ptr = iter->second;
+    }
+
+    for (auto siter = wait_ptr->nodes_vec.begin(); siter != wait_ptr->nodes_vec.end(); ++siter) {
+        nodes_filter.Add(common::Hash::Hash64((*siter)->id));
+    }
 }
 
 };  // namespace elect

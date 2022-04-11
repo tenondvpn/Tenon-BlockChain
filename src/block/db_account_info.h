@@ -29,6 +29,12 @@ public:
     int GetPoolIndex(uint32_t* pool_idx);
     void NewHeight(uint64_t height, db::DbWriteBach& db_batch);
     void GetHeights(uint64_t index, int32_t count, std::vector<uint64_t>* res);
+    void NewTimeTxHeight(
+        uint64_t tm_height,
+        uint64_t height,
+        uint32_t network_id,
+        uint32_t pool_index,
+        db::DbWriteBach& db_batch);
     void GetLatestHeights(uint64_t min_height, uint32_t count, std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
@@ -122,6 +128,7 @@ private:
     uint64_t added_timeout_{ 0 };
     int32_t heap_index_{ -1 };
     db::Queue tx_queue_;
+    db::UniqueQueue id_timeblock_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

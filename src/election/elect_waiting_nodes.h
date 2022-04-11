@@ -35,8 +35,8 @@ public:
 
 private:
     void SendConsensusNodes(uint64_t time_block_tm);
-    void GetThisTimeBlockLocallNodes(uint64_t tm_block_tm);
     void WaitingNodesUpdate();
+    void UpdateWaitingNodeStoke();
 
     static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 
@@ -50,6 +50,8 @@ private:
     std::mutex all_nodes_waiting_map_mutex_;
     std::unordered_set<std::string> coming_root_nodes_;
     uint64_t got_valid_nodes_tm_{ 0 };
+    uint32_t max_nodes_count_{ 0 };
+    std::string max_nodes_hash_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectWaitingNodes);
 };
