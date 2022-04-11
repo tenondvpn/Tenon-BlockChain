@@ -3,6 +3,7 @@
 
 #include "common/encode.h"
 #include "common/bitmap.h"
+#include "common/split.h"
 #include "db/db.h"
 #include "network/network_utils.h"
 
@@ -225,7 +226,7 @@ void DbAccountInfo::NewTimeTxHeight(
         db_batch.Put(key, std::to_string(height));
     } else {
         common::Split<> tmp_split(val.c_str(), '_', val.size());
-        if (tmp_split.size() != 3) {
+        if (tmp_split.Count() != 3) {
             db_batch.Put(key, new_val);
             return;
         }

@@ -10,6 +10,7 @@
 #include "db/db.h"
 #include "db/db_pri_queue.h"
 #include "db/db_queue.h"
+#include "db/db_unique_queue.h"
 #include "bft/proto/bft.pb.h"
 #include "block/block_utils.h"
 
