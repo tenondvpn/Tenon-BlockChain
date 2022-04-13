@@ -32,11 +32,11 @@ public:
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
     void OnTimeBlock(uint64_t tm_block_tm);
+    void UpdateWaitingNodeStoke();
 
 private:
     void SendConsensusNodes(uint64_t time_block_tm);
     void WaitingNodesUpdate();
-    void UpdateWaitingNodeStoke();
 
     static const uint64_t kWaitingHeartbeatPeriod = 30000000llu;
 
