@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "block/db_account_info.h"
 
+#include "block/block_manager.h"
 #include "common/encode.h"
 #include "common/bitmap.h"
 #include "common/split.h"
@@ -75,8 +76,7 @@ bool DbAccountInfo::AddNewAccountToDb(
 
 DbAccountInfo::DbAccountInfo(const std::string& account_id)
         : account_id_(account_id),
-          tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()),
-          id_timeblock_queue_("tm_latest_" + account_id, 3) {
+          tx_queue_(account_id, (std::numeric_limits<uint64_t>::max)()) {
     dict_key_ = db::kGlobalDickKeyAccountInfo + account_id_;
 }
 
