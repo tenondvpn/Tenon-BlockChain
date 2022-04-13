@@ -51,7 +51,7 @@ private:
     std::unordered_set<std::string> coming_root_nodes_;
     uint64_t got_valid_nodes_tm_{ 0 };
     uint32_t max_nodes_count_{ 0 };
-    std::string max_nodes_hash_;
+    uint64_t max_nodes_hash_{ 0 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectWaitingNodes);
 };

@@ -36,6 +36,10 @@ public:
         uint32_t network_id,
         uint32_t pool_index,
         db::DbWriteBach& db_batch);
+    void GetAccountTmHeightBlock(
+        uint64_t tm_height,
+        uint64_t got_tm_height,
+        std::string* block_str);
     void GetLatestHeights(uint64_t min_height, uint32_t count, std::vector<uint64_t>* res);
     int SetMaxHeightHash(uint64_t tmp_height, const std::string& hash, db::DbWriteBach& db_batch);
     int GetMaxHeight(uint64_t* max_height);
@@ -104,6 +108,12 @@ public:
     }
 
 private:
+    void GetBlockString(
+        const std::string& height_info,
+        uint64_t now_tm_height,
+        uint64_t got_tm_height,
+        std::string* block_str);
+
     static std::unordered_set<std::string> account_id_set_;
     static std::mutex account_id_set_mutex_;
 
@@ -114,6 +124,7 @@ private:
     std::atomic<uint32_t> type_{ common::kInvalidUint32 };
     std::atomic<uint64_t> max_height_{ common::kInvalidUint64 };
     uint32_t pool_index_{ common::kInvalidUint32 };
+    uint32_t network_id_{ common::kInvalidUint32 };
     std::string bytes_code_;
     std::mutex bytes_code_mutex_;
     std::string owner_;
@@ -129,7 +140,6 @@ private:
     uint64_t added_timeout_{ 0 };
     int32_t heap_index_{ -1 };
     db::Queue tx_queue_;
-    db::UniqueQueue id_timeblock_queue_;
 
     DISALLOW_COPY_AND_ASSIGN(DbAccountInfo);
 };

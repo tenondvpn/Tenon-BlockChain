@@ -24,6 +24,14 @@ public:
         const std::string& leader_id,
         uint32_t pool_mod_num,
         transport::protobuf::Header& msg);
+    static void CreateSyncStokeRequest(
+        const dht::NodePtr& local_node,
+        uint32_t des_net_id,
+        const std::vector<std::pair<std::string, uint64_t>>& ids,
+        transport::protobuf::Header& msg);
+    static void CreateSyncStokeResponse(
+        const dht::NodePtr& local_node,
+        transport::protobuf::Header& msg);
 
 private:
     ElectProto() {}

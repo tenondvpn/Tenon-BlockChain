@@ -160,6 +160,42 @@ void ElectProto::CreateWaitingHeartbeat(
     msg.set_data(ec_msg.SerializeAsString());
 }
 
+void ElectProto::CreateSyncStokeRequest(
+        const dht::NodePtr& local_node,
+        uint32_t des_net_id,
+        const std::vector<std::pair<std::string, uint64_t>>& ids,
+        transport::protobuf::Header& msg) {
+    msg.set_src_dht_key(local_node->dht_key());
+    dht::DhtKeyManager dht_key(des_net_id, 0);
+    msg.set_des_dht_key(dht_key.StrKey());
+    msg.set_priority(transport::kTransportPriorityHigh);
+    msg.set_id(common::GlobalInfo::Instance()->MessageId());
+    msg.set_type(common::kElectMessage);
+    msg.set_client(local_node->client_mode);
+    msg.set_universal(false);
+    msg.set_hop_count(0);
+
+    // now just for test
+    protobuf::ElectMessage ec_msg;
+    auto sync_stoke_req = ec_msg.mutable_sync_stoke_req();
+    sync_stoke_req->set_now_tm_height(
+        tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
+    for (auto iter = ids.begin(); iter != ids.end(); ++iter) {
+        auto stoke_item = sync_stoke_req->add_sync_item();
+        stoke_item->set_id((*iter).first);
+        stoke_item->set_synced_tm_height((*iter).second);
+    }
+
+    msg.set_data(ec_msg.SerializeAsString());
+}
+
+void ElectProto::CreateSyncStokeResponse(
+        const dht::NodePtr& local_node,
+        transport::protobuf::Header& msg) {
+
+}
+
+
 }  // namespace elect
 
 }  // namespace tenon

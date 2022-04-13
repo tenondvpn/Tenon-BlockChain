@@ -95,7 +95,7 @@ void ElectWaitingNodes::GetAllValidNodes(
     WaitingListPtr wait_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
-        if (max_nodes_hash_.empty()) {
+        if (max_nodes_hash_ == 0) {
             return;
         }
 
@@ -113,7 +113,7 @@ void ElectWaitingNodes::GetAllValidNodes(
         all_nodes_waiting_map_.clear();
         coming_root_nodes_.clear();
         max_nodes_count_ = 0;
-        max_nodes_hash_ = "";
+        max_nodes_hash_ = 0;
     }
 
 //     if (waiting_nodes.empty()) {
@@ -124,7 +124,7 @@ void ElectWaitingNodes::GetAllValidNodes(
 //     auto iter = waiting_nodes.begin();
     for (auto siter = wait_ptr->nodes_vec.begin(); siter != wait_ptr->nodes_vec.end(); ++siter) {
         ELECT_ERROR("all_nodes_waiting_map_ size: %d, waiting_shard_id_: %d, id: %s",
-            (*iter)->nodes_vec.size(), waiting_shard_id_, common::Encode::HexEncode((*siter)->id).c_str());
+            wait_ptr->nodes_vec.size(), waiting_shard_id_, common::Encode::HexEncode((*siter)->id).c_str());
         if (elect::ElectManager::Instance()->IsIdExistsInAnyShard(
                 waiting_shard_id_ - network::kConsensusWaitingShardOffset,
                 (*siter)->id)) {
@@ -269,7 +269,7 @@ void ElectWaitingNodes::UpdateWaitingNodeStoke() {
     WaitingListPtr wait_ptr = nullptr;
     {
         std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
-        if (max_nodes_hash_.empty()) {
+        if (max_nodes_hash_ == 0) {
             return;
         }
 
@@ -282,7 +282,7 @@ void ElectWaitingNodes::UpdateWaitingNodeStoke() {
     }
 
     for (auto siter = wait_ptr->nodes_vec.begin(); siter != wait_ptr->nodes_vec.end(); ++siter) {
-        nodes_filter.Add(common::Hash::Hash64((*siter)->id));
+        // common::Hash::Hash64((*siter)->id);
     }
 }
 

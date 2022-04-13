@@ -12,7 +12,7 @@ namespace tenon {
 
 namespace db {
 
-UniqueQueue::UniqueQueue(const std::string& name, uint32_t max_size) {
+UniqueQueue::UniqueQueue(const std::string& name, uint64_t max_size) {
     std::lock_guard<std::mutex> guard(push_mutex_);
     db_name_ = db::kGlobalDbQueueKeyPrefix + "_" + name;
     db_bindex_name_ = db::kGlobalDbQueueKeyPrefix + "_bi_" + name;
@@ -22,21 +22,21 @@ UniqueQueue::UniqueQueue(const std::string& name, uint32_t max_size) {
 
     std::string begin_index_str;
     if (Db::Instance()->Get(db_bindex_name_, &begin_index_str).ok()) {
-        uint32_t tmp_index = 0;
+        uint64_t tmp_index = 0;
         common::StringUtil::ToUint32(begin_index_str, &tmp_index);
         begin_index_ = tmp_index;
     }
 
     std::string end_index_str;
     if (Db::Instance()->Get(db_eindex_name_, &end_index_str).ok()) {
-        uint32_t tmp_index = 0;
+        uint64_t tmp_index = 0;
         common::StringUtil::ToUint32(end_index_str, &tmp_index);
         end_index_ = tmp_index;
         ++end_index_;
     }
 
     DB_ERROR("load unique queue period: %u, %u", begin_index_, end_index_);
-    for (uint32_t i = begin_index_; i < end_index_; ++i) {
+    for (uint64_t i = begin_index_; i < end_index_; ++i) {
         std::string key = db_name_ + "_" + std::to_string(i);
         std::string val;
         auto st = db::Db::Instance()->Get(key, &val);
@@ -59,7 +59,7 @@ bool UniqueQueue::push(const std::string& value, db::DbWriteBach& db_batch) {
     }
 
     unique_id_set_.insert(value);
-    uint32_t end_index = end_index_;
+    uint64_t end_index = end_index_;
     db_batch.Put(db_eindex_name_, std::to_string(end_index));
     std::string queue_name = db_name_ + "_" + std::to_string(end_index);
     db_batch.Put(queue_name, value);
@@ -72,7 +72,7 @@ bool UniqueQueue::push(const std::string& value, db::DbWriteBach& db_batch) {
     return true;
 }
 
-uint32_t UniqueQueue::size() {
+uint64_t UniqueQueue::size() {
     return end_index_ - begin_index_;
 }
 
@@ -87,7 +87,7 @@ bool UniqueQueue::begin(std::string* value) {
 }
 
 bool UniqueQueue::pop(std::string* value, db::DbWriteBach& db_batch) {
-    uint32_t begin_index = begin_index_;
+    uint64_t begin_index = begin_index_;
     db_batch.Put(db_bindex_name_, std::to_string(begin_index + 1));
     ++begin_index_;
     std::string queue_name = db_name_ + "_" + std::to_string(begin_index);
@@ -95,8 +95,8 @@ bool UniqueQueue::pop(std::string* value, db::DbWriteBach& db_batch) {
     return true;
 }
 
-bool UniqueQueue::get(uint32_t index, std::string* value) {
-    uint32_t begin_index = index;
+bool UniqueQueue::get(uint64_t index, std::string* value) {
+    uint64_t begin_index = index;
     std::string queue_name = db_name_ + "_" + std::to_string(begin_index);
     auto res = Db::Instance()->Get(queue_name, value);
     if (!res.ok()) {

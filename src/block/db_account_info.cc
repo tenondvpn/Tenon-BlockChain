@@ -96,7 +96,6 @@ int DbAccountInfo::SetConsensuseNetid(uint32_t network_id, db::DbWriteBach& db_b
 
     consensuse_net_id_ = network_id;
     return kBlockSuccess;
-
 }
 
 int DbAccountInfo::GetConsensuseNetId(uint32_t* network_id) {
@@ -112,7 +111,7 @@ int DbAccountInfo::GetConsensuseNetId(uint32_t* network_id) {
             &str_net_id)) {
         return kBlockError;
     }
-        
+    
     if (!common::StringUtil::ToUint32(str_net_id, network_id)) {
         return kBlockError;
     }
@@ -215,15 +214,32 @@ void DbAccountInfo::NewTimeTxHeight(
         uint32_t network_id,
         uint32_t pool_index,
         db::DbWriteBach& db_batch) {
-    id_timeblock_queue_.push(std::to_string(tm_height), db_batch);
-    std::string key = "tm_latest_tx_h_" + account_id_;
+    std::string height_key = "tm_latest_tx_h_" + account_id_;
+    std::string height_val;
+    auto hst = db::Db::Instance()->Get(height_key, &height_val);
+    if (!hst.ok()) {
+        db_batch.Put(height_key, std::to_string(tm_height));
+    } else {
+        std::string height_key_prev = "tm_latest_tx_h0_" + account_id_;
+        uint64_t height_val_old = 0;
+        if (!common::StringUtil::ToUint64(height_val, &height_val_old)) {
+            db_batch.Put(height_key, std::to_string(tm_height));
+        } else {
+            if (height_val_old < tm_height) {
+                db_batch.Put(height_key_prev, height_val);
+                db_batch.Put(height_key, std::to_string(tm_height));
+            }
+        }
+    }
+
+    std::string key = "tm_latest_tx_h_" + account_id_ + "_" + std::to_string(tm_height);
     std::string new_val = std::to_string(height) + "_" +
         std::to_string(network_id) + "_" +
         std::to_string(pool_index);
     std::string val;
     auto st = db::Db::Instance()->Get(key, &val);
     if (!st.ok()) {
-        db_batch.Put(key, std::to_string(height));
+        db_batch.Put(key, new_val);
     } else {
         common::Split<> tmp_split(val.c_str(), '_', val.size());
         if (tmp_split.Count() != 3) {
@@ -239,6 +255,76 @@ void DbAccountInfo::NewTimeTxHeight(
                 db_batch.Put(key, new_val);
             }
         }
+    }
+}
+
+void DbAccountInfo::GetAccountTmHeightBlock(
+        uint64_t now_tm_height,
+        uint64_t got_height,
+        std::string* block_str) {
+    block_str->clear();
+    GetBlockString("tm_latest_tx_h_" + account_id_, now_tm_height, got_height, block_str);
+    if (!block_str->empty()) {
+        return;
+    }
+
+    GetBlockString("tm_latest_tx_h0_" + account_id_, now_tm_height, got_height, block_str);
+}
+
+void DbAccountInfo::GetBlockString(
+        const std::string& height_key,
+        uint64_t now_tm_height,
+        uint64_t got_height,
+        std::string* block_str) {
+    std::string height_val;
+    auto hst = db::Db::Instance()->Get(height_key, &height_val);
+    if (!hst.ok()) {
+        return;
+    }
+
+    uint64_t height = 0;
+    if (!common::StringUtil::ToUint64(height_val, &height)) {
+        return;
+    }
+
+    if (now_tm_height <= height) {
+        return;
+    }
+
+    if (height == got_height) {
+        return;
+    }
+
+    std::string key = "tm_latest_tx_h_" + account_id_ + "_" + std::to_string(height);
+    std::string val;
+    auto st = db::Db::Instance()->Get(key, &val);
+    if (!st.ok()) {
+        return;
+    }
+
+    common::Split<> tmp_split(val.c_str(), '_', val.size());
+    uint64_t block_height = 0;
+    if (!common::StringUtil::ToUint64(tmp_split[0], &block_height)) {
+        return;
+    }
+
+    uint32_t netid = 0;
+    if (!common::StringUtil::ToUint32(tmp_split[1], &netid)) {
+        return;
+    }
+
+    uint32_t pool_idx = 0;
+    if (!common::StringUtil::ToUint32(tmp_split[2], &pool_idx)) {
+        return;
+    }
+
+    auto res = block::BlockManager::Instance()->GetBlockStringWithHeight(
+        netid,
+        pool_idx,
+        block_height,
+        block_str);
+    if (res != block::kBlockSuccess) {
+        return;
     }
 }
 
