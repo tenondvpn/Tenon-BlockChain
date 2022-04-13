@@ -6,6 +6,7 @@
 #include "bft/proto/bft.pb.h"
 #include "block/proto/block.pb.h"
 #include "common/bitmap.h"
+#include "common/tick.h"
 #include "election/elect_pool.h"
 #include "election/proto/elect.pb.h"
 #include "election/elect_waiting_nodes.h"
@@ -39,6 +40,7 @@ public:
     void OnNewElectBlock(
         uint64_t height,
         protobuf::ElectBlock& elect_block);
+    void UpdateNodesStoke();
 
 private:
     int GetAllTxInfoBloomFiler(
@@ -82,7 +84,6 @@ private:
         uint32_t network_id,
         const common::Bitmap& bitmap,
         elect::protobuf::ElectBlock* ec_block);
-    void UpdateNodesStoke();
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;
@@ -95,6 +96,7 @@ private:
     std::mutex waiting_pool_map_mutex_;
     NodeHistoryCredit node_credit_;
     uint32_t updated_net_id_{ common::kInvalidUint32 };
+    common::Tick update_stoke_tick_;
 
     DISALLOW_COPY_AND_ASSIGN(ElectPoolManager);
 };

@@ -23,7 +23,9 @@ namespace tenon {
 namespace elect {
 
 static const std::string kElectGidPrefix = common::Encode::HexDecode("fc04c804d4049808ae33755fe9ae5acd50248f249a3ca8aea74fbea679274a11");
-ElectPoolManager::ElectPoolManager() {}
+ElectPoolManager::ElectPoolManager() {
+    update_stoke_tick_.CutOff(30000000l, std::bind(&ElectPoolManager::UpdateNodesStoke, this));
+}
 
 ElectPoolManager::~ElectPoolManager() {}
 
@@ -284,7 +286,29 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
 }
 
 void ElectPoolManager::UpdateNodesStoke() {
+    std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map;
+    {
+        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+        waiting_pool_map = waiting_pool_map_;
+    }
 
+    for (auto iter = waiting_pool_map.begin(); iter != waiting_pool_map.end(); ++iter) {
+        iter->second->UpdateNodesStoke();
+        usleep(100000);
+    }
+
+    std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map;
+    {
+        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
+        elect_pool_map = elect_pool_map_;
+    }
+
+    for (auto iter = elect_pool_map.begin(); iter != elect_pool_map.end(); ++iter) {
+        iter->second->UpdateNodesStoke();
+        usleep(100000);
+    }
+
+    update_stoke_tick_.CutOff(30000000l, std::bind(&ElectPoolManager::UpdateNodesStoke, this));
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
