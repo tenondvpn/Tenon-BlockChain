@@ -39,6 +39,21 @@ void ElectPool::GetAllValidNodes(
 //     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
 }
 
+void ElectPool::UpdateNodesStoke() {
+    std::vector<NodeDetailPtr> nodes;
+    {
+        std::lock_guard<std::mutex> guard(node_map_mutex_);
+        nodes = elect_nodes_;
+    }
+
+    std::vector<std::string> ids;
+    for (auto siter = nodes.begin(); siter != nodes.end(); ++siter) {
+        ids.push_back((*siter)->id);
+    }
+
+    NodesStokeManager::Instance()->SyncAddressStoke(ids);
+}
+
 };  // namespace elect
 
 };  //  namespace tenon

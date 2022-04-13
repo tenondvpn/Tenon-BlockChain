@@ -82,6 +82,7 @@ private:
         uint32_t network_id,
         const common::Bitmap& bitmap,
         elect::protobuf::ElectBlock* ec_block);
+    void UpdateNodesStoke();
 
     std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map_;
     std::mutex elect_pool_map_mutex_;
@@ -93,6 +94,7 @@ private:
     std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map_;
     std::mutex waiting_pool_map_mutex_;
     NodeHistoryCredit node_credit_;
+    uint32_t updated_net_id_{ common::kInvalidUint32 };
 
     DISALLOW_COPY_AND_ASSIGN(ElectPoolManager);
 };

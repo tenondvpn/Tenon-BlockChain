@@ -66,8 +66,13 @@ message SyncNodeStokeRequest {
     optional uint64 now_tm_height = 2;
 }
 
+message SyncNodeStokeResItem {
+    optional bytes id = 1;
+    optional uint64 balance = 2;
+}
+
 message SyncNodeStokeResponse {
-    repeated bytes blocks = 1;
+    repeated SyncNodeStokeResItem items = 1;
     optional uint64 now_tm_height = 2;
 }
 

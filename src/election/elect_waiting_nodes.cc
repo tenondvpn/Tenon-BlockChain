@@ -8,6 +8,7 @@
 #include "transport/proto/transport.pb.h"
 #include "election/elect_pool_manager.h"
 #include "election/elect_manager.h"
+#include "election/nodes_stoke_manager.h"
 #include "election/proto/elect.pb.h"
 #include "election/proto/elect_proto.h"
 #include "security/secp256k1.h"
@@ -281,9 +282,12 @@ void ElectWaitingNodes::UpdateWaitingNodeStoke() {
         wait_ptr = iter->second;
     }
 
+    std::vector<std::string> ids;
     for (auto siter = wait_ptr->nodes_vec.begin(); siter != wait_ptr->nodes_vec.end(); ++siter) {
-        // common::Hash::Hash64((*siter)->id);
+        ids.push_back((*siter)->id);
     }
+
+    NodesStokeManager::Instance()->SyncAddressStoke(ids);
 }
 
 };  // namespace elect

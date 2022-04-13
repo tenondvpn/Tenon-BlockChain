@@ -20,9 +20,7 @@ NodesStokeManager* NodesStokeManager::Instance() {
     return &ins;
 }
 
-void NodesStokeManager::SyncAddressStoke(
-        const std::vector<std::string>& addrs,
-        uint64_t tm_height) {
+void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) {
     std::map<uint32_t, std::vector<std::pair<std::string, uint64_t>>> sync_map;
     for (auto iter = addrs.begin(); iter != addrs.end(); ++iter) {
         auto acc_info = block::AccountManager::Instance()->GetAcountInfo(*iter);
@@ -40,7 +38,8 @@ void NodesStokeManager::SyncAddressStoke(
             std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
             auto synced_iter = sync_nodes_map_.find(*iter);
             if (synced_iter != sync_nodes_map_.end()) {
-                if (synced_iter->second.first == tm_height) {
+                if (synced_iter->second.first ==
+                        tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
                     continue;
                 }
 
@@ -117,7 +116,33 @@ void NodesStokeManager::HandleSyncAddressStoke(
             ec_msg.sync_stoke_req().sync_item(i).synced_tm_height(),
             &block_str);
         if (!block_str.empty()) {
-            sync_stoke_res->add_blocks(block_str);
+            auto block_item = std::make_shared<bft::protobuf::Block>();
+            if (!block_item->ParseFromString(block_str)) {
+                continue;
+            }
+
+            auto& tx_list = block_item->tx_list();
+            for (int32_t i = 0; i < tx_list.size(); ++i) {
+                std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
+                std::string addr;
+                if (tx_list[i].to_add()) {
+                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[i].to()) {
+                        continue;
+                    }
+
+                    addr = tx_list[i].to();
+                } else {
+                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[i].from()) {
+                        continue;
+                    }
+
+                    addr = tx_list[i].from();
+                }
+
+                auto res_item = sync_stoke_res->add_items();
+                res_item->set_id(addr);
+                res_item->set_balance(tx_list[i].balance());
+            }
         }
     }
 
@@ -130,36 +155,16 @@ void NodesStokeManager::HandleSyncAddressStoke(
 void NodesStokeManager::HandleSyncStokeResponse(
         const transport::protobuf::Header& header,
         const protobuf::ElectMessage& ec_msg) {
-    for (int32_t i = 0; i < ec_msg.sync_stoke_res().blocks_size(); ++i) {
-        auto block_item = std::make_shared<bft::protobuf::Block>();
-        if (!block_item->ParseFromString(ec_msg.sync_stoke_res().blocks(i))) {
+    for (int32_t i = 0; i < ec_msg.sync_stoke_res().items_size(); ++i) {
+        std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
+        auto iter = sync_nodes_map_.find(ec_msg.sync_stoke_res().items(i).id());
+        if (iter == sync_nodes_map_.end()) {
             continue;
         }
 
-        auto& tx_list = block_item->tx_list();
-        for (int32_t i = 0; i < tx_list.size(); ++i) {
-            std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
-            std::string addr;
-            if (tx_list[i].to_add()) {
-                auto iter = sync_nodes_map_.find(tx_list[i].to());
-                if (iter == sync_nodes_map_.end()) {
-                    continue;
-                }
-
-                addr = tx_list[i].to();
-            } else {
-                auto iter = sync_nodes_map_.find(tx_list[i].from());
-                if (iter == sync_nodes_map_.end()) {
-                    continue;
-                }
-
-                addr = tx_list[i].from();
-            }
-
-            sync_nodes_map_[addr] = std::make_pair(
-                ec_msg.sync_stoke_res().now_tm_height(),
-                tx_list[i].balance());
-        }
+        sync_nodes_map_[ec_msg.sync_stoke_res().items(i).id()] = std::make_pair(
+            ec_msg.sync_stoke_res().now_tm_height(),
+            ec_msg.sync_stoke_res().items(i).balance());
     }
 }
 

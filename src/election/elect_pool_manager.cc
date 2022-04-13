@@ -283,6 +283,10 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
     waiting_pool_ptr->AddNewNode(node_ptr);
 }
 
+void ElectPoolManager::UpdateNodesStoke() {
+
+}
+
 void ElectPoolManager::UpdateWaitingNodes(
         uint32_t waiting_shard_id,
         const std::string& root_node_id,

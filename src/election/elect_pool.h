@@ -20,6 +20,7 @@ public:
     void GetAllValidNodes(
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
+    void UpdateNodesStoke();
 
 private:
     void CreateFtsTree(const std::vector<NodeDetailPtr>& src_nodes);
