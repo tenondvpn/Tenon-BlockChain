@@ -23,12 +23,13 @@ namespace protobuf_elect_2eproto {
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_BlsPublicKey;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_LeaderRotationMessage;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncNodeStokeItem;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncNodeStokeResponse;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_SyncNodeStokeResItem;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodeHeartbeat;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_WaitingNodesMessage;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_member;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_PrevMembers;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SyncNodeStokeRequest;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_SyncNodeStokeResponse;
 extern PROTOBUF_INTERNAL_EXPORT_protobuf_elect_2eproto ::google::protobuf::internal::SCCInfo<2> scc_info_ElectBlock;
 }  // namespace protobuf_elect_2eproto
 namespace tenon {
@@ -79,6 +80,11 @@ class SyncNodeStokeRequestDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<SyncNodeStokeRequest>
       _instance;
 } _SyncNodeStokeRequest_default_instance_;
+class SyncNodeStokeResItemDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<SyncNodeStokeResItem>
+      _instance;
+} _SyncNodeStokeResItem_default_instance_;
 class SyncNodeStokeResponseDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<SyncNodeStokeResponse>
@@ -223,6 +229,20 @@ static void InitDefaultsSyncNodeStokeRequest() {
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsSyncNodeStokeRequest}, {
       &protobuf_elect_2eproto::scc_info_SyncNodeStokeItem.base,}};
 
+static void InitDefaultsSyncNodeStokeResItem() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::tenon::elect::protobuf::_SyncNodeStokeResItem_default_instance_;
+    new (ptr) ::tenon::elect::protobuf::SyncNodeStokeResItem();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::tenon::elect::protobuf::SyncNodeStokeResItem::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_SyncNodeStokeResItem =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncNodeStokeResItem}, {}};
+
 static void InitDefaultsSyncNodeStokeResponse() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -234,8 +254,9 @@ static void InitDefaultsSyncNodeStokeResponse() {
   ::tenon::elect::protobuf::SyncNodeStokeResponse::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_SyncNodeStokeResponse =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsSyncNodeStokeResponse}, {}};
+::google::protobuf::internal::SCCInfo<1> scc_info_SyncNodeStokeResponse =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsSyncNodeStokeResponse}, {
+      &protobuf_elect_2eproto::scc_info_SyncNodeStokeResItem.base,}};
 
 static void InitDefaultsElectMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -267,11 +288,12 @@ void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_LeaderRotationMessage.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncNodeStokeItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncNodeStokeRequest.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_SyncNodeStokeResItem.base);
   ::google::protobuf::internal::InitSCC(&scc_info_SyncNodeStokeResponse.base);
   ::google::protobuf::internal::InitSCC(&scc_info_ElectMessage.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[11];
+::google::protobuf::Metadata file_level_metadata[12];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::BlsPublicKey, _has_bits_),
@@ -393,12 +415,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeRequest, now_tm_height_),
   ~0u,
   0,
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResItem, _has_bits_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResItem, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResItem, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResItem, balance_),
+  0,
+  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResponse, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResponse, blocks_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResponse, items_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::SyncNodeStokeResponse, now_tm_height_),
   ~0u,
   0,
@@ -438,8 +469,9 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 92, 99, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
   { 101, 108, sizeof(::tenon::elect::protobuf::SyncNodeStokeItem)},
   { 110, 117, sizeof(::tenon::elect::protobuf::SyncNodeStokeRequest)},
-  { 119, 126, sizeof(::tenon::elect::protobuf::SyncNodeStokeResponse)},
-  { 128, 143, sizeof(::tenon::elect::protobuf::ElectMessage)},
+  { 119, 126, sizeof(::tenon::elect::protobuf::SyncNodeStokeResItem)},
+  { 128, 135, sizeof(::tenon::elect::protobuf::SyncNodeStokeResponse)},
+  { 137, 152, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -452,6 +484,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_LeaderRotationMessage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_SyncNodeStokeItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_SyncNodeStokeRequest_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_SyncNodeStokeResItem_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_SyncNodeStokeResponse_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::tenon::elect::protobuf::_ElectMessage_default_instance_),
 };
@@ -471,7 +504,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 11);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 12);
 }
 
 void AddDescriptorsImpl() {
@@ -504,25 +537,27 @@ void AddDescriptorsImpl() {
       "Item\022\n\n\002id\030\001 \001(\014\022\030\n\020synced_tm_height\030\002 \001"
       "(\004\"i\n\024SyncNodeStokeRequest\022:\n\tsync_item\030"
       "\001 \003(\0132\'.tenon.elect.protobuf.SyncNodeSto"
-      "keItem\022\025\n\rnow_tm_height\030\002 \001(\004\">\n\025SyncNod"
-      "eStokeResponse\022\016\n\006blocks\030\001 \003(\014\022\025\n\rnow_tm"
-      "_height\030\002 \001(\004\"\214\004\n\014ElectMessage\0225\n\013elect_"
-      "block\030\001 \001(\0132 .tenon.elect.protobuf.Elect"
-      "Block\022:\n\020prev_elect_block\030\002 \001(\0132 .tenon."
-      "elect.protobuf.ElectBlock\022@\n\rwaiting_nod"
-      "es\030\003 \001(\0132).tenon.elect.protobuf.WaitingN"
-      "odesMessage\022\016\n\006pubkey\030\004 \001(\014\022\017\n\007sign_ch\030\005"
-      " \001(\014\022\020\n\010sign_res\030\006 \001(\014\022E\n\021waiting_heartb"
-      "eat\030\007 \001(\0132*.tenon.elect.protobuf.Waiting"
-      "NodeHeartbeat\022D\n\017leader_rotation\030\010 \001(\0132+"
-      ".tenon.elect.protobuf.LeaderRotationMess"
-      "age\022B\n\016sync_stoke_req\030\t \001(\0132*.tenon.elec"
-      "t.protobuf.SyncNodeStokeRequest\022C\n\016sync_"
-      "stoke_res\030\n \001(\0132+.tenon.elect.protobuf.S"
-      "yncNodeStokeResponse"
+      "keItem\022\025\n\rnow_tm_height\030\002 \001(\004\"3\n\024SyncNod"
+      "eStokeResItem\022\n\n\002id\030\001 \001(\014\022\017\n\007balance\030\002 \001"
+      "(\004\"i\n\025SyncNodeStokeResponse\0229\n\005items\030\001 \003"
+      "(\0132*.tenon.elect.protobuf.SyncNodeStokeR"
+      "esItem\022\025\n\rnow_tm_height\030\002 \001(\004\"\214\004\n\014ElectM"
+      "essage\0225\n\013elect_block\030\001 \001(\0132 .tenon.elec"
+      "t.protobuf.ElectBlock\022:\n\020prev_elect_bloc"
+      "k\030\002 \001(\0132 .tenon.elect.protobuf.ElectBloc"
+      "k\022@\n\rwaiting_nodes\030\003 \001(\0132).tenon.elect.p"
+      "rotobuf.WaitingNodesMessage\022\016\n\006pubkey\030\004 "
+      "\001(\014\022\017\n\007sign_ch\030\005 \001(\014\022\020\n\010sign_res\030\006 \001(\014\022E"
+      "\n\021waiting_heartbeat\030\007 \001(\0132*.tenon.elect."
+      "protobuf.WaitingNodeHeartbeat\022D\n\017leader_"
+      "rotation\030\010 \001(\0132+.tenon.elect.protobuf.Le"
+      "aderRotationMessage\022B\n\016sync_stoke_req\030\t "
+      "\001(\0132*.tenon.elect.protobuf.SyncNodeStoke"
+      "Request\022C\n\016sync_stoke_res\030\n \001(\0132+.tenon."
+      "elect.protobuf.SyncNodeStokeResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1700);
+      descriptor, 1796);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -3918,10 +3953,293 @@ void SyncNodeStokeRequest::InternalSwap(SyncNodeStokeRequest* other) {
 
 // ===================================================================
 
+void SyncNodeStokeResItem::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int SyncNodeStokeResItem::kIdFieldNumber;
+const int SyncNodeStokeResItem::kBalanceFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+SyncNodeStokeResItem::SyncNodeStokeResItem()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_elect_2eproto::scc_info_SyncNodeStokeResItem.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:tenon.elect.protobuf.SyncNodeStokeResItem)
+}
+SyncNodeStokeResItem::SyncNodeStokeResItem(const SyncNodeStokeResItem& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_id()) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  balance_ = from.balance_;
+  // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.SyncNodeStokeResItem)
+}
+
+void SyncNodeStokeResItem::SharedCtor() {
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  balance_ = GOOGLE_ULONGLONG(0);
+}
+
+SyncNodeStokeResItem::~SyncNodeStokeResItem() {
+  // @@protoc_insertion_point(destructor:tenon.elect.protobuf.SyncNodeStokeResItem)
+  SharedDtor();
+}
+
+void SyncNodeStokeResItem::SharedDtor() {
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void SyncNodeStokeResItem::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* SyncNodeStokeResItem::descriptor() {
+  ::protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const SyncNodeStokeResItem& SyncNodeStokeResItem::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_elect_2eproto::scc_info_SyncNodeStokeResItem.base);
+  return *internal_default_instance();
+}
+
+
+void SyncNodeStokeResItem::Clear() {
+// @@protoc_insertion_point(message_clear_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    id_.ClearNonDefaultToEmptyNoArena();
+  }
+  balance_ = GOOGLE_ULONGLONG(0);
+  _has_bits_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool SyncNodeStokeResItem::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bytes id = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_id()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint64 balance = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          set_has_balance();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &balance_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:tenon.elect.protobuf.SyncNodeStokeResItem)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:tenon.elect.protobuf.SyncNodeStokeResItem)
+  return false;
+#undef DO_
+}
+
+void SyncNodeStokeResItem::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      1, this->id(), output);
+  }
+
+  // optional uint64 balance = 2;
+  if (cached_has_bits & 0x00000002u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->balance(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:tenon.elect.protobuf.SyncNodeStokeResItem)
+}
+
+::google::protobuf::uint8* SyncNodeStokeResItem::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // optional bytes id = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        1, this->id(), target);
+  }
+
+  // optional uint64 balance = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->balance(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:tenon.elect.protobuf.SyncNodeStokeResItem)
+  return target;
+}
+
+size_t SyncNodeStokeResItem::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional bytes id = 1;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->id());
+    }
+
+    // optional uint64 balance = 2;
+    if (has_balance()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->balance());
+    }
+
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SyncNodeStokeResItem::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SyncNodeStokeResItem* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const SyncNodeStokeResItem>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tenon.elect.protobuf.SyncNodeStokeResItem)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:tenon.elect.protobuf.SyncNodeStokeResItem)
+    MergeFrom(*source);
+  }
+}
+
+void SyncNodeStokeResItem::MergeFrom(const SyncNodeStokeResItem& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_id();
+      id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      balance_ = from.balance_;
+    }
+    _has_bits_[0] |= cached_has_bits;
+  }
+}
+
+void SyncNodeStokeResItem::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SyncNodeStokeResItem::CopyFrom(const SyncNodeStokeResItem& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:tenon.elect.protobuf.SyncNodeStokeResItem)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SyncNodeStokeResItem::IsInitialized() const {
+  return true;
+}
+
+void SyncNodeStokeResItem::Swap(SyncNodeStokeResItem* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void SyncNodeStokeResItem::InternalSwap(SyncNodeStokeResItem* other) {
+  using std::swap;
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(balance_, other->balance_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata SyncNodeStokeResItem::GetMetadata() const {
+  protobuf_elect_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_elect_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
 void SyncNodeStokeResponse::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int SyncNodeStokeResponse::kBlocksFieldNumber;
+const int SyncNodeStokeResponse::kItemsFieldNumber;
 const int SyncNodeStokeResponse::kNowTmHeightFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -3936,7 +4254,7 @@ SyncNodeStokeResponse::SyncNodeStokeResponse(const SyncNodeStokeResponse& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
       _has_bits_(from._has_bits_),
-      blocks_(from.blocks_) {
+      items_(from.items_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   now_tm_height_ = from.now_tm_height_;
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.SyncNodeStokeResponse)
@@ -3974,7 +4292,7 @@ void SyncNodeStokeResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  blocks_.Clear();
+  items_.Clear();
   now_tm_height_ = GOOGLE_ULONGLONG(0);
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -3990,12 +4308,12 @@ bool SyncNodeStokeResponse::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated bytes blocks = 1;
+      // repeated .tenon.elect.protobuf.SyncNodeStokeResItem items = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->add_blocks()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_items()));
         } else {
           goto handle_unusual;
         }
@@ -4042,10 +4360,13 @@ void SyncNodeStokeResponse::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated bytes blocks = 1;
-  for (int i = 0, n = this->blocks_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      1, this->blocks(i), output);
+  // repeated .tenon.elect.protobuf.SyncNodeStokeResItem items = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->items_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1,
+      this->items(static_cast<int>(i)),
+      output);
   }
 
   cached_has_bits = _has_bits_[0];
@@ -4068,10 +4389,12 @@ void SyncNodeStokeResponse::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated bytes blocks = 1;
-  for (int i = 0, n = this->blocks_size(); i < n; i++) {
+  // repeated .tenon.elect.protobuf.SyncNodeStokeResItem items = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->items_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteBytesToArray(1, this->blocks(i), target);
+      InternalWriteMessageToArray(
+        1, this->items(static_cast<int>(i)), deterministic, target);
   }
 
   cached_has_bits = _has_bits_[0];
@@ -4097,12 +4420,15 @@ size_t SyncNodeStokeResponse::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // repeated bytes blocks = 1;
-  total_size += 1 *
-      ::google::protobuf::internal::FromIntSize(this->blocks_size());
-  for (int i = 0, n = this->blocks_size(); i < n; i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
-      this->blocks(i));
+  // repeated .tenon.elect.protobuf.SyncNodeStokeResItem items = 1;
+  {
+    unsigned int count = static_cast<unsigned int>(this->items_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->items(static_cast<int>(i)));
+    }
   }
 
   // optional uint64 now_tm_height = 2;
@@ -4139,7 +4465,7 @@ void SyncNodeStokeResponse::MergeFrom(const SyncNodeStokeResponse& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  blocks_.MergeFrom(from.blocks_);
+  items_.MergeFrom(from.items_);
   if (from.has_now_tm_height()) {
     set_now_tm_height(from.now_tm_height());
   }
@@ -4169,7 +4495,7 @@ void SyncNodeStokeResponse::Swap(SyncNodeStokeResponse* other) {
 }
 void SyncNodeStokeResponse::InternalSwap(SyncNodeStokeResponse* other) {
   using std::swap;
-  blocks_.InternalSwap(CastToBase(&other->blocks_));
+  CastToBase(&items_)->InternalSwap(CastToBase(&other->items_));
   swap(now_tm_height_, other->now_tm_height_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -4906,6 +5232,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::SyncNode
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::SyncNodeStokeRequest* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::SyncNodeStokeRequest >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::SyncNodeStokeRequest >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::SyncNodeStokeResItem* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::SyncNodeStokeResItem >(Arena* arena) {
+  return Arena::CreateInternal< ::tenon::elect::protobuf::SyncNodeStokeResItem >(arena);
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::tenon::elect::protobuf::SyncNodeStokeResponse* Arena::CreateMaybeMessage< ::tenon::elect::protobuf::SyncNodeStokeResponse >(Arena* arena) {
   return Arena::CreateInternal< ::tenon::elect::protobuf::SyncNodeStokeResponse >(arena);
