@@ -1,5 +1,13 @@
 #include "election/nodes_stoke_manager.h"
 
+#include "block/account_manager.h"
+#include "block/block_utils.h"
+#include "common/global_info.h"
+#include "network/dht_manager.h"
+#include "network/network_utils.h"
+#include "network/route.h"
+#include "transport/multi_thread.h"
+
 namespace tenon {
 
 namespace elect {
@@ -39,9 +47,9 @@ void NodesStokeManager::SyncAddressStoke(
             }
         }
 
-        auto iter = sync_map.find(netid);
-        if (iter != sync_map.end()) {
-            iter->second.push_back(std::make_pair(*iter, synced_tm_height));
+        auto siter = sync_map.find(netid);
+        if (siter != sync_map.end()) {
+            siter->second.push_back(std::make_pair(*iter, synced_tm_height));
         } else {
             sync_map[netid] = std::vector<std::pair<std::string, uint64_t>>{
                 std::make_pair(*iter, synced_tm_height) };
@@ -86,13 +94,13 @@ void NodesStokeManager::HandleSyncAddressStoke(
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kElectMessage);
-    msg.set_client(local_node->client_mode);
+    msg.set_client(false);
     msg.set_universal(false);
     msg.set_hop_count(0);
 
     // now just for test
-    protobuf::ElectMessage ec_msg;
-    auto sync_stoke_res = ec_msg.mutable_sync_stoke_res();
+    protobuf::ElectMessage res_ec_msg;
+    auto sync_stoke_res = res_ec_msg.mutable_sync_stoke_res();
     for (int32_t i = 0; i < ec_msg.sync_stoke_req().sync_item_size(); ++i) {
         auto acc_info = block::AccountManager::Instance()->GetAcountInfo(
             ec_msg.sync_stoke_req().sync_item(i).id());
@@ -111,7 +119,7 @@ void NodesStokeManager::HandleSyncAddressStoke(
     }
 
     sync_stoke_res->set_now_tm_height(ec_msg.sync_stoke_req().now_tm_height());
-    msg.set_data(ec_msg.SerializeAsString());
+    msg.set_data(res_ec_msg.SerializeAsString());
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
 }

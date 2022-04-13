@@ -67,7 +67,7 @@ message SyncNodeStokeRequest {
 }
 
 message SyncNodeStokeResponse {
-    optional bytes blocks = 1;
+    repeated bytes blocks = 1;
     optional uint64 now_tm_height = 2;
 }
 

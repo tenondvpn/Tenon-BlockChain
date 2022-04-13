@@ -2,6 +2,7 @@
 
 #include "db/db_unique_queue.h"
 #include "election/elect_utils.h"
+#include "election/proto/elect.pb.h"
 #include "transport/transport_utils.h"
 
 namespace tenon {
