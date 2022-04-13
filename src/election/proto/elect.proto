@@ -58,17 +58,17 @@ message LeaderRotationMessage {
 
 message SyncNodeStokeItem {
     optional bytes id = 1;
-    optional uint64_t synced_tm_height = 2;
+    optional uint64 synced_tm_height = 2;
 }
 
 message SyncNodeStokeRequest {
     repeated SyncNodeStokeItem sync_item = 1;
-    optional uint64_t now_tm_height = 2;
+    optional uint64 now_tm_height = 2;
 }
 
 message SyncNodeStokeResponse {
     optional bytes blocks = 1;
-    optional uint64_t now_tm_height = 2;
+    optional uint64 now_tm_height = 2;
 }
 
 message ElectMessage {
