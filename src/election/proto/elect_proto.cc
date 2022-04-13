@@ -15,6 +15,7 @@
 #include "network/network_utils.h"
 #include "network/dht_manager.h"
 #include "security/security.h"
+#include "timeblock/time_block_manager.h"
 #include "transport/transport_utils.h"
 
 namespace tenon {
