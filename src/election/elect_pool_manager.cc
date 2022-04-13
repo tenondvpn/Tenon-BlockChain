@@ -293,7 +293,7 @@ void ElectPoolManager::UpdateNodesStoke() {
     }
 
     for (auto iter = waiting_pool_map.begin(); iter != waiting_pool_map.end(); ++iter) {
-        iter->second->UpdateNodesStoke();
+        iter->second->UpdateWaitingNodeStoke();
         usleep(100000);
     }
 
