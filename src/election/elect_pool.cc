@@ -4,7 +4,7 @@
 #include "common/global_info.h"
 #include "vss/vss_manager.h"
 #include "network/network_utils.h"
-#include "election/member_manager.h"
+#include "election/nodes_stoke_manager.h"
 
 namespace tenon {
 
