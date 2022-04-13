@@ -3,9 +3,12 @@
 #include "block/account_manager.h"
 #include "block/block_utils.h"
 #include "common/global_info.h"
+#include "dht/base_dht.h"
+#include "election/proto/elect_proto.h"
 #include "network/dht_manager.h"
 #include "network/network_utils.h"
 #include "network/route.h"
+#include "timeblock/time_block_manager.h"
 #include "transport/multi_thread.h"
 
 namespace tenon {
@@ -133,7 +136,7 @@ void NodesStokeManager::HandleSyncStokeResponse(
             continue;
         }
 
-        auto& tx_list = block_ptr->tx_list();
+        auto& tx_list = block_item->tx_list();
         for (int32_t i = 0; i < tx_list.size(); ++i) {
             std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
             std::string addr;
