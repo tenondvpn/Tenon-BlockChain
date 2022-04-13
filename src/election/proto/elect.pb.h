@@ -38,7 +38,7 @@ namespace protobuf_elect_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[8];
+  static const ::google::protobuf::internal::ParseTable schema[11];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -63,6 +63,15 @@ extern LeaderRotationMessageDefaultTypeInternal _LeaderRotationMessage_default_i
 class PrevMembers;
 class PrevMembersDefaultTypeInternal;
 extern PrevMembersDefaultTypeInternal _PrevMembers_default_instance_;
+class SyncNodeStokeItem;
+class SyncNodeStokeItemDefaultTypeInternal;
+extern SyncNodeStokeItemDefaultTypeInternal _SyncNodeStokeItem_default_instance_;
+class SyncNodeStokeRequest;
+class SyncNodeStokeRequestDefaultTypeInternal;
+extern SyncNodeStokeRequestDefaultTypeInternal _SyncNodeStokeRequest_default_instance_;
+class SyncNodeStokeResponse;
+class SyncNodeStokeResponseDefaultTypeInternal;
+extern SyncNodeStokeResponseDefaultTypeInternal _SyncNodeStokeResponse_default_instance_;
 class WaitingNodeHeartbeat;
 class WaitingNodeHeartbeatDefaultTypeInternal;
 extern WaitingNodeHeartbeatDefaultTypeInternal _WaitingNodeHeartbeat_default_instance_;
@@ -82,6 +91,9 @@ template<> ::tenon::elect::protobuf::ElectBlock* Arena::CreateMaybeMessage<::ten
 template<> ::tenon::elect::protobuf::ElectMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::ElectMessage>(Arena*);
 template<> ::tenon::elect::protobuf::LeaderRotationMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::LeaderRotationMessage>(Arena*);
 template<> ::tenon::elect::protobuf::PrevMembers* Arena::CreateMaybeMessage<::tenon::elect::protobuf::PrevMembers>(Arena*);
+template<> ::tenon::elect::protobuf::SyncNodeStokeItem* Arena::CreateMaybeMessage<::tenon::elect::protobuf::SyncNodeStokeItem>(Arena*);
+template<> ::tenon::elect::protobuf::SyncNodeStokeRequest* Arena::CreateMaybeMessage<::tenon::elect::protobuf::SyncNodeStokeRequest>(Arena*);
+template<> ::tenon::elect::protobuf::SyncNodeStokeResponse* Arena::CreateMaybeMessage<::tenon::elect::protobuf::SyncNodeStokeResponse>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodeHeartbeat* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodeHeartbeat>(Arena*);
 template<> ::tenon::elect::protobuf::WaitingNodesMessage* Arena::CreateMaybeMessage<::tenon::elect::protobuf::WaitingNodesMessage>(Arena*);
 template<> ::tenon::elect::protobuf::member* Arena::CreateMaybeMessage<::tenon::elect::protobuf::member>(Arena*);
@@ -1287,6 +1299,402 @@ class LeaderRotationMessage : public ::google::protobuf::Message /* @@protoc_ins
 };
 // -------------------------------------------------------------------
 
+class SyncNodeStokeItem : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.SyncNodeStokeItem) */ {
+ public:
+  SyncNodeStokeItem();
+  virtual ~SyncNodeStokeItem();
+
+  SyncNodeStokeItem(const SyncNodeStokeItem& from);
+
+  inline SyncNodeStokeItem& operator=(const SyncNodeStokeItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SyncNodeStokeItem(SyncNodeStokeItem&& from) noexcept
+    : SyncNodeStokeItem() {
+    *this = ::std::move(from);
+  }
+
+  inline SyncNodeStokeItem& operator=(SyncNodeStokeItem&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SyncNodeStokeItem& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SyncNodeStokeItem* internal_default_instance() {
+    return reinterpret_cast<const SyncNodeStokeItem*>(
+               &_SyncNodeStokeItem_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  void Swap(SyncNodeStokeItem* other);
+  friend void swap(SyncNodeStokeItem& a, SyncNodeStokeItem& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SyncNodeStokeItem* New() const final {
+    return CreateMaybeMessage<SyncNodeStokeItem>(NULL);
+  }
+
+  SyncNodeStokeItem* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SyncNodeStokeItem>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SyncNodeStokeItem& from);
+  void MergeFrom(const SyncNodeStokeItem& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SyncNodeStokeItem* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes id = 1;
+  bool has_id() const;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  const ::std::string& id() const;
+  void set_id(const ::std::string& value);
+  #if LANG_CXX11
+  void set_id(::std::string&& value);
+  #endif
+  void set_id(const char* value);
+  void set_id(const void* value, size_t size);
+  ::std::string* mutable_id();
+  ::std::string* release_id();
+  void set_allocated_id(::std::string* id);
+
+  // optional uint64 synced_tm_height = 2;
+  bool has_synced_tm_height() const;
+  void clear_synced_tm_height();
+  static const int kSyncedTmHeightFieldNumber = 2;
+  ::google::protobuf::uint64 synced_tm_height() const;
+  void set_synced_tm_height(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.SyncNodeStokeItem)
+ private:
+  void set_has_id();
+  void clear_has_id();
+  void set_has_synced_tm_height();
+  void clear_has_synced_tm_height();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr id_;
+  ::google::protobuf::uint64 synced_tm_height_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class SyncNodeStokeRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.SyncNodeStokeRequest) */ {
+ public:
+  SyncNodeStokeRequest();
+  virtual ~SyncNodeStokeRequest();
+
+  SyncNodeStokeRequest(const SyncNodeStokeRequest& from);
+
+  inline SyncNodeStokeRequest& operator=(const SyncNodeStokeRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SyncNodeStokeRequest(SyncNodeStokeRequest&& from) noexcept
+    : SyncNodeStokeRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SyncNodeStokeRequest& operator=(SyncNodeStokeRequest&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SyncNodeStokeRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SyncNodeStokeRequest* internal_default_instance() {
+    return reinterpret_cast<const SyncNodeStokeRequest*>(
+               &_SyncNodeStokeRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  void Swap(SyncNodeStokeRequest* other);
+  friend void swap(SyncNodeStokeRequest& a, SyncNodeStokeRequest& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SyncNodeStokeRequest* New() const final {
+    return CreateMaybeMessage<SyncNodeStokeRequest>(NULL);
+  }
+
+  SyncNodeStokeRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SyncNodeStokeRequest>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SyncNodeStokeRequest& from);
+  void MergeFrom(const SyncNodeStokeRequest& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SyncNodeStokeRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .tenon.elect.protobuf.SyncNodeStokeItem sync_item = 1;
+  int sync_item_size() const;
+  void clear_sync_item();
+  static const int kSyncItemFieldNumber = 1;
+  ::tenon::elect::protobuf::SyncNodeStokeItem* mutable_sync_item(int index);
+  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::SyncNodeStokeItem >*
+      mutable_sync_item();
+  const ::tenon::elect::protobuf::SyncNodeStokeItem& sync_item(int index) const;
+  ::tenon::elect::protobuf::SyncNodeStokeItem* add_sync_item();
+  const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::SyncNodeStokeItem >&
+      sync_item() const;
+
+  // optional uint64 now_tm_height = 2;
+  bool has_now_tm_height() const;
+  void clear_now_tm_height();
+  static const int kNowTmHeightFieldNumber = 2;
+  ::google::protobuf::uint64 now_tm_height() const;
+  void set_now_tm_height(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.SyncNodeStokeRequest)
+ private:
+  void set_has_now_tm_height();
+  void clear_has_now_tm_height();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::SyncNodeStokeItem > sync_item_;
+  ::google::protobuf::uint64 now_tm_height_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class SyncNodeStokeResponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.SyncNodeStokeResponse) */ {
+ public:
+  SyncNodeStokeResponse();
+  virtual ~SyncNodeStokeResponse();
+
+  SyncNodeStokeResponse(const SyncNodeStokeResponse& from);
+
+  inline SyncNodeStokeResponse& operator=(const SyncNodeStokeResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  SyncNodeStokeResponse(SyncNodeStokeResponse&& from) noexcept
+    : SyncNodeStokeResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline SyncNodeStokeResponse& operator=(SyncNodeStokeResponse&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SyncNodeStokeResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SyncNodeStokeResponse* internal_default_instance() {
+    return reinterpret_cast<const SyncNodeStokeResponse*>(
+               &_SyncNodeStokeResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  void Swap(SyncNodeStokeResponse* other);
+  friend void swap(SyncNodeStokeResponse& a, SyncNodeStokeResponse& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SyncNodeStokeResponse* New() const final {
+    return CreateMaybeMessage<SyncNodeStokeResponse>(NULL);
+  }
+
+  SyncNodeStokeResponse* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<SyncNodeStokeResponse>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const SyncNodeStokeResponse& from);
+  void MergeFrom(const SyncNodeStokeResponse& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SyncNodeStokeResponse* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated bytes blocks = 1;
+  int blocks_size() const;
+  void clear_blocks();
+  static const int kBlocksFieldNumber = 1;
+  const ::std::string& blocks(int index) const;
+  ::std::string* mutable_blocks(int index);
+  void set_blocks(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_blocks(int index, ::std::string&& value);
+  #endif
+  void set_blocks(int index, const char* value);
+  void set_blocks(int index, const void* value, size_t size);
+  ::std::string* add_blocks();
+  void add_blocks(const ::std::string& value);
+  #if LANG_CXX11
+  void add_blocks(::std::string&& value);
+  #endif
+  void add_blocks(const char* value);
+  void add_blocks(const void* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& blocks() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_blocks();
+
+  // optional uint64 now_tm_height = 2;
+  bool has_now_tm_height() const;
+  void clear_now_tm_height();
+  static const int kNowTmHeightFieldNumber = 2;
+  ::google::protobuf::uint64 now_tm_height() const;
+  void set_now_tm_height(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.SyncNodeStokeResponse)
+ private:
+  void set_has_now_tm_height();
+  void clear_has_now_tm_height();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> blocks_;
+  ::google::protobuf::uint64 now_tm_height_;
+  friend struct ::protobuf_elect_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tenon.elect.protobuf.ElectMessage) */ {
  public:
   ElectMessage();
@@ -1329,7 +1737,7 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
                &_ElectMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    10;
 
   void Swap(ElectMessage* other);
   friend void swap(ElectMessage& a, ElectMessage& b) {
@@ -1486,6 +1894,30 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::elect::protobuf::LeaderRotationMessage* mutable_leader_rotation();
   void set_allocated_leader_rotation(::tenon::elect::protobuf::LeaderRotationMessage* leader_rotation);
 
+  // optional .tenon.elect.protobuf.SyncNodeStokeRequest sync_stoke_req = 9;
+  bool has_sync_stoke_req() const;
+  void clear_sync_stoke_req();
+  static const int kSyncStokeReqFieldNumber = 9;
+  private:
+  const ::tenon::elect::protobuf::SyncNodeStokeRequest& _internal_sync_stoke_req() const;
+  public:
+  const ::tenon::elect::protobuf::SyncNodeStokeRequest& sync_stoke_req() const;
+  ::tenon::elect::protobuf::SyncNodeStokeRequest* release_sync_stoke_req();
+  ::tenon::elect::protobuf::SyncNodeStokeRequest* mutable_sync_stoke_req();
+  void set_allocated_sync_stoke_req(::tenon::elect::protobuf::SyncNodeStokeRequest* sync_stoke_req);
+
+  // optional .tenon.elect.protobuf.SyncNodeStokeResponse sync_stoke_res = 10;
+  bool has_sync_stoke_res() const;
+  void clear_sync_stoke_res();
+  static const int kSyncStokeResFieldNumber = 10;
+  private:
+  const ::tenon::elect::protobuf::SyncNodeStokeResponse& _internal_sync_stoke_res() const;
+  public:
+  const ::tenon::elect::protobuf::SyncNodeStokeResponse& sync_stoke_res() const;
+  ::tenon::elect::protobuf::SyncNodeStokeResponse* release_sync_stoke_res();
+  ::tenon::elect::protobuf::SyncNodeStokeResponse* mutable_sync_stoke_res();
+  void set_allocated_sync_stoke_res(::tenon::elect::protobuf::SyncNodeStokeResponse* sync_stoke_res);
+
   // @@protoc_insertion_point(class_scope:tenon.elect.protobuf.ElectMessage)
  private:
   void set_has_elect_block();
@@ -1504,6 +1936,10 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   void clear_has_waiting_heartbeat();
   void set_has_leader_rotation();
   void clear_has_leader_rotation();
+  void set_has_sync_stoke_req();
+  void clear_has_sync_stoke_req();
+  void set_has_sync_stoke_res();
+  void clear_has_sync_stoke_res();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1516,6 +1952,8 @@ class ElectMessage : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tenon::elect::protobuf::WaitingNodesMessage* waiting_nodes_;
   ::tenon::elect::protobuf::WaitingNodeHeartbeat* waiting_heartbeat_;
   ::tenon::elect::protobuf::LeaderRotationMessage* leader_rotation_;
+  ::tenon::elect::protobuf::SyncNodeStokeRequest* sync_stoke_req_;
+  ::tenon::elect::protobuf::SyncNodeStokeResponse* sync_stoke_res_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
 // ===================================================================
@@ -3024,6 +3462,255 @@ inline void LeaderRotationMessage::set_pool_mod_num(::google::protobuf::uint32 v
 
 // -------------------------------------------------------------------
 
+// SyncNodeStokeItem
+
+// optional bytes id = 1;
+inline bool SyncNodeStokeItem::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SyncNodeStokeItem::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SyncNodeStokeItem::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SyncNodeStokeItem::clear_id() {
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_id();
+}
+inline const ::std::string& SyncNodeStokeItem::id() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeItem.id)
+  return id_.GetNoArena();
+}
+inline void SyncNodeStokeItem::set_id(const ::std::string& value) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeItem.id)
+}
+#if LANG_CXX11
+inline void SyncNodeStokeItem::set_id(::std::string&& value) {
+  set_has_id();
+  id_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.SyncNodeStokeItem.id)
+}
+#endif
+inline void SyncNodeStokeItem::set_id(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.SyncNodeStokeItem.id)
+}
+inline void SyncNodeStokeItem::set_id(const void* value, size_t size) {
+  set_has_id();
+  id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.SyncNodeStokeItem.id)
+}
+inline ::std::string* SyncNodeStokeItem::mutable_id() {
+  set_has_id();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.SyncNodeStokeItem.id)
+  return id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* SyncNodeStokeItem::release_id() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.SyncNodeStokeItem.id)
+  if (!has_id()) {
+    return NULL;
+  }
+  clear_has_id();
+  return id_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void SyncNodeStokeItem::set_allocated_id(::std::string* id) {
+  if (id != NULL) {
+    set_has_id();
+  } else {
+    clear_has_id();
+  }
+  id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), id);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.SyncNodeStokeItem.id)
+}
+
+// optional uint64 synced_tm_height = 2;
+inline bool SyncNodeStokeItem::has_synced_tm_height() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SyncNodeStokeItem::set_has_synced_tm_height() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SyncNodeStokeItem::clear_has_synced_tm_height() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SyncNodeStokeItem::clear_synced_tm_height() {
+  synced_tm_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_synced_tm_height();
+}
+inline ::google::protobuf::uint64 SyncNodeStokeItem::synced_tm_height() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeItem.synced_tm_height)
+  return synced_tm_height_;
+}
+inline void SyncNodeStokeItem::set_synced_tm_height(::google::protobuf::uint64 value) {
+  set_has_synced_tm_height();
+  synced_tm_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeItem.synced_tm_height)
+}
+
+// -------------------------------------------------------------------
+
+// SyncNodeStokeRequest
+
+// repeated .tenon.elect.protobuf.SyncNodeStokeItem sync_item = 1;
+inline int SyncNodeStokeRequest::sync_item_size() const {
+  return sync_item_.size();
+}
+inline void SyncNodeStokeRequest::clear_sync_item() {
+  sync_item_.Clear();
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeItem* SyncNodeStokeRequest::mutable_sync_item(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.SyncNodeStokeRequest.sync_item)
+  return sync_item_.Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::SyncNodeStokeItem >*
+SyncNodeStokeRequest::mutable_sync_item() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.SyncNodeStokeRequest.sync_item)
+  return &sync_item_;
+}
+inline const ::tenon::elect::protobuf::SyncNodeStokeItem& SyncNodeStokeRequest::sync_item(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeRequest.sync_item)
+  return sync_item_.Get(index);
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeItem* SyncNodeStokeRequest::add_sync_item() {
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.SyncNodeStokeRequest.sync_item)
+  return sync_item_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::tenon::elect::protobuf::SyncNodeStokeItem >&
+SyncNodeStokeRequest::sync_item() const {
+  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.SyncNodeStokeRequest.sync_item)
+  return sync_item_;
+}
+
+// optional uint64 now_tm_height = 2;
+inline bool SyncNodeStokeRequest::has_now_tm_height() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SyncNodeStokeRequest::set_has_now_tm_height() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SyncNodeStokeRequest::clear_has_now_tm_height() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SyncNodeStokeRequest::clear_now_tm_height() {
+  now_tm_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_now_tm_height();
+}
+inline ::google::protobuf::uint64 SyncNodeStokeRequest::now_tm_height() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeRequest.now_tm_height)
+  return now_tm_height_;
+}
+inline void SyncNodeStokeRequest::set_now_tm_height(::google::protobuf::uint64 value) {
+  set_has_now_tm_height();
+  now_tm_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeRequest.now_tm_height)
+}
+
+// -------------------------------------------------------------------
+
+// SyncNodeStokeResponse
+
+// repeated bytes blocks = 1;
+inline int SyncNodeStokeResponse::blocks_size() const {
+  return blocks_.size();
+}
+inline void SyncNodeStokeResponse::clear_blocks() {
+  blocks_.Clear();
+}
+inline const ::std::string& SyncNodeStokeResponse::blocks(int index) const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  return blocks_.Get(index);
+}
+inline ::std::string* SyncNodeStokeResponse::mutable_blocks(int index) {
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  return blocks_.Mutable(index);
+}
+inline void SyncNodeStokeResponse::set_blocks(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  blocks_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void SyncNodeStokeResponse::set_blocks(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  blocks_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void SyncNodeStokeResponse::set_blocks(int index, const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  blocks_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+inline void SyncNodeStokeResponse::set_blocks(int index, const void* value, size_t size) {
+  blocks_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+inline ::std::string* SyncNodeStokeResponse::add_blocks() {
+  // @@protoc_insertion_point(field_add_mutable:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  return blocks_.Add();
+}
+inline void SyncNodeStokeResponse::add_blocks(const ::std::string& value) {
+  blocks_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+#if LANG_CXX11
+inline void SyncNodeStokeResponse::add_blocks(::std::string&& value) {
+  blocks_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+#endif
+inline void SyncNodeStokeResponse::add_blocks(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  blocks_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+inline void SyncNodeStokeResponse::add_blocks(const void* value, size_t size) {
+  blocks_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SyncNodeStokeResponse::blocks() const {
+  // @@protoc_insertion_point(field_list:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  return blocks_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SyncNodeStokeResponse::mutable_blocks() {
+  // @@protoc_insertion_point(field_mutable_list:tenon.elect.protobuf.SyncNodeStokeResponse.blocks)
+  return &blocks_;
+}
+
+// optional uint64 now_tm_height = 2;
+inline bool SyncNodeStokeResponse::has_now_tm_height() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SyncNodeStokeResponse::set_has_now_tm_height() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SyncNodeStokeResponse::clear_has_now_tm_height() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SyncNodeStokeResponse::clear_now_tm_height() {
+  now_tm_height_ = GOOGLE_ULONGLONG(0);
+  clear_has_now_tm_height();
+}
+inline ::google::protobuf::uint64 SyncNodeStokeResponse::now_tm_height() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.SyncNodeStokeResponse.now_tm_height)
+  return now_tm_height_;
+}
+inline void SyncNodeStokeResponse::set_now_tm_height(::google::protobuf::uint64 value) {
+  set_has_now_tm_height();
+  now_tm_height_ = value;
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.SyncNodeStokeResponse.now_tm_height)
+}
+
+// -------------------------------------------------------------------
+
 // ElectMessage
 
 // optional .tenon.elect.protobuf.ElectBlock elect_block = 1;
@@ -3514,9 +4201,131 @@ inline void ElectMessage::set_allocated_leader_rotation(::tenon::elect::protobuf
   // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.leader_rotation)
 }
 
+// optional .tenon.elect.protobuf.SyncNodeStokeRequest sync_stoke_req = 9;
+inline bool ElectMessage::has_sync_stoke_req() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void ElectMessage::set_has_sync_stoke_req() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void ElectMessage::clear_has_sync_stoke_req() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void ElectMessage::clear_sync_stoke_req() {
+  if (sync_stoke_req_ != NULL) sync_stoke_req_->Clear();
+  clear_has_sync_stoke_req();
+}
+inline const ::tenon::elect::protobuf::SyncNodeStokeRequest& ElectMessage::_internal_sync_stoke_req() const {
+  return *sync_stoke_req_;
+}
+inline const ::tenon::elect::protobuf::SyncNodeStokeRequest& ElectMessage::sync_stoke_req() const {
+  const ::tenon::elect::protobuf::SyncNodeStokeRequest* p = sync_stoke_req_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.sync_stoke_req)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::SyncNodeStokeRequest*>(
+      &::tenon::elect::protobuf::_SyncNodeStokeRequest_default_instance_);
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeRequest* ElectMessage::release_sync_stoke_req() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.sync_stoke_req)
+  clear_has_sync_stoke_req();
+  ::tenon::elect::protobuf::SyncNodeStokeRequest* temp = sync_stoke_req_;
+  sync_stoke_req_ = NULL;
+  return temp;
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeRequest* ElectMessage::mutable_sync_stoke_req() {
+  set_has_sync_stoke_req();
+  if (sync_stoke_req_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::SyncNodeStokeRequest>(GetArenaNoVirtual());
+    sync_stoke_req_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.sync_stoke_req)
+  return sync_stoke_req_;
+}
+inline void ElectMessage::set_allocated_sync_stoke_req(::tenon::elect::protobuf::SyncNodeStokeRequest* sync_stoke_req) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete sync_stoke_req_;
+  }
+  if (sync_stoke_req) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      sync_stoke_req = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, sync_stoke_req, submessage_arena);
+    }
+    set_has_sync_stoke_req();
+  } else {
+    clear_has_sync_stoke_req();
+  }
+  sync_stoke_req_ = sync_stoke_req;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.sync_stoke_req)
+}
+
+// optional .tenon.elect.protobuf.SyncNodeStokeResponse sync_stoke_res = 10;
+inline bool ElectMessage::has_sync_stoke_res() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void ElectMessage::set_has_sync_stoke_res() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void ElectMessage::clear_has_sync_stoke_res() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void ElectMessage::clear_sync_stoke_res() {
+  if (sync_stoke_res_ != NULL) sync_stoke_res_->Clear();
+  clear_has_sync_stoke_res();
+}
+inline const ::tenon::elect::protobuf::SyncNodeStokeResponse& ElectMessage::_internal_sync_stoke_res() const {
+  return *sync_stoke_res_;
+}
+inline const ::tenon::elect::protobuf::SyncNodeStokeResponse& ElectMessage::sync_stoke_res() const {
+  const ::tenon::elect::protobuf::SyncNodeStokeResponse* p = sync_stoke_res_;
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.ElectMessage.sync_stoke_res)
+  return p != NULL ? *p : *reinterpret_cast<const ::tenon::elect::protobuf::SyncNodeStokeResponse*>(
+      &::tenon::elect::protobuf::_SyncNodeStokeResponse_default_instance_);
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeResponse* ElectMessage::release_sync_stoke_res() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.ElectMessage.sync_stoke_res)
+  clear_has_sync_stoke_res();
+  ::tenon::elect::protobuf::SyncNodeStokeResponse* temp = sync_stoke_res_;
+  sync_stoke_res_ = NULL;
+  return temp;
+}
+inline ::tenon::elect::protobuf::SyncNodeStokeResponse* ElectMessage::mutable_sync_stoke_res() {
+  set_has_sync_stoke_res();
+  if (sync_stoke_res_ == NULL) {
+    auto* p = CreateMaybeMessage<::tenon::elect::protobuf::SyncNodeStokeResponse>(GetArenaNoVirtual());
+    sync_stoke_res_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.ElectMessage.sync_stoke_res)
+  return sync_stoke_res_;
+}
+inline void ElectMessage::set_allocated_sync_stoke_res(::tenon::elect::protobuf::SyncNodeStokeResponse* sync_stoke_res) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete sync_stoke_res_;
+  }
+  if (sync_stoke_res) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      sync_stoke_res = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, sync_stoke_res, submessage_arena);
+    }
+    set_has_sync_stoke_res();
+  } else {
+    clear_has_sync_stoke_res();
+  }
+  sync_stoke_res_ = sync_stoke_res;
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.ElectMessage.sync_stoke_res)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
