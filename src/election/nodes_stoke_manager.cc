@@ -39,7 +39,7 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
             auto synced_iter = sync_nodes_map_.find(*iter);
             if (synced_iter != sync_nodes_map_.end()) {
                 if (synced_iter->second.first ==
-                        tmblock::TimeBlockManager::Instance()->LatestTimestamp()) {
+                        tmblock::TimeBlockManager::Instance()->LatestTimestampHeight()) {
                     continue;
                 }
 
@@ -56,6 +56,11 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
             sync_map[netid] = std::vector<std::pair<std::string, uint64_t>>{
                 std::make_pair(*iter, synced_tm_height) };
         }
+
+        ELECT_DEBUG("add sync addr: %s, height: %lu, now height: %lu",
+            common::Encode::HexEncode(*iter).c_str(),
+            synced_tm_height,
+            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
     }
 
     auto dht = network::DhtManager::Instance()->GetDht(
@@ -142,6 +147,10 @@ void NodesStokeManager::HandleSyncAddressStoke(
                 auto res_item = sync_stoke_res->add_items();
                 res_item->set_id(addr);
                 res_item->set_balance(tx_list[i].balance());
+                ELECT_DEBUG("response sync addr: %s, height: %lu, balance: %lu",
+                    common::Encode::HexEncode(addr).c_str(),
+                    ec_msg.sync_stoke_req().sync_item(i).synced_tm_height(),
+                    tx_list[i].balance());
             }
         }
     }
@@ -163,6 +172,10 @@ void NodesStokeManager::HandleSyncStokeResponse(
         }
 
         sync_nodes_map_[ec_msg.sync_stoke_res().items(i).id()] = std::make_pair(
+            ec_msg.sync_stoke_res().now_tm_height(),
+            ec_msg.sync_stoke_res().items(i).balance());
+        ELECT_DEBUG("get response sync addr: %s, height: %lu, balance: %lu",
+            common::Encode::HexEncode(ec_msg.sync_stoke_res().items(i).id()).c_str(),
             ec_msg.sync_stoke_res().now_tm_height(),
             ec_msg.sync_stoke_res().items(i).balance());
     }
