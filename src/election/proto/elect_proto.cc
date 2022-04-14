@@ -166,6 +166,14 @@ void ElectProto::CreateSyncStokeRequest(
         uint32_t des_net_id,
         const std::vector<std::pair<std::string, uint64_t>>& ids,
         transport::protobuf::Header& msg) {
+    // check if has waiting nodes to get account balance
+    //  + network::kConsensusWaitingShardOffset
+    auto tmp_net_id = des_net_id + network::kConsensusWaitingShardOffset;
+    auto dht = network::DhtManager::Instance()->GetDht(tmp_net_id);
+    if (dht != nullptr) {
+        des_net_id = tmp_net_id;
+    }
+
     msg.set_src_dht_key(local_node->dht_key());
     dht::DhtKeyManager dht_key(des_net_id, 0);
     msg.set_des_dht_key(dht_key.StrKey());

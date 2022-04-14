@@ -73,12 +73,19 @@ int Route::Send(const transport::protobuf::Header& message) {
                 }
             } else {
                 dht_ptr->SendToClosestNode(message);
+                if (message.type() == common::kElectMessage) {
+                    NETWORK_ERROR("TTTTTTTT message.type() == common::kElectMessage des_net_id: %d send to close node.", des_net_id);
+                }
             }
         }
         return kNetworkSuccess;
     }
     // this node not in this network, relay by universal
     RouteByUniversal(message);
+    if (message.type() == common::kElectMessage) {
+        NETWORK_ERROR("TTTTTTTT message.type() == common::kElectMessage des_net_id: %d send to universal.", des_net_id);
+    }
+
     return kNetworkSuccess;
 }
 

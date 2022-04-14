@@ -74,7 +74,7 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
         transport::protobuf::Header msg;
         elect::ElectProto::CreateSyncStokeRequest(
             dht->local_node(),
-            iter->first + network::kConsensusWaitingShardOffset,
+            iter->first,
             iter->second,
             msg);
         if (msg.has_data()) {
