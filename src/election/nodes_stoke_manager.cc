@@ -79,6 +79,7 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
             msg);
         if (msg.has_data()) {
             network::Route::Instance()->Send(msg);
+            ELECT_DEBUG("TTTTTTTTT send out stoke request.");
         }
     }
 }

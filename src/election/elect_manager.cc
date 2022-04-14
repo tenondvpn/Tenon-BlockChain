@@ -12,6 +12,7 @@
 #include "dht/dht_utils.h"
 #include "db/db_utils.h"
 #include "election/proto/elect_proto.h"
+#include "election/nodes_stoke_manager.h"
 #include "network/route.h"
 #include "network/shard_network.h"
 #include "security/secp256k1.h"
@@ -39,6 +40,7 @@ ElectManager::ElectManager() {
     waiting_hb_tick_.CutOff(
         kWaitingHeartbeatPeriod,
         std::bind(&ElectManager::WaitingNodeSendHeartbeat, this));
+    ELECT_DEBUG("TTTTTTTTT ElectManager RegisterMessage called!");
 }
 
 ElectManager::~ElectManager() {}
@@ -105,6 +107,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
     auto& header = *header_ptr;
     assert(header.type() == common::kElectMessage);
     // TODO: verify message signature
+    ELECT_DEBUG("TTTTTT received elect message.");
     protobuf::ElectMessage ec_msg;
     if (!ec_msg.ParseFromString(header.data())) {
         ELECT_ERROR("protobuf::ElectMessage ParseFromString failed!");
