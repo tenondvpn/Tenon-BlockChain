@@ -57,10 +57,11 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
                 std::make_pair(*iter, synced_tm_height) };
         }
 
-        ELECT_DEBUG("add sync addr: %s, height: %lu, now height: %lu",
+        ELECT_DEBUG("TTTTTTTTT add sync addr: %s, height: %lu, now height: %lu, netid: %u",
             common::Encode::HexEncode(*iter).c_str(),
             synced_tm_height,
-            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight());
+            tmblock::TimeBlockManager::Instance()->LatestTimestampHeight(),
+            netid);
     }
 
     auto dht = network::DhtManager::Instance()->GetDht(
@@ -147,7 +148,7 @@ void NodesStokeManager::HandleSyncAddressStoke(
                 auto res_item = sync_stoke_res->add_items();
                 res_item->set_id(addr);
                 res_item->set_balance(tx_list[i].balance());
-                ELECT_DEBUG("response sync addr: %s, height: %lu, balance: %lu",
+                ELECT_DEBUG("TTTTTTTTT response sync addr: %s, height: %lu, balance: %lu",
                     common::Encode::HexEncode(addr).c_str(),
                     ec_msg.sync_stoke_req().sync_item(i).synced_tm_height(),
                     tx_list[i].balance());
@@ -174,7 +175,7 @@ void NodesStokeManager::HandleSyncStokeResponse(
         sync_nodes_map_[ec_msg.sync_stoke_res().items(i).id()] = std::make_pair(
             ec_msg.sync_stoke_res().now_tm_height(),
             ec_msg.sync_stoke_res().items(i).balance());
-        ELECT_DEBUG("get response sync addr: %s, height: %lu, balance: %lu",
+        ELECT_DEBUG("TTTTTTTTT get response sync addr: %s, height: %lu, balance: %lu",
             common::Encode::HexEncode(ec_msg.sync_stoke_res().items(i).id()).c_str(),
             ec_msg.sync_stoke_res().now_tm_height(),
             ec_msg.sync_stoke_res().items(i).balance());

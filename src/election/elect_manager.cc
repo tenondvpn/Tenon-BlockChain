@@ -111,6 +111,16 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
         return;
     }
 
+    if (ec_msg.has_sync_stoke_req()) {
+        NodesStokeManager::Instance()->HandleSyncAddressStoke(header, ec_msg);
+        return;
+    }
+
+    if (ec_msg.has_sync_stoke_res()) {
+        NodesStokeManager::Instance()->HandleSyncStokeResponse(header, ec_msg);
+        return;
+    }
+
     if (!security::IsValidPublicKey(ec_msg.pubkey())) {
         ELECT_ERROR("invalid public key: %s!", common::Encode::HexEncode(ec_msg.pubkey()));
         return;

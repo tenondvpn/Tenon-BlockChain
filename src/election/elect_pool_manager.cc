@@ -286,26 +286,28 @@ void ElectPoolManager::AddWaitingPoolNode(uint32_t network_id, NodeDetailPtr& no
 }
 
 void ElectPoolManager::UpdateNodesStoke() {
-    std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map;
-    {
-        std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
-        waiting_pool_map = waiting_pool_map_;
-    }
+    if (common::GlobalInfo::Instance()->network_id() == network::kRootCongressNetworkId) {
+        std::unordered_map<uint32_t, ElectWaitingNodesPtr> waiting_pool_map;
+        {
+            std::lock_guard<std::mutex> guard(waiting_pool_map_mutex_);
+            waiting_pool_map = waiting_pool_map_;
+        }
 
-    for (auto iter = waiting_pool_map.begin(); iter != waiting_pool_map.end(); ++iter) {
-        iter->second->UpdateWaitingNodeStoke();
-        usleep(100000);
-    }
+        for (auto iter = waiting_pool_map.begin(); iter != waiting_pool_map.end(); ++iter) {
+            iter->second->UpdateWaitingNodeStoke();
+            usleep(100000);
+        }
 
-    std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map;
-    {
-        std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
-        elect_pool_map = elect_pool_map_;
-    }
+        std::unordered_map<uint32_t, ElectPoolPtr> elect_pool_map;
+        {
+            std::lock_guard<std::mutex> guard(elect_pool_map_mutex_);
+            elect_pool_map = elect_pool_map_;
+        }
 
-    for (auto iter = elect_pool_map.begin(); iter != elect_pool_map.end(); ++iter) {
-        iter->second->UpdateNodesStoke();
-        usleep(100000);
+        for (auto iter = elect_pool_map.begin(); iter != elect_pool_map.end(); ++iter) {
+            iter->second->UpdateNodesStoke();
+            usleep(100000);
+        }
     }
 
     update_stoke_tick_.CutOff(30000000l, std::bind(&ElectPoolManager::UpdateNodesStoke, this));
