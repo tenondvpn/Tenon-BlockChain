@@ -243,6 +243,10 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         nodes.push_back(iter->second);
     }
 
+    if (nodes.empty()) {
+        return;
+    }
+
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
     std::string blance_str;
     for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
