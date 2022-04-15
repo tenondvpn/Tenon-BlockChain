@@ -246,7 +246,7 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
     std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
     std::string blance_str;
     for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
-        auto balance = NodesStokeManager::Instance()->GetAddressStoke(iter->first);
+        auto balance = NodesStokeManager::Instance()->GetAddressStoke((*iter)->id);
         blance_str += std::to_string(balance) + "_";
     }
 
