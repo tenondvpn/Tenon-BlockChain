@@ -84,36 +84,36 @@ void NodesStokeManager::SyncAddressStoke(const std::vector<std::string>& addrs) 
     }
 }
 
-void NodesStokeManager::GetAddressStoke(const std::string& addr, uint64_t tm_height) {
+uint64_t NodesStokeManager::GetAddressStoke(const std::string& addr) {
+    std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
+    auto iter = sync_nodes_map_.find(addr);
+    if (iter != sync_nodes_map_.end()) {
+        return iter->second.second;
+    }
 
+    return 0;
 }
 
 void NodesStokeManager::HandleSyncAddressStoke(
         const transport::protobuf::Header& header,
         const protobuf::ElectMessage& ec_msg) {
-    auto dht = network::DhtManager::Instance()->GetDht(
-        common::GlobalInfo::Instance()->network_id());
-    if (!dht) {
-        return;
-    }
-
     transport::protobuf::Header msg;
-    msg.set_src_dht_key(dht->local_node()->dht_key());
-    msg.set_des_dht_key(dht->local_node()->dht_key());
+    msg.set_src_dht_key(header.des_dht_key());
+    msg.set_des_dht_key(header.src_dht_key());
     msg.set_priority(transport::kTransportPriorityHigh);
     msg.set_id(common::GlobalInfo::Instance()->MessageId());
     msg.set_type(common::kElectMessage);
     msg.set_client(false);
     msg.set_universal(false);
     msg.set_hop_count(0);
-
-    // now just for test
     protobuf::ElectMessage res_ec_msg;
     auto sync_stoke_res = res_ec_msg.mutable_sync_stoke_res();
     for (int32_t i = 0; i < ec_msg.sync_stoke_req().sync_item_size(); ++i) {
         auto acc_info = block::AccountManager::Instance()->GetAcountInfo(
             ec_msg.sync_stoke_req().sync_item(i).id());
         if (acc_info == nullptr) {
+            ELECT_DEBUG("TTTTTTT get account info failed: %s",
+                common::Encode::HexEncode(ec_msg.sync_stoke_req().sync_item(i).id()).c_str());
             continue;
         }
 
@@ -125,34 +125,36 @@ void NodesStokeManager::HandleSyncAddressStoke(
         if (!block_str.empty()) {
             auto block_item = std::make_shared<bft::protobuf::Block>();
             if (!block_item->ParseFromString(block_str)) {
+                ELECT_DEBUG("TTTTTTT get account info failed: %s",
+                    common::Encode::HexEncode(ec_msg.sync_stoke_req().sync_item(i).id()).c_str());
                 continue;
             }
 
             auto& tx_list = block_item->tx_list();
-            for (int32_t i = 0; i < tx_list.size(); ++i) {
+            for (int32_t tx_idx = 0; tx_idx < tx_list.size(); ++tx_idx) {
                 std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
                 std::string addr;
-                if (tx_list[i].to_add()) {
-                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[i].to()) {
+                if (tx_list[tx_idx].to_add()) {
+                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[tx_idx].to()) {
                         continue;
                     }
 
-                    addr = tx_list[i].to();
+                    addr = tx_list[tx_idx].to();
                 } else {
-                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[i].from()) {
+                    if (ec_msg.sync_stoke_req().sync_item(i).id() != tx_list[tx_idx].from()) {
                         continue;
                     }
 
-                    addr = tx_list[i].from();
+                    addr = tx_list[tx_idx].from();
                 }
 
                 auto res_item = sync_stoke_res->add_items();
                 res_item->set_id(addr);
-                res_item->set_balance(tx_list[i].balance());
+                res_item->set_balance(tx_list[tx_idx].balance());
                 ELECT_DEBUG("TTTTTTTTT response sync addr: %s, height: %lu, balance: %lu",
                     common::Encode::HexEncode(addr).c_str(),
                     ec_msg.sync_stoke_req().sync_item(i).synced_tm_height(),
-                    tx_list[i].balance());
+                    tx_list[tx_idx].balance());
             }
         }
     }
@@ -161,13 +163,20 @@ void NodesStokeManager::HandleSyncAddressStoke(
     msg.set_data(res_ec_msg.SerializeAsString());
     transport::MultiThreadHandler::Instance()->tcp_transport()->Send(
         header.from_ip(), header.from_port(), 0, msg);
+    ELECT_DEBUG("TTTTTTT send back ip: %s, port: %d", header.from_ip().c_str(), header.from_port());
 }
 
 void NodesStokeManager::HandleSyncStokeResponse(
         const transport::protobuf::Header& header,
         const protobuf::ElectMessage& ec_msg) {
+    if (common::GlobalInfo::Instance()->network_id() != network::kRootCongressNetworkId) {
+        return;
+    }
+
+    ELECT_DEBUG("TTTTTTTTT get HandleSyncStokeResponse.");
     for (int32_t i = 0; i < ec_msg.sync_stoke_res().items_size(); ++i) {
         std::lock_guard<std::mutex> g(sync_nodes_map_mutex_);
+        ELECT_DEBUG("TTTTTTTTT get HandleSyncStokeResponse: %s", common::Encode::HexEncode(ec_msg.sync_stoke_res().items(i).id()).c_str());
         auto iter = sync_nodes_map_.find(ec_msg.sync_stoke_res().items(i).id());
         if (iter == sync_nodes_map_.end()) {
             continue;

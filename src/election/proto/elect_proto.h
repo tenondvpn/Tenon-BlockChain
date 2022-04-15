@@ -13,6 +13,7 @@ public:
     static void CreateElectWaitingNodes(
         const dht::NodePtr& local_node,
         uint32_t waiting_shard_id,
+        const std::string& balance_hash_256,
         const common::BloomFilter& nodes_filter,
         transport::protobuf::Header& msg);
     static void CreateWaitingHeartbeat(

@@ -314,9 +314,10 @@ void ElectPoolManager::UpdateNodesStoke() {
 }
 
 void ElectPoolManager::UpdateWaitingNodes(
-        uint32_t waiting_shard_id,
+        const protobuf::WaitingNodesMessage& waiting_nodes,
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter) {
+    auto waiting_shard_id = waiting_nodes.waiting_shard_id();
     if (waiting_shard_id < network::kRootCongressWaitingNetworkId ||
         waiting_shard_id >= network::kConsensusWaitingShardEndNetworkId) {
         return;
@@ -333,7 +334,7 @@ void ElectPoolManager::UpdateWaitingNodes(
         waiting_pool_ptr = iter->second;
     }
 
-    waiting_pool_ptr->UpdateWaitingNodes(root_node_id, nodes_filter);
+    waiting_pool_ptr->UpdateWaitingNodes(root_node_id, waiting_nodes.stoke_hash(), nodes_filter);
 }
 
 void ElectPoolManager::GetInvalidLeaders(

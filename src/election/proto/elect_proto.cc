@@ -69,6 +69,7 @@ void ElectProto::CreateLeaderRotation(
 void ElectProto::CreateElectWaitingNodes(
         const dht::NodePtr& local_node,
         uint32_t waiting_shard_id,
+        const std::string& balance_hash_256,
         const common::BloomFilter& nodes_filter,
         transport::protobuf::Header& msg) {
     msg.set_src_dht_key(local_node->dht_key());
@@ -88,7 +89,10 @@ void ElectProto::CreateElectWaitingNodes(
         waiting_nodes_msg->add_nodes_filter(nodes_filter.data()[i]);
     }
 
-    std::string hash_str = nodes_filter.Serialize() + std::to_string(waiting_shard_id);
+    waiting_nodes_msg.set_stoke_hash(balance_hash_256);
+    std::string hash_str = nodes_filter.Serialize() +
+        std::to_string(waiting_shard_id) +
+        balance_hash_256;
     waiting_nodes_msg->set_waiting_shard_id(waiting_shard_id);
     auto message_hash = common::Hash::keccak256(hash_str);
     security::Signature sign;

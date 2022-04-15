@@ -29,6 +29,7 @@ ElectWaitingNodes::~ElectWaitingNodes() {}
 
 void ElectWaitingNodes::UpdateWaitingNodes(
         const std::string& root_node_id,
+        const std::string& balance_hash_256,
         const common::BloomFilter& nodes_filter) {
     std::lock_guard<std::mutex> guard(all_nodes_waiting_map_mutex_);
     std::string coming_id = root_node_id + std::to_string(
@@ -49,7 +50,17 @@ void ElectWaitingNodes::UpdateWaitingNodes(
         kBloomfilterWaitingSize,
         kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> local_all_waiting_nodes;
-    GetAllValidHeartbeatNodes(true, 0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
+    std::string hash_256;
+    GetAllValidHeartbeatNodes(
+        true,
+        0,
+        &hash_256,
+        local_all_waiting_bloom_filter,
+        local_all_waiting_nodes);
+    if (hash_256 != balance_hash_256) {
+        return;
+    }
+
     std::sort(
         local_all_waiting_nodes.begin(),
         local_all_waiting_nodes.end(),
@@ -59,7 +70,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     for (auto iter = local_all_waiting_nodes.begin();
             iter != local_all_waiting_nodes.end(); ++iter) {
         if (!nodes_filter.Contain(common::Hash::Hash64((*iter)->id))) {
-            continue;
+            return;
         }
         
         wait_ptr->nodes_vec.push_back(*iter);
@@ -169,6 +180,7 @@ void ElectWaitingNodes::RemoveNodes(const std::vector<NodeDetailPtr>& nodes) {
 void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         bool no_delay,
         uint64_t time_offset_milli,
+        std::string* hash_256,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes) {
     std::unordered_map<std::string, NodeDetailPtr> node_map;
@@ -230,6 +242,15 @@ void ElectWaitingNodes::GetAllValidHeartbeatNodes(
         nodes_filter.Add(common::Hash::Hash64(iter->second->id));
         nodes.push_back(iter->second);
     }
+
+    std::sort(nodes.begin(), nodes.end(), ElectNodeIdCompare);
+    std::string blance_str;
+    for (auto iter = nodes.begin(); iter != nodes.end(); ++iter) {
+        auto balance = NodesStokeManager::Instance()->GetAddressStoke(iter->first);
+        blance_str += std::to_string(balance) + "_";
+    }
+
+    *hash_256 = common::Hash::Hash256(blance_str);
 }
 
 void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
@@ -244,12 +265,19 @@ void ElectWaitingNodes::SendConsensusNodes(uint64_t time_block_tm) {
         kBloomfilterWaitingSize,
         kBloomfilterWaitingHashCount);
     std::vector<NodeDetailPtr> local_all_waiting_nodes;
-    GetAllValidHeartbeatNodes(false, 0, local_all_waiting_bloom_filter, local_all_waiting_nodes);
+    std::string hash_256;
+    GetAllValidHeartbeatNodes(
+        false,
+        0,
+        &hash_256,
+        local_all_waiting_bloom_filter,
+        local_all_waiting_nodes);
     if (!local_all_waiting_nodes.empty()) {
         transport::protobuf::Header msg;
         elect::ElectProto::CreateElectWaitingNodes(
             dht->local_node(),
             waiting_shard_id_,
+            hash_256,
             local_all_waiting_bloom_filter,
             msg);
         if (msg.has_data()) {

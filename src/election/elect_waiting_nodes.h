@@ -20,6 +20,7 @@ public:
     ~ElectWaitingNodes();
     void UpdateWaitingNodes(
         const std::string& root_node_id,
+        const std::string& balance_hash_256,
         const common::BloomFilter& nodes_filter);
     void AddNewNode(NodeDetailPtr& node_ptr);
     void RemoveNodes(const std::vector<NodeDetailPtr>& nodes);
@@ -29,6 +30,7 @@ public:
     void GetAllValidHeartbeatNodes(
         bool no_delay,
         uint64_t time_offset_milli,
+        std::string* hash_256,
         common::BloomFilter& nodes_filter,
         std::vector<NodeDetailPtr>& nodes);
     void OnTimeBlock(uint64_t tm_block_tm);

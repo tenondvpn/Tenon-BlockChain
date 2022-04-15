@@ -13,7 +13,7 @@ class NodesStokeManager {
 public:
     static NodesStokeManager* Instance();
     void SyncAddressStoke(const std::vector<std::string>& addrs);
-    void GetAddressStoke(const std::string& addr, uint64_t tm_height);
+    uint64_t GetAddressStoke(const std::string& addr);
     void HandleSyncAddressStoke(
         const transport::protobuf::Header& header,
         const protobuf::ElectMessage& ec_msg);

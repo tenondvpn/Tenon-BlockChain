@@ -182,7 +182,7 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
             }
 
             pool_manager_.UpdateWaitingNodes(
-                ec_msg.waiting_nodes().waiting_shard_id(),
+                ec_msg.waiting_nodes(),
                 id,
                 fiter);
         }

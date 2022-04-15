@@ -27,7 +27,7 @@ public:
         const bft::protobuf::TxInfo& local_tx_info,
         const bft::protobuf::TxInfo& tx_info);
     void UpdateWaitingNodes(
-        uint32_t waiting_shard_id,
+        const protobuf::WaitingNodesMessage& waiting_nodes,
         const std::string& root_node_id,
         const common::BloomFilter& nodes_filter);
     int CreateElectTransaction(

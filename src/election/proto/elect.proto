@@ -42,6 +42,7 @@ message ElectBlock {
 message WaitingNodesMessage {
     repeated uint64 nodes_filter = 1;
     optional uint32 waiting_shard_id = 2;
+    optional bytes stoke_hash = 3;
 }
 
 message WaitingNodeHeartbeat {
