@@ -89,7 +89,7 @@ void ElectProto::CreateElectWaitingNodes(
         waiting_nodes_msg->add_nodes_filter(nodes_filter.data()[i]);
     }
 
-    waiting_nodes_msg.set_stoke_hash(balance_hash_256);
+    waiting_nodes_msg->set_stoke_hash(balance_hash_256);
     std::string hash_str = nodes_filter.Serialize() +
         std::to_string(waiting_shard_id) +
         balance_hash_256;
