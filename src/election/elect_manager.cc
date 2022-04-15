@@ -173,11 +173,13 @@ void ElectManager::HandleMessage(const transport::TransportMessagePtr& header_pt
 
             common::BloomFilter fiter(filter_vec, kBloomfilterWaitingHashCount);
             std::string hash_str = fiter.Serialize() +
-                std::to_string(ec_msg.waiting_nodes().waiting_shard_id());
+                std::to_string(ec_msg.waiting_nodes().waiting_shard_id()) +
+                ec_msg.waiting_nodes().stoke_hash();
             auto message_hash = common::Hash::keccak256(hash_str);
             auto pubkey = security::PublicKey(ec_msg.pubkey());
             auto sign = security::Signature(ec_msg.sign_ch(), ec_msg.sign_res());
             if (!security::Security::Instance()->Verify(message_hash, sign, pubkey)) {
+                ELECT_ERROR("verify elect message signature failed!");
                 return;
             }
 

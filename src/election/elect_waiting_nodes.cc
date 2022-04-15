@@ -70,6 +70,7 @@ void ElectWaitingNodes::UpdateWaitingNodes(
     for (auto iter = local_all_waiting_nodes.begin();
             iter != local_all_waiting_nodes.end(); ++iter) {
         if (!nodes_filter.Contain(common::Hash::Hash64((*iter)->id))) {
+//             continue;
             return;
         }
         

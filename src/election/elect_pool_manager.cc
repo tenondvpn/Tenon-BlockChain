@@ -9,14 +9,15 @@
 #include "common/fts_tree.h"
 #include "common/random.h"
 #include "election/elect_manager.h"
-#include "vss/vss_manager.h"
+#include "election/nodes_stoke_manager.h"
+#include "network/network_utils.h"
 #include "security/secp256k1.h"
 #include "security/security.h"
 #include "security/private_key.h"
 #include "security/public_key.h"
-#include "network/network_utils.h"
 #include "timeblock/time_block_utils.h"
 #include "timeblock/time_block_manager.h"
+#include "vss/vss_manager.h"
 
 namespace tenon {
 
@@ -706,7 +707,15 @@ void ElectPoolManager::SmoothFtsValue(
         std::vector<NodeDetailPtr>& sort_vec) {
     assert(sort_vec.size() >= (uint32_t)count);
     std::sort(sort_vec.begin(), sort_vec.end(), ElectNodeBalanceCompare);
+    sort_vec[0]->choosed_balance = NodesStokeManager::Instance()->GetAddressStoke(sort_vec[0]->id);
+    ELECT_DEBUG("TTTTTTTTT smooth get blance: %s, %lu",
+        common::Encode::HexEncode(sort_vec[0]->id).c_str(),
+        (uint64_t)sort_vec[0]->choosed_balance);
     for (uint32_t i = 1; i < sort_vec.size(); ++i) {
+        sort_vec[i]->choosed_balance = NodesStokeManager::Instance()->GetAddressStoke(sort_vec[i]->id);
+        ELECT_DEBUG("TTTTTTTTT smooth get blance: %s, %lu",
+            common::Encode::HexEncode(sort_vec[i]->id).c_str(),
+            (uint64_t)sort_vec[i]->choosed_balance);
         sort_vec[i]->balance_diff = sort_vec[i]->choosed_balance - sort_vec[i - 1]->choosed_balance;
     }
 

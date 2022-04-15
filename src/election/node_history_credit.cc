@@ -75,7 +75,7 @@ void NodeHistoryCredit::ChangeCredit(
         }
     }
 
-    std::cout << common::Encode::HexEncode(id) << ": " << add_credit << ", weedout: " << weedout << std::endl;
+    ELECT_DEBUG("change credit %s, %d, %d", common::Encode::HexEncode(id).c_str(), add_credit, weedout);
 }
 
 int NodeHistoryCredit::GetNodeHistoryCredit(const std::string& id, int32_t* credit) {
