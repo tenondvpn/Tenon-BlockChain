@@ -998,6 +998,21 @@ class WaitingNodesMessage : public ::google::protobuf::Message /* @@protoc_inser
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_nodes_filter();
 
+  // optional bytes stoke_hash = 3;
+  bool has_stoke_hash() const;
+  void clear_stoke_hash();
+  static const int kStokeHashFieldNumber = 3;
+  const ::std::string& stoke_hash() const;
+  void set_stoke_hash(const ::std::string& value);
+  #if LANG_CXX11
+  void set_stoke_hash(::std::string&& value);
+  #endif
+  void set_stoke_hash(const char* value);
+  void set_stoke_hash(const void* value, size_t size);
+  ::std::string* mutable_stoke_hash();
+  ::std::string* release_stoke_hash();
+  void set_allocated_stoke_hash(::std::string* stoke_hash);
+
   // optional uint32 waiting_shard_id = 2;
   bool has_waiting_shard_id() const;
   void clear_waiting_shard_id();
@@ -1009,11 +1024,14 @@ class WaitingNodesMessage : public ::google::protobuf::Message /* @@protoc_inser
  private:
   void set_has_waiting_shard_id();
   void clear_has_waiting_shard_id();
+  void set_has_stoke_hash();
+  void clear_has_stoke_hash();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > nodes_filter_;
+  ::google::protobuf::internal::ArenaStringPtr stoke_hash_;
   ::google::protobuf::uint32 waiting_shard_id_;
   friend struct ::protobuf_elect_2eproto::TableStruct;
 };
@@ -3328,13 +3346,13 @@ WaitingNodesMessage::mutable_nodes_filter() {
 
 // optional uint32 waiting_shard_id = 2;
 inline bool WaitingNodesMessage::has_waiting_shard_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void WaitingNodesMessage::set_has_waiting_shard_id() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void WaitingNodesMessage::clear_has_waiting_shard_id() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void WaitingNodesMessage::clear_waiting_shard_id() {
   waiting_shard_id_ = 0u;
@@ -3348,6 +3366,72 @@ inline void WaitingNodesMessage::set_waiting_shard_id(::google::protobuf::uint32
   set_has_waiting_shard_id();
   waiting_shard_id_ = value;
   // @@protoc_insertion_point(field_set:tenon.elect.protobuf.WaitingNodesMessage.waiting_shard_id)
+}
+
+// optional bytes stoke_hash = 3;
+inline bool WaitingNodesMessage::has_stoke_hash() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void WaitingNodesMessage::set_has_stoke_hash() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void WaitingNodesMessage::clear_has_stoke_hash() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void WaitingNodesMessage::clear_stoke_hash() {
+  stoke_hash_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_stoke_hash();
+}
+inline const ::std::string& WaitingNodesMessage::stoke_hash() const {
+  // @@protoc_insertion_point(field_get:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+  return stoke_hash_.GetNoArena();
+}
+inline void WaitingNodesMessage::set_stoke_hash(const ::std::string& value) {
+  set_has_stoke_hash();
+  stoke_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+}
+#if LANG_CXX11
+inline void WaitingNodesMessage::set_stoke_hash(::std::string&& value) {
+  set_has_stoke_hash();
+  stoke_hash_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+}
+#endif
+inline void WaitingNodesMessage::set_stoke_hash(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_stoke_hash();
+  stoke_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+}
+inline void WaitingNodesMessage::set_stoke_hash(const void* value, size_t size) {
+  set_has_stoke_hash();
+  stoke_hash_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+}
+inline ::std::string* WaitingNodesMessage::mutable_stoke_hash() {
+  set_has_stoke_hash();
+  // @@protoc_insertion_point(field_mutable:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+  return stoke_hash_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* WaitingNodesMessage::release_stoke_hash() {
+  // @@protoc_insertion_point(field_release:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
+  if (!has_stoke_hash()) {
+    return NULL;
+  }
+  clear_has_stoke_hash();
+  return stoke_hash_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void WaitingNodesMessage::set_allocated_stoke_hash(::std::string* stoke_hash) {
+  if (stoke_hash != NULL) {
+    set_has_stoke_hash();
+  } else {
+    clear_has_stoke_hash();
+  }
+  stoke_hash_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), stoke_hash);
+  // @@protoc_insertion_point(field_set_allocated:tenon.elect.protobuf.WaitingNodesMessage.stoke_hash)
 }
 
 // -------------------------------------------------------------------

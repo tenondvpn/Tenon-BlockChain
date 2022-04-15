@@ -373,7 +373,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, nodes_filter_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, waiting_shard_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodesMessage, stoke_hash_),
   ~0u,
+  1,
   0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::tenon::elect::protobuf::WaitingNodeHeartbeat, _internal_metadata_),
@@ -464,14 +466,14 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 15, 31, sizeof(::tenon::elect::protobuf::member)},
   { 42, 50, sizeof(::tenon::elect::protobuf::PrevMembers)},
   { 53, 64, sizeof(::tenon::elect::protobuf::ElectBlock)},
-  { 70, 77, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
-  { 79, 88, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
-  { 92, 99, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
-  { 101, 108, sizeof(::tenon::elect::protobuf::SyncNodeStokeItem)},
-  { 110, 117, sizeof(::tenon::elect::protobuf::SyncNodeStokeRequest)},
-  { 119, 126, sizeof(::tenon::elect::protobuf::SyncNodeStokeResItem)},
-  { 128, 135, sizeof(::tenon::elect::protobuf::SyncNodeStokeResponse)},
-  { 137, 152, sizeof(::tenon::elect::protobuf::ElectMessage)},
+  { 70, 78, sizeof(::tenon::elect::protobuf::WaitingNodesMessage)},
+  { 81, 90, sizeof(::tenon::elect::protobuf::WaitingNodeHeartbeat)},
+  { 94, 101, sizeof(::tenon::elect::protobuf::LeaderRotationMessage)},
+  { 103, 110, sizeof(::tenon::elect::protobuf::SyncNodeStokeItem)},
+  { 112, 119, sizeof(::tenon::elect::protobuf::SyncNodeStokeRequest)},
+  { 121, 128, sizeof(::tenon::elect::protobuf::SyncNodeStokeResItem)},
+  { 130, 137, sizeof(::tenon::elect::protobuf::SyncNodeStokeResponse)},
+  { 139, 154, sizeof(::tenon::elect::protobuf::ElectMessage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -527,37 +529,38 @@ void AddDescriptorsImpl() {
       "\nacc_pubkey\030\002 \001(\014\022\020\n\010acc_sign\030\003 \001(\014\022\030\n\020s"
       "hard_network_id\030\004 \001(\r\0227\n\014prev_members\030\005 "
       "\001(\0132!.tenon.elect.protobuf.PrevMembers\022\023"
-      "\n\013weedout_ids\030\006 \003(\014\"E\n\023WaitingNodesMessa"
+      "\n\013weedout_ids\030\006 \003(\014\"Y\n\023WaitingNodesMessa"
       "ge\022\024\n\014nodes_filter\030\001 \003(\004\022\030\n\020waiting_shar"
-      "d_id\030\002 \001(\r\"i\n\024WaitingNodeHeartbeat\022\021\n\tpu"
-      "blic_ip\030\001 \001(\014\022\023\n\013public_port\030\002 \001(\r\022\022\n\nne"
-      "twork_id\030\003 \001(\r\022\025\n\rtimestamp_sec\030\004 \001(\004\"@\n"
-      "\025LeaderRotationMessage\022\021\n\tleader_id\030\001 \001("
-      "\014\022\024\n\014pool_mod_num\030\002 \001(\r\"9\n\021SyncNodeStoke"
-      "Item\022\n\n\002id\030\001 \001(\014\022\030\n\020synced_tm_height\030\002 \001"
-      "(\004\"i\n\024SyncNodeStokeRequest\022:\n\tsync_item\030"
-      "\001 \003(\0132\'.tenon.elect.protobuf.SyncNodeSto"
-      "keItem\022\025\n\rnow_tm_height\030\002 \001(\004\"3\n\024SyncNod"
-      "eStokeResItem\022\n\n\002id\030\001 \001(\014\022\017\n\007balance\030\002 \001"
-      "(\004\"i\n\025SyncNodeStokeResponse\0229\n\005items\030\001 \003"
-      "(\0132*.tenon.elect.protobuf.SyncNodeStokeR"
-      "esItem\022\025\n\rnow_tm_height\030\002 \001(\004\"\214\004\n\014ElectM"
-      "essage\0225\n\013elect_block\030\001 \001(\0132 .tenon.elec"
-      "t.protobuf.ElectBlock\022:\n\020prev_elect_bloc"
-      "k\030\002 \001(\0132 .tenon.elect.protobuf.ElectBloc"
-      "k\022@\n\rwaiting_nodes\030\003 \001(\0132).tenon.elect.p"
-      "rotobuf.WaitingNodesMessage\022\016\n\006pubkey\030\004 "
-      "\001(\014\022\017\n\007sign_ch\030\005 \001(\014\022\020\n\010sign_res\030\006 \001(\014\022E"
-      "\n\021waiting_heartbeat\030\007 \001(\0132*.tenon.elect."
-      "protobuf.WaitingNodeHeartbeat\022D\n\017leader_"
-      "rotation\030\010 \001(\0132+.tenon.elect.protobuf.Le"
-      "aderRotationMessage\022B\n\016sync_stoke_req\030\t "
-      "\001(\0132*.tenon.elect.protobuf.SyncNodeStoke"
-      "Request\022C\n\016sync_stoke_res\030\n \001(\0132+.tenon."
-      "elect.protobuf.SyncNodeStokeResponse"
+      "d_id\030\002 \001(\r\022\022\n\nstoke_hash\030\003 \001(\014\"i\n\024Waitin"
+      "gNodeHeartbeat\022\021\n\tpublic_ip\030\001 \001(\014\022\023\n\013pub"
+      "lic_port\030\002 \001(\r\022\022\n\nnetwork_id\030\003 \001(\r\022\025\n\rti"
+      "mestamp_sec\030\004 \001(\004\"@\n\025LeaderRotationMessa"
+      "ge\022\021\n\tleader_id\030\001 \001(\014\022\024\n\014pool_mod_num\030\002 "
+      "\001(\r\"9\n\021SyncNodeStokeItem\022\n\n\002id\030\001 \001(\014\022\030\n\020"
+      "synced_tm_height\030\002 \001(\004\"i\n\024SyncNodeStokeR"
+      "equest\022:\n\tsync_item\030\001 \003(\0132\'.tenon.elect."
+      "protobuf.SyncNodeStokeItem\022\025\n\rnow_tm_hei"
+      "ght\030\002 \001(\004\"3\n\024SyncNodeStokeResItem\022\n\n\002id\030"
+      "\001 \001(\014\022\017\n\007balance\030\002 \001(\004\"i\n\025SyncNodeStokeR"
+      "esponse\0229\n\005items\030\001 \003(\0132*.tenon.elect.pro"
+      "tobuf.SyncNodeStokeResItem\022\025\n\rnow_tm_hei"
+      "ght\030\002 \001(\004\"\214\004\n\014ElectMessage\0225\n\013elect_bloc"
+      "k\030\001 \001(\0132 .tenon.elect.protobuf.ElectBloc"
+      "k\022:\n\020prev_elect_block\030\002 \001(\0132 .tenon.elec"
+      "t.protobuf.ElectBlock\022@\n\rwaiting_nodes\030\003"
+      " \001(\0132).tenon.elect.protobuf.WaitingNodes"
+      "Message\022\016\n\006pubkey\030\004 \001(\014\022\017\n\007sign_ch\030\005 \001(\014"
+      "\022\020\n\010sign_res\030\006 \001(\014\022E\n\021waiting_heartbeat\030"
+      "\007 \001(\0132*.tenon.elect.protobuf.WaitingNode"
+      "Heartbeat\022D\n\017leader_rotation\030\010 \001(\0132+.ten"
+      "on.elect.protobuf.LeaderRotationMessage\022"
+      "B\n\016sync_stoke_req\030\t \001(\0132*.tenon.elect.pr"
+      "otobuf.SyncNodeStokeRequest\022C\n\016sync_stok"
+      "e_res\030\n \001(\0132+.tenon.elect.protobuf.SyncN"
+      "odeStokeResponse"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1796);
+      descriptor, 1816);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "elect.proto", &protobuf_RegisterTypes);
 }
@@ -2485,6 +2488,7 @@ void WaitingNodesMessage::InitAsDefaultInstance() {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int WaitingNodesMessage::kNodesFilterFieldNumber;
 const int WaitingNodesMessage::kWaitingShardIdFieldNumber;
+const int WaitingNodesMessage::kStokeHashFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 WaitingNodesMessage::WaitingNodesMessage()
@@ -2500,11 +2504,16 @@ WaitingNodesMessage::WaitingNodesMessage(const WaitingNodesMessage& from)
       _has_bits_(from._has_bits_),
       nodes_filter_(from.nodes_filter_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  stoke_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.has_stoke_hash()) {
+    stoke_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.stoke_hash_);
+  }
   waiting_shard_id_ = from.waiting_shard_id_;
   // @@protoc_insertion_point(copy_constructor:tenon.elect.protobuf.WaitingNodesMessage)
 }
 
 void WaitingNodesMessage::SharedCtor() {
+  stoke_hash_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   waiting_shard_id_ = 0u;
 }
 
@@ -2514,6 +2523,7 @@ WaitingNodesMessage::~WaitingNodesMessage() {
 }
 
 void WaitingNodesMessage::SharedDtor() {
+  stoke_hash_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void WaitingNodesMessage::SetCachedSize(int size) const {
@@ -2537,6 +2547,10 @@ void WaitingNodesMessage::Clear() {
   (void) cached_has_bits;
 
   nodes_filter_.Clear();
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    stoke_hash_.ClearNonDefaultToEmptyNoArena();
+  }
   waiting_shard_id_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -2585,6 +2599,18 @@ bool WaitingNodesMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // optional bytes stoke_hash = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_stoke_hash()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2619,8 +2645,14 @@ void WaitingNodesMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint32 waiting_shard_id = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->waiting_shard_id(), output);
+  }
+
+  // optional bytes stoke_hash = 3;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      3, this->stoke_hash(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2643,8 +2675,15 @@ void WaitingNodesMessage::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional uint32 waiting_shard_id = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->waiting_shard_id(), target);
+  }
+
+  // optional bytes stoke_hash = 3;
+  if (cached_has_bits & 0x00000001u) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        3, this->stoke_hash(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2673,13 +2712,22 @@ size_t WaitingNodesMessage::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // optional uint32 waiting_shard_id = 2;
-  if (has_waiting_shard_id()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->waiting_shard_id());
-  }
+  if (_has_bits_[0 / 32] & 3u) {
+    // optional bytes stoke_hash = 3;
+    if (has_stoke_hash()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->stoke_hash());
+    }
 
+    // optional uint32 waiting_shard_id = 2;
+    if (has_waiting_shard_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->waiting_shard_id());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -2708,8 +2756,16 @@ void WaitingNodesMessage::MergeFrom(const WaitingNodesMessage& from) {
   (void) cached_has_bits;
 
   nodes_filter_.MergeFrom(from.nodes_filter_);
-  if (from.has_waiting_shard_id()) {
-    set_waiting_shard_id(from.waiting_shard_id());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 3u) {
+    if (cached_has_bits & 0x00000001u) {
+      set_has_stoke_hash();
+      stoke_hash_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.stoke_hash_);
+    }
+    if (cached_has_bits & 0x00000002u) {
+      waiting_shard_id_ = from.waiting_shard_id_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
 }
 
@@ -2738,6 +2794,8 @@ void WaitingNodesMessage::Swap(WaitingNodesMessage* other) {
 void WaitingNodesMessage::InternalSwap(WaitingNodesMessage* other) {
   using std::swap;
   nodes_filter_.InternalSwap(&other->nodes_filter_);
+  stoke_hash_.Swap(&other->stoke_hash_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(waiting_shard_id_, other->waiting_shard_id_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
