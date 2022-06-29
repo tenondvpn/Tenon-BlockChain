@@ -1,0 +1,10 @@
+columns format version: 1
+8 columns:
+`time` UInt64
+`all_tenon` UInt64
+`all_address` UInt32
+`all_contracts` UInt32
+`all_transactions` UInt32
+`all_nodes` UInt32
+`all_waiting_nodes` UInt32
+`date` UInt32

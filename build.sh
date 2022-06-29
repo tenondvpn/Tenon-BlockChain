@@ -1,6 +1,6 @@
 # configure
-export CXX=/root/tools/gcc-8.3.0/install/bin/g++
-export CC=/root/tools/gcc-8.3.0/install/bin/gcc
+export CXX=/root/install/bin/g++
+export CC=/root/install/bin/gcc
 TARGET=Debug
 mkdir -p cbuild_$TARGET
 cd cbuild_$TARGET
@@ -14,4 +14,5 @@ cmake .. -DCMAKE_BUILD_TYPE=$TARGET -DOPENSSL_ROOT_DIR=./third_party/depends/inc
 
 # make
 make -j4 tenon
-make -j4 vpn_client
+#strip tenon
+#make -j4 vpn_client

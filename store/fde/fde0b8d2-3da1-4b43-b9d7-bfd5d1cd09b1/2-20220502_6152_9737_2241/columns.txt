@@ -1,0 +1,18 @@
+columns format version: 1
+16 columns:
+`shard_id` UInt32
+`pool_index` UInt32
+`height` UInt64
+`prehash` String
+`hash` String
+`version` UInt32
+`vss` UInt64
+`elect_height` UInt64
+`bitmap` String
+`timestamp` UInt64
+`timeblock_height` UInt64
+`bls_agg_sign_x` String
+`bls_agg_sign_y` String
+`commit_bitmap` String
+`tx_size` UInt32
+`date` UInt32

@@ -86,3 +86,42 @@ cp -rf /root/nodes/tenon/shard_db /root/nodes/s15/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s16/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s17/db
 cp -rf /root/nodes/tenon/shard_db /root/nodes/s18/db
+
+cd /root/nodes/r1/ && nohup ./tenon -f 1 -g 0 &
+sleep 3
+
+cd /root/nodes/r2/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/r3/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/r4/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/r5/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/r6/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/r7/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s1/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s2/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s3/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s4/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s5/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s6/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s7/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s8/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s9/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s10/ && nohup ./tenon -f 0 -g 0 &
+
+clickhouse-client -q "drop table tenon_ck_account_key_value_table"
+clickhouse-client -q "drop table tenon_ck_account_table"
+clickhouse-client -q "drop table tenon_ck_block_table"
+clickhouse-client -q "drop table tenon_ck_statistic_table"
+clickhouse-client -q "drop table tenon_ck_transaction_table"
+cd /root/n2 &&  rm -rf db ./log/* && nohup ./tenon2 -f 0 -g 0 &
+cd /root/n3 &&  rm -rf db ./log/* && nohup ./tenon3 -f 0 -g 0 &
+cd /root/n4 &&  rm -rf db ./log/* && nohup ./tenon4 -f 0 -g 0 &
+exit 0
+sleep 3
+cd /root/nodes/s11/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s12/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s13/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s14/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s15/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s16/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s17/ && nohup ./tenon -f 0 -g 0 &
+cd /root/nodes/s18/ && nohup ./tenon -f 0 -g 0 &

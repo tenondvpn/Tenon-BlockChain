@@ -1,0 +1,8 @@
+columns format version: 1
+6 columns:
+`from` String
+`to` String
+`type` UInt32
+`shard_id` UInt32
+`key` String
+`value` String

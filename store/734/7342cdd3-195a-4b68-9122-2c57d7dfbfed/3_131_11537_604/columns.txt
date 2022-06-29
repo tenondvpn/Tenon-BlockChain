@@ -1,0 +1,6 @@
+columns format version: 1
+4 columns:
+`id` String
+`shard_id` UInt32
+`pool_index` UInt32
+`balance` UInt64
